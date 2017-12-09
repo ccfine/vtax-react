@@ -77,7 +77,7 @@ class Message extends Component{
         const {messages,total} = this.state;
         return(
             <Popover
-                trigger="click"
+                //trigger="click"
                 content={
                 <div>
                     {

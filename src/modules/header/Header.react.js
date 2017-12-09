@@ -28,8 +28,10 @@ class WimsHeader extends Component {
                 onCancel() {
                 },
             });
-        }else if(key === 'admin'){
+        }else if(key === 'admin') {
             this.props.history.push(`/${key}`)
+        }else if(key === 'message'){
+            return false
         }else{
             this.props.history.push(`/web/${key}`)
         }
