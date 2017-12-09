@@ -34,7 +34,6 @@ const MainRoute =(
         const homeRoute = () => <Redirect to="/login"/>
         return(
             <Layout>
-                <Route path="/web" render={() => <div>Home</div>}/>
                 <Route exact strict path="/" render={homeRoute} />
                 <Switch>
                     {routes.map((route, index) => (

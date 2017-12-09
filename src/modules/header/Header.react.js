@@ -50,9 +50,6 @@ class WimsHeader extends Component {
                     <Col span={6}>
                         <SelectSearch />
                     </Col>
-                    {/*<Col span={2} style={{textAlign:'right'}}>
-                        <Message />
-                    </Col>*/}
                     <Col span={6} style={{justifyContent:'flex-end'}}>
                         <Menu
                             theme="light"

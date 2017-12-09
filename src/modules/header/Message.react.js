@@ -100,9 +100,8 @@ class Message extends Component{
 
                 </div>
             } title="消息">
-                <Badge count={total}>
-                    <Icon type='bell' />
-                    消息
+                <Badge count={total} >
+                    <Icon type='bell' />消息
                 </Badge>
             </Popover>
         )

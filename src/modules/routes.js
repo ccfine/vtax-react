@@ -3,7 +3,6 @@
  * createTime   : 2017/12/7 15:38
  * description  :
  */
-import React from 'react'
 import {wrapPage} from '../compoments'
 import AccountManage from './accountManage'
 import ReportManage from './reportManage'

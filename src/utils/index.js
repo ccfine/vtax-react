@@ -4,7 +4,6 @@
  * description  :
  */
 import request from './request.js'
-import React from 'react'
 import composeMenus from './composeMenus'
 
 const fMoney = (s,n=2)=>{

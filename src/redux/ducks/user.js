@@ -27,12 +27,12 @@ const data = {
 const initialState = fromJS({
     /**用户个人信息*/
     personal:{
-        realname:undefined,
-        username:undefined,
-        userId:undefined,
+        realname:null,
+        username:null,
+        userId:null,
     },
     /**登录凭证*/
-    token:undefined,
+    token:null,
 
     /**是否登录成功*/
     isAuthed:false,

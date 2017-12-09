@@ -5,38 +5,44 @@
  */
 import React,{Component} from 'react'
 import { Layout } from 'antd'
+import PropTypes from 'prop-types'
 import {Switch,Route } from 'react-router-dom';
 import {connect} from 'react-redux'
 import {RouteWithSubRoutes} from '../compoments'
 import {composeMenus} from '../utils'
-import WimsHeader from './header'
+import Header from './header'
 import Sider from './sider'
 import BreadCrumb from './breadcrumb/Breadcrumb'
 import routes from '../modules/routes'
+import {logout} from '../redux/ducks/user'
 
 const { Content } = Layout;
 
 class Web extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            //routes: ''  //用来获取redux里面存储的权限来判断显示那些导航
-        }
-    }
-    componentWillReceiveProps(nextProps){
-        /*if(this.props.roleType!== nextProps.roleType){
-            let isAdmin = parseInt(nextProps.roleType,0)===2;
-            this.setState({
-                routes: getRoutesByIndex([0,1,2,3,isAdmin ? 4 : null,isAdmin ? 5 : null])
-            })
-        }*/
+    static propTypes = {
+        history:PropTypes.object.isRequired
     }
 
-    render() {
+    checkLoggedIn= props =>{
+        const {isAuthed,history} = props;
+        if(!isAuthed){
+            history.replace('/login');
+        }
+    }
+
+    componentWillMount(){
+        this.checkLoggedIn(this.props)
+    }
+
+    componentWillReceiveProps(nextProps){
+        this.checkLoggedIn(nextProps)
+    }
+
+    renderNormal() {
         return (
             <Layout>
-                <WimsHeader />
+                <Header logout={()=>this.props.logout()} />
                 <Layout style={{width:'100%', maxWidth:1500,minWidth:1024,padding:'0 20px',margin:'0 auto'}}>
                     <Sider menusData={composeMenus(routes)}  />
                     <Layout style={{ padding: '0 24px', margin: 0}}>
@@ -54,7 +60,20 @@ class Web extends Component {
             </Layout>
         )
     }
+
+    render() {
+        return (
+            <div>
+                {
+                    this.renderNormal()
+                }
+            </div>
+        )
+    }
 }
 
 export default connect(state=>({
+    isAuthed:state.user.get('isAuthed')
+}),dispatch=>({
+    logout:logout(dispatch)
 }))(Web)

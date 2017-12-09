@@ -92,12 +92,19 @@ class AccountManage extends Component {
     }
 
     componentDidMount(){
-        setTimeout(()=>{
-           this.setState({
+        this.timer = setTimeout(()=>{
+            this.setState({
                isTime: true
            })
         },0)
     }
+
+    //mount=true
+    componentWillUnmount(){
+        //this.mount=null;
+        clearTimeout(this.timer)
+    }
+
 
     render() {
         const settings = {
