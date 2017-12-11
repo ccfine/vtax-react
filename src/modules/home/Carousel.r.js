@@ -22,7 +22,7 @@ class VTaxCarousel extends Component {
             this.setState({
                 isTime: true
             })
-        },0)
+        },100)
     }
 
     componentWillUnmount(){
@@ -34,6 +34,7 @@ class VTaxCarousel extends Component {
         const settings = {
             autoplay: true,
             autoplaySpeed: 5000,
+            lazyLoad: true,
         };
         return (
             <div>

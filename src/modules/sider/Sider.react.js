@@ -37,6 +37,23 @@ class VTaxSider extends Component {
         document.dispatchEvent(event);
     }
 
+    componentDidMount(){
+        this.automaticTrigger()
+    }
+
+    automaticTrigger=()=>{
+        // IE
+        if(document.all) {
+            document.getElementById("clickTrigger").click();
+        }
+        // 其它浏览器
+        else {
+            let e = document.createEvent("MouseEvents");
+            e.initEvent("click", true, true);
+            document.getElementById("clickTrigger").dispatchEvent(e);
+        }
+    }
+
     componentWillReceiveProps(nextProps){
         this.setState({
             selectedPath:nextProps.history.location.pathname
@@ -56,6 +73,7 @@ class VTaxSider extends Component {
             >
                 <div className="logo" />
                 <Menu
+                    id="clickTrigger"
                     theme="dark"
                     mode="inline"
                     selectedKeys={[this.state.selectedPath]}
@@ -68,9 +86,11 @@ class VTaxSider extends Component {
                                 window.location.href=`http://${window.location.host}${key}`
                             }
 
-                        setTimeout(()=>{
-                            this.onResize();
-                        },300)}
+                            setTimeout(()=>{
+                                this.onResize();
+                            },300)
+
+                        }
                     }
 
                 >
