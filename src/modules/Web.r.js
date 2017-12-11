@@ -46,7 +46,7 @@ class Web extends Component {
                 <Layout style={{width:'100%', maxWidth:1500,minWidth:1024,padding:'0 20px',margin:'0 auto'}}>
                     <Sider menusData={composeMenus(routes)}  />
                     <Layout style={{ padding: '0 24px', margin: 0}}>
-                        <BreadCrumb location={this.props.location} routes={routes} />
+                        {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
                         <Content style={{background: '#fff', margin: 0}}>
                             <Switch>
                                 {routes.map((route, i) => (
