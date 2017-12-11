@@ -13,7 +13,6 @@ const { Sider } = Layout;
 
 class VTaxSider extends Component {
 
-
     //自行包装sider时要加入，为了让layout正确识别
     static __ANT_LAYOUT_SIDER = true
     constructor(props){
@@ -29,6 +28,15 @@ class VTaxSider extends Component {
         history: PropTypes.object.isRequired
     }
 
+    onResize=()=>{
+        // 创建事件
+        let event = document.createEvent('Event');
+        // 定义事件名为'build'.
+        event.initEvent('resize', true, true);
+        // 触发对象可以是任何元素或其他事件目标
+        document.dispatchEvent(event);
+    }
+
     componentWillReceiveProps(nextProps){
         this.setState({
             selectedPath:nextProps.history.location.pathname
@@ -36,17 +44,20 @@ class VTaxSider extends Component {
     }
 
     render() {
+
+        console.log(this.props)
+
         return (
             <Sider
                 trigger={null}
                 collapsible
-                //collapsed={true}
-                style={{background:'#fff'}}
+                collapsed={this.props.collapsed}
+                className="vtax-custom-trigger"
             >
+                <div className="logo" />
                 <Menu
-                    //mode="inline"
-                    style={{ height: '100%', borderRight: 0 }}
-                    className="vtax-sider-menu"
+                    theme="dark"
+                    mode="inline"
                     selectedKeys={[this.state.selectedPath]}
                     onClick={
                         ({item,key,selectedKeys})=>{
@@ -56,8 +67,12 @@ class VTaxSider extends Component {
                             }else{
                                 window.location.href=`http://${window.location.host}${key}`
                             }
-                        }
+
+                        setTimeout(()=>{
+                            this.onResize();
+                        },300)}
                     }
+
                 >
                     {
                         this.props.menusData.map(item=>{
@@ -69,10 +84,8 @@ class VTaxSider extends Component {
                             )
                         })
                     }
-
                 </Menu>
             </Sider>
-
         )
     }
 }

@@ -20,6 +20,10 @@ const { Content } = Layout;
 
 class Web extends Component {
 
+    state = {
+        collapsed:false
+    }
+
     static propTypes = {
         history:PropTypes.object.isRequired
     }
@@ -29,6 +33,16 @@ class Web extends Component {
         if(!isAuthed){
             history.replace('/login');
         }
+    }
+    //给其它组件传数据
+    changeCollapsed=collapsed=>{
+        this.setState({
+            collapsed
+        })
+    }
+
+    componentDidMount() {
+
     }
 
     componentWillMount(){
@@ -42,12 +56,12 @@ class Web extends Component {
     renderNormal() {
         return (
             <Layout>
-                <Header logout={()=>this.props.logout()} />
-                <Layout style={{width:'100%', maxWidth:1500,minWidth:1024,padding:'0 20px',margin:'0 auto'}}>
-                    <Sider menusData={composeMenus(routes)}  />
-                    <Layout style={{ padding: '0 24px', margin: 0}}>
+                <Sider collapsed={this.state.collapsed} menusData={composeMenus(routes)}  />
+                <Layout>
+                    <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} />
+                    <div>
                         {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                        <Content style={{background: '#fff', margin: 0}}>
+                        <Content style={{ margin: '24px 16px', padding: 24,background: '#fff',}}>
                             <Switch>
                                 {routes.map((route, i) => (
                                     <RouteWithSubRoutes key={i} {...route}/>
@@ -55,7 +69,7 @@ class Web extends Component {
                                 <Route path="*" component={()=><div>no match</div>} />
                             </Switch>
                         </Content>
-                    </Layout>
+                    </div>
                 </Layout>
             </Layout>
         )

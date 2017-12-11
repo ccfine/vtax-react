@@ -19,6 +19,30 @@ const confirm = Modal.confirm;
 
 class WimsHeader extends Component {
 
+    state = {
+        collapsed: false,
+    };
+
+    toggle = () => {
+        this.setState({
+            collapsed: !this.state.collapsed,
+        },()=>{
+            this.props.changeCollapsed(this.state.collapsed);
+            setTimeout(()=>{
+                this.onResize();
+            },300)
+        });
+    }
+
+    onResize=()=>{
+        // 创建事件
+        let event = document.createEvent('Event');
+        // 定义事件名为'build'.
+        event.initEvent('resize', true, true);
+        // 触发对象可以是任何元素或其他事件目标
+        document.dispatchEvent(event);
+    }
+
     handlerClick = ({item, key, keyPath})=>{
         if(key==='exit') {
             confirm({
@@ -36,20 +60,24 @@ class WimsHeader extends Component {
             this.props.history.push(`/web/${key}`)
         }
     }
+    componentDidMount(){
+
+    }
+    componentWillUnmount(){
+    }
 
     render() {
         return (
-            <Header className="header">
-                <Row style={{maxWidth:1500,margin:'0 auto',padding:'0 20px'}}>
-                    <Col span={12}>
-                        <div style={{overflow:'hidden'}}>
-                            <Link to="/web" className="logo">
-                                <img src="" alt="logo" />
-                                <h1>喜盈佳纳税申报平台</h1>
-                            </Link>
-                        </div>
+            <Header className="vtax-custom-trigger" style={{ background: '#fff', padding: 0 }}>
+                <Row>
+                    <Col span={10}>
+                        <Icon
+                            className="trigger"
+                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                            onClick={this.toggle}
+                        />
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <SelectSearch />
                     </Col>
                     <Col span={6} style={{justifyContent:'flex-end'}}>
@@ -67,14 +95,14 @@ class WimsHeader extends Component {
                             <SubMenu
                                 title={
                                     <span>
-                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
+                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
                                         { this.props.realName }
-                            </span>}>
+                                    </span>}>
                                 <Menu.Item key="admin">
-                                <span>
-                                    <Icon type="user" />
-                                    个人资料
-                                </span>
+                                    <span>
+                                        <Icon type="user" />
+                                        个人资料
+                                    </span>
                                 </Menu.Item>
                                 <Menu.Item key="exit" >
                                     <Icon type="poweroff" />退出

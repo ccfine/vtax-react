@@ -9,16 +9,16 @@ import { createActions, handleActions } from 'redux-actions'
 import {fromJS} from 'immutable';
 
 const data = {
-    password: "string",
-    phoneNumber: "string",
+    password: "123",
+    phoneNumber: "18675567665",
     provinceCode: "string",
-    realname: "string",
+    realname: "刘心",
     remark: "string",
     sex: "string",
     userId: 0,
-    username: "string",
+    username: "admin",
     token: "string",
-    email: "string",
+    email: "2541337855@qq.com",
     address: "string",
     administrator: 0,
     avatar: "string",
