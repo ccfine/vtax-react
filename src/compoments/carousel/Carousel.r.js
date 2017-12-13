@@ -11,9 +11,6 @@ import './styles.less'
 class VTaxCarousel extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            images:props.banner
-        }
     }
 
     componentDidMount(){
@@ -43,7 +40,7 @@ class VTaxCarousel extends Component {
 
         return (
             <div>
-                <ImageGallery {...setting} items={this.state.images} />
+                <ImageGallery {...setting} items={this.props.banner} />
             </div>
         )
     }

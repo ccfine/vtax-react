@@ -12,6 +12,7 @@ import wrapPage from './titlePage'
 import DescriptionList from './descriptionList'
 import Carousel from './carousel'
 import Nav from './nav'
+import CountTable from './countTable'
 
 export {
     RouteWithSubRoutes,
@@ -19,4 +20,5 @@ export {
     DescriptionList,
     Carousel,
     Nav,
+    CountTable
 }

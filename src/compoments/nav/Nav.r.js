@@ -12,9 +12,6 @@ const { Description } = DescriptionList;
 class Nav extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            nav:props.nav
-        }
     }
 
     renderSubNavNodes = data => {
@@ -33,7 +30,7 @@ class Nav extends Component {
             <div style={{padding: '40px 0'}}>
                 <DescriptionList size="large" col="3">
                     {
-                        this.state.nav.map((item,i)=>(
+                        this.props.nav.map((item,i)=>(
                             <Description key={i}>
                                 <div className="sub-nav-title" style={{marginBottom:20,backgroundColor: item.bgColor}}>
                                     {item.title}

@@ -15,16 +15,20 @@ class SelectSearch extends Component {
         data:[
             {
                 uuid:1,
-                suppliersName:'select outp 1'
+                label:'select outp 1',
+                value:'1'
             },{
                 uuid:2,
-                suppliersName:'select outp 2'
+                label:'select outp 2',
+                value:'2'
             },{
                 uuid:3,
-                suppliersName:'select outp 3'
+                label:'select outp 3',
+                value:'3'
             },{
                 uuid:4,
-                suppliersName:'select outp 4'
+                label:'select outp 4',
+                value:'4'
             }
         ],
         coreCompanyLoaded:true
@@ -32,17 +36,30 @@ class SelectSearch extends Component {
 
     handleChange = (value) => {
         const { saveCodeList } = this.props;
-        this.setState({
+        this.mounted && this.setState({
             value ,
             coreCompanyLoaded:false
         },()=>{
-            saveCodeList(value)
-            setTimeout(()=>{
-                this.setState(prevState=>({
-                    coreCompanyLoaded:true
-                }))
-            },2000)
+            saveCodeList(value);
+            this.mounted && this.setState(prevState=>({
+                coreCompanyLoaded:true
+            }),()=>{
+                this.props.changeRefresh(Date.now());
+            })
         });
+    }
+
+    componentDidMount(){
+
+    }
+
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    componentWillReceiveProps(nextProps){
+
     }
 
     render() {
@@ -76,7 +93,7 @@ class SelectSearch extends Component {
                                 onChange={this.handleChange}
                             >
                                 {
-                                    this.state.data.map(d => <Option key={d.uuid}>{d.suppliersName}</Option>)
+                                    this.state.data.map(d => <Option key={d.uuid}>{d.label}</Option>)
                                 }
                             </Select>
                         )}

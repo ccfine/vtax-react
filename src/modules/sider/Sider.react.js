@@ -31,6 +31,7 @@ class VTaxSider extends Component {
     }
 
     componentDidMount(){
+
     }
 
     componentWillReceiveProps(nextProps){

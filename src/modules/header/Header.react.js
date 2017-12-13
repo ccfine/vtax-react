@@ -16,7 +16,6 @@ const { Header} = Layout;
 const SubMenu = Menu.SubMenu;
 const confirm = Modal.confirm;
 
-
 class WimsHeader extends Component {
 
     state = {
@@ -28,21 +27,8 @@ class WimsHeader extends Component {
             collapsed: !this.state.collapsed,
         },()=>{
             this.props.changeCollapsed(this.state.collapsed);
-            setTimeout(()=>{
-                this.onResize();
-            },300)
         });
     }
-
-    onResize=()=>{
-        // 创建事件
-        let event = document.createEvent('Event');
-        // 定义事件名为'build'.
-        event.initEvent('resize', true, true);
-        // 触发对象可以是任何元素或其他事件目标
-        document.dispatchEvent(event);
-    }
-
     handlerClick = ({item, key, keyPath})=>{
         if(key==='exit') {
             confirm({
@@ -106,7 +92,7 @@ class WimsHeader extends Component {
                         </Menu>
                     </div>
                     <div className="set-search-width">
-                        <SelectSearch />
+                        <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />
                     </div>
                 </div>
 

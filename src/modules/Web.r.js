@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Icon} from 'antd'
+import {Layout,Icon,Spin} from 'antd'
 import PropTypes from 'prop-types'
 import {withRouter,Switch,Route,Link} from 'react-router-dom';
 import {connect} from 'react-redux'
@@ -23,6 +23,8 @@ class Web extends Component {
     state = {
         collapsed:false,
         number:0,
+        refresh: Date.now(),
+        routes: routes,
     }
 
     static propTypes = {
@@ -37,21 +39,43 @@ class Web extends Component {
     }
     //给其它组件传数据
     changeCollapsed=collapsed=>{
-        this.setState({
+        this.mounted && this.setState({
             collapsed
         })
+    }
+
+    changeRefresh = refresh =>{
+        this.mounted && this.setState({
+            refresh,
+        },()=>{
+            this.props.history.replace('/web/accountManage')
+        })
+    }
+
+
+
+    componentWillMount(){
+        this.checkLoggedIn(this.props)
     }
 
     componentDidMount() {
 
     }
 
-    componentWillMount(){
-        this.checkLoggedIn(this.props)
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
     }
 
     componentWillReceiveProps(nextProps){
-        this.checkLoggedIn(nextProps)
+        this.checkLoggedIn(nextProps);
+
+        //判断权限
+        if(nextProps.codeList.key !== this.props.codeList.key){
+            console.log(nextProps);
+        }
+
+
     }
 
     renderNormal() {
@@ -59,24 +83,26 @@ class Web extends Component {
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout>
-                <Sider collapsed={this.state.collapsed} menusData={composeMenus(routes)}  />
+                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={composeMenus(this.state.routes)}  />
                 <Layout>
-                    <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} />
+                    <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
 
                     {/*
                         <BreadCrumb location={this.props.location} routes={routes} />
                         ,padding: pathname ==='/web' ? 0 : 20
                     */}
-                    <Content style={{ margin: '24px 24px 0', height: '100%',background: '#fff'}}>
+
+                    <Content key={this.state.refresh+1} style={{ margin: '24px 24px 0', height: '100%',background: '#fff'}}>
                         <div style={{ minHeight: 'calc(100vh - 260px)' }}>
                             <Switch>
-                                {routes.map((route, i) => (
+                                {this.state.routes.map((route, i) => (
                                     <RouteWithSubRoutes key={i} {...route}/>
                                 ))}
                                 <Route path="*" component={()=><div>no match</div>} />
                             </Switch>
                         </div>
                     </Content>
+
                     <Footer style={{ textAlign: 'center' }}>
                         {
                             copyright
@@ -99,7 +125,8 @@ class Web extends Component {
 }
 
 export default withRouter(connect(state=>({
-    isAuthed:state.user.get('isAuthed')
+    isAuthed:state.user.get('isAuthed'),
+    codeList:state.user.getIn(['personal','codeList'])
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))
