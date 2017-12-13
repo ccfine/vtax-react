@@ -3,7 +3,41 @@
  * createTime   : 2017/12/7 16:36
  * description  : 
  */
+@import "~antd/lib/style/themes/default.less";
 
+
+
+.vtax-custom-trigger{
+  min-height: 100vh;
+  box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+  position: relative;
+  z-index: 10;
+
+  .logo {
+    height: 64px;
+    position: relative;
+    line-height: 64px;
+    padding-left: (@menu-collapsed-width - 32px) / 2;
+    transition: all .3s;
+    background: #002140;
+    overflow: hidden;
+    img {
+      width: 32px;
+      display: inline-block;
+      vertical-align: middle;
+      height: 32px;
+    }
+    h1 {
+      color: #fff;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 12px;
+      margin: 0 0 0 12px;
+      font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+    }
+  }
+}
 .vtax-custom-trigger .trigger {
   font-size: 18px;
   line-height: 64px;
@@ -16,8 +50,26 @@
   color: #1890ff;
 }
 
-.vtax-custom-trigger .logo {
-  height: 32px;
-  background: rgba(255,255,255,.2);
-  margin: 16px;
+.vtax-header-trigger{
+  padding: 0 12px 0 0;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  position: relative;
+
+  i.trigger {
+    font-size: 20px;
+    line-height: 64px;
+    cursor: pointer;
+    transition: all .3s;
+    padding: 0 24px;
+    &:hover {
+      background: @primary-1;
+    }
+  }
+}
+
+@media screen and (max-width: @screen-xs) {
+  .trigger {
+    display: none;
+  }
 }

@@ -30,6 +30,9 @@ const initialState = fromJS({
         realname:null,
         username:null,
         userId:null,
+        codeList:{
+            list:null,
+        },
     },
     /**登录凭证*/
     token:null,
@@ -38,7 +41,7 @@ const initialState = fromJS({
     isAuthed:false,
 });
 
-export const {personal, token, isAuthed} = createActions({
+export const {personal, token, isAuthed,codeList} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -52,6 +55,9 @@ export const {personal, token, isAuthed} = createActions({
         LOGIN:() => true,
         /**退出*/
         LOGOUT:() => false
+    },
+    CODE_LIST:{
+        INCREMENT: info => info
     }
 })
 
@@ -67,6 +73,9 @@ export default handleActions({
     },
     [isAuthed.logout] : state=>{
         return initialState
+    },
+    [codeList.increment] : (state, {payload})=>{
+        return state.setIn(['personal','codeList'], payload)
     }
 }, initialState)
 
@@ -97,4 +106,12 @@ export const login = dispatch => async ({userName,password,success,fail})=>{
 export const logout = dispatch => async () =>{
     //登出
     dispatch(isAuthed.logout())
+}
+
+export const saveCodeList = dispatch => async (item) =>{
+    try {
+        dispatch(codeList.increment(item))
+    }catch (err){
+        console.log(err)
+    }
 }

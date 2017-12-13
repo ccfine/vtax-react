@@ -5,8 +5,10 @@
  */
 import React, { Component } from 'react';
 import { Layout, Menu,Icon} from 'antd';
-import { withRouter } from 'react-router'
+import { withRouter} from 'react-router'
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
+import logo from './images/logo.png'
 import './styles.less'
 
 const { Sider } = Layout;
@@ -28,30 +30,7 @@ class VTaxSider extends Component {
         history: PropTypes.object.isRequired
     }
 
-    onResize=()=>{
-        // 创建事件
-        let event = document.createEvent('Event');
-        // 定义事件名为'build'.
-        event.initEvent('resize', true, true);
-        // 触发对象可以是任何元素或其他事件目标
-        document.dispatchEvent(event);
-    }
-
     componentDidMount(){
-        this.automaticTrigger()
-    }
-
-    automaticTrigger=()=>{
-        // IE
-        if(document.all) {
-            document.getElementById("clickTrigger").click();
-        }
-        // 其它浏览器
-        else {
-            let e = document.createEvent("MouseEvents");
-            e.initEvent("click", true, true);
-            document.getElementById("clickTrigger").dispatchEvent(e);
-        }
     }
 
     componentWillReceiveProps(nextProps){
@@ -62,8 +41,6 @@ class VTaxSider extends Component {
 
     render() {
 
-        console.log(this.props)
-
         return (
             <Sider
                 trigger={null}
@@ -71,12 +48,18 @@ class VTaxSider extends Component {
                 collapsed={this.props.collapsed}
                 className="vtax-custom-trigger"
             >
-                <div className="logo" />
+                <div className="logo">
+                    <Link to="/">
+                        <img src={logo} alt="logo" />
+                        <h1>喜盈佳纳税申报平台</h1>
+                    </Link>
+                </div>
                 <Menu
                     id="clickTrigger"
                     theme="dark"
                     mode="inline"
                     selectedKeys={[this.state.selectedPath]}
+                    style={{ margin: '16px 0', width: '100%' }}
                     onClick={
                         ({item,key,selectedKeys})=>{
                             //this.props.history.replace(key)
@@ -85,11 +68,6 @@ class VTaxSider extends Component {
                             }else{
                                 window.location.href=`http://${window.location.host}${key}`
                             }
-
-                            setTimeout(()=>{
-                                this.onResize();
-                            },300)
-
                         }
                     }
 

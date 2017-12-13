@@ -4,11 +4,11 @@
  * description  :
  */
 import React,{Component} from 'react'
-import { Layout } from 'antd'
+import {Layout,Icon} from 'antd'
 import PropTypes from 'prop-types'
-import {Switch,Route } from 'react-router-dom';
+import {withRouter,Switch,Route,Link} from 'react-router-dom';
 import {connect} from 'react-redux'
-import {RouteWithSubRoutes} from '../compoments'
+import {RouteWithSubRoutes,Exception} from '../compoments'
 import {composeMenus} from '../utils'
 import Header from './header'
 import Sider from './sider'
@@ -16,12 +16,13 @@ import BreadCrumb from './breadcrumb/Breadcrumb'
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
 
-const { Content } = Layout;
+const { Content,Footer } = Layout;
 
 class Web extends Component {
 
     state = {
-        collapsed:false
+        collapsed:false,
+        number:0,
     }
 
     static propTypes = {
@@ -54,22 +55,33 @@ class Web extends Component {
     }
 
     renderNormal() {
+        const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
+        //const pathname = this.props.history.location.pathname;
         return (
             <Layout>
                 <Sider collapsed={this.state.collapsed} menusData={composeMenus(routes)}  />
                 <Layout>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} />
-                    <div>
-                        {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                        <Content style={{ margin: '24px 16px', padding: 24,background: '#fff',}}>
+
+                    {/*
+                        <BreadCrumb location={this.props.location} routes={routes} />
+                        ,padding: pathname ==='/web' ? 0 : 20
+                    */}
+                    <Content style={{ margin: '24px 24px 0', height: '100%',background: '#fff'}}>
+                        <div style={{ minHeight: 'calc(100vh - 260px)' }}>
                             <Switch>
                                 {routes.map((route, i) => (
                                     <RouteWithSubRoutes key={i} {...route}/>
                                 ))}
                                 <Route path="*" component={()=><div>no match</div>} />
                             </Switch>
-                        </Content>
-                    </div>
+                        </div>
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        {
+                            copyright
+                        }
+                    </Footer>
                 </Layout>
             </Layout>
         )
@@ -86,8 +98,8 @@ class Web extends Component {
     }
 }
 
-export default connect(state=>({
+export default withRouter(connect(state=>({
     isAuthed:state.user.get('isAuthed')
 }),dispatch=>({
     logout:logout(dispatch)
-}))(Web)
+}))(Web))

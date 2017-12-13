@@ -4,6 +4,7 @@
  * description  :
  */
 import {wrapPage} from '../compoments'
+import Home from './home'
 import AccountManage from './accountManage'
 import ReportManage from './reportManage'
 import TaxDeclare from './taxDeclare'
@@ -13,6 +14,11 @@ const PATH = '/web';
 
 const routes = [
     {
+        path:`${PATH}`,
+        component:wrapPage('首页',Home),
+        name:'首页',
+        exact:true,
+    },{
         path:`${PATH}/accountManage`,
         component:wrapPage('台账管理',AccountManage),
         name:'台账管理',
@@ -45,7 +51,7 @@ const routes = [
     },{
         path:'/web',
         redirect:true,
-        to:`${PATH}/accountManage`,
+        to:`${PATH}`,
 
     }
 ]

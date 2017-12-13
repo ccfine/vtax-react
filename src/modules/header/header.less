@@ -3,6 +3,7 @@
  * createTime   : 2017/12/6 11:41
  * description  :
  */
+
 .ant-menu-horizontal.vtax-menu-root{
   background:transparent;
   border-bottom:0!important;
@@ -51,4 +52,111 @@
   }
 }
 
+
+.right{
+  float: right;
+  height: 100%;
+  >div{
+    cursor: pointer;
+    padding: 0 12px;
+    display: inline-block;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+    height: 100%;
+  }
+}
+
+.set-search-width{
+  float:right;
+}
+
+
+/* 智能手机 (纵向 和 横向) ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+  /* Styles */
+  .set-search-width{
+    width:300px;
+  }
+}
+
+/* 智能手机 (横向) ----------- */
+@media only screen
+and (min-width : 321px) {
+  /* Styles */
+  .set-search-width{
+    width:300px;
+  }
+}
+
+/* 智能手机 (纵向) ----------- */
+@media only screen
+and (max-width : 320px) {
+  /* Styles */
+  .set-search-width{
+    width:300px;
+  }
+}
+
+/* iPad 系列 (纵向 和 横向) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px) {
+  /* Styles */
+  .set-search-width{
+    width:300px;
+  }
+}
+
+/* iPad 系列 (横向) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+  /* Styles */
+  .set-search-width{
+    width:300px;
+  }
+}
+
+/* iPad 系列 (纵向) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+  /* Styles */
+  .set-search-width{
+    width:500px;
+  }
+}
+
+/* 台式机 和 笔记本 ----------- */
+@media only screen
+and (min-width : 1224px) {
+  /* Styles */
+  .set-search-width{
+    width:500px;
+  }
+}
+
+/* 大屏幕 ----------- */
+@media only screen
+and (min-width : 1824px) {
+  /* Styles */
+  .set-search-width{
+    width:500px;
+  }
+}
+
+/* iPhone 4 ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) {
+  /* Styles */
+  .set-search-width{
+    width:300px;
+  }
+}
 

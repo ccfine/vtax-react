@@ -68,9 +68,51 @@ class WimsHeader extends Component {
 
     render() {
         return (
-            <Header className="vtax-custom-trigger" style={{ background: '#fff', padding: 0 }}>
-                <Row>
-                    <Col span={10}>
+            <Header className="vtax-header-trigger" style={{ background: '#fff', padding: 0 }}>
+                <Icon
+                    className="trigger"
+                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                    onClick={this.toggle}
+                />
+                <div style={{float:'right'}}>
+                    <div style={{float:'right'}}>
+                        <Menu
+                            theme="light"
+                            mode="horizontal"
+                            onClick={this.handlerClick}
+                            defaultSelectedKeys={['bus']}
+                            style={{ lineHeight: '64px' }}
+                            className="vtax-menu-root vtax-menu-right"
+                        >
+                            <Menu.Item key="message">
+                                <Message />
+                            </Menu.Item>
+                            <SubMenu
+                                title={
+                                    <span>
+                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
+                                        { this.props.realName }
+                                    </span>}>
+                                <Menu.Item key="admin">
+                                    <span>
+                                        <Icon type="user" />
+                                        个人资料
+                                    </span>
+                                </Menu.Item>
+                                <Menu.Item key="exit" >
+                                    <Icon type="poweroff" />退出
+                                </Menu.Item>
+                            </SubMenu>
+                        </Menu>
+                    </div>
+                    <div className="set-search-width">
+                        <SelectSearch />
+                    </div>
+                </div>
+
+
+                {/*<Row>
+                    <Col span={8}>
                         <Icon
                             className="trigger"
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
@@ -80,7 +122,7 @@ class WimsHeader extends Component {
                     <Col span={8}>
                         <SelectSearch />
                     </Col>
-                    <Col span={6} style={{justifyContent:'flex-end'}}>
+                    <Col span={8} style={{justifyContent:'flex-end'}}>
                         <Menu
                             theme="light"
                             mode="horizontal"
@@ -110,7 +152,7 @@ class WimsHeader extends Component {
                             </SubMenu>
                         </Menu>
                     </Col>
-                </Row>
+                </Row>*/}
             </Header>
         )
     }

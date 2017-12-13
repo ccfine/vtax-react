@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Layout} from 'antd'
-import {Carousel,Nav} from '../home'
+import {Carousel,Nav} from '../../compoments'
 import banner1 from './images/banner1.png'
 import banner2 from './images/banner2.png'
 
@@ -67,14 +67,11 @@ class AccountManage extends Component {
                     }]
                 }
             ],
-            banner:[{
-                alt:'banner1',
-                src:banner1
-
-            },{
-                alt:'banner2',
-                src:banner2
-            }]
+            banner: [{
+                    original: banner1,
+                },{
+                    original: banner2,
+                }]
         }
     }
 
@@ -83,7 +80,10 @@ class AccountManage extends Component {
         return (
             <Layout style={{background:'transparent'}} >
                 <Carousel banner={this.state.banner} />
-                <Nav nav={this.state.nav} />
+
+                <div style={{ padding: 24}}>
+                    <Nav nav={this.state.nav} />
+                </div>
             </Layout>
         )
     }

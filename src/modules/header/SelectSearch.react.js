@@ -5,6 +5,8 @@
  */
 import React,{Component} from 'react';
 import {  Form,Select,Spin } from 'antd';
+import {connect} from 'react-redux'
+import {saveCodeList} from '../../redux/ducks/user'
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -29,10 +31,12 @@ class SelectSearch extends Component {
     }
 
     handleChange = (value) => {
+        const { saveCodeList } = this.props;
         this.setState({
             value ,
             coreCompanyLoaded:false
         },()=>{
+            saveCodeList(value)
             setTimeout(()=>{
                 this.setState(prevState=>({
                     coreCompanyLoaded:true
@@ -64,6 +68,7 @@ class SelectSearch extends Component {
                         })(
                             <Select
                                 showSearch
+                                labelInValue
                                 placeholder="请选择供应商"
                                 optionFilterProp="children"
                                 notFoundContent="无法找到"
@@ -82,4 +87,9 @@ class SelectSearch extends Component {
     }
 }
 
-export default Form.create()(SelectSearch)
+const FormSelectSearch =  Form.create()(SelectSearch)
+
+export default connect(state=>({
+}),dispatch=>({
+    saveCodeList:saveCodeList(dispatch)
+}))(FormSelectSearch)

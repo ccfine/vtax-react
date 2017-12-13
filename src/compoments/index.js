@@ -9,8 +9,14 @@ import RouteWithSubRoutes from './routeWithSubRoutes'
 
 /**给页面增加标题的组件*/
 import wrapPage from './titlePage'
+import DescriptionList from './descriptionList'
+import Carousel from './carousel'
+import Nav from './nav'
 
 export {
     RouteWithSubRoutes,
-    wrapPage
+    wrapPage,
+    DescriptionList,
+    Carousel,
+    Nav,
 }

@@ -4,5 +4,6 @@
  * description  :
  */
 
-import Home from './Home.react'
-export default Home
+import Nav from './Nav.r'
+
+export default Nav
