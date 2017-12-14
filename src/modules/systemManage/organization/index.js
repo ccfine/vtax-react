@@ -3,5 +3,5 @@
  * createTime   : 2017/12/7 17:13
  * description  :
  */
-import SystemManage from './SystemManage.react'
-export default SystemManage
+import Organization from './Organization.react'
+export default Organization

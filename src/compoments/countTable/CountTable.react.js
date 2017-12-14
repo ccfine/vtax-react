@@ -8,9 +8,6 @@ import {Table} from 'antd'
 import './styles.css'
 
 class CountTable extends Component {
-    constructor(props){
-        super(props)
-    }
 
     tableScroll=(i,j)=>{
         const dom = document.getElementById(this.props.id);

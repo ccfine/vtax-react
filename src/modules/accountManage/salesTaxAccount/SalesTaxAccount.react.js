@@ -5,11 +5,11 @@
  */
 import React, { Component } from 'react'
 import { Layout} from 'antd'
-import {Carousel,Nav} from '../../compoments'
+import {Carousel,Nav} from '../../../compoments/index'
 import banner1 from './images/banner1.png'
 import banner2 from './images/banner2.png'
 
-class AccountManage extends Component {
+class SalesTaxAccount extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -88,4 +88,4 @@ class AccountManage extends Component {
         )
     }
 }
-export default AccountManage
+export default SalesTaxAccount

@@ -4,11 +4,11 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Icon,Spin} from 'antd'
+import {Layout,Icon} from 'antd'
 import PropTypes from 'prop-types'
-import {withRouter,Switch,Route,Link} from 'react-router-dom';
+import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
-import {RouteWithSubRoutes,Exception} from '../compoments'
+import {RouteWithSubRoutes} from '../compoments'
 import {composeMenus} from '../utils'
 import Header from './header'
 import Sider from './sider'
@@ -24,7 +24,7 @@ class Web extends Component {
         collapsed:false,
         number:0,
         refresh: Date.now(),
-        routes: routes,
+        //routes: routes.reduce((arr, current) => arr.concat(current.children), []),
     }
 
     static propTypes = {
@@ -52,8 +52,6 @@ class Web extends Component {
         })
     }
 
-
-
     componentWillMount(){
         this.checkLoggedIn(this.props)
     }
@@ -75,31 +73,30 @@ class Web extends Component {
             console.log(nextProps);
         }
 
-
     }
 
     renderNormal() {
+
         const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout>
-                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={composeMenus(this.state.routes)}  />
+                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes}  />
                 <Layout>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
 
-                    {/*
-                        <BreadCrumb location={this.props.location} routes={routes} />
-                        ,padding: pathname ==='/web' ? 0 : 20
-                    */}
+                    <BreadCrumb location={this.props.location} routes={routes} />
 
                     <Content key={this.state.refresh+1} style={{ margin: '24px 24px 0', height: '100%',background: '#fff'}}>
                         <div style={{ minHeight: 'calc(100vh - 260px)' }}>
+
                             <Switch>
-                                {this.state.routes.map((route, i) => (
+                                {composeMenus(routes).map((route, i) => (
                                     <RouteWithSubRoutes key={i} {...route}/>
                                 ))}
                                 <Route path="*" component={()=><div>no match</div>} />
                             </Switch>
+
                         </div>
                     </Content>
 

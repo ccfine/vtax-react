@@ -4,8 +4,8 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Row,Col,Avatar,Icon,Modal} from 'antd'
-import {withRouter,Link} from 'react-router-dom'
+import {Layout,Menu,Avatar,Icon,Modal} from 'antd'
+import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'

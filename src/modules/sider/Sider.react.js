@@ -5,13 +5,13 @@
  */
 import React, { Component } from 'react';
 import { Layout, Menu,Icon} from 'antd';
-import { withRouter} from 'react-router'
-import {Link} from 'react-router-dom';
+import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
 import logo from './images/logo.png'
 import './styles.less'
 
 const { Sider } = Layout;
+const { SubMenu } = Menu;
 
 class VTaxSider extends Component {
 
@@ -20,7 +20,7 @@ class VTaxSider extends Component {
     constructor(props){
         super(props);
         this.state = {
-            selectedPath:props.history.location.pathname
+            selectedPath:props.history.location.pathname,
         };
     }
 
@@ -30,8 +30,48 @@ class VTaxSider extends Component {
         history: PropTypes.object.isRequired
     }
 
-    componentDidMount(){
+    getNavMenuItems=(menusData)=>{
+        if (!menusData) {
+            return [];
+        }
+        return menusData.map((item) => {
 
+            if (!item.name || item.to || item.path === '/web') {
+                return null;
+            }
+            if (item.children && item.children.some(child => child.name)) {
+                return (
+                    <SubMenu
+                        title={
+                            item.icon ? (
+                                <span>
+                                  <Icon type={item.icon} />
+                                  <span>{item.name}</span>
+                                </span>
+                            ) : item.name
+                        }
+                        key={item.key || item.path}
+                    >
+                        {this.getNavMenuItems(item.children)}
+                    </SubMenu>
+                );
+            }
+            const icon = item.icon && <Icon type={item.icon} />;
+            return (
+                <Menu.Item key={item.key || item.path}>
+                    <Link
+                        to={item.path}
+                        target={item.target}
+                        replace={item.path === this.props.location.pathname}
+                    >
+                        {icon}<span>{item.name}</span>
+                    </Link>
+                </Menu.Item>
+            );
+        });
+    }
+
+    componentDidMount(){
     }
 
     componentWillReceiveProps(nextProps){
@@ -59,30 +99,11 @@ class VTaxSider extends Component {
                     id="clickTrigger"
                     theme="dark"
                     mode="inline"
+                    defaultOpenKeys={['sub1']}
                     selectedKeys={[this.state.selectedPath]}
                     style={{ margin: '16px 0', width: '100%' }}
-                    onClick={
-                        ({item,key,selectedKeys})=>{
-                            //this.props.history.replace(key)
-                            if(key!=='/dashboard/admin/user' &&  key!=='/dashboard/admin/role'){
-                                this.props.history.replace(key)
-                            }else{
-                                window.location.href=`http://${window.location.host}${key}`
-                            }
-                        }
-                    }
-
                 >
-                    {
-                        this.props.menusData.map(item=>{
-                            return(
-                                <Menu.Item key={item.path}>
-                                    <Icon type={item.icon} />
-                                    <span style={{fontSize:'14px'}}>{item.name}</span>
-                                </Menu.Item>
-                            )
-                        })
-                    }
+                    {this.getNavMenuItems(this.props.menusData)}
                 </Menu>
             </Sider>
         )

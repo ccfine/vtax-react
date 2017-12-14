@@ -3,15 +3,20 @@
  * createTime   : 2017/12/7 16:05
  * description  :
  */
-export default function (routes) {
-    return routes.map(item=>{
-        if(item && !item.to && item.icon){
-            return {
-                name:item.name,
-                icon:item.icon,
-                path:item.path
+
+export default function composeMenus(nodeList) {
+    const arr = [];
+    nodeList.forEach((node) => {
+        const item = node;
+        item.exact = true;
+        if (item.children && !item.component) {
+            arr.push(...composeMenus(item.children));
+        } else {
+            if (item.children && item.component) {
+                item.exact = false;
             }
+            arr.push(item);
         }
-        return null;
-    }).filter(item=>item);
+    });
+    return arr;
 }

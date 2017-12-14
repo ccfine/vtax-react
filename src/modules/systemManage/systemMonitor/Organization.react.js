@@ -6,11 +6,11 @@
 import React, { Component } from 'react'
 import {Layout} from 'antd'
 
-class BasisManage extends Component {
+class Organization extends Component {
     render() {
         return (
-            <Layout style={{background:'transparent'}} > 基础管理 </Layout>
+            <Layout style={{background:'transparent'}} > 组织架构 </Layout>
         )
     }
 }
-export default BasisManage
+export default Organization

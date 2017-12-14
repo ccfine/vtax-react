@@ -5,7 +5,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import { Layout,Form, Card, Icon, Input, Button, Checkbox, Alert,Row,Col} from 'antd'
+import { Layout,Form, Icon, Input, Button, Alert,Row,Col} from 'antd'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {login} from '../../redux/ducks/user'

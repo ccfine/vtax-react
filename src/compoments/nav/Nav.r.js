@@ -10,9 +10,6 @@ import DescriptionList from '../descriptionList';
 const { Description } = DescriptionList;
 
 class Nav extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     renderSubNavNodes = data => {
         return data.map((item,i) => {

@@ -9,10 +9,6 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import './styles.less'
 
 class VTaxCarousel extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount(){
     }
 

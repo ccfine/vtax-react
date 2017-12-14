@@ -12,7 +12,7 @@ const TabPane = Tabs.TabPane;
 class TaxDeclare extends Component {
 
     callback=(key)=>{
-        const index = parseInt(key,0);
+        console.log(key);
     }
 
     componentWillMount() {

@@ -203,7 +203,7 @@ class Home extends Component {
                                 type="inner"
                                 extra={
                                     <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="#">
+                                        <a className="ant-dropdown-link" href="/">
                                             <Icon type="ellipsis" />
                                         </a>
                                     </Dropdown>
@@ -219,7 +219,7 @@ class Home extends Component {
                                 type="inner"
                                 extra={
                                     <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="#">
+                                        <a className="ant-dropdown-link" href="/">
                                             <Icon type="ellipsis" />
                                         </a>
                                     </Dropdown>

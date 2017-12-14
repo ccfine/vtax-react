@@ -33,8 +33,11 @@ const VTaxBreadCrumb = props =>  {
     //剔除掉路由表中没有的项
     let newPathSnippets = pathSnippets.map((item,index)=>{
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-        return breadcrumbNameMap[url]? item : false;
+        return breadcrumbNameMap[url] ? item : false;
     }).filter(i=>i)
+
+    console.log(newPathSnippets);
+
 
     const extraBreadcrumbItems = newPathSnippets.map((_, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
