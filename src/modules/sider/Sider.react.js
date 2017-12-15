@@ -36,18 +36,19 @@ class VTaxSider extends Component {
         }
         return menusData.map((item) => {
 
-            if (!item.name || item.to || item.path === '/web') {
+            if (!item.name || item.to || item.path === '/web' ) {
                 return null;
             }
-            if (item.children && item.children.some(child => child.name)) {
+
+            if (item.exact && item.children && item.children.some(child => child.name)) {
                 return (
                     <SubMenu
                         title={
                             item.icon ? (
                                 <span>
-                                  <Icon type={item.icon} />
-                                  <span>{item.name}</span>
-                                </span>
+                              <Icon type={item.icon} />
+                              <span>{item.name}</span>
+                            </span>
                             ) : item.name
                         }
                         key={item.key || item.path}
@@ -56,6 +57,7 @@ class VTaxSider extends Component {
                     </SubMenu>
                 );
             }
+
             const icon = item.icon && <Icon type={item.icon} />;
             return (
                 <Menu.Item key={item.key || item.path}>
@@ -68,6 +70,8 @@ class VTaxSider extends Component {
                     </Link>
                 </Menu.Item>
             );
+
+
         });
     }
 

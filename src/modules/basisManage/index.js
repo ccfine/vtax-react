@@ -3,5 +3,5 @@
  * createTime   : 2017/12/15 18:26
  * description  :
  */
-import ReportManage_routes from './routes'
-export default ReportManage_routes
+import BasisManage_routes from './routes'
+export default BasisManage_routes

@@ -4,44 +4,30 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Row,Col,Icon} from 'antd'
+import {Avatar,List, Card } from 'antd'
 import {Link} from 'react-router-dom'
-import DescriptionList from '../descriptionList';
-const { Description } = DescriptionList;
+import './styles.less'
 
 class Nav extends Component {
 
-    renderSubNavNodes = data => {
-        return data.map((item,i) => {
-            return (
-                <Col span={24} key={i} className="sub-nav-col">
-                    <Icon type="caret-right" style={{marginRight:10}} />
-                    <Link to={item.subUrl}>{item.subTitle}</Link>
-                </Col>
-            );
-        });
-    }
-
     render() {
         return (
-            <div style={{padding: '40px 0'}}>
-                <DescriptionList size="large" col="3">
-                    {
-                        this.props.nav.map((item,i)=>(
-                            <Description key={i}>
-                                <div className="sub-nav-title" style={{marginBottom:20,backgroundColor: item.bgColor}}>
+            <div>
+                {/*<h2 style={{padding: '10px 0'}}>{document.title}</h2>*/}
+                <List
+                    grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }}
+                    dataSource={this.props.data}
+                    renderItem={item => (
+                        <List.Item>
+                            <Card>
+                                <Avatar className="IconImg" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                                <Link to="/">
                                     {item.title}
-                                </div>
-                                <Row className="sub-nav-row">
-                                    {
-                                        this.renderSubNavNodes(item.subNav)
-                                    }
-                                </Row>
-                            </Description>
-                        ))
-                    }
-
-                </DescriptionList>
+                                </Link>
+                            </Card>
+                        </List.Item>
+                    )}
+                />
             </div>
         )
     }
