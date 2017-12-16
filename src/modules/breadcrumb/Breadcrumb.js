@@ -29,7 +29,7 @@ const getBreadcrumb=(breadcrumbNameMap, url)=>{
 const getNodeList =(nodeList)=>{
     const arr = [];
     nodeList.forEach((item) => {
-        if (item.to) {
+        if (item.to && !item.permissions) {
             return null;
         }
         if (item.children) {

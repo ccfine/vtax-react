@@ -28,6 +28,8 @@ const routes = [
                 name:'台账管理',
                 icon:'user',
                 exact:true,
+                redirect:true,
+                to:`${PATH}/accountManage/salesTaxAccount`,
                 permissions:true,
                 children:[...AccountManage_Routes]
             },{
@@ -36,6 +38,8 @@ const routes = [
                 icon:'user',
                 exact:true,
                 permissions:true,
+                redirect:true,
+                to:`${PATH}/reportManage/businessReport`,
                 children:ReportManage_Routes
             },{
                 path:`${PATH}/taxDeclare`,
@@ -50,6 +54,8 @@ const routes = [
                 icon:'user',
                 exact:true,
                 permissions:true,
+                redirect:true,
+                to:`${PATH}/basisManage/basicInfo`,
                 children:BasisManage_Routes
             },{
                 path:`${PATH}/systemManage`,
@@ -57,6 +63,8 @@ const routes = [
                 icon:'user',
                 exact:true,
                 permissions:true,
+                redirect:true,
+                to:`${PATH}/systemManage/organization`,
                 children:SystemManage_Routes
             },{
                 path:'/',

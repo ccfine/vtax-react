@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.8.0",
-    "@antv/g2": "^3.0.2-beta.1",
+    "@antv/g2": "^3.0.2",
     "antd": "^3.0.0",
     "axios": "^0.17.1",
     "immutable": "^4.0.0-rc.9",
