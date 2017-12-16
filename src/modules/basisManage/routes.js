@@ -9,26 +9,36 @@ import BasicInfo from './basicInfo'
 import DataField from './dataField'
 import ReportConfig from './reportConfig'
 
-const BasisManage_PATH = `/web/basisManage`;
-const BasisManage_routes = [
+import BasicInfo_Routes from './basicInfo/routes'
+import DataField_Routes from './dataField/routes'
+import ReportConfig_Routes from './reportConfig/routes'
+
+const PATH = `/web/basisManage`;
+const BasisManage_Routes = [
     {
-        path:`${BasisManage_PATH}/basicInfo`,
+        path:`${PATH}/basicInfo`,
         component:wrapPage('基础信息',BasicInfo),
-        name:'基础信息'
+        name:'基础信息',
+        exact:true,
+        children:BasicInfo_Routes
     },{
-        path:`${BasisManage_PATH}/dataField`,
+        path:`${PATH}/dataField`,
         component:wrapPage('数据字段',DataField),
-        name:'数据字段'
+        name:'数据字段',
+        exact:true,
+        children:DataField_Routes
     },{
-        path:`${BasisManage_PATH}/reportConfig`,
+        path:`${PATH}/reportConfig`,
         component:wrapPage('报表配置',ReportConfig),
-        name:'报表配置'
+        name:'报表配置',
+        exact:true,
+        children:ReportConfig_Routes
     },{
-        path:`${BasisManage_PATH}`,
+        path:`${PATH}`,
         redirect:true,
-        to:`${BasisManage_PATH}/basicInfo`,
+        to:`${PATH}/basicInfo`,
 
     }
 ]
 
-export default BasisManage_routes
+export default BasisManage_Routes

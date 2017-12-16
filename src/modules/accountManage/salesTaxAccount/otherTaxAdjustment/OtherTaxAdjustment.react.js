@@ -6,11 +6,11 @@
 import React, { Component } from 'react'
 import {Layout} from 'antd'
 
-class BillingSalesAccount extends Component {
+class OtherTaxAdjustment extends Component {
     render() {
         return (
-            <Layout style={{background:'transparent'}} > 开票销售台账 </Layout>
+            <Layout style={{background:'transparent'}} > 其他涉税调整台账 </Layout>
         )
     }
 }
-export default BillingSalesAccount
+export default OtherTaxAdjustment

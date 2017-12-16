@@ -4,31 +4,33 @@
  * description  :
  */
 import {wrapPage} from '../../../compoments'
-import BillingSalesAccount from './billingSalesAccount'
-import UnbilledAalesAccount from './unbilledAalesAccount'
-import OtherTaxAdjustmentAccount from './otherTaxAdjustmentAccount'
-import OutputTaxAccount from './outputTaxAccount'
+import BillingSales from './billingSales'
+import UnbilledAales from './unbilledAales'
+import OtherTaxAdjustment from './otherTaxAdjustment'
 
-const salesTax_PATH = `/web/accountManage/salesTaxAccount`;
+const PATHS = '/web/accountManage/salesTaxAccount';
 
-const SalesTax_routes = [
+const SalesTax_Routes = [
     {
-        path:`${salesTax_PATH}/billingSalesAccount`,
-        component:wrapPage('开票销售台账',BillingSalesAccount),
+        path:`${PATHS}/billingSales`,
+        component:wrapPage('开票销售台账',BillingSales),
         name:'开票销售台账',
+        exact:true,
     },{
-        path:`${salesTax_PATH}/unbilledAalesAccount`,
-        component:wrapPage('未开票销售台账',UnbilledAalesAccount),
+        path:`${PATHS}/unbilledAales`,
+        component:wrapPage('未开票销售台账',UnbilledAales),
         name:'未开票销售台账',
+        exact:true,
     },{
-        path:`${salesTax_PATH}/otherTaxAdjustmentAccount`,
-        component:wrapPage('其他涉税调整台账',OtherTaxAdjustmentAccount),
+        path:`${PATHS}/otherTaxAdjustment`,
+        component:wrapPage('其他涉税调整台账',OtherTaxAdjustment),
         name:'其他涉税调整台账',
+        exact:true,
     },{
-        path:`${salesTax_PATH}/outputTaxAccount`,
-        component:wrapPage('销项税台账',OutputTaxAccount),
-        name:'销项税台账',
+        path:`${PATHS}`,
+        redirect:true,
+        to:`${PATHS}/billingSales`,
     }
 ]
 
-export default SalesTax_routes
+export default SalesTax_Routes

@@ -69,9 +69,9 @@ class Web extends Component {
         this.checkLoggedIn(nextProps);
 
         //判断权限
-        if(nextProps.codeList.key !== this.props.codeList.key){
+        /*if(nextProps.codeList.key !== this.props.codeList.key){
             console.log(nextProps);
-        }
+        }*/
 
     }
 
@@ -84,14 +84,16 @@ class Web extends Component {
                 <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes}  />
                 <Layout>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
-                    <BreadCrumb location={this.props.location} routes={routes} />
+                    {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
                     <Content key={this.state.refresh+1} style={{ margin: '24px 24px 0', height: '100%',background: '#fff'}}>
                         <div style={{ minHeight: 'calc(100vh - 260px)' }}>
 
                             <Switch>
-                                {composeMenus(routes).map((route, i) => (
-                                    <RouteWithSubRoutes key={i} {...route}/>
-                                ))}
+                                {
+                                    composeMenus(routes).map((route, i) => (
+                                        <RouteWithSubRoutes key={i} {...route}/>
+                                    ))
+                                }
                                 <Route path="*" component={()=><div>no match</div>} />
                             </Switch>
 

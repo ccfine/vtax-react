@@ -8,22 +8,24 @@ import {wrapPage} from '../../compoments'
 import BusinessReport from './businessReport'
 import ManageAnalysisReport from './manageAnalysisReport'
 
-const ReportManage_PATH = `/web/reportManage`;
-const ReportManage_routes = [
+const PATH = `/web/reportManage`;
+const ReportManage_Routes = [
     {
-        path:`${ReportManage_PATH}/businessReport`,
+        path:`${PATH}/businessReport`,
         component:wrapPage('业务报表',BusinessReport),
-        name:'业务报表'
+        name:'业务报表',
+        exact:true,
     },{
-        path:`${ReportManage_PATH}/manageAnalysisReport`,
+        path:`${PATH}/manageAnalysisReport`,
         component:wrapPage('管理分析报表',ManageAnalysisReport),
-        name:'管理分析报表'
+        name:'管理分析报表',
+        exact:true,
     },{
-        path:`${ReportManage_PATH}`,
+        path:`${PATH}`,
         redirect:true,
-        to:`${ReportManage_PATH}/businessReport`,
+        to:`${PATH}/businessReport`,
 
     }
 ]
 
-export default ReportManage_routes
+export default ReportManage_Routes

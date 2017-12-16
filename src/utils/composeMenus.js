@@ -4,7 +4,7 @@
  * description  :
  */
 
-export default function composeMenus(nodeList) {
+/*export default function composeMenus(nodeList) {
     const arr = [];
     nodeList.forEach((node) => {
         const item = node;
@@ -18,5 +18,24 @@ export default function composeMenus(nodeList) {
             arr.push(item);
         }
     });
+
+    return arr;
+}*/
+
+
+
+
+
+export default function composeMenus(nodeList) {
+    const arr = [];
+    nodeList.forEach((item) => {
+        if (item.children) {
+            arr.push({...item}, ...composeMenus(item.children));
+        }else{
+            arr.push(item);
+        }
+    });
+
     return arr;
 }
+

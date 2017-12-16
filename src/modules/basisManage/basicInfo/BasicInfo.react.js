@@ -5,11 +5,17 @@
  */
 import React, { Component } from 'react'
 import {Layout} from 'antd'
+import {Nav} from '../../../compoments/index'
+import routes from '../../basisManage/basicInfo/routes'
 
 class BasicInfo extends Component {
     render() {
         return (
-            <Layout style={{background:'transparent'}} > 基础信息 </Layout>
+            <Layout style={{background: 'transparent'}}>
+                <div style={{padding: 24}}>
+                    <Nav data={routes}/>
+                </div>
+            </Layout>
         )
     }
 }

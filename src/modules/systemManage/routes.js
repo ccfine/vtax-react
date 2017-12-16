@@ -11,33 +11,38 @@ import InterfaceManage from './interfaceManage'
 import ProcessManage from './processManage'
 import SystemMonitor from './systemMonitor'
 
-const SystemManage_PATH = `/web/systemManage`;
-const SystemManage_routes = [
+const PATH = `/web/systemManage`;
+const SystemManage_Routes = [
     {
-        path:`${SystemManage_PATH}/organization`,
+        path:`${PATH}/organization`,
         component:wrapPage('组织架构',Organization),
-        name:'组织架构'
+        name:'组织架构',
+        exact:true,
     },{
-        path:`${SystemManage_PATH}/userPermissions`,
+        path:`${PATH}/userPermissions`,
         component:wrapPage('用户权限',UserPermissions),
-        name:'用户权限'
+        name:'用户权限',
+        exact:true,
     },{
-        path:`${SystemManage_PATH}/interfaceManage`,
+        path:`${PATH}/interfaceManage`,
         component:wrapPage('接口管理',InterfaceManage),
-        name:'接口管理'
+        name:'接口管理',
+        exact:true,
     },{
-        path:`${SystemManage_PATH}/processManage`,
+        path:`${PATH}/processManage`,
         component:wrapPage('流程管理',ProcessManage),
-        name:'流程管理'
+        name:'流程管理',
+        exact:true,
     },{
-        path:`${SystemManage_PATH}/systemMonitor`,
+        path:`${PATH}/systemMonitor`,
         component:wrapPage('系统监控',SystemMonitor),
-        name:'系统监控'
+        name:'系统监控',
+        exact:true,
     },{
-        path:`${SystemManage_PATH}`,
+        path:`${PATH}`,
         redirect:true,
-        to:`${SystemManage_PATH}/organization`,
+        to:`${PATH}/organization`,
     }
 ]
 
-export default SystemManage_routes
+export default SystemManage_Routes

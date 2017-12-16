@@ -6,11 +6,11 @@
 import React, { Component } from 'react'
 import {Layout} from 'antd'
 
-class UnbilledAalesAccount extends Component {
+class UnbilledAales extends Component {
     render() {
         return (
             <Layout style={{background:'transparent'}} > 未开票销售台账 </Layout>
         )
     }
 }
-export default UnbilledAalesAccount
+export default UnbilledAales

@@ -11,24 +11,7 @@ class OtherAccount extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    title: '售房预缴台账',
-                    icon: '',
-                }, {
-                    title: '预缴税款台账',
-                    icon: '',
-                }, {
-                    title: '土地价款扣除明细台账',
-                    icon: '',
-                }, {
-                    title: '扣除项目税款台账',
-                    icon: '',
-                }, {
-                    title: '减免税明细台账',
-                    icon: '',
-                }
-            ]
+            data: [ ]
         }
     }
 

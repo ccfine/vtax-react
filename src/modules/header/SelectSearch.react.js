@@ -40,7 +40,7 @@ class SelectSearch extends Component {
             value ,
             coreCompanyLoaded:false
         },()=>{
-            saveCodeList(value);
+           // saveCodeList(value);
             this.mounted && this.setState(prevState=>({
                 coreCompanyLoaded:true
             }),()=>{

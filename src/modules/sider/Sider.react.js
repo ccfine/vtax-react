@@ -40,7 +40,7 @@ class VTaxSider extends Component {
                 return null;
             }
 
-            if (item.exact && item.children && item.children.some(child => child.name)) {
+            if (item.permissions && item.children && item.children.some(child => child.name)) {
                 return (
                     <SubMenu
                         title={
