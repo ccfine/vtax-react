@@ -95,7 +95,7 @@ class Home extends Component {
             as: 'percent'
         });
         const chart = new G2.Chart({
-            container: 'example',
+            container: this.refs.example,
             forceFit: true,
             height: window.innerHeight,
         });
@@ -139,7 +139,7 @@ class Home extends Component {
     componentDidMount(){
         setTimeout(()=>{
             this.init();
-        },0)
+        },200)
     }
 
     componentWillMount(){
@@ -226,7 +226,7 @@ class Home extends Component {
                                 }
 
                             >
-                                <div id="example"> </div>
+                                <div ref="example"> </div>
                             </Card>
                         </Col>
                     </Row>

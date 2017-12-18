@@ -77,7 +77,7 @@ class WimsHeader extends Component {
                                 title={
                                     <span>
                                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
-                                        { this.props.realName }
+                                        { this.props.userName }
                                     </span>}>
                                 <Menu.Item key="admin">
                                     <span>
@@ -146,6 +146,6 @@ class WimsHeader extends Component {
 
 export default withRouter(connect(state=>{
     return {
-        realName:state.user.getIn(['personal','realname'])
+        userName:state.user.getIn(['personal','username'])
     }
 })(WimsHeader))

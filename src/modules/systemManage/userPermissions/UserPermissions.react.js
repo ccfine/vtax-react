@@ -5,11 +5,17 @@
  */
 import React, { Component } from 'react'
 import {Layout} from 'antd'
+import {Nav} from '../../../compoments'
+import routes from '../../systemManage/userPermissions/routes'
 
 class UserPermissions extends Component {
     render() {
         return (
-            <Layout style={{background:'transparent'}} > 用户权限 </Layout>
+            <Layout style={{background: 'transparent'}}>
+                <div style={{padding: 24}}>
+                    <Nav data={routes}/>
+                </div>
+            </Layout>
         )
     }
 }

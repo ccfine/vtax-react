@@ -3,7 +3,7 @@
  * createTime   : 2017/12/5 18:09
  * description  :
  */
-import request from './request.js'
+import request from './request'
 import composeMenus from './composeMenus'
 
 const fMoney = (s,n=2)=>{
