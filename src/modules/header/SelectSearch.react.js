@@ -3,54 +3,53 @@
  * createTime   : 2017/12/6 14:38
  * description  :
  */
-import React,{Component} from 'react';
-import {  Form,Select,Spin } from 'antd';
+import React,{Component} from 'react'
+import { Form,Select,Spin } from 'antd'
 import {connect} from 'react-redux'
-import {saveCodeList} from '../../redux/ducks/user'
+import {request} from '../../utils'
+import {saveOrgId,saveToken} from '../../redux/ducks/user'
 
 const Option = Select.Option;
 const FormItem = Form.Item;
 class SelectSearch extends Component {
     state = {
-        data:[
-            {
-                uuid:1,
-                label:'select outp 1',
-                value:'1'
-            },{
-                uuid:2,
-                label:'select outp 2',
-                value:'2'
-            },{
-                uuid:3,
-                label:'select outp 3',
-                value:'3'
-            },{
-                uuid:4,
-                label:'select outp 4',
-                value:'4'
-            }
-        ],
+        data:[],
         coreCompanyLoaded:true
     }
 
     handleChange = (value) => {
-        const { saveCodeList } = this.props;
+        const { saveOrgId } = this.props;
         this.mounted && this.setState({
             value ,
             coreCompanyLoaded:false
         },()=>{
-           // saveCodeList(value);
+           saveOrgId(value);
+           this.renderSwitchGroupSearch(value)
             this.mounted && this.setState(prevState=>({
-                coreCompanyLoaded:true
-            }),()=>{
-                this.props.changeRefresh(Date.now());
-            })
+               coreCompanyLoaded:true
+           }),()=>{
+               this.props.changeRefresh(Date.now());
+           })
         });
     }
 
-    componentDidMount(){
+    renderSwitchGroupSearch=(orgId)=>{
+        const { saveToken } = this.props;
+        request.get(`/switch_group/${orgId}`)
+            .then(({data})=>{
+                if(data.code ===200){
+                    saveToken(data.data.token)
+                }
+            })
+    }
 
+    componentDidMount(){
+        request.get('/user_belong_organizations')
+            .then(({data})=>{
+                if(data.code ===200){
+                    this.setState({ data: data.data });
+                }
+            })
     }
 
     mounted = true;
@@ -82,18 +81,17 @@ class SelectSearch extends Component {
                 >
                     <Spin size='small' spinning={!this.state.coreCompanyLoaded}>
                         {getFieldDecorator('select', {
+                            initialValue: this.props.orgId,
                         })(
                             <Select
                                 showSearch
-                                labelInValue
                                 placeholder="请选择供应商"
                                 optionFilterProp="children"
                                 notFoundContent="无法找到"
-                                searchPlaceholder="输入关键词"
                                 onChange={this.handleChange}
                             >
                                 {
-                                    this.state.data.map(d => <Option key={d.uuid}>{d.label}</Option>)
+                                    this.state.data.map(d => <Option key={d.orgId}>{d.orgName}</Option>)
                                 }
                             </Select>
                         )}
@@ -107,6 +105,8 @@ class SelectSearch extends Component {
 const FormSelectSearch =  Form.create()(SelectSearch)
 
 export default connect(state=>({
+    orgId:state.user.get('orgId')
 }),dispatch=>({
-    saveCodeList:saveCodeList(dispatch)
+    saveOrgId:saveOrgId(dispatch),
+    saveToken:saveToken(dispatch),
 }))(FormSelectSearch)

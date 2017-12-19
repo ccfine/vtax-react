@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Layout} from 'antd'
-import {Nav} from '../../../compoments/index'
+import {Nav} from '../../../compoments'
 import routes from '../../basisManage/basicInfo/routes'
 
 class BasicInfo extends Component {

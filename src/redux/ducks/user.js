@@ -7,33 +7,27 @@
 import { createActions, handleActions } from 'redux-actions'
 //TODO:  npm 的时候必须加上版本号 4.0.0-rc.9  要不然 getIn() 用不了
 import {fromJS} from 'immutable';
-
-const data = {
-    password: "123",
-    phoneNumber: "18675567665",
-    provinceCode: "string",
-    realname: "刘心",
-    remark: "string",
-    sex: "string",
-    userId: 0,
-    username: "admin",
-    token: "string",
-    email: "2541337855@qq.com",
-    address: "string",
-    administrator: 0,
-    avatar: "string",
-}
+import {request} from '../../utils'
 
 const initialState = fromJS({
     /**用户个人信息*/
     personal:{
+        adminUrl:null,
+        email:null,
+        enabled:null,
+        fax:null,
+        phoneNumber:null,
         realname:null,
-        username:null,
+        roleType:null,
+        roles:null,
+        sex:null,
         userId:null,
-        codeList:{
-            list:null,
-        },
+        userType:null,
+        username:null,
     },
+    /**组织代码*/
+    orgId:null,
+
     /**登录凭证*/
     token:null,
 
@@ -41,7 +35,7 @@ const initialState = fromJS({
     isAuthed:false,
 });
 
-export const {personal, token, isAuthed,codeList} = createActions({
+export const {personal, token, isAuthed, orgId} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -56,7 +50,7 @@ export const {personal, token, isAuthed,codeList} = createActions({
         /**退出*/
         LOGOUT:() => false
     },
-    CODE_LIST:{
+    ORG_ID:{
         INCREMENT: info => info
     }
 })
@@ -74,30 +68,37 @@ export default handleActions({
     [isAuthed.logout] : state=>{
         return initialState
     },
-    [codeList.increment] : (state, {payload})=>{
-        return state.setIn(['personal','codeList'], payload)
+    [orgId.increment] : (state, {payload})=>{
+        return state.set('orgId', payload)
     }
 }, initialState)
 
 export const login = dispatch => async ({userName,password,success,fail})=>{
     try {
-        let getTokenSuccess = false;
-        if(userName==='admin' && password==='123'){
-            getTokenSuccess = true;
-            dispatch(token.increment('登录成功！'))
-        }else{
-            fail && fail('登录失败！')
-        }
 
-        if(getTokenSuccess){
-            //获取用户信息
-            dispatch(personal.increment(data))
-            //用户信息获取成功的话
-            //所需信息全部加载完毕，完成登录
-            dispatch(isAuthed.login())
-            //执行登录成功回调
-            success && success()
-        }
+        await request.post('/login',{
+            userName,
+            password
+        }).then(res=>{
+            request.testSuccess(res.data,data=>{
+               // console.log(data)
+                dispatch(token.increment(data.token))
+                //获取组织信息
+                dispatch(orgId.increment(data.orgId))
+                //获取用户信息
+                dispatch(personal.increment(data.secUserBasicBO))
+                //用户信息获取成功的话
+                //所需信息全部加载完毕，完成登录
+                dispatch(isAuthed.login())
+                //执行登录成功回调
+                success && success()
+            },err=>{
+                fail && fail(err)
+            })
+        }).catch(err=>{
+            fail && fail(err.message)
+        })
+
     }catch(err) {
         console.log(err)
     }
@@ -108,9 +109,17 @@ export const logout = dispatch => async () =>{
     dispatch(isAuthed.logout())
 }
 
-export const saveCodeList = dispatch => async (item) =>{
+export const saveOrgId = dispatch => async (id) =>{
     try {
-        dispatch(codeList.increment(item))
+        dispatch(orgId.increment(id))
+    }catch (err){
+        console.log(err)
+    }
+}
+
+export const saveToken = dispatch => async (data) =>{
+    try {
+        dispatch(token.increment(data))
     }catch (err){
         console.log(err)
     }

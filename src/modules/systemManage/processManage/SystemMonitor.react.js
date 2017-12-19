@@ -5,11 +5,17 @@
  */
 import React, { Component } from 'react'
 import {Layout} from 'antd'
+import {Nav} from '../../../compoments'
+import routes from '../../systemManage/processManage/routes'
 
 class SystemMonitor extends Component {
     render() {
         return (
-            <Layout style={{background:'transparent'}} > 系统监控 </Layout>
+            <Layout style={{background: 'transparent'}}>
+                <div style={{padding: 24}}>
+                    <Nav data={routes}/>
+                </div>
+            </Layout>
         )
     }
 }

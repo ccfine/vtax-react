@@ -5,34 +5,18 @@
  */
 import React, { Component } from 'react'
 import {Layout} from 'antd'
-import IframePage from '../../IframePage.react'
-import {connect} from 'react-redux'
+import {Nav} from '../../../compoments'
+import routes from '../../reportManage/businessReport/routes'
 
 class BusinessReport extends Component {
-   /* render() {
-        return (
-            <Layout style={{background:'transparent'}} > 业务报表 </Layout>
-        )
-    }*/
-
     render() {
-        //const {adminUrl,token,username,supplierId} = this.props;
-        const {adminUrl} = this.props;
-        return(
-            <IframePage title="报表" src={`${adminUrl}`}/>
-        )
-        /*return (
-            <Layout style={{background:'transparent'}} >
-                报表管理
+        return (
+            <Layout style={{background: 'transparent'}}>
+                <div style={{padding: 24}}>
+                    <Nav data={routes}/>
+                </div>
             </Layout>
-        )*/
+        )
     }
 }
-//export default BusinessReport
-export default connect(state=>({
-    /*token:state.user.token,
-    username:state.user.personal.username,
-    supplierId:state.user.supplier.supplierId,
-    adminUrl:state.user.personal.adminUrl,*/
-    adminUrl:'http://192.168.3.185:8075/WebReport/ReportServer?reportlet=WorkBook2.cpt&op=write'
-}))(BusinessReport)
+export default BusinessReport

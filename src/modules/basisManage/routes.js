@@ -6,12 +6,10 @@
 import {wrapPage} from '../../compoments'
 
 import BasicInfo from './basicInfo'
-import DataField from './dataField'
-import ReportConfig from './reportConfig'
+import TaxFile from './taxFile'
 
 import BasicInfo_Routes from './basicInfo/routes'
-import DataField_Routes from './dataField/routes'
-import ReportConfig_Routes from './reportConfig/routes'
+import TaxFile_Routes from './taxFile/routes'
 
 const PATH = `/web/basisManage`;
 const BasisManage_Routes = [
@@ -22,17 +20,11 @@ const BasisManage_Routes = [
         exact:true,
         children:BasicInfo_Routes
     },{
-        path:`${PATH}/dataField`,
-        component:wrapPage('数据字段',DataField),
-        name:'数据字段',
+        path:`${PATH}/taxFile`,
+        component:wrapPage('税务档案',TaxFile),
+        name:'税务档案',
         exact:true,
-        children:DataField_Routes
-    },{
-        path:`${PATH}/reportConfig`,
-        component:wrapPage('报表配置',ReportConfig),
-        name:'报表配置',
-        exact:true,
-        children:ReportConfig_Routes
+        children:TaxFile_Routes
     },{
         path:`${PATH}`,
         redirect:true,

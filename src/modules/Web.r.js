@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {RouteWithSubRoutes} from '../compoments'
-import {composeMenus} from '../utils'
+import {composeMenus,request} from '../utils'
 import Header from './header'
 import Sider from './sider'
 import BreadCrumb from './breadcrumb/Breadcrumb'
@@ -47,8 +47,6 @@ class Web extends Component {
     changeRefresh = refresh =>{
         this.mounted && this.setState({
             refresh,
-        },()=>{
-            this.props.history.replace('/web/accountManage')
         })
     }
 
@@ -57,6 +55,12 @@ class Web extends Component {
     }
 
     componentDidMount() {
+        request.get('/login_org_user_permissions')
+            .then(({data})=>{
+                if(data.code ===200){
+                    console.log(data);
+                }
+            })
 
     }
 
@@ -69,9 +73,9 @@ class Web extends Component {
         this.checkLoggedIn(nextProps);
 
         //判断权限
-        /*if(nextProps.codeList.key !== this.props.codeList.key){
-            console.log(nextProps);
-        }*/
+        if(nextProps.orgId !== this.props.orgId){
+            this.props.history.replace('/web')
+        }
 
     }
 
@@ -122,7 +126,7 @@ class Web extends Component {
 
 export default withRouter(connect(state=>({
     isAuthed:state.user.get('isAuthed'),
-    codeList:state.user.getIn(['personal','codeList'])
+    orgId:state.user.get('orgId')
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))
