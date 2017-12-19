@@ -11,6 +11,7 @@ const VATPrepaymentForm =()=><div>增值税预缴表</div>
 const RoomTransactionFile =()=><div>房间交易档案</div>
 const RoomFileSummaryQuery =()=><div>房间档案汇总查询</div>
 const InterimContractInputTaxTransferredOutQuery =()=><div>跨期合同进项税额转出查询</div>
+const LandPriceDeductionDetails =()=><div>土地价款扣除明细查询</div>
 const PrePaidSalesQuery =()=><div>售房预缴查询</div>
 const TaxpayersQuery =()=><div>纳税主体查询</div>
 const TaxIncentives =()=><div>税收优惠</div>
@@ -46,6 +47,11 @@ const BusinessReport_Routes = [
         path:`${PATH}/interimContractInputTaxTransferredOutQuery`,
         component:wrapPage('跨期合同进项税额转出查询',InterimContractInputTaxTransferredOutQuery),
         name:'跨期合同进项税额转出查询',
+        exact:true,
+    },{
+        path:`${PATH}/landPriceDeductionDetails`,
+        component:wrapPage('土地价款扣除明细查询',LandPriceDeductionDetails),
+        name:'土地价款扣除明细查询',
         exact:true,
     },{
         path:`${PATH}/prePaidSalesQuery`,

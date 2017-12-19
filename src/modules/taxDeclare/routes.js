@@ -4,35 +4,17 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import Children_Routes from './children/routes'
 
-const TaxStructureAnalysis =()=><div>纳税结构分析</div>
-const TaxTrendsAnalysis =()=><div>纳税趋势分析</div>
-const TaxAnalysis =()=><div>税负分析</div>
+const PATH = `/web/taxDeclare`;
 
-const PATH = `/web/reportManage/manageAnalysisReport`;
-
-const OtherAccount_Routes = [
+const TaxDeclare_Routes = [
     {
-        path:`${PATH}/taxStructureAnalysis`,
-        component:wrapPage('纳税结构分析',TaxStructureAnalysis),
-        name:'纳税结构分析',
-        exact:true,
-    },{
-        path:`${PATH}/taxTrendsAnalysis`,
-        component:wrapPage('纳税趋势分析',TaxTrendsAnalysis),
-        name:'纳税趋势分析',
-        exact:true,
-    },{
-        path:`${PATH}/taxAnalysis`,
-        component:wrapPage('税负分析',TaxAnalysis),
-        name:'税负分析',
-        exact:true,
-    },{
         path:`${PATH}`,
         redirect:true,
-        to:`${PATH}/taxStructureAnalysis`,
+        to:`${PATH}/createAMatter`,
+        children:Children_Routes
     }
 ]
 
-export default OtherAccount_Routes
+export default TaxDeclare_Routes

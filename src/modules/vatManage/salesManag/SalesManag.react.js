@@ -6,21 +6,15 @@
 import React, { Component } from 'react'
 import {Layout} from 'antd'
 import {Nav} from '../../../compoments'
+import routes from '../../vatManage/salesManag/routes'
 
 class SalesManag extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [ ]
-        }
-    }
-
     render() {
 
         return (
             <Layout style={{background: 'transparent'}}>
                 <div style={{padding: 24}}>
-                    <Nav data={this.state.data}/>
+                    <Nav data={routes}/>
                 </div>
             </Layout>
         )

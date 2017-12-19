@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import {Layout} from 'antd'
 import {Nav} from '../../../compoments'
-import routes from '../../systemManage/userPermissions/routes'
+import routes from '../routes'
 
 class UserPermissions extends Component {
     render() {

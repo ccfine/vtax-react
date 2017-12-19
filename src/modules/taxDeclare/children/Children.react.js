@@ -1,14 +1,15 @@
 /**
  * author       : liuliyuan
- * createTime   : 2017/12/14 12:09
+ * createTime   : 2017/12/7 17:13
  * description  :
  */
 import React, { Component } from 'react'
 import {Layout} from 'antd'
 import {Nav} from '../../../compoments'
-import routes from '../../vatManage/landPrice/routes'
+import routes from './routes'
 
-class LandPrice extends Component {
+class Children extends Component {
+
     render() {
 
         return (
@@ -18,7 +19,6 @@ class LandPrice extends Component {
                 </div>
             </Layout>
         )
-
     }
 }
-export default LandPrice
+export default Children
