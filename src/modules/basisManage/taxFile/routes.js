@@ -10,8 +10,7 @@ import LicenseManage from './licenseManage'
 import DeclareFile from './declareFile'
 import FilingMaterial from './filingMaterial'
 import OtherFiles from './otherFiles'
-
-const InspectionReport = ()=><div>稽查报告</div>
+import InspectionReport from './inspectionReport'
 
 const PATHS = '/web/basisManage/taxFile';
 
