@@ -12,11 +12,14 @@ import wrapPage from './titlePage'
 import Carousel from './carousel'
 import Nav from './nav'
 import CountTable from './countTable'
-
+import AsyncTable from './asyncTable'
+import CusFormItem from './formItems'
 export {
     RouteWithSubRoutes,
     wrapPage,
     Carousel,
     Nav,
-    CountTable
+    CountTable,
+    AsyncTable,
+    CusFormItem
 }
