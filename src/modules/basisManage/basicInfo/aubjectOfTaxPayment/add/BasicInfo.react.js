@@ -260,7 +260,6 @@ class BasicInfo extends Component {
                 label: '注册资本原币金额(万元)',
                 type: 'inputNumber',
                 fieldName: 'jbxx.currencyAmount',
-                initialValue:0.00,
                 res:{
                     formatter:value => fMoney(value),
                     parser:value => value.replace(/\$\s?|(,*)/g, ''),
@@ -273,10 +272,11 @@ class BasicInfo extends Component {
                 label: '实收资本原币金额(万元)',
                 type: 'inputNumber',
                 fieldName: 'jbxx.receiptCurrencyAmount',
-                initialValue:0.00,
+                initialValue:'',
                 res:{
-                    formatter:value => value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+                    formatter:value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
                     parser:value => value.replace(/\$\s?|(,*)/g, ''),
+                    onBlur:this.handleBlur,
                 }
             }, {
                 label: '是否协同（喜盈佳）',
@@ -343,7 +343,7 @@ class BasicInfo extends Component {
             }else if(data[i].type ==='cascader'){
                 inputComponent = <Cascader options={data[i].items} placeholder={`请输入${data[i].label}`} />;
             }else if(data[i].type === 'inputNumber'){
-                inputComponent = <InputNumber {...data[i].res} />
+                inputComponent = <InputNumber {...data[i].res} style={{width:'100%'}} />
             }
 
             if(data[i].type === 'rangePicker'){
@@ -402,6 +402,13 @@ class BasicInfo extends Component {
 
         }
         return children.slice(start, end || null);
+    }
+
+    handleBlur=(e)=>{
+        console.log(e);
+        console.log(e.target.value)
+        console.log(fMoney(e.target.value));
+       return e.target.value = fMoney(e.target.value)
     }
 
     //注册类型:取基础资料DJZCLX
