@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Select,Icon,Modal} from 'antd'
 import {request} from '../../../../utils'
-import {AsyncTable} from '../../../../compoments'
+import {AsyncTable,CusFormItem} from '../../../../compoments'
 import PopModal from './popModal'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -64,44 +64,8 @@ const columns = [{
     dataIndex: 'isAttachment',
     render:text=>parseInt(text,0) === 1?'是':'否'
 }];
-let timeout;
-let currentValue;
-function fetchTaxMain(value, callback) {
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
-
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.id}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
-}
 class InspectionReport extends Component {
     state={
-        mainTaxItems:[
-        ],
-
         /**
          * params条件，给table用的
          * */
@@ -139,9 +103,6 @@ class InspectionReport extends Component {
         });
 
     }
-    onSearch = (value) => {
-        fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
-    }
     onChange=(selectedRowKeys, selectedRows) => {
         console.log(selectedRowKeys,selectedRows)
         this.setState({
@@ -159,7 +120,7 @@ class InspectionReport extends Component {
     }
     render() {
         const {getFieldDecorator} = this.props.form;
-        const {mainTaxItems,tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -180,23 +141,7 @@ class InspectionReport extends Component {
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             <Col span={8}>
-                                <FormItem label='纳税主体' {...formItemStyle}>
-                                    {getFieldDecorator(`mainId`,{
-                                    })(
-                                        <Select
-                                            showSearch
-                                            style={{ width: '100%' }}
-                                            optionFilterProp="children"
-                                            onSearch={this.onSearch}
-                                        >
-                                            {
-                                                mainTaxItems.map((item,i)=>(
-                                                    <Option key={i} value={item.value}>{item.text}</Option>
-                                                ))
-                                            }
-                                        </Select>
-                                    )}
-                                </FormItem>
+                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
                             </Col>
                             <Col span={8}>
                                 <FormItem label='实施年度' {...formItemStyle}>
@@ -255,7 +200,7 @@ class InspectionReport extends Component {
                               删除
                           </Button>
                       </div>}
-                      style={{marginTop:20}}>
+                      style={{marginTop:10}}>
 
                     <AsyncTable url="/report/list"
                                 updateKey={tableUpDateKey}

@@ -4,6 +4,7 @@
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
 import {request} from '../../../../../utils'
+import {CusFormItem} from '../../../../../compoments'
 import moment from 'moment';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -162,26 +163,7 @@ class PopModal extends Component{
                 <Form onSubmit={this.handleSubmit} style={{height:'470px',overflowY:'scroll'}}>
                     <Row>
                         <Col span={12}>
-                            <FormItem label='纳税主体' {...formItemLayout}>
-                                {getFieldDecorator(`mainId`,{
-                                    initialValue:initData.mainId
-                                })(
-                                    <Select
-                                        disabled={disibled}
-                                        showSearch
-                                        style={{ width: '100%' }}
-                                        optionFilterProp="children"
-                                        onSelect={this.onSelect}
-                                        onSearch={this.onSearch}
-                                    >
-                                        {
-                                            mainTaxItems.map((item,i)=>(
-                                                <Option key={i} value={item.value}>{item.text}</Option>
-                                            ))
-                                        }
-                                    </Select>
-                                )}
-                            </FormItem>
+                            <CusFormItem.TaxMain fieldName="mainId" initialValue={initData.mainId} formItemStyle={formItemLayout} form={this.props.form} />
                         </Col>
                     </Row>
                     <Row>
