@@ -5,7 +5,8 @@
  */
 import request from './request'
 import composeMenus from './composeMenus'
-import regRules from './rules'
+import regRules from './regRules'
+
 
 const fMoney = (s,n=2)=>{
 
@@ -40,4 +41,5 @@ export {
     fMoney,
     getQueryString,
     composeMenus,
+    regRules,
 }

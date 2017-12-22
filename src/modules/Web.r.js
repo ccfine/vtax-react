@@ -58,7 +58,7 @@ class Web extends Component {
         request.get('/login_org_user_permissions')
             .then(({data})=>{
                 if(data.code ===200){
-                    console.log(data);
+                    //console.log(data);
                 }
             })
 
