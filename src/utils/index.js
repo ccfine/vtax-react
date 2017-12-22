@@ -41,5 +41,4 @@ export {
     fMoney,
     getQueryString,
     composeMenus,
-    regRules,
 }
