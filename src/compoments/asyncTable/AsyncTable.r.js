@@ -41,7 +41,7 @@ export default class AsyncTable extends Component{
             if(data.code===200){
                 const pagination = { ...this.state.pagination };
                 pagination.total = data.data.total;
-                this.setState({
+                this.mounted && this.setState({
                     loaded: true,
                     dataSource: data.data.records,
                     pagination,
@@ -63,6 +63,10 @@ export default class AsyncTable extends Component{
             sortOrder: sorter.order,
             ...filters,
         });
+    }
+    mounted=true
+    componentWillUnmount(){
+        this.mounted=null
     }
     render(){
         const {loaded,dataSource,pagination}  = this.state;

@@ -3,7 +3,6 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Select,Icon,Modal} from 'antd'
-import {request} from '../../../../utils'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import PopModal from './popModal'
 const FormItem = Form.Item;
@@ -12,24 +11,9 @@ const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
-const showDeleteConfirm = ()=>{
-    confirm({
-        title: '友情提醒',
-        content: '该删除后将不可恢复，是否删除？',
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk() {
-            console.log('OK');
-        },
-        onCancel() {
-            console.log('Cancel');
-        },
-    });
-}
 const columns = [{
     title: '编码',
-    dataIndex: 'code',
+    dataIndex: 'mainCode',
 }, {
     title: '纳税主体',
     dataIndex: 'mainName',
@@ -132,8 +116,7 @@ class InspectionReport extends Component {
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
-            onChange: this.onChange,
-            getCheckboxProps:this.getCheckboxProps
+            onChange: this.onChange
         };
         return (
             <Layout style={{background:'transparent'}} >
