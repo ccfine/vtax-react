@@ -89,7 +89,7 @@ class Web extends Component {
                 <Layout>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     <BreadCrumb location={this.props.location} routes={routes} />
-                    <Content key={this.state.refresh+1} style={{ margin: '24px 24px 0', height: '100%',background: '#fff'}}>
+                    <Content key={this.state.refresh+1} style={{ margin: '12px 12px 0', height: '100%'}}>
                         <div style={{ minHeight: 'calc(100vh - 260px)' }}>
 
                             <Switch>

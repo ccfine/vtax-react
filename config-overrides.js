@@ -26,7 +26,21 @@ module.exports = function override(config, env) {
     config = injectBabelPlugin(['import', { libraryName: 'antd', style: true }], config);
    // config = rewireCssModules(config, env);
     config = rewireLess.withLoaderOptions({
-        modifyVars: { "@primary-color": "#1890ff" },
+        modifyVars: {
+            "@primary-color": "#1890ff",
+            "@font-size-base":'12px',
+            "@card-head-padding":"8px",
+            "@card-inner-head-padding":"6px",
+            "@card-padding-wider":"16px",
+            "@card-padding-base": "12px",
+
+            "@layout-header-height":"64px",
+            "@layout-header-padding":"0 25px",
+            "@layout-footer-padding":"12px 25px",
+            "@layout-trigger-height":"24px",
+            "@layout-zero-trigger-width":"18px",
+            "@layout-zero-trigger-height":"21px"
+        },
     })(config, env);
     return config;
 };

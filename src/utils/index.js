@@ -7,6 +7,7 @@ import request from './request'
 import composeMenus from './composeMenus'
 import regRules from './regRules'
 
+
 const fMoney = (s,n=2)=>{
 
     if(s === "" || s === 0 || typeof (s) === 'undefined'){
@@ -35,6 +36,7 @@ const getQueryString=name=>{
 }
 
 export {
+    regRules,
     request,
     fMoney,
     getQueryString,
