@@ -4,26 +4,105 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Modal,Tabs,Form} from 'antd'
+import {Modal,Tabs,Form,Button,Row,Col} from 'antd'
 import BasicInfo from './BasicInfo.react'
 import TaxIdentification from './TaxIdentification.react'
 import Shareholding from './Shareholding.react'
 import EquityRelation from './EquityRelation.react'
-
+import {remove} from '../../../../../utils'
 const TabPane = Tabs.TabPane;
+
 class Add extends Component {
+    static defaultProps={
+        type:'edit',
+        visible:true
+    }
 
     state = {
-        modalKey:Date.now()+'1',
+        modalKey:Date.now()+1,
         submitLoading:false,
+
+        gdjcg:[
+            {
+                lcapitalRemark: undefined,
+                collectionCapitalAmount: undefined,
+                collectionCapitalCurrency: undefined,
+                id: 0,
+                propertyRemark: undefined,
+                realStockholder: "",
+                registeredCapitalAmount: "",
+                registeredCapitalCurrency: "",
+                registeredStockholder: "",
+                situation: undefined,
+                stockRight: 1,
+                stockholderType: "2",
+                term: "",
+            },{
+                lcapitalRemark: undefined,
+                collectionCapitalAmount: undefined,
+                collectionCapitalCurrency: undefined,
+                id: 1,
+                propertyRemark: undefined,
+                realStockholder: "",
+                registeredCapitalAmount: "",
+                registeredCapitalCurrency: "",
+                registeredStockholder: "",
+                situation: undefined,
+                stockRight: 0,
+                stockholderType: "2",
+                term: "",
+            },{
+                lcapitalRemark: undefined,
+                collectionCapitalAmount: undefined,
+                collectionCapitalCurrency: undefined,
+                id: 2,
+                propertyRemark: undefined,
+                realStockholder: "",
+                registeredCapitalAmount: "",
+                registeredCapitalCurrency: "",
+                registeredStockholder: "",
+                situation: undefined,
+                stockRight: 0,
+                stockholderType: "2",
+                term: "",
+            }
+        ],
+        gqgx:[
+            {
+                stockholderType: 0,
+                stockholder: 'wwwww',
+                stockRightRatio: undefined,
+                id: 0,
+                rightsRatio: undefined,
+                remark: "",
+            },{
+                stockholderType: 1,
+                stockholder: 'wwwww',
+                stockRightRatio: undefined,
+                id: 1,
+                rightsRatio: undefined,
+                remark: "",
+            }
+        ],
     }
 
-    static defaultProps={
-        modalType:'create'
+    callback=(key)=>{
+        console.log(key);
+        //this.props.setSelectedRowKeysAndselectedRows(null,{});
     }
 
-    callback = (key) => {
-        //console.log(key);
+
+    setGdjcgDate = gdjcg =>{
+        this.mounted && this.setState({
+            gdjcg
+        })
+    }
+
+    //给其它组件传数据
+    setGqgxDate=gqgx=>{
+        this.mounted && this.setState({
+            gqgx
+        })
     }
 
     handleOk = (e) => {
@@ -59,38 +138,76 @@ class Add extends Component {
     }
 
     render() {
-        const {modalType,visible, form, defaultDate} = this.props;
+        const {modalConfig,visible,form,initData,selectedRowKeys,selectedRows} = this.props;
+        const {gdjcg,gqgx} = this.state;
+
+        let title='';
+        let disibled = false;
+        const type = modalConfig.type;
+        switch (type){
+            case 'add':
+                title = '添加';
+                break;
+            case 'edit':
+                title = '编辑';
+                break;
+            case 'view':
+                title = '查看';
+                disibled=true;
+                break;
+        }
+
         return (
                 <div>
                     <Modal
-                        key={this.state.modalKey}
-                        title={modalType ==='create' ? '添加' : '修改' }
                         maskClosable={false}
+                        onCancel={()=>this.props.toggleModalVisible(false)}
+                        width={900}
                         visible={visible}
-                        onOk={this.handleOk}
-                        onCancel={this.handleCancel}
-                        confirmLoading={this.state.submitLoading}
-                        okText="确定"
-                        cancelText="取消"
-                        width="900px"
-                    >
+                        footer={
+                            type !== 'view' && <Row>
+                                <Col span={12}></Col>
+                                <Col span={12}>
+                                    <Button type="primary" onClick={this.handleSubmit}>确定</Button>
+                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                                </Col>
+                            </Row>
+                        }
+                        title={title}
+                        >
+
                         <Form onSubmit={this.handleSubmit} className="vtax-from">
 
                             <Tabs defaultActiveKey="1" onChange={this.callback}>
                                 <TabPane tab="基本信息" key="1">
                                     <BasicInfo
                                         form={form}
-                                        defaultDate={defaultDate}
+                                        type={type}
+                                        visible={visible}
+                                        initData={initData}
+                                        selectedRowKeys={selectedRowKeys}
+                                        selectedRows={selectedRows}
                                     />
                                 </TabPane>
                                 <TabPane tab="税种鉴定" key="2">
-                                    <TaxIdentification form={form} />
+                                    <TaxIdentification
+                                        form={form}
+                                        type={type}
+                                    />
                                 </TabPane>
                                 <TabPane tab="股东持股" key="3">
-                                    <Shareholding form={form} />
+                                    <Shareholding
+                                        data={gdjcg}
+                                        type={type}
+                                        setGdjcgDate={this.setGdjcgDate.bind(this)}
+                                    />
                                 </TabPane>
                                 <TabPane tab="股权关系" key="4">
-                                    <EquityRelation form={form} />
+                                    <EquityRelation
+                                        data={gqgx}
+                                        type={type}
+                                        setGqgxDate={this.setGqgxDate.bind(this)}
+                                    />
                                 </TabPane>
                             </Tabs>
 

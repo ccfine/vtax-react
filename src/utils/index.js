@@ -35,6 +35,7 @@ const getQueryString=name=>{
     if(r!==null)return  decodeURI(r[2]); return null;
 }
 
+
 export {
     regRules,
     request,

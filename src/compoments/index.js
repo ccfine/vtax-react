@@ -14,6 +14,7 @@ import Nav from './nav'
 import CountTable from './countTable'
 import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
+import SynchronizeTable from './synchronizeTable'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -21,5 +22,6 @@ export {
     Nav,
     CountTable,
     AsyncTable,
-    CusFormItem
+    CusFormItem,
+    SynchronizeTable
 }
