@@ -70,6 +70,11 @@ class DeclareParameter extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
+                    values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
+                    values.subordinatePeriodEnd= values.subordinatePeriod[1].format('YYYY-MM-DD')
+                    values.subordinatePeriod = undefined;
+                }
                 this.setState({
                     selectedRowKeys:null,
                     filters:values
@@ -131,7 +136,7 @@ class DeclareParameter extends Component {
                             </Col>
                             <Col span={8}>
                                 <FormItem label='税(费)种' {...formItemStyle}>
-                                    {getFieldDecorator(`checkImplementYear`,{
+                                    {getFieldDecorator(`taxType`,{
                                     })(
                                         <Select
                                             style={{ width: '100%' }}
@@ -142,9 +147,20 @@ class DeclareParameter extends Component {
                                     )}
                                 </FormItem>
                             </Col>
+                            <Col span={8}>
+                                <FormItem
+                                    {...formItemStyle}
+                                    label="所属期起止"
+                                >
+                                    {getFieldDecorator('subordinatePeriod', {
+                                    })(
+                                        <RangePicker style={{width:'100%'}} format="YYYY-MM-DD" />
+                                    )}
+                                </FormItem>
+                            </Col>
                         </Row>
                         <Row>
-                            <Col span={8}>
+                            <Col style={{textAlign:'right'}}>
                                 <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
                                 <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>

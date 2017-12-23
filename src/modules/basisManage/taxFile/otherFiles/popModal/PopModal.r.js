@@ -109,7 +109,7 @@ class PopModal extends Component{
         }
     }
     mounted=true
-    componenWillUnmount(){
+    componentWillUnmount(){
         this.mounted=null
     }
     render(){
@@ -125,7 +125,7 @@ class PopModal extends Component{
             wrapperCol: { span: 18 },
         };
         let title='';
-        let disibled = false;
+        let disabled = false;
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
@@ -136,7 +136,7 @@ class PopModal extends Component{
                 break;
             case 'view':
                 title = '查看';
-                disibled=true;
+                disabled=true;
                 break;
         }
         const dateFormat = 'YYYY-MM-DD'
@@ -178,7 +178,7 @@ class PopModal extends Component{
                                         }
                                     ]
                                 })(
-                                    <Input disabled={disibled} />
+                                    <Input disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -194,7 +194,7 @@ class PopModal extends Component{
                                     ]
                                 })(
                                     <Select
-                                        disabled={disibled}
+                                        disabled={disabled}
                                         style={{ width: '100%' }}
                                     >
                                         <Option value={'1'}>类型1</Option>
@@ -218,7 +218,7 @@ class PopModal extends Component{
                                         }
                                     ]
                                 })(
-                                    <RangePicker disabled={disibled} style={{width:'100%'}} format="YYYY-MM-DD" />
+                                    <RangePicker disabled={disabled} style={{width:'100%'}} format="YYYY-MM-DD" />
                                 )}
                             </FormItem>
                         </Col>
@@ -236,7 +236,7 @@ class PopModal extends Component{
                                         }
                                     ]
                                 })(
-                                    <RangePicker disabled={disibled} style={{width:'100%'}} format="YYYY-MM-DD" />
+                                    <RangePicker disabled={disabled} style={{width:'100%'}} format="YYYY-MM-DD" />
                                 )}
                             </FormItem>
                         </Col>
@@ -253,7 +253,7 @@ class PopModal extends Component{
                                         }
                                     ]
                                 })(
-                                    <Input disabled={disibled} />
+                                    <Input disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -264,7 +264,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`issue`,{
                                     initialValue:initData.issue
                                 })(
-                                    <TextArea disabled={disibled} />
+                                    <TextArea disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -278,7 +278,7 @@ class PopModal extends Component{
                                 {getFieldDecorator('closingTime', {
                                     initialValue:shouldShowDefaultData ? moment(initData.closingTime, dateFormat) :undefined
                                 })(
-                                    <DatePicker disabled={disibled} style={{width:'100%'}} format="YYYY-MM-DD" />
+                                    <DatePicker disabled={disabled} style={{width:'100%'}} format="YYYY-MM-DD" />
                                 )}
                             </FormItem>
                         </Col>
@@ -289,7 +289,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`checkItems`,{
                                     initialValue:initData.checkItems
                                 })(
-                                    <TextArea disabled={disibled} />
+                                    <TextArea disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -301,7 +301,7 @@ class PopModal extends Component{
                                     initialValue:initData.differential
                                 })(
                                     <Select
-                                        disabled={disibled}
+                                        disabled={disabled}
                                         style={{ width: '100%' }}
                                     >
                                         <Option value={'1'}>暂时性差异</Option>
@@ -315,7 +315,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`taxPayment`,{
                                     initialValue:initData.taxPayment
                                 })(
-                                    <Input disabled={disibled} />
+                                    <Input disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -326,7 +326,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`lateFee`,{
                                     initialValue:initData.lateFee
                                 })(
-                                    <Input disabled={disibled} />
+                                    <Input disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -335,7 +335,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`fine`,{
                                     initialValue:initData.fine
                                 })(
-                                    <Input disabled={disibled} />
+                                    <Input disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -346,7 +346,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`remark`,{
                                     initialValue:initData.remark
                                 })(
-                                    <TextArea disabled={disibled} />
+                                    <TextArea disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
