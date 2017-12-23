@@ -4,30 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Select,Table,Icon,Modal,Divider} from 'antd'
-import {request} from '../../../../utils'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal} from 'antd'
+import {AsyncTable,CusFormItem} from '../../../../compoments'
 import ProjectInformationManagement from './projectInformationManagement'
-const FormItem = Form.Item;
-const Option = Select.Option;
+import AddEditModal from './add'
 const confirm = Modal.confirm;
-const linkStyle={
-    color:'#1890ff',
-    cursor:'pointer'
-}
-const showDeleteConfirm = ()=>{
-    confirm({
-        title: '友情提醒',
-        content: '该删除后将不可恢复，是否删除？',
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk() {
-            console.log('OK');
-        },
-        onCancel() {
-            console.log('Cancel');
-        },
-    });
+const buttonStyle={
+    marginRight:5
 }
 const columns = [{
     title: '编码',
@@ -51,115 +34,74 @@ const columns = [{
     title: '营业状态',
     dataIndex: 'operatingStatus',
     render:text=>parseInt(text,0) ===1?'营业':'停业'
-},{
-    title:'操作',
-    key:'action',
-    render:(text,record)=>(
-        <div>
-            <span style={linkStyle}>编辑</span>
-            <Divider type="vertical" />
-            <span style={linkStyle}
-                onClick={showDeleteConfirm}
-            >
-                删除
-            </span>
-            <Divider type="vertical" />
-            <ProjectInformationManagement taxSubjectId={record.id} />
-        </div>
-    )
 }];
-let timeout;
-let currentValue;
-function fetchTaxMain(value, callback) {
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
-
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.id}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
-}
 class AubjectOfTaxPayment extends Component {
     state={
-        mainTaxItems:[
-        ],
-        selectedId:undefined,
-
-
-        dataSource : [],
-        pagination: {
-            showTotal:total => `总共 ${total} 条`
+        /**
+         * params条件，给table用的
+         * */
+        filters:{},
+        /**
+         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
+         * */
+        tableUpDateKey:Date.now(),
+        selectedRowKeys:null,
+        selectedRows:{},
+        visible:false,
+        modalConfig:{
+            type:''
         },
-        tableLoading: false,
     }
-    fetch = (params = {}) => {
-        this.setState({ tableLoading: true });
-        request.get('/taxsubject/list',{
-            params:{
-                results: 10,
-                id:this.state.selectedId,
-                ...params,
-            }
-        }).then(({data}) => {
-            if(data.code===200){
-                const pagination = { ...this.state.pagination };
-                pagination.total = data.data.total;
+
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
                 this.setState({
-                    tableLoading: false,
-                    dataSource: data.data.records,
-                    pagination,
+                    selectedRowKeys:null,
+                    filters:values
+                },()=>{
+                    this.setState({
+                        tableUpDateKey:Date.now()
+                    })
                 });
             }
+        });
 
-        });
     }
-    handleTableChange = (pagination, filters, sorter) => {
-        const pager = { ...this.state.pagination };
-        pager.current = pagination.current;
+
+    onChange=(selectedRowKeys, selectedRows) => {
+        //console.log(selectedRowKeys,selectedRows)
+        this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
+    }
+
+    setSelectedRowKeysAndselectedRows=(selectedRowKeys, selectedRows)=>{
         this.setState({
-            pagination: pager,
-        });
-        this.fetch({
-            results: pagination.pageSize,
-            current: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sorter.order,
-            ...filters,
-        });
+            selectedRowKeys,
+            selectedRows
+        })
     }
-    onSearch = (value) => {
-        fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
-    }
-    onSelect = (value,option)=>{
+    refreshCurdTable=()=>{
         this.setState({
-            selectedId:value.key
+            tableUpDateKey:Date.now()+'1'
+        })
+    }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    showModal=type=>{
+        this.toggleModalVisible(true)
+        this.setState({
+            modalConfig:{
+                type,
+                id:this.state.selectedRowKeys
+            }
         })
     }
     render() {
-        const {getFieldDecorator} = this.props.form;
-        const {mainTaxItems,dataSource,tableLoading,pagination} = this.state;
+        const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -168,52 +110,87 @@ class AubjectOfTaxPayment extends Component {
                 span:18
             }
         }
+        const rowSelection = {
+            type:'radio',
+            selectedRowKeys,
+            onChange: this.onChange
+        };
         return (
             <Layout style={{background:'transparent'}} >
                 <Card title="查询条件">
-                    <Row>
-                        <Col span={8}>
-                            <FormItem label='纳税主体' {...formItemStyle}>
-                                {getFieldDecorator(`aa`,{
-                                })(
-                                    <Select
-                                    showSearch
-                                    style={{ width: '100%' }}
-                                    optionFilterProp="children"
-                                    labelInValue
-                                    onSelect={this.onSelect}
-                                    onSearch={this.onSearch}
-                                    >
-                                    {
-                                        mainTaxItems.map((item,i)=>(
-                                            <Option key={i} value={item.value}>{item.text}</Option>
-                                        ))
-                                    }
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={8} offset={1}>
-                            <Button style={{marginTop:3}} type='primary' onClick={()=>this.fetch()}>查询</Button>
-                        </Col>
-                    </Row>
+                    <Form onSubmit={this.handleSubmit}>
+                        <Row>
+                            <Col span={8}>
+                                <CusFormItem.TaxMain fieldName="id" formItemStyle={formItemStyle} form={this.props.form} />
+                            </Col>
+                            <Col span={8} offset={1}>
+                                <Button style={{marginTop:3}} type='primary' htmlType="submit">查询</Button>
+                            </Col>
+                        </Row>
+                    </Form>
                 </Card>
                 <Card title="查询结果"
                       extra={<div>
-                          <Button>
+                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="plus-circle" />
                               新增
                           </Button>
+                          <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                              <Icon type="edit" />
+                              编辑
+                          </Button>
+                          <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                              <Icon type="search" />
+                              查看
+                          </Button>
+                          <Button
+                              style={buttonStyle}
+                              onClick={()=>{
+                                  confirm({
+                                      title: '友情提醒',
+                                      content: '该删除后将不可恢复，是否删除？',
+                                      okText: '确定',
+                                      okType: 'danger',
+                                      cancelText: '取消',
+                                      onOk:()=>{
+                                          this.setSelectedRowKeysAndselectedRows(null,{});
+                                          this.toggleModalVisible(false)
+                                      },
+                                      onCancel:()=>{
+                                          console.log('Cancel');
+                                      },
+                                  });
+                              }}
+                              disabled={!selectedRowKeys}
+                              type='danger'>
+                              <Icon type="delete" />
+                              删除
+                          </Button>
+                          <ProjectInformationManagement disabled={!selectedRowKeys} taxSubjectId={selectedRowKeys} />
                       </div>}
-                      style={{marginTop:20}}>
-                    <Table
-                        loading={tableLoading}
-                        rowKey={record=>record.id}
-                        dataSource={dataSource}
-                        pagination={pagination}
-                        onChange={this.handleTableChange}
-                        columns={columns} />
+                      style={{marginTop:10}}>
+                    <AsyncTable url="/taxsubject/list"
+                                updateKey={tableUpDateKey}
+                                filters={filters}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:true,
+                                    size:'middle',
+                                    columns:columns,
+                                    rowSelection:rowSelection
+                                }} />
                 </Card>
+
+                <AddEditModal
+                    visible={visible}
+                    modalConfig={modalConfig}
+                    selectedRowKeys={selectedRowKeys}
+                    selectedRows={selectedRows}
+                    initData={selectedRows}
+                    toggleModalVisible={this.toggleModalVisible}
+                    refreshCurdTable={this.refreshCurdTable}
+                    setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
+                />
             </Layout>
         )
     }

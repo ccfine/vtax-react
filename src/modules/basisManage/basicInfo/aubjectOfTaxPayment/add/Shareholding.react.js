@@ -4,29 +4,201 @@
  * description  :
  */
 import React, { Component } from 'react'
+import {Layout,Card,Button,Icon,Modal} from 'antd'
+import {request} from '../../../../../utils'
+import {SynchronizeTable} from '../../../../../compoments'
+import PopModal from './shareholdingPopModal'
+const confirm = Modal.confirm;
+const buttonStyle={
+    marginRight:5
+}
+
+const columns = [{
+    title: '股东类型',
+    dataIndex: 'stockholderType',
+    render:text=>parseInt(text,0) === 1 ? '我方股东' : '他方股东',
+}, {
+    title: '实际股东',
+    dataIndex: 'realStockholder',
+},{
+    title: '是否代持股权',
+    dataIndex: 'stockRight',
+    render:text=>parseInt(text,0) === 0 ? '否' : '是',
+},{
+    title: '登记股东',
+    dataIndex: 'registeredStockholder',
+},{
+    title: '注册资本',
+    children: [{
+        title: '出资期限',
+        dataIndex: 'term',
+    }, {
+        title: '原币币种',
+        dataIndex: 'registeredCapitalCurrency',
+    }, {
+        title: '原币金额(万元)',
+        dataIndex: 'registeredCapitalAmount',
+    }, {
+        title: '备注',
+        dataIndex: 'capitalRemark',
+    }],
+},{
+    title: '实收资本',
+    children: [{
+        title: '原币币种 ',
+        dataIndex: 'collectionCapitalCurrency',
+    }, {
+        title: '原币金额(万元) ',
+        dataIndex: 'collectionCapitalAmount',
+    }],
+},{
+    title: '代持情况',
+    dataIndex: 'situation',
+},{
+    title: '股东属性备注 ',
+    dataIndex: 'propertyRemark',
+}];
 
 class Shareholding extends Component {
 
+    state={
 
-    componentDidMount() {
-
+        /**
+         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
+         * */
+        tableUpDateKey:Date.now(),
+        selectedRowKeys:null,
+        selectedRows:{},
+        visible:false,
+        modalConfig:{
+            type:''
+        },
+    }
+    static defaultProps={
+        shareholdingKey:Date.now()+1
     }
 
-    mounted = true;
-    componentWillUnmount(){
-        this.mounted = null;
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    onChange=(selectedRowKeys, selectedRows) => {
+        console.log(selectedRowKeys,selectedRows)
+        this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 
-    componentWillReceiveProps(nextProps){
+    setSelectedRowKeysAndselectedRows=(selectedRowKeys, selectedRows)=>{
+        this.setState({
+            selectedRowKeys,
+            selectedRows
+        })
+    }
 
+    showModal=type=>{
+        this.toggleModalVisible(true)
+        this.setState({
+            modalConfig:{
+                type,
+                id:this.state.selectedRowKeys
+            }
+        })
     }
 
     render() {
+        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
+        const rowSelection = {
+            type:'radio',
+            selectedRowKeys,
+            onChange: this.onChange,
+            getCheckboxProps:this.getCheckboxProps
+        };
         return (
-            <div className="basicInfo">
-                股东持股
-            </div>
+            <Layout style={{background:'transparent'}} >
+                <Card title="查询结果"
+                      extra={
+                              this.props.type !== 'view' ?  <div>
+                                  <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                      <Icon type="file-add" />
+                                      新增
+                                  </Button>
+                                  <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Icon type="edit" />
+                                      编辑
+                                  </Button>
+                                  <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Icon type="search" />
+                                      查看
+                                  </Button>
+                                  <Button
+                                      onClick={()=>{
+                                          confirm({
+                                              title: '友情提醒',
+                                              content: '该删除后将不可恢复，是否删除？',
+                                              okText: '确定',
+                                              okType: 'danger',
+                                              cancelText: '取消',
+                                              onOk:()=>{
+                                                  const nowKeys = this.props.data;
+                                                  const keys = this.state.selectedRows;
+                                                  for(let i = 0;i<nowKeys.length;i++){
+                                                      for(let j = 0; j<keys.length;j++){
+                                                          if(nowKeys[i] === keys[j]){
+                                                              nowKeys.splice(i,1)
+                                                          }
+                                                      }
+                                                  }
+                                                  this.props.setGdjcgDate(nowKeys);
+                                                  this.setSelectedRowKeysAndselectedRows(null,{});
+                                                  this.toggleModalVisible(false)
+
+                                              },
+                                              onCancel:()=>{
+                                                  console.log('Cancel');
+                                              },
+                                          });
+                                      }}
+                                      disabled={!selectedRowKeys}
+                                      type='danger'>
+                                      <Icon type="delete" />
+                                      删除
+                                  </Button>
+                              </div>
+                                  :
+                              <div>
+                                  <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Icon type="search" />
+                                      查看
+                                  </Button>
+                              </div>
+
+                      }
+                      style={{marginTop:10}}>
+
+                    <SynchronizeTable data={this.props.data}
+                                updateKey={tableUpDateKey}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:true,
+                                    bordered:true,
+                                    size:'middle',
+                                    columns:columns,
+                                    rowSelection:rowSelection
+                                }} />
+                </Card>
+                <PopModal
+                    visible={visible}
+                    modalConfig={modalConfig}
+                    selectedRowKeys={selectedRowKeys}
+                    selectedRows={selectedRows}
+                    initData={this.props.data}
+                    toggleModalVisible={this.toggleModalVisible}
+                    setGdjcgDate={this.props.setGdjcgDate.bind(this)}
+                    setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
+                />
+            </Layout>
         )
     }
 }
+
 export default Shareholding
