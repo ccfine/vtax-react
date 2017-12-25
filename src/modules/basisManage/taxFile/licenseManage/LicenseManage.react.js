@@ -10,29 +10,11 @@ const columns = [{
     title: '纳税主体',
     dataIndex: 'mainName',
 }, {
-    title: '项目编码',
-    dataIndex: 'taxType',
+    title: '项目代码',
+    dataIndex: 'itemNum',
 },{
     title: '项目名称',
-    dataIndex: 'type',
-},{
-    title: '土地出让合同编号',
-    dataIndex: 'documentNum1',
-},{
-    title: '合同建筑面积(m²)',
-    dataIndex: 'documentNum2',
-},{
-    title: '调整后建筑面积(m²)',
-    dataIndex: 'documentNum3',
-},{
-    title: '可抵扣地价款',
-    dataIndex: 'documentNum4',
-},{
-    title: '实际已扣除土地价款',
-    dataIndex: 'documentNum5',
-},{
-    title: '已售建筑面积(m²)',
-    dataIndex: 'documentNum6',
+    dataIndex: 'itemName',
 }];
 
 class LicenseManage extends Component {
@@ -48,7 +30,7 @@ class LicenseManage extends Component {
         tableUpDateKey:Date.now(),
 
         selectedRowKeys:null,
-        visible:true,
+        visible:false,
         expand:true
     }
     toggleModalVisible=visible=>{
@@ -81,7 +63,7 @@ class LicenseManage extends Component {
         this.toggleModalVisible(true)
     }
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,expand} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -128,7 +110,7 @@ class LicenseManage extends Component {
                       </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/tax/preferences/list"
+                    <AsyncTable url="/card/certificate/list"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -139,7 +121,7 @@ class LicenseManage extends Component {
                                     rowSelection:rowSelection
                                 }} />
                 </Card>
-                <PopModal visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <PopModal visible={visible} projectId={selectedRowKeys} toggleModalVisible={this.toggleModalVisible} />
             </Layout>
         )
     }

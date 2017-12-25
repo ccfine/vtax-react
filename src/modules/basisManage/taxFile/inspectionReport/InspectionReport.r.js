@@ -127,18 +127,7 @@ class InspectionReport extends Component {
                                 <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
                             </Col>
                             <Col span={8}>
-                                <FormItem label='实施年度' {...formItemStyle}>
-                                    {getFieldDecorator(`checkImplementYear`,{
-                                    })(
-                                        <Select
-                                            style={{ width: '100%' }}
-                                        >
-                                            <Option value={'2015'}>2015</Option>
-                                            <Option value={'2016'}>2016</Option>
-                                            <Option value={'2017'}>2017</Option>
-                                        </Select>
-                                    )}
-                                </FormItem>
+                                <CusFormItem.YearSelect fieldName="checkImplementYear" formItemStyle={formItemStyle} form={this.props.form} />
                             </Col>
                             <Col span={8}>
                                 <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>

@@ -50,9 +50,12 @@ class DeclareFile extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
-                values.subordinatePeriodEnd = values.subordinatePeriod[1].format('YYYY-MM-DD')
-                values.subordinatePeriod = undefined;
+                if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
+                    values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
+                    values.subordinatePeriodEnd = values.subordinatePeriod[1].format('YYYY-MM-DD')
+                    values.subordinatePeriod = undefined;
+                }
+
                 this.setState({
                     selectedRowKeys:null,
                     filters:values

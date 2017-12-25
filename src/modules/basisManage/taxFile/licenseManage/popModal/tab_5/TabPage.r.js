@@ -38,11 +38,14 @@ const columns = [{
     title: '其中:独有面积(m²)',
     dataIndex: 'ownArea',
 },{
+    title: '取证日期',
+    dataIndex: 'evidenceDate',
+},{
     title: '备注',
     dataIndex: 'remark',
 }];
 
-class LicenseManage extends Component {
+class TabPage extends Component {
     state={
         /**
          * params条件，给table用的
@@ -88,6 +91,20 @@ class LicenseManage extends Component {
             selectedRowKeys
         })
     }
+    updateTable(){
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
+    componentDidMount(){
+        this.updateTable()
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.projectId !== nextProps.projectId){
+            //项目id改变则重新更新
+            this.updateTable()
+        }
+    }
     showModal=()=>{
         this.toggleModalVisible(true)
     }
@@ -111,7 +128,14 @@ class LicenseManage extends Component {
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
                             <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
+                                <CusFormItem.AsyncSelect
+                                    formItemStyle={formItemStyle}
+                                    label="项目分期"
+                                    fieldName="aa"
+                                    fieldTextName="1"
+                                    fieldValueName="2"
+                                    url=""
+                                    form={this.props.form} />
                             </Col>
                             <Col span={8}>
                                 <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
@@ -154,7 +178,7 @@ class LicenseManage extends Component {
                         </Row>
                     </Form>
 
-                    <AsyncTable url="/tax/preferences/list"
+                    <AsyncTable url={`/card/land/use/list/${this.props.projectId}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -169,4 +193,4 @@ class LicenseManage extends Component {
         )
     }
 }
-export default Form.create()(LicenseManage)
+export default Form.create()(TabPage)

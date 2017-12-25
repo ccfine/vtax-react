@@ -12,13 +12,13 @@ const buttonStyle={
 }
 const columns = [{
     title: '项目分期代码',
-    dataIndex: 'id',
+    dataIndex: 'itemNum',
 }, {
     title: '项目分期名称',
-    dataIndex: 'parcelNum',
+    dataIndex: 'itemName',
 },{
     title: '土地出让合同编号',
-    dataIndex: 'transferor',
+    dataIndex: 'leaseContractId',
 }];
 export default class TabPage extends Component{
     static propTypes={
@@ -48,7 +48,13 @@ export default class TabPage extends Component{
         })
     }
     componentDidMount(){
-        //this.updateTable()
+        this.updateTable()
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.projectId !== nextProps.projectId){
+            //项目id改变则重新更新
+            this.updateTable()
+        }
     }
     toggleModalVisible=visible=>{
         this.setState({

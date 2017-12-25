@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2017/12/23.
  */
-/** 房屋所有权证*/
+/** 竣工验收备案表*/
 import React, { Component } from 'react'
 import {Layout,Row,Col,Form,Button,Icon,Modal} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../../../compoments'
@@ -11,53 +11,56 @@ const buttonStyle={
     marginRight:5
 }
 const columns = [{
-    title: '权证名称 ',
-    dataIndex: 'warrantName',
+    title: '竣工备案编号 ',
+    dataIndex: 'licenseNumber',
 }, {
-    title: '权证号',
-    dataIndex: 'warrantNum',
+    title: '工程名称',
+    dataIndex: 'projectName',
 },{
-    title: '权利人',
-    dataIndex: 'warrantUser',
-},{
-    title: '坐落',
-    dataIndex: 'position',
-},{
-    title: '取得方式',
-    dataIndex: 'acquireWay'
-},{
-    title: '用途',
-    dataIndex: 'landUse',
-},{
-    title: '宗地面积(m²)',
-    dataIndex: 'landArea',
+    title: '工程编号',
+    dataIndex: 'projectNum',
 },{
     title: '建筑面积(m²)',
-    dataIndex: 'bulidArea',
+    dataIndex: 'buildingArea',
 },{
-    title: '地号',
-    dataIndex: 'num',
+    title: '工程地点',
+    dataIndex: 'position'
 },{
-    title: '使用期限',
-    dataIndex: 'limitDate',
+    title: '工程类别',
+    dataIndex: 'projectType',
 },{
-    title: '登记时间',
-    dataIndex: 'boardingTime',
+    title: '结构形式',
+    dataIndex: 'structuralStyle',
 },{
-    title: '项目分期',
-    dataIndex: 'stagesId',
+    title: '建设单位',
+    dataIndex: 'developmentOrg',
 },{
-    title: '清算分期',
-    dataIndex: 'liquidationStage',
+    title: '勘察单位',
+    dataIndex: 'surveyOrg',
 },{
-    title: '套数',
-    dataIndex: 'rooms',
+    title: '设计单位',
+    dataIndex: 'designOrg',
+},{
+    title: '施工单位',
+    dataIndex: 'builderOrg',
+},{
+    title: '监理单位',
+    dataIndex: 'constructionOrg',
+},{
+    title: '监督机构',
+    dataIndex: 'authorityOrg',
+},{
+    title: '开工日期',
+    dataIndex: 'startDate',
 },{
     title: '发证日期',
     dataIndex: 'issuingDate',
 },{
     title: '备注',
     dataIndex: 'remark',
+},{
+    title: '项目分期',
+    dataIndex: 'stagesId'
 }];
 
 class TabPage extends Component {
@@ -186,7 +189,7 @@ class TabPage extends Component {
                         </Row>
                     </Form>
 
-                    <AsyncTable url={`/card/house/ownership/list/${this.props.projectId}`}
+                    <AsyncTable url={`/project/finish/acceptance/list/${this.props.projectId}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{

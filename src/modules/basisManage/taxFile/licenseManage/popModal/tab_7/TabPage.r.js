@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2017/12/23.
  */
-/** 房屋所有权证*/
+/** 建设工程施工许可证*/
 import React, { Component } from 'react'
 import {Layout,Row,Col,Form,Button,Icon,Modal} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../../../compoments'
@@ -11,53 +11,41 @@ const buttonStyle={
     marginRight:5
 }
 const columns = [{
-    title: '权证名称 ',
-    dataIndex: 'warrantName',
+    title: '施工许可证编号 ',
+    dataIndex: 'licenseKey',
 }, {
-    title: '权证号',
-    dataIndex: 'warrantNum',
+    title: '建设单位',
+    dataIndex: 'organization',
 },{
-    title: '权利人',
-    dataIndex: 'warrantUser',
+    title: '项目名称',
+    dataIndex: 'projectName',
 },{
-    title: '坐落',
+    title: '建设位置',
     dataIndex: 'position',
 },{
-    title: '取得方式',
-    dataIndex: 'acquireWay'
+    title: '建设规模m(²)',
+    dataIndex: 'scale',
 },{
-    title: '用途',
-    dataIndex: 'landUse',
+    title: '其中:地上建筑面积(m²)',
+    dataIndex: 'upArea',
 },{
-    title: '宗地面积(m²)',
-    dataIndex: 'landArea',
+    title: '其中:地下建筑面积(m²)',
+    dataIndex: 'downArea',
 },{
-    title: '建筑面积(m²)',
-    dataIndex: 'bulidArea',
+    title: '设计单位',
+    dataIndex: 'designOrg',
 },{
-    title: '地号',
-    dataIndex: 'num',
+    title: '施工单位',
+    dataIndex: 'buildOrg',
 },{
-    title: '使用期限',
-    dataIndex: 'limitDate',
+    title: '监理单位',
+    dataIndex: 'supervisionOrg',
 },{
-    title: '登记时间',
-    dataIndex: 'boardingTime',
+    title: '合同开工日期',
+    dataIndex: 'startDate',
 },{
-    title: '项目分期',
-    dataIndex: 'stagesId',
-},{
-    title: '清算分期',
-    dataIndex: 'liquidationStage',
-},{
-    title: '套数',
-    dataIndex: 'rooms',
-},{
-    title: '发证日期',
-    dataIndex: 'issuingDate',
-},{
-    title: '备注',
-    dataIndex: 'remark',
+    title: '合同竣工日期',
+    dataIndex: 'endDate',
 }];
 
 class TabPage extends Component {
@@ -186,7 +174,7 @@ class TabPage extends Component {
                         </Row>
                     </Form>
 
-                    <AsyncTable url={`/card/house/ownership/list/${this.props.projectId}`}
+                    <AsyncTable url={`/card/project/build/list/${this.props.projectId}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{

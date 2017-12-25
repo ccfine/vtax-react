@@ -8,6 +8,10 @@ import Tab2 from './tab_2';
 import Tab3 from './tab_3';
 import Tab4 from './tab_4';
 import Tab5 from './tab_5';
+import Tab6 from './tab_6';
+import Tab7 from './tab_7';
+import Tab8 from './tab_8';
+import Tab9 from './tab_9';
 import Tab10 from './tab_10';
 const tabList = [{
     key: 'tab1',
@@ -24,22 +28,45 @@ const tabList = [{
 }, {
     key: 'tab5',
     tab: '国有土地使用证',
+}, {
+    key: 'tab6',
+    tab: '建设工程规划许可证',
+}, {
+    key: 'tab7',
+    tab: '建设工程施工许可证',
+}, {
+    key: 'tab8',
+    tab: '商品房预售许可证',
+}, {
+    key: 'tab9',
+    tab: '竣工验收备案表',
+}, {
+    key: 'tab10',
+    tab: '房屋所有权证',
 }];
 
-const contentList = {
-    tab1: <Tab1 />,
-    tab2: <Tab2 />,
-    tab3: <Tab3 />,
-    tab4: <Tab4 />,
-    tab5: <Tab5 />,
-};
+const getContent = (key,projectId) => {
+    const contentList = {
+        tab1: <Tab1 projectId={projectId} />,
+        tab2: <Tab2 projectId={projectId} />,
+        tab3: <Tab3 projectId={projectId} />,
+        tab4: <Tab4 projectId={projectId} />,
+        tab5: <Tab5 projectId={projectId} />,
+        tab6: <Tab6 projectId={projectId} />,
+        tab7: <Tab7 projectId={projectId} />,
+        tab8: <Tab8 projectId={projectId} />,
+        tab9: <Tab9 projectId={projectId} />,
+        tab10: <Tab10 projectId={projectId} />,
+    };
+    return contentList[key]
+}
+
 class PopModal extends Component{
     state = {
         key: 'tab1',
         noTitleKey: 'article',
     }
     onTabChange = (key, type) => {
-        console.log(key, type);
         this.setState({ [type]: key });
     }
     render(){
@@ -64,7 +91,7 @@ class PopModal extends Component{
                     tabList={tabList}
                     onTabChange={(key) => { this.onTabChange(key, 'key'); }}
                 >
-                    {contentList[this.state.key]}
+                    {props.projectId && getContent(this.state.key,`${props.projectId[0]}`)}
                 </Card>
             </Modal>
         )

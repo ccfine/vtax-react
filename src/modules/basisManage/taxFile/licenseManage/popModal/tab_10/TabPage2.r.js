@@ -1,63 +1,36 @@
 /**
  * Created by liurunbin on 2017/12/23.
  */
-/** 房屋所有权证*/
+/** 大产证明细*/
 import React, { Component } from 'react'
 import {Layout,Row,Col,Form,Button,Icon,Modal} from 'antd'
-import {AsyncTable,CusFormItem} from '../../../../../../compoments'
+import {AsyncTable} from '../../../../../../compoments'
 import PopModal from './popModal'
 const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
 const columns = [{
-    title: '权证名称 ',
-    dataIndex: 'warrantName',
+    title: '栋号 ',
+    dataIndex: 'building',
 }, {
-    title: '权证号',
-    dataIndex: 'warrantNum',
+    title: '单元号',
+    dataIndex: 'unitNumber',
 },{
-    title: '权利人',
-    dataIndex: 'warrantUser',
-},{
-    title: '坐落',
-    dataIndex: 'position',
-},{
-    title: '取得方式',
-    dataIndex: 'acquireWay'
-},{
-    title: '用途',
-    dataIndex: 'landUse',
-},{
-    title: '宗地面积(m²)',
-    dataIndex: 'landArea',
+    title: '户号',
+    dataIndex: 'accountNumber',
 },{
     title: '建筑面积(m²)',
     dataIndex: 'bulidArea',
 },{
-    title: '地号',
-    dataIndex: 'num',
+    title: '分摊面积(m²)',
+    dataIndex: 'shareArea'
 },{
-    title: '使用期限',
-    dataIndex: 'limitDate',
+    title: '设计用途',
+    dataIndex: 'landUse',
 },{
-    title: '登记时间',
-    dataIndex: 'boardingTime',
-},{
-    title: '项目分期',
-    dataIndex: 'stagesId',
-},{
-    title: '清算分期',
-    dataIndex: 'liquidationStage',
-},{
-    title: '套数',
-    dataIndex: 'rooms',
-},{
-    title: '发证日期',
-    dataIndex: 'issuingDate',
-},{
-    title: '备注',
-    dataIndex: 'remark',
+    title: '坐落',
+    dataIndex: 'position',
 }];
 
 class TabPage extends Component {
@@ -109,20 +82,6 @@ class TabPage extends Component {
     showModal=()=>{
         this.toggleModalVisible(true)
     }
-    updateTable(){
-        this.setState({
-            tableUpDateKey:Date.now()
-        })
-    }
-    componentDidMount(){
-        this.updateTable()
-    }
-    componentWillReceiveProps(nextProps){
-        if(this.props.projectId !== nextProps.projectId){
-            //项目id改变则重新更新
-            this.updateTable()
-        }
-    }
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
         const formItemStyle={
@@ -142,9 +101,6 @@ class TabPage extends Component {
             <Layout style={{background:'transparent'}} >
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
-                            <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
-                            </Col>
                             <Col span={8}>
                                 <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
                             </Col>
@@ -186,7 +142,7 @@ class TabPage extends Component {
                         </Row>
                     </Form>
 
-                    <AsyncTable url={`/card/house/ownership/list/${this.props.projectId}`}
+                    <AsyncTable url={`/card/house/ownership/detail/list/${this.props.titleCertificateId}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{

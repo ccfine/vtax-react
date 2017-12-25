@@ -37,9 +37,30 @@ const columns = [{
 },{
     title: '纳税申报',
     dataIndex: 'taxDeclaration',
+    render:text=>{
+        //纳税申报([1一般纳税人申报表（通用）2企业所得税预缴纳税申报表（A类）3企业所得税年度纳税申报表（A类）]）
+        text = parseInt(text,0)
+        if(text===1){
+            return '一般纳税人申报表(通用)'
+        }
+        if(text===2){
+            return '企业所得税预缴纳税申报表(A类)'
+        }
+        if(text===3){
+            return '企业所得税年度纳税申报表(A类)'
+        }
+        return ''
+    }
 },{
     title: '纳税形式',
-    dataIndex: 'taxDeclaration1',
+    dataIndex: 'taxModality',
+    render:text=>{
+        text = parseInt(text,0)
+        if(text===1){
+            return '独立纳税'
+        }
+        return ''
+    }
 }];
 
 class DeclareParameter extends Component {

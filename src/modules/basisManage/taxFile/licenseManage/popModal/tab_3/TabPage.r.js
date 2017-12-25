@@ -66,7 +66,13 @@ export default class TabPage extends Component{
         })
     }
     componentDidMount(){
-        //this.updateTable()
+        this.updateTable()
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.projectId !== nextProps.projectId){
+            //项目id改变则重新更新
+            this.updateTable()
+        }
     }
     toggleModalVisible=visible=>{
         this.setState({

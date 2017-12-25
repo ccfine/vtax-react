@@ -3,7 +3,9 @@
  */
 import TaxMain from './TaxMain.r'
 import AsyncSelect from './AsyncSelect'
+import YearSelect from './YearSelect.r'
 export default {
     TaxMain,
-    AsyncSelect
+    AsyncSelect,
+    YearSelect
 }
