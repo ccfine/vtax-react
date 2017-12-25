@@ -173,7 +173,7 @@ class PopModal extends Component{
                             >
                                 {getFieldDecorator('stockRight', {
                                     valuePropName: 'checked',
-                                    initialValue:parseInt(defaultData.stockRight,0)===1,
+                                    initialValue:defaultData.stockRight,
                                 })(
                                     <Checkbox disabled={disibled} />
                                 )}

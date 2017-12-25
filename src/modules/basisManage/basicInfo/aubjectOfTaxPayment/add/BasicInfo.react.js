@@ -34,7 +34,7 @@ class BasicInfo extends Component {
 
     getFields(start,end) {
         const {getFieldDecorator} = this.props.form;
-        const {defaultData} = this.state;
+        const {defaultData} = this.props;
 
         const dateFormat = 'YYYY-MM-DD';
         let disibled = this.props.type ==='view';
@@ -42,7 +42,7 @@ class BasicInfo extends Component {
         if(this.props.type==='edit' || this.props.type==='view'){
             shouldShowDefaultData = true;
         }
-        console.log(defaultData);
+
 
         const formItemLayout = {
             labelCol: {
@@ -201,7 +201,7 @@ class BasicInfo extends Component {
                 label: '生产经营地址',
                 type: 'cascader',
                 fieldName: 'jbxx.operatingProvince',
-                initialValue:defaultData.operatingProvince,
+                initialValue:[`${defaultData.operatingProvince}`,`${defaultData.operatingCity}`,`${defaultData.operatingArea}`],
                 items: this.state.selectOptions
             }, {
                 label: '生产经营详细地址',
@@ -327,7 +327,7 @@ class BasicInfo extends Component {
                 label: '主管国税机关',
                 type: 'cascader',
                 fieldName: 'jbxx.nationalTaxProvince',
-                initialValue:defaultData.nationalTaxProvince,
+                initialValue:[`${defaultData.nationalTaxProvince}`,`${defaultData.nationalTaxCity}`,`${defaultData.nationalTaxArea}`],
                 items: this.state.selectOptions
             }, {
                 label: '主管国税机关详细地址',
@@ -349,7 +349,7 @@ class BasicInfo extends Component {
                 label: '主管地税机关',
                 type: 'cascader',
                 fieldName: 'jbxx.localTaxProvince',
-                initialValue:defaultData.localTaxProvince,
+                initialValue:[`${defaultData.localTaxProvince}`,`${defaultData.localTaxCity}`,`${defaultData.localTaxArea}`],
                 items: this.state.selectOptions
             }, {
                 label: '主管地税机关详细地址',
@@ -457,7 +457,7 @@ class BasicInfo extends Component {
     handleBlur=(name)=>{
         const form = this.props.form;
         let value = form.getFieldValue(`${name}`);
-        console.log(value,fMoney(value));
+        //console.log(value,fMoney(value));
 
         form.setFieldsValue({
             [name]: fMoney(value),
@@ -524,21 +524,35 @@ class BasicInfo extends Component {
         })
     }
 
-    componentDidMount() {
+    /*fetch = (id)=> {
+        console.log(id)
+        request.get(`/taxsubject/get/${id}`,{
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    console.log(data.data.jbxx)
+                    this.setState({
+                        defaultData:{...data.data.jbxx}
+                    })
+                }
+            });
+    }*/
 
-        if(this.props.type !== 'add'){
-            this.setState({
-                defaultData:{...this.props.initData[0]}
-            })
-        }
+    componentDidMount() {
 
         this.getRegistrationType()
         this.getTaxpayerQualification()
         this.getMaximumLimit()
         this.getlistArea()
+
+       /* if(this.props.type !== 'add'){
+            this.fetch(this.props.selectedRowKeys[0])
+        }*/
+
     }
+
     componentWillReceiveProps(nextProps){
-        console.log(nextProps)
+        //console.log(nextProps)
 
         if(!nextProps.visible){
             /**
@@ -549,25 +563,30 @@ class BasicInfo extends Component {
                 defaultData:{}
             })
         }
-        console.log(this.props.visible !== nextProps.visible);
+        //console.log(this.props.visible !== nextProps.visible);
 
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.type !== 'add'){
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
+            console.log(nextProps)
+            debugger
             this.setState({
-                defaultData:{...nextProps.selectedRows[0]}
+                defaultData:{...nextProps.defaultData}
             })
 
         }
     }
+
     mounted=true
     componentWillUnmount(){
         this.mounted=null
     }
 
     render() {
-        const {defaultData} = this.state;
+
+        const {defaultData} = this.props;
+        const {industry} = this.state;
         const {getFieldDecorator} = this.props.form;
 
         const formItemLayout = {
@@ -597,7 +616,7 @@ class BasicInfo extends Component {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label='所属行业'>
                                 {getFieldDecorator('jbxx.industry', {
-                                    initialValue: defaultData.industry || '',
+                                    initialValue: defaultData.industry || industry.title,
                                     rules: [
                                         {
                                             required: true, message: '请选择所属行业',

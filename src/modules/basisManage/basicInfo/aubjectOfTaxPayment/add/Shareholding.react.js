@@ -23,7 +23,7 @@ const columns = [{
 },{
     title: '是否代持股权',
     dataIndex: 'stockRight',
-    render:text=>parseInt(text,0) === 0 ? '否' : '是',
+    render:text=>text=== true ? '否' : '是',
 },{
     title: '登记股东',
     dataIndex: 'registeredStockholder',
@@ -62,6 +62,7 @@ const columns = [{
 class Shareholding extends Component {
 
     state={
+        defaultData:[],
 
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
@@ -105,8 +106,39 @@ class Shareholding extends Component {
         })
     }
 
+    /*fetch = (id)=> {
+        request.get(`/taxsubject/get/${id}`,{
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    this.setState({
+                        defaultData:[...data.data.gdjcg]
+                    },()=>{
+                        this.props.setGdjcgDate(this.state.defaultData);
+                    })
+                }
+            });
+    }*/
+
+    componentDidMount() {
+        /*if(this.props.type !== 'add'){
+            this.fetch(this.props.selectedRowKeys[0])
+        }*/
+    }
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps)
+
+        /* if(nextProps.modalConfig.type !== '' && nextProps.modalConfig.type !== 'add' && nextProps.visible === true){
+             if(nextProps.selectedRowKeys.length>0){
+                 console.log(nextProps.selectedRowKeys[0])
+                 this.fetch(nextProps.selectedRowKeys[0])
+             }
+         }*/
+
+    }
     render() {
         const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
+        const {defaultData} = this.props;
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
@@ -139,7 +171,7 @@ class Shareholding extends Component {
                                               okType: 'danger',
                                               cancelText: '取消',
                                               onOk:()=>{
-                                                  const nowKeys = this.props.data;
+                                                  const nowKeys = defaultData;
                                                   const keys = this.state.selectedRows;
                                                   for(let i = 0;i<nowKeys.length;i++){
                                                       for(let j = 0; j<keys.length;j++){
@@ -175,7 +207,7 @@ class Shareholding extends Component {
                       }
                       style={{marginTop:10}}>
 
-                    <SynchronizeTable data={this.props.data}
+                    <SynchronizeTable data={defaultData}
                                 updateKey={tableUpDateKey}
                                 tableProps={{
                                     rowKey:record=>record.id,
@@ -191,7 +223,7 @@ class Shareholding extends Component {
                     modalConfig={modalConfig}
                     selectedRowKeys={selectedRowKeys}
                     selectedRows={selectedRows}
-                    initData={this.props.data}
+                    initData={defaultData}
                     toggleModalVisible={this.toggleModalVisible}
                     setGdjcgDate={this.props.setGdjcgDate.bind(this)}
                     setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}

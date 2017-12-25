@@ -5,6 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Checkbox, Row, Col, Form } from 'antd'
+import {request} from '../../../../../utils'
 import './styles.less'
 
 const FormItem = Form.Item;
@@ -16,7 +17,8 @@ class TaxIdentification extends Component {
         list: [
             {
                 label:'流转税',
-                fieldName: 'jbxx.lzs',
+                fieldName: 'szjd.lzs',
+                initialValue:this.props.defaultData && this.props.defaultData.lzs,
                 data:[
                     {
                         label: '增值税',
@@ -29,7 +31,8 @@ class TaxIdentification extends Component {
                 ]
             },{
                 label:'所得税',
-                fieldName: 'jbxx.sds',
+                fieldName: 'szjd.sds',
+                initialValue:this.props.defaultData && this.props.defaultData.sds,
                 data:[
                     {
                         label: '企业所得税',
@@ -42,7 +45,8 @@ class TaxIdentification extends Component {
                 ]
             },{
                 label:'财产税',
-                fieldName: 'jbxx.ccs',
+                fieldName: 'szjd.ccs',
+                initialValue:this.props.defaultData && this.props.defaultData.ccs,
                 data:[
                     {
                         label: '房产税',
@@ -60,7 +64,8 @@ class TaxIdentification extends Component {
                 ]
             },{
                 label:'行为税',
-                fieldName: 'jbxx.xys',
+                fieldName: 'szjd.xws',
+                initialValue:this.props.defaultData && this.props.defaultData.xws,
                 data:[
                     {
                         label: '印花税',
@@ -78,7 +83,8 @@ class TaxIdentification extends Component {
                 ]
             },{
                 label:'资源税',
-                fieldName: 'jbxx.zys',
+                fieldName: 'szjd.zys',
+                initialValue:this.props.defaultData && this.props.defaultData.zys,
                 data:[
                     {
                         label: '资源税',
@@ -104,7 +110,8 @@ class TaxIdentification extends Component {
                 ]
             },{
                 label:'其他税费',
-                fieldName: 'jbxx.qtsf',
+                fieldName: 'szjd.qtsf',
+                initialValue:this.props.defaultData && this.props.defaultData.qtsf,
                 data:[
                     {
                         label: '教育费附加',
@@ -136,8 +143,28 @@ class TaxIdentification extends Component {
         ]
     }
 
-    componentDidMount() {
+    /*fetch = (id)=> {
+        console.log(id)
+        request.get(`/taxsubject/get/${id}`,{
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    console.log(data.data.szjd.value)
+                    debugger
+                    this.setState({
+                        defaultData:{...data.data.szjd}
+                    })
+                }
+            });
+    }*/
 
+    componentDidMount() {
+        console.log('e');
+        console.log(this.props.defaultData);
+
+        /*if(this.props.type !== 'add'){
+            this.fetch(this.props.selectedRowKeys[0])
+        }*/
     }
 
     mounted = true;
@@ -151,6 +178,7 @@ class TaxIdentification extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
+
         let disibled = this.props.type ==='view';
         const checkboxformItemLayout = {
             labelCol: {
@@ -175,6 +203,7 @@ class TaxIdentification extends Component {
                                         className='vTax-CheckboxGroup'
                                     >
                                         {getFieldDecorator(item.fieldName, {
+                                            initialValue:item.initialValue || [],
                                         })(
                                             <CheckboxGroup disabled={disibled} options={item.data} />
                                         )}
