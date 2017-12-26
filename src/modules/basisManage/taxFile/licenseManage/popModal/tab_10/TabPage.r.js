@@ -79,7 +79,8 @@ class TabPage extends Component {
 
         modalConfig:{
             type:''
-        }
+        },
+        titleCertificateId:undefined
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -104,7 +105,8 @@ class TabPage extends Component {
     }
     onChange=(selectedRowKeys, selectedRows) => {
         this.setState({
-            selectedRowKeys
+            selectedRowKeys,
+            titleCertificateId:selectedRows[0].id
         })
     }
     showModal=()=>{
@@ -125,7 +127,7 @@ class TabPage extends Component {
         }
     }
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand,titleCertificateId} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -206,7 +208,7 @@ class TabPage extends Component {
                                     rowSelection:rowSelection
                                 }} />
                 <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
-                <PartTwo />
+                <PartTwo titleCertificateId={titleCertificateId} />
             </Layout>
         )
     }

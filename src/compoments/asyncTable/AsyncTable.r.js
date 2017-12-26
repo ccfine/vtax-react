@@ -26,12 +26,12 @@ export default class AsyncTable extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
-            this.fetch()
+            this.fetch({},nextProps.url)
         }
     }
-    fetch = (params = {}) => {
+    fetch = (params = {},url) => {
         this.setState({ loaded: false });
-        request.get(this.props.url,{
+        request.get(url || this.props.url,{
             params:{
                 results: 10,
                 ...params,

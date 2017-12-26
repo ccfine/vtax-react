@@ -2,11 +2,10 @@
  * Created by liurunbin on 2017/12/23.
  */
 import React,{Component} from 'react'
-import {Card,Button,Icon,Modal} from 'antd'
+import {Card,Button,Icon} from 'antd'
 import PropTypes from 'prop-types'
 import {AsyncTable} from '../../../../../../compoments'
 import PopModal from './popModal'
-const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
