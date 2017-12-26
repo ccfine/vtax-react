@@ -53,7 +53,6 @@ class AubjectOfTaxPayment extends Component {
             type:''
         },
     }
-
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -103,6 +102,9 @@ class AubjectOfTaxPayment extends Component {
         this.setState({
             tableUpDateKey:Date.now()
         })
+    }
+    componentDidMount(){
+        this.updateTable()
     }
     componentDidMount(){
         this.updateTable()

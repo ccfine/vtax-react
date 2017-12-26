@@ -3,54 +3,19 @@
  */
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
-import {request} from '../../../../../utils'
-import {CusFormItem} from '../../../../../compoments'
+import {request} from '../../../../../../../utils'
+import {CusFormItem} from '../../../../../../../compoments'
 import moment from 'moment';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
-let timeout;
-let currentValue;
-function fetchTaxMain(value, callback) {
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
-
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.name}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
-}
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
         visible:true
     }
     state={
-        mainTaxItems:[
-        ],
         initData:{
 
         }
@@ -63,14 +28,6 @@ class PopModal extends Component{
                 console.log('Received values of form: ', values);
             }
         });
-    }
-    onSearch = (value) => {
-        fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
-    }
-    onSelect = (value,option)=>{
-        this.setState({
-            selectedId:value
-        })
     }
     fetchReportById = id=>{
         request.get(`/report/get/${id}`)
@@ -114,7 +71,7 @@ class PopModal extends Component{
     }
     render(){
         const props = this.props;
-        const {mainTaxItems,initData} = this.state;
+        const {initData} = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 8 },
@@ -138,6 +95,8 @@ class PopModal extends Component{
                 title = '查看';
                 disabled=true;
                 break;
+            default:
+                //no
         }
         const dateFormat = 'YYYY-MM-DD'
         let shouldShowDefaultData = false;

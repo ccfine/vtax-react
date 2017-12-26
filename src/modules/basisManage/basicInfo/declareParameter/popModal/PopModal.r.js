@@ -114,7 +114,7 @@ class PopModal extends Component{
     }
     render(){
         const props = this.props;
-        const {mainTaxItems,initData} = this.state;
+        const {initData} = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 8 },

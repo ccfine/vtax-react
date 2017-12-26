@@ -1,164 +1,140 @@
-/**
- * author       : liuliyuan
- * createTime   : 2017/12/16 17:47
- * description  :
- */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Select,Table,Icon,Modal,Divider,DatePicker} from 'antd'
-import {request} from '../../../../utils'
-const FormItem = Form.Item;
-const Option = Select.Option;
-const confirm = Modal.confirm;
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Select,DatePicker} from 'antd'
+import {AsyncTable,CusFormItem} from '../../../../compoments'
+import {requestDict} from '../../../../utils'
+import PopModal from './popModal'
 const { RangePicker } = DatePicker;
-const linkStyle={
-    color:'#1890ff',
-    cursor:'pointer'
+const confirm = Modal.confirm;
+const FormItem = Form.Item;
+const Option = Select.Option
+const buttonStyle={
+    marginRight:5
 }
-const showDeleteConfirm = ()=>{
-    confirm({
-        title: '友情提醒',
-        content: '该删除后将不可恢复，是否删除？',
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk() {
-            console.log('OK');
-        },
-        onCancel() {
-            console.log('Cancel');
-        },
-    });
-}
-const columns = [{
-    title: '编码',
-    dataIndex: 'code',
-}, {
-    title: '纳税主体',
-    dataIndex: 'name',
-},{
-    title: '社会信用代码',
-    dataIndex: 'taxNum',
-},{
-    title: '开业日期',
-    dataIndex: 'openingDate',
-},{
-    title: '税务经办人',
-    dataIndex: 'operater',
-},{
-    title: '经办人电话',
-    dataIndex: 'operaterPhone',
-},{
-    title: '营业状态',
-    dataIndex: 'operatingStatus',
-    render:text=>parseInt(text,0) ===1?'营业':'停业'
-},{
-    title:'操作',
-    key:'action',
-    render:(text,record)=>(
-        <div>
-            <span style={linkStyle}>编辑</span>
-            <Divider type="vertical" />
-            <span style={linkStyle}
-                  onClick={showDeleteConfirm}
-            >
-                删除
-            </span>
-            <Divider type="vertical" />
-        </div>
-    )
-}];
-let timeout;
-let currentValue;
-function fetchTaxMain(value, callback) {
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
 
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.id}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
-}
 class DeclareParameter extends Component {
     state={
-        mainTaxItems:[
-        ],
-        selectedId:undefined,
+        /**
+         * params条件，给table用的
+         * */
+        filters:{},
 
+        /**
+         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
+         * */
+        tableUpDateKey:Date.now(),
 
-        dataSource : [],
-        pagination: {
-            showTotal:total => `总共 ${total} 条`
+        selectedRowKeys:null,
+        visible:false,
+        modalConfig:{
+            type:''
         },
-        tableLoading: false,
+        expand:true,
+        nssbData:[]
     }
-    fetch = (params = {}) => {
-        this.setState({ tableLoading: true });
-        request.get('/taxsubject/list',{
-            params:{
-                results: 10,
-                id:this.state.selectedId,
-                ...params,
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    columns = [
+        {
+            title: '编码',
+            dataIndex: 'mainCode',
+        },{
+            title: '纳税主体',
+            dataIndex: 'mainName',
+        }, {
+            title: '税(费)种',
+            dataIndex: 'taxType',
+            render:text=>{
+                text = parseInt(text,0)
+                if(text===1){
+                    return '企业所得税'
+                }
+                if(text===2){
+                    return '增值税'
+                }
+                return ''
             }
-        }).then(({data}) => {
-            if(data.code===200){
-                const pagination = { ...this.state.pagination };
-                pagination.total = data.data.total;
+        },{
+            title: '所属期起',
+            dataIndex: 'subordinatePeriodStart',
+        },{
+            title: '所属期止',
+            dataIndex: 'subordinatePeriodEnd',
+        },{
+            title: '纳税申报',
+            dataIndex: 'taxDeclaration',
+            render:text=>{
+                //纳税申报([1一般纳税人申报表（通用）2企业所得税预缴纳税申报表（A类）3企业所得税年度纳税申报表（A类）]）
+                //数据字典NSSB
+                let str = ''
+                this.state.nssbData.map(item=>{
+                    if(item.id === text){
+                        str = item.description
+                    }
+                    return item
+                })
+                return str
+            }
+        },{
+            title: '纳税形式',
+            dataIndex: 'taxModality',
+            render:text=>{
+                text = parseInt(text,0)
+                if(text===1){
+                    return '独立纳税'
+                }
+                return ''
+            }
+        }
+    ];
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
+                    values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
+                    values.subordinatePeriodEnd= values.subordinatePeriod[1].format('YYYY-MM-DD')
+                    values.subordinatePeriod = undefined;
+                }
                 this.setState({
-                    tableLoading: false,
-                    dataSource: data.data.records,
-                    pagination,
+                    selectedRowKeys:null,
+                    filters:values
+                },()=>{
+                    this.setState({
+                        tableUpDateKey:Date.now()
+                    })
                 });
             }
+        });
 
-        });
     }
-    handleTableChange = (pagination, filters, sorter) => {
-        const pager = { ...this.state.pagination };
-        pager.current = pagination.current;
+    onChange=(selectedRowKeys, selectedRows) => {
         this.setState({
-            pagination: pager,
-        });
-        this.fetch({
-            results: pagination.pageSize,
-            current: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sorter.order,
-            ...filters,
+            selectedRowKeys
+        })
+    }
+    componentDidMount(){
+        //获取纳税申报对应的数据字典
+        requestDict('NSSB',result=>{
+            this.setState({
+                nssbData:result
+            })
         });
     }
-    onSearch = (value) => {
-        fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
-    }
-    onSelect = (value,option)=>{
+    showModal=type=>{
+        this.toggleModalVisible(true)
         this.setState({
-            selectedId:value.key
+            modalConfig:{
+                type,
+                id:this.state.selectedRowKeys
+            }
         })
     }
     render() {
         const {getFieldDecorator} = this.props.form;
-        const {mainTaxItems,dataSource,tableLoading,pagination} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -167,77 +143,107 @@ class DeclareParameter extends Component {
                 span:18
             }
         }
+        const rowSelection = {
+            type:'radio',
+            selectedRowKeys,
+            onChange: this.onChange
+        };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询条件">
-                    <Row>
-                        <Col span={8}>
-                            <FormItem label='纳税主体' {...formItemStyle}>
-                                {getFieldDecorator(`aa`,{
-                                })(
-                                    <Select
-                                        showSearch
-                                        style={{ width: '100%' }}
-                                        optionFilterProp="children"
-                                        labelInValue
-                                        onSelect={this.onSelect}
-                                        onSearch={this.onSearch}
-                                    >
-                                        {
-                                            mainTaxItems.map((item,i)=>(
-                                                <Option key={i} value={item.value}>{item.text}</Option>
-                                            ))
-                                        }
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={8}>
-                            <FormItem label='税(费)种' {...formItemStyle}>
-                                {getFieldDecorator(`bb`,{
-                                })(
-                                    <Select
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value='1'>1</Option>
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={8}>
-                            <FormItem
-                                {...formItemStyle}
-                                label="有效期起止"
-                            >
-                                {getFieldDecorator('range-time-picker', {
-                                })(
-                                    <RangePicker style={{width:'100%'}} showTime format="YYYY-MM-DD" />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24} style={{textAlign:'right'}}>
-                            <Button style={{marginTop:3}} type='primary' onClick={()=>this.fetch()}>查询</Button>
-                        </Col>
-                    </Row>
+                <Card title="查询条件"
+                      bodyStyle={{
+                          padding:expand?'12px 16px':'0 16px'
+                      }}
+                      extra={
+                          <Icon
+                              style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
+                              onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
+                              type={`${expand?'up':'down'}-circle-o`} />
+                      }>
+                    <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                        <Row>
+                            <Col span={8}>
+                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
+                            </Col>
+                            <Col span={8}>
+                                <FormItem label='税(费)种' {...formItemStyle}>
+                                    {getFieldDecorator(`taxType`,{
+                                    })(
+                                        <Select
+                                            style={{ width: '100%' }}
+                                        >
+                                            <Option value={'1'}>增值税</Option>
+                                            <Option value={'2'}>企业所得税</Option>
+                                        </Select>
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem
+                                    {...formItemStyle}
+                                    label="所属期起止"
+                                >
+                                    {getFieldDecorator('subordinatePeriod', {
+                                    })(
+                                        <RangePicker style={{width:'100%'}} format="YYYY-MM-DD" />
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col style={{textAlign:'right'}}>
+                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            </Col>
+                        </Row>
+                    </Form>
                 </Card>
                 <Card title="查询结果"
                       extra={<div>
-                          <Button>
-                              <Icon type="plus-circle" />
+                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                              <Icon type="file-add" />
                               新增
                           </Button>
+                          <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                              <Icon type="edit" />
+                              编辑
+                          </Button>
+                          <Button
+                              onClick={()=>{
+                                  confirm({
+                                      title: '友情提醒',
+                                      content: '该删除后将不可恢复，是否删除？',
+                                      okText: '确定',
+                                      okType: 'danger',
+                                      cancelText: '取消',
+                                      onOk() {
+                                          console.log('OK');
+                                      },
+                                      onCancel() {
+                                          console.log('Cancel');
+                                      },
+                                  });
+                              }}
+                              disabled={!selectedRowKeys}
+                              type='danger'>
+                              <Icon type="delete" />
+                              删除
+                          </Button>
                       </div>}
-                      style={{marginTop:20}}>
-                    <Table
-                        loading={tableLoading}
-                        rowKey={record=>record.id}
-                        dataSource={dataSource}
-                        pagination={pagination}
-                        onChange={this.handleTableChange}
-                        columns={columns} />
+                      style={{marginTop:10}}>
+
+                    <AsyncTable url="/sys/declarationParam/list"
+                                updateKey={tableUpDateKey}
+                                filters={filters}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:true,
+                                    size:'middle',
+                                    columns:this.columns,
+                                    rowSelection:rowSelection
+                                }} />
                 </Card>
+                <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
             </Layout>
         )
     }
