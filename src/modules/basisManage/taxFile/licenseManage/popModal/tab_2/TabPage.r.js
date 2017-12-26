@@ -88,7 +88,7 @@ export default class TabPage extends Component{
                     </Button>
                 </div>
             }>
-                <AsyncTable url={`/contract/land/list/${props.projectId}`}
+                <AsyncTable url={`/project/stage/list/${props.projectId}`}
                             updateKey={tableUpDateKey}
                             tableProps={{
                                 rowKey:record=>record.id,

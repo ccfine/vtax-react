@@ -123,6 +123,7 @@ class TabPage extends Component {
             selectedRowKeys,
             onChange: this.onChange
         };
+        const {projectId} = this.props;
         return (
             <Layout style={{background:'transparent'}} >
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
@@ -131,10 +132,10 @@ class TabPage extends Component {
                                 <CusFormItem.AsyncSelect
                                     formItemStyle={formItemStyle}
                                     label="项目分期"
-                                    fieldName="aa"
-                                    fieldTextName="1"
-                                    fieldValueName="2"
-                                    url=""
+                                    fieldName="stagesId"
+                                    fieldTextName="itemName"
+                                    fieldValueName="id"
+                                    url={`/project/stages/${projectId}`}
                                     form={this.props.form} />
                             </Col>
                             <Col span={8}>
@@ -186,7 +187,16 @@ class TabPage extends Component {
                                     pagination:true,
                                     size:'middle',
                                     columns:columns,
-                                    rowSelection:rowSelection
+                                    rowSelection:rowSelection,
+                                    footer:() => {
+                                        return (
+                                            <tr className='ant-table-row  ant-table-row-level-0'>
+                                                <td>总计</td>
+                                                <td>总计</td>
+                                                <td>总计</td>
+                                            </tr>
+                                        )
+                                    }
                                 }} />
                 <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
             </Layout>

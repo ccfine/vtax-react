@@ -11,19 +11,20 @@ const columns = [{
     dataIndex: 'mainName',
 }, {
     title: '备案资料类型',
-    dataIndex: 'taxType',
+    dataIndex: 'recordType',
 },{
     title: '备案日期',
-    dataIndex: 'type',
+    dataIndex: 'recordDate',
 },{
     title: '备案资料名称',
-    dataIndex: 'documentNum1',
+    dataIndex: 'recordName',
 },{
     title: '涉及税费种',
-    dataIndex: 'documentNum2',
+    dataIndex: 'taxFeeCategory',
 },{
     title: '是否有附件',
-    dataIndex: 'documentNum3',
+    dataIndex: 'isAttachment',
+    render:text=>parseInt(text,0) === 1 ?'有':'无'
 }];
 
 class FilingMaterial extends Component {
@@ -158,7 +159,7 @@ class FilingMaterial extends Component {
                       </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/tax/preferences/list"
+                    <AsyncTable url="/sys/recordInfo/list"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{

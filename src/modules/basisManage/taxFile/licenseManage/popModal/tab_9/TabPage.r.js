@@ -141,12 +141,20 @@ class TabPage extends Component {
             selectedRowKeys,
             onChange: this.onChange
         };
+        const {projectId} = this.props;
         return (
             <Layout style={{background:'transparent'}} >
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
                             <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
+                                <CusFormItem.AsyncSelect
+                                    formItemStyle={formItemStyle}
+                                    label="项目分期"
+                                    fieldName="stagesId"
+                                    fieldTextName="itemName"
+                                    fieldValueName="id"
+                                    url={`/project/stages/${projectId}`}
+                                    form={this.props.form} />
                             </Col>
                             <Col span={8}>
                                 <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>

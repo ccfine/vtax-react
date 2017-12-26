@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Select,DatePicker} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
+import {requestDict} from '../../../../utils'
 import PopModal from './popModal'
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -9,59 +10,6 @@ const Option = Select.Option
 const buttonStyle={
     marginRight:5
 }
-const columns = [{
-    title: '编码',
-    dataIndex: 'mainCode',
-},{
-    title: '纳税主体',
-    dataIndex: 'mainName',
-}, {
-    title: '税(费)种',
-    dataIndex: 'taxType',
-    render:text=>{
-        text = parseInt(text,0)
-        if(text===1){
-            return '企业所得税'
-        }
-        if(text===2){
-            return '增值税'
-        }
-        return ''
-    }
-},{
-    title: '所属期起',
-    dataIndex: 'subordinatePeriodStart',
-},{
-    title: '所属期止',
-    dataIndex: 'subordinatePeriodEnd',
-},{
-    title: '纳税申报',
-    dataIndex: 'taxDeclaration',
-    render:text=>{
-        //纳税申报([1一般纳税人申报表（通用）2企业所得税预缴纳税申报表（A类）3企业所得税年度纳税申报表（A类）]）
-        text = parseInt(text,0)
-        if(text===1){
-            return '一般纳税人申报表(通用)'
-        }
-        if(text===2){
-            return '企业所得税预缴纳税申报表(A类)'
-        }
-        if(text===3){
-            return '企业所得税年度纳税申报表(A类)'
-        }
-        return ''
-    }
-},{
-    title: '纳税形式',
-    dataIndex: 'taxModality',
-    render:text=>{
-        text = parseInt(text,0)
-        if(text===1){
-            return '独立纳税'
-        }
-        return ''
-    }
-}];
 
 class DeclareParameter extends Component {
     state={
@@ -80,13 +28,67 @@ class DeclareParameter extends Component {
         modalConfig:{
             type:''
         },
-        expand:true
+        expand:true,
+        nssbData:[]
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
     }
+    columns = [
+        {
+            title: '编码',
+            dataIndex: 'mainCode',
+        },{
+            title: '纳税主体',
+            dataIndex: 'mainName',
+        }, {
+            title: '税(费)种',
+            dataIndex: 'taxType',
+            render:text=>{
+                text = parseInt(text,0)
+                if(text===1){
+                    return '企业所得税'
+                }
+                if(text===2){
+                    return '增值税'
+                }
+                return ''
+            }
+        },{
+            title: '所属期起',
+            dataIndex: 'subordinatePeriodStart',
+        },{
+            title: '所属期止',
+            dataIndex: 'subordinatePeriodEnd',
+        },{
+            title: '纳税申报',
+            dataIndex: 'taxDeclaration',
+            render:text=>{
+                //纳税申报([1一般纳税人申报表（通用）2企业所得税预缴纳税申报表（A类）3企业所得税年度纳税申报表（A类）]）
+                //数据字典NSSB
+                let str = ''
+                this.state.nssbData.map(item=>{
+                    if(item.id === text){
+                        str = item.description
+                    }
+                    return item
+                })
+                return str
+            }
+        },{
+            title: '纳税形式',
+            dataIndex: 'taxModality',
+            render:text=>{
+                text = parseInt(text,0)
+                if(text===1){
+                    return '独立纳税'
+                }
+                return ''
+            }
+        }
+    ];
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -112,6 +114,14 @@ class DeclareParameter extends Component {
         this.setState({
             selectedRowKeys
         })
+    }
+    componentDidMount(){
+        //获取纳税申报对应的数据字典
+        requestDict('NSSB',result=>{
+            this.setState({
+                nssbData:result
+            })
+        });
     }
     showModal=type=>{
         this.toggleModalVisible(true)
@@ -229,7 +239,7 @@ class DeclareParameter extends Component {
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     size:'middle',
-                                    columns:columns,
+                                    columns:this.columns,
                                     rowSelection:rowSelection
                                 }} />
                 </Card>

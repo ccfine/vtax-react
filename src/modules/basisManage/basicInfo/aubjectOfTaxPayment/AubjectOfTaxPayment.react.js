@@ -69,6 +69,14 @@ class AubjectOfTaxPayment extends Component {
             selectedRowKeys
         })
     }
+    updateTable(){
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
+    componentDidMount(){
+        this.updateTable()
+    }
     render() {
         const {tableUpDateKey,filters,selectedRowKeys} = this.state;
         const formItemStyle={

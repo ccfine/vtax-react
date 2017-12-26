@@ -98,13 +98,10 @@ class TabPage extends Component {
             onChange: this.onChange
         };
         return (
-            <Layout style={{background:'transparent'}} >
+            <Layout style={{background:'transparent',marginTop:15}} >
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
-                            <Col span={8}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                            </Col>
-                            <Col span={8} style={{textAlign:'right'}}>
+                            <Col span={24} style={{textAlign:'right',marginBottom:15}}>
                                     <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
                                         <Icon type="file-add" />
                                         新增
