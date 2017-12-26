@@ -34,7 +34,6 @@ const getQueryString=name=>{
     let r = window.location.search.substr(1).match(reg);
     if(r!==null)return  decodeURI(r[2]); return null;
 }
-
 const getDict = type => {
     return new Promise(function (resolve, reject) {
         request.get(`/sys/dict/listBaseInfo/${type}`)

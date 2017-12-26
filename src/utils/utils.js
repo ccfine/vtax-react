@@ -51,6 +51,19 @@ const digitUppercase=(n)=> {
     return s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');
 }
 
+//数组删除的方法
+Array.prototype.remove = function(index){
+    if(isNaN(index) || index > this.length){
+        return false;
+    }
+    for(let i=0,n=0;i<this.length;i++){
+        if(this[i] !== this[index]){
+            this[n++] = this[i];
+        }
+    }
+    this.length -= 1;
+}
+
 
 export {
     fMoney,
