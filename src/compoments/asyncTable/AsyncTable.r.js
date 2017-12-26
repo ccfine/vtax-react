@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Table} from 'antd'
+import {Table,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from '../../utils'
 export default class AsyncTable extends Component{
@@ -41,10 +41,15 @@ export default class AsyncTable extends Component{
             if(data.code===200){
                 const pagination = { ...this.state.pagination };
                 pagination.total = data.data.total;
-                this.setState({
+                this.mounted && this.setState({
                     loaded: true,
                     dataSource: data.data.records,
                     pagination,
+                });
+            }else{
+                message.error(data.msg)
+                this.mounted && this.setState({
+                    loaded: true
                 });
             }
 
@@ -63,6 +68,10 @@ export default class AsyncTable extends Component{
             sortOrder: sorter.order,
             ...filters,
         });
+    }
+    mounted=true
+    componentWillUnmount(){
+        this.mounted=null
     }
     render(){
         const {loaded,dataSource,pagination}  = this.state;

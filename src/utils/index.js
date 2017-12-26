@@ -34,12 +34,27 @@ const getQueryString=name=>{
     let r = window.location.search.substr(1).match(reg);
     if(r!==null)return  decodeURI(r[2]); return null;
 }
-
-
+const getDict = type => {
+    return new Promise(function (resolve, reject) {
+        request.get(`/sys/dict/listBaseInfo/${type}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    resolve(data.data)
+                }else{
+                    reject(data.msg)
+                }
+            })
+    })
+}
+const requestDict = async (type,callback)=>{
+    let result = await getDict(type);
+    callback(result)
+}
 export {
     regRules,
     request,
     fMoney,
     getQueryString,
     composeMenus,
+    requestDict
 }

@@ -38,6 +38,7 @@ class EquityRelation extends Component {
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
+        defaultData:[],
         tableUpDateKey:Date.now(),
         selectedRowKeys:null,
         selectedRows:{},
@@ -77,8 +78,15 @@ class EquityRelation extends Component {
         })
     }
 
+    componentDidMount() {
+
+    }
+    componentWillReceiveProps(nextProps){
+
+    }
     render() {
         const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
+        const {defaultData} = this.props;
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
@@ -113,7 +121,7 @@ class EquityRelation extends Component {
                                               okType: 'danger',
                                               cancelText: '取消',
                                               onOk:()=>{
-                                                  const nowKeys = this.props.data;
+                                                  const nowKeys = defaultData;
                                                   const keys = this.state.selectedRows;
                                                   for(let i = 0;i<nowKeys.length;i++){
                                                       for(let j = 0; j<keys.length;j++){
@@ -148,7 +156,7 @@ class EquityRelation extends Component {
                       }
                       style={{marginTop:10}}>
 
-                    <SynchronizeTable data={this.props.data}
+                    <SynchronizeTable data={defaultData}
                                       updateKey={tableUpDateKey}
                                       tableProps={{
                                           rowKey:record=>record.id,
@@ -164,7 +172,7 @@ class EquityRelation extends Component {
                     modalConfig={modalConfig}
                     selectedRowKeys={selectedRowKeys}
                     selectedRows={selectedRows}
-                    initData={this.props.data}
+                    initData={defaultData}
                     toggleModalVisible={this.toggleModalVisible}
                     setGqgxDate={this.props.setGqgxDate.bind(this)}
                     setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}

@@ -4,10 +4,11 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import ProjectInformationManagement from './projectInformationManagement'
 import AddEditModal from './add'
+import {request} from '../../../../utils'
 const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
@@ -52,7 +53,6 @@ class AubjectOfTaxPayment extends Component {
             type:''
         },
     }
-
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -69,7 +69,6 @@ class AubjectOfTaxPayment extends Component {
         });
 
     }
-
     onChange=(selectedRowKeys, selectedRows) => {
         //console.log(selectedRowKeys,selectedRows)
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
@@ -79,11 +78,6 @@ class AubjectOfTaxPayment extends Component {
         this.setState({
             selectedRowKeys,
             selectedRows
-        })
-    }
-    refreshCurdTable=()=>{
-        this.setState({
-            tableUpDateKey:Date.now()+'1'
         })
     }
     toggleModalVisible=visible=>{
@@ -99,6 +93,21 @@ class AubjectOfTaxPayment extends Component {
                 id:this.state.selectedRowKeys
             }
         })
+        /*if(type === 'add') {
+            this.setSelectedRowKeysAndselectedRows(null, {});
+        }*/
+
+    }
+    updateTable(){
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
+    componentDidMount(){
+        this.updateTable()
+    }
+    componentDidMount(){
+        this.updateTable()
     }
     render() {
         const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
@@ -153,7 +162,18 @@ class AubjectOfTaxPayment extends Component {
                                       okType: 'danger',
                                       cancelText: '取消',
                                       onOk:()=>{
-                                          this.setSelectedRowKeysAndselectedRows(null,{});
+
+                                          request.delete(`/taxsubject/delete/${this.state.selectedRowKeys[0]}`)
+                                              .then(({data})=>{
+                                                  if(data.code===200){
+                                                      message.success('删除成功!');
+                                                      this.updateTable();
+                                                  }else{
+                                                      message.error(data.msg)
+                                                  }
+                                              })
+
+                                          ///this.setSelectedRowKeysAndselectedRows(null,{});
                                           this.toggleModalVisible(false)
                                       },
                                       onCancel:()=>{
@@ -186,9 +206,8 @@ class AubjectOfTaxPayment extends Component {
                     modalConfig={modalConfig}
                     selectedRowKeys={selectedRowKeys}
                     selectedRows={selectedRows}
-                    initData={selectedRows}
                     toggleModalVisible={this.toggleModalVisible}
-                    refreshCurdTable={this.refreshCurdTable}
+                    updateTable={this.updateTable.bind(this)}
                     setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
                 />
             </Layout>

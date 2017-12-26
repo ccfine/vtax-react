@@ -18,6 +18,22 @@ class PopModal extends Component{
         defaultData:{},
     }
 
+    handleKeyUp=(name)=> {
+        const form = this.props.form;
+        let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
+        form.setFieldsValue({
+            [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+        });
+    }
+
+    handleBlur=(name)=>{
+        const form = this.props.form;
+        let value = form.getFieldValue(`${name}`);
+        form.setFieldsValue({
+            [name]: fMoney(value),
+        });
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -40,7 +56,7 @@ class PopModal extends Component{
     addKey=data=>{
         const arr = [];
         data.forEach((item,i) => {
-            arr.push({...item, id:i});
+            arr.push({...item, id:`t${i}`});
         });
         return arr;
     }
@@ -132,7 +148,7 @@ class PopModal extends Component{
                     </Row>
                 }
                 title={title}>
-                <Form onSubmit={this.handleSubmit} style={{height:'470px',overflowY:'scroll'}}>
+                <Form onSubmit={this.handleSubmit}>
                     <Row>
                         <Col span={12}>
                             <FormItem label='股东类型' {...formItemLayout}>
@@ -173,7 +189,7 @@ class PopModal extends Component{
                             >
                                 {getFieldDecorator('stockRight', {
                                     valuePropName: 'checked',
-                                    initialValue:parseInt(defaultData.stockRight,0)===1,
+                                    initialValue:defaultData.stockRight,
                                 })(
                                     <Checkbox disabled={disibled} />
                                 )}
@@ -214,24 +230,8 @@ class PopModal extends Component{
                                     initialValue:defaultData.registeredCapitalAmount
                                 })(
                                     <Input disabled={disibled}
-                                           onKeyUp={(e)=>{
-                                               e && e.preventDefault();
-                                               const form = this.props.form;
-                                               let value = form.getFieldValue('registeredCapitalAmount').replace(/\$\s?|(,*)/g, '');
-                                               form.setFieldsValue({
-                                                   registeredCapitalAmount: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-                                               });
-                                           }}
-                                           onBlur={(e)=>{
-                                               e && e.preventDefault();
-                                               const form = this.props.form;
-                                               let value = form.getFieldValue('registeredCapitalAmount');
-                                               console.log(value,fMoney(value));
-
-                                               form.setFieldsValue({
-                                                   registeredCapitalAmount: fMoney(value),
-                                               });
-                                           }}
+                                           onKeyUp={(e)=>this.handleKeyUp('registeredCapitalAmount')}
+                                           onBlur={(e)=>this.handleBlur('registeredCapitalAmount')}
                                            style={{width:'100%'}}  />
                                 )}
                             </FormItem>
@@ -259,27 +259,13 @@ class PopModal extends Component{
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem label='实收资本原币金额(万元)(万元)' {...formItemLayout}>
+                            <FormItem label='实收资本原币金额(万元)' {...formItemLayout}>
                                 {getFieldDecorator(`collectionCapitalAmount`,{
                                     initialValue:defaultData.collectionCapitalAmount
                                 })(
                                     <Input disabled={disibled}
-                                           onKeyPress={(e)=>{
-                                               const form = this.props.form;
-                                               let value = form.getFieldValue('registeredCapitalAmount').replace(/\$\s?|(,*)/g, '');
-                                               form.setFieldsValue({
-                                                   registeredCapitalAmount: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-                                               });
-                                           }}
-                                           onBlur={(e)=>{
-                                               const form = this.props.form;
-                                               let value = form.getFieldValue('registeredCapitalAmount');
-                                               console.log(value,fMoney(value));
-
-                                               form.setFieldsValue({
-                                                   registeredCapitalAmount: fMoney(value),
-                                               });
-                                           }}
+                                           onKeyUp={(e)=>this.handleKeyUp('collectionCapitalAmount')}
+                                           onBlur={(e)=>this.handleBlur('collectionCapitalAmount')}
                                            style={{width:'100%'}}  />
                                 )}
                             </FormItem>
