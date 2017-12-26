@@ -14,10 +14,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 class BasicInfo extends Component {
-    static defaultProps={
-        type:'edit',
-        visible:true
-    }
+
     state = {
 
         defaultData:{},
@@ -375,7 +372,7 @@ class BasicInfo extends Component {
             if (data[i].type === 'text') {
                 inputComponent = <Input disabled={disibled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
             } else if (data[i].type === 'rangePicker') {
-                inputComponent = <DatePicker disabled={disibled} placeholder={`请输入${data[i].label}`} />;
+                inputComponent = <DatePicker disabled={disibled} placeholder={`请输入${data[i].label}`} format="YYYY-MM-DD" />;
             } else if (data[i].type === 'select') {
                 inputComponent = (
                     <Select disabled={disibled} placeholder="请选择">
@@ -395,7 +392,7 @@ class BasicInfo extends Component {
                     <Col span={12} key={i}>
                         <FormItem {...formItemLayout} label={data[i].label}>
                             {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue:shouldShowDefaultData ? moment(data[i].initialValue, dateFormat) :undefined
+                                initialValue:shouldShowDefaultData ? moment(data[i].initialValue, dateFormat) : undefined
                             })(
                                 inputComponent
                             )}
@@ -524,20 +521,6 @@ class BasicInfo extends Component {
         })
     }
 
-    /*fetch = (id)=> {
-        console.log(id)
-        request.get(`/taxsubject/get/${id}`,{
-        })
-            .then(({data}) => {
-                if(data.code===200){
-                    console.log(data.data.jbxx)
-                    this.setState({
-                        defaultData:{...data.data.jbxx}
-                    })
-                }
-            });
-    }*/
-
     componentDidMount() {
 
         this.getRegistrationType()
@@ -545,37 +528,10 @@ class BasicInfo extends Component {
         this.getMaximumLimit()
         this.getlistArea()
 
-       /* if(this.props.type !== 'add'){
-            this.fetch(this.props.selectedRowKeys[0])
-        }*/
-
     }
 
     componentWillReceiveProps(nextProps){
-        //console.log(nextProps)
 
-        if(!nextProps.visible){
-            /**
-             * 关闭的时候清空表单
-             * */
-            nextProps.form.resetFields();
-            this.setState({
-                defaultData:{}
-            })
-        }
-        //console.log(this.props.visible !== nextProps.visible);
-
-        if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.type !== 'add'){
-            /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
-             * */
-            console.log(nextProps)
-            debugger
-            this.setState({
-                defaultData:{...nextProps.defaultData}
-            })
-
-        }
     }
 
     mounted=true

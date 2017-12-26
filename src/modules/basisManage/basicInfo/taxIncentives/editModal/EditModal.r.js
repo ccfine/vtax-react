@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/20.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
+import {Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
 import {request} from '../../../../../utils'
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

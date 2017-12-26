@@ -1,7 +1,7 @@
 /**Created by liurunbin 2017.12.20
  * */
 import React,{Component} from 'react'
-import {Button,Modal,Table,Card,message} from 'antd'
+import {Button,Modal,Icon,Table,Card,message} from 'antd'
 import {List} from 'immutable'
 import {request} from '../../../../../utils'
 import FileUpload from './FileUpload.r'
@@ -43,10 +43,16 @@ export default class ProjectInformationManagement extends Component{
         });
         visible && this.initData()
     }
+    componentWillReceiveProps(nextProps){
+        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
+            this.initData()
+        }
+    }
     initData=()=>{
         this.fetchTable_1_Data();
         this.setState({
-            selectedRowKeys:null
+            selectedRowKeys:null,
+            $$table_2_data:List([])
         })
     }
     fetchTable_1_Data = () =>{
@@ -95,10 +101,10 @@ export default class ProjectInformationManagement extends Component{
         };
         return(
             <div style={{display:'inline-block',...this.props.style}}>
-                <span style={{
-                    color:'#1890ff',
-                    cursor:'pointer'
-                }} onClick={()=>this.toggleModal(true)}>项目信息管理</span>
+                <Button disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
+                    <Icon type="plus-circle" />
+                    项目信息管理
+                </Button>
                 <Modal
                     title="项目管理"
                     visible={this.state.visible}

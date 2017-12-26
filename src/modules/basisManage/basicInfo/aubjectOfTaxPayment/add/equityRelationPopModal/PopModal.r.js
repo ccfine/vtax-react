@@ -40,7 +40,7 @@ class PopModal extends Component{
     addKey=data=>{
         const arr = [];
         data.forEach((item,i) => {
-            arr.push({...item, id:i});
+            arr.push({...item, id:`t${i}`});
         });
         return arr;
     }
@@ -120,7 +120,7 @@ class PopModal extends Component{
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={900}
+                width={600}
                 visible={props.visible}
                 footer={
                     type !== 'view' && <Row>
@@ -132,7 +132,7 @@ class PopModal extends Component{
                         </Row>
                 }
                 title={title}>
-                <Form onSubmit={this.handleSubmit} style={{height:'470px',overflowY:'scroll'}}>
+                <Form onSubmit={this.handleSubmit}>
                     <Row>
                         <Col span={12}>
                             <FormItem label='股东类型' {...formItemLayout}>

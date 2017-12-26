@@ -23,7 +23,7 @@ const columns = [{
 },{
     title: '是否代持股权',
     dataIndex: 'stockRight',
-    render:text=>text=== true ? '否' : '是',
+    render:text=>text=== true ? '是' : '否',
 },{
     title: '登记股东',
     dataIndex: 'registeredStockholder',
@@ -106,34 +106,10 @@ class Shareholding extends Component {
         })
     }
 
-    /*fetch = (id)=> {
-        request.get(`/taxsubject/get/${id}`,{
-        })
-            .then(({data}) => {
-                if(data.code===200){
-                    this.setState({
-                        defaultData:[...data.data.gdjcg]
-                    },()=>{
-                        this.props.setGdjcgDate(this.state.defaultData);
-                    })
-                }
-            });
-    }*/
-
     componentDidMount() {
-        /*if(this.props.type !== 'add'){
-            this.fetch(this.props.selectedRowKeys[0])
-        }*/
+
     }
     componentWillReceiveProps(nextProps){
-        console.log(nextProps)
-
-        /* if(nextProps.modalConfig.type !== '' && nextProps.modalConfig.type !== 'add' && nextProps.visible === true){
-             if(nextProps.selectedRowKeys.length>0){
-                 console.log(nextProps.selectedRowKeys[0])
-                 this.fetch(nextProps.selectedRowKeys[0])
-             }
-         }*/
 
     }
     render() {

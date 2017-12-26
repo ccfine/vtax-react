@@ -16,7 +16,7 @@ const buttonStyle={
 const columns = [{
     title: '股东类型',
     dataIndex: 'stockholderType',
-    render:text=>text === true ? '我方股东' : '他方股东',
+    render:text=>parseInt(text,0) === 1 ? '我方股东' : '他方股东',
 }, {
     title: '股东',
     dataIndex: 'stockholder',
@@ -77,33 +77,11 @@ class EquityRelation extends Component {
             }
         })
     }
-    /*fetch = (id)=> {
-        request.get(`/taxsubject/get/${id}`,{
-        })
-            .then(({data}) => {
-                if(data.code===200){
-                    this.setState({
-                        defaultData:[...data.data.gqgx]
-                    },()=>{
-                        this.props.setGqgxDate(this.state.defaultData);
-                    })
-                }
-            });
-    }*/
 
     componentDidMount() {
-        /*if(this.props.type !== 'add'){
-            this.fetch(this.props.selectedRowKeys[0])
-        }*/
+
     }
     componentWillReceiveProps(nextProps){
-        /* if(nextProps.modalConfig.type !== '' && nextProps.modalConfig.type !== 'add' && nextProps.visible === true){
-             if(nextProps.selectedRowKeys.length>0){
-                 console.log(nextProps.selectedRowKeys[0])
-                 this.fetch(nextProps.selectedRowKeys[0])
-             }
-         }*/
-
 
     }
     render() {

@@ -9,9 +9,6 @@ import {Nav} from '../../../compoments/index'
 import routes from './routes'
 
 class SalesTaxAccount extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
 

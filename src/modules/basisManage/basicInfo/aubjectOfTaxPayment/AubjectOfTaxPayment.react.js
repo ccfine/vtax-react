@@ -70,7 +70,6 @@ class AubjectOfTaxPayment extends Component {
         });
 
     }
-
     onChange=(selectedRowKeys, selectedRows) => {
         //console.log(selectedRowKeys,selectedRows)
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
@@ -80,11 +79,6 @@ class AubjectOfTaxPayment extends Component {
         this.setState({
             selectedRowKeys,
             selectedRows
-        })
-    }
-    refreshCurdTable=()=>{
-        this.setState({
-            tableUpDateKey:Date.now()+1
         })
     }
     toggleModalVisible=visible=>{
@@ -100,6 +94,18 @@ class AubjectOfTaxPayment extends Component {
                 id:this.state.selectedRowKeys
             }
         })
+        /*if(type === 'add') {
+            this.setSelectedRowKeysAndselectedRows(null, {});
+        }*/
+
+    }
+    updateTable(){
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
+    componentDidMount(){
+        this.updateTable()
     }
     render() {
         const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
@@ -159,7 +165,7 @@ class AubjectOfTaxPayment extends Component {
                                               .then(({data})=>{
                                                   if(data.code===200){
                                                       message.success('删除成功!');
-                                                      this.refreshCurdTable();
+                                                      this.updateTable();
                                                   }else{
                                                       message.error(data.msg)
                                                   }
@@ -199,7 +205,7 @@ class AubjectOfTaxPayment extends Component {
                     selectedRowKeys={selectedRowKeys}
                     selectedRows={selectedRows}
                     toggleModalVisible={this.toggleModalVisible}
-                    refreshCurdTable={this.refreshCurdTable}
+                    updateTable={this.updateTable.bind(this)}
                     setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
                 />
             </Layout>
