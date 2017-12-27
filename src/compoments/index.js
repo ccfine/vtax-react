@@ -10,7 +10,7 @@ import RouteWithSubRoutes from './routeWithSubRoutes'
 /**给页面增加标题的组件*/
 import wrapPage from './titlePage'
 import Carousel from './carousel'
-import Nav from './nav'
+import NavRouter from './nav'
 import CountTable from './countTable'
 import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
@@ -19,7 +19,7 @@ export {
     RouteWithSubRoutes,
     wrapPage,
     Carousel,
-    Nav,
+    NavRouter,
     CountTable,
     AsyncTable,
     CusFormItem,

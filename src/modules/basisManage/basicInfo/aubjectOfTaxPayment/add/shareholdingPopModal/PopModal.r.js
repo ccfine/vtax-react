@@ -8,6 +8,7 @@ import {Button,Input,Modal,Form,Row,Col,Select,Checkbox} from 'antd';
 import {request,fMoney} from '../../../../../../utils'
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { TextArea } = Input;
 
 class PopModal extends Component{
     static defaultProps={
@@ -227,7 +228,7 @@ class PopModal extends Component{
                         <Col span={8}>
                             <FormItem label='注册资本原币金额(万元)' {...formItemLayout}>
                                 {getFieldDecorator(`registeredCapitalAmount`,{
-                                    initialValue:defaultData.registeredCapitalAmount
+                                    initialValue:fMoney(defaultData.registeredCapitalAmount)
                                 })(
                                     <Input disabled={disibled}
                                            onKeyUp={(e)=>this.handleKeyUp('registeredCapitalAmount')}
@@ -243,7 +244,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`capitalRemark`,{
                                     initialValue:defaultData.capitalRemark
                                 })(
-                                    <Input disabled={disibled} />
+                                    <TextArea disabled={disibled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -261,7 +262,7 @@ class PopModal extends Component{
                         <Col span={12}>
                             <FormItem label='实收资本原币金额(万元)' {...formItemLayout}>
                                 {getFieldDecorator(`collectionCapitalAmount`,{
-                                    initialValue:defaultData.collectionCapitalAmount
+                                    initialValue:fMoney(defaultData.collectionCapitalAmount)
                                 })(
                                     <Input disabled={disibled}
                                            onKeyUp={(e)=>this.handleKeyUp('collectionCapitalAmount')}
@@ -288,7 +289,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`propertyRemark`,{
                                     initialValue:defaultData.propertyRemark
                                 })(
-                                    <Input disabled={disibled} />
+                                    <TextArea disabled={disibled} />
                                 )}
                             </FormItem>
                         </Col>

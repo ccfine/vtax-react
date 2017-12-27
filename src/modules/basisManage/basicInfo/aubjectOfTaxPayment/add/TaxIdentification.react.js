@@ -43,7 +43,6 @@ class TaxIdentification extends Component {
             },
         };
         const {defaultData} = this.props;
-        console.log(defaultData && defaultData.lzs)
         const list= [
             {
                 label:'流转税',

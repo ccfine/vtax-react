@@ -4,11 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Avatar,List, Card } from 'antd'
+import {Layout,Avatar,List, Card } from 'antd'
 import {Link} from 'react-router-dom'
 import './styles.less'
 
-class Nav extends Component {
+const { Meta } = Card;
+
+class NavRouter extends Component {
 
     composeNav=(routes)=>{
         return routes.map((item,i)=>{
@@ -25,25 +27,29 @@ class Nav extends Component {
 
     render() {
         return (
-            <div>
-                {/*<h2 style={{padding: '10px 0'}}>{document.title}</h2>*/}
+            <Layout style={{background: 'transparent'}}>
                 <List
                     grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }}
                     dataSource={this.composeNav(this.props.data)}
                     renderItem={item => (
                         <List.Item>
-                            <Card>
-                                <Avatar className="IconImg" src={item.icon} />
-                                <Link to={item.path}>
-                                    {item.name}
-                                </Link>
+                            <Card className="card">
+                                    <Meta
+                                        avatar={<Avatar className="IconImg" src={item.icon} />}
+                                        //title={item.name}
+                                        description={<Link to={item.path}>
+                                            {item.name}
+                                        </Link>}
+                                    />
                             </Card>
                         </List.Item>
                     )}
                 />
-            </div>
+            </Layout>
         )
     }
 }
 
-export default Nav
+
+
+export default NavRouter

@@ -71,7 +71,7 @@ const VTaxBreadCrumb = props =>  {
         })
         const breadcrumbItems = [].concat(extraBreadcrumbItems);
         return (
-            pathSnippets.length > 1 && <Breadcrumb style={{margin:'10px 24px 0'}}>
+            pathSnippets.length > 1 && <Breadcrumb style={{margin:'10px 12px 0'}}>
                 {breadcrumbItems}
             </Breadcrumb>
         )

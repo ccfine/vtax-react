@@ -4,6 +4,6 @@
  * description  :
  */
 
-import Nav from './Nav.r'
+import NavRouter from './Nav.r'
 
-export default Nav
+export default NavRouter

@@ -8,6 +8,7 @@ import {Button,Input,Modal,Form,Row,Col,Select,InputNumber} from 'antd';
 import {request,fMoney} from '../../../../../../utils'
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { TextArea } = Input;
 
 class PopModal extends Component{
     static defaultProps={
@@ -211,7 +212,7 @@ class PopModal extends Component{
                                 {getFieldDecorator(`remark`,{
                                     initialValue:defaultData.remark
                                 })(
-                                    <Input disabled={disibled} />
+                                    <TextArea disabled={disibled} />
                                 )}
                             </FormItem>
                         </Col>

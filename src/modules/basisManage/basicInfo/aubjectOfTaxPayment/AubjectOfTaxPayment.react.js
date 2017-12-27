@@ -101,9 +101,6 @@ class AubjectOfTaxPayment extends Component {
     updateTable=()=>{
         this.handleSubmit()
     }
-    componentDidMount(){
-        this.updateTable()
-    }
     render() {
         const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
         const formItemStyle={
@@ -188,7 +185,7 @@ class AubjectOfTaxPayment extends Component {
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
-                                    rowKey:record=>record.id,
+                                    rowKey:record=>`${record.id}`,
                                     pagination:true,
                                     size:'middle',
                                     columns:columns,

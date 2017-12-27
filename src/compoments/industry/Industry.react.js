@@ -101,8 +101,9 @@ class Industry extends Component {
     }
 
     render() {
+
         const {expandedKeys,autoExpandParent,selectedKeys} = this.state;
-        const {visible, title } = this.props;
+        const {visible, title} = this.props;
         return (
             <Modal
                 title={title}
