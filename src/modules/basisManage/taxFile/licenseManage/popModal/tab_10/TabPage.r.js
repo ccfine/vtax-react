@@ -34,7 +34,7 @@ const columns = [{
     dataIndex: 'landArea',
 },{
     title: '建筑面积(m²)',
-    dataIndex: 'bulidArea',
+    dataIndex: 'buildingArea',
 },{
     title: '地号',
     dataIndex: 'num',
@@ -79,7 +79,8 @@ class TabPage extends Component {
 
         modalConfig:{
             type:''
-        }
+        },
+        titleCertificateId:undefined
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -87,7 +88,7 @@ class TabPage extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
@@ -104,16 +105,15 @@ class TabPage extends Component {
     }
     onChange=(selectedRowKeys, selectedRows) => {
         this.setState({
-            selectedRowKeys
+            selectedRowKeys,
+            titleCertificateId:selectedRows[0].id
         })
     }
     showModal=()=>{
         this.toggleModalVisible(true)
     }
-    updateTable(){
-        this.setState({
-            tableUpDateKey:Date.now()
-        })
+    updateTable=()=>{
+        this.handleSubmit()
     }
     componentDidMount(){
         this.updateTable()
@@ -125,7 +125,7 @@ class TabPage extends Component {
         }
     }
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand,titleCertificateId} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -206,7 +206,7 @@ class TabPage extends Component {
                                     rowSelection:rowSelection
                                 }} />
                 <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
-                <PartTwo />
+                <PartTwo titleCertificateId={titleCertificateId} />
             </Layout>
         )
     }

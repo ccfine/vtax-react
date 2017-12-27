@@ -21,7 +21,7 @@ const columns = [{
     dataIndex: 'accountNumber',
 },{
     title: '建筑面积(m²)',
-    dataIndex: 'bulidArea',
+    dataIndex: 'buildingArea',
 },{
     title: '分摊面积(m²)',
     dataIndex: 'shareArea'
@@ -59,7 +59,7 @@ class TabPage extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
@@ -82,16 +82,19 @@ class TabPage extends Component {
     showModal=()=>{
         this.toggleModalVisible(true)
     }
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps.titleCertificateId)
+        if(this.props.titleCertificateId !== nextProps.titleCertificateId){
+            setTimeout(()=>{
+                this.setState({
+                    tableUpDateKey:Date.now()
+                })
+            },100)
+        }
+
+    }
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
-        const formItemStyle={
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:18
-            }
-        }
         const rowSelection = {
             type:'radio',
             selectedRowKeys,

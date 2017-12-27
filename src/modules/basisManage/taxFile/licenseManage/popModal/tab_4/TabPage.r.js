@@ -54,7 +54,7 @@ export default class TabPage extends Component{
             selectedRowKeys
         })
     }
-    updateTable(){
+    updateTable=()=>{
         this.setState({
             tableUpDateKey:Date.now()
         })

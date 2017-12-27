@@ -29,7 +29,7 @@ class Login extends Component {
     }
 
     handleSubmit = (e) => {
-        e.preventDefault();
+        e && e.preventDefault();
 
         const {form,login} = this.props;
 

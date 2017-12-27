@@ -65,9 +65,20 @@ class PopModal extends Component{
     state = {
         key: 'tab1',
         noTitleKey: 'article',
+        cardKey:Date.now()
     }
     onTabChange = (key, type) => {
         this.setState({ [type]: key });
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.visible && this.props.visible !== nextProps.visible){
+            //传进来的是要求打开并且当前是关闭状态的时候，一打开就初始化
+            this.setState({
+                key: 'tab1',
+                noTitleKey: 'article',
+                cardKey:Date.now()
+            })
+        }
     }
     render(){
         const props = this.props;
@@ -89,6 +100,7 @@ class PopModal extends Component{
                 <Card
                     style={{ width: '100%',border:'none' }}
                     tabList={tabList}
+                    key={this.state.cardKey}
                     onTabChange={(key) => { this.onTabChange(key, 'key'); }}
                 >
                     {props.projectId && getContent(this.state.key,`${props.projectId[0]}`)}

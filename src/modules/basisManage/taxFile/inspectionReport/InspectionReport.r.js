@@ -2,11 +2,9 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Select,Icon,Modal} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import PopModal from './popModal'
-const FormItem = Form.Item;
-const Option = Select.Option;
 const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
@@ -72,7 +70,7 @@ class InspectionReport extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
@@ -88,7 +86,6 @@ class InspectionReport extends Component {
 
     }
     onChange=(selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys,selectedRows)
         this.setState({
             selectedRowKeys
         })
@@ -102,8 +99,13 @@ class InspectionReport extends Component {
             }
         })
     }
+    updateTable=()=>{
+        this.handleSubmit()
+    }
+    componentDidMount(){
+        this.updateTable()
+    }
     render() {
-        const {getFieldDecorator} = this.props.form;
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
         const formItemStyle={
             labelCol:{

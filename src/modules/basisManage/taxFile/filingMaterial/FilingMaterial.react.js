@@ -52,7 +52,7 @@ class FilingMaterial extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
@@ -81,6 +81,12 @@ class FilingMaterial extends Component {
                 id:this.state.selectedRowKeys
             }
         })
+    }
+    updateTable=()=>{
+        this.handleSubmit()
+    }
+    componentDidMount(){
+        this.updateTable()
     }
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
