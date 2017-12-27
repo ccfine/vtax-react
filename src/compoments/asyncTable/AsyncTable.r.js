@@ -31,6 +31,7 @@ export default class AsyncTable extends Component{
     }
     fetch = (params = {}) => {
         this.setState({ loaded: false });
+
         request.get(this.props.url,{
             params:{
                 results: 10,

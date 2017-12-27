@@ -4,8 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout} from 'antd'
-import {Nav} from '../../compoments'
+import {NavRouter} from '../../compoments'
 import routes from './children/routes'
 
 class TaxDeclare extends Component {
@@ -13,11 +12,7 @@ class TaxDeclare extends Component {
     render() {
 
         return (
-            <Layout style={{background: 'transparent'}}>
-                <div style={{padding: 24}}>
-                    <Nav data={routes}/>
-                </div>
-            </Layout>
+            <NavRouter data={routes} />
         )
     }
 }

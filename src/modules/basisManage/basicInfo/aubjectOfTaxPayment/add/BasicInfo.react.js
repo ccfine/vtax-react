@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import {Form,Row,Col,Input,DatePicker,Select,Checkbox,Cascader,Icon,Card} from 'antd'
 import moment from 'moment';
-import {request,regRules,fMoney} from '../../../../../utils'
+import {request,regRules,fMoney,requestDict} from '../../../../../utils'
 import Industry from '../../../../../compoments/industry'
 import './styles.less'
 
@@ -26,7 +26,6 @@ class BasicInfo extends Component {
 
         IndustryModalKey:Date.now(),
         IndustryModalVisible: false,
-        industry:{},
     }
 
     getFields(start,end) {
@@ -63,6 +62,8 @@ class BasicInfo extends Component {
                         required: true, message: '请输入编码',
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -75,6 +76,8 @@ class BasicInfo extends Component {
                         required: true, message: '请输入纳税主体',
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -87,6 +90,8 @@ class BasicInfo extends Component {
                         required: true, message: '请输入社会信用代码',
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -99,6 +104,8 @@ class BasicInfo extends Component {
                         required: true, message: '请输入管理单位公司注册证书营业执照号',
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -151,7 +158,7 @@ class BasicInfo extends Component {
                 label: '注册日期',
                 type: 'rangePicker',
                 fieldName: 'jbxx.registrationDate',
-                initialValue:defaultData.registrationDate,
+                initialValue: (shouldShowDefaultData && defaultData.registrationDate) ? moment(defaultData.registrationDate, dateFormat) :  null,
                 rules: [
                     {
                         required: true, message: '请选择注册日期',
@@ -161,7 +168,7 @@ class BasicInfo extends Component {
                 label: '开业日期',
                 type: 'rangePicker',
                 fieldName: 'jbxx.openingDate',
-                initialValue:defaultData.openingDate,
+                initialValue:(shouldShowDefaultData && defaultData.openingDate) ? moment(defaultData.openingDate, dateFormat) :  null,
                 rules: [
                     {
                         required: true, message: '请选择开业日期',
@@ -175,6 +182,8 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         required: true, message: '请输入经营期限',
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -206,6 +215,11 @@ class BasicInfo extends Component {
                 fieldName: 'jbxx.operatingAddress',
                 initialValue:defaultData.operatingAddress,
                 noName:true,
+                rules: [
+                    {
+                        max:regRules.textarea_lenght.max, message: regRules.textarea_lenght.message
+                    }
+                ],
             }, {
                 label: '办公电话',
                 type: 'text',
@@ -216,6 +230,8 @@ class BasicInfo extends Component {
                         required: true, message: '请输入办公电话',
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -226,6 +242,8 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         required: true, message: '请输入开户银行',
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -238,6 +256,8 @@ class BasicInfo extends Component {
                         required: true, message: '请输入银行账号',
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -245,6 +265,11 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.legalPerson',
                 initialValue:defaultData.legalPerson,
+                rules: [
+                    {
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                    }
+                ],
             }, {
                 label: '法人代表身份证号码',
                 type: 'text',
@@ -253,6 +278,8 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         pattern: regRules.not_chinese.pattern, message: regRules.not_chinese.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
 
@@ -261,11 +288,21 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.financialOfficer',
                 initialValue:defaultData.financialOfficer,
+                rules: [
+                    {
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                    }
+                ],
             }, {
                 label: '税务经办人',
                 type: 'text',
                 fieldName: 'jbxx.operater',
                 initialValue:defaultData.operater,
+                rules: [
+                    {
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                    }
+                ],
             }, {
                 label: '经办人电话',
                 type: 'text',
@@ -274,6 +311,8 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -287,16 +326,26 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.machineType',
                 initialValue:defaultData.machineType,
+                rules: [
+                    {
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                    }
+                ],
             }, {
                 label: '注册资本原币币别',
                 type: 'text',
                 fieldName: 'jbxx.currencyType',
                 initialValue:defaultData.currencyType,
+                rules: [
+                    {
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                    }
+                ],
             }, {
                 label: '注册资本原币金额(万元)',
                 type: 'text',
                 fieldName: 'jbxx.currencyAmount',
-                initialValue:defaultData.currencyAmount,
+                initialValue:fMoney(defaultData.currencyAmount),
                 res:{
                     onKeyUp:(e)=>this.handleKeyUp('jbxx.currencyAmount'),
                     onBlur:(e)=>this.handleBlur('jbxx.currencyAmount'),
@@ -306,11 +355,16 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.receiptCurrencyType',
                 initialValue:defaultData.receiptCurrencyType,
+                rules: [
+                    {
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                    }
+                ],
             }, {
                 label: '实收资本原币金额(万元)',
                 type: 'text',
                 fieldName: 'jbxx.receiptCurrencyAmount',
-                initialValue:defaultData.receiptCurrencyAmount,
+                initialValue:fMoney(defaultData.receiptCurrencyAmount),
                 res:{
                     onKeyUp:(e)=>this.handleKeyUp('jbxx.receiptCurrencyAmount'),
                     onBlur:(e)=>this.handleBlur('jbxx.receiptCurrencyAmount'),
@@ -332,6 +386,11 @@ class BasicInfo extends Component {
                 fieldName: 'jbxx.nationalTaxAddress',
                 initialValue:defaultData.nationalTaxAddress,
                 noName:true,
+                rules: [
+                    {
+                        max:regRules.textarea_lenght.max, message: regRules.textarea_lenght.message,
+                    }
+                ],
             }, {
                 label: '联系电话',
                 type: 'text',
@@ -340,6 +399,8 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }, {
@@ -354,6 +415,11 @@ class BasicInfo extends Component {
                 fieldName: 'jbxx.localTaxAddress',
                 initialValue:defaultData.localTaxAddress,
                 noName:true,
+                rules: [
+                    {
+                        max:regRules.textarea_lenght.max, message: regRules.textarea_lenght.message,
+                    }
+                ],
             }, {
                 label: '联系电话',
                 type: 'text',
@@ -362,6 +428,8 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
+                    },{
+                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
                     }
                 ],
             }
@@ -372,7 +440,7 @@ class BasicInfo extends Component {
             if (data[i].type === 'text') {
                 inputComponent = <Input disabled={disibled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
             } else if (data[i].type === 'rangePicker') {
-                inputComponent = <DatePicker disabled={disibled} placeholder={`请输入${data[i].label}`} format="YYYY-MM-DD" />;
+                inputComponent = <DatePicker disabled={disibled} placeholder={`请输入${data[i].label}`} format="YYYY-MM-DD" style={{width:'100%'}} />;
             } else if (data[i].type === 'select') {
                 inputComponent = (
                     <Select disabled={disibled} placeholder="请选择">
@@ -387,19 +455,20 @@ class BasicInfo extends Component {
                 inputComponent = <Cascader disabled={disibled} options={data[i].items} placeholder={`请输入${data[i].label}`}/>;
             }
 
-            if(data[i].type === 'rangePicker'){
+            /*if(data[i].type === 'rangePicker'){
                 children.push(
                     <Col span={12} key={i}>
                         <FormItem {...formItemLayout} label={data[i].label}>
                             {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue:shouldShowDefaultData ? moment(data[i].initialValue, dateFormat) : undefined
+                                initialValue: data[i].initialValue,
                             })(
                                 inputComponent
                             )}
                         </FormItem>
                     </Col>
                 );
-            } else if(data[i].type ==='checked'){
+            } else*/
+            if(data[i].type ==='checked'){
                 children.push(
                     <Col span={12} key={i}>
                         <FormItem {...formItemLayout} label={data[i].label}>
@@ -463,45 +532,49 @@ class BasicInfo extends Component {
 
     //注册类型:取基础资料DJZCLX
     getRegistrationType=()=>{
-        request.get('/sys/dict/listBaseInfo/DJZCLX')
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.setState({
-                        registrationType:data.data
-                    })
-                }
+        requestDict('DJZCLX',result=>{
+            this.setState({
+                registrationType:result
             })
+        })
     }
     //纳税人资质:取基础资料NSRLX
     getTaxpayerQualification=()=>{
-        request.get('/sys/dict/listBaseInfo/NSRLX')
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.setState({
-                        taxpayerQualification:data.data
-                    })
-                }
+        requestDict('NSRLX',result=>{
+            this.setState({
+                taxpayerQualification:result
             })
+        })
     }
     //增值税专用发票最高限额:取基础资料ZZS_ZYFP_ZGXE
     getMaximumLimit=()=>{
-        request.get('/sys/dict/listBaseInfo/ZZS_ZYFP_ZGXE')
+        requestDict('ZZS_ZYFP_ZGXE',result=>{
+            this.setState({
+                maximumLimit:result
+            })
+        })
+    }
+
+    //省市区联动
+    getlistArea=()=>{
+        request.get('/taxsubject/list/area')
             .then(({data})=>{
                 if(data.code ===200){
                     this.setState({
-                        maximumLimit:data.data
+                        selectOptions:data.data
                     })
                 }
             })
     }
 
-    //省市区联动
-    getlistArea=()=>{
-        request.get('/taxsubject/listArea')
+    //根据id查询行业
+    getIndustryTitle=(id)=>{
+        request.get(`/taxsubject/get/industry/${id}`)
             .then(({data})=>{
                 if(data.code ===200){
-                    this.setState({
-                        selectOptions:data.data
+                    this.props.changeIndustry({
+                        key:data.data.key,
+                        title:data.data.title,
                     })
                 }
             })
@@ -514,24 +587,17 @@ class BasicInfo extends Component {
         });
     }
 
-    //给其它组件传数据
-    changeIndustry=industry=>{
-        this.mounted && this.setState({
-            industry
-        })
-    }
-
     componentDidMount() {
-
         this.getRegistrationType()
         this.getTaxpayerQualification()
         this.getMaximumLimit()
         this.getlistArea()
-
     }
 
     componentWillReceiveProps(nextProps){
-
+        if(nextProps.defaultData.industry && this.props.defaultData.industry !== nextProps.defaultData.industry ){
+            this.getIndustryTitle(nextProps.defaultData.industry)
+        }
     }
 
     mounted=true
@@ -540,9 +606,6 @@ class BasicInfo extends Component {
     }
 
     render() {
-
-        const {defaultData} = this.props;
-        const {industry} = this.state;
         const {getFieldDecorator} = this.props.form;
 
         const formItemLayout = {
@@ -560,9 +623,8 @@ class BasicInfo extends Component {
                 <Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />
             </a>
         );
-
         return (
-            <div className="basicInfo">
+            <div className="basicInfo" style={{height:'470px',overflow:'hidden',overflowY:'scroll'}}>
 
                 <Card style={{marginBottom:16}}>
                     <Row gutter={40}>
@@ -572,7 +634,7 @@ class BasicInfo extends Component {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label='所属行业'>
                                 {getFieldDecorator('jbxx.industry', {
-                                    initialValue: defaultData.industry || industry.title,
+                                    initialValue: this.props.industry.title,
                                     rules: [
                                         {
                                             required: true, message: '请选择所属行业',
@@ -656,14 +718,14 @@ class BasicInfo extends Component {
                     key={this.state.IndustryModalKey}
                     visible={this.state.IndustryModalVisible}
                     title="行业信息"
-                    url="/taxsubject/listIndustry"
+                    url="/taxsubject/list/industry"
                     changeVisable={ status =>{
                         this.setState({
                             IndustryModalVisible:status,
                             IndustryModalKey:Date.now()
                         })
                     }}
-                    changeIndustry={this.changeIndustry.bind(this)}
+                    changeIndustry={this.props.changeIndustry.bind(this)}
                 />
 
             </div>

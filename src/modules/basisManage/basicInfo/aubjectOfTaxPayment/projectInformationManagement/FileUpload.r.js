@@ -43,5 +43,5 @@ class CompanyFileUploadItem extends Component{
 }
 
 export default connect(state=>({
-    token:state.user.token
+    token:state.user.get('token')
 }))(CompanyFileUploadItem)

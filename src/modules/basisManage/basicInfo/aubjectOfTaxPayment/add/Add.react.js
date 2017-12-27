@@ -32,6 +32,7 @@ class Add extends Component {
 
         gdjcg2:[],
         gqgx2:[],
+        industry:{},
     }
 
     onChange = (activeKey) => {
@@ -52,7 +53,12 @@ class Add extends Component {
             gqgx
         })
     }
-
+    //给其它组件传数据
+    changeIndustry=industry=>{
+        this.mounted && this.setState({
+            industry
+        })
+    }
     handleOk = (e) => {
         this.handleSubmit()
     }
@@ -140,6 +146,7 @@ class Add extends Component {
                     ...values,
                     jbxx:{
                         ...values.jbxx,
+                        industry:this.state.industry.key,
                         id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
                         operatingProvince:values.jbxx.operatingProvince[0],
                         operatingCity:values.jbxx.operatingProvince[1],
@@ -152,8 +159,8 @@ class Add extends Component {
                         localTaxProvince:values.jbxx.localTaxProvince[0],
                         localTaxCity:values.jbxx.localTaxProvince[1],
                         localTaxArea:values.jbxx.localTaxProvince[2],
-                        registrationDate:values.jbxx.registrationDate.format('YYYY-MM-DD'),
-                        openingDate:values.jbxx.openingDate.format('YYYY-MM-DD'),
+                        registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
+                        openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
                     },
                     gdjcg:gdjcg ,
                     gqgx:gqgx,
@@ -265,6 +272,7 @@ class Add extends Component {
                 gqgx:[],
                 jbxx:{},
                 szjd: null,
+                industry:{},
             })
         }
 
@@ -283,7 +291,7 @@ class Add extends Component {
     render() {
         const {modalConfig,visible,form,selectedRowKeys} = this.props;
 
-        const {jbxx,szjd,gdjcg,gqgx} = this.state;
+        const {jbxx,szjd,gdjcg,gqgx,industry} = this.state;
 
         let title='';
         const type = modalConfig.type;
@@ -318,7 +326,7 @@ class Add extends Component {
                     title={title}
                 >
                     <Spin spinning={this.state.submitLoading}>
-                        <Form onSubmit={this.handleSubmit} className="vtax-from">
+                        <Form onSubmit={this.handleSubmit}>
 
                             <Tabs activeKey={this.state.activeKey} onChange={this.onChange}>
                                 <TabPane tab="基本信息" key="1">
@@ -327,7 +335,9 @@ class Add extends Component {
                                         type={type}
                                         visible={visible}
                                         defaultData={jbxx}
+                                        industry={industry}
                                         selectedRowKeys={selectedRowKeys}
+                                        changeIndustry = {this.changeIndustry.bind(this)}
                                     />
                                 </TabPane>
                                 <TabPane tab="税种鉴定" key="2" forceRender={true}>

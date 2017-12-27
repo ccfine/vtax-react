@@ -5,6 +5,7 @@ import {Button,Modal,Icon,Table,Card,message} from 'antd'
 import {List} from 'immutable'
 import {request} from '../../../../../utils'
 import FileUpload from './FileUpload.r'
+import FileExport from './FileExport.r'
 const confirm = Modal.confirm;
 const constants = {
     PROJECT_NAME:'itemName',
@@ -93,6 +94,14 @@ export default class ProjectInformationManagement extends Component{
         })
         this.fetchTable_2_Data(selectedRowKeys)
     }
+    handleDownload=()=>{
+        debugger
+        let url =`${window.baseURL}${this.props.url}`;
+        let elemIF = document.createElement("iframe");
+        elemIF.src = url;
+        elemIF.style.display = "none";
+        window.document.body.appendChild(elemIF);
+    }
     render(){
         const {$$table_1_data,table_1_loaded,$$table_2_data,selectedRowKeys} = this.state;
         const rowSelection = {
@@ -120,24 +129,37 @@ export default class ProjectInformationManagement extends Component{
                         extra={
                             <div>
                                 <FileUpload taxSubjectId={this.props.taxSubjectId} fetchTable_1_Data={this.fetchTable_1_Data} />
+                                <FileExport url='project/download' title="模板下载" />
                                 <Button size='small'
-                                        onClick={()=>{
-                                            confirm({
-                                                title: '友情提醒',
-                                                content: '该删除后将不可恢复，是否删除？',
-                                                okText: '确定',
-                                                okType: 'danger',
-                                                cancelText: '取消',
-                                                onOk() {
-                                                    console.log('OK');
-                                                },
-                                                onCancel() {
-                                                    console.log('Cancel');
-                                                },
-                                            });
-                                        }}
-                                        disabled={!selectedRowKeys}
-                                        type='danger'>删除</Button>
+                                    onClick={()=>{
+                                        confirm({
+                                            title: '友情提醒',
+                                            content: '该删除后将不可恢复，是否删除？',
+                                            okText: '确定',
+                                            okType: 'danger',
+                                            cancelText: '取消',
+                                            onOk:()=>{
+
+                                                request.delete(`/project/delete/${this.state.selectedRowKeys[0]}`)
+                                                    .then(({data})=>{
+                                                        if(data.code===200){
+                                                            message.success('删除成功!');
+                                                            this.initData();
+                                                        }else{
+                                                            message.error(data.msg)
+                                                        }
+                                                    })
+                                            },
+                                            onCancel:()=>{
+                                                console.log('Cancel');
+                                            },
+                                        });
+                                    }}
+                                    disabled={!selectedRowKeys}
+                                    type='danger'>
+                                    <Icon type="delete" />
+                                    删除
+                                </Button>
                             </div>
                         }
                         bodyStyle={{padding:0}}
