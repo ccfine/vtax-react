@@ -180,21 +180,13 @@ class TabPage extends Component {
                     <AsyncTable url={`/card/land/use/list/${this.props.projectId}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
+                                //summaryFields={['rightArea']}
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     size:'middle',
                                     columns:columns,
-                                    rowSelection:rowSelection,
-                                    footer:() => {
-                                        return (
-                                            <tr className='ant-table-row  ant-table-row-level-0'>
-                                                <td>总计</td>
-                                                <td>总计</td>
-                                                <td>总计</td>
-                                            </tr>
-                                        )
-                                    }
+                                    rowSelection:rowSelection
                                 }} />
                 <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
             </Layout>

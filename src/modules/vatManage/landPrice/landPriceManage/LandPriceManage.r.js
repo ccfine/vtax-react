@@ -89,6 +89,12 @@ class LandPriceManage extends Component {
             }
         })
     }
+    updateTable=()=>{
+        this.handleSubmit()
+    }
+    componentDidMount(){
+        this.updateTable()
+    }
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
         const formItemStyle={

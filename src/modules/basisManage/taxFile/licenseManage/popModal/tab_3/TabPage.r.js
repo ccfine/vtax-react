@@ -61,7 +61,9 @@ export default class TabPage extends Component{
         })
     }
     updateTable=()=>{
-        this.handleSubmit()
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
     }
     componentDidMount(){
         this.updateTable()
