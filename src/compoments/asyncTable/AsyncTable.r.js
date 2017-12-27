@@ -97,7 +97,7 @@ export default class AsyncTable extends Component{
     render(){
         const {loaded,dataSource,pagination,summaryData}  = this.state;
         const {props} = this;
-        const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
+       // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
         return(
             <Table
                 {...props.tableProps}
@@ -105,7 +105,6 @@ export default class AsyncTable extends Component{
                 pagination={props.tableProps.pagination ? pagination : false}
                 onChange={this.handleTableChange}
                 loading={!loaded}
-                footer={footer}
             />
         )
     }
