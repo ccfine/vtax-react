@@ -128,7 +128,7 @@ class Add extends Component {
 
     handleSubmit = (e) => {
 
-        e && e.preventDefault();
+        e && e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
 
             if (!err) {

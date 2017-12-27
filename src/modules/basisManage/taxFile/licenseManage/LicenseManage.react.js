@@ -39,7 +39,7 @@ class LicenseManage extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
@@ -61,6 +61,12 @@ class LicenseManage extends Component {
     }
     showModal=()=>{
         this.toggleModalVisible(true)
+    }
+    updateTable=()=>{
+        this.handleSubmit()
+    }
+    componentDidMount(){
+        this.updateTable()
     }
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,expand} = this.state;

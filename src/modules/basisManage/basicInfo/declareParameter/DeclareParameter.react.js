@@ -90,7 +90,7 @@ class DeclareParameter extends Component {
         }
     ];
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
@@ -122,6 +122,11 @@ class DeclareParameter extends Component {
                 nssbData:result
             })
         });
+        this.updateTable()
+
+    }
+    updateTable=()=>{
+        this.handleSubmit()
     }
     showModal=type=>{
         this.toggleModalVisible(true)

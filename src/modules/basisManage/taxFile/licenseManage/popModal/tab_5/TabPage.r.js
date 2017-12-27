@@ -71,7 +71,7 @@ class TabPage extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
@@ -91,10 +91,8 @@ class TabPage extends Component {
             selectedRowKeys
         })
     }
-    updateTable(){
-        this.setState({
-            tableUpDateKey:Date.now()
-        })
+    updateTable=()=>{
+        this.handleSubmit()
     }
     componentDidMount(){
         this.updateTable()

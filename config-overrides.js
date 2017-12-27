@@ -39,7 +39,11 @@ module.exports = function override(config, env) {
             "@layout-footer-padding":"12px 25px",
             "@layout-trigger-height":"24px",
             "@layout-zero-trigger-width":"18px",
-            "@layout-zero-trigger-height":"21px"
+            "@layout-zero-trigger-height":"21px",
+
+
+            //form
+            "@form-item-margin-bottom":"0"
         },
     })(config, env);
     return config;

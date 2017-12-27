@@ -60,10 +60,8 @@ export default class TabPage extends Component{
             selectedRowKeys
         })
     }
-    updateTable(){
-        this.setState({
-            tableUpDateKey:Date.now()
-        })
+    updateTable=()=>{
+        this.handleSubmit()
     }
     componentDidMount(){
         this.updateTable()

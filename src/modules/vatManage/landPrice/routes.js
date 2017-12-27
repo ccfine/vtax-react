@@ -5,9 +5,7 @@
  */
 import React from 'react'
 import {wrapPage} from '../../../compoments'
-
-const LandPriceManage =()=><div>土地价款管理</div>
-
+import LandPriceManage from './landPriceManage'
 
 const PATH = `/web/vatManage/landPrice`;
 

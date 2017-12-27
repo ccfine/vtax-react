@@ -21,7 +21,7 @@ const columns = [{
     dataIndex: 'accountNumber',
 },{
     title: '建筑面积(m²)',
-    dataIndex: 'bulidArea',
+    dataIndex: 'buildingArea',
 },{
     title: '分摊面积(m²)',
     dataIndex: 'shareArea'
@@ -59,7 +59,7 @@ class TabPage extends Component {
         })
     }
     handleSubmit = e => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({
