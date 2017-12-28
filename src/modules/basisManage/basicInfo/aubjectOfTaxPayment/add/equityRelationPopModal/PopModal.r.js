@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,Select,InputNumber} from 'antd';
-import {request,fMoney} from '../../../../../../utils'
+import {regRules} from '../../../../../../utils'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -166,6 +166,8 @@ class PopModal extends Component{
                                         {
                                             required:true,
                                             message:'请输入股东'
+                                        },{
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
                                         }
                                     ]
                                 })(
@@ -210,7 +212,12 @@ class PopModal extends Component{
                         <Col span={24}>
                             <FormItem label='备注' {...formItemLayout2}>
                                 {getFieldDecorator(`remark`,{
-                                    initialValue:defaultData.remark
+                                    initialValue:defaultData.remark,
+                                    rules:[
+                                        {
+                                            max:regRules.textarea_2000_lenght.max, message: regRules.textarea_2000_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <TextArea disabled={disibled} />
                                 )}

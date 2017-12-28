@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,Select,Checkbox} from 'antd';
-import {request,fMoney} from '../../../../../../utils'
+import {fMoney,regRules} from '../../../../../../utils'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -175,7 +175,12 @@ class PopModal extends Component{
                         <Col span={12}>
                             <FormItem label='实际股东' {...formItemLayout}>
                                 {getFieldDecorator(`realStockholder`,{
-                                    initialValue:defaultData.realStockholder
+                                    initialValue:defaultData.realStockholder,
+                                    rules:[
+                                        {
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled} />
                                 )}
@@ -199,7 +204,12 @@ class PopModal extends Component{
                         <Col span={12}>
                             <FormItem label='登记股东' {...formItemLayout}>
                                 {getFieldDecorator(`registeredStockholder`,{
-                                    initialValue:defaultData.registeredStockholder
+                                    initialValue:defaultData.registeredStockholder,
+                                    rules:[
+                                        {
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled} />
                                 )}
@@ -211,6 +221,11 @@ class PopModal extends Component{
                             <FormItem label='注册资本出资期限' {...formItemLayout}>
                                 {getFieldDecorator(`term`,{
                                     initialValue:defaultData.term,
+                                    rules:[
+                                        {
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled} />
                                 )}
@@ -219,7 +234,12 @@ class PopModal extends Component{
                         <Col span={8}>
                             <FormItem label='注册资本原币币种' {...formItemLayout}>
                                 {getFieldDecorator(`registeredCapitalCurrency`,{
-                                    initialValue:defaultData.registeredCapitalCurrency
+                                    initialValue:defaultData.registeredCapitalCurrency,
+                                    rules:[
+                                        {
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled} />
                                 )}
@@ -242,7 +262,12 @@ class PopModal extends Component{
                         <Col span={24}>
                             <FormItem label='注册资本备注' {...formItemLayout2}>
                                 {getFieldDecorator(`capitalRemark`,{
-                                    initialValue:defaultData.capitalRemark
+                                    initialValue:defaultData.capitalRemark,
+                                    rules:[
+                                        {
+                                            max:regRules.textarea_2000_lenght.max, message: regRules.textarea_2000_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <TextArea disabled={disibled} />
                                 )}
@@ -253,7 +278,12 @@ class PopModal extends Component{
                         <Col span={12}>
                             <FormItem label='实收资本' {...formItemLayout}>
                                 {getFieldDecorator(`collectionCapitalCurrency`,{
-                                    initialValue:defaultData.collectionCapitalCurrency
+                                    initialValue:defaultData.collectionCapitalCurrency,
+                                    rules:[
+                                        {
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled} />
                                 )}
@@ -276,7 +306,12 @@ class PopModal extends Component{
                         <Col span={24}>
                             <FormItem label='代持情况' {...formItemLayout2}>
                                 {getFieldDecorator(`situation`,{
-                                    initialValue:defaultData.situation
+                                    initialValue:defaultData.situation,
+                                    rules:[
+                                        {
+                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled} />
                                 )}
@@ -287,7 +322,12 @@ class PopModal extends Component{
                         <Col span={24}>
                             <FormItem label='股东属性备注' {...formItemLayout2}>
                                 {getFieldDecorator(`propertyRemark`,{
-                                    initialValue:defaultData.propertyRemark
+                                    initialValue:defaultData.propertyRemark,
+                                    rules:[
+                                        {
+                                            max:regRules.textarea_2000_lenght.max, message: regRules.textarea_2000_lenght.message
+                                        }
+                                    ]
                                 })(
                                     <TextArea disabled={disibled} />
                                 )}
