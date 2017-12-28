@@ -2,13 +2,11 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
-import {request} from '../../../../../utils'
+import {Button,Input,Modal,Form,Row,Col,DatePicker} from 'antd';
 import {CusFormItem} from '../../../../../compoments'
 import moment from 'moment';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
-const Option = Select.Option;
 const { TextArea } = Input;
 class PopModal extends Component{
     static defaultProps={

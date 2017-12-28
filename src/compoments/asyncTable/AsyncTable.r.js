@@ -32,7 +32,7 @@ export default class AsyncTable extends Component{
     }
     fetch = (params = {},url) => {
         this.setState({ loaded: false });
-        const {props} = this;
+        //const {props} = this;
         request.get(url || this.props.url,{
             params:{
                 results: 10,
@@ -63,7 +63,11 @@ export default class AsyncTable extends Component{
 
                 this.mounted && this.setState({
                     loaded: true,
-                    dataSource: data.data.records,
+
+                    /**
+                     * 有的列表接口返回的结构不一样
+                     * */
+                    dataSource: data.data.records ? data.data.records : data.data.page.records,
                     //summaryData:summaryData,
                     pagination
                 });
@@ -95,7 +99,7 @@ export default class AsyncTable extends Component{
         this.mounted=null
     }
     render(){
-        const {loaded,dataSource,pagination,summaryData}  = this.state;
+        const {loaded,dataSource,pagination}  = this.state;
         const {props} = this;
        // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
         return(

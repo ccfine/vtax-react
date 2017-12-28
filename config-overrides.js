@@ -43,7 +43,7 @@ module.exports = function override(config, env) {
 
 
             //form
-            "@form-item-margin-bottom":"0"
+            "@form-item-margin-bottom":"12px"
         },
     })(config, env);
     return config;

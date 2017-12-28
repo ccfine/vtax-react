@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,Select,Checkbox} from 'antd';
-import {request,fMoney} from '../../../../../../utils'
+import {fMoney} from '../../../../../../utils'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -48,6 +48,8 @@ class PopModal extends Component{
                     case 'edit':
                         this.updateDate(this.props.selectedRowKeys[0], values);
                         break;
+                    default :
+                    //no default
                 }
                 this.props.toggleModalVisible(false);
                 this.props.setSelectedRowKeysAndselectedRows(null,{})
@@ -132,6 +134,8 @@ class PopModal extends Component{
                 title = '查看';
                 disibled=true;
                 break;
+            default :
+            //no default
         }
         return(
             <Modal

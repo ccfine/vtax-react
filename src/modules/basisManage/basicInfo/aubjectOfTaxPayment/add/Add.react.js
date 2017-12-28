@@ -88,7 +88,6 @@ class Add extends Component {
                     stockholderType:item.stockholderType,
                 }
             }
-            return item;
         })
 
     }
@@ -128,7 +127,6 @@ class Add extends Component {
                     term: item.term,
                 }
             }
-            return item;
         })
     }
 
@@ -305,6 +303,8 @@ class Add extends Component {
             case 'view':
                 title = '查看';
                 break;
+            default :
+                //no default
         }
 
         return (

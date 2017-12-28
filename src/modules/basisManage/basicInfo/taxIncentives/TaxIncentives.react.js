@@ -47,7 +47,8 @@ const columns = [{
             case 6:
                 t='其他税收优惠';
                 break;
-
+            default:
+                //no default
         }
         return t
     }
