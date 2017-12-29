@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Select,DatePicker,Input} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Select,DatePicker,Input,message} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
-import {requestDict} from '../../../../utils'
+import {request,requestDict} from '../../../../utils'
+import {FileExport} from '../../../../compoments'
+import FileUpload from '../../../basisManage/basicInfo/aubjectOfTaxPayment/projectInformationManagement/FileUpload.r'
 import PopModal from './popModal'
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -210,11 +212,27 @@ class InvoiceCollection extends Component {
                               <Icon type="file-add" />
                               新增
                           </Button>
+                          <FileUpload taxSubjectId={this.props.taxSubjectId} fetchTable_1_Data={this.fetchTable_1_Data} />
+                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                              <Icon type="file-add" />
+                              撤销导入
+                          </Button>
+                          <FileExport
+                              url='project/download'
+                              title="下载导入样表"
+                              size="default"
+                              setButtonStyle={{marginRight:5}}
+                          />
                           <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="edit" />
                               编辑
                           </Button>
+                          <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                              <Icon type="search" />
+                              查看
+                          </Button>
                           <Button
+                              style={buttonStyle}
                               onClick={()=>{
                                   confirm({
                                       title: '友情提醒',
@@ -222,10 +240,22 @@ class InvoiceCollection extends Component {
                                       okText: '确定',
                                       okType: 'danger',
                                       cancelText: '取消',
-                                      onOk() {
-                                          console.log('OK');
+                                      onOk:()=>{
+
+                                          request.delete(`/income/invoice/collection/delete/${this.state.selectedRowKeys[0]}`)
+                                              .then(({data})=>{
+                                                  if(data.code===200){
+                                                      message.success('删除成功!');
+                                                      this.updateTable();
+                                                  }else{
+                                                      message.error(data.msg)
+                                                  }
+                                              })
+
+                                          ///this.setSelectedRowKeysAndselectedRows(null,{});
+                                          this.toggleModalVisible(false)
                                       },
-                                      onCancel() {
+                                      onCancel:()=>{
                                           console.log('Cancel');
                                       },
                                   });
@@ -249,7 +279,11 @@ class InvoiceCollection extends Component {
                                     rowSelection:rowSelection
                                 }} />
                 </Card>
-                <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
+                <PopModal
+                    visible={visible}
+                    modalConfig={modalConfig}
+                    toggleModalVisible={this.toggleModalVisible}
+                />
             </Layout>
         )
     }

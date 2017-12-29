@@ -27,12 +27,18 @@ export default class AsyncTable extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
+            const currentPager = { ...this.state.pagination };
+            currentPager.current = 1;
+            this.mounted &&  this.setState({
+                pagination: currentPager,
+                updateKey: nextProps.updateKey,
+            });
             this.fetch({},nextProps.url)
         }
     }
     fetch = (params = {},url) => {
         this.setState({ loaded: false });
-        const {props} = this;
+        //const {props} = this;
         request.get(url || this.props.url,{
             params:{
                 results: 10,
@@ -44,26 +50,30 @@ export default class AsyncTable extends Component{
                 const pagination = { ...this.state.pagination };
                 pagination.total = data.data.total;
 
-               /* let summaryData = [{}];
-                let summaryFields = props.summaryFields;
-                if(summaryFields && summaryFields.length >0){
-                    console.log(summaryFields)
+                /* let summaryData = [{}];
+                 let summaryFields = props.summaryFields;
+                 if(summaryFields && summaryFields.length >0){
+                     console.log(summaryFields)
 
-                    data.data.records.forEach(item=>{
-                        for(let key in item){
-                            if(summaryFields.indexOf(key)){
-                                console.log(1)
-                                summaryData[0][key] = parseFloat(summaryData[0][key]) + parseFloat(item[key]);
-                            }
-                        }
-                    })
+                     data.data.records.forEach(item=>{
+                         for(let key in item){
+                             if(summaryFields.indexOf(key)){
+                                 console.log(1)
+                                 summaryData[0][key] = parseFloat(summaryData[0][key]) + parseFloat(item[key]);
+                             }
+                         }
+                     })
 
-                }
-                console.log(summaryData)*/
+                 }
+                 console.log(summaryData)*/
 
                 this.mounted && this.setState({
                     loaded: true,
-                    dataSource: data.data.records,
+
+                    /**
+                     * 有的列表接口返回的结构不一样
+                     * */
+                    dataSource: data.data.records ? data.data.records : data.data.page.records,
                     //summaryData:summaryData,
                     pagination
                 });
@@ -95,9 +105,9 @@ export default class AsyncTable extends Component{
         this.mounted=null
     }
     render(){
-        const {loaded,dataSource,pagination,summaryData}  = this.state;
+        const {loaded,dataSource,pagination}  = this.state;
         const {props} = this;
-       // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
+        // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
         return(
             <Table
                 {...props.tableProps}

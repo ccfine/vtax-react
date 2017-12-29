@@ -41,7 +41,11 @@ class PopModal extends Component{
     addKey=data=>{
         const arr = [];
         data.forEach((item,i) => {
-            arr.push({...item, id:`t${i}`});
+            if(!item.id){
+                arr.push({...item, id:`t${i}`});
+            }else{
+                arr.push(item);
+            }
         });
         return arr;
     }
@@ -128,6 +132,7 @@ class PopModal extends Component{
                             <Col span={12}></Col>
                             <Col span={12}>
                                 <Button type="primary" onClick={this.handleSubmit}>确定</Button>
+                                <Button type="primary" onClick={this.handleSubmit}>继续添加</Button>
                                 <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                             </Col>
                         </Row>

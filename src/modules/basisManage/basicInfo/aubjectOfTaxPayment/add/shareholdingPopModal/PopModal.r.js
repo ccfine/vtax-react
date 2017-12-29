@@ -57,7 +57,11 @@ class PopModal extends Component{
     addKey=data=>{
         const arr = [];
         data.forEach((item,i) => {
-            arr.push({...item, id:`t${i}`});
+            if(!item.id){
+                arr.push({...item, id:`t${i}`});
+            }else{
+                arr.push(item);
+            }
         });
         return arr;
     }

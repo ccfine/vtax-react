@@ -4,8 +4,8 @@ import React,{Component} from 'react'
 import {Button,Modal,Icon,Table,Card,message} from 'antd'
 import {List} from 'immutable'
 import {request} from '../../../../../utils'
+import {FileExport} from '../../../../../compoments'
 import FileUpload from './FileUpload.r'
-import FileExport from './FileExport.r'
 const confirm = Modal.confirm;
 const constants = {
     PROJECT_NAME:'itemName',
@@ -129,7 +129,12 @@ export default class ProjectInformationManagement extends Component{
                         extra={
                             <div>
                                 <FileUpload taxSubjectId={this.props.taxSubjectId} fetchTable_1_Data={this.fetchTable_1_Data} />
-                                <FileExport url='project/download' title="模板下载" />
+                                <FileExport
+                                    url='project/download'
+                                    title="模板下载"
+                                    setButtonStyle={{marginTop:10,marginRight:15}}
+                                    size='small'
+                                />
                                 <Button size='small'
                                     onClick={()=>{
                                         confirm({

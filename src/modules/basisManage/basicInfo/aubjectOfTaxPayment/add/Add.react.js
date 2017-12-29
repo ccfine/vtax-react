@@ -30,8 +30,6 @@ class Add extends Component {
         jbxx:{},
         szjd: null,
 
-        gdjcg2:[],
-        gqgx2:[],
         industry:{},
     }
 
@@ -89,7 +87,6 @@ class Add extends Component {
                 }
             }
         })
-
     }
 
     checkeGdjcgId = (data)=> {
@@ -164,7 +161,6 @@ class Add extends Component {
                 }
 
                 console.log(data);
-                debugger
 
                 this.mounted && this.setState({
                     submitLoading: true

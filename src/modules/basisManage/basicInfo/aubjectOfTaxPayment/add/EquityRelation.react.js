@@ -5,7 +5,6 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Button,Icon,Modal} from 'antd'
-import {request} from '../../../../../utils'
 import {SynchronizeTable} from '../../../../../compoments'
 import PopModal from './equityRelationPopModal'
 const confirm = Modal.confirm;
