@@ -3,7 +3,8 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col} from 'antd';
-import {request,getFields} from '../../../../../utils'
+import {request,getFields,regRules} from '../../../../../utils'
+import moment from 'moment'
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
@@ -12,7 +13,8 @@ class PopModal extends Component{
     state={
         initData:{
 
-        }
+        },
+        loaded:false
     }
 
     handleSubmit = (e) => {
@@ -23,13 +25,17 @@ class PopModal extends Component{
             }
         });
     }
+    toggleLoaded = loaded => this.setState({loaded})
     fetchReportById = id=>{
+        this.toggleLoaded(false)
         request.get(`/output/invoice/collection/get/${id}`)
             .then(({data})=>{
-                const d = {"id":1,"createdDate":"2017-12-20 17:34:19","lastModifiedDate":"2017-12-20 12:16:35","createdBy":null,"lastModifiedBy":"1","mainId":1,"mainName":"c2","checkSets":"查1","checkType":12,"checkStart":"2017-01-02","checkEnd":"2017-01-02","checkImplementStart":"2017-01-02","checkImplementEnd":"2017-01-02","documentNum":"文书编号","issue":null,"closingTime":"2017-12-12","checkItems":"hello","differential":'2',"taxPayment":null,"lateFee":'90000.0',"fine":'12121.12',"remark":'备注蚊子',"isAttachment":0,"orgId":"87e7511d51754da6a1a04de1b4c669ff"}
-                this.setState({
-                    initData:d
-                })
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    this.setState({
+                        initData:data.data
+                    })
+                }
             })
     }
     componentWillReceiveProps(nextProps){
@@ -55,16 +61,7 @@ class PopModal extends Component{
     }
     render(){
         const props = this.props;
-        const {initData} = this.state;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 },
-        };
-        const formItemLayout2 = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 18 },
-        };
+        const {initData,loaded} = this.state;
         let title='';
         let disabled = false;
         const type = props.modalConfig.type;
@@ -82,16 +79,21 @@ class PopModal extends Component{
             default :
                 //no default
         }
-        const dateFormat = 'YYYY-MM-DD'
         let shouldShowDefaultData = false;
-        if(type==='edit' || type==='view'){
+        if( (type==='edit' || type==='view') && loaded){
             shouldShowDefaultData = true;
+        }
+        if(type==='type'){
+            disabled=true
         }
         return(
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={900}
+                width={1920}
+                style={{
+                    maxWidth:'90%'
+                }}
                 visible={props.visible}
                 footer={
                     <Row>
@@ -110,7 +112,13 @@ class PopModal extends Component{
                                 {
                                     label:'纳税主体',
                                     fieldName:'mainId',
-                                    type:'taxMain'
+                                    type:'taxMain',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['taxMain'],
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
                                 },
                                 {
                                     label:'计税方法',
@@ -125,7 +133,19 @@ class PopModal extends Component{
                                             text:'简易计税方法',
                                             value:'2'
                                         }
-                                    ]
+                                    ],
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['taxMethod'],
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请选择计税方法'
+                                            }
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
                                 },
                                 {
                                     label:'发票类型',
@@ -140,23 +160,329 @@ class PopModal extends Component{
                                             text:'普票',
                                             value:'c'
                                         }
-                                    ]
+                                    ],
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['invoiceType'],
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请选择发票类型'
+                                            }
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
                                 },
                                 {
                                     label:'应税项目',
                                     fieldName:'taxableItem',
-                                    type:'input'
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['taxableItem'],
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
                                 },
                                 {
                                     label:'发票号码',
                                     fieldName:'invoiceNum',
-                                    type:'input'
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['invoiceNum'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
                                 },
                                 {
                                     label:'发票代码',
                                     fieldName:'invoiceCode',
-                                    type:'input'
-                                }
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['invoiceCode']
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'发票明细号',
+                                    fieldName:'invoiceDetailNum',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['invoiceDetailNum'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'开票日期',
+                                    fieldName:'billingDate',
+                                    type:'datePicker',
+                                    fieldDecoratorOptions:{
+                                        initialValue:shouldShowDefaultData ? moment(`${initData['billingDate']}`,"YYYY-MM-DD") : undefined,
+                                    },
+                                    componentProps:{
+                                        format:"YYYY-MM-DD",
+                                        disabled
+                                    },
+
+                                },
+                                {
+                                    label:'商品名称',
+                                    fieldName:'commodityName',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['commodityName'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'规格型号',
+                                    fieldName:'specificationModel',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['specificationModel'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'购货单位名称',
+                                    fieldName:'purchaseName',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['purchaseName'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'购方税号',
+                                    fieldName:'purchaseTaxNum',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['purchaseTaxNum'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'地址',
+                                    fieldName:'address',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['address'],
+                                        rules:[
+                                            regRules.input_lenght
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'电话',
+                                    fieldName:'phone',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['phone'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'开户行',
+                                    fieldName:'bank',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['bank'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'帐号',
+                                    fieldName:'account',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['account'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'金额',
+                                    fieldName:'amount',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['amount'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'税率',
+                                    fieldName:'taxRate',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['taxRate'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'税额',
+                                    fieldName:'taxAmount',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['taxAmount'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'价税合计',
+                                    fieldName:'totalAmount',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled:true
+                                    }
+                                },
+                                {
+                                    label:'备注',
+                                    fieldName:'remark',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['remark'],
+                                        rules:[
+                                            regRules.input_lenght
+                                        ]
+                                    },
+                                    span:24,
+                                    formItemStyle:{
+                                        labelCol:{
+                                            span:2
+                                        },
+                                        wrapperCol:{
+                                            span:22
+                                        }
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'收款人',
+                                    fieldName:'payee',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['payee'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'复核',
+                                    fieldName:'checker',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['checker'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'开票人',
+                                    fieldName:'drawer',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['drawer'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
+                                {
+                                    label:'数据来源',
+                                    fieldName:'sourceType',
+                                    type:'input',
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData['sourceType'],
+                                        rules:[
+                                            regRules.input_length_20
+                                        ]
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    }
+                                },
                             ])
                         }
                     </Row>

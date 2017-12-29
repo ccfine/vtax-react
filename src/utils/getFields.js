@@ -9,7 +9,7 @@ const Option = Select.Option;
 const { RangePicker,MonthPicker } = DatePicker;
 const getFields = (form,fieldsData=[]) =>{
     const {getFieldDecorator} = form;
-    let formItemStyle={
+    let defaultFormItemStyle={
         labelCol:{
             span:6
         },
@@ -18,43 +18,57 @@ const getFields = (form,fieldsData=[]) =>{
         }
     }
     return fieldsData.map((item,i)=>{
-        let Component;
+        let CusComponent;
         const type = item.type;
+        let formItemStyle = item.formItemStyle || defaultFormItemStyle;
         switch (type){
             case 'input':
-                Component = Input;
+                CusComponent = Input;
                 break;
             case 'taxMain':
-                Component = CusFormItem.TaxMain;
+                CusComponent = CusFormItem.TaxMain;
                 break;
             case 'rangePicker' :
-                Component = RangePicker;
+                CusComponent = RangePicker;
                 break;
             case 'select':
-                Component = props=>(
-                    <Select {...props}>
-                        {
-                            item.options.map((option,i)=>(
-                                <Option key={i} value={option.value}>{option.text}</Option>
-                            ))
-                        }
-                    </Select>
-                );
+                CusComponent = Select;
                 break;
             case 'asyncSelect':
-                Component = CusFormItem.AsyncSelect;
+                CusComponent = CusFormItem.AsyncSelect;
                 break;
             case 'monthPicker':
-                Component = MonthPicker;
+                CusComponent = MonthPicker;
+                break;
+            case 'datePicker':
+                CusComponent = DatePicker;
                 break;
             default:
-                Component = props =><div {...props}>no match Component</div>
+                CusComponent = Input
         }
 
         if(type ==='taxMain' || type === 'asyncSelect'){
             return <Col key={i} span={item['span'] || 8}>
-                <Component label={item['label']} fieldName={item['fieldName']} formItemStyle={formItemStyle} form={form} {...item['componentProps']} />
+                <CusComponent label={item['label']} fieldName={item['fieldName']} formItemStyle={formItemStyle} form={form} {...item['componentProps']} />
             </Col>
+        }else if(type==='select'){
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} >
+                                {
+                                    item.options.map((option,i)=>(
+                                        <Option key={i} value={option.value}>{option.text}</Option>
+                                    ))
+                                }
+                            </CusComponent>
+                        )}
+                    </FormItem>
+                </Col>
+            )
         }else{
             return (
                 <Col key={i} span={item['span'] || 8}>
@@ -62,7 +76,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <Component {...item['componentProps']} />
+                            <CusComponent {...item['componentProps']} />
                         )}
                     </FormItem>
                 </Col>
@@ -74,3 +88,4 @@ const getFields = (form,fieldsData=[]) =>{
 }
 
 export default getFields
+

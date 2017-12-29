@@ -62,6 +62,7 @@ const columns = [{
 }];
 
 class SalesInvoiceCollection extends Component {
+
     state={
         /**
          * params条件，给table用的
@@ -182,10 +183,10 @@ class SalesInvoiceCollection extends Component {
                                         label:'商品名称',
                                         type:'input',
                                         fieldName:'commodityName',
-                                        fieldDecoratorOptions:{}
                                     },
                                     {
                                         label:'发票类型',
+                                        fieldName:'invoiceType',
                                         type:'select',
                                         options:[
                                             {
@@ -196,15 +197,8 @@ class SalesInvoiceCollection extends Component {
                                                 text:'普票',
                                                 value:'c'
                                             }
-                                        ],
-                                        fieldName:'invoiceType',
+                                        ]
                                     },
-                                    /*{//不要了
-                                        label:'发票号码起止',
-                                        type:'inputRangePicker',
-                                        fieldName:'invoiceNum',
-                                        fieldDecoratorOptions:{}
-                                    }*/
                                 ])
                             }
 
