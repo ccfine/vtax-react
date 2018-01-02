@@ -63,7 +63,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -77,7 +77,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -91,7 +91,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -105,7 +105,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -183,7 +183,7 @@ class BasicInfo extends Component {
                     {
                         required: true, message: '请输入经营期限',
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -207,7 +207,7 @@ class BasicInfo extends Component {
                 label: '生产经营地址',
                 type: 'cascader',
                 fieldName: 'jbxx.operatingProvince',
-                initialValue:[`${defaultData.operatingProvince}`,`${defaultData.operatingCity}`,`${defaultData.operatingArea}`],
+                initialValue:[defaultData.operatingProvince,defaultData.operatingCity,defaultData.operatingArea],
                 items: this.state.selectOptions
             }, {
                 label: '生产经营详细地址',
@@ -217,7 +217,7 @@ class BasicInfo extends Component {
                 noName:true,
                 rules: [
                     {
-                        max:regRules.textarea_lenght.max, message: regRules.textarea_lenght.message
+                        max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
                     }
                 ],
             }, {
@@ -231,7 +231,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -243,7 +243,7 @@ class BasicInfo extends Component {
                     {
                         required: true, message: '请输入开户银行',
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -257,7 +257,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -267,7 +267,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.legalPerson,
                 rules: [
                     {
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -279,7 +279,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.not_chinese.pattern, message: regRules.not_chinese.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
 
@@ -290,7 +290,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.financialOfficer,
                 rules: [
                     {
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -300,7 +300,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.operater,
                 rules: [
                     {
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -312,7 +312,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -328,7 +328,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.machineType,
                 rules: [
                     {
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -338,7 +338,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.currencyType,
                 rules: [
                     {
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -357,7 +357,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.receiptCurrencyType,
                 rules: [
                     {
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
@@ -378,7 +378,7 @@ class BasicInfo extends Component {
                 label: '主管国税机关',
                 type: 'cascader',
                 fieldName: 'jbxx.nationalTaxProvince',
-                initialValue:[`${defaultData.nationalTaxProvince}`,`${defaultData.nationalTaxCity}`,`${defaultData.nationalTaxArea}`],
+                initialValue:[defaultData.nationalTaxProvince,defaultData.nationalTaxCity,defaultData.nationalTaxArea],
                 items: this.state.selectOptions
             }, {
                 label: '主管国税机关详细地址',
@@ -388,7 +388,7 @@ class BasicInfo extends Component {
                 noName:true,
                 rules: [
                     {
-                        max:regRules.textarea_lenght.max, message: regRules.textarea_lenght.message,
+                        max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message,
                     }
                 ],
             }, {
@@ -400,14 +400,14 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }, {
                 label: '主管地税机关',
                 type: 'cascader',
                 fieldName: 'jbxx.localTaxProvince',
-                initialValue:[`${defaultData.localTaxProvince}`,`${defaultData.localTaxCity}`,`${defaultData.localTaxArea}`],
+                initialValue:[defaultData.localTaxProvince,defaultData.localTaxCity,defaultData.localTaxArea],
                 items: this.state.selectOptions
             }, {
                 label: '主管地税机关详细地址',
@@ -417,7 +417,7 @@ class BasicInfo extends Component {
                 noName:true,
                 rules: [
                     {
-                        max:regRules.textarea_lenght.max, message: regRules.textarea_lenght.message,
+                        max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message,
                     }
                 ],
             }, {
@@ -429,7 +429,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_lenght.max, message: regRules.input_lenght.message,
+                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
                     }
                 ],
             }
@@ -455,19 +455,6 @@ class BasicInfo extends Component {
                 inputComponent = <Cascader disabled={disibled} options={data[i].items} placeholder={`请输入${data[i].label}`}/>;
             }
 
-            /*if(data[i].type === 'rangePicker'){
-                children.push(
-                    <Col span={12} key={i}>
-                        <FormItem {...formItemLayout} label={data[i].label}>
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue,
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            } else*/
             if(data[i].type ==='checked'){
                 children.push(
                     <Col span={12} key={i}>
@@ -726,6 +713,7 @@ class BasicInfo extends Component {
                         })
                     }}
                     changeIndustry={this.props.changeIndustry.bind(this)}
+                    form={this.props.form}
                 />
 
             </div>

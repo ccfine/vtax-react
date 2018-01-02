@@ -5,8 +5,7 @@
  */
 import React from 'react'
 import {wrapPage} from '../../../compoments'
-
-const InvoiceCollection =()=><div>进项发票采集</div>
+import InvoiceCollection from './invoiceCollection'
 const InvoiceMatching =()=><div>进项发票匹配</div>
 
 

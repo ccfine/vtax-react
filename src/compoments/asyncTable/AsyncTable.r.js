@@ -28,6 +28,12 @@ export default class AsyncTable extends Component{
 
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
+            const currentPager = { ...this.state.pagination };
+            currentPager.current = 1;
+            this.mounted &&  this.setState({
+                pagination: currentPager,
+                updateKey: nextProps.updateKey,
+            });
             this.fetch({},nextProps.url)
         }
     }
@@ -45,22 +51,22 @@ export default class AsyncTable extends Component{
                 const pagination = { ...this.state.pagination };
                 pagination.total = data.data.total;
 
-               /* let summaryData = [{}];
-                let summaryFields = props.summaryFields;
-                if(summaryFields && summaryFields.length >0){
-                    console.log(summaryFields)
+                /* let summaryData = [{}];
+                 let summaryFields = props.summaryFields;
+                 if(summaryFields && summaryFields.length >0){
+                     console.log(summaryFields)
 
-                    data.data.records.forEach(item=>{
-                        for(let key in item){
-                            if(summaryFields.indexOf(key)){
-                                console.log(1)
-                                summaryData[0][key] = parseFloat(summaryData[0][key]) + parseFloat(item[key]);
-                            }
-                        }
-                    })
+                     data.data.records.forEach(item=>{
+                         for(let key in item){
+                             if(summaryFields.indexOf(key)){
+                                 console.log(1)
+                                 summaryData[0][key] = parseFloat(summaryData[0][key]) + parseFloat(item[key]);
+                             }
+                         }
+                     })
 
-                }
-                console.log(summaryData)*/
+                 }
+                 console.log(summaryData)*/
 
                 this.mounted && this.setState({
                     loaded: true,
@@ -102,7 +108,7 @@ export default class AsyncTable extends Component{
     render(){
         const {loaded,dataSource,pagination}  = this.state;
         const {props} = this;
-       // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
+        // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
         return(
             <Table
                 {...props.tableProps}

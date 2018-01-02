@@ -21,16 +21,23 @@ export default class SynchronizeTable extends Component{
     static defaultProps={
         updateKey:Date.now()
     }
-    /*componentWillReceiveProps(nextProps){
-        console.log(nextProps);
+    componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
-            this.getDate(nextProps.data)
+            const currentPager = { ...this.state.pagination };
+            currentPager.current = 1;
+            this.mounted &&  this.setState({
+                pagination: currentPager,
+                updateKey: nextProps.updateKey,
+            });
+            this.getDate()
         }
-    }*/
+    }
+
     getDate = () => {
         this.setState({ loaded: false });
         const pagination = { ...this.state.pagination };
         pagination.total = this.props.data.length;
+
         this.setState({
             loaded: true,
             pagination,

@@ -30,8 +30,6 @@ class Add extends Component {
         jbxx:{},
         szjd: null,
 
-        gdjcg2:[],
-        gqgx2:[],
         industry:{},
     }
 
@@ -89,7 +87,6 @@ class Add extends Component {
                 }
             }
         })
-
     }
 
     checkeGdjcgId = (data)=> {
@@ -134,22 +131,20 @@ class Add extends Component {
 
         e && e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-
             if (!err) {
-
                 const type = this.props.modalConfig.type;
                 const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
                 const gqgx = this.checkeGqgxId(this.state.gqgx);
+                const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
                 const data = {
                     ...values,
                     jbxx:{
                         ...values.jbxx,
                         industry:this.state.industry.key,
                         id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
-                        operatingProvince:values.jbxx.operatingProvince[0],
+                        operatingProvince: values.jbxx.operatingProvince[0],
                         operatingCity:values.jbxx.operatingProvince[1],
                         operatingArea:values.jbxx.operatingProvince[2],
-
                         nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
                         nationalTaxCity:values.jbxx.nationalTaxProvince[1],
                         nationalTaxArea:values.jbxx.nationalTaxProvince[2],
@@ -162,6 +157,7 @@ class Add extends Component {
                     },
                     gdjcg:gdjcg ,
                     gqgx:gqgx,
+                    szjd:szjd,
                 }
 
                 console.log(data);

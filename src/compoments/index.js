@@ -15,6 +15,7 @@ import CountTable from './countTable'
 import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
 import SynchronizeTable from './synchronizeTable'
+import FileExport from './fileExport'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -23,5 +24,6 @@ export {
     CountTable,
     AsyncTable,
     CusFormItem,
-    SynchronizeTable
+    SynchronizeTable,
+    FileExport
 }
