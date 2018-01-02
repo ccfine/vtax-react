@@ -5,7 +5,6 @@
  */
 import React,{Component} from 'react';
 import { Badge,Icon,Popover} from 'antd';
-import {request} from '../../utils'
 import {withRouter,Link} from 'react-router-dom'
 
 const data = [{

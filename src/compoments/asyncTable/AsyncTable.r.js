@@ -25,6 +25,7 @@ export default class AsyncTable extends Component{
     static defaultProps={
         updateKey:Date.now()
     }
+
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
             const currentPager = { ...this.state.pagination };

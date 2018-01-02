@@ -3,7 +3,6 @@
  * createTime   : 2017/12/7 15:38
  * description  :
  */
-import React,{Component} from 'react'
 import {wrapPage} from '../compoments'
 import Home from './home'
 import VatManage_Routes from './vatManage'

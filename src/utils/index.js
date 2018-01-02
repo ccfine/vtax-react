@@ -6,7 +6,7 @@
 import request from './request'
 import composeMenus from './composeMenus'
 import regRules from './regRules'
-
+import getFields from './getFields'
 
 const fMoney = (s,n=2)=>{
 
@@ -173,4 +173,5 @@ export {
     accMul,
     accSub,
     accAdd,
+    getFields
 }

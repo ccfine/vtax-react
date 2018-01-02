@@ -299,6 +299,8 @@ class Add extends Component {
             case 'view':
                 title = '查看';
                 break;
+            default :
+                //no default
         }
 
         return (

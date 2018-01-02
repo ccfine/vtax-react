@@ -75,12 +75,6 @@ class PopModal extends Component{
     fetchReportById = id=>{
         request.get(`/report/get/${id}`)
             .then(({data})=>{
-                if(data.code===200){
-                    const {setFieldsValue} = this.props.form
-                }
-
-
-                const {setFieldsValue} = this.props.form
                 const d = {"id":1,"createdDate":"2017-12-20 17:34:19","lastModifiedDate":"2017-12-20 12:16:35","createdBy":null,"lastModifiedBy":"1","mainId":1,"mainName":"c2","checkSets":"查1","checkType":12,"checkStart":"2017-01-02","checkEnd":"2017-01-02","checkImplementStart":"2017-01-02","checkImplementEnd":"2017-01-02","documentNum":"文书编号","issue":null,"closingTime":"2017-12-12","checkItems":"hello","differential":'2',"taxPayment":null,"lateFee":'90000.0',"fine":'12121.12',"remark":'备注蚊子',"isAttachment":0,"orgId":"87e7511d51754da6a1a04de1b4c669ff"}
                 this.setState({
                     initData:d,
@@ -114,7 +108,7 @@ class PopModal extends Component{
     }
     render(){
         const props = this.props;
-        const {mainTaxItems,initData} = this.state;
+        const {initData} = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 8 },
@@ -138,6 +132,8 @@ class PopModal extends Component{
                 title = '查看';
                 disabled=true;
                 break;
+            default :
+                //no default
         }
         const dateFormat = 'YYYY-MM-DD'
         let shouldShowDefaultData = false;

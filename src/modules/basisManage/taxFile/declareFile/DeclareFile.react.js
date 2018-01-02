@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,DatePicker} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import PopModal from './popModal'
-import moment from 'moment';
 const RangePicker = DatePicker.RangePicker;
 const FormItem = Form.Item;
 const buttonStyle={

@@ -5,7 +5,6 @@
  */
 import React, { Component } from 'react'
 import { Checkbox, Row, Col, Form } from 'antd'
-import {request} from '../../../../../utils'
 import './styles.less'
 
 const FormItem = Form.Item;

@@ -4,7 +4,7 @@
  * description  :
  */
 import createG2 from 'g2-react'
-import { Stat,Frame  } from 'g2'
+import { Stat  } from 'g2'
 import React, { Component } from 'react'
 import { Layout, Card, Col, Row,Icon,Menu, Dropdown } from 'antd'
 import {Carousel} from '../../compoments'
