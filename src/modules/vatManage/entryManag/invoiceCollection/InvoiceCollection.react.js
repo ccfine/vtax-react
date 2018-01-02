@@ -250,8 +250,6 @@ class InvoiceCollection extends Component {
                                                       message.error(data.msg)
                                                   }
                                               })
-
-                                          ///this.setSelectedRowKeysAndselectedRows(null,{});
                                           this.toggleModalVisible(false)
                                       },
                                       onCancel:()=>{
@@ -281,7 +279,9 @@ class InvoiceCollection extends Component {
                 <PopModal
                     visible={visible}
                     modalConfig={modalConfig}
+                    selectedRowKeys={selectedRowKeys}
                     toggleModalVisible={this.toggleModalVisible}
+
                 />
             </Layout>
         )

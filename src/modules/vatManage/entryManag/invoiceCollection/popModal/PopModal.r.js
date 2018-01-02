@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon} from 'antd';
+import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon,message} from 'antd';
 import {request,regRules,fMoney,requestDict} from '../../../../../utils'
 import {CusFormItem,SynchronizeTable} from '../../../../../compoments'
 import PopsModal from './popModal'
@@ -14,39 +14,7 @@ const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
-let timeout;
-let currentValue;
-function fetchTaxMain(value, callback) {
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
 
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.name}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
-}
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
@@ -59,8 +27,6 @@ class PopModal extends Component{
         initData:{
 
         },
-
-        defaultTableData:[],
         detailsDate:[],
 
         /**
@@ -116,14 +82,17 @@ class PopModal extends Component{
         if(props.modalConfig.type==='edit' || props.modalConfig.type==='view'){
             shouldShowDefaultData = true;
         }
-
         const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 },
+            labelCol: { span: 6 },
+            wrapperCol: { span: 18 },
         };
-        const formItemLayout2 = {
-            labelCol: { span: 3},
-            wrapperCol: { span: 19 },
+        const formItemStyle = {
+            labelCol:{
+                span:2
+            },
+            wrapperCol:{
+                span:22
+            }
         };
 
         const children = [];
@@ -140,6 +109,7 @@ class PopModal extends Component{
                     initialValue={initData.mainId}
                     formItemStyle={formItemLayout}
                     form={this.props.form}
+
                     fieldDecoratorOptions={{
                         rules:[
                             {
@@ -147,6 +117,9 @@ class PopModal extends Component{
                                 message:'请选择纳税主体'
                             }
                         ]
+                    }}
+                    componentProps={{
+                        disabled:disabled
                     }}
                 />
             },{
@@ -193,7 +166,7 @@ class PopModal extends Component{
                         required:true,
                         message:'请输入发票号码'
                     },{
-                ...max20
+                        ...max20
                     }
                 ]
             }, {
@@ -252,7 +225,7 @@ class PopModal extends Component{
                         required:true,
                         message:'请输入纳税人识别号'
                     },{
-                    ...max20
+                        ...max20
                     }
                 ]
             }, {
@@ -265,7 +238,7 @@ class PopModal extends Component{
                         required:true,
                         message:'请输入地址'
                     },{
-                    ...max50
+                        ...max50
                     }
                 ]
             }, {
@@ -280,7 +253,7 @@ class PopModal extends Component{
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                    ...max20
+                        ...max20
                     }
                 ]
             }, {
@@ -293,7 +266,7 @@ class PopModal extends Component{
                         required:true,
                         message:'请输入开户行'
                     },{
-                    ...max20
+                        ...max20
                     }
                 ]
             }, {
@@ -306,7 +279,7 @@ class PopModal extends Component{
                         required:true,
                         message:'请输入账号'
                     },{
-                    ...max20
+                        ...max20
                     }
                 ]
             }, {
@@ -383,7 +356,7 @@ class PopModal extends Component{
                 children.push(
                     <Col span={data[i].span || 8} key={i}>
                         <FormItem
-                            {...(data[i].span === 24 ? formItemLayout2 : formItemLayout)}
+                            {...(data[i].span === 24 ? formItemStyle : formItemLayout)}
                             label={data[i].label}
                         >
                             {getFieldDecorator(data[i]['fieldName'], {
@@ -417,7 +390,7 @@ class PopModal extends Component{
         })
     }
     //注册类型:进项结构分类
-    getRegistrationType=()=>{
+    getIncomeStructureType=()=>{
         requestDict('JXJGFL',result=>{
             this.setState({
                 incomeStructureTypeItem:result
@@ -427,6 +400,8 @@ class PopModal extends Component{
     setDetailsDate=detailsDate=>{
         this.setState({
             detailsDate
+        },()=>{
+            console.log(this.state.detailsDate);
         })
     }
     toggleModalVisible=visible=>{
@@ -436,6 +411,7 @@ class PopModal extends Component{
     }
     onChange=(selectedRowKeys, selectedRows) => {
         console.log(selectedRowKeys,selectedRows)
+        debugger
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 
@@ -466,26 +442,25 @@ class PopModal extends Component{
             }
         });
     }
-    onSearch = (value) => {
-        fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
-    }
-    onSelect = (value,option)=>{
-        this.setState({
-            selectedId:value
+
+    fetch = id=> {
+        request.get(`/income/invoice/collection/get/${id}`,{
         })
-    }
-    fetchReportById = id=>{
-        request.get(`/report/get/${id}`)
-            .then(({data})=>{
+            .then(({data}) => {
+                console.log(data)
                 if(data.code===200){
-
+                    this.setState({
+                        initData:{...data.data.incomeInvoiceCollectionDO},
+                        detailsDate:[...data.data.list],
+                    })
+                }else{
+                    message.error(data.msg, 4);
                 }
-            })
+            });
     }
-
     componentDidMount(){
         this.getRegistrationType()
-        this.getRegistrationType()
+        this.getIncomeStructureType()
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -494,14 +469,17 @@ class PopModal extends Component{
              * */
             nextProps.form.resetFields();
             this.setState({
-                initData:{}
+                initData:{},
+                detailsDate:[],
             })
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            this.fetchReportById(nextProps.modalConfig.id)
+            if(nextProps.selectedRowKeys.length>0){
+                this.fetch(nextProps.selectedRowKeys[0])
+            }
         }
     }
     mounted=true
@@ -509,9 +487,8 @@ class PopModal extends Component{
         this.mounted=null
     }
     render(){
-        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
+        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,detailsDate} = this.state;
         const props = this.props;
-        const defaultTableData = props.defaultTableData;
 
         let title='';
         const type = props.modalConfig.type;
@@ -532,14 +509,14 @@ class PopModal extends Component{
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
-            onChange: this.onChange,
-            getCheckboxProps:this.getCheckboxProps
+            onChange: this.onChange
         };
         return(
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
+                style={{ top: 50 }}
                 visible={props.visible}
                 footer={
                     <Row>
@@ -551,8 +528,8 @@ class PopModal extends Component{
                     </Row>
                 }
                 title={title}>
-                <Form onSubmit={this.handleSubmit}>
-                    <Card style={{height:'330px',overflowY:'scroll'}}>
+                <Form onSubmit={this.handleSubmit} style={{height:'400px',overflowY:'scroll'}}>
+                    <Card>
                         <Row>
                             {
                                 this.getFields(0,3)
@@ -576,52 +553,52 @@ class PopModal extends Component{
                     </Card>
 
                     <Card
-                        extra={<div>
-                                    <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
-                                        <Icon type="file-add" />
-                                        新增明细
-                                    </Button>
-                                    <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                        <Icon type="edit" />
-                                        编辑
-                                    </Button>
-                                    <Button
-                                        onClick={()=>{
-                                            confirm({
-                                                title: '友情提醒',
-                                                content: '该删除后将不可恢复，是否删除？',
-                                                okText: '确定',
-                                                okType: 'danger',
-                                                cancelText: '取消',
-                                                onOk:()=>{
-                                                    const nowKeys = defaultTableData;
-                                                    const keys = this.state.selectedRows;
-                                                    for(let i = 0;i<nowKeys.length;i++){
-                                                        for(let j = 0; j<keys.length;j++){
-                                                            if(nowKeys[i] === keys[j]){
-                                                                nowKeys.splice(i,1)
-                                                            }
-                                                        }
+                        extra={type !== 'view' && <div>
+                            <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                <Icon type="file-add" />
+                                新增明细
+                            </Button>
+                            <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                <Icon type="edit" />
+                                编辑
+                            </Button>
+                            <Button
+                                onClick={()=>{
+                                    confirm({
+                                        title: '友情提醒',
+                                        content: '该删除后将不可恢复，是否删除？',
+                                        okText: '确定',
+                                        okType: 'danger',
+                                        cancelText: '取消',
+                                        onOk:()=>{
+                                            const nowKeys = detailsDate;
+                                            const keys = this.state.selectedRows;
+                                            for(let i = 0;i<nowKeys.length;i++){
+                                                for(let j = 0; j<keys.length;j++){
+                                                    if(nowKeys[i] === keys[j]){
+                                                        nowKeys.splice(i,1)
                                                     }
-                                                    this.props.setGdjcgDate(nowKeys);
-                                                    this.setSelectedRowKeysAndselectedRows(null,{});
-                                                    this.toggleModalVisible(false)
+                                                }
+                                            }
+                                            this.props.setDetailsDate(nowKeys);
+                                            this.setSelectedRowKeysAndselectedRows(null,{});
+                                            this.toggleModalVisible(false)
 
-                                                },
-                                                onCancel:()=>{
-                                                    console.log('Cancel');
-                                                },
-                                            });
-                                        }}
-                                        disabled={!selectedRowKeys}
-                                        type='danger'>
-                                        <Icon type="delete" />
-                                        删除
-                              </Button>
-                          </div>}
-                          style={{marginTop:10}}>
+                                        },
+                                        onCancel:()=>{
+                                            console.log('Cancel');
+                                        },
+                                    });
+                                }}
+                                disabled={!selectedRowKeys}
+                                type='danger'>
+                                <Icon type="delete" />
+                                删除
+                            </Button>
+                        </div>}
+                        style={{marginTop:10}}>
 
-                        <SynchronizeTable data={defaultTableData}
+                         <SynchronizeTable data={detailsDate}
                                       updateKey={tableUpDateKey}
                                       tableProps={{
                                           rowKey:record=>record.id,
@@ -629,17 +606,35 @@ class PopModal extends Component{
                                           bordered:true,
                                           size:'middle',
                                           columns:this.columns,
-                                          rowSelection:rowSelection
-                                      }} />
+                                          rowSelection:rowSelection,
+                                          footer:(currentPageData) => {
+                                              return (
+                                                  <Row gutter={24}>
+                                                      <Col span={6}>
+
+                                                          金额合计：1357
+                                                      </Col>
+                                                      <Col span={6}>
+                                                          税额合计：1357
+                                                      </Col>
+                                                      <Col span={6}>
+                                                          价税合计：1357
+                                                      </Col>
+                                                  </Row>
+                                              )
+                                          }
+                                      }}
+                         />
+
 
                         <PopsModal
                             visible={visible}
                             modalConfig={modalConfig}
                             selectedRowKeys={selectedRowKeys}
                             selectedRows={selectedRows}
-                            initData={defaultTableData}
+                            initData={detailsDate}
                             toggleModalVisible={this.toggleModalVisible}
-                            setDetailsDate={this.setDetailsDate}
+                            setDetailsDate={this.setDetailsDate.bind(this)}
                             setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
                         />
                     </Card>

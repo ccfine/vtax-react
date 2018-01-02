@@ -300,7 +300,7 @@ class PopModal extends Component{
                                     fieldDecoratorOptions:{
                                         initialValue:initData['address'],
                                         rules:[
-                                            regRules.input_lenght
+                                            regRules.input_length_50
                                         ]
                                     },
                                     componentProps:{

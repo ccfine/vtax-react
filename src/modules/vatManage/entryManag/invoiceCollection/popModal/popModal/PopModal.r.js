@@ -90,8 +90,10 @@ class PopModal extends Component{
                         message:'请输入数量'
                     }
                 ],
-                res:{
-                    onBlur:(e)=>this.handleAmout('qty','unitPrice','amount'),
+                setCondition:{
+                    min:0,
+                    max:9999999999999.99,
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
             }, {
                 label: '单价',
@@ -104,9 +106,9 @@ class PopModal extends Component{
                         message:'请输入单价'
                     }
                 ],
-                res:{
+                setCondition:{
                     onKeyUp:(e)=>this.handleKeyUp('unitPrice'),
-                    onBlur:(e)=>this.handleAmout('qty','unitPrice','amount'),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
             }, {
                 label: '金额',
@@ -120,10 +122,9 @@ class PopModal extends Component{
                 fieldName: 'taxRate',
                 initialValue:fMoney(initData.taxRate),
                 setCondition:{
-                    min:0,
-                    max:100,
                     formatter:value => `${value}%`,
                     parser:value => value.replace('%', ''),
+                    onChange:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
                 rules: [
                     {
@@ -136,10 +137,7 @@ class PopModal extends Component{
                 type: 'text',
                 fieldName: 'taxAmount',
                 initialValue:fMoney(initData.taxAmount),
-                res:{
-                    onKeyUp:(e)=>this.handleKeyUp('taxAmount'),
-                    onBlur:(e)=>this.handleBlur('taxAmount'),
-                },
+                disabled:true,
             }
         ];
 
@@ -148,7 +146,7 @@ class PopModal extends Component{
 
             if(!data[i].components){
                 if (data[i].type === 'text') {
-                    inputComponent = <Input disabled={ data[i].disabled ? data[i].disabled : disabled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
+                    inputComponent = <Input disabled={ data[i].disabled ? data[i].disabled : disabled} {...data[i].setCondition} placeholder={`请输入${data[i].label}`}/>;
                 } else if (data[i].type === 'inputNumber') {
                     inputComponent = <InputNumber disabled={disabled} {...data[i].setCondition} style={{width:'100%'}} />;
                 }
@@ -202,14 +200,38 @@ class PopModal extends Component{
         });
     }
 
-    handleAmout=(num1,num2,name)=>{
+
+    handleCalcAmoutTaxAmount=(n1,n2,n3,t2,t)=>{
         const form = this.props.form;
-        let v1 = form.getFieldValue(`${num1}`);
-        let v2 = form.getFieldValue(`${num2}`);
+        this.handleAmout(n1,n2,n3);
+        this.handleTaxAmount(n3,t2,t);
+    }
+
+    handleTaxAmount=(num1,num2,name)=>{
+        const form = this.props.form;
+        let v1 = form.getFieldValue(`${num1}`).replace(/\$\s?|(,*)/g, '');
+        console.log(v1)
+        console.log(form.getFieldValue(`${num2}`))
+
+        let v2 = (form.getFieldValue(`${num2}`)) /100;
+
+        const count = v1*v2;
+        console.log(count)
         form.setFieldsValue({
             [num1]:fMoney(v1),
             [num2]:fMoney(v2),
-            [name]: fMoney(accMul(v1,v2)),
+            [name]: fMoney(count),
+        });
+    }
+    handleAmout=(num1,num2,name)=>{
+        const form = this.props.form;
+        let v1 = form.getFieldValue(`${num1}`);
+        let v2 = form.getFieldValue(`${num2}`).replace(/\$\s?|(,*)/g, '');
+        const count = accMul(v1,v2);
+        form.setFieldsValue({
+            [num1]:fMoney(v1),
+            [num2]:fMoney(v2),
+            [name]: fMoney(count),
         });
     }
 
@@ -244,8 +266,13 @@ class PopModal extends Component{
     }
     addDate = (data, item) =>{
         let arry = [];
-        arry.push({...item});
-        let t = this.addKey(data.concat(arry));
+        let t = null;
+        arry.push(item);
+        if(typeof (data) === 'undefined'){
+            t = this.addKey([].concat(arry));
+        }else{
+            t = this.addKey(data.concat(arry));
+        }
         this.props.setDetailsDate(t);
     }
 
