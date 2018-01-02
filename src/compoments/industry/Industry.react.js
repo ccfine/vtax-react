@@ -51,10 +51,10 @@ class Industry extends Component {
                     title:selectedNodes.title,
                 })
                 const form = this.props.form;
-                let value = form.getFieldValue('jbxx.industry');
+                let value = form.getFieldValue(this.props.name);
                 console.log(value);
                 form.setFieldsValue({
-                    ['jbxx.industry']: selectedNodes.title,
+                    [this.props.name]: selectedNodes.title,
                 });
                 this.props.changeVisable(false);
             }

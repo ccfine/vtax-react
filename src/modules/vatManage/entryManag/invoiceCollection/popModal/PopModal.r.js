@@ -2,15 +2,14 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon,message} from 'antd';
+import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon} from 'antd';
 import {request,regRules,fMoney,requestDict} from '../../../../../utils'
 import {CusFormItem,SynchronizeTable} from '../../../../../compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
 const FormItem = Form.Item;
-const { MonthPicker, RangePicker } = DatePicker;
+const { MonthPicker } = DatePicker;
 const Option = Select.Option;
-const { TextArea } = Input;
 const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
@@ -479,18 +478,8 @@ class PopModal extends Component{
         request.get(`/report/get/${id}`)
             .then(({data})=>{
                 if(data.code===200){
-                    const {setFieldsValue} = this.props.form
-                }
 
-                const {setFieldsValue} = this.props.form
-                const d = {"id":1,"createdDate":"2017-12-20 17:34:19","lastModifiedDate":"2017-12-20 12:16:35","createdBy":null,"lastModifiedBy":"1","mainId":1,"mainName":"c2","checkSets":"查1","checkType":12,"checkStart":"2017-01-02","checkEnd":"2017-01-02","checkImplementStart":"2017-01-02","checkImplementEnd":"2017-01-02","documentNum":"文书编号","issue":null,"closingTime":"2017-12-12","checkItems":"hello","differential":'2',"taxPayment":null,"lateFee":'90000.0',"fine":'12121.12',"remark":'备注蚊子',"isAttachment":0,"orgId":"87e7511d51754da6a1a04de1b4c669ff"}
-                this.setState({
-                    initData:d,
-                    mainTaxItems:[{
-                        text:d.mainName,
-                        value:d.mainId
-                    }]
-                })
+                }
             })
     }
 
@@ -525,7 +514,6 @@ class PopModal extends Component{
         const defaultTableData = props.defaultTableData;
 
         let title='';
-        let disabled = false;
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
@@ -536,7 +524,9 @@ class PopModal extends Component{
                 break;
             case 'view':
                 title = '查看';
-                disabled=true;
+                break;
+            default:
+                title = '添加';
                 break;
         }
         const rowSelection = {

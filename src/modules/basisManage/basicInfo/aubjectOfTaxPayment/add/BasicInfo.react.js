@@ -703,6 +703,7 @@ class BasicInfo extends Component {
                 {/*所属行业弹出框*/}
                 <Industry
                     key={this.state.IndustryModalKey}
+                    name="jbxx.industry"
                     visible={this.state.IndustryModalVisible}
                     title="行业信息"
                     url="/taxsubject/list/industry"

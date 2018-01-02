@@ -2,10 +2,9 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,InputNumber} from 'antd';
-import {request,regRules,fMoney,requestDict,accMul} from '../../../../../../utils'
+import {Button,Input,Modal,Form,Row,Col,InputNumber} from 'antd';
+import {regRules,fMoney,accMul} from '../../../../../../utils'
 const FormItem = Form.Item;
-const { MonthPicker } = DatePicker;
 
 class PopModal extends Component{
     static defaultProps={
@@ -40,9 +39,6 @@ class PopModal extends Component{
         const children = [];
         const max20={
             max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
-        }
-        const max50={
-            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message,
         }
         const data = [
             {
@@ -196,6 +192,9 @@ class PopModal extends Component{
                     case 'edit':
                         this.updateDate(this.props.selectedRowKeys[0], values);
                         break;
+                    default:
+                        this.addDate(this.props.initData, values);
+                        break;
                 }
                 this.props.toggleModalVisible(false);
                 this.props.setSelectedRowKeysAndselectedRows(null,{})
@@ -291,7 +290,6 @@ class PopModal extends Component{
     render(){
         const props = this.props;
         let title='';
-        let disabled = false;
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
@@ -302,7 +300,9 @@ class PopModal extends Component{
                 break;
             case 'view':
                 title = '查看';
-                disabled=true;
+                break;
+            default:
+                title = '添加';
                 break;
         }
         return(

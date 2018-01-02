@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Select,DatePicker,Input,message} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,DatePicker,Input,message} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import {request,requestDict} from '../../../../utils'
 import {FileExport} from '../../../../compoments'
@@ -8,7 +8,6 @@ import PopModal from './popModal'
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
 const FormItem = Form.Item;
-const Option = Select.Option
 const buttonStyle={
     marginRight:5
 }
