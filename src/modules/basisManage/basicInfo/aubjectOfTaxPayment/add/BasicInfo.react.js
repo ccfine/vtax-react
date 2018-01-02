@@ -63,7 +63,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -77,7 +77,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -91,7 +91,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -105,7 +105,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.trim.pattern, message: regRules.trim.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -183,7 +183,7 @@ class BasicInfo extends Component {
                     {
                         required: true, message: '请输入经营期限',
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -217,7 +217,7 @@ class BasicInfo extends Component {
                 noName:true,
                 rules: [
                     {
-                        max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                        max:regRules.input_length_50.max, message: regRules.input_length_50.message
                     }
                 ],
             }, {
@@ -231,7 +231,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -243,7 +243,7 @@ class BasicInfo extends Component {
                     {
                         required: true, message: '请输入开户银行',
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -257,7 +257,7 @@ class BasicInfo extends Component {
                     },{
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -267,7 +267,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.legalPerson,
                 rules: [
                     {
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -279,7 +279,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.not_chinese.pattern, message: regRules.not_chinese.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
 
@@ -290,7 +290,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.financialOfficer,
                 rules: [
                     {
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -300,7 +300,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.operater,
                 rules: [
                     {
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -312,7 +312,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -328,7 +328,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.machineType,
                 rules: [
                     {
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -338,7 +338,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.currencyType,
                 rules: [
                     {
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -357,7 +357,7 @@ class BasicInfo extends Component {
                 initialValue:defaultData.receiptCurrencyType,
                 rules: [
                     {
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -388,7 +388,7 @@ class BasicInfo extends Component {
                 noName:true,
                 rules: [
                     {
-                        max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message,
+                        max:regRules.input_length_50.max, message: regRules.input_length_50.message,
                     }
                 ],
             }, {
@@ -400,7 +400,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -417,7 +417,7 @@ class BasicInfo extends Component {
                 noName:true,
                 rules: [
                     {
-                        max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message,
+                        max:regRules.input_length_50.max, message: regRules.input_length_50.message,
                     }
                 ],
             }, {
@@ -429,7 +429,7 @@ class BasicInfo extends Component {
                     {
                         pattern: regRules.number.pattern, message: regRules.number.message,
                     },{
-                        max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }

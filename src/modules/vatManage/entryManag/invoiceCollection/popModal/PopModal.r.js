@@ -128,10 +128,10 @@ class PopModal extends Component{
 
         const children = [];
         const max20={
-            max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+            max:regRules.input_length_20.max, message: regRules.input_length_20.message,
         }
         const max50={
-            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message,
+            max:regRules.input_length_50.max, message: regRules.input_length_50.message,
         }
         const data = [
             {
@@ -350,7 +350,7 @@ class PopModal extends Component{
                 span:24,
                 rules:[
                     {
-                        max:regRules.textarea_100_lenght.max, message: regRules.textarea_100_lenght.message,
+                        max:regRules.textarea_length_100.max, message: regRules.textarea_length_100.message,
                     }
                 ],
             }

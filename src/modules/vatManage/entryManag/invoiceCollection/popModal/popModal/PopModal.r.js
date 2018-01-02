@@ -38,7 +38,7 @@ class PopModal extends Component{
 
         const children = [];
         const max20={
-            max:regRules.input_20_lenght.max, message: regRules.input_20_lenght.message,
+            max:regRules.input_length_20.max, message: regRules.input_length_20.message,
         }
         const data = [
             {

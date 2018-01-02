@@ -109,7 +109,7 @@ class PopModal extends Component{
             wrapperCol: { span: 18 },
         };
         let title='';
-        let disibled = false;
+        let disabled = false;
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
@@ -120,7 +120,7 @@ class PopModal extends Component{
                 break;
             case 'view':
                 title = '查看';
-                disibled=true;
+                disabled=true;
                 break;
             default :
             //no default
@@ -156,7 +156,7 @@ class PopModal extends Component{
                                     ]
                                 })(
                                     <Select
-                                        disabled={disibled}
+                                        disabled={disabled}
                                         style={{ width: '100%' }}
                                     >
                                         <Option value={'1'}>我方股东</Option>
@@ -176,11 +176,11 @@ class PopModal extends Component{
                                             required:true,
                                             message:'请输入股东'
                                         },{
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
-                                    <Input disabled={disibled} />
+                                    <Input disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>
@@ -192,7 +192,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.stockRightRatio
                                 })(
                                     <InputNumber
-                                        disabled={disibled}
+                                        disabled={disabled}
                                         min={0}
                                         max={100}
                                         formatter={value => `${value}%`}
@@ -207,7 +207,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.rightsRatio
                                 })(
                                     <InputNumber
-                                        disabled={disibled}
+                                        disabled={disabled}
                                         min={0}
                                         max={100}
                                         formatter={value => `${value}%`}
@@ -224,11 +224,11 @@ class PopModal extends Component{
                                     initialValue:defaultData.remark,
                                     rules:[
                                         {
-                                            max:regRules.textarea_2000_lenght.max, message: regRules.textarea_2000_lenght.message
+                                            max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
                                         }
                                     ]
                                 })(
-                                    <TextArea disabled={disibled} />
+                                    <TextArea disabled={disabled} />
                                 )}
                             </FormItem>
                         </Col>

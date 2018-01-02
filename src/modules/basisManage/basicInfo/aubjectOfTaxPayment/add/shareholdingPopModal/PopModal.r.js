@@ -186,7 +186,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.realStockholder,
                                     rules:[
                                         {
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
@@ -215,7 +215,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.registeredStockholder,
                                     rules:[
                                         {
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
@@ -231,7 +231,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.term,
                                     rules:[
                                         {
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
@@ -245,7 +245,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.registeredCapitalCurrency,
                                     rules:[
                                         {
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
@@ -273,7 +273,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.capitalRemark,
                                     rules:[
                                         {
-                                            max:regRules.textarea_2000_lenght.max, message: regRules.textarea_2000_lenght.message
+                                            max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
                                         }
                                     ]
                                 })(
@@ -289,7 +289,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.collectionCapitalCurrency,
                                     rules:[
                                         {
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
@@ -317,7 +317,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.situation,
                                     rules:[
                                         {
-                                            max:regRules.input_50_lenght.max, message: regRules.input_50_lenght.message
+                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
                                 })(
@@ -333,7 +333,7 @@ class PopModal extends Component{
                                     initialValue:defaultData.propertyRemark,
                                     rules:[
                                         {
-                                            max:regRules.textarea_2000_lenght.max, message: regRules.textarea_2000_lenght.message
+                                            max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
                                         }
                                     ]
                                 })(
