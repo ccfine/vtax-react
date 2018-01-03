@@ -90,11 +90,12 @@ class PopModal extends Component{
                 footer={false}
                 width={1920}
                 bodyStyle={{
-                    padding:0
+                    padding:0,
+                    height:500,
+                    overflowY:'scroll'
                 }}
                 style={{
                     maxWidth:'90%',
-                    maxHeight:'90%'
                 }}
                 visible={props.visible}>
                 <Card

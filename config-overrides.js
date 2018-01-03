@@ -43,7 +43,10 @@ module.exports = function override(config, env) {
 
 
             //form
-            "@form-item-margin-bottom":"12px"
+            "@form-item-margin-bottom":"12px",
+
+            "@table-padding-vertical": "3px",
+            "@table-padding-horizontal":"3px"
         },
     })(config, env);
     return config;

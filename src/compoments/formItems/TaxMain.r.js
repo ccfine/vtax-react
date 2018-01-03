@@ -45,7 +45,6 @@ export default class TaxMain extends Component{
         form:PropTypes.object.isRequired,
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
-        initialValue:PropTypes.any,
         fieldDecoratorOptions:PropTypes.object,
         componentProps:PropTypes.object
     }
@@ -59,7 +58,6 @@ export default class TaxMain extends Component{
             }
         },
         fieldName:'mainId',
-        initialValue:'',
         fieldDecoratorOptions:{
 
         }
@@ -71,14 +69,32 @@ export default class TaxMain extends Component{
     onSearch = (value) => {
         fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
     }
+    componentDidMount(){
+        request.get(`/taxsubject/list`,{
+            params:{
+                results:100
+            }
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    this.setState({
+                        mainTaxItems:data.data.records.map(item=>{
+                            return {
+                                value:item.id,
+                                text:item.name
+                            }
+                        })
+                    })
+                }
+            });
+    }
     render(){
         const {mainTaxItems}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldDecoratorOptions,componentProps} = this.props;
+        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps} = this.props;
         return(
             <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
-                    initialValue,
                     ...fieldDecoratorOptions
                 })(
                     <Select
