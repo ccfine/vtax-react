@@ -2,22 +2,14 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Form,Select,Spin} from 'antd'
+import {Select,Icon,Modal,Button} from 'antd'
+import {SearchTable} from '../../compoments'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
-const FormItem = Form.Item;
-const Option = Select.Option
 export default class TaxClassCodingSelect extends Component{
     static propTypes={
-        form:PropTypes.object.isRequired,
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
-        initialValue:PropTypes.any,
-        fieldTextName:PropTypes.string.isRequired,
-        fieldValueName:PropTypes.string.isRequired,
         label:PropTypes.string.isRequired,
-        url:PropTypes.string.isRequired,
-        selectOptions:PropTypes.object,
         decoratorOptions:PropTypes.object
     }
     static defaultProps={
@@ -29,74 +21,169 @@ export default class TaxClassCodingSelect extends Component{
                 span:18
             }
         },
-        initialValue:'',
         label:'field',
-        selectOptions:{
-
-        },
         decoratorOptions:{
 
         }
     }
     state={
-        dataSource:[
-        ],
-        loaded:false
-    }
-    componentWillReceiveProps(nextProps){
-        if(this.props.url !== nextProps.url){
-            this.fetch(nextProps.url)
-        }
-    }
-    componentDidMount(){
-        this.fetch()
-    }
-    toggleLoaded=loaded=>{
-        this.setState({
-            loaded
-        })
-    }
-    fetch(url){
-        this.toggleLoaded(false)
-        request.get(url || this.props.url)
-            .then(({data}) => {
-                if(data.code===200 && this.mounted){
-                    this.toggleLoaded(true)
-                    const result = data.data.records;
-                    this.setState({
-                        dataSource:result
-                    })
-                }
-            });
+
     }
     mounted = true
     componentWillUnmount(){
         this.mounted=null;
     }
     render(){
-        const {dataSource,loaded}=this.state;
-        const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions} = this.props;
+        const {dataSource,setFieldsValue,fieldName} = this.props;
+        const nextDataSource = this.state.dataSource ? this.state.dataSource :dataSource;
         return(
-            <Spin spinning={!loaded}>
-                <FormItem label={label} {...formItemStyle}>
-                    {getFieldDecorator(fieldName,{
-                        initialValue,
-                        ...decoratorOptions
-                    })(
-                        <Select
-                            style={{ width: '100%' }}
-                            {...selectOptions}
-                        >
-                            {
-                                dataSource.map((item,i)=>(
-                                    <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
-                                ))
+            <div>
+            <Select {...this.props} disabled>
+                {
+                    nextDataSource.map((item,i)=>(
+                            <Select.Option key={i} value={item.value}>{item.text}</Select.Option>
+                        )
+                    )
+                }
+            </Select>
+                <TaxClassSelectPage fieldName={fieldName} setDataSource={(dataSource,cb) => this.setState({dataSource},cb)} setFieldsValue={setFieldsValue} />
+         </div>
+        )
+    }
+}
+
+
+const searchFields = [
+    {
+        label:'税收分类编码',
+        type:'input',
+        fieldName:'num',
+    },
+    {
+        label:'商品名称',
+        type:'input',
+        fieldName:'commodityName'
+    },
+    {
+        label:'应税项目',
+        type:'input',
+        fieldName:'taxableProjectName',
+    },
+    {
+        label:'税率',
+        type:'input',
+        fieldName:'taxRate',
+    }
+]
+const getColumns = context => [
+    {
+        title:'操作',
+        dataIndex:'actions',
+        fixed:true,
+        render:(text,record)=>(
+            <Button
+                size='small'
+                onClick={()=>{
+                    const {setFieldsValue,setDataSource,fieldName} = context.props;
+                    setDataSource([
+                        {
+                            text:record.num,
+                            value:record.id
+                        }
+                    ],()=>{
+                        setFieldsValue({
+                            [fieldName]:record.id
+                        })
+                        context.toggleModalVisible(false)
+                    })
+                }}
+                style={{cursor:'pointer',color:'#1890ff'}}>选择</Button>
+        )
+    },
+    {
+        title: '税收分类编码',
+        dataIndex: 'num',
+    }, {
+        title: '商品名称',
+        dataIndex: 'commodityName'
+    }, {
+        title: '应税项目',
+        dataIndex: 'taxableProjectName'
+    }, {
+        title: '一般增值税税率',
+        dataIndex: 'commonlyTaxRate'
+    }, {
+        title: '简易增值税税率',
+        dataIndex: 'simpleTaxRate'
+    }
+]
+class TaxClassSelectPage extends Component{
+    state={
+        visible:false
+    }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    render(){
+        const {visible} = this.state;
+        return(
+        <span>
+            <span
+                onClick={(e)=>{
+                    e && e.preventDefault() && e.stopPropagation();
+                    this.toggleModalVisible(true)
+                }}
+                style={{
+                    display:'inline-block',
+                    position:'absolute',
+                    cursor:'pointer',
+                    right:3,
+                    top:5,
+                    height:30,
+                    width:30,
+                    borderRadius:'3px',
+                    textAlign:'center',
+                    lineHeight:'30px',
+                    backgroundColor:'#fff'
+                }}>
+                <Icon type="search" />
+
+            </span>
+            <Modal
+                title="选择税收分类"
+                maskClosable={false}
+                onCancel={()=>this.toggleModalVisible(false)}
+                width={1920}
+                footer={false}
+                style={{
+                    maxWidth:'80%',
+                }}
+                visible={visible}>
+                    <SearchTable
+                        searchOption={{
+                            fields:searchFields,
+                            cardProps:{
+                                title:'',
+                                extra:null
                             }
-                        </Select>
-                    )}
-                </FormItem>
-            </Spin>
+                        }}
+                        tableOption={{
+                            columns:getColumns(this),
+                            results:20,
+                            url:'/tax/classification/coding/list',
+                            cardProps:{
+                                title:''
+                            },
+                            scroll:{
+                                y:300
+                            }
+                        }}
+                    />
+                </Modal>
+        </span>
+
         )
     }
 }
