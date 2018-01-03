@@ -124,7 +124,7 @@ class PopModal extends Component{
                 setCondition:{
                     formatter:value => `${value}%`,
                     parser:value => value.replace('%', ''),
-                    onChange:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
                 rules: [
                     {
@@ -177,32 +177,41 @@ class PopModal extends Component{
         return children.slice(start, end || null);
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = (e,isContinue) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                //console.log('Received values of form: ', values);
+                let amount = parseFloat(`${values.amount}`.replace(/\$\s?|(,*)/g, ''));
+                let taxAmount = parseFloat(`${values.taxAmount}`.replace(/\$\s?|(,*)/g, ''));
+                let sum = amount+taxAmount;
+                const obj = {...values,totalAmount:sum};
+
                 const type = this.props.modalConfig.type;
                 switch (type){
                     case 'add':
-                        this.addDate(this.props.initData, values);
+                        this.addDate(this.props.initData, obj);
                         break;
                     case 'edit':
-                        this.updateDate(this.props.selectedRowKeys[0], values);
+                        this.updateDate(this.props.selectedRowKeys[0], obj);
                         break;
                     default:
-                        this.addDate(this.props.initData, values);
+                        this.addDate(this.props.initData, obj);
                         break;
                 }
-                this.props.toggleModalVisible(false);
+                if(isContinue === 'continue'){
+                    this.props.form.resetFields();
+                }else{
+                    this.props.toggleModalVisible(false);
+                }
                 this.props.setSelectedRowKeysAndselectedRows(null,{})
+
             }
         });
+
     }
 
 
     handleCalcAmoutTaxAmount=(n1,n2,n3,t2,t)=>{
-        const form = this.props.form;
         this.handleAmout(n1,n2,n3);
         this.handleTaxAmount(n3,t2,t);
     }
@@ -210,16 +219,9 @@ class PopModal extends Component{
     handleTaxAmount=(num1,num2,name)=>{
         const form = this.props.form;
         let v1 = form.getFieldValue(`${num1}`).replace(/\$\s?|(,*)/g, '');
-        console.log(v1)
-        console.log(form.getFieldValue(`${num2}`))
-
         let v2 = (form.getFieldValue(`${num2}`)) /100;
-
         const count = v1*v2;
-        console.log(count)
         form.setFieldsValue({
-            [num1]:fMoney(v1),
-            [num2]:fMoney(v2),
             [name]: fMoney(count),
         });
     }
@@ -229,7 +231,6 @@ class PopModal extends Component{
         let v2 = form.getFieldValue(`${num2}`).replace(/\$\s?|(,*)/g, '');
         const count = accMul(v1,v2);
         form.setFieldsValue({
-            [num1]:fMoney(v1),
             [num2]:fMoney(v2),
             [name]: fMoney(count),
         });
@@ -240,16 +241,6 @@ class PopModal extends Component{
         let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
         form.setFieldsValue({
             [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        });
-    }
-
-    handleBlur=(name)=>{
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`);
-        //console.log(value,fMoney(value));
-
-        form.setFieldsValue({
-            [name]: fMoney(value),
         });
     }
 
@@ -281,10 +272,13 @@ class PopModal extends Component{
         const data = list.map((item)=>{
             if(item.id === id){
                 return {
-                    id:item.id,
+                    ...item,
+                    totalAmount:item.amount+item.taxAmount,
                     ...selectedRows,
                 }
             }
+            console.log(item)
+            debugger
             return item;
         })
         this.props.setDetailsDate(data)
@@ -342,8 +336,8 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                            <Button type="primary" onClick={this.handleSubmit}>继续增加</Button>
+                            <Button type="primary" onClick={(e)=>this.handleSubmit(e,'no')}>确定</Button>
+                            <Button type="primary" onClick={(e)=>this.handleSubmit(e,'continue')}>继续增加</Button>
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                         </Col>
                     </Row>

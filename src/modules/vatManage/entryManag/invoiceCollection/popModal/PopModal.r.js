@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon,message} from 'antd';
+import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon,message,Spin} from 'antd';
 import {request,regRules,fMoney,requestDict} from '../../../../../utils'
 import {CusFormItem,SynchronizeTable} from '../../../../../compoments'
 import PopsModal from './popModal'
@@ -33,6 +33,7 @@ class PopModal extends Component{
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey:Date.now(),
+        submitLoading:false,
         selectedRowKeys:null,
         selectedRows:{},
         visible:false,
@@ -59,15 +60,23 @@ class PopModal extends Component{
     },{
         title: '单价',
         dataIndex: 'unitPrice',
+        render:text=>fMoney(text),
     },{
         title: '金额',
         dataIndex: 'amount',
+        render:text=>fMoney(text),
     },{
         title: '税率',
         dataIndex: 'taxRate',
+        render:text=>`${text}%`,
     },{
         title: '税额',
         dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
+    },{
+        title: '价税合计',
+        dataIndex: 'totalAmount',
+        render:text=>fMoney(text),
     }];
 
     getFields(start,end) {
@@ -184,7 +193,7 @@ class PopModal extends Component{
                 label: '认证月份',
                 type: 'monthPicker',
                 fieldName: 'incomeInvoiceCollectionDO.authMonth',
-                initialValue:(shouldShowDefaultData && initData.authMonth) ? moment(initData.authMonth, dateFormat) : undefined,
+                initialValue:(shouldShowDefaultData && initData.authMonth) ? moment(initData.authMonth, 'YYYY-MM') : undefined,
                 rules:[
                     {
                         required:true,
@@ -381,6 +390,33 @@ class PopModal extends Component{
         return children.slice(start, end || null);
     }
 
+    //计算金额的总和
+    cellAmountSum=(arr,totalAmount)=>{
+        const form = this.props.form;
+        const data = this.state.detailsDate;
+        if(data.length >0 ) {
+            arr.forEach((n) => {
+                let sum = 0;
+                data.forEach(item => {
+                    const value = `${item[n]}`.replace(/\$\s?|(,*)/g, '');
+                    sum += parseFloat(value);
+                });
+                form.setFieldsValue({
+                    [`incomeInvoiceCollectionDO.${n}`]: fMoney(sum),
+                });
+                const v1 = parseFloat(form.getFieldValue(`incomeInvoiceCollectionDO.${arr[0]}`).replace(/\$\s?|(,*)/g, ''));
+                const v2 = parseFloat(form.getFieldValue(`incomeInvoiceCollectionDO.${arr[1]}`).replace(/\$\s?|(,*)/g, ''));
+                const count = v1+v2
+                form.setFieldsValue({
+                    [`incomeInvoiceCollectionDO.${totalAmount}`]: fMoney(count),
+                });
+            });
+
+
+
+        }
+    }
+
     //注册类型:发票类型
     getRegistrationType=()=>{
         requestDict('JXFPLX',result=>{
@@ -401,7 +437,7 @@ class PopModal extends Component{
         this.setState({
             detailsDate
         },()=>{
-            console.log(this.state.detailsDate);
+            this.cellAmountSum(['amount','taxAmount'],'totalAmount')
         })
     }
     toggleModalVisible=visible=>{
@@ -411,7 +447,6 @@ class PopModal extends Component{
     }
     onChange=(selectedRowKeys, selectedRows) => {
         console.log(selectedRowKeys,selectedRows)
-        debugger
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 
@@ -435,12 +470,77 @@ class PopModal extends Component{
     handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-            console.log(values);
-            debugger
             if (!err) {
-                console.log('Received values of form: ', values);
+                const type = this.props.modalConfig.type;
+                const info = this.state.initData;
+                let data = {
+                    incomeInvoiceCollectionDO:{
+                        ...info,
+                        ...values.incomeInvoiceCollectionDO,
+                        authDate:values.incomeInvoiceCollectionDO.authDate && values.incomeInvoiceCollectionDO.authDate.format('YYYY-MM-DD'),
+                        authMonth:values.incomeInvoiceCollectionDO.authMonth && values.incomeInvoiceCollectionDO.authMonth.format('YYYY-MM'),
+                        billingDate:values.incomeInvoiceCollectionDO.billingDate && values.incomeInvoiceCollectionDO.billingDate.format('YYYY-MM-DD'),
+                        amount:values.incomeInvoiceCollectionDO.amount && parseFloat(`${values.incomeInvoiceCollectionDO.amount}`.replace(/\$\s?|(,*)/g, '')),
+                        taxAmount:values.incomeInvoiceCollectionDO.taxAmount && parseFloat(`${values.incomeInvoiceCollectionDO.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
+                        totalAmount:values.incomeInvoiceCollectionDO.totalAmount && parseFloat(`${values.incomeInvoiceCollectionDO.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
+                    },
+                    list:this.checkeDetailsDateId(this.state.detailsDate)
+                }
+                this.mounted && this.setState({
+                    submitLoading: true
+                })
+                if (type === 'add') {
+                    request.post('/income/invoice/collection/save', data
+                    )
+                        .then(({data}) => {
+                            if (data.code === 200) {
+                                message.success('新增成功！', 4)
+                                //新增成功，关闭当前窗口,刷新父级组件
+                                this.props.toggleModalVisible(false);
+                                this.props.updateTable();
+                            } else {
+                                message.error(data.msg, 4)
+                                this.mounted && this.setState({
+                                    submitLoading: false
+                                })
+                            }
+                        })
+                        .catch(err => {
+                            message.error(err.message)
+                            this.mounted && this.setState({
+                                submitLoading: false
+                            })
+
+                        })
+                }
+
+                if (type === 'edit') {
+
+                    request.put('/income/invoice/collection/update', data
+                    )
+                        .then(({data}) => {
+                            if (data.code === 200) {
+                                message.success('编辑成功！', 4);
+                                //编辑成功，关闭当前窗口,刷新父级组件
+                                this.props.toggleModalVisible(false);
+                                this.props.updateTable();
+
+                            } else {
+                                message.error(data.msg, 4);
+                                this.mounted && this.setState({
+                                    submitLoading: false
+                                })
+                            }
+                        })
+                        .catch(err => {
+                            message.error(err.message)
+                            this.mounted && this.setState({
+                                submitLoading: false
+                            })
+                        })
+                }
             }
-        });
+        })
     }
 
     fetch = id=> {
@@ -452,11 +552,46 @@ class PopModal extends Component{
                     this.setState({
                         initData:{...data.data.incomeInvoiceCollectionDO},
                         detailsDate:[...data.data.list],
+                    },()=>{
+                        this.cellAmountSum(['amount','taxAmount'],'totalAmount');
                     })
                 }else{
                     message.error(data.msg, 4);
                 }
             });
+    }
+
+    checkeDetailsDateId = (data)=>{
+        return data.map((item)=>{
+            if(item.id.indexOf('t')> -1){
+                return {
+                    amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
+                    goodsServicesName:item.goodsServicesName,
+                    parentId:item.parentId,
+                    qty:item.qty,
+                    specificationModel:item.specificationModel,
+                    taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
+                    taxRate:item.taxRate,
+                    totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
+                    unit:item.unit,
+                    unitPrice:parseFloat(`${item.unitPrice}`.replace(/\$\s?|(,*)/g, '')),
+                }
+            }else{
+                return {
+                    id:item.id,
+                    amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
+                    goodsServicesName:item.goodsServicesName,
+                    parentId:item.parentId,
+                    qty:item.qty,
+                    specificationModel:item.specificationModel,
+                    taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
+                    taxRate:item.taxRate,
+                    totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
+                    unit:item.unit,
+                    unitPrice:parseFloat(`${item.unitPrice}`.replace(/\$\s?|(,*)/g, '')),
+                }
+            }
+        })
     }
     componentDidMount(){
         this.getRegistrationType()
@@ -489,7 +624,6 @@ class PopModal extends Component{
     render(){
         const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,detailsDate} = this.state;
         const props = this.props;
-
         let title='';
         const type = props.modalConfig.type;
         switch (type){
@@ -528,121 +662,118 @@ class PopModal extends Component{
                     </Row>
                 }
                 title={title}>
-                <Form onSubmit={this.handleSubmit} style={{height:'400px',overflowY:'scroll'}}>
-                    <Card>
-                        <Row>
-                            {
-                                this.getFields(0,3)
-                            }
-                        </Row>
-                        <Row>
-                            {
-                                this.getFields(3,8)
-                            }
-                        </Row>
-                        <Row>
-                            {
-                                this.getFields(8,17)
-                            }
-                        </Row>
-                        <Row>
-                            {
-                                this.getFields(17,18)
-                            }
-                        </Row>
-                    </Card>
+                <Spin spinning={this.state.submitLoading}>
+                    <Form onSubmit={this.handleSubmit} style={{height:'400px',overflowY:'scroll'}}>
+                        <Card>
+                            <Row>
+                                {
+                                    this.getFields(0,3)
+                                }
+                            </Row>
+                            <Row>
+                                {
+                                    this.getFields(3,8)
+                                }
+                            </Row>
+                            <Row>
+                                {
+                                    this.getFields(8,17)
+                                }
+                            </Row>
+                            <Row>
+                                {
+                                    this.getFields(17,18)
+                                }
+                            </Row>
+                        </Card>
 
-                    <Card
-                        extra={type !== 'view' && <div>
-                            <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
-                                <Icon type="file-add" />
-                                新增明细
-                            </Button>
-                            <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                <Icon type="edit" />
-                                编辑
-                            </Button>
-                            <Button
-                                onClick={()=>{
-                                    confirm({
-                                        title: '友情提醒',
-                                        content: '该删除后将不可恢复，是否删除？',
-                                        okText: '确定',
-                                        okType: 'danger',
-                                        cancelText: '取消',
-                                        onOk:()=>{
-                                            const nowKeys = detailsDate;
-                                            const keys = this.state.selectedRows;
-                                            for(let i = 0;i<nowKeys.length;i++){
-                                                for(let j = 0; j<keys.length;j++){
-                                                    if(nowKeys[i] === keys[j]){
-                                                        nowKeys.splice(i,1)
+                        <Card
+                            extra={type !== 'view' && <div>
+                                <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                    <Icon type="file-add" />
+                                    新增明细
+                                </Button>
+                                <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                    <Icon type="edit" />
+                                    编辑
+                                </Button>
+                                <Button
+                                    onClick={()=>{
+                                        confirm({
+                                            title: '友情提醒',
+                                            content: '该删除后将不可恢复，是否删除？',
+                                            okText: '确定',
+                                            okType: 'danger',
+                                            cancelText: '取消',
+                                            onOk:()=>{
+                                                const nowKeys = detailsDate;
+                                                const keys = this.state.selectedRows;
+                                                for(let i = 0;i<nowKeys.length;i++){
+                                                    for(let j = 0; j<keys.length;j++){
+                                                        if(nowKeys[i] === keys[j]){
+                                                            debugger
+                                                            nowKeys.splice(i,1)
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            this.props.setDetailsDate(nowKeys);
-                                            this.setSelectedRowKeysAndselectedRows(null,{});
-                                            this.toggleModalVisible(false)
+                                                this.setDetailsDate(nowKeys);
+                                                this.setSelectedRowKeysAndselectedRows(null,{});
+                                                this.toggleModalVisible(false)
 
-                                        },
-                                        onCancel:()=>{
-                                            console.log('Cancel');
-                                        },
-                                    });
-                                }}
-                                disabled={!selectedRowKeys}
-                                type='danger'>
-                                <Icon type="delete" />
-                                删除
-                            </Button>
-                        </div>}
-                        style={{marginTop:10}}>
+                                            },
+                                            onCancel:()=>{
+                                                console.log('Cancel');
+                                            },
+                                        });
+                                    }}
+                                    disabled={!selectedRowKeys}
+                                    type='danger'>
+                                    <Icon type="delete" />
+                                    删除
+                                </Button>
+                            </div>}
+                            style={{marginTop:10}}>
 
-                         <SynchronizeTable data={detailsDate}
-                                      updateKey={tableUpDateKey}
-                                      tableProps={{
-                                          rowKey:record=>record.id,
-                                          pagination:true,
-                                          bordered:true,
-                                          size:'middle',
-                                          columns:this.columns,
-                                          rowSelection:rowSelection,
-                                          footer:(currentPageData) => {
-                                              return (
-                                                  <Row gutter={24}>
-                                                      <Col span={6}>
+                             <SynchronizeTable data={detailsDate}
+                                          updateKey={tableUpDateKey}
+                                          tableProps={{
+                                              rowKey:record=>record.id,
+                                              pagination:true,
+                                              bordered:true,
+                                              size:'middle',
+                                              columns:this.columns,
+                                              rowSelection:rowSelection,
+                                              footer:(currentPageData) => {
+                                                  return (
+                                                      <Row gutter={24}>
+                                                          <Col span={8}>
+                                                              金额合计：<span ref='amount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.amount')}</span>
+                                                          </Col>
+                                                          <Col span={8}>
+                                                              税额合计：<span ref='taxAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.taxAmount')}</span>
+                                                          </Col>
+                                                          <Col span={8}>
+                                                              价税合计：<span ref='totalAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.totalAmount')}</span>
+                                                          </Col>
+                                                      </Row>
+                                                  )
+                                              }
+                                          }}
+                             />
 
-                                                          金额合计：1357
-                                                      </Col>
-                                                      <Col span={6}>
-                                                          税额合计：1357
-                                                      </Col>
-                                                      <Col span={6}>
-                                                          价税合计：1357
-                                                      </Col>
-                                                  </Row>
-                                              )
-                                          }
-                                      }}
-                         />
-
-
-                        <PopsModal
-                            visible={visible}
-                            modalConfig={modalConfig}
-                            selectedRowKeys={selectedRowKeys}
-                            selectedRows={selectedRows}
-                            initData={detailsDate}
-                            toggleModalVisible={this.toggleModalVisible}
-                            setDetailsDate={this.setDetailsDate.bind(this)}
-                            setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
-                        />
-                    </Card>
-
-                </Form>
-
-
-
+                            <PopsModal
+                                visible={visible}
+                                modalConfig={modalConfig}
+                                selectedRowKeys={selectedRowKeys}
+                                selectedRows={selectedRows}
+                                initData={detailsDate}
+                                toggleModalVisible={this.toggleModalVisible}
+                                setDetailsDate={this.setDetailsDate.bind(this)}
+                                setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
+                            />
+                        </Card>
+                    </Form>
+                </Spin>
             </Modal>
         )
     }

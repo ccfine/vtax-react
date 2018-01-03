@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,DatePicker,Input,message} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
-import {request,requestDict} from '../../../../utils'
+import {request,requestDict,fMoney} from '../../../../utils'
 import {FileExport} from '../../../../compoments'
 import FileUpload from '../../../basisManage/basicInfo/aubjectOfTaxPayment/projectInformationManagement/FileUpload.r'
 import PopModal from './popModal'
@@ -81,12 +81,15 @@ class InvoiceCollection extends Component {
         },{
             title: '金额',
             dataIndex: 'amount',
+            render:text=>fMoney(text)
         },{
             title: '税额',
             dataIndex: 'taxAmount',
+            render:text=>fMoney(text)
         },{
             title: '价税合计',
             dataIndex: 'totalAmount',
+            render:text=>fMoney(text)
         }
     ];
     handleSubmit = e => {
@@ -217,7 +220,7 @@ class InvoiceCollection extends Component {
                               撤销导入
                           </Button>
                           <FileExport
-                              url='project/download'
+                              url='/income/invoice/collection/download'
                               title="下载导入样表"
                               size="default"
                               setButtonStyle={{marginRight:5}}
@@ -280,6 +283,7 @@ class InvoiceCollection extends Component {
                     visible={visible}
                     modalConfig={modalConfig}
                     selectedRowKeys={selectedRowKeys}
+                    updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
 
                 />
