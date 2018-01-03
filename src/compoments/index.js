@@ -16,6 +16,7 @@ import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
 import SynchronizeTable from './synchronizeTable'
 import FileExport from './fileExport'
+import SearchTable from './searchTable'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -25,5 +26,6 @@ export {
     AsyncTable,
     CusFormItem,
     SynchronizeTable,
-    FileExport
+    FileExport,
+    SearchTable
 }

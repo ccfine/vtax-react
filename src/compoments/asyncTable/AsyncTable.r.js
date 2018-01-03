@@ -6,14 +6,17 @@ import {Table,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from '../../utils'
 export default class AsyncTable extends Component{
-    state={
-        loaded:true,
-        dataSource:[],
-
-        pagination: {
-            showTotal:total => `总共 ${total} 条`
-        },
-        summaryData:[]
+    constructor(props){
+        super(props);
+        this.state={
+            loaded:true,
+            dataSource:[],
+            pagination: {
+                results:props.tableProps.results || 10,
+                showTotal:total => `总共 ${total} 条`
+            },
+            summaryData:[]
+        }
     }
     static propTypes={
         tableProps:PropTypes.object.isRequired,
@@ -25,7 +28,6 @@ export default class AsyncTable extends Component{
     static defaultProps={
         updateKey:Date.now()
     }
-
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
             const currentPager = { ...this.state.pagination };
@@ -42,7 +44,7 @@ export default class AsyncTable extends Component{
         //const {props} = this;
         request.get(url || this.props.url,{
             params:{
-                results: 10,
+                results: this.state.pagination.results,
                 ...params,
                 ...this.props.filters
             }
