@@ -90,8 +90,10 @@ class PopModal extends Component{
                         message:'请输入数量'
                     }
                 ],
-                res:{
-                    onBlur:(e)=>this.handleAmout('qty','unitPrice','amount'),
+                setCondition:{
+                    min:0,
+                    max:9999999999999.99,
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
             }, {
                 label: '单价',
@@ -104,9 +106,9 @@ class PopModal extends Component{
                         message:'请输入单价'
                     }
                 ],
-                res:{
+                setCondition:{
                     onKeyUp:(e)=>this.handleKeyUp('unitPrice'),
-                    onBlur:(e)=>this.handleAmout('qty','unitPrice','amount'),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
             }, {
                 label: '金额',
@@ -120,10 +122,9 @@ class PopModal extends Component{
                 fieldName: 'taxRate',
                 initialValue:fMoney(initData.taxRate),
                 setCondition:{
-                    min:0,
-                    max:100,
                     formatter:value => `${value}%`,
                     parser:value => value.replace('%', ''),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
                 rules: [
                     {
@@ -136,10 +137,7 @@ class PopModal extends Component{
                 type: 'text',
                 fieldName: 'taxAmount',
                 initialValue:fMoney(initData.taxAmount),
-                res:{
-                    onKeyUp:(e)=>this.handleKeyUp('taxAmount'),
-                    onBlur:(e)=>this.handleBlur('taxAmount'),
-                },
+                disabled:true,
             }
         ];
 
@@ -148,7 +146,7 @@ class PopModal extends Component{
 
             if(!data[i].components){
                 if (data[i].type === 'text') {
-                    inputComponent = <Input disabled={ data[i].disabled ? data[i].disabled : disabled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
+                    inputComponent = <Input disabled={ data[i].disabled ? data[i].disabled : disabled} {...data[i].setCondition} placeholder={`请输入${data[i].label}`}/>;
                 } else if (data[i].type === 'inputNumber') {
                     inputComponent = <InputNumber disabled={disabled} {...data[i].setCondition} style={{width:'100%'}} />;
                 }
@@ -179,37 +177,62 @@ class PopModal extends Component{
         return children.slice(start, end || null);
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = (e,isContinue) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                //console.log('Received values of form: ', values);
+                let amount = parseFloat(`${values.amount}`.replace(/\$\s?|(,*)/g, ''));
+                let taxAmount = parseFloat(`${values.taxAmount}`.replace(/\$\s?|(,*)/g, ''));
+                let sum = amount+taxAmount;
+                const obj = {...values,totalAmount:sum};
+
                 const type = this.props.modalConfig.type;
                 switch (type){
                     case 'add':
-                        this.addDate(this.props.initData, values);
+                        this.addDate(this.props.initData, obj);
                         break;
                     case 'edit':
-                        this.updateDate(this.props.selectedRowKeys[0], values);
+                        this.updateDate(this.props.selectedRowKeys[0], obj);
                         break;
                     default:
-                        this.addDate(this.props.initData, values);
+                        this.addDate(this.props.initData, obj);
                         break;
                 }
-                this.props.toggleModalVisible(false);
+                if(isContinue === 'continue'){
+                    this.props.form.resetFields();
+                }else{
+                    this.props.toggleModalVisible(false);
+                }
                 this.props.setSelectedRowKeysAndselectedRows(null,{})
+
             }
         });
+
     }
 
+
+    handleCalcAmoutTaxAmount=(n1,n2,n3,t2,t)=>{
+        this.handleAmout(n1,n2,n3);
+        this.handleTaxAmount(n3,t2,t);
+    }
+
+    handleTaxAmount=(num1,num2,name)=>{
+        const form = this.props.form;
+        let v1 = form.getFieldValue(`${num1}`).replace(/\$\s?|(,*)/g, '');
+        let v2 = (form.getFieldValue(`${num2}`)) /100;
+        const count = v1*v2;
+        form.setFieldsValue({
+            [name]: fMoney(count),
+        });
+    }
     handleAmout=(num1,num2,name)=>{
         const form = this.props.form;
         let v1 = form.getFieldValue(`${num1}`);
-        let v2 = form.getFieldValue(`${num2}`);
+        let v2 = form.getFieldValue(`${num2}`).replace(/\$\s?|(,*)/g, '');
+        const count = accMul(v1,v2);
         form.setFieldsValue({
-            [num1]:fMoney(v1),
             [num2]:fMoney(v2),
-            [name]: fMoney(accMul(v1,v2)),
+            [name]: fMoney(count),
         });
     }
 
@@ -218,16 +241,6 @@ class PopModal extends Component{
         let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
         form.setFieldsValue({
             [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        });
-    }
-
-    handleBlur=(name)=>{
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`);
-        //console.log(value,fMoney(value));
-
-        form.setFieldsValue({
-            [name]: fMoney(value),
         });
     }
 
@@ -244,8 +257,13 @@ class PopModal extends Component{
     }
     addDate = (data, item) =>{
         let arry = [];
-        arry.push({...item});
-        let t = this.addKey(data.concat(arry));
+        let t = null;
+        arry.push(item);
+        if(typeof (data) === 'undefined'){
+            t = this.addKey([].concat(arry));
+        }else{
+            t = this.addKey(data.concat(arry));
+        }
         this.props.setDetailsDate(t);
     }
 
@@ -254,10 +272,13 @@ class PopModal extends Component{
         const data = list.map((item)=>{
             if(item.id === id){
                 return {
-                    id:item.id,
+                    ...item,
+                    totalAmount:item.amount+item.taxAmount,
                     ...selectedRows,
                 }
             }
+            console.log(item)
+            debugger
             return item;
         })
         this.props.setDetailsDate(data)
@@ -315,8 +336,8 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                            <Button type="primary" onClick={this.handleSubmit}>继续增加</Button>
+                            <Button type="primary" onClick={(e)=>this.handleSubmit(e,'no')}>确定</Button>
+                            <Button type="primary" onClick={(e)=>this.handleSubmit(e,'continue')}>继续增加</Button>
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                         </Col>
                     </Row>

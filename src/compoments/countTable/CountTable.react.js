@@ -13,9 +13,9 @@ class CountTable extends Component {
         const dom = document.getElementById(this.props.id);
         const js_table = dom.getElementsByClassName('ant-table-body')[i];
         const js_footer_table = dom.getElementsByClassName('ant-table-body')[j];
-         js_table.onscroll = () =>{
-             js_footer_table.scrollLeft = js_table.scrollLeft;
-         }
+        js_table.onscroll = () =>{
+            js_footer_table.scrollLeft = js_table.scrollLeft;
+        }
     }
 
     componentDidMount(){
@@ -23,27 +23,25 @@ class CountTable extends Component {
             this.tableScroll(0,1);
         },0)
     }
-
     componentWillUnmount() {
         this.timer && clearTimeout(this.timer);
     }
 
-    componentWillReceiveProps(nextProps){
-
-    }
-
     render() {
+        const {props} = this;
         return (
-            <div id={this.props.id}>
+            <div id={props.id}>
                 <Table
                     className="js-combin-table"
-                    {...this.props.setting}
-                    footer={currentData => <div>
-                        <Table
-                            className="js-combin-footer-table"
-                            {...this.props.setting2}
-                        />
-                    </div>}
+                    {...props.setting}
+                    footer={currentData =>
+                        props.setting2 && <div>
+                            <Table
+                                className="js-combin-footer-table"
+                                {...props.setting2}
+                            />
+                        </div>
+                    }
                 />
             </div>
         )

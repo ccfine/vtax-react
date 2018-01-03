@@ -27,7 +27,6 @@ class FileExport extends Component{
         elemIF.src = url;
         elemIF.style.display = "none";
         window.document.body.appendChild(elemIF);
-
         //window.open(url);
     }
 
