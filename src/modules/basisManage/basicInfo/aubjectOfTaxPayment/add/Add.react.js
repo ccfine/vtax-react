@@ -309,6 +309,7 @@ class Add extends Component {
                     maskClosable={false}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
+                    style={{ top: 25 }}
                     visible={visible}
                     footer={
                         type !== 'view' && <Row>

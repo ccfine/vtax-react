@@ -611,7 +611,7 @@ class BasicInfo extends Component {
             </a>
         );
         return (
-            <div className="basicInfo" style={{height:'470px',overflow:'hidden',overflowY:'scroll'}}>
+            <div className="basicInfo" style={{height:this.props.type !== 'view' ? '390px' : '443px',overflow:'hidden',overflowY:'scroll'}}>
 
                 <Card style={{marginBottom:16}}>
                     <Row gutter={40}>

@@ -15,8 +15,10 @@ import CountTable from './countTable'
 import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
 import SynchronizeTable from './synchronizeTable'
+import {AutoFileUpload,ManualFileUpload} from './fileUpload'
 import FileExport from './fileExport'
 import SearchTable from './searchTable'
+
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -26,6 +28,8 @@ export {
     AsyncTable,
     CusFormItem,
     SynchronizeTable,
+    AutoFileUpload,
+    ManualFileUpload,
     FileExport,
     SearchTable
 }

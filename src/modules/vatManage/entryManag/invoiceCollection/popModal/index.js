@@ -1,4 +1,11 @@
 /**
  * Created by liurunbin on 2017/12/21.
  */
-export {default} from './PopModal.r'
+import PopModal from './PopModal.r'
+import PopUploadModal from './PopUploadModal.r'
+import PopUndoUploadModal from './PopUndoUploadModal.r'
+export {
+    PopModal,
+    PopUploadModal,
+    PopUndoUploadModal
+}

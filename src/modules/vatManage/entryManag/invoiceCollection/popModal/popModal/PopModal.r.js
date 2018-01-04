@@ -277,8 +277,6 @@ class PopModal extends Component{
                     ...selectedRows,
                 }
             }
-            console.log(item)
-            debugger
             return item;
         })
         this.props.setDetailsDate(data)
