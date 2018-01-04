@@ -12,7 +12,9 @@ export default class AsyncTable extends Component{
             loaded:true,
             dataSource:[],
             pagination: {
-                results:props.tableProps.results || 10,
+                showSizeChanger:true,
+                showQuickJumper:true,
+                pageSize:props.tableProps.pageSize || 10,
                 showTotal:total => `总共 ${total} 条`
             },
             summaryData:[]
@@ -26,7 +28,7 @@ export default class AsyncTable extends Component{
         //columns:PropTypes.array.isRequired
     }
     static defaultProps={
-        updateKey:Date.now()
+        updateKey:Date.now(),
     }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey!==nextProps.updateKey){
@@ -44,32 +46,15 @@ export default class AsyncTable extends Component{
         //const {props} = this;
         request.get(url || this.props.url,{
             params:{
-                results: this.state.pagination.results,
+                size: this.state.pagination.pageSize,
                 ...params,
                 ...this.props.filters
             }
         }).then(({data}) => {
             if(data.code===200){
                 const pagination = { ...this.state.pagination };
-                pagination.total = data.data.total;
-
-                /* let summaryData = [{}];
-                 let summaryFields = props.summaryFields;
-                 if(summaryFields && summaryFields.length >0){
-                     console.log(summaryFields)
-
-                     data.data.records.forEach(item=>{
-                         for(let key in item){
-                             if(summaryFields.indexOf(key)){
-                                 console.log(1)
-                                 summaryData[0][key] = parseFloat(summaryData[0][key]) + parseFloat(item[key]);
-                             }
-                         }
-                     })
-
-                 }
-                 console.log(summaryData)*/
-
+                pagination.total = data.data.total ? data.data.total : data.data.page.total;
+                pagination.pageSize = data.data.size ? data.data.size : data.data.page.size;
                 this.mounted && this.setState({
                     loaded: true,
 
@@ -96,7 +81,7 @@ export default class AsyncTable extends Component{
             pagination: pager,
         });
         this.fetch({
-            results: pagination.pageSize,
+            size: pagination.pageSize,
             current: pagination.current,
             sortField: sorter.field,
             sortOrder: sorter.order,

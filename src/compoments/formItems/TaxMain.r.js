@@ -19,7 +19,8 @@ function fetchTaxMain(value, callback) {
     const fetch = ()=> {
         request.get(`/taxsubject/listByName`,{
             params:{
-                name:value
+                name:value,
+                size:100
             }
         })
             .then(({data}) => {
@@ -72,7 +73,7 @@ export default class TaxMain extends Component{
     componentDidMount(){
         request.get(`/taxsubject/list`,{
             params:{
-                results:100
+                size:100
             }
         })
             .then(({data}) => {

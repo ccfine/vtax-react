@@ -91,7 +91,7 @@ class PopModal extends Component{
                 width={1920}
                 bodyStyle={{
                     padding:0,
-                    height:500,
+                    height:400,
                     overflowY:'scroll'
                 }}
                 style={{
