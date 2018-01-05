@@ -99,7 +99,8 @@ class SearchTable extends Component{
             <Layout style={{background:'transparent'}} >
                 {
                     searchOption && (
-                        <Card title="查询条件"
+                        <Card
+                                className="search-card"
                               bodyStyle={{
                                   padding:expand?'12px 16px':'0 16px'
                               }}
@@ -126,7 +127,7 @@ class SearchTable extends Component{
                         </Card>
                     )
                 }
-                <Card title='查询结果'
+                <Card
                       extra={tableOption.extra || null}
                       style={{marginTop:10}}
                       {...tableOption.cardProps}

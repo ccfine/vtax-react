@@ -101,16 +101,16 @@ class LicenseManage extends Component {
         }
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询条件"
+                <Card
                       bodyStyle={{
                           padding:expand?'12px 16px':'0 16px'
                       }}
-                      extra={
+                      /*extra={
                           <Icon
                               style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
                               onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
                               type={`${expand?'up':'down'}-circle-o`} />
-                      }>
+                      }*/>
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
                             <Col span={8}>

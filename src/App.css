@@ -60,3 +60,7 @@
 .ant-tabs-large .ant-tabs-tab{
   padding:8px;
 }
+
+.search-card .ant-form-item{
+  margin-bottom:0;
+}
