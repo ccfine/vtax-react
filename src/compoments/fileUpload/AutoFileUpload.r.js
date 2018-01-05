@@ -3,7 +3,7 @@ import {message,Upload,Button,Icon} from 'antd';
 import {connect} from 'react-redux'
 
 
-class CompanyFileUploadItem extends Component{
+class AutoFileUpload extends Component{
     onChange=info=>{
         if (info.file.status === 'uploading') {
             console.log('uploading');
@@ -44,4 +44,4 @@ class CompanyFileUploadItem extends Component{
 
 export default connect(state=>({
     token:state.user.get('token')
-}))(CompanyFileUploadItem)
+}))(AutoFileUpload)

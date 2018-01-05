@@ -17,7 +17,8 @@ export default class AsyncTable extends Component{
                 pageSize:props.tableProps.pageSize || 10,
                 showTotal:total => `总共 ${total} 条`
             },
-            summaryData:[]
+            summaryData:[],
+            footerDate:{},
         }
     }
     static propTypes={
@@ -62,6 +63,7 @@ export default class AsyncTable extends Component{
                      * 有的列表接口返回的结构不一样
                      * */
                     dataSource: data.data.records ? data.data.records : data.data.page.records,
+                    footerDate: data.data,
                     //summaryData:summaryData,
                     pagination
                 });
@@ -93,9 +95,8 @@ export default class AsyncTable extends Component{
         this.mounted=null
     }
     render(){
-        const {loaded,dataSource,pagination}  = this.state;
+        const {loaded,dataSource,pagination,footerDate}  = this.state;
         const {props} = this;
-        // const footer = props.footer? ()=><Table columns={props.tableProps.columns} dataSource={summaryData} pagination={false} showHeader={false} />: ()=>''
         return(
             <Table
                 {...props.tableProps}
@@ -103,6 +104,9 @@ export default class AsyncTable extends Component{
                 pagination={props.tableProps.pagination ? pagination : false}
                 onChange={this.handleTableChange}
                 loading={!loaded}
+                footer={(currentPageData)=>{
+                    return props.tableProps.renderFooter ? props.tableProps.renderFooter(footerDate) : null
+                }}
             />
         )
     }

@@ -1,15 +1,34 @@
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal,DatePicker,Input,message} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,DatePicker,Input,message } from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import {request,requestDict,fMoney} from '../../../../utils'
 import {FileExport} from '../../../../compoments'
-import FileUpload from '../../../basisManage/basicInfo/aubjectOfTaxPayment/projectInformationManagement/FileUpload.r'
-import PopModal from './popModal'
+import {PopModal, PopUploadModal,PopUndoUploadModal} from './popModal'
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
 const FormItem = Form.Item;
 const buttonStyle={
     marginRight:5
+}
+const spanPaddingRight={
+    paddingRight:30
+}
+const code = {
+    /*margin: '0px 30px 0px 1px',
+    background: '#2db7f5',
+    borderRadius: '3px',
+    fontSize: '0.9em',
+    border: '1px solid #2db7f5',
+    color: '#fff',
+    padding: '2px 4px',*/
+
+    margin:' 0 1px',
+    background: '#f2f4f5',
+    borderRadius: '3px',
+    fontSize: '.9em',
+    border:'1px solid #eee',
+    marginRight:30,
+    padding: '2px 4px'
 }
 
 class InvoiceCollection extends Component {
@@ -25,18 +44,17 @@ class InvoiceCollection extends Component {
         tableUpDateKey:Date.now(),
 
         selectedRowKeys:null,
+        selectedRows:null,
         visible:false,
+        uploaderVisible:false,
+        undoUploadVisible:false,
         modalConfig:{
             type:''
         },
         expand:true,
         nssbData:[]
     }
-    toggleModalVisible=visible=>{
-        this.setState({
-            visible
-        })
-    }
+
     columns = [
         {
             title: '数据来源',
@@ -95,9 +113,6 @@ class InvoiceCollection extends Component {
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-
-            console.log(values);
-
             if (!err) {
                 if(values.authMonth && values.authMonth.length!==0){
                     values.authMonthStartStart = values.authMonth[0].format('YYYY-MM')
@@ -116,11 +131,6 @@ class InvoiceCollection extends Component {
         });
 
     }
-    onChange=(selectedRowKeys, selectedRows) => {
-        this.setState({
-            selectedRowKeys
-        })
-    }
     componentDidMount(){
         //获取纳税申报对应的数据字典
         requestDict('NSSB',result=>{
@@ -131,22 +141,79 @@ class InvoiceCollection extends Component {
         this.updateTable()
 
     }
+    componentWillReceiveProps(nextProps){
+        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
+            this.initData()
+        }
+    }
+    onChange=(selectedRowKeys, selectedRows) => {
+        this.setState({
+            selectedRowKeys,
+            selectedRows
+        })
+    }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    toggleUploadModalVisible=uploaderVisible=>{
+        this.setState({
+            uploaderVisible
+        })
+    }
+    toggleUndoUploadModalVisible=undoUploadVisible=>{
+        this.setState({
+            undoUploadVisible
+        })
+    }
     updateTable=()=>{
         this.handleSubmit()
     }
     showModal=type=>{
-        this.toggleModalVisible(true)
-        this.setState({
-            modalConfig:{
-                type,
-                id:this.state.selectedRowKeys
-            }
-        })
+
+       if(type === 'edit'){
+           let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
+           if(sourceType === 2 ){
+               const ref = Modal.warning({
+                   title: '友情提醒',
+                   content: '该发票信息是外部导入，无法修改！',
+                   okText: '确定',
+                   onOk:()=>{
+                       ref.destroy();
+                   }
+               });
+           }else{
+               this.toggleModalVisible(true)
+               this.setState({
+                   modalConfig:{
+                       type,
+                       id:this.state.selectedRowKeys
+                   }
+               })
+           }
+        }else{
+            this.toggleModalVisible(true)
+            this.setState({
+                modalConfig:{
+                    type,
+                    id:this.state.selectedRowKeys
+                }
+            })
+        }
+    }
+
+    showIsUpload=type=> {
+        if (type === 'upload') {
+            this.toggleUploadModalVisible(true)
+        }else{
+            this.toggleUndoUploadModalVisible(true)
+        }
     }
 
     render() {
         const {getFieldDecorator} = this.props.form;
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,uploaderVisible,undoUploadVisible,modalConfig,expand} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -162,26 +229,17 @@ class InvoiceCollection extends Component {
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询条件"
-                      bodyStyle={{
-                          padding:expand?'12px 16px':'0 16px'
-                      }}
-                      extra={
-                          <Icon
-                              style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
-                              onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
-                              type={`${expand?'up':'down'}-circle-o`} />
-                      }>
+                <Card>
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
                             <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
+                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
                             </Col>
                             <Col span={8}>
                                 <FormItem label='发票号码' {...formItemStyle}>
                                     {getFieldDecorator('invoiceNum',{
                                     })(
-                                        <Input />
+                                        <Input size="small" />
                                     )}
                                 </FormItem>
                             </Col>
@@ -192,9 +250,10 @@ class InvoiceCollection extends Component {
                                 >
                                     {getFieldDecorator('authMonth', {
                                     })(
-                                        <ControlledRangePicker
-                                            form={this.props.form}
-                                            name='authMonth'
+                                        <RangePicker
+                                            style={{width:'100%'}}
+                                            format="YYYY-MM"
+                                            size="small"
                                         />
                                     )}
                                 </FormItem>
@@ -202,63 +261,78 @@ class InvoiceCollection extends Component {
                         </Row>
                         <Row>
                             <Col style={{textAlign:'right'}}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                <Button size="small" style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button size="small" style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
-                <Card title="查询结果"
+                <Card
                       extra={<div>
-                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />
                               新增
                           </Button>
-                          <FileUpload taxSubjectId={this.props.taxSubjectId} fetchTable_1_Data={this.fetchTable_1_Data} />
-                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showIsUpload('upload')} style={buttonStyle}>
+                              <Icon type="upload" />
+                              导入
+                          </Button>
+                          <Button size="small" onClick={()=>this.showIsUpload('undo')} style={buttonStyle}>
                               <Icon type="file-add" />
                               撤销导入
                           </Button>
                           <FileExport
                               url='/income/invoice/collection/download'
                               title="下载导入样表"
-                              size="default"
+                              size="small"
                               setButtonStyle={{marginRight:5}}
                           />
-                          <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="edit" />
                               编辑
                           </Button>
-                          <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="search" />
                               查看
                           </Button>
                           <Button
+                              size="small"
                               style={buttonStyle}
                               onClick={()=>{
-                                  confirm({
-                                      title: '友情提醒',
-                                      content: '该删除后将不可恢复，是否删除？',
-                                      okText: '确定',
-                                      okType: 'danger',
-                                      cancelText: '取消',
-                                      onOk:()=>{
-
-                                          request.delete(`/income/invoice/collection/delete/${this.state.selectedRowKeys[0]}`)
-                                              .then(({data})=>{
-                                                  if(data.code===200){
-                                                      message.success('删除成功!');
-                                                      this.updateTable();
-                                                  }else{
-                                                      message.error(data.msg)
-                                                  }
-                                              })
-                                          this.toggleModalVisible(false)
-                                      },
-                                      onCancel:()=>{
-                                          console.log('Cancel');
-                                      },
-                                  });
+                                  let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
+                                  if(sourceType === 1 ) {
+                                      const ref = Modal.warning({
+                                          title: '友情提醒',
+                                          content: '该发票信息是外部导入，无法删除！',
+                                          okText: '确定',
+                                          onOk: () => {
+                                              ref.destroy();
+                                          }
+                                      });
+                                  }else {
+                                      confirm({
+                                          title: '友情提醒',
+                                          content: '该删除后将不可恢复，是否删除？',
+                                          okText: '确定',
+                                          okType: 'danger',
+                                          cancelText: '取消',
+                                          onOk: () => {
+                                              request.delete(`/income/invoice/collection/delete/${this.state.selectedRowKeys[0]}`)
+                                                  .then(({data}) => {
+                                                      if (data.code === 200) {
+                                                          message.success('删除成功!');
+                                                          this.updateTable();
+                                                      } else {
+                                                          message.error(data.msg)
+                                                      }
+                                                  })
+                                              this.toggleModalVisible(false)
+                                          },
+                                          onCancel: () => {
+                                              console.log('Cancel');
+                                          },
+                                      });
+                                  }
                               }}
                               disabled={!selectedRowKeys}
                               type='danger'>
@@ -276,7 +350,27 @@ class InvoiceCollection extends Component {
                                     pagination:true,
                                     size:'middle',
                                     columns:this.columns,
-                                    rowSelection:rowSelection
+                                    rowSelection:rowSelection,
+                                    renderFooter:data=>{
+                                        return (
+                                            <div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
+                                                    本页金额：<span style={code}>{data.pageAmount}</span>
+                                                    本页税额：<span style={code}>{data.pageTaxAmount}</span>
+                                                    本页价税：<span style={code}>{data.pageTotalAmount}</span>
+                                                    本页总价：<span style={code}>{data.pageTotalPrice}</span>
+                                                </div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
+                                                    总金额：<span style={code}>{data.allAmount}</span>
+                                                    总税额：<span style={code}>{data.allTaxAmount}</span>
+                                                    总价税：<span style={code}>{data.allTotalAmount}</span>
+                                                    全部总价：<span style={code}>{data.allTotalPrice}</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    },
                                 }} />
                 </Card>
                 <PopModal
@@ -285,45 +379,23 @@ class InvoiceCollection extends Component {
                     selectedRowKeys={selectedRowKeys}
                     updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
+                />
 
+                <PopUploadModal
+                    visible={uploaderVisible}
+                    updateTable={this.updateTable}
+                    toggleUploadModalVisible={this.toggleUploadModalVisible}
+                    title="进项发票采集-导入"
+                />
+
+                <PopUndoUploadModal
+                    visible={undoUploadVisible}
+                    updateTable={this.updateTable}
+                    toggleUndoUploadModalVisible={this.toggleUndoUploadModalVisible}
+                    title="进项发票采集-导入"
                 />
             </Layout>
         )
     }
 }
 export default Form.create()(InvoiceCollection)
-
-class ControlledRangePicker extends React.Component {
-    state = {
-        mode: ['month', 'month'],
-        value: [],
-    };
-
-    handlePanelChange = (value, mode) => {
-        const {form,name} = this.props;
-        form.setFieldsValue({
-            [`${name}`]: value,
-        });
-        this.setState({
-            value,
-            mode: [
-                mode[0] === 'date' ? 'month' : mode[0],
-                mode[1] === 'date' ? 'month' : mode[1],
-            ],
-        });
-    }
-
-    render() {
-        const { value,mode } = this.state;
-        return (
-            <RangePicker
-                style={{width:'100%'}}
-                //placeholder={this.props.placeholder}
-                format="YYYY-MM"
-                mode={mode}
-                value={value}
-                onPanelChange={this.handlePanelChange.bind(this)}
-            />
-        );
-    }
-}

@@ -653,7 +653,7 @@ class PopModal extends Component{
                 style={{ top: 50 }}
                 visible={props.visible}
                 footer={
-                    <Row>
+                    type !== 'view' && <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
                             <Button type="primary" onClick={this.handleSubmit}>确定</Button>
@@ -711,7 +711,6 @@ class PopModal extends Component{
                                                 for(let i = 0;i<nowKeys.length;i++){
                                                     for(let j = 0; j<keys.length;j++){
                                                         if(nowKeys[i] === keys[j]){
-                                                            debugger
                                                             nowKeys.splice(i,1)
                                                         }
                                                     }
