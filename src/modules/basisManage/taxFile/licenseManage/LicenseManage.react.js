@@ -6,7 +6,28 @@ import PopModal from './popModal'
 const buttonStyle={
     marginRight:5
 }
-const columns = [{
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff'
+}
+const getColumns = context => [
+    {
+        title:'操作',
+        key:'actions',
+        render:(text,record)=>(
+            <span style={pointerStyle} onClick={()=>{
+                context.setState({
+                    selectedRowKeys:[record.id],
+                    modalConfig:{
+                        type:'view'
+                    }
+                },()=>{
+                    context.toggleModalVisible(true)
+                })
+            }}>查看</span>
+        )
+    },
+    {
     title: '纳税主体',
     dataIndex: 'mainName',
 }, {
@@ -78,23 +99,18 @@ class LicenseManage extends Component {
                 span:18
             }
         }
-        const rowSelection = {
-            type:'radio',
-            selectedRowKeys,
-            onChange: this.onChange
-        };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询条件"
+                <Card
                       bodyStyle={{
                           padding:expand?'12px 16px':'0 16px'
                       }}
-                      extra={
+                      /*extra={
                           <Icon
                               style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
                               onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
                               type={`${expand?'up':'down'}-circle-o`} />
-                      }>
+                      }*/>
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
                             <Col span={8}>
@@ -123,8 +139,7 @@ class LicenseManage extends Component {
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     size:'middle',
-                                    columns:columns,
-                                    rowSelection:rowSelection
+                                    columns:getColumns(this),
                                 }} />
                 </Card>
                 <PopModal visible={visible} projectId={selectedRowKeys} toggleModalVisible={this.toggleModalVisible} />

@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Modal,Form,Row,Col,Spin} from 'antd';
+import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields,regRules} from '../../../../../utils'
 import moment from 'moment'
 const confirm = Modal.confirm
@@ -18,16 +18,8 @@ class PopModal extends Component{
         loaded:false
     }
 
-    handleSubmit = (e) => {
-        e && e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            }
-        });
-    }
     toggleLoaded = loaded => this.setState({loaded})
-    fetchReportById = id=>{
+    fetchReportById = (id,props)=>{
         this.toggleLoaded(false)
         request.get(`/output/invoice/collection/get/${id}`)
             .then(({data})=>{
@@ -35,6 +27,24 @@ class PopModal extends Component{
                 if(data.code===200){
                     this.setState({
                         initData:data.data
+                    },()=>{
+
+                        if(props.type==='edit'){
+                            //根据税收分类编码的值去查询整条税收分类编码，因为税率会根据这条数据的值自动变化，所以需要这条数据源
+                            request.get(`/tax/classification/coding/get/${data.data.taxClassificationCoding}`)
+                                .then(({data})=>{
+                                    if(data.code===200){
+                                        props.form.setFieldsValue({
+                                            'taxClassificationCoding':{
+                                                ...data.data,
+                                                label:data.data.num,
+                                                key:data.data.id
+                                            }
+                                        })
+                                    }
+                                })
+                        }
+
                     })
                 }
             })
@@ -58,7 +68,7 @@ class PopModal extends Component{
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            this.fetchReportById(nextProps.modalConfig.id)
+            this.fetchReportById(nextProps.modalConfig.id,nextProps)
         }
     }
     mounted=true
@@ -68,13 +78,70 @@ class PopModal extends Component{
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            alert(1)
             if (!err) {
+                const type = this.props.type;
                 console.log(values)
+                this.toggleLoaded(false)
+                for(let key in values){
+                    if(moment.isMoment(values[key])){
+                        values[key] = values[key].format('YYYY-MM-DD');
+                    }
+                    if(key ==='taxClassificationCoding'){
+                        values[key] = values[key]['id']
+                    }
+                }
+                console.log(values)
+
+                if(type==='edit'){
+                    values.id=this.state.initData['id']
+                    this.updateRecord(values)
+                }else if(type==='add'){
+                    this.createRecord(values)
+                }
             }
         });
 
     }
+
+    updateRecord = data =>{
+        request.put('/output/invoice/collection/update',data)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    alert('更新成功')
+                }else{
+                    alert(data.msg)
+                }
+            })
+    }
+
+    createRecord = data =>{
+        request.put('/output/invoice/collection/save',data)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    alert('创建成功')
+                }else{
+                    alert(data.msg)
+                }
+            })
+    }
+
+    deleteRecord = id => {
+        request.delete(`/output/invoice/collection/delete/${id}`)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    const props = this.props;
+                    message.success('删除成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
+                }else{
+                    message.error(`删除失败:${data.msg}`)
+                }
+            })
+    }
+
     render(){
         const props = this.props;
         const {initData,loaded} = this.state;
@@ -113,7 +180,7 @@ class PopModal extends Component{
                 }}
                 visible={props.visible}
                 footer={
-                    <Row>
+                    type !== 'view' ? <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
                             <Button type="primary" onClick={this.handleSubmit}>确定</Button>
@@ -127,11 +194,12 @@ class PopModal extends Component{
                                             okText: '确定',
                                             okType: 'danger',
                                             cancelText: '取消',
-                                            onOk() {
-                                                console.log('OK');
+                                            onOk:()=>{
+                                                this.toggleLoaded(false)
+                                                this.deleteRecord(initData['id'])
                                             },
                                             onCancel() {
-                                                console.log('Cancel');
+
                                             },
                                         });
                                     }}
@@ -140,7 +208,7 @@ class PopModal extends Component{
                                 </Button>
                             }
                         </Col>
-                    </Row>
+                    </Row> : null
                 }
                 title={title}>
                 <Spin spinning={!loaded}>
@@ -164,7 +232,10 @@ class PopModal extends Component{
                                         fieldName:'taxClassificationCoding',
                                         type:'taxClassCodingSelect',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['taxClassificationCoding'],
+                                            initialValue:initData['taxClassificationCodingNum'] ? {
+                                                label:initData['taxClassificationCodingNum'] || '',
+                                                key:initData['taxClassificationCoding'] || ''
+                                            } : undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -173,10 +244,23 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
-                                            dataSource:[{
-                                                value:initData['taxClassificationCoding'],
-                                                text:initData['taxClassificationCodingNum']
-                                            }]
+                                            onChange:data=>{
+                                                let type = parseInt(getFieldValue('taxMethod'),0);
+                                                let rateValue = '';
+
+                                                if(!!type){
+                                                    if(type===1){
+                                                        rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
+                                                    }
+                                                    if(type===2){
+                                                        rateValue=getFieldValue('taxClassificationCoding').simpleTaxRate
+                                                    }
+                                                    setFieldsValue({
+                                                        taxRate:rateValue
+                                                    })
+                                                }
+
+                                            }
                                         }
                                     },
                                     {
@@ -203,7 +287,19 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
-                                            disabled
+                                            disabled,
+                                            onSelect:value=>{
+                                                let rateValue = '';
+                                                if(parseInt(value,0)===1){
+                                                    rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
+                                                }
+                                                if(parseInt(value,0)===2){
+                                                    rateValue=getFieldValue('taxClassificationCoding').simpleTaxRate
+                                                }
+                                                setFieldsValue({
+                                                    taxRate:rateValue
+                                                })
+                                            }
                                         }
                                     },
                                     {
@@ -460,12 +556,9 @@ class PopModal extends Component{
                                         type:'numeric',
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxRate'] ? `${initData['taxRate']}` : undefined,
-                                            rules:[
-                                                regRules.input_length_20
-                                            ]
                                         },
                                         componentProps:{
-                                            disabled
+                                            disabled:true
                                         }
                                     },
                                     {
@@ -491,7 +584,7 @@ class PopModal extends Component{
                                         fieldName:'totalAmount',
                                         type:'input',
                                         fieldDecoratorOptions:{
-                                            initialValue:( parseFloat( getFieldValue('amount') ) +  parseFloat( getFieldValue('taxRate') ) ) || 0,
+                                            initialValue:( parseFloat( getFieldValue('amount') ) +  parseFloat( getFieldValue('taxAmount') ) ) || initData['totalAmount'],
                                         },
                                         componentProps:{
                                             disabled:true

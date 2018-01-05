@@ -13,6 +13,7 @@ export default class AsyncTable extends Component{
             dataSource:[],
             pagination: {
                 showSizeChanger:true,
+                showQuickJumper:true,
                 pageSize:props.tableProps.pageSize || 10,
                 showTotal:total => `总共 ${total} 条`
             },

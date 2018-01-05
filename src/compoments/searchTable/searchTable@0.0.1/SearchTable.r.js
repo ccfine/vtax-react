@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Layout,Card,Row,Col,Form,Button,Icon} from 'antd'
+import {Layout,Card,Row,Col,Form,Button} from 'antd'
 import moment from 'moment'
 import {AsyncTable} from '../../index'
 import {getFields} from '../../../utils'
@@ -12,30 +12,40 @@ class SearchTable extends Component{
         searchOption:PropTypes.object,
         tableOption:PropTypes.object
     }
-    state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{
-            results:20
-        },
+    constructor(props){
+        super(props)
+        this.state={
+            /**
+             * params条件，给table用的
+             * */
+            filters:{
+                pageSize:20
+            },
 
-        /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
-         * */
-        tableUpDateKey:Date.now(),
+            /**
+             * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
+             * */
+            tableUpDateKey:props.tableOption.key || Date.now(),
 
-        selectedRowKeys:null,
-        visible:false,
-        modalConfig:{
-            type:''
-        },
-        expand:true
+            selectedRowKeys:null,
+            visible:false,
+            modalConfig:{
+                type:''
+            },
+            expand:true
+        }
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.tableOption.key !== nextProps.tableOption.key){
+            this.setState({
+                tableUpDateKey:nextProps.tableOption.key
+            })
+        }
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -89,16 +99,17 @@ class SearchTable extends Component{
             <Layout style={{background:'transparent'}} >
                 {
                     searchOption && (
-                        <Card title="查询条件"
+                        <Card
+                                className="search-card"
                               bodyStyle={{
                                   padding:expand?'12px 16px':'0 16px'
                               }}
-                              extra={
+                              /*extra={
                                   <Icon
                                       style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
                                       onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
                                       type={`${expand?'up':'down'}-circle-o`} />
-                              }
+                              }*/
                               {...searchOption.cardProps}
                         >
                             <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
@@ -116,7 +127,7 @@ class SearchTable extends Component{
                         </Card>
                     )
                 }
-                <Card title='查询结果'
+                <Card
                       extra={tableOption.extra || null}
                       style={{marginTop:10}}
                       {...tableOption.cardProps}
@@ -127,7 +138,7 @@ class SearchTable extends Component{
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,
-                                    results:tableOption.results || 10,
+                                    pageSize:tableOption.pageSize || 10,
                                     size:'middle',
                                     columns:tableOption.columns,
                                     scroll:tableOption.scroll || undefined

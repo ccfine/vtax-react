@@ -120,5 +120,5 @@ export default {
     input_length_50:{
         max:20,
         message:'不能超过20个字符'
-    },
+    }
 }

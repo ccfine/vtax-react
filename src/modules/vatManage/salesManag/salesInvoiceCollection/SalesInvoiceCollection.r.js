@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal} from 'antd'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable,FileExport} from '../../../../compoments'
 import PopModal from './popModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -69,7 +69,6 @@ const getColumns = context =>[
         render:(text,record)=>(
             <div>
                 <span style={pointerStyle} onClick={()=>{
-
                     const type = parseInt(record.sourceType,0);
                     if(type!==1){
                         Modal.warning({
@@ -88,6 +87,21 @@ const getColumns = context =>[
                         context.toggleModalVisible(true)
                     })
                 }}>编辑</span>
+                <span style={{
+                    ...pointerStyle,
+                    marginLeft:5
+                }} onClick={()=>{
+                    context.setState({
+                        modalConfig:{
+                            type:'view',
+                            id:record.id
+                        }
+                    },()=>{
+                        context.toggleModalVisible(true)
+                    })
+                }}>
+                    查看
+                </span>
             </div>
         ),
         fixed:'left'
@@ -153,6 +167,7 @@ export default class Test extends Component{
         modalConfig:{
             type:''
         },
+        tableKey:Date.now()
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -167,26 +182,41 @@ export default class Test extends Component{
             }
         })
     }
+    refreshTable = ()=>{
+        this.setState({
+            tableKey:Date.now()
+        })
+    }
     render(){
-        const {visible,modalConfig} = this.state;
+        const {visible,modalConfig,tableKey} = this.state;
         return(
             <SearchTable
                 searchOption={{
                     fields:searchFields
                 }}
                 tableOption={{
+                    key:tableKey,
+                    pageSize:10,
                     columns:getColumns(this),
                     url:'/output/invoice/collection/list',
-                    extra:<Button size='small' onClick={()=>this.showModal('add')} >
-                        <Icon type="file-add" />
-                        新增
-                    </Button>,
+                    extra:<div>
+                        <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
+                            <Icon type="file-add" />
+                            新增
+                        </Button>
+                        <FileExport
+                            url='/output/invoice/collection/download'
+                            title="下载导入模板"
+                            size="small"
+                            setButtonStyle={{marginRight:5}}
+                        />
+                    </div>,
                     scroll:{
                         x:'180%'
                     }
                 }}
             >
-                <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
+                <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }
