@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import {Button,Icon,Modal} from 'antd'
 import {SearchTable,FileExport} from '../../../../compoments'
+import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -104,7 +105,8 @@ const getColumns = context =>[
                 </span>
             </div>
         ),
-        fixed:'left'
+        fixed:'left',
+        width:'70px'
 
     },{
         title: '纳税主体',
@@ -161,13 +163,23 @@ const getColumns = context =>[
     }
 ];
 
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        str += `${key}=${data[key]}&`
+    }
+    return str;
+}
 export default class Test extends Component{
     state={
         visible:false,
         modalConfig:{
             type:''
         },
-        tableKey:Date.now()
+        tableKey:Date.now(),
+        searchFieldsValues:{
+
+        }
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -178,7 +190,7 @@ export default class Test extends Component{
         this.toggleModalVisible(true)
         this.setState({
             modalConfig:{
-                type
+                type:type
             }
         })
     }
@@ -188,11 +200,16 @@ export default class Test extends Component{
         })
     }
     render(){
-        const {visible,modalConfig,tableKey} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues} = this.state;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields
+                    fields:searchFields,
+                    getFieldsValues:values=>{
+                        this.setState({
+                            searchFieldsValues:values
+                        })
+                    }
                 }}
                 tableOption={{
                     key:tableKey,
@@ -204,6 +221,13 @@ export default class Test extends Component{
                             <Icon type="file-add" />
                             新增
                         </Button>
+                        <FileImportModal style={{marginRight:5}} />
+                        <FileExport
+                            url={`/output/invoice/collection/export?${parseJsonToParams(searchFieldsValues)}`}
+                            title="导出"
+                            size="small"
+                            setButtonStyle={{marginRight:5}}
+                        />
                         <FileExport
                             url='/output/invoice/collection/download'
                             title="下载导入模板"

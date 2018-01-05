@@ -31,11 +31,12 @@ export default class TaxClassCodingSelect extends Component{
         this.mounted=null;
     }
     render(){
-        const {setFieldsValue,fieldName,onChange} = this.props;
+        const {setFieldsValue,fieldName,onChange,conditionValue} = this.props;
         return(
             <div>
             <Select labelInValue {...this.props} disabled />
                 <TaxClassSelectPage
+                    conditionValue={conditionValue}
                     fieldName={fieldName}
                     onChange={data=>onChange(data)}
                     setFieldsValue={setFieldsValue} />
@@ -76,20 +77,44 @@ const getColumns = context => [
             <Button
                 size='small'
                 onClick={()=>{
-                    const {setFieldsValue,fieldName} = context.props;
+                    const {setFieldsValue,fieldName,conditionValue} = context.props;
                     let fieldData =  {
                         ...record,
                         key:record.id,
                         label:record.num
                     }
-                    setFieldsValue({
-                        [fieldName]:fieldData
-                    })
-                    setFieldsValue({
-                        'taxableItem':record.taxableProjectName
-                    })
-                    context.props.onChange && context.props.onChange(fieldData)
-                    context.toggleModalVisible(false)
+                    let taxMethod = parseInt(conditionValue.taxMethod,0),
+                        taxRate = parseFloat(conditionValue.taxRate);
+
+                    //这里是针对外部传入的默认税率以及默认计税方法进行比较，有差异则提示
+                    if( ( taxMethod===1 &&  taxRate !== parseFloat(record.commonlyTaxRate) ) || ( taxMethod===2 &&  taxRate !== parseFloat(record.simpleTaxRate) ) ){
+                        Modal.confirm({
+                            content: '1条发票税率与税收分类编码税率对应税率不一致，是否有差额开票情况，是否继续设置？',
+                            onOk() {
+                                setFieldsValue({
+                                    [fieldName]:fieldData
+                                })
+                                setFieldsValue({
+                                    'taxableItem':record.taxableProjectName
+                                })
+                                context.props.onChange && context.props.onChange(fieldData)
+                                context.toggleModalVisible(false)
+                            },
+                            onCancel() {
+
+                            },
+                        })
+                    }else{
+                        setFieldsValue({
+                            [fieldName]:fieldData
+                        })
+                        setFieldsValue({
+                            'taxableItem':record.taxableProjectName
+                        })
+                        context.props.onChange && context.props.onChange(fieldData)
+                        context.toggleModalVisible(false)
+                    }
+
                 }}
                 style={{cursor:'pointer',color:'#1890ff'}}>选择</Button>
         )
