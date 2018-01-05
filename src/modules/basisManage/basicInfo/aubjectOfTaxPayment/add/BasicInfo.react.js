@@ -109,6 +109,16 @@ class BasicInfo extends Component {
                     }
                 ],
             }, {
+                label: '所属行业',
+                type: 'industry',
+                fieldName: 'jbxx.industry',
+                initialValue:this.props.industry.title,
+                rules: [
+                    {
+                        required: true, message: '请选择所属行业',
+                    }
+                ],
+            }, {
                 label: '注册类型',
                 type: 'select',
                 fieldName: 'jbxx.registrationType',
@@ -453,6 +463,10 @@ class BasicInfo extends Component {
                 inputComponent = <Checkbox disabled={disibled}  />;
             }else if(data[i].type ==='cascader') {
                 inputComponent = <Cascader disabled={disibled} options={data[i].items} placeholder={`请输入${data[i].label}`}/>;
+            }else if(data[i].type ==='industry'){
+                inputComponent = <Input disabled={this.props.type ==='view'} placeholder={`请输入${data[i].label}`} addonAfter={<a onClick={this.showIndustryModal}>
+                    <Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />
+                </a>} />;
             }
 
             if(data[i].type ==='checked'){
@@ -593,56 +607,13 @@ class BasicInfo extends Component {
     }
 
     render() {
-        const {getFieldDecorator} = this.props.form;
-
-        const formItemLayout = {
-            labelCol: {
-                xs: {span: 24},
-                sm: {span: 6},
-            },
-            wrapperCol: {
-                xs: {span: 24},
-                sm: {span: 14},
-            },
-        };
-        const SearchAfter = (
-            <a onClick={this.showIndustryModal}>
-                <Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />
-            </a>
-        );
         return (
             <div className="basicInfo" style={{height:this.props.type !== 'view' ? '390px' : '443px',overflow:'hidden',overflowY:'scroll'}}>
 
                 <Card style={{marginBottom:16}}>
                     <Row gutter={40}>
                         {
-                            this.getFields(0,4)
-                        }
-                        <Col span={12}>
-                            <FormItem {...formItemLayout} label='所属行业'>
-                                {getFieldDecorator('jbxx.industry', {
-                                    initialValue: this.props.industry.title,
-                                    rules: [
-                                        {
-                                            required: true, message: '请选择所属行业',
-                                        }
-                                    ],
-                                })(
-                                    <Input disabled={this.props.type ==='view'} placeholder="请选择所属行业" addonAfter={SearchAfter} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        {
-                           this.getFields(4,13)
-                        }
-                    </Row>
-                </Card>
-
-                {/*办公电话*/}
-                <Card style={{marginBottom:16}}>
-                    <Row gutter={40}>
-                        {
-                            this.getFields(13,14)
+                            this.getFields(0,14)
                         }
                     </Row>
                     <Row gutter={40}>
@@ -650,10 +621,6 @@ class BasicInfo extends Component {
                             this.getFields(14,18)
                         }
                     </Row>
-                </Card>
-
-                {/*财务负责人*/}
-                <Card style={{marginBottom:16}}>
                     <Row gutter={40}>
                         {
                             this.getFields(18,19)
@@ -661,41 +628,32 @@ class BasicInfo extends Component {
                     </Row>
                     <Row gutter={40}>
                         {
-                            this.getFields(19,27)
-                        }
-                    </Row>
-                </Card>
-
-                {/*是否协同（喜盈佳）*/}
-                <Card>
-                    <Row gutter={40}>
-                        {
-                            this.getFields(27,28)
+                            this.getFields(19,24)
                         }
                     </Row>
                     <Row gutter={40}>
                         {
-                            this.getFields(28,30)
-                        }
-                    </Row>
-
-                    {/*联系电话*/}
-
-                    <Row gutter={40}>
-                        {
-                            this.getFields(30,31)
+                            this.getFields(24,28)
                         }
                     </Row>
                     <Row gutter={40}>
                         {
-                            this.getFields(31,33)
+                            this.getFields(28,29)
                         }
                     </Row>
-
-                    {/*联系电话*/}
                     <Row gutter={40}>
                         {
-                            this.getFields(33,34)
+                            this.getFields(29,32)
+                        }
+                    </Row>
+                    <Row gutter={40}>
+                        {
+                            this.getFields(32,34)
+                        }
+                    </Row>
+                    <Row gutter={40}>
+                        {
+                            this.getFields(34,37)
                         }
                     </Row>
                 </Card>

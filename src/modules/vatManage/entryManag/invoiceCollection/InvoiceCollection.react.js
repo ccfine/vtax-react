@@ -392,7 +392,7 @@ class InvoiceCollection extends Component {
                     visible={undoUploadVisible}
                     updateTable={this.updateTable}
                     toggleUndoUploadModalVisible={this.toggleUndoUploadModalVisible}
-                    title="进项发票采集-导入"
+                    title="进项发票采集-撤销导入"
                 />
             </Layout>
         )

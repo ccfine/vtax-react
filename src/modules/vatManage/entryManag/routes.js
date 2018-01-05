@@ -3,10 +3,9 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import React from 'react'
 import {wrapPage} from '../../../compoments'
 import InvoiceCollection from './invoiceCollection'
-const InvoiceMatching =()=><div>进项发票匹配</div>
+import InvoiceMatching from './invoiceMatching'
 
 
 const PATH = `/web/vatManage/entryManag`;
