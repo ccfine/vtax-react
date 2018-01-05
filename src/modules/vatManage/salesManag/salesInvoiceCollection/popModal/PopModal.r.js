@@ -79,8 +79,7 @@ class PopModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const type = this.props.type;
-                console.log(values)
+                const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
                 for(let key in values){
                     if(moment.isMoment(values[key])){
@@ -108,21 +107,27 @@ class PopModal extends Component{
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
-                    alert('更新成功')
+                    const props = this.props;
+                    message.success('更新成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
                 }else{
-                    alert(data.msg)
+                    message.error(`更新失败:${data.msg}`)
                 }
             })
     }
 
     createRecord = data =>{
-        request.put('/output/invoice/collection/save',data)
+        request.post('/output/invoice/collection/save',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
-                    alert('创建成功')
+                    const props = this.props;
+                    message.success('新增成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
                 }else{
-                    alert(data.msg)
+                    message.error(`新增失败:${data.msg}`)
                 }
             })
     }
@@ -188,6 +193,10 @@ class PopModal extends Component{
                             {
                                 type === 'edit' && <Button
                                     onClick={()=>{
+                                        if( parseInt(initData['sourceType'],0)!==1 ){
+                                            message.error('只能删除手工新增的数据');
+                                            return false;
+                                        }
                                         confirm({
                                             title: '友情提醒',
                                             content: '该删除后将不可恢复，是否删除？',
@@ -222,6 +231,12 @@ class PopModal extends Component{
                                         type:'taxMain',
                                         fieldDecoratorOptions:{
                                             initialValue:initData['mainId'],
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                         componentProps:{
                                             disabled
@@ -244,6 +259,13 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
+                                            conditionValue:getFieldValue('taxRate') ? {
+                                                taxMethod:getFieldValue('taxMethod'),
+                                                taxRate:getFieldValue('taxRate')
+                                            } : {
+                                                taxMethod:initData['taxMethod'],
+                                                taxRate:initData['taxRate']
+                                            },
                                             onChange:data=>{
                                                 let type = parseInt(getFieldValue('taxMethod'),0);
                                                 let rateValue = '';
@@ -289,16 +311,19 @@ class PopModal extends Component{
                                         componentProps:{
                                             disabled,
                                             onSelect:value=>{
-                                                let rateValue = '';
-                                                if(parseInt(value,0)===1){
-                                                    rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
+                                                let rateValue = getFieldValue('taxClassificationCoding');
+                                                if(rateValue){
+                                                    if(parseInt(value,0)===1){
+                                                        rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
+                                                    }
+                                                    if(parseInt(value,0)===2){
+                                                        rateValue=getFieldValue('taxClassificationCoding').simpleTaxRate
+                                                    }
+                                                    setFieldsValue({
+                                                        taxRate:rateValue
+                                                    })
                                                 }
-                                                if(parseInt(value,0)===2){
-                                                    rateValue=getFieldValue('taxClassificationCoding').simpleTaxRate
-                                                }
-                                                setFieldsValue({
-                                                    taxRate:rateValue
-                                                })
+
                                             }
                                         }
                                     },
@@ -401,11 +426,17 @@ class PopModal extends Component{
                                         type:'datePicker',
                                         fieldDecoratorOptions:{
                                             initialValue:shouldShowDefaultData ? moment(`${initData['billingDate']}`,"YYYY-MM-DD") : undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择开票日期'
+                                                }
+                                            ]
                                         },
                                         componentProps:{
                                             format:"YYYY-MM-DD",
                                             disabled
-                                        },
+                                        }
 
                                     },
                                     {
@@ -553,7 +584,7 @@ class PopModal extends Component{
                                     {
                                         label:'税率',
                                         fieldName:'taxRate',
-                                        type:'numeric',
+                                        type:'input',
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxRate'] ? `${initData['taxRate']}` : undefined,
                                         },

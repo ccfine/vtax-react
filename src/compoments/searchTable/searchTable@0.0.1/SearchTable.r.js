@@ -29,16 +29,8 @@ class SearchTable extends Component{
 
             selectedRowKeys:null,
             visible:false,
-            modalConfig:{
-                type:''
-            },
             expand:true
         }
-    }
-    toggleModalVisible=visible=>{
-        this.setState({
-            visible
-        })
     }
     componentWillReceiveProps(nextProps){
         if(this.props.tableOption.key !== nextProps.tableOption.key){
@@ -139,7 +131,7 @@ class SearchTable extends Component{
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     pageSize:tableOption.pageSize || 10,
-                                    size:'middle',
+                                    size:'small',
                                     columns:tableOption.columns,
                                     scroll:tableOption.scroll || undefined
                                 }} />
@@ -151,4 +143,9 @@ class SearchTable extends Component{
         )
     }
 }
-export default Form.create()(SearchTable)
+export default Form.create({
+    onValuesChange:(props,values)=>{
+        //给外部一个获得搜索条件的回调
+        props.searchOption.getFieldsValues && props.searchOption.getFieldsValues(values)
+    }
+})(SearchTable)

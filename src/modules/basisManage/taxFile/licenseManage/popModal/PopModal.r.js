@@ -104,7 +104,7 @@ class PopModal extends Component{
                     key={this.state.cardKey}
                     onTabChange={(key) => { this.onTabChange(key, 'key'); }}
                 >
-                    {props.projectId && getContent(this.state.key,`${props.projectId[0]}`)}
+                    {props.projectId && getContent(this.state.key,`${props.projectId}`)}
                 </Card>
             </Modal>
         )
