@@ -229,26 +229,17 @@ class InvoiceCollection extends Component {
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询条件"
-                      bodyStyle={{
-                          padding:expand?'12px 16px':'0 16px'
-                      }}
-                      extra={
-                          <Icon
-                              style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
-                              onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
-                              type={`${expand?'up':'down'}-circle-o`} />
-                      }>
+                <Card>
                     <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                         <Row>
                             <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} />
+                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
                             </Col>
                             <Col span={8}>
                                 <FormItem label='发票号码' {...formItemStyle}>
                                     {getFieldDecorator('invoiceNum',{
                                     })(
-                                        <Input />
+                                        <Input size="small" />
                                     )}
                                 </FormItem>
                             </Col>
@@ -262,6 +253,7 @@ class InvoiceCollection extends Component {
                                         <RangePicker
                                             style={{width:'100%'}}
                                             format="YYYY-MM"
+                                            size="small"
                                         />
                                     )}
                                 </FormItem>
@@ -269,41 +261,42 @@ class InvoiceCollection extends Component {
                         </Row>
                         <Row>
                             <Col style={{textAlign:'right'}}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                <Button size="small" style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button size="small" style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
-                <Card title="查询结果"
+                <Card
                       extra={<div>
-                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />
                               新增
                           </Button>
-                          <Button onClick={()=>this.showIsUpload('upload')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showIsUpload('upload')} style={buttonStyle}>
                               <Icon type="upload" />
                               导入
                           </Button>
-                          <Button onClick={()=>this.showIsUpload('undo')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showIsUpload('undo')} style={buttonStyle}>
                               <Icon type="file-add" />
                               撤销导入
                           </Button>
                           <FileExport
                               url='/income/invoice/collection/download'
                               title="下载导入样表"
-                              size="default"
+                              size="small"
                               setButtonStyle={{marginRight:5}}
                           />
-                          <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="edit" />
                               编辑
                           </Button>
-                          <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="search" />
                               查看
                           </Button>
                           <Button
+                              size="small"
                               style={buttonStyle}
                               onClick={()=>{
                                   let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
