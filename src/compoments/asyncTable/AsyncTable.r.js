@@ -104,9 +104,9 @@ export default class AsyncTable extends Component{
                 pagination={props.tableProps.pagination ? pagination : false}
                 onChange={this.handleTableChange}
                 loading={!loaded}
-                footer={(currentPageData)=>{
-                    return props.tableProps.renderFooter ? props.tableProps.renderFooter(footerDate) : null
-                }}
+                footer={props.tableProps.renderFooter ? (currentPageData)=>{
+                    return props.tableProps.renderFooter(footerDate)
+                } : null}
             />
         )
     }
