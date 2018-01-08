@@ -11,7 +11,6 @@ import {Upload,Button,Icon} from 'antd';
 class ManualFileUpload extends Component{
     state = {
         fileList:[],
-        uploading: false,
     }
     static propTypes={
         name:PropTypes.string,
@@ -44,6 +43,14 @@ class ManualFileUpload extends Component{
         },
         fileList: this.state.fileList,
     });
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.value !== this.props.value){
+            this.setState({
+                fileList:nextProps.value
+            })
+        }
+    }
     render(){
         const {btnSize,name} = this.props;
         return(

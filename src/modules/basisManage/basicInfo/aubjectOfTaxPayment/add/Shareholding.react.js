@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import {Layout,Card,Button,Icon,Modal} from 'antd'
 import {SynchronizeTable} from '../../../../../compoments'
+import {fMoney} from '../../../../../utils'
 import PopModal from './shareholdingPopModal'
 const confirm = Modal.confirm;
 const buttonStyle={
@@ -37,6 +38,7 @@ const columns = [{
     }, {
         title: '原币金额(万元)',
         dataIndex: 'registeredCapitalAmount',
+        render:text=>fMoney(text),
     }, {
         title: '备注',
         dataIndex: 'capitalRemark',
@@ -49,6 +51,7 @@ const columns = [{
     }, {
         title: '原币金额(万元) ',
         dataIndex: 'collectionCapitalAmount',
+        render:text=>fMoney(text),
     }],
 },{
     title: '代持情况',

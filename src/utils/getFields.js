@@ -7,6 +7,13 @@ import {CusFormItem} from '../compoments'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { RangePicker,MonthPicker } = DatePicker;
+const normFile = (e) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+        return e;
+    }
+    return e && e.fileList;
+}
 const getFields = (form,fieldsData=[]) =>{
     const {getFieldDecorator,setFieldsValue} = form;
     let defaultFormItemStyle={
@@ -52,6 +59,9 @@ const getFields = (form,fieldsData=[]) =>{
             case 'yearSelect':
                 CusComponent = CusFormItem.YearSelect;
                 break;
+            case 'fileUpload':
+                CusComponent = CusFormItem.FileUpload;
+                break;
             default:
                 CusComponent = Input
         }
@@ -87,6 +97,20 @@ const getFields = (form,fieldsData=[]) =>{
                             ...item['fieldDecoratorOptions']
                         })(
                             <CusComponent fieldName={item['fieldName']} setFieldsValue={setFieldsValue} {...item['componentProps']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else if(type==='fileUpload'){
+            return(
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            valuePropName: 'fileList',
+                            getValueFromEvent:normFile,
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent setFieldsValue={fileList=>setFieldsValue({[item['fileName']]:fileList})} componentProps={item['componentProps']} />
                         )}
                     </FormItem>
                 </Col>

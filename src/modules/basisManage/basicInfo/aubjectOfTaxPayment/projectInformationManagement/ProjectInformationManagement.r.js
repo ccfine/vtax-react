@@ -109,7 +109,7 @@ export default class ProjectInformationManagement extends Component{
         };
         return(
             <div style={{display:'inline-block',...this.props.style}}>
-                <Button disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
+                <Button size='small' disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
                     <Icon type="plus-circle" />
                     项目信息管理
                 </Button>
@@ -127,11 +127,11 @@ export default class ProjectInformationManagement extends Component{
                     <Card
                         extra={
                             <div>
-                                <AutoFileUpload taxSubjectId={this.props.taxSubjectId} fetchTable_1_Data={this.fetchTable_1_Data} />
+                                <AutoFileUpload url={`project/upload/${this.props.taxSubjectId}`} fetchTable_1_Data={this.fetchTable_1_Data} />
                                 <FileExport
                                     url='project/download'
                                     title="模板下载"
-                                    setButtonStyle={{marginTop:10,marginRight:15}}
+                                    setButtonStyle={{marginTop:10,marginRight:5}}
                                     size='small'
                                 />
                                 <Button size='small'

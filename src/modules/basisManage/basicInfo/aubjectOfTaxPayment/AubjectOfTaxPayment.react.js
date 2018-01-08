@@ -121,34 +121,35 @@ class AubjectOfTaxPayment extends Component {
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询条件">
+                <Card className="search-card">
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="id" formItemStyle={formItemStyle} form={this.props.form} />
+                                <CusFormItem.TaxMain fieldName="id" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
                             </Col>
                             <Col span={8} offset={1}>
-                                <Button style={{marginTop:3}} type='primary' htmlType="submit">查询</Button>
+                                <Button size="small" style={{marginTop:8}} type='primary' htmlType="submit">查询</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
-                <Card title="查询结果"
+                <Card
                       extra={<div>
-                          <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="plus-circle" />
                               新增
                           </Button>
-                          <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="edit" />
                               编辑
                           </Button>
-                          <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="search" />
                               查看
                           </Button>
                           <Button
                               style={buttonStyle}
+                              size="small"
                               onClick={()=>{
                                   confirm({
                                       title: '友情提醒',

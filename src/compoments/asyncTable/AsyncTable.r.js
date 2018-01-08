@@ -74,6 +74,10 @@ export default class AsyncTable extends Component{
                 });
             }
 
+        }).catch(err=>{
+            this.mounted && this.setState({
+                loaded: true
+            });
         });
     }
     handleTableChange = (pagination, filters, sorter) => {

@@ -128,7 +128,6 @@ class PopUploadModal extends Component{
         this.setState({
             fileList
         },()=>{
-            console.log(this.state.fileList)
             this.props.form.setFieldsValue({
                 files: this.state.fileList,
             });
@@ -165,6 +164,10 @@ class PopUploadModal extends Component{
                         fileList: [],
                         uploading: false,
                     });
+                    /**
+                     * 关闭的时候清空表单
+                     * */
+                    this.props.form.resetFields();
                     message.success('导入成功！', 4)
                     //新增成功，关闭当前窗口,刷新父级组件
                     this.props.toggleUploadModalVisible(false);
