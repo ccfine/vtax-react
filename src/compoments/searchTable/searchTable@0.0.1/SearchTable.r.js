@@ -43,7 +43,6 @@ class SearchTable extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values)
                 for(let key in values){
                     if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
                         //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangPicker

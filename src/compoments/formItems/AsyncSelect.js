@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import {request} from '../../utils'
 const FormItem = Form.Item;
 const Option = Select.Option
-export default class TaxMain extends Component{
+export default class AsyncSelect extends Component{
     static propTypes={
         form:PropTypes.object.isRequired,
         formItemStyle:PropTypes.object,
@@ -18,7 +18,11 @@ export default class TaxMain extends Component{
         label:PropTypes.string.isRequired,
         url:PropTypes.string.isRequired,
         selectOptions:PropTypes.object,
-        decoratorOptions:PropTypes.object
+        doNotFetchDidMount:PropTypes.bool,
+        decoratorOptions:PropTypes.object,
+
+        //外部条件，用来提供给外部控制该组件是否要异步获取信息的条件，可选
+        fetchAble:PropTypes.any
     }
     static defaultProps={
         formItemStyle:{
@@ -34,22 +38,37 @@ export default class TaxMain extends Component{
         selectOptions:{
 
         },
+        doNotFetchDidMount:false,
         decoratorOptions:{
 
-        }
+        },
+        fetchAble:true
     }
-    state={
-        dataSource:[
-        ],
-        loaded:false
+
+    constructor(props){
+        super(props)
+        this.state={
+            dataSource:[
+            ],
+            loaded:props.doNotFetchDidMount
+        }
     }
     componentWillReceiveProps(nextProps){
         if(this.props.url !== nextProps.url){
-            this.fetch(nextProps.url)
+            if(nextProps.fetchAble){
+                this.fetch(nextProps.url)
+            }
+            if(!nextProps.decoratorOptions.initialValue){
+                nextProps.form.resetFields([nextProps.fieldName])
+                this.setState({
+                    dataSource:[]
+                })
+            }
+
         }
     }
     componentDidMount(){
-       this.fetch()
+        !this.props.doNotFetchDidMount && this.fetch()
     }
     toggleLoaded=loaded=>{
         this.setState({

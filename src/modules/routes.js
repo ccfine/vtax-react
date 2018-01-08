@@ -25,7 +25,7 @@ const routes = [
     },{
         path:`${PATH}/basisManage`,
         name:'基础管理',
-        icon:'user',
+        icon:'appstore-o',
         exact:true,
         permissions:true,
         redirect:true,
@@ -34,7 +34,7 @@ const routes = [
     },{
         path:`${PATH}/vatManage`,
         name:'增值税管理',   // 修改成  name:增值税管理
-        icon:'user',
+        icon:'desktop',
         exact:true,
         redirect:true,
         to:`${PATH}/vatManage/salesTaxAccount`,
@@ -43,7 +43,7 @@ const routes = [
     },{
         path:`${PATH}/taxDeclare`,
         name:'纳税申报',
-        icon:'user',
+        icon:'form',
         exact:true,
         permissions:false,
         component:TaxDeclare,
@@ -51,7 +51,7 @@ const routes = [
     },{
         path:`${PATH}/reportManage`,
         name:'报表管理',
-        icon:'user',
+        icon:'copy',
         exact:true,
         permissions:true,
         redirect:true,
@@ -60,7 +60,7 @@ const routes = [
     },{
         path:`${PATH}/systemManage`,
         name:'系统管理',
-        icon:'user',
+        icon:'global',
         exact:true,
         permissions:true,
         redirect:true,

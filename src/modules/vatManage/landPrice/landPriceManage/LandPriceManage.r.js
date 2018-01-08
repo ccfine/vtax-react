@@ -25,9 +25,7 @@ const getColumns =(context)=>[
                 <span style={pointerStyle} onClick={()=>{
                     context.setState({opid:record.id,visible:true});}}>编辑</span>
             </div>
-        ),
-        fixed:'left'
-
+        )
     },
     {
         title: '纳税主体',
