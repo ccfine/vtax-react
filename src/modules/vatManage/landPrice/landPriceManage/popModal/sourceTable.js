@@ -1,11 +1,11 @@
 import React from "react";
-import {Table,Card} from "antd";
+import {Table,Card,Popconfirm} from "antd";
 import PopModal from "./sourcePopModal/popModal";
 
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff',
-    marginRight:'10px'
+    marginRight:'5px'
 }
 
 const renderContent =function(length){ return ((value, row, index) => {
@@ -31,13 +31,18 @@ const getColumns =(context, length)=>[
             else {return (
             <div>
                 <span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,sourceid:record.id,action:"modify"});}}>编辑</span>
+                    context.setState({visible:true,source:record,readOnly:false,action:"modify"});}}>编辑</span>
                 <span style={pointerStyle} onClick={()=>{
-                        context.setState({visible:true});}}>删除</span>
+                    context.setState({visible:true,source:record,readOnly:true,action:"modify"});}}>查看</span>
+                 <Popconfirm placement="bottom" title={`是否确认删除？`} onConfirm={()=>{
+                        context.props.deleteSource(record)}} okText="删除" cancelText="不删">
+                    <span style={pointerStyle}>删除</span>
+                    </Popconfirm>
             </div>);
         }
     },
-        fixed:'left'
+        fixed:'left',
+        width:"100px"
     },
     {
         title: '付款类型',
@@ -57,8 +62,9 @@ export default class StageTable extends React.Component{
     state = {
         updateKey:Date.now(),
         visible:false,
-        sourceid:"",
-        action:"add"
+        source:{},
+        action:"add",
+        readOnly:false
     }
     showModal(){
         this.setState({visible:true});
@@ -70,23 +76,25 @@ export default class StageTable extends React.Component{
         
     }
     render(){
+        const dataSource = this.props.dataSource.filter((element)=>element.action!=="delete");
         return (
             <Card title="" extra={<a  onClick={()=>{
-                this.setState({visible:true,action:"add",sourceid:""})}}>新增</a>} style={{ width: "100%" }}>
+                this.setState({visible:true,action:"add",source:{}})}}>新增</a>} style={{ width: "100%" }}>
                 <Table 
-                columns={getColumns(this,this.props.dataSource?this.props.dataSource.length:0)} 
-                dataSource={this.props.dataSource} 
-                size="middle" pagination={false} 
+                columns={getColumns(this,dataSource?dataSource.length:0)} 
+                dataSource={dataSource} 
+                size="small" pagination={false} 
                 rowKey="id" 
                 loading={this.props.loading} 
                 />
                 <PopModal 
                 visible={this.state.visible} 
                 hideModal={()=>this.hideModal()} 
-                id={this.state.sourceid} 
+                source={this.state.source} 
                 action={this.state.action}
                 update = {this.props.updateSource}
                 add = {this.props.addSource}
+                readOnly = {this.state.readOnly}
                 />
             </Card>
         );

@@ -1,6 +1,6 @@
 import React from "react";
 import {Modal, Form, Input, Row, Col, Select} from "antd";
-import {request,requestDict} from '../../../../../../../utils'
+import {requestDict} from '../../../../../../../utils'
 import {CusFormItem} from "../../../../../../../compoments";
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -19,19 +19,14 @@ class PopModal extends React.Component{
         })
     }
     componentWillReceiveProps(props){
-        console.log("props",props);
-        if(props.action === "modify"){
-            this.props.form.resetFields();
-            request.get(`/land/priceSource/find/${props.id}`).then(({data}) => {
-                if(data.code===200){
-                    this.setState({source:data.data})
-                }});
-        }else if(props.action === "add" && this.props.action!==props.action){
-            this.setState({source:{}});
-        }
+        this.setState({source:Object.assign({},props.source)});
     }
-    handleOk(e){
-        e.preventDefault();
+    handleOk(){
+        if(this.props.readOnly){
+            this.props.hideModal();
+            return;
+        }
+
         this.props.form.validateFields((err, values) => {
         if (!err) {
             // 数据是新增还是修改
@@ -41,17 +36,19 @@ class PopModal extends React.Component{
                     newobj.priceClassTxt = item.name;
                 }
             });
+            newobj.amount = Number.parseFloat(newobj.amount);
             if(this.props.action === "add"){
                 newobj.id = Date.now();
-                newobj.id.action = "add";
+                newobj.action = "add";
                 this.props.add(newobj);
             }else if(this.props.action === "modify"){
                 // 考虑添加后修改的情况
-                newobj.id.action = newobj.id.action?"modify":newobj.id.action;
+                newobj.action = newobj.action?"modify":newobj.action;
                 this.props.update(newobj);
             }
             
             this.props.hideModal();
+            this.props.form.resetFields();
         }
         });
     }
@@ -92,7 +89,7 @@ class PopModal extends React.Component{
                                 { required: true, message: '必录' },
                             ]    
                         })(
-                            <Select>
+                            <Select disabled={this.props.readOnly}>
                                 {
                                     this.state.priceClassDic.map((item)=><Option key={item.id} value={item.id}>{item.name}</Option>)
                                 }
@@ -114,7 +111,7 @@ class PopModal extends React.Component{
                                 { required: true, message: '必录' },
                             ] 
                         })(
-                            <NumericInput />
+                            <NumericInput disabled={this.props.readOnly}/>
                         )}
                     </FormItem>
                   </Col>
@@ -127,7 +124,7 @@ class PopModal extends React.Component{
                         label="票据类型"
                         >
                         {getFieldDecorator('billType',{initialValue:record.billType})(
-                            <Input/>
+                            <Input disabled={this.props.readOnly}/>
                         )}
                     </FormItem>
                   </Col>

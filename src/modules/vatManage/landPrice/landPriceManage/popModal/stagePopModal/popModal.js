@@ -1,12 +1,27 @@
 import React from "react";
 import { Modal, Form, Input, Row, Col, Radio } from 'antd';
-import {request} from '../../../../../../utils'
+import {request} from '../../../../../../utils';
+import {CusFormItem} from "../../../../../../compoments";
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+const {NumericInput} = CusFormItem;
 
 class PopModal extends React.Component{
     state={
         stage:{}
+    }
+    handOK(e){
+        if(this.props.readOnly){
+            this.props.hideModal();
+            return;
+        }
+
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                this.props.update(Object.assign({},this.state.stage,values));
+                this.props.hideModal();
+            }
+        });
     }
     componentWillReceiveProps(props){
         if(this.props.id !== props.id){
@@ -34,7 +49,9 @@ class PopModal extends React.Component{
             visible={this.props.visible}
             title="修改"
             onCancel={this.props.hideModal}
-            onOk={()=>{}}
+            onOk={(e)=>{
+                this.handOK(e);
+            }}
             style={{maxWidth:'90%'}}
             width={820}
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
@@ -81,7 +98,7 @@ class PopModal extends React.Component{
                        label="施工证面积（㎡）"
                        >
                        {getFieldDecorator('upArea',{initialValue:this.state.stage.upArea})(
-                           <Input disabled={true}/>
+                           <NumericInput disabled={true}/>
                        )}
                    </FormItem>
                  </Col>
@@ -91,7 +108,7 @@ class PopModal extends React.Component{
                        label="调整后施工证面积（㎡）"
                        >
                        {getFieldDecorator('certificateArea',{initialValue:this.state.stage.certificateArea})(
-                           <Input/>
+                           <NumericInput disabled={this.props.readOnly}/>
                        )}
                    </FormItem>
                  </Col>
@@ -103,7 +120,7 @@ class PopModal extends React.Component{
                        label="可售面积（㎡）"
                        >
                        {getFieldDecorator('upAreaSale',{initialValue:this.state.stage.upAreaSale})(
-                           <Input disabled={true}/>
+                           <NumericInput disabled={true}/>
                        )}
                    </FormItem>
                  </Col>
@@ -113,7 +130,7 @@ class PopModal extends React.Component{
                        label="调整后可售面积（㎡）"
                        >
                        {getFieldDecorator('ableSaleArea',{initialValue:this.state.stage.ableSaleArea})(
-                          <Input/>
+                          <NumericInput disabled={this.props.readOnly}/>
                        )}
                    </FormItem>
                  </Col>
@@ -125,7 +142,7 @@ class PopModal extends React.Component{
                        label="可分摊土地价款比例"
                        >
                        {getFieldDecorator('apportionLandPriceProportion',{initialValue:this.state.stage.apportionLandPriceProportion})(
-                           <Input/>
+                           <NumericInput disabled={true}/>
                        )}
                    </FormItem>
                        </Col>
@@ -135,7 +152,7 @@ class PopModal extends React.Component{
                        label="分摊后土地价款"
                        >
                        {getFieldDecorator('apportionLandPrice',{initialValue:this.state.stage.apportionLandPrice})(
-                           <Input/>
+                           <NumericInput disabled={true}/>
                        )}
                     </FormItem>
                     </Col>
@@ -144,13 +161,20 @@ class PopModal extends React.Component{
              <Row>
                  <Col span={12}>
                  <FormItem
-                       {...formItemLayout}
+                       labelCol= {{
+                        xs: { span: 12 },
+                        sm: { span: 10 },
+                      }}
+                      wrapperCol= {{
+                        xs: { span: 12 },
+                        sm: { span: 14 },
+                      }}
                        label="可抵扣的土地价款比例设置"
                        >
                        {getFieldDecorator('setUp',{initialValue:this.state.stage.setUp})(
-                           <RadioGroup >
-                           <Radio value={1}>按调整后可售面积（㎡）/调整后施工证面积（㎡）</Radio>
-                           <Radio value={2}>100%</Radio>
+                           <RadioGroup  disabled={this.props.readOnly}>
+                           <Radio value={2}>按调整后可售面积（㎡）/调整后施工证面积（㎡）</Radio>
+                           <Radio value={1}>100%</Radio>
                          </RadioGroup>
                        )}
                    </FormItem>
@@ -163,7 +187,7 @@ class PopModal extends React.Component{
                        label="可抵扣的土地价款比例"
                        >
                        {getFieldDecorator('deductibleLandPriceProportion',{initialValue:this.state.stage.deductibleLandPriceProportion})(
-                           <Input/>
+                           <NumericInput disabled={true}/>
                        )}
                    </FormItem>
                        </Col>
@@ -173,7 +197,7 @@ class PopModal extends React.Component{
                        label="可抵扣土地价款"
                        >
                        {getFieldDecorator('deductibleLandPrice',{initialValue:this.state.stage.deductibleLandPrice})(
-                           <Input/>
+                           <NumericInput disabled={true}/>
                        )}
                     </FormItem>
                     </Col>
@@ -186,7 +210,7 @@ class PopModal extends React.Component{
                        label="已售建筑面积（㎡）"
                        >
                        {getFieldDecorator('saleArea',{initialValue:this.state.stage.notOffsetLandPrice})(
-                           <Input/>
+                           <NumericInput disabled={this.props.readOnly}/>
                        )}
                    </FormItem>
                        </Col>
@@ -196,7 +220,7 @@ class PopModal extends React.Component{
                        label="已实际抵扣土地价款"
                        >
                        {getFieldDecorator('actualDeductibleLandPrice',{initialValue:this.state.stage.actualDeductibleLandPrice})(
-                           <Input/>
+                           <NumericInput disabled={this.props.readOnly}/>
                        )}
                     </FormItem>
                     </Col>
@@ -208,12 +232,11 @@ class PopModal extends React.Component{
                        label="单方土地成本"
                        >
                        {getFieldDecorator('singleLandCost',{initialValue:this.state.stage.singleLandCost})(
-                           <Input/>
+                           <NumericInput disabled={true}/>
                        )}
                    </FormItem>
                        </Col>
              </Row>
-             
          </Form>
           </Modal>
         );
