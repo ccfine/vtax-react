@@ -348,7 +348,7 @@ class InvoiceCollection extends Component {
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,
-                                    size:'middle',
+                                    size:'small',
                                     columns:this.columns,
                                     rowSelection:rowSelection,
                                     renderFooter:data=>{

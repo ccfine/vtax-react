@@ -32,7 +32,7 @@ class PopDifferenceModal extends Component{
             if (!err) {
                 const data = {
                     ...values,
-                    id:this.props.selectedRowKeys[0]
+                    id:this.props.selectedRows[0].id
                 }
                 this.setState({
                     loading: true,
@@ -46,6 +46,7 @@ class PopDifferenceModal extends Component{
                                 loading: false,
                             });
                             message.success('提交成功！', 4)
+                            this.props.form.resetFields();
                             //新增成功，关闭当前窗口,刷新父级组件
                             this.props.toggleModalVisible(false);
                             this.props.updateTable();
@@ -66,6 +67,10 @@ class PopDifferenceModal extends Component{
         })
     }
 
+    handleReset = () => {
+        this.props.form.resetFields();
+        this.props.toggleModalVisible(false)
+    }
     render(){
         const { loading } = this.state;
         const props = this.props;
@@ -85,7 +90,7 @@ class PopDifferenceModal extends Component{
                         <Col span={12}></Col>
                         <Col span={12}>
                             <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                            <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
+                            <Button onClick={this.handleReset}>取消</Button>
                         </Col>
                     </Row>
                 }
@@ -96,7 +101,7 @@ class PopDifferenceModal extends Component{
                             <Col span={24}>
                                 <FormItem label='差异原因' {...formItemLayout}>
                                     {getFieldDecorator(`causeDifference`,{
-                                        initialValue:props.selectedRowKeys && props.selectedRowKeys[0].causeDifference,
+                                        initialValue:props.selectedRows && props.selectedRows[0].causeDifference,
                                         rules:[
                                             {
                                                 max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
