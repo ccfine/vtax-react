@@ -11,21 +11,23 @@ import RouteWithSubRoutes from './routeWithSubRoutes'
 import wrapPage from './titlePage'
 import Carousel from './carousel'
 import NavRouter from './nav'
-import CountTable from './countTable'
 import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
 import SynchronizeTable from './synchronizeTable'
+import {AutoFileUpload,ManualFileUpload} from './fileUpload'
 import FileExport from './fileExport'
 import SearchTable from './searchTable'
+
 export {
     RouteWithSubRoutes,
     wrapPage,
     Carousel,
     NavRouter,
-    CountTable,
     AsyncTable,
     CusFormItem,
     SynchronizeTable,
+    AutoFileUpload,
+    ManualFileUpload,
     FileExport,
     SearchTable
 }

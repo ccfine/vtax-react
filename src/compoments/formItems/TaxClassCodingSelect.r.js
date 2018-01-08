@@ -26,27 +26,20 @@ export default class TaxClassCodingSelect extends Component{
 
         }
     }
-    state={
-
-    }
     mounted = true
     componentWillUnmount(){
         this.mounted=null;
     }
     render(){
-        const {dataSource,setFieldsValue,fieldName} = this.props;
-        const nextDataSource = this.state.dataSource ? this.state.dataSource :dataSource;
+        const {setFieldsValue,fieldName,onChange,conditionValue} = this.props;
         return(
             <div>
-            <Select {...this.props} disabled>
-                {
-                    nextDataSource.map((item,i)=>(
-                            <Select.Option key={i} value={item.value}>{item.text}</Select.Option>
-                        )
-                    )
-                }
-            </Select>
-                <TaxClassSelectPage fieldName={fieldName} setDataSource={(dataSource,cb) => this.setState({dataSource},cb)} setFieldsValue={setFieldsValue} />
+            <Select labelInValue {...this.props} disabled />
+                <TaxClassSelectPage
+                    conditionValue={conditionValue}
+                    fieldName={fieldName}
+                    onChange={data=>onChange(data)}
+                    setFieldsValue={setFieldsValue} />
          </div>
         )
     }
@@ -78,24 +71,50 @@ const searchFields = [
 const getColumns = context => [
     {
         title:'操作',
-        dataIndex:'actions',
-        fixed:true,
+        key:'actions',
+        width:'10%',
         render:(text,record)=>(
             <Button
                 size='small'
                 onClick={()=>{
-                    const {setFieldsValue,setDataSource,fieldName} = context.props;
-                    setDataSource([
-                        {
-                            text:record.num,
-                            value:record.id
-                        }
-                    ],()=>{
-                        setFieldsValue({
-                            [fieldName]:record.id
+                    const {setFieldsValue,fieldName,conditionValue} = context.props;
+                    let fieldData =  {
+                        ...record,
+                        key:record.id,
+                        label:record.num
+                    }
+                    let taxMethod = parseInt(conditionValue.taxMethod,0),
+                        taxRate = parseFloat(conditionValue.taxRate);
+
+                    //这里是针对外部传入的默认税率以及默认计税方法进行比较，有差异则提示
+                    if( ( taxMethod===1 &&  taxRate !== parseFloat(record.commonlyTaxRate) ) || ( taxMethod===2 &&  taxRate !== parseFloat(record.simpleTaxRate) ) ){
+                        Modal.confirm({
+                            content: '1条发票税率与税收分类编码税率对应税率不一致，是否有差额开票情况，是否继续设置？',
+                            onOk() {
+                                setFieldsValue({
+                                    [fieldName]:fieldData
+                                })
+                                setFieldsValue({
+                                    'taxableItem':record.taxableProjectName
+                                })
+                                context.props.onChange && context.props.onChange(fieldData)
+                                context.toggleModalVisible(false)
+                            },
+                            onCancel() {
+
+                            },
                         })
+                    }else{
+                        setFieldsValue({
+                            [fieldName]:fieldData
+                        })
+                        setFieldsValue({
+                            'taxableItem':record.taxableProjectName
+                        })
+                        context.props.onChange && context.props.onChange(fieldData)
                         context.toggleModalVisible(false)
-                    })
+                    }
+
                 }}
                 style={{cursor:'pointer',color:'#1890ff'}}>选择</Button>
         )
@@ -103,18 +122,23 @@ const getColumns = context => [
     {
         title: '税收分类编码',
         dataIndex: 'num',
+        width:'18%'
     }, {
         title: '商品名称',
-        dataIndex: 'commodityName'
+        dataIndex: 'commodityName',
+        width:'18%'
     }, {
         title: '应税项目',
-        dataIndex: 'taxableProjectName'
+        dataIndex: 'taxableProjectName',
+        width:'18%'
     }, {
         title: '一般增值税税率',
-        dataIndex: 'commonlyTaxRate'
+        dataIndex: 'commonlyTaxRate',
+        width:'18%'
     }, {
         title: '简易增值税税率',
-        dataIndex: 'simpleTaxRate'
+        dataIndex: 'simpleTaxRate',
+        width:'18'
     }
 ]
 class TaxClassSelectPage extends Component{
@@ -171,7 +195,7 @@ class TaxClassSelectPage extends Component{
                         }}
                         tableOption={{
                             columns:getColumns(this),
-                            results:20,
+                            pageSize:20,
                             url:'/tax/classification/coding/list',
                             cardProps:{
                                 title:''

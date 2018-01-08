@@ -1,8 +1,14 @@
 /**
  * Created by liurunbin on 2018/1/2.
  */
-import React, { Component } from 'react'
-import {SearchTable} from '../../../../compoments'
+import React, { Component } from 'react';
+import {SearchTable} from '../../../../compoments';
+import PopModal from "./popModal";
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff'
+}
+
 const searchFields = [
     {
         label:'纳税主体',
@@ -10,7 +16,17 @@ const searchFields = [
         fieldName:'mainId',
     }
 ]
-const columns = [
+const getColumns =(context)=>[
+    {
+        title:'操作',
+        key:'actions',
+        render:(text,record)=>(
+            <div>
+                <span style={pointerStyle} onClick={()=>{
+                    context.setState({opid:record.id,visible:true});}}>编辑</span>
+            </div>
+        )
+    },
     {
         title: '纳税主体',
         dataIndex: 'mainName',
@@ -42,18 +58,31 @@ const columns = [
 ];
 
 export default class LandPriceManage extends Component{
+    state={
+        visible:false, // 控制Modal是否显示
+        opid:"" // 当前操作的记录
+    }
+    showModal(){
+        this.setState({visible:true});
+    }
+    hideModal(){
+        this.setState({visible:false});
+    }
     render(){
         return(
-            <SearchTable
-                searchOption={{
-                    fields:searchFields
-                }}
-                tableOption={{
-                    columns,
-                    url:'/landPriceInfo/list'
-                }}
-            >
-            </SearchTable>
+            <div>
+                <SearchTable
+                    searchOption={{
+                        fields:searchFields
+                    }}
+                    tableOption={{
+                        columns:getColumns(this),
+                        url:'/landPriceInfo/list'
+                    }}
+                >
+                </SearchTable>
+                <PopModal visible={this.state.visible} hideModal={()=>{this.hideModal()}} id={this.state.opid}/>
+            </div>
         )
     }
 }

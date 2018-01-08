@@ -91,7 +91,7 @@ class PopModal extends Component{
                 width={1920}
                 bodyStyle={{
                     padding:0,
-                    height:500,
+                    height:400,
                     overflowY:'scroll'
                 }}
                 style={{
@@ -104,7 +104,7 @@ class PopModal extends Component{
                     key={this.state.cardKey}
                     onTabChange={(key) => { this.onTabChange(key, 'key'); }}
                 >
-                    {props.projectId && getContent(this.state.key,`${props.projectId[0]}`)}
+                    {props.projectId && getContent(this.state.key,`${props.projectId}`)}
                 </Card>
             </Modal>
         )
