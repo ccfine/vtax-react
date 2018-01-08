@@ -69,8 +69,13 @@ class PopModal extends Component{
     }
     addDate = (data, item) =>{
         let arry = [];
-        arry.push({...item});
-        let t = this.addKey(data.concat(arry));
+        let t = null;
+            arry.push(item);
+        if(typeof (data) === 'undefined'){
+            t = this.addKey([].concat(arry));
+        }else{
+            t = this.addKey(data.concat(arry));
+        }
         this.props.setGdjcgDate(t);
     }
 

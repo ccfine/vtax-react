@@ -31,3 +31,66 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+.ant-table-small{
+  border-radius:0;
+  border:1px solid #ccc;
+  border-right:none;
+}
+.ant-table-tbody > tr > td{
+  border-color:#ccc;
+  border-right:1px solid #ccc;
+}
+.ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td{
+  padding:3px;
+}
+.ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,.ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td{
+  padding:3px 3px!important;
+}
+.ant-table-small > .ant-table-content > .ant-table-header > table, .ant-table-small > .ant-table-content > .ant-table-body > table{
+  padding:0;
+}
+.ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
+  border-color:#ccc;
+  border-right:1px solid #ccc;
+  background:#fafafa;
+}
+.ant-table-thead > tr > th{
+  border-right:1px solid #ccc;
+}
+
+/*card*/
+.ant-card-head{
+  min-height:10px;
+}
+
+/*pagination*/
+.ant-table-pagination.ant-pagination{
+  margin:8px 0;
+}
+
+/*modal*/
+.ant-modal-header{
+  padding:8px 12px !important;
+}
+.ant-modal-body{
+  padding:12px;
+}
+.ant-modal-footer{
+  padding:10px 12px;
+}
+.ant-modal-close-x{
+  width:35px;
+  height:35px;
+  line-height:35px;
+}
+
+/*tab*/
+.ant-tabs-large .ant-tabs-tab{
+  padding:8px;
+}
+
+.search-card .ant-form-item{
+  margin-bottom:0;
+}
+
+/*button*/

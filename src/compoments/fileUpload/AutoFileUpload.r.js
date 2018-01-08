@@ -3,7 +3,7 @@ import {message,Upload,Button,Icon} from 'antd';
 import {connect} from 'react-redux'
 
 
-class CompanyFileUploadItem extends Component{
+class AutoFileUpload extends Component{
     onChange=info=>{
         if (info.file.status === 'uploading') {
             console.log('uploading');
@@ -23,7 +23,7 @@ class CompanyFileUploadItem extends Component{
     //不设置accept的原因是设置之后osx下弹出文件选择会特别慢
     getUpLoadProps = props => ({
         name: 'files',
-        action:`${window.baseURL}project/upload/${props.taxSubjectId}`,
+        action:`${window.baseURL+this.props.url}`,
         headers: {
             Authorization:props.token,
         },
@@ -31,7 +31,7 @@ class CompanyFileUploadItem extends Component{
     });
     render(){
         return(
-            <div style={{display:'inline-block',marginRight:15}}>
+            <div style={{display:'inline-block',marginRight:5}}>
                     <Upload {...this.getUpLoadProps(this.props)} onChange={this.onChange.bind(this)}>
                             <Button size="small" style={{marginTop:10}}>
                                 <Icon type="upload" /> 导入
@@ -44,4 +44,4 @@ class CompanyFileUploadItem extends Component{
 
 export default connect(state=>({
     token:state.user.get('token')
-}))(CompanyFileUploadItem)
+}))(AutoFileUpload)

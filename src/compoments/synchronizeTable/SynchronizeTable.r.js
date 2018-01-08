@@ -61,7 +61,11 @@ export default class SynchronizeTable extends Component{
         const {loaded,pagination}  = this.state;
         const {props} = this;
         return(
-            <Table {...props.tableProps} dataSource={props.data} pagination={props.tableProps.pagination ? pagination : false} onChange={this.handleTableChange} loading={!loaded}/>
+            <Table {...props.tableProps}
+                   dataSource={props.data}
+                   pagination={props.tableProps.pagination ? pagination : false}
+                   onChange={this.handleTableChange} loading={!loaded}
+            />
         )
     }
 }

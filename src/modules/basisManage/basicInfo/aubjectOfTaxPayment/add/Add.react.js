@@ -94,11 +94,11 @@ class Add extends Component {
             if (item.id.indexOf('t') > -1) {
                 return {
                     capitalRemark: item.capitalRemark,
-                    collectionCapitalAmount: item.collectionCapitalAmount,
+                    collectionCapitalAmount: parseFloat(`${item.collectionCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
                     collectionCapitalCurrency: item.collectionCapitalCurrency,
                     propertyRemark: item.propertyRemark,
                     realStockholder: item.realStockholder,
-                    registeredCapitalAmount: item.registeredCapitalAmount,
+                    registeredCapitalAmount: parseFloat(`${item.registeredCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
                     registeredCapitalCurrency: item.registeredCapitalCurrency,
                     registeredStockholder: item.registeredStockholder,
                     situation: item.situation,
@@ -111,11 +111,11 @@ class Add extends Component {
                 return {
                     id: item.id,
                     capitalRemark: item.capitalRemark,
-                    collectionCapitalAmount: item.collectionCapitalAmount,
+                    collectionCapitalAmount: parseFloat(`${item.collectionCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
                     collectionCapitalCurrency: item.collectionCapitalCurrency,
                     propertyRemark: item.propertyRemark,
                     realStockholder: item.realStockholder,
-                    registeredCapitalAmount: item.registeredCapitalAmount,
+                    registeredCapitalAmount: parseFloat(`${item.registeredCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
                     registeredCapitalCurrency: item.registeredCapitalCurrency,
                     registeredStockholder: item.registeredStockholder,
                     situation: item.situation,
@@ -152,6 +152,8 @@ class Add extends Component {
                         localTaxProvince:values.jbxx.localTaxProvince[0],
                         localTaxCity:values.jbxx.localTaxProvince[1],
                         localTaxArea:values.jbxx.localTaxProvince[2],
+                        currencyAmount:values.jbxx.currencyAmount && parseFloat(`${values.jbxx.currencyAmount}`.replace(/\$\s?|(,*)/g, '')),
+                        receiptCurrencyAmount:values.jbxx.receiptCurrencyAmount && parseFloat(`${values.jbxx.receiptCurrencyAmount}`.replace(/\$\s?|(,*)/g, '')),
                         registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
                         openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
                     },
@@ -161,6 +163,7 @@ class Add extends Component {
                 }
 
                 console.log(data);
+                debugger
 
                 this.mounted && this.setState({
                     submitLoading: true
@@ -309,6 +312,7 @@ class Add extends Component {
                     maskClosable={false}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
+                    style={{ top: 25 }}
                     visible={visible}
                     footer={
                         type !== 'view' && <Row>

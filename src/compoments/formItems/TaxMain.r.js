@@ -19,7 +19,8 @@ function fetchTaxMain(value, callback) {
     const fetch = ()=> {
         request.get(`/taxsubject/listByName`,{
             params:{
-                name:value
+                name:value,
+                size:100
             }
         })
             .then(({data}) => {
@@ -70,23 +71,7 @@ export default class TaxMain extends Component{
         fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
     }
     componentDidMount(){
-        request.get(`/taxsubject/list`,{
-            params:{
-                results:100
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200){
-                    this.setState({
-                        mainTaxItems:data.data.records.map(item=>{
-                            return {
-                                value:item.id,
-                                text:item.name
-                            }
-                        })
-                    })
-                }
-            });
+        this.onSearch('');
     }
     render(){
         const {mainTaxItems}=this.state;

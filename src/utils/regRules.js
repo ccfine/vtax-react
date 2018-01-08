@@ -105,10 +105,6 @@ export default {
         pattern:/^[0-9a-f]{2}([:][0-9a-f]{2}){5}$|^[0-9a-f]{2}([-][0-9a-f]{2}){5}$/i,
         message:'非法的MAC地址'
     },
-    input_length_50:{
-        max:50,
-        message:'不能超过50个字符'
-    },
     textarea_length_100:{
         max:100,
         message:'不能超过100个字符'
@@ -124,5 +120,5 @@ export default {
     input_length_50:{
         max:20,
         message:'不能超过20个字符'
-    },
+    }
 }

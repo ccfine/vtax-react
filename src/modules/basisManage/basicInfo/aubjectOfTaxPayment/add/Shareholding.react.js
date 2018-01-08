@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import {Layout,Card,Button,Icon,Modal} from 'antd'
 import {SynchronizeTable} from '../../../../../compoments'
+import {fMoney} from '../../../../../utils'
 import PopModal from './shareholdingPopModal'
 const confirm = Modal.confirm;
 const buttonStyle={
@@ -37,6 +38,7 @@ const columns = [{
     }, {
         title: '原币金额(万元)',
         dataIndex: 'registeredCapitalAmount',
+        render:text=>fMoney(text),
     }, {
         title: '备注',
         dataIndex: 'capitalRemark',
@@ -49,6 +51,7 @@ const columns = [{
     }, {
         title: '原币金额(万元) ',
         dataIndex: 'collectionCapitalAmount',
+        render:text=>fMoney(text),
     }],
 },{
     title: '代持情况',
@@ -122,77 +125,79 @@ class Shareholding extends Component {
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card title="查询结果"
-                      extra={
-                              this.props.type !== 'view' ?  <div>
-                                  <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
-                                      <Icon type="file-add" />
-                                      新增
-                                  </Button>
-                                  <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                      <Icon type="edit" />
-                                      编辑
-                                  </Button>
-                                  <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                      <Icon type="search" />
-                                      查看
-                                  </Button>
-                                  <Button
-                                      onClick={()=>{
-                                          confirm({
-                                              title: '友情提醒',
-                                              content: '该删除后将不可恢复，是否删除？',
-                                              okText: '确定',
-                                              okType: 'danger',
-                                              cancelText: '取消',
-                                              onOk:()=>{
-                                                  const nowKeys = defaultData;
-                                                  const keys = this.state.selectedRows;
-                                                  for(let i = 0;i<nowKeys.length;i++){
-                                                      for(let j = 0; j<keys.length;j++){
-                                                          if(nowKeys[i] === keys[j]){
-                                                              nowKeys.splice(i,1)
+                <div style={{height:this.props.type !== 'view' ? '390px' : '443px',overflow:'hidden',overflowY:'scroll'}}>
+                    <Card title="查询结果"
+                          extra={
+                                  this.props.type !== 'view' ?  <div>
+                                      <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                          <Icon type="file-add" />
+                                          新增
+                                      </Button>
+                                      <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                          <Icon type="edit" />
+                                          编辑
+                                      </Button>
+                                      <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                          <Icon type="search" />
+                                          查看
+                                      </Button>
+                                      <Button
+                                          onClick={()=>{
+                                              confirm({
+                                                  title: '友情提醒',
+                                                  content: '该删除后将不可恢复，是否删除？',
+                                                  okText: '确定',
+                                                  okType: 'danger',
+                                                  cancelText: '取消',
+                                                  onOk:()=>{
+                                                      const nowKeys = defaultData;
+                                                      const keys = this.state.selectedRows;
+                                                      for(let i = 0;i<nowKeys.length;i++){
+                                                          for(let j = 0; j<keys.length;j++){
+                                                              if(nowKeys[i] === keys[j]){
+                                                                  nowKeys.splice(i,1)
+                                                              }
                                                           }
                                                       }
-                                                  }
-                                                  this.props.setGdjcgDate(nowKeys);
-                                                  this.setSelectedRowKeysAndselectedRows(null,{});
-                                                  this.toggleModalVisible(false)
+                                                      this.props.setGdjcgDate(nowKeys);
+                                                      this.setSelectedRowKeysAndselectedRows(null,{});
+                                                      this.toggleModalVisible(false)
 
-                                              },
-                                              onCancel:()=>{
-                                                  console.log('Cancel');
-                                              },
-                                          });
-                                      }}
-                                      disabled={!selectedRowKeys}
-                                      type='danger'>
-                                      <Icon type="delete" />
-                                      删除
-                                  </Button>
-                              </div>
-                                  :
-                              <div>
-                                  <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                      <Icon type="search" />
-                                      查看
-                                  </Button>
-                              </div>
+                                                  },
+                                                  onCancel:()=>{
+                                                      console.log('Cancel');
+                                                  },
+                                              });
+                                          }}
+                                          disabled={!selectedRowKeys}
+                                          type='danger'>
+                                          <Icon type="delete" />
+                                          删除
+                                      </Button>
+                                  </div>
+                                      :
+                                  <div>
+                                      <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                          <Icon type="search" />
+                                          查看
+                                      </Button>
+                                  </div>
 
-                      }
-                      style={{marginTop:10}}>
+                          }
+                          style={{marginTop:10}}>
 
-                    <SynchronizeTable data={defaultData}
-                                updateKey={tableUpDateKey}
-                                tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:true,
-                                    bordered:true,
-                                    size:'middle',
-                                    columns:columns,
-                                    rowSelection:rowSelection
-                                }} />
-                </Card>
+                        <SynchronizeTable data={defaultData}
+                                    updateKey={tableUpDateKey}
+                                    tableProps={{
+                                        rowKey:record=>record.id,
+                                        pagination:true,
+                                        bordered:true,
+                                        size:'middle',
+                                        columns:columns,
+                                        rowSelection:rowSelection
+                                    }} />
+                    </Card>
+                </div>
                 <PopModal
                     visible={visible}
                     modalConfig={modalConfig}
