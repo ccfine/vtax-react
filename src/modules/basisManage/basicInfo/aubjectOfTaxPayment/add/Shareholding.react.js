@@ -125,23 +125,24 @@ class Shareholding extends Component {
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <div style={{height:this.props.type !== 'view' ? '390px' : '443px',overflow:'hidden',overflowY:'scroll'}}>
+                <div style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
                     <Card title="查询结果"
                           extra={
                                   this.props.type !== 'view' ?  <div>
-                                      <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                      <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                                           <Icon type="file-add" />
                                           新增
                                       </Button>
-                                      <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                                           <Icon type="edit" />
                                           编辑
                                       </Button>
-                                      <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                                           <Icon type="search" />
                                           查看
                                       </Button>
                                       <Button
+                                          size="small"
                                           onClick={()=>{
                                               confirm({
                                                   title: '友情提醒',

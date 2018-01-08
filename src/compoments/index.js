@@ -11,7 +11,6 @@ import RouteWithSubRoutes from './routeWithSubRoutes'
 import wrapPage from './titlePage'
 import Carousel from './carousel'
 import NavRouter from './nav'
-import CountTable from './countTable'
 import AsyncTable from './asyncTable'
 import CusFormItem from './formItems'
 import SynchronizeTable from './synchronizeTable'
@@ -24,7 +23,6 @@ export {
     wrapPage,
     Carousel,
     NavRouter,
-    CountTable,
     AsyncTable,
     CusFormItem,
     SynchronizeTable,

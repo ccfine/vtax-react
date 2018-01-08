@@ -4,12 +4,11 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal} from 'antd'
 import {AsyncTable,CusFormItem} from '../../../../compoments'
 import ProjectInformationManagement from './projectInformationManagement'
 import AddEditModal from './add'
-import {request} from '../../../../utils'
-const confirm = Modal.confirm;
+
 const buttonStyle={
     marginRight:5
 }
@@ -34,7 +33,34 @@ const columns = [{
 },{
     title: '营业状态',
     dataIndex: 'operatingStatus',
-    render:text=>parseInt(text,0) ===1?'营业':'停业'
+    render:text=>parseInt(text,0) ===1 ? <span style={{color: "#87d068"}}>营业</span> : <span style={{color: "red"}}>停业</span>,
+},{
+    title: '更新人',
+    dataIndex: 'lastModifiedBy',
+},{
+    title: '更新时间',
+    dataIndex: 'lastModifiedDate',
+},{
+    title: '当前状态',
+    dataIndex: 'status',
+    render:text=>{
+        //0:删除;1:保存;2:提交; ,
+        let t = '';
+        switch (parseInt(text,0)){
+            case 0:
+                t=<span style={{color: "red"}}>删除</span>;
+                break;
+            case 1:
+                t=<span style={{color: "#2db7f5"}}>保存</span>;
+                break;
+            case 2:
+                t=<span style={{color: "#108ee9"}}>提交</span>;
+                break;
+            default:
+            //no default
+        }
+        return t
+    },
 }];
 class AubjectOfTaxPayment extends Component {
     state={
@@ -47,7 +73,7 @@ class AubjectOfTaxPayment extends Component {
          * */
         tableUpDateKey:Date.now(),
         selectedRowKeys:null,
-        selectedRows:{},
+        selectedRows:null,
         visible:false,
         modalConfig:{
             type:''
@@ -106,6 +132,7 @@ class AubjectOfTaxPayment extends Component {
     }
     render() {
         const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
+
         const formItemStyle={
             labelCol:{
                 span:6
@@ -139,48 +166,29 @@ class AubjectOfTaxPayment extends Component {
                               <Icon type="plus-circle" />
                               新增
                           </Button>
-                          <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
                               <Icon type="edit" />
                               编辑
                           </Button>
-                          <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('view')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 1) && !(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
                               <Icon type="search" />
                               查看
                           </Button>
-                          <Button
-                              style={buttonStyle}
-                              size="small"
-                              onClick={()=>{
-                                  confirm({
-                                      title: '友情提醒',
-                                      content: '该删除后将不可恢复，是否删除？',
-                                      okText: '确定',
-                                      okType: 'danger',
-                                      cancelText: '取消',
-                                      onOk:()=>{
-
-                                          request.delete(`/taxsubject/delete/${this.state.selectedRowKeys[0]}`)
-                                              .then(({data})=>{
-                                                  if(data.code===200){
-                                                      message.success('删除成功!');
-                                                      this.updateTable();
-                                                  }else{
-                                                      message.error(data.msg)
-                                                  }
-                                              })
-
-                                          ///this.setSelectedRowKeysAndselectedRows(null,{});
-                                          this.toggleModalVisible(false)
-                                      },
-                                      onCancel:()=>{
-                                          console.log('Cancel');
-                                      },
-                                  });
-                              }}
-                              disabled={!selectedRowKeys}
-                              type='danger'>
-                              <Icon type="delete" />
-                              删除
+                          <Button size="small"
+                                  disabled={!selectedRowKeys}
+                                  style={buttonStyle}
+                                  onClick={()=>{
+                                      const ref = Modal.warning({
+                                          content: '研发中...',
+                                          okText: '关闭',
+                                          onOk:()=>{
+                                              ref.destroy();
+                                          }
+                                      });
+                                  }}
+                          >
+                              <Icon type="search" />
+                              查看历史版本
                           </Button>
                           <ProjectInformationManagement disabled={!selectedRowKeys} taxSubjectId={selectedRowKeys} />
                       </div>}
@@ -191,7 +199,7 @@ class AubjectOfTaxPayment extends Component {
                                 tableProps={{
                                     rowKey:record=>`${record.id}`,
                                     pagination:true,
-                                    size:'middle',
+                                    size:'small',
                                     columns:columns,
                                     rowSelection:rowSelection
                                 }} />
