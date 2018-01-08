@@ -36,7 +36,7 @@ class PopModal extends React.Component{
         if (!err) {
             // 数据是新增还是修改
             let newobj = Object.assign({},this.state.source,values);
-            this.state.priceClassDic.map((item)=>{
+            this.state.priceClassDic.forEach((item)=>{
                 if(item.id === newobj.priceClass){
                     newobj.priceClassTxt = item.name;
                 }
