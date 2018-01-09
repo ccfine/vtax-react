@@ -122,7 +122,6 @@ class LandPriceInfo extends React.Component{
                         </FormItem>
                             </Col>
                   </Row>
-                  
                   <Row>
                       <Col span={12}>
                       <FormItem

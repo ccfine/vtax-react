@@ -6,7 +6,8 @@ import {SearchTable} from '../../../../compoments';
 import PopModal from "./popModal";
 const pointerStyle = {
     cursor:'pointer',
-    color:'#1890ff'
+    color:'#1890ff',
+    marginRight:'5px'
 }
 
 const searchFields = [
@@ -23,9 +24,13 @@ const getColumns =(context)=>[
         render:(text,record)=>(
             <div>
                 <span style={pointerStyle} onClick={()=>{
-                    context.setState({opid:record.id,visible:true});}}>编辑</span>
+                    context.setState({opid:record.id,readOnly:false,visible:true});}}>编辑</span>
+                    <span style={pointerStyle} onClick={()=>{
+                    context.setState({opid:record.id,readOnly:true,visible:true});}}>查看</span>
             </div>
-        )
+        ),
+        fixed:'left',
+        width:'75px'
     },
     {
         title: '纳税主体',
@@ -60,7 +65,8 @@ const getColumns =(context)=>[
 export default class LandPriceManage extends Component{
     state={
         visible:false, // 控制Modal是否显示
-        opid:"" // 当前操作的记录
+        opid:"", // 当前操作的记录
+        readOnly:false
     }
     showModal(){
         this.setState({visible:true});
@@ -76,12 +82,13 @@ export default class LandPriceManage extends Component{
                         fields:searchFields
                     }}
                     tableOption={{
+                        pageSize:10,
                         columns:getColumns(this),
                         url:'/landPriceInfo/list'
                     }}
                 >
                 </SearchTable>
-                <PopModal visible={this.state.visible} hideModal={()=>{this.hideModal()}} id={this.state.opid}/>
+                <PopModal visible={this.state.visible} readOnly={this.state.readOnly} hideModal={()=>{this.hideModal()}} id={this.state.opid}/>
             </div>
         )
     }
