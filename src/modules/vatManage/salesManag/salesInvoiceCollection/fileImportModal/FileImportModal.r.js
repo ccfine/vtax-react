@@ -101,7 +101,9 @@ class FileImportModal extends Component{
                                         },
                                         componentProps:{
                                             buttonText:'点击上传',
-                                            accept:'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                                            accept:'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                            explain:'文件格式为.XLS,并且不超过5M',
+                                            //size:2
                                         },
                                         fieldDecoratorOptions:{
                                             rules:[

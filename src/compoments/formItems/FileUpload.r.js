@@ -22,12 +22,22 @@ export default class FileUpload extends Component{
     }
     render(){
         const {setFieldsValue,fileList} = this.props;
+        //const fileSize = this.props.componentProps.size;
         const props = {
             ...this.props,
             onRemove: () => {
                 setFieldsValue(undefined)
             },
-            beforeUpload: () => {
+            beforeUpload: file => {
+                //TODO:文件大小限制
+                /*if(fileSize){
+                    const isLtSize = file.size / 1024 / 1024 < fileSize;
+                    if (!isLtSize) {
+                        message.error(`文件大小不能超过${fileSize}mb`);
+                        setFieldsValue(undefined)
+                    }
+                }
+*/
                 return false;
             },
         };
@@ -36,7 +46,9 @@ export default class FileUpload extends Component{
                 <Button disabled={fileList && fileList.length>=1}>
                     <Icon type="upload" />{props.componentProps.buttonText}
                 </Button>
-                <span style={{color:'#ccc',marginLeft:5}}>文件格式为.XLS,并且不超过5M</span>
+                {
+                    props.componentProps.explain && <span style={{color:'#ccc',marginLeft:5}}>{props.componentProps.explain}</span>
+                }
             </Upload>
         )
     }
