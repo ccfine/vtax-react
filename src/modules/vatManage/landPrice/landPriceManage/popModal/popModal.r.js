@@ -38,7 +38,6 @@ class LandPriceModal extends React.Component{
         stageSource.pop();
         stageSource = this.countStage(stageSource);
         this.setState({stageSource: stageSource});
-        console.log("update",this.state.stageSource);
     }
     countStage(stageSource){
         if(!stageSource || stageSource.length===0)return;
@@ -163,7 +162,7 @@ class LandPriceModal extends React.Component{
             title="修改"
             visible={this.props.visible}
             onOk={()=>{
-                this.handleOk();
+                this.state.loading || this.handleOk();
             }}
             onCancel={this.props.hideModal}
             style={{maxWidth:'90%'}}
