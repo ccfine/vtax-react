@@ -72,7 +72,7 @@ class RoomTransactionFile extends Component{
                                     },
                                     {
                                         label:'项目名称',
-                                        fieldName:'123',
+                                        fieldName:'projectId',
                                         type:'asyncSelect',
                                         span:6,
                                         componentProps:{
@@ -85,63 +85,51 @@ class RoomTransactionFile extends Component{
                                     },
                                     {
                                         label:'项目分期',
-                                        fieldName:'111',
+                                        fieldName:'stagesId',
                                         type:'asyncSelect',
                                         span:6,
                                         componentProps:{
                                             fieldTextName:'itemName',
                                             fieldValueName:'id',
                                             doNotFetchDidMount:true,
-                                            fetchAble:getFieldValue('123') || false,
-                                            url:`/project/stages/${getFieldValue('123') || ''}`,
+                                            fetchAble:getFieldValue('projectId') || false,
+                                            url:`/project/stages/${getFieldValue('projectId') || ''}`,
                                         }
                                     },
                                     {
                                         label:'房号',
-                                        fieldName:'taxableItem',
+                                        fieldName:'roomNumber',
                                         type:'input',
                                         span:6,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
                                         }
                                     },
                                     {
                                         label:'客户名称',
-                                        fieldName:'4423',
+                                        fieldName:'customerName',
                                         type:'input',
                                         span:6,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
                                         }
                                     },
                                     {
                                         label:'发票号码',
-                                        fieldName:'3',
+                                        fieldName:'invoiceNum',
                                         type:'input',
                                         span:6,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
                                         }
                                     },
                                     {
                                         label:'发票代码',
-                                        fieldName:'12441',
+                                        fieldName:'invoiceCode',
                                         type:'input',
                                         span:6,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
                                         }
                                     },
                                 ])

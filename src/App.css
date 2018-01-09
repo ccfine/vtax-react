@@ -38,7 +38,7 @@
   border-radius:0;
   border:none;
 }
-.ant-table-scroll{
+.ant-table-scroll .ant-table-body{
   border-right:1px solid #ccc;
 }
 .ant-table-fixed-left td{
