@@ -642,6 +642,9 @@ class PopModal extends Component{
         }
         const rowSelection = {
             type:'radio',
+            width:50,
+            fixed:true,
+            scroll:{ x: 900 },
             selectedRowKeys,
             onChange: this.onChange
         };
@@ -689,15 +692,16 @@ class PopModal extends Component{
 
                         <Card
                             extra={type !== 'view' && <div>
-                                <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                                     <Icon type="file-add" />
                                     新增明细
                                 </Button>
-                                <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                                     <Icon type="edit" />
                                     编辑
                                 </Button>
                                 <Button
+                                    size="small"
                                     onClick={()=>{
                                         confirm({
                                             title: '友情提醒',

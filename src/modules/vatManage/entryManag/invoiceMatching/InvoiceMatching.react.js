@@ -5,8 +5,8 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
-import {AsyncTable,CusFormItem,AutoFileUpload} from '../../../../compoments'
-import {request,fMoney} from '../../../../utils'
+import {AsyncTable,AutoFileUpload} from '../../../../compoments'
+import {request,fMoney,getFields} from '../../../../utils'
 import {FileExport} from '../../../../compoments'
 import PopDifferenceModal from './popModal'
 const TabPane = Tabs.TabPane;
@@ -46,7 +46,6 @@ class InvoiceMatching extends Component {
         modalConfig:{
             type:''
         },
-        expand:true,
         activeKey:'tab1'
     }
 
@@ -250,16 +249,7 @@ class InvoiceMatching extends Component {
     }
 
     render() {
-        const {expand,selectedRowKeys,selectedRows,visible} = this.state;
-        const formItemStyle={
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:18
-            }
-        }
-
+        const {selectedRowKeys,selectedRows,visible} = this.state;
         const tabList = [{
             key: 'tab1',
             tab: '完全匹配',
@@ -276,15 +266,30 @@ class InvoiceMatching extends Component {
 
         return (
             <Layout style={{background:'transparent'}} >
-                <Card className="search-card">
-                    <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                <Card
+                    style={{
+                        borderTop:'none'
+                    }}
+                    className="search-card"
+                >
+                    <Form onSubmit={this.handleSubmit}>
                         <Row>
-                            <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
-                            </Col>
-                            <Col span={8}>
-                                <Button size="small" style={{marginTop:8,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button size="small" style={{marginTop:8,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            {
+                                getFields(this.props.form,[
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:6,
+                                        fieldDecoratorOptions:{
+                                        },
+                                    },
+                                ])
+                            }
+
+                            <Col span={6}>
+                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
