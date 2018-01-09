@@ -18,9 +18,9 @@ const getColumns =(context,length)=>[
             }else{
             return (<div>
                 <span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,readOnly:false,stageid:record.id});}}>编辑</span>
+                    context.setState({visible:true,readOnly:false,stage:record});}}>编辑</span>
                 <span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,readOnly:true,stageid:record.id});}}>查看</span>
+                    context.setState({visible:true,readOnly:true,stage:record});}}>查看</span>
             </div>);
             }
         },
@@ -47,7 +47,7 @@ const getColumns =(context,length)=>[
         dataIndex: 'upAreaSale',
     },{
         title: '调整后可售面积（㎡）',
-        dataIndex: 'pageAblesalearea',
+        dataIndex: 'ableSaleArea',
     },{
         title: '可分摊土地价款比例',
         dataIndex: 'apportionLandPriceProportion',
@@ -84,10 +84,9 @@ const getColumns =(context,length)=>[
 
 export default class StageTable extends React.Component{
     state = {
-        updateKey:Date.now(),
         visible:false,
-        stageid:"",
-        readOnly:false
+        readOnly:false,
+        stage:{}
     }
     showModal(){
         this.setState({visible:true});
@@ -96,11 +95,16 @@ export default class StageTable extends React.Component{
         this.setState({visible:false});
     }
     render(){
-        console.log(this.props.dataSource)
         return (
             <Card title="项目分期信息" style={{ width: "100%" }}>
                 <Table columns={getColumns(this,this.props.dataSource?this.props.dataSource.length:0)}  size="small" dataSource={this.props.dataSource} pagination={false} scroll={{x:"250%"}} rowKey="id"/>
-                <StageModal visible={this.state.visible} id={this.state.stageid} readOnly={this.state.readOnly} hideModal={()=>{this.hideModal()}} update={this.props.update}/>
+                <StageModal 
+                visible={this.state.visible} 
+                readOnly={this.state.readOnly} 
+                hideModal={()=>{this.hideModal()}} 
+                update={(stage)=>{this.props.update(stage)}}
+                stage = {this.state.stage}
+                />
             </Card>
         );
     }

@@ -24,9 +24,9 @@ const getColumns =(context)=>[
         render:(text,record)=>(
             <div>
                 <span style={pointerStyle} onClick={()=>{
-                    context.setState({opid:record.id,readOnly:false,visible:true});}}>编辑</span>
+                    context.setState({opid:record.id,readOnly:false,visible:true,updateKey:Date.now()});}}>编辑</span>
                     <span style={pointerStyle} onClick={()=>{
-                    context.setState({opid:record.id,readOnly:true,visible:true});}}>查看</span>
+                    context.setState({opid:record.id,readOnly:true,visible:true,updateKey:Date.now()});}}>查看</span>
             </div>
         ),
         fixed:'left',
@@ -66,10 +66,8 @@ export default class LandPriceManage extends Component{
     state={
         visible:false, // 控制Modal是否显示
         opid:"", // 当前操作的记录
-        readOnly:false
-    }
-    showModal(){
-        this.setState({visible:true});
+        readOnly:false,
+        updateKey:Date.now()
     }
     hideModal(){
         this.setState({visible:false});
@@ -88,7 +86,12 @@ export default class LandPriceManage extends Component{
                     }}
                 >
                 </SearchTable>
-                <PopModal visible={this.state.visible} readOnly={this.state.readOnly} hideModal={()=>{this.hideModal()}} id={this.state.opid}/>
+                <PopModal 
+                visible={this.state.visible} 
+                readOnly={this.state.readOnly} 
+                hideModal={()=>{this.hideModal()}} 
+                id={this.state.opid}
+                updateKey={this.state.updateKey}/>
             </div>
         )
     }

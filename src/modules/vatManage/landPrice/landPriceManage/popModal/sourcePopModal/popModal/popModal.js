@@ -43,7 +43,7 @@ class PopModal extends React.Component{
                 this.props.add(newobj);
             }else if(this.props.action === "modify"){
                 // 考虑添加后修改的情况
-                newobj.action = newobj.action?"modify":newobj.action;
+                newobj.action = newobj.action || "modify";
                 this.props.update(newobj);
             }
             
@@ -123,7 +123,7 @@ class PopModal extends React.Component{
                         {...formItemLayout}
                         label="票据类型"
                         >
-                        {getFieldDecorator('billType',{initialValue:record.billType})(
+                        {getFieldDecorator('billType',{initialValue:(record.billType?record.billType:"")})(
                             <Input disabled={this.props.readOnly}/>
                         )}
                     </FormItem>

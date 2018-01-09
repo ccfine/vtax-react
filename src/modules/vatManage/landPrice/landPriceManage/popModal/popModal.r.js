@@ -12,7 +12,7 @@ const {NumericInput} = CusFormItem;
 class LandPriceModal extends React.Component{
     state={
         record:{},
-        stageSource:null,
+        stageSource:[],
         priceSource:null,
         visible:false, // 土价来源
         stageLoaded:false,
@@ -38,12 +38,14 @@ class LandPriceModal extends React.Component{
         stageSource.pop();
         stageSource = this.countStage(stageSource);
         this.setState({stageSource: stageSource});
+        console.log("update",this.state.stageSource);
     }
     countStage(stageSource){
+        if(!stageSource || stageSource.length===0)return;
         let stage={
             id:"-1"
         };
-        let countFeild = ['upArea','certificateArea','upAreaSale','pageAblesalearea','apportionLandPrice','deductibleLandPrice','saleArea','actualDeductibleLandPrice'];
+        let countFeild = ['upArea','certificateArea','upAreaSale','ableSaleArea','apportionLandPrice','deductibleLandPrice','saleArea','actualDeductibleLandPrice'];
         countFeild.forEach(ele=>stage[ele] = 0);
         let numFeild;
         stageSource.forEach(element => {
@@ -55,19 +57,27 @@ class LandPriceModal extends React.Component{
         stageSource.push(stage);
         return stageSource;
     }
-    async handleOk(){
+    handleOk(){
         
         if(this.props.readOnly){
             this.props.hideModal();
             return;
         }
-
-        this.setState({loading:true});
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                this.setState({loading:true});
               // 修改价款信息
               let requests = [];
-              requests.push(request.put("/landPriceInfo/update", Object.assign({},this.state.record,values)));
+              let oldPriceInfo = Object.assign({},this.state.record,values);
+              let priceInfo = {
+                buildArea:oldPriceInfo.buildArea,
+                contractLandId:oldPriceInfo.contractLandId,
+                id:oldPriceInfo.id,
+                landPrice:oldPriceInfo.adjustLandPrice,
+                notOffsetLandPrice:oldPriceInfo.notOffsetLandPrice,
+                setUp:oldPriceInfo.setUp
+              };
+              requests.push(request.put("/landPriceInfo/update", priceInfo));
               
               // 修改土地来源
               Array.isArray(this.state.priceSource) && this.state.priceSource.forEach(ele=>{
@@ -82,9 +92,21 @@ class LandPriceModal extends React.Component{
               });
 
               // 修改分期信息
-              Array.isArray(this.state.StageTable) && this.state.StageTable.forEach(ele=>{
+              Array.isArray(this.state.stageSource) && this.state.stageSource.forEach(ele=>{
                 if(ele.action === "modify"){
-                    requests.push(request.put("/land/priceProjectStages/update", ele));
+                    let stage = {
+                        ableSaleArea:ele.ableSaleArea ,// 调整后可售面积（㎡） 
+                        //apportionLandPriceProportion:ele.actualDeductibleLandPrice ,//已实际抵扣土地价款 ,
+                        certificateArea:ele.certificateArea  ,// 调整后施工证面积（㎡） ,
+                        //deductibleLandPrice:ele.actualDeductibleLandPrice ,// 已实际抵扣土地价款 ,
+                        id:ele.id,//主键 ,
+                        //landPriceInfoId: this.state.record.id,//land_price_info价款信息表的id ,
+                        //projectStagesId :ele.id,
+                        //saledArea:ele.saleArea ,// 已售建筑面积（㎡） ,
+                        setUp :ele.setUp// 可抵扣的土地价款比例设置(1-100%,2-按调整后可售面积（㎡）/调整后施工证面积（㎡）计算)
+
+                    }
+                    requests.push(request.put("/land/priceProjectStages/update", stage));
                 }
               })
               Promise.all(requests).then((results)=>{
@@ -108,17 +130,18 @@ class LandPriceModal extends React.Component{
           });
     }
     componentWillReceiveProps(props){
-        if(this.props.id !== props.id){
+        if(this.props.updateKey !== props.updateKey){
+            this.setState({record:{},stageSource:[],loading:true,stageLoaded:false});
             request.get(`/landPriceInfo/find/${props.id}`).then(({data}) => {
                 if(data.code===200){
-                    this.setState({record:data.data})
+                    this.setState({record:data.data,loading:false})
+                    //this.props.form.setFieldsValue(data.data);
                 }});
-        }
-        if(this.props.id !== props.id){
+
             // 加载table数据
             request.get(`/land/priceProjectStages/list/${props.id}`).then(({data}) => {
                 if(data.code===200){
-                    let stageSource = data.data.page.records;
+                    let stageSource = data.data.items;
                     stageSource = this.countStage(stageSource);
                     this.setState({stageSource:stageSource,stageLoaded:true})
                 }});
@@ -156,7 +179,7 @@ class LandPriceModal extends React.Component{
                         label="纳税主体"
                         >
                         {getFieldDecorator('mainName',{initialValue:this.state.record.mainName})(
-                            <Input disabled={true} />
+                            <Input disabled={true}/>
                         )}
                     </FormItem>
                   </Col>
@@ -178,7 +201,7 @@ class LandPriceModal extends React.Component{
                         label="项目名称"
                         >
                         {getFieldDecorator('itemName',{initialValue:this.state.record.itemName})(
-                            <Input disabled={true} />
+                            <Input disabled={true}/>
                         )}
                     </FormItem>
                   </Col>
@@ -188,7 +211,7 @@ class LandPriceModal extends React.Component{
                         label="土地出让合同编号"
                         >
                         {getFieldDecorator('contractNum',{initialValue:this.state.record.contractNum})(
-                            <Input disabled={true}/>
+                            <Input disabled={true} />
                         )}
                     </FormItem>
                   </Col>
@@ -233,8 +256,7 @@ class LandPriceModal extends React.Component{
                         >
                         {getFieldDecorator('adjustLandPrice',{initialValue:this.state.record.adjustLandPrice})(
                             <Input disabled={this.props.readOnly}
-                                suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                onClick={()=>{this.showModal()}}
+                                suffix={<Icon type="search" style={{cursor:"pointer",padding:"10px",position:"absolute",right:"-11px",top:"-16px"}} onClick={()=>{this.showModal()}} />}
                             />
                         )}
                     </FormItem>
@@ -270,13 +292,21 @@ class LandPriceModal extends React.Component{
               </Row>
           </Form>
           <StageTable
-                  dataSource={this.state.stageSource} loading={!this.state.stageLoaded} update={(item)=>this.updateStage(item)}
+                  dataSource={this.state.stageSource} 
+                  loading={!this.state.stageLoaded} 
+                  update={(item)=>this.updateStage(item)}
                 >
                 </StageTable>
             </Spin>
           </Modal>
         
-        <SourceModal visible={this.state.visible} id={this.props.id} hideModal={()=>{this.hideModal()}} update={(table)=>this.updateSource(table)}/>  </div>
+        <SourceModal 
+        visible={this.state.visible} 
+        id={this.props.id} 
+        hideModal={()=>{this.hideModal()}} 
+        update={(table)=>this.updateSource(table)}
+        updateKey = {this.props.updateKey}
+        />  </div>
         );
     }
 }
