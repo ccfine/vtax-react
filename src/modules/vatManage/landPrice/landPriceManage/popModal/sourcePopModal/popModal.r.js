@@ -48,11 +48,11 @@ export default class SourceModal extends React.Component{
         return sourceTable;
     }
     componentWillReceiveProps(props){
-        if(this.props.id !== props.id){
+        if(this.props.updateKey !== props.updateKey){
             request.get(`/land/priceSource/list/${props.id}`).then(({data}) => {
                 if(data.code===200){
                     // 计算总共金额并放置在数据的最后一条
-                    let sourceTable = this.countAmount(data.data.page.records);
+                    let sourceTable = this.countAmount(data.data.items);
                     this.setState({sourceTable:sourceTable, loaded:true});
                 }});
         }
@@ -65,7 +65,10 @@ export default class SourceModal extends React.Component{
                 this.props.update && this.props.update(this.state.sourceTable);
                 this.props.hideModal();
             }}
-            onCancel={this.props.hideModal}
+            onCancel={()=>{
+                this.props.update && this.props.update(this.state.sourceTable);
+                this.props.hideModal();
+            }}
             width={520}
             bodyStyle={{overflow:"auto",height:"400px"}}
           >

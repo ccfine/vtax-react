@@ -60,7 +60,6 @@ const getColumns =(context, length)=>[
 
 export default class StageTable extends React.Component{
     state = {
-        updateKey:Date.now(),
         visible:false,
         source:{},
         action:"add",
@@ -72,11 +71,8 @@ export default class StageTable extends React.Component{
     hideModal(){
         this.setState({visible:false});
     }
-    componentWillReceiveProps(props){
-        
-    }
     render(){
-        const dataSource = this.props.dataSource.filter((element)=>element.action!=="delete");
+        const dataSource = this.props.dataSource && this.props.dataSource.filter((element)=>element.action!=="delete");
         return (
             <Card title="" extra={<a  onClick={()=>{
                 this.setState({visible:true,action:"add",source:{}})}}>新增</a>} style={{ width: "100%" }}>
