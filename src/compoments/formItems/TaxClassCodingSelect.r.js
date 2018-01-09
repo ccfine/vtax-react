@@ -164,29 +164,32 @@ class TaxClassSelectPage extends Component{
         <span onClick={e=>{
             e && e.stopPropagation() && e.preventDefault()
         }}>
-            <span
-                onClick={e=>{
-                    e && e.stopPropagation() && e.preventDefault()
-                    if(!disabled){
-                        toggleModalVisible(true)
-                    }
-                }}
-                style={{
-                    display:'inline-block',
-                    position:'absolute',
-                    cursor:'pointer',
-                    right:3,
-                    top:6,
-                    height:23,
-                    width:23,
-                    borderRadius:'3px',
-                    textAlign:'center',
-                    lineHeight:'23px',
-                    backgroundColor:'#fff'
-                }}>
+            {
+                !disabled && (
+                    <span
+                        onClick={e=>{
+                            e && e.stopPropagation() && e.preventDefault()
+                            toggleModalVisible(true)
+                        }}
+                        style={{
+                            display:'inline-block',
+                            position:'absolute',
+                            cursor:'pointer',
+                            right:3,
+                            top:6,
+                            height:23,
+                            width:23,
+                            borderRadius:'3px',
+                            textAlign:'center',
+                            lineHeight:'23px',
+                            backgroundColor:'#fff'
+                        }}>
                 <Icon type="search" />
 
             </span>
+                )
+            }
+
             <Modal
                 title="选择税收分类"
                 maskClosable={false}
