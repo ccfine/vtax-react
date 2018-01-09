@@ -85,7 +85,7 @@ class SearchTable extends Component{
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;
-        const {searchOption,tableOption,children} = this.props;
+        const {searchOption,tableOption,children,form} = this.props;
         return(
             <Layout style={{background:'transparent'}} >
                 {
@@ -106,12 +106,11 @@ class SearchTable extends Component{
                             <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                                 <Row>
                                     {
-                                        getFields(this.props.form,searchOption.fields)
+                                        getFields(form,searchOption.fields)
                                     }
-
-                                    <Col span={8}>
-                                        <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                        <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                    <Col style={{width:'100%',textAlign:'right'}}>
+                                        <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                        <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>form.resetFields()}>重置</Button>
                                     </Col>
                                 </Row>
                             </Form>

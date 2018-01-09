@@ -122,7 +122,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} />
+                            <CusComponent {...item['componentProps']} style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

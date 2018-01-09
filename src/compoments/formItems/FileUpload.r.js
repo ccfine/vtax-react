@@ -43,7 +43,7 @@ export default class FileUpload extends Component{
         };
         return(
             <Upload {...props} {...props.componentProps} >
-                <Button disabled={fileList && fileList.length>=1}>
+                <Button size="small" disabled={fileList && fileList.length>=1}>
                     <Icon type="upload" />{props.componentProps.buttonText}
                 </Button>
                 {

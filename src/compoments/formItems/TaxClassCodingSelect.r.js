@@ -10,7 +10,7 @@ export default class TaxClassCodingSelect extends Component{
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
         label:PropTypes.string.isRequired,
-        decoratorOptions:PropTypes.object
+        decoratorOptions:PropTypes.object,
     }
     static defaultProps={
         formItemStyle:{
@@ -24,18 +24,34 @@ export default class TaxClassCodingSelect extends Component{
         label:'field',
         decoratorOptions:{
 
-        }
+        },
+    }
+    state={
+        visible:false
+    }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
     }
     mounted = true
     componentWillUnmount(){
         this.mounted=null;
     }
     render(){
-        const {setFieldsValue,fieldName,onChange,conditionValue} = this.props;
+        const {setFieldsValue,fieldName,onChange,conditionValue,disabled} = this.props;
+        const {visible} = this.state;
         return(
-            <div>
-            <Select labelInValue {...this.props} disabled />
+            <div onClick={()=>{
+                if(!disabled){
+                    this.toggleModalVisible(true)
+                }
+            }}>
+            <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} />
                 <TaxClassSelectPage
+                    visible={visible}
+                    disabled={disabled}
+                    toggleModalVisible={this.toggleModalVisible}
                     conditionValue={conditionValue}
                     fieldName={fieldName}
                     onChange={data=>onChange(data)}
@@ -98,7 +114,7 @@ const getColumns = context => [
                                     'taxableItem':record.taxableProjectName
                                 })
                                 context.props.onChange && context.props.onChange(fieldData)
-                                context.toggleModalVisible(false)
+                                context.props.toggleModalVisible(false)
                             },
                             onCancel() {
 
@@ -112,7 +128,7 @@ const getColumns = context => [
                             'taxableItem':record.taxableProjectName
                         })
                         context.props.onChange && context.props.onChange(fieldData)
-                        context.toggleModalVisible(false)
+                        context.props.toggleModalVisible(false)
                     }
 
                 }}
@@ -129,7 +145,7 @@ const getColumns = context => [
         width:'18%'
     }, {
         title: '应税项目',
-        dataIndex: 'taxableProjectName',
+        dataIndex: 'taxableItem',
         width:'18%'
     }, {
         title: '一般增值税税率',
@@ -142,34 +158,30 @@ const getColumns = context => [
     }
 ]
 class TaxClassSelectPage extends Component{
-    state={
-        visible:false
-    }
-    toggleModalVisible=visible=>{
-        this.setState({
-            visible
-        })
-    }
     render(){
-        const {visible} = this.state;
+        const {disabled,toggleModalVisible,visible} = this.props;
         return(
-        <span>
+        <span onClick={e=>{
+            e && e.stopPropagation() && e.preventDefault()
+        }}>
             <span
-                onClick={(e)=>{
-                    e && e.preventDefault() && e.stopPropagation();
-                    this.toggleModalVisible(true)
+                onClick={e=>{
+                    e && e.stopPropagation() && e.preventDefault()
+                    if(!disabled){
+                        toggleModalVisible(true)
+                    }
                 }}
                 style={{
                     display:'inline-block',
                     position:'absolute',
                     cursor:'pointer',
                     right:3,
-                    top:5,
-                    height:30,
-                    width:30,
+                    top:6,
+                    height:23,
+                    width:23,
                     borderRadius:'3px',
                     textAlign:'center',
-                    lineHeight:'30px',
+                    lineHeight:'23px',
                     backgroundColor:'#fff'
                 }}>
                 <Icon type="search" />
@@ -178,7 +190,7 @@ class TaxClassSelectPage extends Component{
             <Modal
                 title="选择税收分类"
                 maskClosable={false}
-                onCancel={()=>this.toggleModalVisible(false)}
+                onCancel={()=>toggleModalVisible(false)}
                 width={1920}
                 footer={false}
                 style={{

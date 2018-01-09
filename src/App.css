@@ -39,7 +39,6 @@
   border:none;
 }
 .ant-table-scroll .ant-table-body{
-  border-right:1px solid #ccc;
 }
 .ant-table-fixed-left td{
   border-left:1px solid #ccc;
@@ -113,3 +112,13 @@
 }
 
 /*button*/
+
+
+
+/*form item*/
+.ant-form-item-label,.ant-form-item-control{
+  line-height:35px;
+}
+form .ant-select:only-child, form .ant-cascader-picker:only-child{
+  top:4.5px;
+}
