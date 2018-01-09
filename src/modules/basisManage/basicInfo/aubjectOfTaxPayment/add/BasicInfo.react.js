@@ -28,6 +28,99 @@ class BasicInfo extends Component {
         IndustryModalVisible: false,
     }
 
+    handleKeyUp=(name)=> {
+        const form = this.props.form;
+        let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
+        form.setFieldsValue({
+            [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+        });
+    }
+
+    handleBlur=(name)=>{
+        const form = this.props.form;
+        let value = form.getFieldValue(`${name}`);
+        //console.log(value,fMoney(value));
+
+        form.setFieldsValue({
+            [name]: fMoney(value),
+        });
+    }
+
+    //注册类型:取基础资料DJZCLX
+    getRegistrationType=()=>{
+        requestDict('DJZCLX',result=>{
+            this.setState({
+                registrationType:result
+            })
+        })
+    }
+    //纳税人资质:取基础资料NSRLX
+    getTaxpayerQualification=()=>{
+        requestDict('NSRLX',result=>{
+            this.setState({
+                taxpayerQualification:result
+            })
+        })
+    }
+    //增值税专用发票最高限额:取基础资料ZZS_ZYFP_ZGXE
+    getMaximumLimit=()=>{
+        requestDict('ZZS_ZYFP_ZGXE',result=>{
+            this.setState({
+                maximumLimit:result
+            })
+        })
+    }
+
+    //省市区联动
+    getlistArea=()=>{
+        request.get('/taxsubject/list/area')
+            .then(({data})=>{
+                if(data.code ===200){
+                    this.setState({
+                        selectOptions:data.data
+                    })
+                }
+            })
+    }
+
+    //根据id查询行业
+    getIndustryTitle=(id)=>{
+        request.get(`/taxsubject/get/industry/${id}`)
+            .then(({data})=>{
+                if(data.code ===200){
+                    this.props.changeIndustry({
+                        key:data.data.key,
+                        title:data.data.title,
+                    })
+                }
+            })
+    }
+
+    //弹出框
+    showIndustryModal = () => {
+        this.setState({
+            IndustryModalVisible: true
+        });
+    }
+
+    componentDidMount() {
+        this.getRegistrationType()
+        this.getTaxpayerQualification()
+        this.getMaximumLimit()
+        this.getlistArea()
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.defaultData.industry && this.props.defaultData.industry !== nextProps.defaultData.industry ){
+            this.getIndustryTitle(nextProps.defaultData.industry)
+        }
+    }
+
+    mounted=true
+    componentWillUnmount(){
+        this.mounted=null
+    }
+
     getFields(start,end) {
         const {getFieldDecorator} = this.props.form;
         const {defaultData} = this.props;
@@ -442,7 +535,33 @@ class BasicInfo extends Component {
                         max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
+            }, {
+                label: '更新人',
+                type: 'text',
+                fieldName: 'jbxx.lastModifiedBy',
+                initialValue:defaultData.lastModifiedBy,
+            }, {
+                label: '更新时间',
+                type: 'text',
+                fieldName: 'jbxx.lastModifiedDate',
+                initialValue:defaultData.lastModifiedDate,
+            }, {
+                label: '当前状态',
+                type: 'select',
+                fieldName: 'jbxx.status',
+                initialValue:`${defaultData.status}`,
+                items: [{
+                        name: '删除',
+                        id: '0',
+                    }, {
+                        name: '保存',
+                        id: '1',
+                    }, {
+                        name: '提交',
+                        id: '2',
+                }]
             }
+
         ];
 
         for (let i = 0; i < data.length; i++) {
@@ -513,102 +632,9 @@ class BasicInfo extends Component {
         return children.slice(start, end || null);
     }
 
-    handleKeyUp=(name)=> {
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
-        form.setFieldsValue({
-            [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        });
-    }
-
-    handleBlur=(name)=>{
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`);
-        //console.log(value,fMoney(value));
-
-        form.setFieldsValue({
-            [name]: fMoney(value),
-        });
-    }
-
-    //注册类型:取基础资料DJZCLX
-    getRegistrationType=()=>{
-        requestDict('DJZCLX',result=>{
-            this.setState({
-                registrationType:result
-            })
-        })
-    }
-    //纳税人资质:取基础资料NSRLX
-    getTaxpayerQualification=()=>{
-        requestDict('NSRLX',result=>{
-            this.setState({
-                taxpayerQualification:result
-            })
-        })
-    }
-    //增值税专用发票最高限额:取基础资料ZZS_ZYFP_ZGXE
-    getMaximumLimit=()=>{
-        requestDict('ZZS_ZYFP_ZGXE',result=>{
-            this.setState({
-                maximumLimit:result
-            })
-        })
-    }
-
-    //省市区联动
-    getlistArea=()=>{
-        request.get('/taxsubject/list/area')
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.setState({
-                        selectOptions:data.data
-                    })
-                }
-            })
-    }
-
-    //根据id查询行业
-    getIndustryTitle=(id)=>{
-        request.get(`/taxsubject/get/industry/${id}`)
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.props.changeIndustry({
-                        key:data.data.key,
-                        title:data.data.title,
-                    })
-                }
-            })
-    }
-
-    //弹出框
-    showIndustryModal = () => {
-        this.setState({
-            IndustryModalVisible: true
-        });
-    }
-
-    componentDidMount() {
-        this.getRegistrationType()
-        this.getTaxpayerQualification()
-        this.getMaximumLimit()
-        this.getlistArea()
-    }
-
-    componentWillReceiveProps(nextProps){
-        if(nextProps.defaultData.industry && this.props.defaultData.industry !== nextProps.defaultData.industry ){
-            this.getIndustryTitle(nextProps.defaultData.industry)
-        }
-    }
-
-    mounted=true
-    componentWillUnmount(){
-        this.mounted=null
-    }
-
     render() {
         return (
-            <div className="basicInfo" style={{height:this.props.type !== 'view' ? '390px' : '443px',overflow:'hidden',overflowY:'scroll'}}>
+            <div className="basicInfo" style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
 
                 <Card style={{marginBottom:16}}>
                     <Row gutter={40}>
@@ -653,7 +679,7 @@ class BasicInfo extends Component {
                     </Row>
                     <Row gutter={40}>
                         {
-                            this.getFields(34,37)
+                            this.getFields(34,this.props.type !== 'view' ? 35 : 38)
                         }
                     </Row>
                 </Card>

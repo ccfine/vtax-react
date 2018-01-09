@@ -18,7 +18,10 @@ class NavRouter extends Component {
                 return {
                     path:item.path,
                     name:item.name,
-                    icon: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' //`icon_${i}`,
+                    icon:item.icon || {
+                        url:'/assets/routes_avatar/mainTax.svg',
+                        backgroundColor:'#61C5C3'
+                    } //`icon_${i}`,
                 }
             }
             return null;
@@ -35,7 +38,9 @@ class NavRouter extends Component {
                         <List.Item>
                             <Card className="card">
                                     <Meta
-                                        avatar={<Avatar className="IconImg" src={item.icon} />}
+                                        avatar={<Avatar className="IconImg" src={item.icon.url} style={{
+                                            background:item.icon.backgroundColor
+                                        }} />}
                                         //title={item.name}
                                         description={<Link to={item.path}>
                                             {item.name}

@@ -11,6 +11,7 @@ import Shareholding from './Shareholding.react'
 import EquityRelation from './EquityRelation.react'
 import {request} from '../../../../../utils'
 const TabPane = Tabs.TabPane;
+const confirm = Modal.confirm;
 
 class Add extends Component {
     static defaultProps={
@@ -31,6 +32,9 @@ class Add extends Component {
         szjd: null,
 
         industry:{},
+
+        status:1,
+        id:null,
     }
 
     onChange = (activeKey) => {
@@ -55,6 +59,11 @@ class Add extends Component {
     changeIndustry=industry=>{
         this.mounted && this.setState({
             industry
+        })
+    }
+    setStatus = status=>{
+        this.mounted && this.setState({
+            status:status
         })
     }
     handleOk = (e) => {
@@ -128,99 +137,151 @@ class Add extends Component {
     }
 
     handleSubmit = (e) => {
-
         e && e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                const type = this.props.modalConfig.type;
-                const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
-                const gqgx = this.checkeGqgxId(this.state.gqgx);
-                const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
-                const data = {
-                    ...values,
-                    jbxx:{
-                        ...values.jbxx,
-                        industry:this.state.industry.key,
-                        id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
-                        operatingProvince: values.jbxx.operatingProvince[0],
-                        operatingCity:values.jbxx.operatingProvince[1],
-                        operatingArea:values.jbxx.operatingProvince[2],
-                        nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
-                        nationalTaxCity:values.jbxx.nationalTaxProvince[1],
-                        nationalTaxArea:values.jbxx.nationalTaxProvince[2],
+         this.props.form.validateFields((err, values) => {
+         if (!err) {
+               const type = this.props.modalConfig.type;
+               const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
+               const gqgx = this.checkeGqgxId(this.state.gqgx);
+               const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
+               const data = {
+                   ...values,
+                   jbxx:{
+                       ...values.jbxx,
+                       industry:this.state.industry.key,
+                       id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
+                       operatingProvince: values.jbxx.operatingProvince[0],
+                       operatingCity:values.jbxx.operatingProvince[1],
+                       operatingArea:values.jbxx.operatingProvince[2],
+                       nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
+                       nationalTaxCity:values.jbxx.nationalTaxProvince[1],
+                       nationalTaxArea:values.jbxx.nationalTaxProvince[2],
 
-                        localTaxProvince:values.jbxx.localTaxProvince[0],
-                        localTaxCity:values.jbxx.localTaxProvince[1],
-                        localTaxArea:values.jbxx.localTaxProvince[2],
-                        currencyAmount:values.jbxx.currencyAmount && parseFloat(`${values.jbxx.currencyAmount}`.replace(/\$\s?|(,*)/g, '')),
-                        receiptCurrencyAmount:values.jbxx.receiptCurrencyAmount && parseFloat(`${values.jbxx.receiptCurrencyAmount}`.replace(/\$\s?|(,*)/g, '')),
-                        registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
-                        openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
-                    },
-                    gdjcg:gdjcg ,
-                    gqgx:gqgx,
-                    szjd:szjd,
-                }
+                       localTaxProvince:values.jbxx.localTaxProvince[0],
+                       localTaxCity:values.jbxx.localTaxProvince[1],
+                       localTaxArea:values.jbxx.localTaxProvince[2],
+                       currencyAmount:values.jbxx.currencyAmount && parseFloat(`${values.jbxx.currencyAmount}`.replace(/\$\s?|(,*)/g, '')),
+                       receiptCurrencyAmount:values.jbxx.receiptCurrencyAmount && parseFloat(`${values.jbxx.receiptCurrencyAmount}`.replace(/\$\s?|(,*)/g, '')),
+                       registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
+                       openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
+                   },
+                   gdjcg:gdjcg ,
+                   gqgx:gqgx,
+                   szjd:szjd,
+               }
 
-                console.log(data);
-                debugger
+               console.log(data);
 
-                this.mounted && this.setState({
-                    submitLoading: true
-                })
-                if (type === 'add') {
-                    request.post('/taxsubject/save', data
-                    )
-                        .then(({data}) => {
-                            if (data.code === 200) {
-                                message.success('新增成功！', 4)
-                                //新增成功，关闭当前窗口,刷新父级组件
-                                this.props.toggleModalVisible(false);
-                                this.props.updateTable();
-                            } else {
-                                message.error(data.msg, 4)
-                                this.mounted && this.setState({
-                                    submitLoading: false
-                                })
-                            }
-                        })
-                        .catch(err => {
-                            message.error(err.message)
-                            this.mounted && this.setState({
-                                submitLoading: false
-                            })
+               this.mounted && this.setState({
+                   submitLoading: true
+               })
+               if (type === 'add') {
+                   request.post('/taxsubject/save', data
+                   )
+                       .then(({data}) => {
+                           if (data.code === 200) {
+                               message.success('新增成功！', 4)
+                               this.setStatus(2);
+                               this.mounted && this.setState({
+                                   submitLoading: false,
+                                   id:data.data,
+                               })
+                           } else {
+                               message.error(data.msg, 4)
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           }
+                       })
+                       .catch(err => {
+                           message.error(err.message)
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
 
-                        })
-                }
+                       })
+               }
 
-                if (type === 'edit') {
+               if (type === 'edit') {
 
-                    request.put('/taxsubject/update', data
-                    )
-                        .then(({data}) => {
+                   request.put('/taxsubject/update', data
+                   )
+                       .then(({data}) => {
 
-                            if (data.code === 200) {
-                                message.success('编辑成功！', 4);
-                                //编辑成功，关闭当前窗口,刷新父级组件
-                                this.props.toggleModalVisible(false);
-                                this.props.updateTable();
-
-                            } else {
-                                message.error(data.msg, 4);
-                                this.mounted && this.setState({
-                                    submitLoading: false
-                                })
-                            }
-                        })
-                        .catch(err => {
-                            message.error(err.message)
-                            this.mounted && this.setState({
-                                submitLoading: false
-                            })
-                        })
-                }
-            }
+                           if (data.code === 200) {
+                               message.success('编辑成功！', 4);
+                               //编辑成功，关闭当前窗口,刷新父级组件
+                               this.props.toggleModalVisible(false);
+                               this.props.updateTable();
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           } else {
+                               message.error(data.msg, 4);
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           }
+                       })
+                       .catch(err => {
+                           message.error(err.message)
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       })
+               }
+           }
         })
+    }
+    handleDelete=()=>{
+        confirm({
+            title: '友情提醒',
+            content: '该删除后将不可恢复，是否删除？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+
+                request.delete(`/taxsubject/delete/${this.props.selectedRowKeys[0]}`)
+                    .then(({data})=>{
+                        if(data.code===200){
+                            message.success('删除成功!');
+                            this.props.toggleModalVisible(false);
+                            this.props.updateTable();
+                        }else{
+                            message.error(data.msg)
+                        }
+                    })
+            },
+            onCancel:()=>{
+                console.log('Cancel');
+            },
+        });
+    }
+
+    handleSetStatus=(mes,status)=>{
+        request.put(`/taxsubject/update/${(this.props.selectedRowKeys && this.props.selectedRowKeys[0]) || this.state.id}/${status}`
+        )
+            .then(({data}) => {
+                    console.log(data)
+                if (data.code === 200) {
+                    message.success(`${mes}成功！`, 4);
+                    //编辑成功，关闭当前窗口,刷新父级组件
+                    this.props.toggleModalVisible(false);
+                    this.props.updateTable();
+                } else {
+                    message.error(data.msg, 4);
+                    this.mounted && this.setState({
+                        submitLoading: false
+                    })
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.mounted && this.setState({
+                    submitLoading: false
+                })
+            })
     }
 
     fetch = (id)=> {
@@ -258,7 +319,6 @@ class Add extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-
         if(!nextProps.visible){
             /**
              * 关闭的时候清空表单
@@ -279,6 +339,7 @@ class Add extends Component {
              * */
             if(nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
+                this.setStatus(parseInt(nextProps.selectedRows[0].status, 0));
             }
 
         }
@@ -288,7 +349,7 @@ class Add extends Component {
     render() {
         const {modalConfig,visible,form,selectedRowKeys} = this.props;
 
-        const {jbxx,szjd,gdjcg,gqgx,industry} = this.state;
+        const {jbxx,szjd,gdjcg,gqgx,industry,status} = this.state;
 
         let title='';
         const type = modalConfig.type;
@@ -312,15 +373,37 @@ class Add extends Component {
                     maskClosable={false}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
-                    style={{ top: 25 }}
+                    style={{ top: 40 }}
                     visible={visible}
                     footer={
-                        type !== 'view' && <Row>
+                        <Row>
                             <Col span={12}></Col>
-                            <Col span={12}>
-                                <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                                <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                            </Col>
+                            {
+                                (type ==='add') &&
+                                <Col span={12}>
+                                    {
+                                        parseInt(status,0) === 1 ?  <Button type="primary" onClick={this.handleSubmit}>保存</Button> : <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button>
+                                    }
+                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                                </Col>
+                            }
+                            {
+                                (type ==='edit') && parseInt(status,0) === 1 &&
+                                <Col span={12}>
+                                    <Button type="primary" onClick={this.handleSubmit}>保存</Button>
+                                    <Button type="primary" onClick={this.handleDelete}>删除</Button>
+                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                                </Col>
+                            }
+                           {
+                                type === 'view' &&
+                               <Col span={12}>
+                               {
+                                   parseInt(status,0) === 1 ? <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button> : <Button type="primary" onClick={()=>this.handleSetStatus('撤销',1)}>撤销</Button>
+                               }
+                               <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                               </Col>
+                            }
                         </Row>
                     }
                     title={title}

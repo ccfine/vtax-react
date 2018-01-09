@@ -38,27 +38,27 @@ export default class AsyncTable extends Component{
             this.mounted &&  this.setState({
                 pagination: currentPager,
                 updateKey: nextProps.updateKey,
+            },()=>{
+                this.fetch({},nextProps)
             });
-            this.fetch({},nextProps.url)
         }
     }
-    fetch = (params = {},url) => {
+    fetch = (params = {},nextProps) => {
+        const props = nextProps || this.props;
         this.setState({ loaded: false });
-        //const {props} = this;
-        request.get(url || this.props.url,{
+        request.get(props.url,{
             params:{
                 size: this.state.pagination.pageSize,
                 ...params,
-                ...this.props.filters
+                ...props.filters
             }
         }).then(({data}) => {
             if(data.code===200){
                 const pagination = { ...this.state.pagination };
-                pagination.total = data.data.total ? data.data.total : data.data.page.total;
-                pagination.pageSize = data.data.size ? data.data.size : data.data.page.size;
+                pagination.total = typeof data.data.total !== 'undefined' ? data.data.total : data.data.page.total;
+                pagination.pageSize = typeof data.data.size !== 'undefined' ? data.data.size : data.data.page.size;
                 this.mounted && this.setState({
                     loaded: true,
-
                     /**
                      * 有的列表接口返回的结构不一样
                      * */

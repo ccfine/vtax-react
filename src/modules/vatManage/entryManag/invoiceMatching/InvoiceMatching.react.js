@@ -212,7 +212,7 @@ class InvoiceMatching extends Component {
                         tableProps={{
                             rowKey:record=>record.id,
                             pagination:true,
-                            size:'middle',
+                            size:'small',
                             columns:this.columns,
                             rowSelection:rowSelection,
                             renderFooter:data=>{
@@ -250,7 +250,7 @@ class InvoiceMatching extends Component {
     }
 
     render() {
-        const {expand,selectedRowKeys,visible} = this.state;
+        const {expand,selectedRowKeys,selectedRows,visible} = this.state;
         const formItemStyle={
             labelCol:{
                 span:6
@@ -335,7 +335,7 @@ class InvoiceMatching extends Component {
                     title="差异原因"
                     url={this.state.activeKey ==='tab2' ? '/income/invoice/marry/unCompletely/update' : '/income/invoice/marry/unInvoice/update'}
                     visible={visible}
-                    selectedRowKeys={selectedRowKeys}
+                    selectedRows={selectedRows}
                     updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
