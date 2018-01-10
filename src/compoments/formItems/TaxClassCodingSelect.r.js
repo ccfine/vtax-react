@@ -111,7 +111,7 @@ const getColumns = context => [
                                     [fieldName]:fieldData
                                 })
                                 setFieldsValue({
-                                    'taxableItem':record.taxableProjectName
+                                    'taxableItem':record.taxableItem
                                 })
                                 context.props.onChange && context.props.onChange(fieldData)
                                 context.props.toggleModalVisible(false)
@@ -125,7 +125,7 @@ const getColumns = context => [
                             [fieldName]:fieldData
                         })
                         setFieldsValue({
-                            'taxableItem':record.taxableProjectName
+                            'taxableItem':record.taxableItem
                         })
                         context.props.onChange && context.props.onChange(fieldData)
                         context.props.toggleModalVisible(false)
@@ -194,7 +194,7 @@ class TaxClassSelectPage extends Component{
                 title="选择税收分类"
                 maskClosable={false}
                 onCancel={()=>toggleModalVisible(false)}
-                width={1920}
+                width={1000}
                 footer={false}
                 style={{
                     maxWidth:'80%',

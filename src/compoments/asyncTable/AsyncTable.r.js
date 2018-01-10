@@ -38,7 +38,6 @@ export default class AsyncTable extends Component{
             currentPager.current = 1;
             this.mounted &&  this.setState({
                 pagination: currentPager,
-                updateKey: nextProps.updateKey,
             },()=>{
                 this.fetch({},nextProps)
             });
@@ -58,12 +57,24 @@ export default class AsyncTable extends Component{
                 const pagination = { ...this.state.pagination };
                 pagination.total = typeof data.data.total !== 'undefined' ? data.data.total : data.data.page.total;
                 pagination.pageSize = typeof data.data.size !== 'undefined' ? data.data.size : data.data.page.size;
+
+                let dataSource = data.data.records ? data.data.records : data.data.page.records;
+                /*dataSource = dataSource.concat([{
+
+                }])
+                console.log(dataSource)
+                /!** 针对合计 start*!/
+                if(data.data.page){
+
+                }
+                /!** 针对合计 end*!/*/
+
                 this.mounted && this.setState({
                     loaded: true,
                     /**
                      * 有的列表接口返回的结构不一样
                      * */
-                    dataSource: data.data.records ? data.data.records : data.data.page.records,
+                    dataSource,
                     footerDate: data.data,
                     //summaryData:summaryData,
                     pagination

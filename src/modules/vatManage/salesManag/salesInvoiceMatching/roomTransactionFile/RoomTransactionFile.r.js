@@ -15,6 +15,10 @@ const getColumns = context => [
                 color:'#f5222d',
                 cursor:'pointer'
             }} onClick={()=>{
+                if(parseInt(record.matchingStatus,0) ===1){
+                    message.error('只能删除未匹配的数据');
+                    return false;
+                }
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
                     content: '该删除后将不可恢复，是否删除？',
@@ -82,7 +86,8 @@ const getColumns = context => [
     },
     {
         title:'匹配状态',
-        dataIndex:'matchingStatus'
+        dataIndex:'matchingStatus',
+        render:text=>parseInt(text,0) === 0 ? '未匹配' : '已匹配' //0:未匹配,1:已匹配
     }
 ]
 class RoomTransactionFile extends Component{
