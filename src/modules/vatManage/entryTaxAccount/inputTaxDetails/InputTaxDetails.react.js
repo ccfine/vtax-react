@@ -7,6 +7,7 @@ import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button} from 'antd'
 import {AsyncTable} from '../../../../compoments'
 import {getFields,fMoney} from '../../../../utils'
+import PopInvoiceInformationModal from './popModal'
 const spanPaddingRight={
     paddingRight:30
 }
@@ -19,27 +20,6 @@ const code = {
     marginRight:30,
     padding: '2px 4px'
 }
-const columns = [
-    {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-    }, {
-        title: '抵扣凭据类型',
-        dataIndex: 'invoiceType',
-    },{
-        title: '凭据份数',
-        dataIndex: 'amount',
-    },{
-        title: '金额',
-        dataIndex: 'recordName',
-        render:text=>fMoney(text),
-    },{
-        title: '税额',
-        dataIndex: 'taxFeeCategory',
-        render:text=>fMoney(text),
-
-    }
-];
 class InputTaxDetails extends Component {
     state={
         /**
@@ -53,7 +33,40 @@ class InputTaxDetails extends Component {
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey:Date.now(),
+        visible:false,
+        id:'',
     }
+
+    columns = [
+        {
+            title: '纳税主体',
+            dataIndex: 'mainName',
+        }, {
+            title: '抵扣凭据类型',
+            dataIndex: 'invoiceType',
+        },{
+            title: '凭据份数',
+            dataIndex: 'amount',
+            render: (text, record) => (
+                  <a onClick={()=>{
+                      this.setState({
+                          id:record.id ,
+                          visible:true,
+                      })
+                  }}>{text}</a>
+            ),
+        },{
+            title: '金额',
+            dataIndex: 'recordName',
+            render:text=>fMoney(text),
+        },{
+            title: '税额',
+            dataIndex: 'taxFeeCategory',
+            render:text=>fMoney(text),
+
+        }
+    ];
+
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -76,11 +89,16 @@ class InputTaxDetails extends Component {
     componentDidMount(){
         this.updateTable()
     }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
     updateTable=()=>{
         this.handleSubmit()
     }
     render(){
-        const {tableUpDateKey,filters} = this.state;
+        const {tableUpDateKey,filters,visible,id} = this.state;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -127,7 +145,7 @@ class InputTaxDetails extends Component {
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     size:'small',
-                                    columns:columns,
+                                    columns:this.columns,
                                     renderFooter:data=>{
                                         return (
                                             <div>
@@ -141,6 +159,13 @@ class InputTaxDetails extends Component {
                                     },
                                 }} />
                 </Card>
+
+                <PopInvoiceInformationModal
+                    title="发票信息"
+                    visible={visible}
+                    id={id}
+                    toggleModalVisible={this.toggleModalVisible}
+                />
             </Layout>
         )
     }

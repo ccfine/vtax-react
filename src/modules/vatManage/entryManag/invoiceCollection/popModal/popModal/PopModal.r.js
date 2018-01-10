@@ -81,18 +81,19 @@ class PopModal extends Component{
                 ]
             }, {
                 label: '数量',
-                type: 'inputNumber',
+                type: 'text',
                 fieldName: 'qty',
                 initialValue: initData.qty,
                 rules:[
                     {
                         required:true,
                         message:'请输入数量'
+                    },{
+                        pattern:regRules.integer.pattern,
+                        message: regRules.integer.message,
                     }
                 ],
                 setCondition:{
-                    min:0,
-                    max:9999999999999.99,
                     onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
                 },
             }, {
@@ -195,11 +196,13 @@ class PopModal extends Component{
                         this.updateDate(this.props.selectedRowKeys[0], obj);
                         break;
                     default:
-                        this.addDate(this.props.initData, obj);
-                        break;
+                        //no default
                 }
                 if(isContinue === 'continue'){
                     this.props.form.resetFields();
+                    this.setState({
+                        initData: {}
+                    })
                 }else{
                     this.props.toggleModalVisible(false);
                 }
@@ -335,7 +338,9 @@ class PopModal extends Component{
                         <Col span={12}></Col>
                         <Col span={12}>
                             <Button type="primary" onClick={(e)=>this.handleSubmit(e,'no')}>确定</Button>
-                            <Button type="primary" onClick={(e)=>this.handleSubmit(e,'continue')}>继续增加</Button>
+                            {
+                                type === 'add' && <Button type="primary" onClick={(e)=>this.handleSubmit(e,'continue')}>继续增加</Button>
+                            }
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                         </Col>
                     </Row>

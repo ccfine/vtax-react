@@ -583,7 +583,7 @@ class BasicInfo extends Component {
             }else if(data[i].type ==='cascader') {
                 inputComponent = <Cascader disabled={disibled} options={data[i].items} placeholder={`请输入${data[i].label}`}/>;
             }else if(data[i].type ==='industry'){
-                inputComponent = <Input disabled={this.props.type ==='view'} placeholder={`请输入${data[i].label}`} addonAfter={<a style={{cursor: this.props.type ==='view' && 'not-allowed'}} onClick={this.props.type !=='view' && this.showIndustryModal}>
+                inputComponent = <Input disabled={true} placeholder={`请输入${data[i].label}`} addonAfter={<a style={{cursor: this.props.type ==='view' && 'not-allowed'}} onClick={this.props.type !=='view' ? this.showIndustryModal : null}>
                     <Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />
                 </a>} />;
             }

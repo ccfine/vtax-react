@@ -5,9 +5,8 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
-import {AsyncTable,AutoFileUpload} from '../../../../compoments'
+import {AsyncTable,AutoFileUpload,FileExport} from '../../../../compoments'
 import {request,fMoney,getFields} from '../../../../utils'
-import {FileExport} from '../../../../compoments'
 import PopDifferenceModal from './popModal'
 const TabPane = Tabs.TabPane;
 const buttonStyle={
