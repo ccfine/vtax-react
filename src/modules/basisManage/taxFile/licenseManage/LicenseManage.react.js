@@ -61,6 +61,7 @@ export default class LicenseManage extends Component{
     render(){
         const {visible,projectId} = this.state;
         return(
+            <div style={{maxWidth:"700px"}}>
             <SearchTable
                 searchOption={{
                     fields:searchFields
@@ -69,10 +70,12 @@ export default class LicenseManage extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/card/certificate/list',
+                    scroll:{x:'100%'},
                 }}
             >
                 <PopModal visible={visible} projectId={projectId} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
+        </div>
         )
     }
 }

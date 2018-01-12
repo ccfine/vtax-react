@@ -118,6 +118,11 @@
   margin-bottom:0;
 }
 
+/*Tab更紧凑，去除右边的填充，覆盖 .ant-tabs-nav .ant-tabs-tab 设置；modify by lchunxiu on 2018.1.10*/
+.ant-tabs-small .ant-tabs-nav .ant-tabs-tab{
+  margin-right:0;
+}
+
 /*button*/
 
 
