@@ -1,11 +1,108 @@
 /**
- * Created by liurunbin on 2018/1/10.
+ * Created by liurunbin on 2018/1/9.
  */
-import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Modal,message,Icon,Spin} from 'antd'
-import {AsyncTable,FileExport} from '../../../../../compoments'
-import {getFields,request} from '../../../../../utils'
+import React, { Component } from 'react'
+import {Button,Icon,Modal,message} from 'antd'
+import {request,fMoney} from '../../../../../utils'
+import {SearchTable,FileExport} from '../../../../../compoments'
 
+const searchFields = (getFieldValue,setFieldsValue)=> {
+    return [
+        {
+            label:'纳税主体',
+            fieldName:'mainId',
+            type:'taxMain',
+            span:6,
+            fieldDecoratorOptions:{
+
+            },
+        },
+        {
+            label:'开票时间',
+            fieldName:'billingDate',
+            type:'rangePicker',
+            span:6
+        },
+        {
+            label:'项目名称',
+            fieldName:'projectId',
+            type:'asyncSelect',
+            span:6,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('mainId') || false,
+                url:`/project/list/${getFieldValue('mainId')}`,
+            }
+        },
+        {
+            label:'项目分期',
+            fieldName:'stagesId',
+            type:'asyncSelect',
+            span:6,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('projectId') || false,
+                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+            }
+        },
+        {
+            label:'楼栋名称',
+            fieldName:'buildingName',
+            type:'input',
+            span:6
+        },
+        {
+            label:'单元',
+            fieldName:'element',
+            type:'element',
+            span:6
+        },
+        {
+            label:'房号',
+            fieldName:'roomNumber',
+            type:'input',
+            span:6
+        },
+        {
+            label:'客户名称',
+            fieldName:'customerName',
+            type:'input',
+            span:6
+        },
+        {
+            label:'纳税识别号',
+            fieldName:'taxIdentificationCode',
+            type:'input',
+            span:6
+        },
+        {
+            label:'发票号码',
+            fieldName:'invoiceNum',
+            type:'input',
+            span:6
+        },
+        {
+            label:'匹配方式',
+            fieldName:'matchingWay',
+            type:'select',
+            span:6,
+            options:[
+                {
+                    text:'手动匹配',
+                    value:'0'
+                },
+                {
+                    text:'自动匹配',
+                    value:'1'
+                }
+            ]
+        }
+    ]
+}
 const getColumns = context => [
     {
         title: '操作',
@@ -17,13 +114,9 @@ const getColumns = context => [
                 color:'#f5222d',
                 cursor:'pointer'
             }} onClick={()=>{
-                if(parseInt(record.matchingStatus,0) ===1){
-                    message.error('只能删除未匹配的数据');
-                    return false;
-                }
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
-                    content: '该删除后将不可恢复，是否删除？',
+                    content: '是否要解除匹配？',
                     okText: '确定',
                     okType: 'danger',
                     cancelText: '取消',
@@ -98,7 +191,9 @@ const getColumns = context => [
     },
     {
         title:'金额',
-        dataIndex:'amount'
+        dataIndex:'amount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'税率',
@@ -106,11 +201,15 @@ const getColumns = context => [
     },
     {
         title:'税额',
-        dataIndex:'taxAmount'
+        dataIndex:'taxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'价税合计',
-        dataIndex:'totalAmount'
+        dataIndex:'totalAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'规格型号',
@@ -146,71 +245,53 @@ const getColumns = context => [
     },
     {
         title:'成交总价',
-        dataIndex:'totalPrice'
+        dataIndex:'totalPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'匹配方式',
         dataIndex:'matchingWay',
-        render:text=>parseInt(text,0) === 0 ? '手动匹配' : '自动匹配' //0:手动匹配,1:自动匹配
+        render:text=>{
+            text = parseInt(text,0);//0:手动匹配,1:自动匹配
+            if(text === 0){
+                return '手动匹配';
+            }else if(text ===1){
+                return '自动匹配';
+            }else{
+                return ''
+            }
+        }
     },
 ]
+
 const parseJsonToParams = data=>{
     let str = '';
     for(let key in data){
-        if(typeof data[key] !== 'undefined'){
-            str += `${key}=${data[key]}&`
-        }
+        str += `${key}=${data[key]}&`
     }
     return str;
 }
-class InvoiceDataMatching extends Component{
+export default class InvoiceDataMatching extends Component{
     state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{
-            pageSize:20
+        tableKey:Date.now(),
+        searchFieldsValues:{
         },
-
-        /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
-         * */
-        tableUpDateKey:Date.now(),
-
-        selectedRowKeys:null,
-
-        /**数据匹配状态*/
         matching:false
-    }
-    handleSubmit = e => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.setState({
-                    selectedRowKeys:null,
-                    filters:values
-                },()=>{
-                    this.refreshTable()
-                });
-            }
-        });
-    }
-    componentDidMount(){
-        this.handleSubmit()
     }
     refreshTable = ()=>{
         this.setState({
-            tableUpDateKey:Date.now()
+            tableKey:Date.now()
         })
     }
     deleteRecord = (id,cb) => {
-        request.delete(`/output/room/files/delete/${id}`)
+        request.delete(`/output/invoice/marry/already/delete/${id}`)
             .then(({data})=>{
                 if(data.code===200){
-                    message.success('删除成功!');
+                    message.success('解除成功!');
                     cb && cb()
                 }else{
-                    message.error(`删除失败:${data.msg}`)
+                    message.error(`解除匹配失败:${data.msg}`)
                 }
             })
     }
@@ -236,147 +317,72 @@ class InvoiceDataMatching extends Component{
         })
     }
     render(){
-        const {tableUpDateKey,filters,matching} = this.state;
-        const {getFieldValue} = this.props.form;
+        const {tableKey,searchFieldsValues,matching} = this.state;
         return(
-            <Layout style={{background:'transparent',marginTop:-16}} >
-                <Spin spinning={matching} tip="数据匹配中">
-                    <Card
-                        style={{
-                            borderTop:'none'
-                        }}
-                        className="search-card"
-                    >
-                        <Form onSubmit={this.handleSubmit}>
-                            <Row>
-                                {
-                                    getFields(this.props.form,[
-                                        {
-                                            label:'纳税主体',
-                                            fieldName:'mainId',
-                                            type:'taxMain',
-                                            span:6,
-                                            fieldDecoratorOptions:{
-
-                                            },
-                                        },
-                                        {
-                                            label:'开票时间',
-                                            fieldName:'billingDate',
-                                            type:'rangePicker',
-                                            span:6
-                                        },
-                                        {
-                                            label:'项目名称',
-                                            fieldName:'projectId',
-                                            type:'asyncSelect',
-                                            span:6,
-                                            componentProps:{
-                                                fieldTextName:'itemName',
-                                                fieldValueName:'id',
-                                                doNotFetchDidMount:true,
-                                                fetchAble:getFieldValue('mainId') || false,
-                                                url:`/project/list/${getFieldValue('mainId')}`,
-                                            }
-                                        },
-                                        {
-                                            label:'项目分期',
-                                            fieldName:'stagesId',
-                                            type:'asyncSelect',
-                                            span:6,
-                                            componentProps:{
-                                                fieldTextName:'itemName',
-                                                fieldValueName:'id',
-                                                doNotFetchDidMount:true,
-                                                fetchAble:getFieldValue('projectId') || false,
-                                                url:`/project/stages/${getFieldValue('projectId') || ''}`,
-                                            }
-                                        },
-                                        {
-                                            label:'楼栋名称',
-                                            fieldName:'buildingName',
-                                            type:'input',
-                                            span:6
-                                        },
-                                        {
-                                            label:'单元',
-                                            fieldName:'roomNumber',
-                                            type:'element',
-                                            span:6
-                                        },
-                                        {
-                                            label:'房号',
-                                            fieldName:'roomNumber',
-                                            type:'input',
-                                            span:6
-                                        },
-                                        {
-                                            label:'客户名称',
-                                            fieldName:'customerName',
-                                            type:'input',
-                                            span:6
-                                        },
-                                        {
-                                            label:'纳税识别号',
-                                            fieldName:'taxIdentificationCode',
-                                            type:'input',
-                                            span:6
-                                        },
-                                        {
-                                            label:'发票号码',
-                                            fieldName:'invoiceNum',
-                                            type:'input',
-                                            span:6
-                                        }
-                                    ])
-                                }
-
-                                <Col style={{width:'100%',textAlign:'right'}}>
-                                    <Button size="small" style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                    <Button size="small" style={{marginTop:5,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Card>
-                    <Card style={{marginTop:10}} extra={
-                        <div>
-                            <Button
-                                onClick={this.matchData}
-                                size='small'
-                                style={{marginRight:5}}>
-                                <Icon type="copy" />
-                                数据匹配
-                            </Button>
-                            <FileExport
-                                url={`/output/invoice/marry/already/export?${parseJsonToParams(filters)}`}
-                                title="导出匹配列表"
-                                size="small"
-                            />
-                        </div>
-                    }>
-                        <AsyncTable url={'/output/invoice/marry/already/list'}
-                                    updateKey={tableUpDateKey}
-                                    filters={filters}
-                                    tableProps={{
-                                        rowKey:record=>record.id,
-                                        pagination:true,
-                                        pageSize:10,
-                                        size:'small',
-                                        columns:getColumns(this),
-                                        scroll:{
-                                            x:'180%'
-                                        },
-                                        renderFooter:data=>{
-                                            return(
-                                                <div>合计:待添加</div>
-                                            )
-                                        }
-                                    }} />
-                    </Card>
-                </Spin>
-            </Layout>
+            <SearchTable
+                style={{
+                    marginTop:-16
+                }}
+                spinning={matching}
+                searchOption={{
+                    fields:searchFields,
+                    getFieldsValues:values=>{
+                        this.setState({
+                            searchFieldsValues:values
+                        })
+                    },
+                    cardProps:{
+                        style:{
+                            borderTop:0
+                        }
+                    }
+                }}
+                tableOption={{
+                    key:tableKey,
+                    pageSize:10,
+                    columns:getColumns(this),
+                    url:'/output/invoice/marry/already/list',
+                    extra:<div>
+                        <span style={{marginRight:5,color:'#f5222d'}}>红色表示纳税人识别号与证件号码不一致;蓝色表示购货单位名称与客户名称不一致;紫色表示发票计税合计与房间成交总价不一致。</span>
+                        <Button
+                            onClick={this.matchData}
+                            size='small'
+                            style={{marginRight:5}}>
+                            <Icon type="copy" />
+                            数据匹配
+                        </Button>
+                        <FileExport
+                            url={`/output/invoice/marry/already/export?${parseJsonToParams(searchFieldsValues)}`}
+                            title="导出匹配列表"
+                            size="small"
+                        />
+                    </div>,
+                    renderFooter:data=>{
+                        return(
+                            <div>
+                                <div style={{marginBottom:10}}>
+                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                    本页金额：<span className="amount-code">{data.pageAmount}</span>
+                                    本页税额：<span className="amount-code">{data.pageTaxAmount}</span>
+                                    本页价税：<span className="amount-code">{data.pageTotalAmount}</span>
+                                    本页总价：<span className="amount-code">{data.pageTotalPrice}</span>
+                                </div>
+                                <div style={{marginBottom:10}}>
+                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                    总金额：<span className="amount-code">{data.allAmount}</span>
+                                    总税额：<span className="amount-code">{data.allTaxAmount}</span>
+                                    总价税：<span className="amount-code">{data.allTotalAmount}</span>
+                                    全部总价：<span className="amount-code">{data.allTotalPrice}</span>
+                                </div>
+                            </div>
+                        )
+                    },
+                    scroll:{
+                        x:'180%'
+                    }
+                }}
+            >
+            </SearchTable>
         )
     }
 }
-
-export default Form.create()(InvoiceDataMatching)

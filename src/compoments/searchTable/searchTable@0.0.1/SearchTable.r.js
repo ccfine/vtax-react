@@ -3,14 +3,20 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Layout,Card,Row,Col,Form,Button} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Spin} from 'antd'
 import moment from 'moment'
 import {AsyncTable} from '../../index'
 import {getFields} from '../../../utils'
 class SearchTable extends Component{
     static propTypes = {
         searchOption:PropTypes.object,
-        tableOption:PropTypes.object
+        tableOption:PropTypes.object,
+        spinning:PropTypes.bool,
+        doNotFetchDidMount:PropTypes.bool,
+    }
+    static defaultProps = {
+        spinning:false,
+        doNotFetchDidMount:false
     }
     constructor(props){
         super(props)
@@ -27,7 +33,6 @@ class SearchTable extends Component{
              * */
             tableUpDateKey:props.tableOption.key || Date.now(),
 
-            selectedRowKeys:null,
             visible:false,
             expand:true
         }
@@ -35,7 +40,7 @@ class SearchTable extends Component{
     componentWillReceiveProps(nextProps){
         if(this.props.tableOption.key !== nextProps.tableOption.key){
             this.setState({
-                tableUpDateKey:nextProps.tableOption.key
+                tableUpDateKey:nextProps.tableOption.key,
             })
         }
     }
@@ -63,77 +68,73 @@ class SearchTable extends Component{
         });
 
     }
-    onChange=(selectedRowKeys, selectedRows) => {
-        this.setState({
-            selectedRowKeys
-        })
-    }
-    showModal=type=>{
-        this.toggleModalVisible(true)
-        this.setState({
-            modalConfig:{
-                type,
-                id:this.state.selectedRowKeys
-            }
-        })
-    }
     updateTable=()=>{
         this.handleSubmit()
     }
     componentDidMount(){
-        this.updateTable()
+        !this.props.doNotFetchDidMount && this.updateTable()
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;
-        const {searchOption,tableOption,children,form} = this.props;
+        const {searchOption,tableOption,children,form,spinning,style} = this.props;
         return(
-            <Layout style={{background:'transparent'}} >
-                {
-                    searchOption && (
-                        <Card
+            <Layout style={{background:'transparent',...style}} >
+                <Spin spinning={spinning}>
+                    {
+                        searchOption && (
+                            <Card
                                 className="search-card"
-                              bodyStyle={{
-                                  padding:expand?'12px 16px':'0 16px'
-                              }}
-                              /*extra={
-                                  <Icon
-                                      style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
-                                      onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
-                                      type={`${expand?'up':'down'}-circle-o`} />
-                              }*/
-                              {...searchOption.cardProps}
-                        >
-                            <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
-                                <Row>
-                                    {
-                                        getFields(form,searchOption.fields)
-                                    }
-                                    <Col style={{width:'100%',textAlign:'right'}}>
-                                        <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                        <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>form.resetFields()}>重置</Button>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </Card>
-                    )
-                }
-                <Card
-                      extra={tableOption.extra || null}
-                      style={{marginTop:10}}
-                      {...tableOption.cardProps}
-                >
-                    <AsyncTable url={tableOption.url}
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:true,
-                                    pageSize:tableOption.pageSize || 10,
-                                    size:'small',
-                                    columns:tableOption.columns,
-                                    scroll:tableOption.scroll || undefined
-                                }} />
-                </Card>
+                                bodyStyle={{
+                                    padding:expand?'12px 16px':'0 16px'
+                                }}
+                                /*extra={
+                                 <Icon
+                                 style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
+                                 onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
+                                 type={`${expand?'up':'down'}-circle-o`} />
+                                 }*/
+                                {...searchOption.cardProps}
+                            >
+                                <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                                    <Row>
+                                        {
+                                            getFields(form,searchOption.fields)
+                                        }
+                                        <Col style={{width:'100%',textAlign:'right'}}>
+                                            <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                            <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
+                                                form.resetFields()
+                                                //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
+                                                searchOption.getFieldsValues && searchOption.getFieldsValues({})
+                                            }}>重置</Button>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            </Card>
+                        )
+                    }
+                    <Card
+                        extra={tableOption.extra || null}
+                        style={{marginTop:10}}
+                        {...tableOption.cardProps}
+                    >
+                        <AsyncTable url={tableOption.url}
+                                    updateKey={tableUpDateKey}
+                                    filters={filters}
+                                    tableProps={{
+                                        rowKey:record=>record.id,
+                                        pagination:true,
+                                        pageSize:tableOption.pageSize || 10,
+                                        size:'small',
+                                        rowSelection:tableOption.rowSelection || undefined,
+                                        onRowSelect:tableOption.onRowSelect || undefined,
+                                        columns:tableOption.columns,
+                                        scroll:tableOption.scroll || undefined,
+                                        onDataChange:tableOption.onDataChange || undefined,
+                                        renderFooter:tableOption.renderFooter || undefined
+                                    }} />
+                    </Card>
+                </Spin>
                 {
                     children? children : null
                 }

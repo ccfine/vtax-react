@@ -47,6 +47,7 @@
 .ant-table-thead th{
   border-top:1px solid #ccc;
   border-bottom:1px solid #ccc;
+  text-align: center!important;
 }
 .ant-table-body td,.ant-table-thead th{
   border-right:1px solid #ccc;
@@ -75,6 +76,12 @@
 }
 .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
   background:#fafafa;
+}
+.table-money{
+  text-align: right;
+}
+.text-center{
+  text-align: center;
 }
 /*card*/
 .ant-card-head{
@@ -121,4 +128,16 @@
 }
 form .ant-select:only-child, form .ant-cascader-picker:only-child{
   top:4.5px;
+}
+
+
+/*amount table class*/
+.amount-code{
+  margin: 0 1px;
+  background: #f2f4f5;
+  border-radius: 3px;
+  font-size: .9em;
+  border:1px solid #eee;
+  margin-right:30px;
+  padding: 2px 4px
 }

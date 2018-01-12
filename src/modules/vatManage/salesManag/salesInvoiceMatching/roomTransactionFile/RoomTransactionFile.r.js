@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
-import {getFields,request} from '../../../../../utils'
+import {getFields,request,fMoney} from '../../../../../utils'
 
 const getColumns = context => [
     {
@@ -78,7 +78,9 @@ const getColumns = context => [
     },
     {
         title:'成交总价',
-        dataIndex:'totalPrice'
+        dataIndex:'totalPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'房间面积',
@@ -252,6 +254,26 @@ class RoomTransactionFile extends Component{
                                     pagination:true,
                                     pageSize:10,
                                     size:'small',
+                                    renderFooter:data=>{
+                                        return(
+                                            <div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                                    本页金额：<span className="amount-code">{data.pageAmount}</span>
+                                                    本页税额：<span className="amount-code">{data.pageTaxAmount}</span>
+                                                    本页价税：<span className="amount-code">{data.pageTotalAmount}</span>
+                                                    本页总价：<span className="amount-code">{data.pageTotalPrice}</span>
+                                                </div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                                    总金额：<span className="amount-code">{data.allAmount}</span>
+                                                    总税额：<span className="amount-code">{data.allTaxAmount}</span>
+                                                    总价税：<span className="amount-code">{data.allTotalAmount}</span>
+                                                    全部总价：<span className="amount-code">{data.allTotalPrice}</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    },
                                     columns:getColumns(this)
                                 }} />
                 </Card>
