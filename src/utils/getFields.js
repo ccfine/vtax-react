@@ -5,6 +5,7 @@ import React from 'react';
 import {Col,Form,Input,DatePicker,Select} from 'antd'
 import {CusFormItem} from '../compoments'
 const FormItem = Form.Item;
+const { TextArea } = Input;
 const Option = Select.Option;
 const { RangePicker,MonthPicker } = DatePicker;
 const normFile = (e) => {
@@ -61,6 +62,9 @@ const getFields = (form,fieldsData=[]) =>{
                 break;
             case 'fileUpload':
                 CusComponent = CusFormItem.FileUpload;
+                break;
+            case 'textArea':
+                CusComponent = TextArea;
                 break;
             default:
                 CusComponent = Input

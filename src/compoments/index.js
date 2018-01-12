@@ -18,6 +18,7 @@ import {AutoFileUpload,ManualFileUpload} from './fileUpload'
 import FileExport from './fileExport'
 import SearchTable from './searchTable'
 import FileImportModal from './fileImportModal'
+import CountTable from './countTable'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -30,5 +31,6 @@ export {
     ManualFileUpload,
     FileExport,
     SearchTable,
-    FileImportModal
+    FileImportModal,
+    CountTable,
 }

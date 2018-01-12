@@ -34,7 +34,7 @@ class InputTaxDetails extends Component {
          * */
         tableUpDateKey:Date.now(),
         visible:false,
-        id:'',
+        id:undefined,
     }
 
     columns = [
@@ -47,14 +47,15 @@ class InputTaxDetails extends Component {
         },{
             title: '凭据份数',
             dataIndex: 'amount',
-            render: (text, record) => (
-                  <a onClick={()=>{
-                      this.setState({
-                          id:record.id ,
-                          visible:true,
-                      })
-                  }}>{text}</a>
-            ),
+            render:(text,record)=>(
+                <a onClick={()=>{
+                    this.setState({
+                        id:record.id,
+                    },()=>{
+                        this.toggleModalVisible(true)
+                    })
+                }}>{text}</a>
+            )
         },{
             title: '金额',
             dataIndex: 'recordName',
@@ -71,7 +72,6 @@ class InputTaxDetails extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values)
                 const data = {
                     ...values,
                     authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
@@ -97,6 +97,7 @@ class InputTaxDetails extends Component {
     updateTable=()=>{
         this.handleSubmit()
     }
+
     render(){
         const {tableUpDateKey,filters,visible,id} = this.state;
         return(
