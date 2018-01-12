@@ -89,7 +89,6 @@ class PopModal extends Component{
                         values[key] = values[key]['id']
                     }
                 }
-                console.log(values)
 
                 if(type==='edit'){
                     values.id=this.state.initData['id']
@@ -179,7 +178,7 @@ class PopModal extends Component{
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={1920}
+                width={1000}
                 style={{
                     maxWidth:'90%'
                 }}
@@ -259,6 +258,7 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
+                                            disabled,
                                             conditionValue:getFieldValue('taxRate') ? {
                                                 taxMethod:getFieldValue('taxMethod'),
                                                 taxRate:getFieldValue('taxRate')

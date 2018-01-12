@@ -19,7 +19,7 @@ class PopModal extends Component{
         defaultData:{},
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = (e,isContinue) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
@@ -35,8 +35,17 @@ class PopModal extends Component{
                     default :
                         //no default
                 }
-                this.props.toggleModalVisible(false);
+
+                if(isContinue === 'continue'){
+                    this.props.form.resetFields();
+                    this.setState({
+                        defaultData:{}
+                    })
+                }else{
+                    this.props.toggleModalVisible(false);
+                }
                 this.props.setSelectedRowKeysAndselectedRows(null,{})
+
             }
         });
     }
@@ -140,8 +149,10 @@ class PopModal extends Component{
                     type !== 'view' && <Row>
                             <Col span={12}></Col>
                             <Col span={12}>
-                                <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                                <Button type="primary" onClick={this.handleSubmit}>继续添加</Button>
+                                <Button type="primary" onClick={(e)=>this.handleSubmit(e,'no')}>确定</Button>
+                                {
+                                    type === 'add' && <Button type="primary" onClick={(e)=>this.handleSubmit(e,'continue')}>继续添加</Button>
+                                }
                                 <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                             </Col>
                         </Row>

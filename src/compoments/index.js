@@ -17,7 +17,7 @@ import SynchronizeTable from './synchronizeTable'
 import {AutoFileUpload,ManualFileUpload} from './fileUpload'
 import FileExport from './fileExport'
 import SearchTable from './searchTable'
-
+import FileImportModal from './fileImportModal'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -29,5 +29,6 @@ export {
     AutoFileUpload,
     ManualFileUpload,
     FileExport,
-    SearchTable
+    SearchTable,
+    FileImportModal
 }

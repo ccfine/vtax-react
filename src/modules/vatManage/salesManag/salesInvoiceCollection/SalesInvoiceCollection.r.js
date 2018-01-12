@@ -126,6 +126,7 @@ const getColumns = context =>[
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
+        width:'70px'
     },{
         title: '购货单位',
         dataIndex: 'purchaseName',
@@ -150,6 +151,7 @@ const getColumns = context =>[
     },{
         title: '数据来源',
         dataIndex: 'sourceType',
+        width:'60px',
         render:text=>{
             text = parseInt(text,0);
             if(text===1){
@@ -223,13 +225,13 @@ export default class Test extends Component{
                         </Button>
                         <FileImportModal style={{marginRight:5}} />
                         <FileExport
-                            url={`/output/invoice/collection/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`output/invoice/collection/export?${parseJsonToParams(searchFieldsValues)}`}
                             title="导出"
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
                         <FileExport
-                            url='/output/invoice/collection/download'
+                            url='output/invoice/collection/download'
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}

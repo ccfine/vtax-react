@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {NavRouter} from '../../../compoments'
-import routes from '../routes'
+import routes from '../userPermissions/routes'
 
 class UserPermissions extends Component {
     render() {

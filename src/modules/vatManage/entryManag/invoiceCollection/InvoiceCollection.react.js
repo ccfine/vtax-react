@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal,DatePicker,Input,message } from 'antd'
-import {AsyncTable,CusFormItem} from '../../../../compoments'
-import {request,requestDict,fMoney} from '../../../../utils'
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
+import {AsyncTable} from '../../../../compoments'
+import {request,requestDict,fMoney,getFields} from '../../../../utils'
 import {FileExport} from '../../../../compoments'
 import {PopModal, PopUploadModal,PopUndoUploadModal} from './popModal'
-const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
-const FormItem = Form.Item;
 const buttonStyle={
     marginRight:5
 }
@@ -14,14 +12,6 @@ const spanPaddingRight={
     paddingRight:30
 }
 const code = {
-    /*margin: '0px 30px 0px 1px',
-    background: '#2db7f5',
-    borderRadius: '3px',
-    fontSize: '0.9em',
-    border: '1px solid #2db7f5',
-    color: '#fff',
-    padding: '2px 4px',*/
-
     margin:' 0 1px',
     background: '#f2f4f5',
     borderRadius: '3px',
@@ -51,7 +41,6 @@ class InvoiceCollection extends Component {
         modalConfig:{
             type:''
         },
-        expand:true,
         nssbData:[]
     }
 
@@ -115,7 +104,7 @@ class InvoiceCollection extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.authMonth && values.authMonth.length!==0){
-                    values.authMonthStartStart = values.authMonth[0].format('YYYY-MM')
+                    values.authMonthStart = values.authMonth[0].format('YYYY-MM')
                     values.authMonthEnd= values.authMonth[1].format('YYYY-MM')
                     values.authMonth = undefined;
                 }
@@ -212,61 +201,62 @@ class InvoiceCollection extends Component {
     }
 
     render() {
-        const {getFieldDecorator} = this.props.form;
-        const {tableUpDateKey,filters,selectedRowKeys,visible,uploaderVisible,undoUploadVisible,modalConfig,expand} = this.state;
-        const formItemStyle={
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:18
-            }
-        }
+        const {tableUpDateKey,filters,selectedRowKeys,visible,uploaderVisible,undoUploadVisible,modalConfig} = this.state;
         const rowSelection = {
             type:'radio',
+            width:70,
+            fixed:true,
             selectedRowKeys,
             onChange: this.onChange
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card>
-                    <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                <Card
+                    style={{
+                        borderTop:'none'
+                    }}
+                    className="search-card"
+                >
+                    <Form onSubmit={this.handleSubmit}>
                         <Row>
-                            <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
-                            </Col>
-                            <Col span={8}>
-                                <FormItem label='发票号码' {...formItemStyle}>
-                                    {getFieldDecorator('invoiceNum',{
-                                    })(
-                                        <Input size="small" />
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem
-                                    {...formItemStyle}
-                                    label="认证月份"
-                                >
-                                    {getFieldDecorator('authMonth', {
-                                    })(
-                                        <RangePicker
-                                            style={{width:'100%'}}
-                                            format="YYYY-MM"
-                                            size="small"
-                                        />
-                                    )}
-                                </FormItem>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col style={{textAlign:'right'}}>
-                                <Button size="small" style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button size="small" style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            {
+                                getFields(this.props.form,[
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:6,
+                                        fieldDecoratorOptions:{
+                                        },
+                                    },{
+                                        label:'发票号码',
+                                        fieldName:'invoiceNum',
+                                        type:'input',
+                                        span:6,
+                                        fieldDecoratorOptions:{
+                                        },
+                                    },{
+                                        label:'认证月份',
+                                        fieldName:'authMonth',
+                                        type:'rangePicker',
+                                        span:6,
+                                        fieldDecoratorOptions:{
+                                        },
+                                        componentProps:{
+                                            format:"YYYY-MM"
+                                        }
+                                    }
+                                ])
+                            }
+
+                            <Col span={6}>
+                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
+
                 <Card
                       extra={<div>
                           <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
@@ -351,6 +341,7 @@ class InvoiceCollection extends Component {
                                     size:'small',
                                     columns:this.columns,
                                     rowSelection:rowSelection,
+                                    scroll:{ x: '150%' },
                                     renderFooter:data=>{
                                         return (
                                             <div>

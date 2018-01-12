@@ -31,8 +31,7 @@ const getColumns =(context)=>[
         ),
         fixed:'left',
         width:'75px'
-    },
-    {
+    },{
         title: '纳税主体',
         dataIndex: 'mainName',
     }, {

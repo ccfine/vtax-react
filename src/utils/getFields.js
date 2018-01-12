@@ -15,7 +15,7 @@ const normFile = (e) => {
     return e && e.fileList;
 }
 const getFields = (form,fieldsData=[]) =>{
-    const {getFieldDecorator,setFieldsValue} = form;
+    const {getFieldDecorator,setFieldsValue,getFieldValue} = form;
     let defaultFormItemStyle={
         labelCol:{
             span:6
@@ -23,6 +23,11 @@ const getFields = (form,fieldsData=[]) =>{
         wrapperCol:{
             span:18
         }
+    }
+    if(typeof fieldsData === 'function'){
+        /**
+         * 当fieldsData为function的时候，必须要在最后返回fieldsData*/
+        fieldsData = fieldsData(getFieldValue,setFieldsValue)
     }
     return fieldsData.map((item,i)=>{
         let CusComponent;
@@ -55,6 +60,9 @@ const getFields = (form,fieldsData=[]) =>{
                 break;
             case 'taxClassCodingSelect':
                 CusComponent = CusFormItem.TaxClassCodingSelect;
+                break;
+            case 'roomCodeSelect':
+                CusComponent = CusFormItem.RoomCodeSelect;
                 break;
             case 'yearSelect':
                 CusComponent = CusFormItem.YearSelect;
@@ -101,6 +109,19 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
+        }else if(type==='roomCodeSelect'){
+            // 给这个房间编码选择特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent fieldName={item['fieldName']} setFieldsValue={setFieldsValue} {...item['componentProps']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
         }else if(type==='fileUpload'){
             return(
                 <Col key={i} span={item['span'] || 8}>
@@ -122,7 +143,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} />
+                            <CusComponent {...item['componentProps']} style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

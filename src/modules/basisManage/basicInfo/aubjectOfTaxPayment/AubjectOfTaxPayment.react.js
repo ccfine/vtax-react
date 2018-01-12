@@ -5,7 +5,8 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal} from 'antd'
-import {AsyncTable,CusFormItem} from '../../../../compoments'
+import {AsyncTable} from '../../../../compoments'
+import {getFields} from '../../../../utils'
 import ProjectInformationManagement from './projectInformationManagement'
 import AddEditModal from './add'
 
@@ -96,7 +97,6 @@ class AubjectOfTaxPayment extends Component {
 
     }
     onChange=(selectedRowKeys, selectedRows) => {
-        //console.log(selectedRowKeys,selectedRows)
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 
@@ -132,15 +132,6 @@ class AubjectOfTaxPayment extends Component {
     }
     render() {
         const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
-
-        const formItemStyle={
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:18
-            }
-        }
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
@@ -148,51 +139,67 @@ class AubjectOfTaxPayment extends Component {
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card className="search-card">
+                <Card
+                    style={{
+                        borderTop:'none'
+                    }}
+                    className="search-card"
+                >
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
-                            <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="id" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
-                            </Col>
-                            <Col span={8} offset={1}>
-                                <Button size="small" style={{marginTop:8}} type='primary' htmlType="submit">查询</Button>
+                            {
+                                getFields(this.props.form,[
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'id',
+                                        type:'taxMain',
+                                        span:6,
+                                        fieldDecoratorOptions:{
+                                        },
+                                    },
+                                ])
+                            }
+
+                            <Col span={6}>
+                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
                 <Card
-                      extra={<div>
-                          <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                              <Icon type="plus-circle" />
-                              新增
-                          </Button>
-                          <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
-                              <Icon type="edit" />
-                              编辑
-                          </Button>
-                          <Button size="small" onClick={()=>this.showModal('view')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 1) && !(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
-                              <Icon type="search" />
-                              查看
-                          </Button>
-                          <Button size="small"
-                                  disabled={!selectedRowKeys}
-                                  style={buttonStyle}
-                                  onClick={()=>{
-                                      const ref = Modal.warning({
-                                          content: '研发中...',
-                                          okText: '关闭',
-                                          onOk:()=>{
-                                              ref.destroy();
-                                          }
-                                      });
-                                  }}
-                          >
-                              <Icon type="search" />
-                              查看历史版本
-                          </Button>
-                          <ProjectInformationManagement disabled={!selectedRowKeys} taxSubjectId={selectedRowKeys} />
-                      </div>}
-                      style={{marginTop:10}}>
+                    extra={<div>
+                        <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
+                            <Icon type="plus-circle" />
+                            新增
+                        </Button>
+                        <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
+                            <Icon type="edit" />
+                            编辑
+                        </Button>
+                        <Button size="small" onClick={()=>this.showModal('view')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 1) && !(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
+                            <Icon type="search" />
+                            查看
+                        </Button>
+                        <Button size="small"
+                                disabled={!selectedRowKeys}
+                                style={buttonStyle}
+                                onClick={()=>{
+                                    const ref = Modal.warning({
+                                        content: '研发中...',
+                                        okText: '关闭',
+                                        onOk:()=>{
+                                            ref.destroy();
+                                        }
+                                    });
+                                }}
+                        >
+                            <Icon type="search" />
+                            查看历史版本
+                        </Button>
+                        <ProjectInformationManagement disabled={!selectedRowKeys} taxSubjectId={selectedRowKeys} />
+                    </div>}
+                    style={{marginTop:10}}>
                     <AsyncTable url="/taxsubject/list"
                                 updateKey={tableUpDateKey}
                                 filters={filters}

@@ -19,6 +19,7 @@ export default class AsyncTable extends Component{
             },
             summaryData:[],
             footerDate:{},
+            selectedRowKeys: []
         }
     }
     static propTypes={
@@ -36,12 +37,15 @@ export default class AsyncTable extends Component{
             const currentPager = { ...this.state.pagination };
             currentPager.current = 1;
             this.mounted &&  this.setState({
-                pagination: currentPager,
-                updateKey: nextProps.updateKey,
+                pagination: currentPager
             },()=>{
                 this.fetch({},nextProps)
             });
         }
+    }
+    onSelectChange = (selectedRowKeys) => {
+        this.setState({ selectedRowKeys });
+        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys)
     }
     fetch = (params = {},nextProps) => {
         const props = nextProps || this.props;
@@ -57,16 +61,26 @@ export default class AsyncTable extends Component{
                 const pagination = { ...this.state.pagination };
                 pagination.total = typeof data.data.total !== 'undefined' ? data.data.total : data.data.page.total;
                 pagination.pageSize = typeof data.data.size !== 'undefined' ? data.data.size : data.data.page.size;
+
+                let dataSource = data.data.records ? data.data.records : data.data.page.records;
+
+                /** 给外部一个回调方法，可以得到每次变更后的data*/
+                props.tableProps.onDataChange && props.tableProps.onDataChange(dataSource)
+
                 this.mounted && this.setState({
                     loaded: true,
                     /**
                      * 有的列表接口返回的结构不一样
                      * */
-                    dataSource: data.data.records ? data.data.records : data.data.page.records,
+                    dataSource,
                     footerDate: data.data,
+                    selectedRowKeys:[],
                     //summaryData:summaryData,
                     pagination
                 });
+
+                /**假如设置了单选或多选，重新异步请求数据的时候选中项也要清空，也要主动触发一下selectedRowKeys的onChange*/
+                props.tableProps.onRowSelect && props.tableProps.onRowSelect([])
             }else{
                 message.error(data.msg)
                 this.mounted && this.setState({
@@ -99,12 +113,19 @@ export default class AsyncTable extends Component{
         this.mounted=null
     }
     render(){
-        const {loaded,dataSource,pagination,footerDate}  = this.state;
+        const {loaded,dataSource,pagination,footerDate,selectedRowKeys}  = this.state;
         const {props} = this;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+            fixed:true,
+            ...props.tableProps.rowSelection
+        };
         return(
             <Table
                 {...props.tableProps}
                 dataSource={dataSource}
+                rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
                 pagination={props.tableProps.pagination ? pagination : false}
                 onChange={this.handleTableChange}
                 loading={!loaded}
