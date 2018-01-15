@@ -21,31 +21,38 @@ const code = {
 }
 const columns = [
     {
-        title: '认证时间',
-        dataIndex: 'authDate',
+        title: '发票代码',
+        dataIndex: 'invoiceCode',
         width:60,
     },{
-        title: '销货单位名称',
-        dataIndex: 'sellerName',
+        title: '发票号码',
+        dataIndex: 'invoiceNum ',
         width:100,
     },{
-        title: '纳税人识别号',
-        dataIndex: 'sellerTaxNum',
-        width:100,
-    },{
-        title: '数据来源',
-        dataIndex: 'sourceType',
-        width:60,
+        title:'发票类型',
+        dataIndex:'invoiceType',
         render:text=>{
-            text = parseInt(text,0)
-            if(text===1){
-                return '手工采集'
+            if(text==='s'){
+                return '专票'
             }
-            if(text===2){
-                return '外部导入'
+            if(text==='c'){
+                return '普票'
             }
-            return ''
-        }
+            return text;
+        },
+        width:100,
+    },{
+        title: '开票日期',
+        dataIndex: 'billingDate',
+        width:100,
+    },{
+        title: '购货单位名称',
+        dataIndex: 'purchaseName',
+        width:60,
+    },{
+        title: '购方税号',
+        dataIndex: 'purchaseTaxNum',
+        width:60,
     },{
         title: '金额',
         dataIndex: 'amount',
@@ -173,7 +180,7 @@ class PopInvoiceInformationModal extends Component{
 
                 </Card>
 
-                <AsyncTable url="/income/invoice/collection/list"
+                <AsyncTable url="/output/billing/account/detail/list"
                             updateKey={tableUpDateKey}
                             filters={filters}
                             tableProps={{

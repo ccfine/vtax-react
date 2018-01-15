@@ -58,13 +58,17 @@ export default class SynchronizeTable extends Component{
         });
     }
     render(){
-        const {loaded,pagination}  = this.state;
+        const {loaded,pagination,footerDate}  = this.state;
         const {props} = this;
         return(
             <Table {...props.tableProps}
                    dataSource={props.data}
                    pagination={props.tableProps.pagination ? pagination : false}
-                   onChange={this.handleTableChange} loading={!loaded}
+                   onChange={this.handleTableChange}
+                   loading={!loaded}
+                   footer={props.tableProps.renderFooter ? (currentPageData)=>{
+                       return props.tableProps.renderFooter(footerDate)
+                   } : null}
             />
         )
     }

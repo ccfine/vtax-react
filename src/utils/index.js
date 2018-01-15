@@ -162,6 +162,15 @@ const accAdd=(arg1, arg2)=>{
     return (arg1 + arg2) / m;
 };
 
+//获取html
+const htmlDecode = html =>{
+    if(html){
+        let div = document.createElement( 'div' );
+        div.innerHTML = html;
+        return div.textContent;
+    }
+};
+
 export {
     regRules,
     request,
@@ -173,5 +182,6 @@ export {
     accMul,
     accSub,
     accAdd,
-    getFields
+    getFields,
+    htmlDecode,
 }
