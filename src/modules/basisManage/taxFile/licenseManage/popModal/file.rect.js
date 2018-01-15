@@ -1,9 +1,6 @@
 import React from 'react'
-import {Modal,Button,Popconfirm,message,Icon,List,Avatar,Row,Col,Upload} from 'antd'
-import SearchTable from './SearchTableTansform.react'
+import {Modal,Button,Popconfirm,message,Icon,List,Row,Col,Upload} from 'antd'
 import {request} from '../../../../../utils'
-import moment from 'moment'
-import { update } from 'immutable';
 
 const getProps = context => ({
     action: `${window.baseURL}${context.props.url}/file/upload/${context.props.id}`,
@@ -30,8 +27,7 @@ class FileModal extends React.Component{
         return true;
     }
     handleChange = (info) => {
-        let fileList = info.fileList;
-        fileList = fileList.forEach((file) => {
+        info.fileList.forEach((file) => {
             if (file.uid === this.state.uid && file.response) {
                // 判断文件上传是否成功
                if(file.response.code && file.response.data){

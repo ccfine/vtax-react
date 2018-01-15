@@ -83,6 +83,8 @@ class PopModal extends Component{
                 values.leaseContractNum = values.leaseContractNum.join(',');
                 values.leaseContract = undefined;
                 
+                // 处理日期
+                values.evidenceDate = values.evidenceDate.format('YYYY-MM-DD');
                 let obj = Object.assign({},this.state.record,values);
                 let result ,
                 sucessMsg ,
