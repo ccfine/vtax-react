@@ -108,7 +108,7 @@ export default class TabPage extends Component{
         this.setState({updateKey:Date.now()})
     }
     deleteRecord(record){
-        request.delete(`/card/house/ownership/delete${record.id}`).then(({data}) => {
+        request.delete(`/card/house/ownership/delete/${record.id}`).then(({data}) => {
             if (data.code === 200) {
                 message.success('删除成功', 4);
                 this.setState({updateKey:Date.now()});
@@ -182,7 +182,7 @@ export default class TabPage extends Component{
                 hideModal={()=>{this.hideModal()}}
                 update={()=>{this.update()}}
                 ></PopModal>
-                {this.state.titleCertificateId && <PartTwo titleCertificateId={this.state.titleCertificateId} updateKey={this.state.updateKey} projectId={this.props.projectId}/>}
+                {this.state.titleCertificateId && <PartTwo titleCertificateId={this.state.titleCertificateId} updateKey={this.state.updateKey}/>}
                 
             </div>
         )

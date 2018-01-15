@@ -88,8 +88,7 @@ export default class TabPage extends Component{
     render(){        
         const props = this.props;
         return(
-            
-            <Card title="大产证明细">
+            <Card title="大产证明细" style={{marginTop:'10px'}}>
             <SearchTable
                 actionOption={{
                     body:(<Button  onClick={()=>{
@@ -108,7 +107,7 @@ export default class TabPage extends Component{
             >
             </SearchTable>
                <PopModal 
-                projectid={props.projectId}
+                titleCertificateId={props.titleCertificateId}
                 id={this.state.opid}
                 action={this.state.action} 
                 visible={this.state.visible} 
