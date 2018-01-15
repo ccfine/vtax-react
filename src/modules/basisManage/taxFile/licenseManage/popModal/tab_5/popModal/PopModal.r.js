@@ -1,313 +1,267 @@
-/**
- * Created by liurunbin on 2017/12/21.
- */
-import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
-import {request} from '../../../../../../../utils'
-import {CusFormItem} from '../../../../../../../compoments'
-import moment from 'moment';
-const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
-const Option = Select.Option;
+import React,{Component} from 'react'
+import {Modal,Form,Input,Col,Button,message,Spin,Row} from 'antd'
+import {getFields,request} from '../../../../../../../utils'
+import moment from 'moment'
 const { TextArea } = Input;
-class PopModal extends Component{
-    static defaultProps={
-        type:'edit',
-        visible:true
+const FormItem = Form.Item;
+const formItemLayout = {
+    labelCol: {
+      xs: { span: 12 },
+      sm: { span: 9 },
+    },
+    wrapperCol: {
+      xs: { span: 12 },
+      sm: { span: 15 },
+    },
+  };
+const setComItem=(initialValue,readonly=false,required=true)=>({
+    span:'12',
+    type:'input',
+    formItemStyle:formItemLayout,
+    fieldDecoratorOptions:{
+        initialValue,
+        rules:[
+        {
+            required,
+            message:'必录'
+        }
+        ]
+    },
+    componentProps:{
+        disabled:readonly
     }
+});
+class PopModal extends Component{
     state={
-        initData:{
-
+        loading:false,
+        formLoading:false,
+        record:{},
+        submited:false
+    }
+    componentWillReceiveProps(props){
+        if(props.visible && this.props.visible!==props.visible){
+            if(props.id){
+                this.setState({formLoading:true});
+                request.get(`/card/land/use/find/${props.id}`).then(({data}) => {
+                    if (data.code === 200) {
+                        this.setState({formLoading:false,record:data.data,submited:false});
+                    }
+                });
+            }else{
+                this.setState({formLoading:false});
+            }
         }
     }
+    hideModal(){
+        this.props.hideModal();
+        // 回归初始状态
+        this.props.form.resetFields();
+        this.setState({record:{},submited:false});
+    }
+    handleOk(){
+        if((this.props.action!=='modify' && this.props.action!=='add') || this.state.formLoading){
+            this.hideModal();
+            return;
+        }
 
-    handleSubmit = (e) => {
-        e && e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
+        this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                // 提交数据
+                // 处理合同信息
+                values.projectStagesId = [];
+                values.projectStagesName = [];
+                values.projectStages.forEach(ele=>{
+                    values.projectStagesId.push(ele.key);
+                    values.projectStagesName.push(ele.label)
+                })
+                values.projectStagesId = values.projectStagesId.join(',');
+                values.projectStagesName = values.projectStagesName.join(',');
+                values.projectStages = undefined;
+                
+                let obj = Object.assign({},this.state.record,values);
+                let result ,
+                sucessMsg ,
+                isModify=(this.props.action==="modify" || (this.state.submited && this.props.action==="add"));
+                
+                if(isModify){
+                    result = request.put('/card/land/use/update', obj);
+                    sucessMsg='修改成功';
+                }else if(this.props.action==="add"){
+                    obj.projectId = this.props.projectid;
+                    result = request.post('/card/land/use/add', obj);
+                    sucessMsg='新增成功，点击【附件信息】进行文件上传';
+                }
+
+
+
+                this.setState({loading:true});
+                result && result.then(({data}) => {
+                    if (data.code === 200) {
+                        message.success(sucessMsg, 4);
+                        this.setState({loading:false,record:data.data,submited:true});
+                        this.props.update();
+                        // 修改成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
+                        if(isModify){
+                            this.hideModal();
+                        }
+                    } else {
+                        this.setState({loading:false});
+                        message.error(data.msg, 4);
+                    }
+                })
+                .catch(err => {
+                    message.error(err.message);
+                    this.setState({loading:false});
+                })
             }
         });
     }
-    fetchReportById = id=>{
-        request.get(`/report/get/${id}`)
-            .then(({data})=>{
-                const d = {"id":1,"createdDate":"2017-12-20 17:34:19","lastModifiedDate":"2017-12-20 12:16:35","createdBy":null,"lastModifiedBy":"1","mainId":1,"mainName":"c2","checkSets":"查1","checkType":12,"checkStart":"2017-01-02","checkEnd":"2017-01-02","checkImplementStart":"2017-01-02","checkImplementEnd":"2017-01-02","documentNum":"文书编号","issue":null,"closingTime":"2017-12-12","checkItems":"hello","differential":'2',"taxPayment":null,"lateFee":'90000.0',"fine":'12121.12',"remark":'备注蚊子',"isAttachment":0,"orgId":"87e7511d51754da6a1a04de1b4c669ff"}
-                this.setState({
-                    initData:d,
-                    mainTaxItems:[{
-                        text:d.mainName,
-                        value:d.mainId
-                    }]
-                })
-            })
-    }
-    componentWillReceiveProps(nextProps){
-        if(!nextProps.visible){
-            /**
-             * 关闭的时候清空表单
-             * */
-            nextProps.form.resetFields();
-            this.setState({
-                initData:{}
-            })
-        }
-        if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
-            /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
-             * */
-            this.fetchReportById(nextProps.modalConfig.id)
-        }
-    }
-    mounted=true
-    componentWillUnmount(){
-        this.mounted=null
-    }
     render(){
-        const props = this.props;
-        const {initData} = this.state;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 },
-        };
-        const formItemLayout2 = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 18 },
-        };
-        let title='';
-        let disabled = false;
-        const type = props.modalConfig.type;
-        switch (type){
-            case 'add':
-                title = '添加';
-                break;
-            case 'edit':
-                title = '编辑';
-                break;
-            case 'view':
-                title = '查看';
-                disabled=true;
-                break;
-            default:
-                //no
+        const readonly = (this.props.action ==='look');
+        let {record={}} = this.state;
+        const form= this.props.form,
+        {getFieldDecorator} = this.props.form;
+        let title = "查看";
+        if(this.props.action==="add"){
+            title = "添加";
+        }else if(this.props.action==="modify"){
+            title="修改"
         }
-        const dateFormat = 'YYYY-MM-DD'
-        let shouldShowDefaultData = false;
-        if(type==='edit' || type==='view'){
-            shouldShowDefaultData = true;
-        }
-        return(
-            <Modal
-                maskClosable={false}
-                onCancel={()=>props.toggleModalVisible(false)}
-                width={900}
-                visible={props.visible}
-                footer={
+
+        let stages = [];
+        record.projectStagesId && record.projectStagesId.split(',').forEach(element => {
+            stages.push({key:element});
+        });
+        return (
+            <Modal 
+            title={title}
+            visible={this.props.visible}
+            width='800px'
+            bodyStyle={{maxHeight:"500px",overflow:"auto"}}
+            onCancel={()=>{this.hideModal()}}
+            footer={[
+            (record.id && <Button key="info" icon="search" onClick={()=>{}}>附件信息</Button>),
+                <Button key="back" onClick={()=>{this.hideModal()}}>取消</Button>,
+                <Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
+                  确认
+                </Button>,
+              ]}
+            >
+            <Spin spinning={this.state.formLoading}>
+                <Form>
                     <Row>
-                        <Col span={12}></Col>
-                        <Col span={12}>
-                            <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                            <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
-                        </Col>
+                        {
+                        getFields(form,[{
+                            ...setComItem(record.licenseKey,(readonly || this.props.action==="modify")),
+                            label:'土地证编号',
+                            fieldName:'licenseKey'
+                        },
+                        {
+                            ...setComItem(record.organization,readonly),
+                            label:'用地单位',
+                            fieldName:'organization'
+                        }])
+                        }
                     </Row>
-                }
-                title={title}>
-                <Form onSubmit={this.handleSubmit} style={{height:'470px',overflowY:'scroll'}}>
-                    <Row>
-                        <Col span={12}>
-                            <CusFormItem.TaxMain fieldName="mainId" initialValue={initData.mainId} formItemStyle={formItemLayout} form={this.props.form} />
-                        </Col>
+                    <Row>    
+                    {
+                        getFields(form,[{
+                            ...setComItem(record.position,readonly),
+                            label:'地块位置',
+                            fieldName:'position'
+                        },
+                        {
+                            ...setComItem(record.acquireWay,readonly),
+                            label:'取得方式',
+                            fieldName:'acquireWay'
+                        }])
+                    }
                     </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label='检查组' {...formItemLayout}>
-                                {getFieldDecorator(`checkSets`,{
-                                    initialValue:initData.checkSets,
-                                    rules:[
-                                        {
-                                            required:true,
-                                            message:'请输入检查组'
-                                        }
-                                    ]
-                                })(
-                                    <Input disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='检查类型' {...formItemLayout}>
-                                {getFieldDecorator(`checkType`,{
-                                    initialValue:initData.checkType,
-                                    rules:[
-                                        {
-                                            required:true,
-                                            message:'请选择检查类型'
-                                        }
-                                    ]
-                                })(
-                                    <Select
-                                        disabled={disabled}
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value={'1'}>类型1</Option>
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
+                    <Row>    
+                    {
+                        getFields(form,[{
+                            label:'项目分期',
+                            fieldName:'projectStages',
+                            ...setComItem([],readonly),
+                            type:'asyncSelect',
+                            componentProps:{
+                                fieldTextName:'itemName',
+                                fieldValueName:'id',
+                                fetchAble:false,
+                                url:`/project/stages/${this.props.projectid}`,
+                                initialValue:stages, // 传这里有效
+                                selectOptions:{
+                                    mode:"multiple",
+                                    disabled:readonly,
+                                    labelInValue:true
+                                }
+                            }
+                        },{
+                            ...setComItem(record.landUse,readonly,false),
+                            label:'土地用途',
+                            fieldName:'landUse'
+                        }])
+                    }
                     </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label="检查期间起止"
-                            >
-                                {getFieldDecorator('checkImplement', {
-                                    initialValue:shouldShowDefaultData ?[moment(initData.checkImplementStart, dateFormat), moment(initData.checkImplementEnd, dateFormat)] :[null,null],
-                                    rules:[
-                                        {
-                                            required:true,
-                                            message:'请选择检查期间起止'
-                                        }
-                                    ]
-                                })(
-                                    <RangePicker disabled={disabled} style={{width:'100%'}} format="YYYY-MM-DD" />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label="检查实施时间起止"
-                            >
-                                {getFieldDecorator('check', {
-                                    initialValue:shouldShowDefaultData ?[moment(initData.checkStart, dateFormat), moment(initData.checkEnd, dateFormat)]:[null,null],
-                                    rules:[
-                                        {
-                                            required:true,
-                                            message:'请选择检查实施时间起止'
-                                        }
-                                    ]
-                                })(
-                                    <RangePicker disabled={disabled} style={{width:'100%'}} format="YYYY-MM-DD" />
-                                )}
-                            </FormItem>
-                        </Col>
+                    <Row>    
+                    {
+                        getFields(form,[{
+                            ...setComItem(record.ageLimit,readonly),
+                            label:'土地年限',
+                            fieldName:'ageLimit',
+                            type:'numeric',
+                        },{
+                            ...setComItem(record.rightArea,readonly),
+                            label:'使用权面积（㎡）',
+                            fieldName:'rightArea',
+                            type:'numeric',
+                        }])
+                    }
                     </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label='文书编号' {...formItemLayout}>
-                                {getFieldDecorator(`documentNum`,{
-                                    initialValue:initData.documentNum,
-                                    rules:[
-                                        {
-                                            required:true,
-                                            message:'请输入文书编号'
-                                        }
-                                    ]
-                                })(
-                                    <Input disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
+                    <Row>    
+                    {
+                        getFields(form,[{
+                            ...setComItem(record.shareArea,readonly),
+                            label:'其中：分摊面积（㎡）',
+                            fieldName:'shareArea',
+                            type:'numeric',
+                        },{
+                            ...setComItem(record.ownArea,readonly),
+                            label:'其中：独有面积（㎡）',
+                            fieldName:'ownArea',
+                            type:'numeric',
+                        }])
+                    }
+                    </Row>
+                    <Row>    
+                    {
+                        getFields(form,[{
+                            ...setComItem(moment(record.evidenceDate),readonly),
+                            label:'取证日期',
+                            fieldName:'evidenceDate',
+                            type:'datePicker',
+                        }])
+                    }
                     </Row>
                     <Row>
-                        <Col span={24}>
-                            <FormItem label='主要争议点' {...formItemLayout2}>
-                                {getFieldDecorator(`issue`,{
-                                    initialValue:initData.issue
-                                })(
-                                    <TextArea disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label="预计结案时间"
-                            >
-                                {getFieldDecorator('closingTime', {
-                                    initialValue:shouldShowDefaultData ? moment(initData.closingTime, dateFormat) :undefined
-                                })(
-                                    <DatePicker disabled={disabled} style={{width:'100%'}} format="YYYY-MM-DD" />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='查补事项' {...formItemLayout2}>
-                                {getFieldDecorator(`checkItems`,{
-                                    initialValue:initData.checkItems
-                                })(
-                                    <TextArea disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label='差异类型' {...formItemLayout}>
-                                {getFieldDecorator(`differential`,{
-                                    initialValue:initData.differential
-                                })(
-                                    <Select
-                                        disabled={disabled}
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value={'1'}>暂时性差异</Option>
-                                        <Option value={'2'}>永久性差异</Option>
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='补缴税款' {...formItemLayout}>
-                                {getFieldDecorator(`taxPayment`,{
-                                    initialValue:initData.taxPayment
-                                })(
-                                    <Input disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label='滞纳金' {...formItemLayout}>
-                                {getFieldDecorator(`lateFee`,{
-                                    initialValue:initData.lateFee
-                                })(
-                                    <Input disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='罚款' {...formItemLayout}>
-                                {getFieldDecorator(`fine`,{
-                                    initialValue:initData.fine
-                                })(
-                                    <Input disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='备注' {...formItemLayout2}>
-                                {getFieldDecorator(`remark`,{
-                                    initialValue:initData.remark
-                                })(
-                                    <TextArea disabled={disabled} />
-                                )}
+                        <Col span={18}>
+                            <FormItem label="备注" labelCol={{
+                                                            xs: { span: 12 },
+                                                            sm: { span: 6 },
+                                                            }}
+                                                    wrapperCol={ {
+                                                            xs: { span: 12 },
+                                                            sm: { span: 18 },
+                                                            }}>
+                                {getFieldDecorator('remark',{initialValue:record.remark})(<TextArea disabled={readonly}/>)}
                             </FormItem>
                         </Col>
                     </Row>
                 </Form>
+                </Spin>
             </Modal>
-        )
+        );
     }
 }
 
-export default Form.create()(PopModal)
+export default Form.create()(PopModal);

@@ -2,7 +2,10 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {SearchTable} from '../../../../../../compoments'
+import SearchTable from '../SearchTableTansform.react'
+import {Button,Popconfirm,message} from 'antd'
+import PopModal from './popModal'
+import {request} from '../../../../../../utils'
 const getSearchFields = projectId => [
     {
         label:'项目分期',
@@ -15,10 +18,34 @@ const getSearchFields = projectId => [
         }
     }
 ]
-const columns = [
+const getColumns = context=> [
+    {
+        title:'操作',
+        render(text, record, index){
+            return(
+                <span>
+                <a style={{marginRight:"5px"}} onClick={()=>{
+                    context.setState({visible:true,action:'modify',opid:record.id});
+                }}>修改</a>
+                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
+                    <a style={{marginRight:"5px"}}>删除</a>
+                </Popconfirm>
+                <a onClick={()=>{
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}>查看</a>
+                </span>
+            );
+        },
+        fixed:'left',
+        width:'100px',
+        dataIndex:'action'
+    },
     {
         title: '竣工备案编号 ',
         dataIndex: 'licenseNumber',
+    },{
+        title: '项目分期',
+        dataIndex: 'stagesId'
     }, {
         title: '工程名称',
         dataIndex: 'projectName',
@@ -31,13 +58,16 @@ const columns = [
     },{
         title: '工程地点',
         dataIndex: 'position'
-    },{
-        title: '工程类别',
-        dataIndex: 'projectType',
-    },{
-        title: '结构形式',
-        dataIndex: 'structuralStyle',
-    },{
+    },
+     {
+         title: '工程类别',
+         dataIndex: 'projectType',
+     },
+     {
+         title: '结构形式',
+         dataIndex: 'structuralStyle',
+     },
+    {
         title: '建设单位',
         dataIndex: 'developmentOrg',
     },{
@@ -59,46 +89,90 @@ const columns = [
         title: '开工日期',
         dataIndex: 'startDate',
     },{
+        title: '竣工验收日期',
+        dataIndex: 'endDate',
+    },{
         title: '发证日期',
         dataIndex: 'issuingDate',
     },{
         title: '备注',
         dataIndex: 'remark',
-    },{
-        title: '项目分期',
-        dataIndex: 'stagesId'
     }
 ];
 
 export default class TabPage extends Component{
-    render(){
+    state={
+        action:undefined,
+        opid:undefined,
+        visible:false,
+        updateKey:Date.now()
+    }
+    hideModal(){
+        this.setState({visible:false});
+    }
+    update(){
+        this.setState({updateKey:Date.now()})
+    }
+    deleteRecord(record){
+        request.delete(`/project/finish/acceptance/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.setState({updateKey:Date.now()});
+            } else {
+                message.error(data.msg, 4);
+            }
+        })
+        .catch(err => {
+            message.error(err.message);
+            this.setState({loading:false});
+            this.hideModal();
+        })
+    }
+    componentWillReceiveProps(props){
+        if(props.updateKey !== this.props.updateKey){
+            this.setState({updateKey:props.updateKey});
+        }
+    }
+    render(){        
+        const props = this.props;
         const {projectId} = this.props;
         return(
+            <div style={{padding:"0 15px"}}>
             <SearchTable
                 searchOption={{
                     fields:getSearchFields(projectId),
                     cardProps:{
                         title:'',
                         bordered:false,
-                        extra:null
+                        extra:null,
+                        bodyStyle:{padding:"0px"},
                     }
                 }}
+                actionOption={{
+                    body:(<Button  onClick={()=>{
+                        this.setState({visible:true,action:'add',opid:undefined});
+                    }}>添加</Button>)
+                }}
                 tableOption={{
-                    columns,
-                    url:`/project/finish/acceptance/list/${projectId}`,
+                    columns:getColumns(this),
+                    url:`/project/finish/acceptance/list/${props.projectId}`,
+                    scroll:{x:'200%'},
+                    key:this.state.updateKey,
                     cardProps:{
-                        title:'',
                         bordered:false,
-                        style:{
-                            marginTop:0
-                        },
-                        bodyStyle:{
-                            padding:0
-                        }
                     }
                 }}
             >
             </SearchTable>
+               <PopModal 
+                projectid={props.projectId}
+                id={this.state.opid}
+                action={this.state.action} 
+                visible={this.state.visible} 
+                hideModal={()=>{this.hideModal()}}
+                update={()=>{this.update()}}
+                ></PopModal> 
+            </div>
         )
     }
 }

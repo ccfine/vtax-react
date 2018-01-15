@@ -1,160 +1,121 @@
 /**
- * Created by liurunbin on 2017/12/23.
+ * Created by liurunbin on 2018/1/2.
  */
-/** 大产证明细*/
 import React, { Component } from 'react'
-import {Layout,Row,Col,Form,Button,Icon,Modal} from 'antd'
-import {AsyncTable} from '../../../../../../compoments'
-import PopModal from './popModal'
-const confirm = Modal.confirm;
-const buttonStyle={
-    marginRight:5
-}
-const columns = [{
-    title: '栋号 ',
-    dataIndex: 'building',
-}, {
-    title: '单元号',
-    dataIndex: 'unitNumber',
-},{
-    title: '户号',
-    dataIndex: 'accountNumber',
-},{
-    title: '建筑面积(m²)',
-    dataIndex: 'buildingArea',
-},{
-    title: '分摊面积(m²)',
-    dataIndex: 'shareArea'
-},{
-    title: '设计用途',
-    dataIndex: 'landUse',
-},{
-    title: '坐落',
-    dataIndex: 'position',
-}];
+import SearchTable from '../SearchTableTansform.react'
+import {Button,Popconfirm,message,Card} from 'antd'
+import PopModal from './detailModal'
+import {request} from '../../../../../../utils'
+const getColumns = context=> [
+    {
+        title:'操作',
+        render(text, record, index){
+            return(
+                <span>
+                <a style={{marginRight:"5px"}} onClick={()=>{
+                    context.setState({visible:true,action:'modify',opid:record.id});
+                }}>修改</a>
+                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
+                    <a style={{marginRight:"5px"}}>删除</a>
+                </Popconfirm>
+                <a onClick={()=>{
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}>查看</a>
+                </span>
+            );
+        },
+        fixed:'left',
+        width:'100px',
+        dataIndex:'action'
+    },
+    {
+        title: '栋号 ',
+        dataIndex: 'building',
+    }, {
+        title: '单元号',
+        dataIndex: 'unitNumber',
+    },{
+        title: '户号',
+        dataIndex: 'accountNumber',
+    },{
+        title: '建筑面积(m²)',
+        dataIndex: 'buildingArea',
+    },{
+        title: '分摊面积(m²)',
+        dataIndex: 'shareArea'
+    },{
+        title: '设计用途',
+        dataIndex: 'landUse',
+    },{
+        title: '坐落',
+        dataIndex: 'position',
+    }
+];
 
-class TabPage extends Component {
+export default class TabPage extends Component{
     state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{},
-
-        /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
-         * */
-        tableUpDateKey:Date.now(),
-
-        selectedRowKeys:null,
+        action:undefined,
+        opid:undefined,
         visible:false,
-        expand:true,
-
-        modalConfig:{
-            type:''
-        }
+        updateKey:Date.now()
     }
-    toggleModalVisible=visible=>{
-        this.setState({
-            visible
-        })
+    hideModal(){
+        this.setState({visible:false});
     }
-    handleSubmit = e => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.setState({
-                    selectedRowKeys:null,
-                    filters:values
-                },()=>{
-                    this.setState({
-                        tableUpDateKey:Date.now()
-                    })
-                });
+    update(){
+        this.setState({updateKey:Date.now()})
+    }
+    deleteRecord(record){
+        request.delete(`/card/house/ownership/detail/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.setState({updateKey:Date.now()});
+            } else {
+                message.error(data.msg, 4);
             }
-        });
-
-    }
-    onChange=(selectedRowKeys, selectedRows) => {
-        this.setState({
-            selectedRowKeys
+        })
+        .catch(err => {
+            message.error(err.message);
+            this.setState({loading:false});
+            this.hideModal();
         })
     }
-    showModal=()=>{
-        this.toggleModalVisible(true)
-    }
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps.titleCertificateId)
-        if(this.props.titleCertificateId !== nextProps.titleCertificateId){
-            setTimeout(()=>{
-                this.setState({
-                    tableUpDateKey:Date.now()
-                })
-            },100)
+    componentWillReceiveProps(props){
+        if(props.updateKey !== this.props.updateKey || props.titleCertificateId!==this.props.titleCertificateId){
+            this.setState({updateKey:Date.now()});
         }
-
     }
-    render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,expand} = this.state;
-        const rowSelection = {
-            type:'radio',
-            selectedRowKeys,
-            onChange: this.onChange
-        };
-        return (
-            <Layout style={{background:'transparent',marginTop:15}} >
-                    <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
-                        <Row>
-                            <Col span={24} style={{textAlign:'right',marginBottom:15}}>
-                                    <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
-                                        <Icon type="file-add" />
-                                        新增
-                                    </Button>
-                                    <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                        <Icon type="edit" />
-                                        编辑
-                                    </Button>
-                                    <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
-                                        <Icon type="search" />
-                                        查看
-                                    </Button>
-                                    <Button
-                                        onClick={()=>{
-                                            confirm({
-                                                title: '友情提醒',
-                                                content: '该删除后将不可恢复，是否删除？',
-                                                okText: '确定',
-                                                okType: 'danger',
-                                                cancelText: '取消',
-                                                onOk() {
-                                                    console.log('OK');
-                                                },
-                                                onCancel() {
-                                                    console.log('Cancel');
-                                                },
-                                            });
-                                        }}
-                                        disabled={!selectedRowKeys}
-                                        type='danger'>
-                                        <Icon type="delete" />
-                                        删除
-                                    </Button>
-                            </Col>
-                        </Row>
-                    </Form>
-
-                    <AsyncTable url={`/card/house/ownership/detail/list/${this.props.titleCertificateId}`}
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:true,
-                                    size:'middle',
-                                    columns:columns,
-                                    rowSelection:rowSelection
-                                }} />
-                <PopModal visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
-            </Layout>
+    render(){        
+        const props = this.props;
+        return(
+            
+            <Card title="大产证明细">
+            <SearchTable
+                actionOption={{
+                    body:(<Button  onClick={()=>{
+                        this.setState({visible:true,action:'add',opid:undefined});
+                    }}>添加</Button>)
+                }}
+                tableOption={{
+                    columns:getColumns(this),
+                    url:`/card/house/ownership/detail/list/${props.titleCertificateId}`,
+                    scroll:{x:'100%'},
+                    key:this.state.updateKey,
+                    cardProps:{
+                        bordered:false,
+                    }
+                }}
+            >
+            </SearchTable>
+               <PopModal 
+                projectid={props.projectId}
+                id={this.state.opid}
+                action={this.state.action} 
+                visible={this.state.visible} 
+                hideModal={()=>{this.hideModal()}}
+                update={()=>{this.update()}}
+                ></PopModal>
+            </Card>
         )
     }
 }
-export default Form.create()(TabPage)

@@ -81,7 +81,7 @@ export default class AsyncSelect extends Component{
             .then(({data}) => {
                 if(data.code===200 && this.mounted){
                     this.toggleLoaded(true)
-                    const result = data.data.records;
+                    const result = data.data.records || data.data;
                     this.setState({
                         dataSource:result
                     })
