@@ -72,6 +72,9 @@ class PopModal extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // 提交数据
+                // 处理日期
+                values.signingDate = values.signingDate.format('YYYY-MM-DD');
+                
                 let obj = Object.assign({},this.state.record,values);
                 let result ,
                 sucessMsg ,
@@ -258,7 +261,7 @@ class PopModal extends Component{
                     </Row>
                 </Form>
                 </Spin>
-                <FileModal id={this.props.id} visible={this.state.visible} hideModal={this.hideFileModal}/>
+                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='contract/land'/>
             </Modal>
         );
     }

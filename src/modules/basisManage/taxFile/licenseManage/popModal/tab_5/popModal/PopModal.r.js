@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import {Modal,Form,Input,Col,Button,message,Spin,Row} from 'antd'
 import {getFields,request} from '../../../../../../../utils'
 import moment from 'moment'
+import FileModal from '../../file.rect'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -36,7 +37,8 @@ class PopModal extends Component{
         loading:false,
         formLoading:false,
         record:{},
-        submited:false
+        submited:false,
+        visible:false
     }
     componentWillReceiveProps(props){
         if(props.visible && this.props.visible!==props.visible){
@@ -51,6 +53,9 @@ class PopModal extends Component{
                 this.setState({formLoading:false});
             }
         }
+    }
+    hideFileModal=()=>{
+        this.setState({visible:false});
     }
     hideModal(){
         this.props.hideModal();
@@ -77,6 +82,8 @@ class PopModal extends Component{
                 values.projectStagesId = values.projectStagesId.join(',');
                 values.projectStagesName = values.projectStagesName.join(',');
                 values.projectStages = undefined;
+                // 处理日期
+                values.evidenceDate = values.evidenceDate.format('YYYY-MM-DD');
                 
                 let obj = Object.assign({},this.state.record,values);
                 let result ,
@@ -140,7 +147,9 @@ class PopModal extends Component{
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
             onCancel={()=>{this.hideModal()}}
             footer={[
-            (record.id && <Button key="info" icon="search" onClick={()=>{}}>附件信息</Button>),
+            (record.id && <Button key="info" icon="search" onClick={()=>{
+                this.setState({visible:true});
+            }}>附件信息</Button>),
                 <Button key="back" onClick={()=>{this.hideModal()}}>取消</Button>,
                 <Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
                   确认
@@ -259,6 +268,7 @@ class PopModal extends Component{
                     </Row>
                 </Form>
                 </Spin>
+                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='card/land/use'/>
             </Modal>
         );
     }
