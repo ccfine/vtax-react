@@ -25,7 +25,6 @@ class SearchTable extends Component{
              * params条件，给table用的
              * */
             filters:{
-                pageSize:20
             },
 
             /**
@@ -43,6 +42,14 @@ class SearchTable extends Component{
                 tableUpDateKey:nextProps.tableOption.key,
             })
         }
+
+        for(let key in nextProps.searchOption.filters){
+            if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
+                this.setState({
+                    filters:nextProps.searchOption.filters
+                })
+            }
+        }
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -55,11 +62,24 @@ class SearchTable extends Component{
                         values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
                         values[key] = undefined;
                     }
+                    if(moment.isMoment(values[key])){
+                        //格式化一下时间 YYYY-MM类型
+                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM');
+                        }
+
+                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM-DD');
+                        }*/
+                    }
                 }
-                this.setState({
+                this.setState(prevState=>({
                     selectedRowKeys:null,
-                    filters:values
-                },()=>{
+                    filters:{
+                        ...prevState.filters,
+                        ...values
+                    }
+                }),()=>{
                     this.setState({
                         tableUpDateKey:Date.now()
                     })
@@ -73,6 +93,9 @@ class SearchTable extends Component{
     }
     componentDidMount(){
         !this.props.doNotFetchDidMount && this.updateTable()
+        this.setState({
+            filters:this.props.searchOption.filters
+        })
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;
@@ -126,7 +149,7 @@ class SearchTable extends Component{
                                         pagination:true,
                                         pageSize:tableOption.pageSize || 10,
                                         size:'small',
-                                        rowSelection:tableOption.rowSelection || undefined,
+                                        rowSelection:tableOption.onRowSelect || undefined,
                                         onRowSelect:tableOption.onRowSelect || undefined,
                                         columns:tableOption.columns,
                                         scroll:tableOption.scroll || undefined,

@@ -133,10 +133,10 @@ const getColumns = context =>[
         dataIndex: 'mainName',
     }, {
         title: '项目名称',
-        dataIndex: 'piName'
+        dataIndex: 'projectName'
     },{
         title: '项目分期名称',
-        dataIndex: 'psName',
+        dataIndex: 'stagesName',
     },{
         title: '楼栋名称',
         dataIndex: 'buildingName'
