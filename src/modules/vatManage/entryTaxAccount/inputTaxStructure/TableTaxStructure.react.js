@@ -181,7 +181,7 @@ class TableTaxStructure extends Component {
                                 filters={props.filters}
                                 tableProps={{
                                     rowKey:record=>record.id,
-                                    pagination:true,
+                                    pagination:false,
                                     size:'small',
                                     columns:this.columns,
                                     renderFooter:data=>{
