@@ -4,6 +4,7 @@
 import React,{Component} from 'react'
 import {Select,Icon,Modal,Button} from 'antd'
 import {SearchTable} from '../../compoments'
+import {fMoney} from '../../utils'
 import PropTypes from 'prop-types'
 export default class RoomCodeSelect extends Component{
     static propTypes={
@@ -44,9 +45,16 @@ export default class RoomCodeSelect extends Component{
         this.mounted=null;
     }
     render(){
-        const {setFieldsValue,fieldName,onChange,conditionValue,customizedValues,shouldChangeFields} = this.props;
+        const {setFieldsValue,fieldName,onChange,conditionValue,disabled,customizedValues,shouldChangeFields} = this.props;
         const {visible} = this.state;
-        let selectDisabled = !!customizedValues['mainId'];
+
+        //只有查看的时候disabled会返回true，如果是查看的话，直接禁用，如果不是查看，则根据有没有mainID来决定禁用
+        let selectDisabled = false;
+        if(disabled){
+            selectDisabled = false
+        }else{
+            selectDisabled = !!customizedValues['mainId'];
+        }
         return(
             <div onClick={()=>{
                 if(selectDisabled){
@@ -59,6 +67,7 @@ export default class RoomCodeSelect extends Component{
                     disabled={!selectDisabled}
                     toggleModalVisible={this.toggleModalVisible}
                     customizedValues={customizedValues}
+                    mainId={customizedValues['mainId']}
                     conditionValue={conditionValue}
                     fieldName={fieldName}
                     shouldChangeFields={shouldChangeFields}
@@ -117,7 +126,7 @@ const getColumns = context => [
     {
         title:'操作',
         key:'actions',
-        width:'10%',
+        width:'60px',
         render:(text,record)=>(
             <Button
                 size='small'
@@ -145,30 +154,42 @@ const getColumns = context => [
         )
     },
     {
-        title: '税收分类编码',
-        dataIndex: 'num',
-        width:'18%'
+        title: '楼栋名称',
+        dataIndex: 'buildingName',
+        width:'80px'
     }, {
-        title: '商品名称',
-        dataIndex: 'commodityName',
-        width:'18%'
+        title: '单元',
+        dataIndex: 'element',
+        width:'70px',
     }, {
-        title: '应税项目',
-        dataIndex: 'taxableItem',
-        width:'18%'
+        title: '房号',
+        dataIndex: 'roomNumber',
+        width:'70px'
     }, {
-        title: '一般增值税税率',
-        dataIndex: 'commonlyTaxRate',
-        width:'18%'
+        title: '客户名称',
+        dataIndex: 'customerName',
+        width:'90px'
     }, {
-        title: '简易增值税税率',
-        dataIndex: 'simpleTaxRate',
-        width:'18'
+        title: '身份证号/纳税识别号',
+        dataIndex: 'taxIdentificationCode',
+        width:'135px'
+    }, {
+        title: '房间编码',
+        dataIndex: 'roomCode',
+        width:'100px'
+    }, {
+        title: '成交总价',
+        dataIndex: 'totalPrice',
+        className:'table-money',
+        render:text=>fMoney(text)
     }
 ]
 class RoomCodeSelectPage extends Component{
     render(){
-        const {disabled,toggleModalVisible,visible} = this.props;
+        const {disabled,toggleModalVisible,visible,mainId} = this.props;
+        const filters = {
+            mainId
+        }
         return(
         <span onClick={e=>{
             e && e.stopPropagation() && e.preventDefault()
@@ -203,6 +224,7 @@ class RoomCodeSelectPage extends Component{
                 title="选择房间编码"
                 maskClosable={false}
                 onCancel={()=>toggleModalVisible(false)}
+                destroyOnClose={true}
                 width={800}
                 bodyStyle={{
                     backgroundColor:'#fafafa'
@@ -215,6 +237,7 @@ class RoomCodeSelectPage extends Component{
                     <SearchTable
                         doNotFetchDidMount={true}
                         searchOption={{
+                            filters,
                             fields:searchFields(this),
                             cardProps:{
                                 title:'',

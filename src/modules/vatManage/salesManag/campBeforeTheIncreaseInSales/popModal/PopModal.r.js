@@ -4,8 +4,23 @@
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields,regRules} from '../../../../../utils'
-import moment from 'moment'
 const confirm = Modal.confirm
+const formItemStyle = {
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:14
+    }
+}
+const selectRenderColumnNumeric = value =>{
+    //因为字符长度的判断必须是字符串，所以默认值不能是数值型，因此要返回 `` 来初始化字符串以防止编辑的时候直接提交导致校验长度出错
+    if(typeof value !== 'undefined'){
+        return `${value}`
+    }else{
+        return undefined
+    }
+}
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
@@ -63,13 +78,13 @@ class PopModal extends Component{
             if (!err) {
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
-                for(let key in values){
-                    if(moment.isMoment(values[key])){
-                        values[key] = values[key].format('YYYY-MM-DD');
-                    }
-                    if(key ==='taxClassificationCoding'){
-                        values[key] = values[key]['id']
-                    }
+
+                if(values.roomCode.label && values.roomCode.key){
+                    values.roomCode = values.roomCode.key
+                }else{
+                    let tempData = values.roomCode;
+                    values.roomCode = tempData.roomCode;
+                    values.orgId = tempData.orgId;
                 }
 
                 if(type==='edit'){
@@ -99,7 +114,7 @@ class PopModal extends Component{
     }
 
     createRecord = data =>{
-        request.post('/output/invoice/collection/save',data)
+        request.post('/output/sellinghouse/add',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -131,7 +146,7 @@ class PopModal extends Component{
     render(){
         const props = this.props;
         const {initData,loaded} = this.state;
-        const {getFieldValue,setFieldsValue} = this.props.form
+        const {getFieldValue,resetFields} = this.props.form
         let title='';
         let disabled = false;
         const type = props.modalConfig.type;
@@ -200,11 +215,26 @@ class PopModal extends Component{
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainId'],
+                                            initialValue:initData['mainId'] || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                         componentProps:{
                                             disabled,
+                                            onSelect:value=>{
+                                                if(getFieldValue('mainId')!==value){
+                                                    resetFields();
+                                                    this.setState({
+                                                        initData:{}
+                                                    })
+                                                }
+                                            }
                                         }
                                     },
                                     {
@@ -212,18 +242,26 @@ class PopModal extends Component{
                                         fieldName:'roomCode',
                                         type:'roomCodeSelect',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['roomCode'] ? {
                                                 label:initData['roomCode'] || '',
                                                 key:initData['roomCode'] || ''
                                             } : undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择房间编码'
+                                                }
+                                            ]
                                         },
                                         componentProps:{
+                                            disabled,
                                             customizedValues:{
                                                 //这是个必须条件，当有mainId的时候才会正确弹窗
                                                 mainId:initData['mainId'] || getFieldValue('mainId') || undefined
                                             },
-                                            shouldChangeFields:['buildingName','element','roomNumber','customerName','taxIdentificationCode','piName','psName']
+                                            shouldChangeFields:['buildingName','element','roomNumber','customerName','taxIdentificationCode','projectName','stagesName']
                                         }
                                     },
                                     {
@@ -231,6 +269,7 @@ class PopModal extends Component{
                                         fieldName:'buildingName',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['buildingName'],
                                         },
@@ -243,6 +282,7 @@ class PopModal extends Component{
                                         fieldName:'element',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['element'],
                                         },
@@ -255,6 +295,7 @@ class PopModal extends Component{
                                         fieldName:'roomNumber',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['roomNumber'],
                                         },
@@ -267,6 +308,7 @@ class PopModal extends Component{
                                         fieldName:'customerName',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['customerName'],
                                         },
@@ -279,6 +321,7 @@ class PopModal extends Component{
                                         fieldName:'taxIdentificationCode',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxIdentificationCode'],
                                         },
@@ -289,10 +332,18 @@ class PopModal extends Component{
                                     {
                                         label:'营业税收款金额',
                                         fieldName:'businessTaxCollectionAmount',
-                                        type:'input',
+                                        type:'numeric',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['businessTaxCollectionAmount'],
+                                            initialValue:selectRenderColumnNumeric(initData['businessTaxCollectionAmount']),
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入营业税收款金额'
+                                                },
+                                                regRules.input_length_20
+                                            ]
                                         },
                                         componentProps:{
                                             disabled
@@ -301,10 +352,18 @@ class PopModal extends Component{
                                     {
                                         label:'营业税开票金额',
                                         fieldName:'businessTaxInvoiceAmount',
-                                        type:'input',
+                                        type:'numeric',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['businessTaxInvoiceAmount'],
+                                            initialValue:selectRenderColumnNumeric(initData['businessTaxInvoiceAmount']),
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入营业税开票金额'
+                                                },
+                                                regRules.input_length_20
+                                            ]
                                         },
                                         componentProps:{
                                             disabled
@@ -313,10 +372,18 @@ class PopModal extends Component{
                                     {
                                         label:'营业税结转收入金额',
                                         fieldName:'turnoverOfBusinessTax',
-                                        type:'input',
+                                        type:'numeric',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['turnoverOfBusinessTax'],
+                                            initialValue:selectRenderColumnNumeric(initData['turnoverOfBusinessTax']),
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入营业税结转收入金额'
+                                                },
+                                                regRules.input_length_20
+                                            ]
                                         },
                                         componentProps:{
                                             disabled
@@ -324,11 +391,12 @@ class PopModal extends Component{
                                     },
                                     {
                                         label:'项目名称',
-                                        fieldName:'piName',
+                                        fieldName:'projectName',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['piName'],
+                                            initialValue:initData['projectName'],
                                         },
                                         componentProps:{
                                             disabled:true
@@ -336,11 +404,12 @@ class PopModal extends Component{
                                     },
                                     {
                                         label:'项目分期名称',
-                                        fieldName:'psName',
+                                        fieldName:'stagesName',
                                         type:'input',
                                         span:12,
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['psName'],
+                                            initialValue:initData['stagesName'],
                                         },
                                         componentProps:{
                                             disabled:true
