@@ -64,9 +64,9 @@ class FileImportModal extends Component{
         return(
             <span style={props.style}>
                <Button size='small' onClick={()=>this.toggleVisible(true)}>
-                   <Icon type="upload" />导入
+                   <Icon type="upload" />{props.title}
                </Button>
-                <Modal title="导入" visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
+                <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {

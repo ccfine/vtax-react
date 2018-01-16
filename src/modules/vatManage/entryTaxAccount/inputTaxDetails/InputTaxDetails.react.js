@@ -34,7 +34,7 @@ class InputTaxDetails extends Component {
          * */
         tableUpDateKey:Date.now(),
         visible:false,
-        id:undefined,
+        params:{},
     }
 
     columns = [
@@ -43,14 +43,18 @@ class InputTaxDetails extends Component {
             dataIndex: 'mainName',
         }, {
             title: '抵扣凭据类型',
-            dataIndex: 'invoiceType',
+            dataIndex: 'sysDictIdName',
         },{
             title: '凭据份数',
-            dataIndex: 'amount',
+            dataIndex: 'num',
             render:(text,record)=>(
                 <a onClick={()=>{
+                    const params= {
+                        mainId:record.mainId,
+                        invoiceType:record.sysDictId,
+                    }
                     this.setState({
-                        id:record.id,
+                        params:params
                     },()=>{
                         this.toggleModalVisible(true)
                     })
@@ -58,11 +62,11 @@ class InputTaxDetails extends Component {
             )
         },{
             title: '金额',
-            dataIndex: 'recordName',
+            dataIndex: 'amount',
             render:text=>fMoney(text),
         },{
             title: '税额',
-            dataIndex: 'taxFeeCategory',
+            dataIndex: 'taxAmount',
             render:text=>fMoney(text),
 
         }
@@ -86,20 +90,26 @@ class InputTaxDetails extends Component {
             }
         });
     }
-    componentDidMount(){
-        this.updateTable()
-    }
+    /*componentDidMount(){
+        this.refreshTable()
+    }*/
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
     }
-    updateTable=()=>{
-        this.handleSubmit()
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+        //this.handleSubmit()
     }
+    /*updateTable=()=>{
+        this.handleSubmit()
+    }*/
 
     render(){
-        const {tableUpDateKey,filters,visible,id} = this.state;
+        const {tableUpDateKey,filters,visible,params} = this.state;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -118,6 +128,12 @@ class InputTaxDetails extends Component {
                                         type:'taxMain',
                                         span:6,
                                         fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                     },{
                                         label:'认证月份',
@@ -125,7 +141,15 @@ class InputTaxDetails extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
-                                        }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择认证月份'
+                                                }
+                                            ]
+                                        },
                                     },
                                 ])
                             }
@@ -139,7 +163,7 @@ class InputTaxDetails extends Component {
                 </Card>
                 <Card style={{marginTop:10}}>
 
-                    <AsyncTable url="/income/invoice/collection/list"
+                    <AsyncTable url="/account/income/taxDetail/list"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -164,7 +188,7 @@ class InputTaxDetails extends Component {
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}
-                    id={id}
+                    params={params}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>

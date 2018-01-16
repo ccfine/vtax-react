@@ -4,10 +4,9 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon} from 'antd'
-import {SynchronizeTable} from '../../../../compoments'
-import {getFields,htmlDecode,regRules} from '../../../../utils'
-import data from './tsconfig.json'
+import {Layout,Card,Row,Col,Form,Button,Icon,message} from 'antd'
+import {AsyncTable} from '../../../../compoments'
+import {getFields,htmlDecode,regRules,request} from '../../../../utils'
 const spanPaddingRight={
     paddingRight:30
 }
@@ -36,12 +35,12 @@ class InputTaxStructure extends Component {
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
-        tableUpDateKey:Date.now(),
+        tableDateKey:Date.now(),
         visible:false,
-        data:data.data,
+        dataList:[],
     }
 
-    handleSubmit = e => {
+    /*handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
@@ -49,29 +48,76 @@ class InputTaxStructure extends Component {
                     ...values,
                     authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
-                console.log(data)
+                this.fetch(data);
+            }
+        });
+    }*/
+    handleSubmit = (e,type) => {
+        e && e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                const data = {
+                    ...values,
+                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
+                }
+                let url= null;
+                if(type==='提交'){
+                    url = `/account/income/taxstructure/submit/${data.mainId}/${data.authMonth}`;
+                    this.requestPost(url,type);
+                }else if(type === '撤回') {
+                    url = `/account/income/taxstructure/restore/${data.mainId}/${data.authMonth}`;
+                    this.requestPost(url,type);
+                }else if(type==='重算'){
+                    url = '/account/income/taxstructure/reset';
+                    this.fetch(url,data);
+                }else{
+                    //url = '/account/income/taxstructure/list';
+                    //this.fetch(url,data);
+                }
                 this.setState({
                     filters:data
                 },()=>{
                     this.setState({
-                        tableUpDateKey:Date.now()
+                        tableDateKey:Date.now()
                     })
                 });
             }
         });
     }
-    componentDidMount(){
-        this.updateTable()
+    requestPost=(url,type)=>{
+        request.post(url)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success(`${type}成功!`);
+                }else{
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
+    fetch=(url,params = {})=>{
+        request.get(url,{
+            params:{
+                ...params
+            }
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    this.setState({
+                        dataList:data.data.page.records
+                    })
+                }
+            });
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
     }
-    updateTable=()=>{
-        this.handleSubmit()
+    refreshTable = ()=>{
+        this.setState({
+            tableDateKey:Date.now()
+        })
     }
-
     render(){
         return(
             <Layout style={{background:'transparent'}} >
@@ -91,6 +137,12 @@ class InputTaxStructure extends Component {
                                         type:'taxMain',
                                         span:6,
                                         fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                     },{
                                         label:'认证月份',
@@ -98,18 +150,33 @@ class InputTaxStructure extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
-                                        }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择认证月份'
+                                                }
+                                            ]
+                                        },
                                     },
                                 ])
                             }
 
                             <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" onClick={this.handleSubmit}>查询</Button>
+                                <Button style={{marginTop:3,marginLeft:20}} type="primary" onClick={(e)=>this.handleSubmit(e,'查询')}>查询</Button>
                                 <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
-                    <TableTaxStructureForm key={this.state.tableUpDateKey} {...this.state} />
+                    <TableTaxStructureForm
+                        key={this.state.tableDateKey}
+                        tableUpDateKey={this.state.tableDateKey}
+                        filters={this.state.filters}
+                        dataList={this.state.dataList}
+                        refreshTable={this.refreshTable}
+                        handleSubmit={this.handleSubmit}
+                    />
                 </Card>
             </Layout>
         )
@@ -125,192 +192,127 @@ const TextAreaAutoSize = {
     autosize:{ minRows: 2, maxRows: 6 }
 }
 class TableTaxStructure extends Component {
-
-    state = {
-
-        editable: true,
-    }
-
     columns = [
         {
             title: '抵扣明细',
-            dataIndex: 'dkxmMc',
+            dataIndex: 'deductionDetails',
             width:100,
             render:text=><div dangerouslySetInnerHTML={{  __html: htmlDecode(text) }}></div>,
         },{
             title: '金额',
-            dataIndex: 'je',
+            dataIndex: 'amount',
             width:100,
-            render: (text, record) =>{
-                if(parseInt(text,0) !== 0){
-                    return text;
-                }else{
-                    return this.renderColumns(text, record, `data[${record.key}].je`,'numeric')
-                }
-            },
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].amount`,'numeric')
         },{
             title: '税额',
-            dataIndex: 'se',
+            dataIndex: 'taxAmount',
             width:100,
-            render: (text, record) =>{
-                if(parseInt(text,0) !== 0){
-                    return text;
-                }else{
-                    return this.renderColumns(text, record, `data[${record.key}].se`,'numeric')
-                }
-            },
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].taxAmount`,'numeric')
         }, {
             title: '调整金额',
-            dataIndex: 'tzje',
+            dataIndex: 'adjustAmount',
             width:100,
-            render: (text, record) =>{
-                if(parseInt(text,0) !== 0){
-                    return text;
-                }else{
-                    return this.renderColumns(text, record, `data[${record.key}].tzje`,'numeric')
-                }
-            },
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].adjustAmount`,'numeric')
         },{
             title: '调整税额',
             width:100,
-            dataIndex: 'tzse',
-            render: (text, record) =>{
-                if(parseInt(text,0) !== 0){
-                    return text;
-                }else{
-                    return this.renderColumns(text, record, `data[${record.key}].tzse`,'numeric')
-                }
-            },
+            dataIndex: 'adjustTaxAmount',
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].adjustTaxAmount`,'numeric')
         },{
             title: '调整说明',
             width:200,
-            dataIndex: 'tzsm',
-            render: (text, record) =>{
-                if(text !== null){
-                    return text;
-                }else{
-                    return this.renderColumns(text, record, `data[${record.key}].tzsm`, 'textArea',[max50],TextAreaAutoSize)
-                }
-            },
+            dataIndex: 'adjustDescription',
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].adjustDescription`, 'textArea',[max50],TextAreaAutoSize)
         }
     ];
 
     renderColumns(text, record, column,type,rules=[],TextAreaAutoSize={}) {
-        return (
-            <EditableCell
-                editable={this.state.editable}
-                value={text}
-                form={this.props.form}
-                column={column}
-                type={type}
-                rules={rules}
-                componentProps={TextAreaAutoSize}
-                //onChange={value => this.handleChange(value, record.key, column)}
-            />
-        );
+        return  parseInt(record.status, 0) === 1 ? <EditableCell
+            editable={!record.summary}
+            value={text}
+            form={this.props.form}
+            column={column}
+            type={type}
+            rules={rules}
+            componentProps={TextAreaAutoSize}
+            //onChange={value => this.handleChange(value, record.key, column)}
+        />
+            : text
     }
     handleSaveSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
 
-            const newData = [...this.props.data];
+            const newData = [...this.props.dataList];
             let arrList = newData.map((item,i)=>{
                 return {
                     ...item,
                     ...values.data[i+1],
                 }
             });
-            //第二种实现方式
-            /*newData.forEach((data,j) => {
-                values.data.forEach((item,i) => {
-                    if(j===i){
-                        return arrList.push({
-                            ...data,
-                            ...item
-                        })
-                    }
 
-                })
-            })*/
             console.log(arrList);
+
             if (!err) {
-                this.setState({
-                    filters:values
-                },()=>{
-                    this.setState({
-                        tableUpDateKey:Date.now(),
-                        editable:false
+                request.post('/account/income/taxstructure/save',{list:arrList})
+                    .then(({data})=>{
+                        if(data.code===200){
+                            const props = this.props;
+                            message.success('保存成功!');
+                            props.refreshTable();
+                            this.props.form.resetFields()
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
                     })
-                });
+
             }
         });
     }
-    addKey=(item)=>{
-        const data = [];
-        for (let i = 0; i<item.length ; i++) {
-            data.push({
-                key: i.toString(),
-                ...item[i]
-            });
-        }
-        return data
-    }
     componentWillReceiveProps(nextProps){
-        console.log(nextProps);
-
+        console.log(nextProps.tableUpDateKey , this.props.tableUpDateKey)
     }
     render(){
         const props = this.props;
-        console.log(props.tableUpDateKey)
         return (
-            <Card extra={<div>
-                <Button size="small" style={buttonStyle} onClick={this.handleSaveSubmit}><Icon type="save" />保存</Button>
-                <Button size="small" style={buttonStyle}><Icon type="check" />提交</Button>
-                <Button size="small" style={buttonStyle}><Icon type="rollback" />撤回提交</Button>
-            </div>}
+            <Card extra={
+
+                props.dataList.length > 0 && parseInt(props.dataList[0].status, 0)=== 1 ?
+                    <div>
+                        <Button size="small" style={buttonStyle} onClick={(e)=>this.props.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
+                        <Button size="small" style={buttonStyle} onClick={(e)=>this.props.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
+                        <Button size="small" style={buttonStyle} onClick={(e)=>this.props.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
+                    </div>
+                    :
+                    <div>
+                        <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
+                    </div>
+            }
                   style={{marginTop:10}}>
                 <Form onSubmit={this.handleSaveSubmit}>
-                    <SynchronizeTable data={this.addKey(props.data)}
-                                      updateKey={props.tableUpDateKey}
-                                      filters={props.filters}
-                                      tableProps={{
-                                          rowKey:record=>record.id,
-                                          pagination:false,
-                                          size:'small',
-                                          columns:this.columns,
-                                          renderFooter:data=>{
-                                              return (
-                                                  <div>
-                                                      <div style={{marginBottom:10}}>
-                                                          <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                          金额：<span style={code}>12312414</span>
-                                                          税额：<span style={code}>12312414</span>
-                                                      </div>
-                                                  </div>
-                                              )
-                                          }
-                                      }}
-                    />
-                    {/*<AsyncTable url="/income/invoice/collection/list"
-                                    updateKey={tableUpDateKey}
-                                    filters={filters}
-                                    tableProps={{
-                                        rowKey:record=>record.id,
-                                        pagination:true,
-                                        size:'small',
-                                        columns:this.columns,
-                                        renderFooter:data=>{
-                                            return (
-                                                <div>
-                                                    <div style={{marginBottom:10}}>
-                                                        <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                        金额：<span style={code}>{data.pageAmount}</span>
-                                                        税额：<span style={code}>{data.pageTaxAmount}</span>
-                                                    </div>
+                    <AsyncTable url="/account/income/taxstructure/list"
+                                updateKey={props.tableUpDateKey}
+                                filters={props.filters}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:true,
+                                    size:'small',
+                                    columns:this.columns,
+                                    renderFooter:data=>{
+                                        return (
+                                            <div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
+                                                    金额：<span style={code}>{data.totalAdjustAmount}</span>
+                                                    税额：<span style={code}>{data.totalAdjustTaxAmount}</span>
+                                                    价税：<span style={code}>{data.totalAmount}</span>
+                                                    总价：<span style={code}>{data.totalTaxAmount}</span>
                                                 </div>
-                                            )
-                                        },
-                                    }} />*/}
+                                            </div>
+                                        )
+                                    }
+                                }} />
+
                 </Form>
             </Card>
         )

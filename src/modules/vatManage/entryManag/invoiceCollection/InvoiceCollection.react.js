@@ -1,8 +1,13 @@
+/**
+ * author       : liuliyuan
+ * createTime   : 2018/1/15 10:57
+ * description  :
+ */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
-import {AsyncTable,FileExport} from '../../../../compoments'
+import {AsyncTable,FileExport,PopUploadModal,PopUndoUploadModal} from '../../../../compoments'
 import {request,requestDict,fMoney,getFields} from '../../../../utils'
-import {PopModal, PopUploadModal,PopUndoUploadModal} from './popModal'
+import PopModal from './popModal'
 const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
@@ -35,8 +40,6 @@ class InvoiceCollection extends Component {
         selectedRowKeys:null,
         selectedRows:null,
         visible:false,
-        uploaderVisible:false,
-        undoUploadVisible:false,
         modalConfig:{
             type:''
         },
@@ -145,16 +148,6 @@ class InvoiceCollection extends Component {
             visible
         })
     }
-    toggleUploadModalVisible=uploaderVisible=>{
-        this.setState({
-            uploaderVisible
-        })
-    }
-    toggleUndoUploadModalVisible=undoUploadVisible=>{
-        this.setState({
-            undoUploadVisible
-        })
-    }
     updateTable=()=>{
         this.handleSubmit()
     }
@@ -191,16 +184,8 @@ class InvoiceCollection extends Component {
         }
     }
 
-    showIsUpload=type=> {
-        if (type === 'upload') {
-            this.toggleUploadModalVisible(true)
-        }else{
-            this.toggleUndoUploadModalVisible(true)
-        }
-    }
-
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,uploaderVisible,undoUploadVisible,modalConfig} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
         const rowSelection = {
             type:'radio',
             width:70,
@@ -262,14 +247,21 @@ class InvoiceCollection extends Component {
                               <Icon type="file-add" />
                               新增
                           </Button>
-                          <Button size="small" onClick={()=>this.showIsUpload('upload')} style={buttonStyle}>
-                              <Icon type="upload" />
-                              导入
-                          </Button>
-                          <Button size="small" onClick={()=>this.showIsUpload('undo')} style={buttonStyle}>
-                              <Icon type="file-add" />
-                              撤销导入
-                          </Button>
+                          <PopUploadModal
+                              url="/income/invoice/collection/upload"
+                              title="导入"
+                              onSuccess={()=>{
+                                  this.updateTable()
+                              }}
+                              style={{marginRight:5}}
+                          />
+                          <PopUndoUploadModal
+                              url="/income/invoice/collection/revocation"
+                              title="撤销导入"
+                              onSuccess={()=>{
+                                  this.updateTable()
+                              }}
+                              style={{marginRight:5}} />
                           <FileExport
                               url='/income/invoice/collection/download'
                               title="下载导入样表"
@@ -369,20 +361,6 @@ class InvoiceCollection extends Component {
                     selectedRowKeys={selectedRowKeys}
                     updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
-                />
-
-                <PopUploadModal
-                    visible={uploaderVisible}
-                    updateTable={this.updateTable}
-                    toggleUploadModalVisible={this.toggleUploadModalVisible}
-                    title="进项发票采集-导入"
-                />
-
-                <PopUndoUploadModal
-                    visible={undoUploadVisible}
-                    updateTable={this.updateTable}
-                    toggleUndoUploadModalVisible={this.toggleUndoUploadModalVisible}
-                    title="进项发票采集-撤销导入"
                 />
             </Layout>
         )
