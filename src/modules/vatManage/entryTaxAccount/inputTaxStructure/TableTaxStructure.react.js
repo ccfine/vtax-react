@@ -58,6 +58,9 @@ const EditableCell = ({ editable, value, form, column, type,rules,componentProps
     );
 }
 class TableTaxStructure extends Component {
+    state={
+        initData:[]
+    }
     columns = [
         {
             title: '抵扣明细',
@@ -117,7 +120,7 @@ class TableTaxStructure extends Component {
                 }
             });
 
-            console.log(arrList);
+            //console.log(arrList);
 
             if (!err) {
                 request.post('/account/income/taxstructure/save',{list:arrList})
@@ -136,24 +139,40 @@ class TableTaxStructure extends Component {
         });
     }
     componentWillReceiveProps(nextProps){
-
+        if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
+                request.get('/account/income/taxstructure/list',{
+                    params:{
+                        ...nextProps.filters
+                    }
+                })
+                    .then(({data}) => {
+                        if(data.code===200){
+                            this.setState({
+                                initData:data.data.page.records,
+                            })
+                        }
+                    });
+        }
     }
     render(){
         const props = this.props;
-        console.log(props.dataList)
+        const {initData} = this.state;
         return (
             <Card extra={
-
-                props.dataList.length > 0 && parseInt(props.dataList[0].status, 0)=== 1 ?
-                    <div>
-                        <Button size="small" style={buttonStyle} onClick={this.handleSaveSubmit}><Icon type="save" />保存</Button>
-                        <Button size="small" style={buttonStyle} onClick={props.handleRefer}><Icon type="check" />提交</Button>
-                        <Button size="small" style={buttonStyle} onClick={props.handleRecalculate}><Icon type="rollback" />重算</Button>
-                    </div>
-                    :
-                    <div>
-                        <Button size="small" style={buttonStyle} onClick={props.handleWithdraw}><Icon type="rollback" />撤回提交</Button>
-                    </div>
+                initData.length > 0 && <div>
+                    {
+                        parseInt(initData[0].status, 0)=== 1 ?
+                            <div>
+                                <Button size="small" style={buttonStyle} onClick={this.handleSaveSubmit}><Icon type="save" />保存</Button>
+                                <Button size="small" style={buttonStyle} onClick={props.handleRefer}><Icon type="check" />提交</Button>
+                                <Button size="small" style={buttonStyle} onClick={props.handleRecalculate}><Icon type="rollback" />重算</Button>
+                            </div>
+                            :
+                            <div>
+                                <Button size="small" style={buttonStyle} onClick={props.handleWithdraw}><Icon type="rollback" />撤回提交</Button>
+                            </div>
+                    }
+                </div>
             }
                   style={{marginTop:10}}>
                 <Form onSubmit={this.handleSaveSubmit}>

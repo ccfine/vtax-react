@@ -21,7 +21,6 @@ class InputTaxStructure extends Component {
          * */
         tableUpDateKey:Date.now(),
         visible:false,
-        dataList:[],
     }
     handleSubmit = (e,type) => {
         e && e.preventDefault();
@@ -42,12 +41,10 @@ class InputTaxStructure extends Component {
                     url = '/account/income/taxstructure/reset';
                     this.fetch(url,data);
                 }
-
-                url = '/account/income/taxstructure/list';
-                this.fetch(url,data);
-
                 this.setState({
-                    filters:data
+                    filters:data,
+                },()=>{
+                    this.refreshTable()
                 });
             }
         });
@@ -69,12 +66,10 @@ class InputTaxStructure extends Component {
             }
         })
             .then(({data}) => {
-            console.log(data);
                 if(data.code===200){
-                    this.setState({
-                        dataList:data.data.page.records,
-                        tableUpDateKey:Date.now()
-                    })
+                    message.success('重算成功!');
+                }else{
+                    message.error(`重算失败:${data.msg}`)
                 }
             });
     }
@@ -83,7 +78,7 @@ class InputTaxStructure extends Component {
             visible
         })
     }
-    refreshTable = ()=>{
+    refreshTable=()=>{
         this.setState({
             tableUpDateKey:Date.now()
         })
@@ -142,7 +137,6 @@ class InputTaxStructure extends Component {
                     <TableTaxStructure
                         tableUpDateKey={this.state.tableUpDateKey}
                         filters={this.state.filters}
-                        dataList={this.state.dataList}
                         refreshTable={this.refreshTable}
                         handleRefer={(e)=>this.handleSubmit(e,'提交')}
                         handleWithdraw={(e)=>this.handleSubmit(e,'撤回')}
