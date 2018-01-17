@@ -55,7 +55,6 @@ export default class TabPage extends Component{
         return(
             <div>
             <SearchTable
-                searchOption={undefined}
                 tableOption={{
                     columns:getColumns(this),
                     scroll:{x:'100%'},

@@ -1,177 +1,133 @@
 /**
- * author       : liuliyuan
- * createTime   : 2017/12/16 10:48
- * description  :
+ * Created by liurunbin on 2018/1/2.
  */
-import React, { Component } from 'react'
-import {Layout,Tabs} from 'antd'
-import {CountTable} from '../../../../compoments'
-const TabPane = Tabs.TabPane;
+import React, { Component} from 'react'
+import {Button,Row,Col,Icon} from 'antd'
+import {SearchTable,PopUploadModal} from '../../../../compoments'
+import SubmitModal from './popModal'
+// import PopModal from "./popModal";
+const buttonStyle = {
+    margin:'0 5px'
+}
 
-class OtherBusinessInputTaxRollOut extends Component {
-    callback=(key)=>{
-        console.log(key);
-    }
-
-    componentWillMount() {
-
-    }
-
-    componentDidMount(){
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
-    componentWillReceiveProps(nextProps){
-
-    }
-
-    render() {
-
-        const columns = [{
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            width: 100,
-            fixed: 'left',
-        }, {
-            title: 'Other',
-            children: [{
-                title: 'Age',
-                dataIndex: 'age',
-                key: 'age',
-                width: 200,
-                sorter: (a, b) => a.age - b.age,
-            }, {
-                title: 'Address',
-                children: [{
-                    title: 'Street',
-                    dataIndex: 'street',
-                    key: 'street',
-                    width: 200,
-                }, {
-                    title: 'Block',
-                    children: [{
-                        title: 'Building',
-                        dataIndex: 'building',
-                        key: 'building',
-                        width: 100,
-                    }, {
-                        title: 'Door No.',
-                        dataIndex: 'number',
-                        key: 'number',
-                        width: 100,
-                    }],
-                }],
-            }],
-        }, {
-            title: 'Company',
-            children: [{
-                title: 'Company Address',
-                dataIndex: 'companyAddress',
-                key: 'companyAddress',
-                width: 100,
-            }, {
-                title: 'Company Name',
-                dataIndex: 'companyName',
-                key: 'companyName',
-                width: 100,
-            }],
-        }, {
-            title: 'Gender',
-            dataIndex: 'gender',
-            key: 'gender',
-            width: 60,
-            fixed: 'right',
-        }];
-
-        const data = [];
-        for (let i = 0; i < 100; i++) {
-            data.push({
-                key: i,
-                name: 'John Brown',
-                age: i + 1,
-                street: 'Lake Park',
-                building: 'C',
-                number: 2035,
-                companyAddress: 'Lake Street 42',
-                companyName: 'SoftLake Co',
-                gender: 'M',
-            });
+const searchFields = [
+    {
+        label:'纳税主体',
+        type:'taxMain',
+        span:6,
+        fieldName:'mainId',
+        fieldDecoratorOptions:{
+            rules:[
+            {
+                required:true,
+                message:'必录'
+            }
+            ]
         }
-
-        const footerDate = [{
-            key: 'total',
-            name: 'total',
-            age: null,
-            street: null,
-            building: null,
-            number: 2035,
-            companyAddress: null,
-            companyName: null,
-            gender: null,
-        },{
-            key: 'price',
-            name: 'price',
-            age: null,
-            street: null,
-            building: null,
-            number: 2035,
-            companyAddress: null,
-            companyName: null,
-            gender: null,
-        }];
-
-
-        const setting = {
-            columns:columns,
-            bordered:false,
-            dataSource:data,
-            scroll:{x: '130%', y: 240}
+    },
+    {
+        label:'查询月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:6,
+        componentProps:{
+        },
+        fieldDecoratorOptions:{
+            rules:[
+            {
+                required:true,
+                message:'必录'
+            }
+            ]
         }
-        const setting2 = {
-            columns:columns,
-            bordered:false,
-            showHeader:false,
-            pagination:false,
-            dataSource:footerDate,
-            scroll:{x: '130%', y: 240}
-        }
+    }
+]
+const getColumns =(context)=>[
+   {
+        title: '纳税主体',
+        dataIndex: 'mainName',
+    }, {
+        title: '应税项目',
+        dataIndex: 'taxableNum',
+    },{
+        title: '计税方法',
+        dataIndex: 'taxMethod',
+    },{
+        title: '转出项目',
+        dataIndex: 'outProjectNum',
+    },{
+        title: '凭证号',
+        dataIndex: 'voucherNum',
+    },{
+        title: '日期',
+        dataIndex: 'taxDate',
+    },{
+        title: '转出税额',
+        dataIndex: 'outTaxAmount',
+    }
+];
 
-        return (
-            <Layout style={{background:'transparent'}} >
-                <div style={{ padding: 24}}>
-
-                    <Tabs defaultActiveKey="1" onChange={this.callback}>
-                        <TabPane tab="Tab 1" key="1">
-                            <CountTable
-                                id='table1'
-                                setting={setting}
-                                setting2={setting2}
-                            />
-                        </TabPane>
-                        <TabPane tab="Tab 2" key="2">
-                            <CountTable
-                                id='table2'
-                                setting={setting}
-                                setting2={setting2}
-                            />
-                        </TabPane>
-                        <TabPane tab="Tab 3" key="3">
-                            <CountTable
-                                id='table3'
-                                setting={setting}
-                                setting2={setting2}
-                            />
-                        </TabPane>
-                    </Tabs>
-
-                </div>
-            </Layout>
+export default class LandPriceManage extends Component{
+    state={
+        visible:false, // 控制Modal是否显示
+        opid:"", // 当前操作的记录
+        readOnly:false,
+        updateKey:Date.now()
+    }
+    hideModal(){
+        this.setState({visible:false});
+    }
+    render(){
+        return(
+            <div>
+                <SearchTable
+                    searchOption={{
+                        fields:searchFields
+                    }}
+                    
+                    tableOption={{
+                        scroll:{x:'100%'},
+                        pageSize:10,
+                        columns:getColumns(this),
+                        url:'/account/income/taxout/list',
+                        cardProps:{
+                            extra:(<div>
+                                <SubmitModal
+                                    title='提交'
+                                    onSuccess={()=>{}}
+                                ></SubmitModal>
+                                <Button size='small' style={buttonStyle}><Icon type="rollback" />撤回提交</Button>
+                                <Button size='small' style={buttonStyle}><Icon type="arrow-down" />下载模板</Button>
+                                <PopUploadModal
+                                    url="/account/income/taxout/upload"
+                                    title="导入"
+                                    onSuccess={()=>{
+                                        console.log('导入成功')
+                                        //this.updateTable()
+                                    }}
+                                />
+                            </div>),
+                            title:(<Row style={{fontSize:'12px', padding:'5px 0'}}>
+                                <Col span={3}>
+                                    <label>状态：</label>
+                                    <span>暂存</span>
+                                </Col>
+                                <Col span={3}>
+                                    <label>提交时间：</label>
+                                    <span></span>
+                                </Col>
+                            </Row>)
+                        }
+                    }}
+                >
+                </SearchTable>
+                {/* <PopModal 
+                visible={this.state.visible} 
+                readOnly={this.state.readOnly} 
+                hideModal={()=>{this.hideModal()}} 
+                id={this.state.opid}
+                updateKey={this.state.updateKey}/> */}
+            </div>
         )
     }
 }
-export default OtherBusinessInputTaxRollOut

@@ -206,7 +206,7 @@ class PopModal extends Component{
                         {
                             label:'土地出让合同编号',
                             fieldName:'leaseContract',
-                            ...setComItem([],readonly,false),
+                            ...setComItem([],readonly),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'contractNum',
