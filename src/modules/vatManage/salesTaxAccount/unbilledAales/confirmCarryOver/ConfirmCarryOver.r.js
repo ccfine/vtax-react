@@ -1,5 +1,6 @@
 /**
  * Created by liurunbin on 2018/1/11.
+ * 确认结转收入
  */
 import React, { Component } from 'react'
 import {fMoney,} from '../../../../../utils'
@@ -90,10 +91,6 @@ const columns = [
                 title:'税率',
                 dataIndex:'taxRate',
             },
-            {
-                title:'交易日期',
-                dataIndex:'1'
-            },
         ]
     },
     {
@@ -136,9 +133,9 @@ const columns = [
             },
             {
                 title:'未开具发票销售额',
-                dataIndex:'totalAm231ount',
+                dataIndex:'endNoInvoiceSales',
                 render:text=>fMoney(text),
-                className:'endNoInvoiceSales'
+                className:'table-money'
             },
         ]
     },
@@ -172,7 +169,14 @@ const columns = [
         ]
     }
 ];
-export default class NeedNotMatchingPage extends Component{
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        str += `${key}=${data[key]}&`
+    }
+    return str;
+}
+export default class ConfirmCarryOver extends Component{
     state={
         visible:false,
         searchFieldsValues:{
@@ -194,6 +198,7 @@ export default class NeedNotMatchingPage extends Component{
                 searchOption={{
                     fields:searchFields,
                     getFieldsValues:values=>{
+                        values.month = values.month.format('YYYY-MM')
                         this.setState({
                             searchFieldsValues:values
                         })
@@ -209,9 +214,9 @@ export default class NeedNotMatchingPage extends Component{
                     columns:columns,
                     url:'/account/output/notInvoiceSale/list',
                     extra:<div>
-                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />汇总表</Button>
+                        <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />汇总表</Button>
                         <FileExport
-                            url={`/account/output/notInvoiceSale/export?month=${searchFieldsValues.yearMonth}`}
+                            url={`/account/output/notInvoiceSale/export?${parseJsonToParams(searchFieldsValues)}`}
                             title="导出"
                             size="small"
                             setButtonStyle={{marginRight:5}}
@@ -221,18 +226,44 @@ export default class NeedNotMatchingPage extends Component{
                         return(
                             <div>
                                 <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                    本页金额：<span className="amount-code">{data.pageAmount}</span>
-                                    本页税额：<span className="amount-code">{data.pageTaxAmount}</span>
-                                    本页价税：<span className="amount-code">{data.pageTotalAmount}</span>
-                                    本页总价：<span className="amount-code">{data.pageTotalPrice}</span>
+                                    <div>
+                                        <div style={{width:100,display:'inline-block',textAlign: 'right',paddingRight:20}}>本页合计：</div>
+                                        <div style={{display:'inline-block'}}>
+                                            上期-增值税开票金额：<span className="amount-code">{fMoney(data.pageSumTotalAmount)}</span>
+                                            上期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageSumTotalPrice)}</span>
+                                            上期末合计金额-未开具发票销售额：<span className="amount-code">{fMoney(data.pageSumNoInvoiceSales)}</span>
+                                        </div>
+                                    </div>
+                                    <p style={{paddingLeft:100,marginTop:5,marginBottom:0}}>
+                                        本期-增值税开票金额：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                        本期-未开具发票销售额 ：<span className="amount-code">{fMoney(data.pageNoInvoiceSales)}</span>
+                                        本期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
+                                    </p>
+                                    <p style={{paddingLeft:100,marginTop:5}}>
+                                        本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.pageEndNoInvoiceSales)}</span>
+                                        本期末合计-增值税开票金额 ：<span className="amount-code">{fMoney(data.pageEndTotalAmount)}</span>
+                                        本期末合计-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageEndTotalPrice)}</span>
+                                    </p>
                                 </div>
                                 <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
-                                    总金额：<span className="amount-code">{data.allAmount}</span>
-                                    总税额：<span className="amount-code">{data.allTaxAmount}</span>
-                                    总价税：<span className="amount-code">{data.allTotalAmount}</span>
-                                    全部总价：<span className="amount-code">{data.allTotalPrice}</span>
+                                    <div>
+                                        <div style={{width:100,display:'inline-block',textAlign: 'right',paddingRight:20}}>总计：</div>
+                                        <div style={{display:'inline-block'}}>
+                                            上期-增值税开票金额：<span className="amount-code">{fMoney(data.allSumTotalAmount)}</span>
+                                            上期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allSumTotalPrice)}</span>
+                                            上期末合计金额-未开具发票销售额：<span className="amount-code">{fMoney(data.allSumNoInvoiceSales)}</span>
+                                        </div>
+                                    </div>
+                                    <p style={{paddingLeft:100,marginTop:5,marginBottom:0}}>
+                                        本期-增值税开票金额：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                        本期-未开具发票销售额 ：<span className="amount-code">{fMoney(data.allNoInvoiceSales)}</span>
+                                        本期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
+                                    </p>
+                                    <p style={{paddingLeft:100,marginTop:5}}>
+                                        本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.allEndNoInvoiceSales)}</span>
+                                        本期末合计-增值税开票金额 ：<span className="amount-code">{fMoney(data.allEndTotalAmount)}</span>
+                                        本期末合计-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allEndTotalPrice)}</span>
+                                    </p>
                                 </div>
                             </div>
                         )
@@ -242,7 +273,7 @@ export default class NeedNotMatchingPage extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="添加信息"  visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="添加信息" month={searchFieldsValues.month} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

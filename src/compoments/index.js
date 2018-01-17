@@ -19,6 +19,7 @@ import FileExport from './fileExport'
 import SearchTable from './searchTable'
 import FileImportModal from './fileImportModal'
 import CountTable from './countTable'
+import ButtonModalWithForm from './buttonModalWithForm'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -33,4 +34,5 @@ export {
     SearchTable,
     FileImportModal,
     CountTable,
+    ButtonModalWithForm
 }
