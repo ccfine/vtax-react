@@ -29,6 +29,7 @@ class FileImportModal extends Component{
                 this.toggleLoading(true)
                 const formData = new FormData();
                 formData.append('files', values.files[0])
+
                 request.post(`/output/invoice/collection/upload/${values.mainId}`,formData,{
                     header:{
                         //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到

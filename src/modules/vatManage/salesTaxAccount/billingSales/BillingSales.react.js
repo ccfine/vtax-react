@@ -23,30 +23,13 @@ class BillingSales extends Component {
          * */
         tableUpDateKey:Date.now(),
         visible:false,
-        taxRateId:undefined,
+        sysTaxRateId:undefined,
     }
 
     columns = [
         {
             title: '项目',
             dataIndex: 'taxMethod',
-            render:text=>{
-                let t='';
-                switch (parseInt(text,0)){
-                    case 1:
-                        t = '简易计税';
-                        break;
-                    case 2:
-                        t = '一般计税';
-                        break;
-                    case 3:
-                        t = '免税';
-                        break;
-                    default :
-                    //no default
-                }
-                return t;
-            }
         }, {
             title: '栏次',
             dataIndex: 'name',
@@ -75,7 +58,7 @@ class BillingSales extends Component {
                     render:(text,record)=>(
                         <a onClick={()=>{
                             this.setState({
-                                taxRateId:record.taxRateId,
+                                sysTaxRateId:record.sysTaxRateId,
                             },()=>{
                                 this.toggleModalVisible(true)
                             })
@@ -100,7 +83,7 @@ class BillingSales extends Component {
             dataIndex: 'taxMethod',
             render: (text, row, index) => {
                 const obj = {
-                    children: '',
+                    children: text,
                     props: {},
                 };
                 if (index === 0) {
@@ -115,20 +98,6 @@ class BillingSales extends Component {
                 // These two are merged into above cell
                 if (index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 7 || index === 8 || index === 9  || index === 11 ) {
                     obj.props.rowSpan = 0;
-                }
-
-                switch (parseInt(text,0)){
-                    case 1:
-                        obj.children = '简易计税';
-                        break;
-                    case 2:
-                        obj.children = '一般计税';
-                        break;
-                    case 0:
-                        obj.children = '免税';
-                        break;
-                    default :
-                    //no default
                 }
                 return obj;
             }
@@ -160,7 +129,7 @@ class BillingSales extends Component {
                     render:(text,record)=>(
                         <a onClick={()=>{
                             this.setState({
-                                taxRateId:record.taxRateId,
+                                sysTaxRateId:record.sysTaxRateId,
                             },()=>{
                                 this.toggleModalVisible(true)
                             })
@@ -198,19 +167,20 @@ class BillingSales extends Component {
         });
     }
     componentDidMount(){
-        this.updateTable()
+        //this.refreshTable()
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
     }
-    updateTable=()=>{
-        this.handleSubmit()
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
     }
-
     render(){
-        const {tableUpDateKey,filters,visible,taxRateId} = this.state;
+        const {tableUpDateKey,filters,visible,sysTaxRateId} = this.state;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -238,7 +208,7 @@ class BillingSales extends Component {
                                         },
                                     },{
                                         label:'认证月份',
-                                        fieldName:'month',
+                                        fieldName:'authMonth',
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
@@ -272,11 +242,11 @@ class BillingSales extends Component {
                 </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/output/billing/account/list?isEstate=1"
+                    <AsyncTable url="/account/output/billingSale/list?isEstate=1"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
-                                    rowKey:record=>record.taxRateId,
+                                    rowKey:record=>record.sysTaxRateId,
                                     pagination:false,
                                     size:'small',
                                     columns:this.columns,
@@ -284,7 +254,7 @@ class BillingSales extends Component {
                 </Card>
                 <Card extra={<div>
                     <FileExport
-                        url='/income/invoice/marry/download'
+                        url='/account/output/billingSale/export'
                         title="导出"
                         size="small"
                         setButtonStyle={{marginRight:5}}
@@ -292,11 +262,11 @@ class BillingSales extends Component {
                 </div>}
                            style={{marginTop:10}}>
 
-                    <AsyncTable url="/output/billing/account/list?isEstate=0"
+                    <AsyncTable url="/account/output/billingSale/list?isEstate=0"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
-                                    rowKey:record=>record.taxRateId,
+                                    rowKey:record=>record.sysTaxRateId,
                                     pagination:false,
                                     size:'small',
                                     columns:this.notColumns,
@@ -306,7 +276,7 @@ class BillingSales extends Component {
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}
-                    id={taxRateId}
+                    id={sysTaxRateId}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>
