@@ -80,7 +80,7 @@ const getFields = (form,fieldsData=[]) =>{
 
         if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect'){
             return <Col key={i} span={item['span'] || 8}>
-                <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
+                <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} decoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
             </Col>
         }else if(type==='select'){
             return (
@@ -121,7 +121,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent fieldName={item['fieldName']} setFieldsValue={setFieldsValue} {...item['componentProps']} />
+                            <CusComponent fieldName={item['fieldName']} getFieldValue={getFieldValue} setFieldsValue={setFieldsValue} {...item['componentProps']} />
                         )}
                     </FormItem>
                 </Col>

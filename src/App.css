@@ -77,7 +77,7 @@
 .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
   background:#fafafa;
 }
-.table-money{
+.table-money,.text-right{
   text-align: right;
 }
 .text-center{

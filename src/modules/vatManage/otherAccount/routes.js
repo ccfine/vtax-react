@@ -5,11 +5,9 @@
  */
 import React from 'react'
 import {wrapPage} from '../../../compoments'
-
 import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
-
-const PrePaidHousingSales =()=><div>售房预缴台账</div>
+import PrePaidHousingSales from './prePaidHousingSales'
 const PrepayTax =()=><div>预缴税款台账</div>
 const DeductProjectSummary =()=><div>扣除项目汇总台账</div>
 const BusinessTaxChangeTaxAnalysisNegative =()=><div>营改增税负分析测算台账</div>
