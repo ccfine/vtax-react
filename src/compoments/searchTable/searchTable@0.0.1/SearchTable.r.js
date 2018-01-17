@@ -57,7 +57,7 @@ class SearchTable extends Component{
             if (!err) {
                 for(let key in values){
                     if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
-                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangPicker
+                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
                         values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
                         values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
                         values[key] = undefined;

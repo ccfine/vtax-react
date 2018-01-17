@@ -9,6 +9,9 @@ class FileImportModal extends Component{
     static propTypes={
         onSuccess:PropTypes.func
     }
+    static defaultProps={
+        title:'导入'
+    }
     state={
         visible:false,
         loading:false,

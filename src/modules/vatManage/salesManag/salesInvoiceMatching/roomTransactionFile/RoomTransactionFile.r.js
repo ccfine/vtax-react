@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
 import {getFields,request,fMoney} from '../../../../../utils'
-
+import moment from 'moment'
 const getColumns = context => [
     {
         title: '操作',
@@ -90,7 +90,11 @@ const getColumns = context => [
         title:'匹配状态',
         dataIndex:'matchingStatus',
         render:text=>parseInt(text,0) === 0 ? '未匹配' : '已匹配' //0:未匹配,1:已匹配
-    }
+    },
+    {
+        title:'交易日期',
+        dataIndex:'transactionDate'
+    },
 ]
 class RoomTransactionFile extends Component{
     state={
@@ -112,6 +116,24 @@ class RoomTransactionFile extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                for(let key in values){
+                    if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
+                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
+                        values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
+                        values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
+                        values[key] = undefined;
+                    }
+                    if(moment.isMoment(values[key])){
+                        //格式化一下时间 YYYY-MM类型
+                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM');
+                        }
+
+                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                         values[key] = values[key].format('YYYY-MM-DD');
+                         }*/
+                    }
+                }
                 this.setState({
                     selectedRowKeys:null,
                     filters:values
@@ -259,16 +281,10 @@ class RoomTransactionFile extends Component{
                                             <div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                                    本页金额：<span className="amount-code">{data.pageAmount}</span>
-                                                    本页税额：<span className="amount-code">{data.pageTaxAmount}</span>
-                                                    本页价税：<span className="amount-code">{data.pageTotalAmount}</span>
                                                     本页总价：<span className="amount-code">{data.pageTotalPrice}</span>
                                                 </div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
-                                                    总金额：<span className="amount-code">{data.allAmount}</span>
-                                                    总税额：<span className="amount-code">{data.allTaxAmount}</span>
-                                                    总价税：<span className="amount-code">{data.allTotalAmount}</span>
                                                     全部总价：<span className="amount-code">{data.allTotalPrice}</span>
                                                 </div>
                                             </div>
