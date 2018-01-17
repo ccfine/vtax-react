@@ -33,6 +33,7 @@ class InterimContractInputTaxTransferredOut extends Component {
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey:Date.now(),
+        modalUpDateKey:Date.now(),
         visible:false,
         id:undefined,
     }
@@ -177,7 +178,7 @@ class InterimContractInputTaxTransferredOut extends Component {
         })
     }
     render(){
-        const {tableUpDateKey,filters,visible,id} = this.state;
+        const {tableUpDateKey,modalUpDateKey,filters,visible,id} = this.state;
         const uploadArrList = [
             {
                 label:'认证月份',
@@ -245,7 +246,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'纳税主体',
                                         fieldName:'mainId',
                                         type:'taxMain',
-                                        span:8,
+                                        span:6,
                                         fieldDecoratorOptions:{
                                             rules:[
                                                 {
@@ -258,7 +259,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'认证月份',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
-                                        span:8,
+                                        span:6,
                                         componentProps:{
                                         },
                                         fieldDecoratorOptions:{
@@ -273,7 +274,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'合同编号',
                                         fieldName:'contractNum',
                                         type:'input',
-                                        span:8,
+                                        span:6,
                                         componentProps:{
                                         },
                                         fieldDecoratorOptions:{
@@ -288,7 +289,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'结算单/产值单',
                                         fieldName:'BillingAndOutput',
                                         type:'input',
-                                        span:8,
+                                        span:6,
                                         componentProps:{
                                         },
                                         fieldDecoratorOptions:{
@@ -303,7 +304,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                 ])
                             }
 
-                            <Col span={16}  style={{textAlign:'right'}}>
+                            <Col span={24}  style={{textAlign:'right'}}>
                                 <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
                                 <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
@@ -339,14 +340,19 @@ class InterimContractInputTaxTransferredOut extends Component {
                                     <Icon type="retweet" />
                                     重算
                                 </Button>
-                                <Button size='small' style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}>
+                                <Button size='small' style={{marginRight:5}} onClick={()=>{
+                                    this.toggleModalVisible(true)
+                                    this.setState({
+                                        modalUpDateKey:Date.now()
+                                    })
+                                }}>
                                     <Icon type="edit" />
                                     设置税务分摊比例
                                 </Button>
-                                <Button size='small' style={{marginRight:5}}>
+                                {/*<Button size='small' style={{marginRight:5}}>
                                     <Icon type="form" />
                                     差异调整凭证
-                                </Button>
+                                </Button>*/}
                                 <FileExport
                                     url='/account/output/billingSale/export'
                                     title="导出"
@@ -397,6 +403,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                     title="税务分摊比例列表设置"
                     visible={visible}
                     id={id}
+                    tableUpDateKey={modalUpDateKey}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>

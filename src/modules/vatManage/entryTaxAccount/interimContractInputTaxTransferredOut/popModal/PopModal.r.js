@@ -4,10 +4,10 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Card,Row,Col,Form,Button,Modal } from 'antd'
-import {AsyncTable,FileExport} from '../../../../../compoments'
-import {getFields,fMoney} from '../../../../../utils'
-const spanPaddingRight={
+import {Card,Form,Button,Row,Col,Modal} from 'antd'
+import {SynchronizeTable} from '../../../../../compoments'
+import {getFields,htmlDecode} from '../../../../../utils'
+/*const spanPaddingRight={
     paddingRight:30
 }
 const code = {
@@ -18,104 +18,183 @@ const code = {
     border:'1px solid #eee',
     marginRight:30,
     padding: '2px 4px'
+}*/
+
+const EditableCell = ({ editable, value, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
+    return (
+        <div>
+            {
+                editable
+                    ? getFields(form,[
+                        {
+                            fieldName:`${column}`,
+                            type:type,
+                            span:24,
+                            options:options,
+                            formItemStyle:{
+                                labelCol:{
+                                    span:24
+                                },
+                                wrapperCol:{
+                                    span:24
+                                }
+                            },
+                            componentProps:{
+                                ...componentProps
+                            },
+                            fieldDecoratorOptions:{
+                                ...fieldDecoratorOptions
+                            }
+                        }
+                    ])
+                    : value
+            }
+        </div>
+    );
 }
-const columns = [
+const options = [
     {
-        title: '认证时间',
-        dataIndex: 'authDate',
-        width:60,
-    },{
-        title: '销货单位名称',
-        dataIndex: 'sellerName',
-        width:100,
-    },{
-        title: '纳税人识别号',
-        dataIndex: 'sellerTaxNum',
-        width:100,
-    },{
-        title: '数据来源',
-        dataIndex: 'sourceType',
-        width:60,
-        render:text=>{
-            text = parseInt(text,0)
-            if(text===1){
-                return '手工采集'
-            }
-            if(text===2){
-                return '外部导入'
-            }
-            return ''
-        }
-    },{
-        title: '金额',
-        dataIndex: 'amount',
-        render:text=>fMoney(text),
-        width:100,
-    },{
-        title: '税额',
-        dataIndex: 'taxAmount',
-        render:text=>fMoney(text),
-        width:100,
-    },{
-        title: '价税合计',
-        dataIndex: 'totalAmount',
-        width: 100,
-        render:text=>fMoney(text),
+        text:'施工许可证',
+        value:'0'
+    },
+    {
+        text:'预售许可证',
+        value:'1'
     }
-];
+]
+
+const dataSource = [
+    {
+        id:'1',
+        contractTitle:'HT001',
+        projectStagingCode :'001',
+        projectStagingName:'项目分期名称41',
+        constructionAreaDataSource:'1',
+        constructionArea:'',
+        taxAssessmentRatio:'16.67%',
+        summary:true,
+    },{
+        id:'2',
+        contractTitle:'HT001',
+        projectStagingCode :'002',
+        projectStagingName:'项目分期名称2',
+        constructionAreaDataSource:'0',
+        constructionArea:'',
+        taxAssessmentRatio:'16.67%',
+        summary:true,
+    },{
+        id:'3',
+        contractTitle:'HT001',
+        projectStagingCode :'003',
+        projectStagingName:'项目分期名称3',
+        constructionAreaDataSource:'1',
+        constructionArea:'',
+        taxAssessmentRatio:'16.67%',
+        summary:true,
+    }
+]
 class PopModal extends Component{
     static defaultProps={
         visible:true,
     }
 
-    state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{},
-        /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
-         * */
-        tableUpDateKey:Date.now(),
+    columns = [
+        {
+            title: '合同名称',
+            dataIndex: 'contractTitle',
+            width:100,
+            render:text=><div dangerouslySetInnerHTML={{  __html: htmlDecode(text) }}></div>,
+        },{
+            title: '项目分期编码',
+            dataIndex: 'projectStagingCode',
+            width:100,
+        },{
+            title: '项目分期名称',
+            dataIndex: 'projectStagingName',
+            width:100,
+        }, {
+            title: '建筑面积数据来源',
+            dataIndex: 'constructionAreaDataSource',
+            width:100,
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].constructionAreaDataSource`,'select',options)
+        },{
+            title: '建筑面积(m²)',
+            width:100,
+            dataIndex: 'constructionArea',
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].constructionArea`,'numeric')
+        },{
+            title: '税务分摊比例',
+            width:200,
+            dataIndex: 'taxAssessmentRatio',
+        }
+    ];
+    renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:text},TextAreaAutoSize={}) {
+        return  <EditableCell
+                editable={record.summary}
+                value={text}
+                form={this.props.form}
+                column={column}
+                type={type}
+                options={options}
+                fieldDecoratorOptions={fieldDecoratorOptions}
+                componentProps={TextAreaAutoSize}
+                //onChange={value => this.handleChange(value, record.key, column)}
+            />
     }
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.setState({
-                    filters:values
-                },()=>{
-                    this.setState({
-                        tableUpDateKey:Date.now()
+
+            const newData = [...dataSource];
+            let arrList = newData.map((item,i)=>{
+                return {
+                    ...item,
+                    ...values.data[i+1],
+                }
+            });
+
+            console.log(arrList);
+
+            /*if (!err) {
+                request.post('/account/income/taxstructure/save',{list:arrList})
+                    .then(({data})=>{
+                        if(data.code===200){
+                            const props = this.props;
+                            message.success('保存成功!');
+                            props.refreshTable();
+                            this.props.form.resetFields()
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
                     })
-                });
-            }
+
+            }*/
         });
     }
     handleReset = () => {
         this.props.form.resetFields();
         this.props.toggleModalVisible(false)
     }
-
-    updateTable=()=>{
-        this.handleSubmit()
-    }
-
     componentWillReceiveProps(nextProps){
-        if(!nextProps.visible){
-            /**
-             * 关闭的时候清空表单
-             * */
-            nextProps.form.resetFields();
-        }else{
-            //TODO: Modal在第一次弹出的时候不会被初始化，所以需要延迟加载
-            setTimeout(()=>{
-                this.updateTable()
-            },200)
-        }
+        //console.log(nextProps.tableUpDateKey, this.props.tableUpDateKey)
+        /*if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
+            request.get('/account/income/taxstructure/list',{
+                params:{
+                    ...nextProps.filters
+                }
+            })
+                .then(({data}) => {
+                    console.log(data.data.page.records[0].status)
+                    if(data.code===200){
+                        this.setState({
+                            initData:data.data.page.records,
+                        })
+                    }
+                });
+        }*/
     }
+
     render(){
-        const {tableUpDateKey,filters } = this.state;
         const props = this.props;
         return(
             <Modal
@@ -128,81 +207,55 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
+                            <Button type="primary" onClick={this.handleSubmit}>确定</Button>
                             <Button onClick={this.handleReset}>取消</Button>
                         </Col>
                     </Row>
                 }
                 title={props.title}>
-                <Card
-                    style={{
-                        borderTop:'none'
-                    }}
-                    className="search-card"
-                >
-                    <Form onSubmit={this.handleSubmit}>
-                        <Row>
-                            {
-                                getFields(this.props.form,[
-                                    {
-                                        label:'发票号码',
-                                        fieldName:'invoiceCode',
-                                        type:'input',
-                                        span:6,
-                                        componentProps:{
-                                        }
-                                    },
-                                ])
-                            }
 
-                            <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
-                            </Col>
-                        </Row>
+                <Card style={{marginTop:10}}>
+                    <Form onSubmit={this.handleSubmit}>
+                        <SynchronizeTable data={dataSource}
+                                          updateKey={props.tableUpDateKey}
+                                          tableProps={{
+                                              rowKey:record=>record.id,
+                                              pagination:false,
+                                              size:'small',
+                                              columns:this.columns,
+                                              /*renderFooter:data=>{
+                                                  return (
+                                                      <div>
+                                                          <div style={{marginBottom:10}}>
+                                                              <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
+                                                              建筑面积(m²)：<span style={code}>{data.totalAdjustAmount}</span>
+                                                          </div>
+                                                      </div>
+                                                  )
+                                              }*/
+                                          }} />
+
+                        {/*<AsyncTable url="/account/income/taxstructure/list"
+                                    updateKey={props.tableUpDateKey}
+                                    tableProps={{
+                                        rowKey:record=>record.id,
+                                        pagination:false,
+                                        size:'small',
+                                        columns:this.columns,
+                                        renderFooter:data=>{
+                                            return (
+                                                <div>
+                                                    <div style={{marginBottom:10}}>
+                                                        <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
+                                                        建筑面积(m²)：<span style={code}>{data.totalAdjustAmount}</span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                    }} />*/}
+
                     </Form>
                 </Card>
-                <Card extra={<div>
-                    <FileExport
-                        url='/income/invoice/marry/download'
-                        title="导出"
-                        size="small"
-                        setButtonStyle={{marginRight:5}}
-                    />
-                </div>}
-                      style={{marginTop:10}}>
-
-                </Card>
-
-                <AsyncTable url="/income/invoice/collection/list"
-                            updateKey={tableUpDateKey}
-                            filters={filters}
-                            tableProps={{
-                                rowKey:record=>record.id,
-                                pagination:true,
-                                size:'small',
-                                columns:columns,
-                                scroll:{ x: 900, y: 200 },
-                                renderFooter:data=>{
-                                    return (
-                                        <div>
-                                            <div style={{marginBottom:10}}>
-                                                <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                                本页金额：<span style={code}>{data.pageAmount}</span>
-                                                本页税额：<span style={code}>{data.pageTaxAmount}</span>
-                                                本页价税：<span style={code}>{data.pageTotalAmount}</span>
-                                                本页总价：<span style={code}>{data.pageTotalPrice}</span>
-                                            </div>
-                                            <div style={{marginBottom:10}}>
-                                                <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                                总金额：<span style={code}>{data.allAmount}</span>
-                                                总税额：<span style={code}>{data.allTaxAmount}</span>
-                                                总价税：<span style={code}>{data.allTotalAmount}</span>
-                                                全部总价：<span style={code}>{data.allTotalPrice}</span>
-                                            </div>
-                                        </div>
-                                    )
-                                },
-                            }} />
             </Modal>
         )
     }

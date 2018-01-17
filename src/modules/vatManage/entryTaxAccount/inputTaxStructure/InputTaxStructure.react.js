@@ -4,8 +4,8 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
-import {getFields,request} from '../../../../utils'
+import {Layout,Card,Row,Col,Form,Button} from 'antd'
+import {getFields} from '../../../../utils'
 import TableTaxStructure from './TableTaxStructure.react'
 class InputTaxStructure extends Component {
     state={
@@ -22,24 +22,13 @@ class InputTaxStructure extends Component {
         tableUpDateKey:Date.now(),
         visible:false,
     }
-    handleSubmit = (e,type) => {
+    handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 const data = {
                     ...values,
                     authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
-                }
-                let url= null;
-                if(type==='提交'){
-                    url = `/account/income/taxstructure/submit/${data.mainId}/${data.authMonth}`;
-                    this.requestPost(url,type);
-                }else if(type === '撤回') {
-                    url = `/account/income/taxstructure/restore/${data.mainId}/${data.authMonth}`;
-                    this.requestPost(url,type);
-                }else if(type==='重算'){
-                    url = '/account/income/taxstructure/reset';
-                    this.fetch(url,data);
                 }
                 this.setState({
                     filters:data,
@@ -48,30 +37,6 @@ class InputTaxStructure extends Component {
                 });
             }
         });
-    }
-    requestPost=(url,type)=>{
-        request.post(url)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    fetch=(url,params = {})=>{
-        request.get(url,{
-            params:{
-                ...params
-            }
-        })
-            .then(({data}) => {
-                if(data.code===200){
-                    message.success('重算成功!');
-                }else{
-                    message.error(`重算失败:${data.msg}`)
-                }
-            });
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -129,18 +94,16 @@ class InputTaxStructure extends Component {
                             }
 
                             <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" onClick={(e)=>this.handleSubmit(e,'查询')}>查询</Button>
+                                <Button style={{marginTop:3,marginLeft:20}} type="primary" onClick={this.handleSubmit}>查询</Button>
                                 <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
+
                     <TableTaxStructure
                         tableUpDateKey={this.state.tableUpDateKey}
                         filters={this.state.filters}
                         refreshTable={this.refreshTable}
-                        handleRefer={(e)=>this.handleSubmit(e,'提交')}
-                        handleWithdraw={(e)=>this.handleSubmit(e,'撤回')}
-                        handleRecalculate={(e)=>this.handleSubmit(e,'重算')}
                     />
                 </Card>
             </Layout>
