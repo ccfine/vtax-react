@@ -170,7 +170,7 @@ class PopInvoiceInformationModal extends Component{
                 </Card>
                 <Card extra={<div>
                     <FileExport
-                        url='/income/invoice/marry/download'
+                        url='/account/output/billingSale/export'
                         title="导出"
                         size="small"
                         setButtonStyle={{marginRight:5}}
@@ -180,7 +180,7 @@ class PopInvoiceInformationModal extends Component{
 
                 </Card>
 
-                <AsyncTable url="/output/billing/account/detail/list"
+                <AsyncTable url="/account/output/billingSale/detail/list"
                             updateKey={tableUpDateKey}
                             filters={filters}
                             tableProps={{

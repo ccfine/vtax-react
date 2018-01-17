@@ -77,7 +77,7 @@
 .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
   background:#fafafa;
 }
-.table-money{
+.table-money,.text-right{
   text-align: right;
 }
 .text-center{
@@ -133,6 +133,10 @@
 }
 form .ant-select:only-child, form .ant-cascader-picker:only-child{
   top:4.5px;
+}
+/*重写分页里面的select width*/
+form .ant-pagination .ant-select{
+  width: auto;
 }
 
 

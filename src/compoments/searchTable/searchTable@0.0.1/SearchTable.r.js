@@ -93,7 +93,7 @@ class SearchTable extends Component{
     }
     componentDidMount(){
         !this.props.doNotFetchDidMount && this.updateTable()
-        this.setState({
+        this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
     }
@@ -149,7 +149,7 @@ class SearchTable extends Component{
                                         pagination:true,
                                         pageSize:tableOption.pageSize || 10,
                                         size:'small',
-                                        rowSelection:tableOption.onRowSelect || undefined,
+                                        rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
                                         onRowSelect:tableOption.onRowSelect || undefined,
                                         columns:tableOption.columns,
                                         scroll:tableOption.scroll || undefined,

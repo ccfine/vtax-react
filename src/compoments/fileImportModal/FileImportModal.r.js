@@ -30,9 +30,12 @@ class FileImportModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.toggleLoading(true)
+                this.toggleLoading(true);
                 const formData = new FormData();
-                formData.append('files', values.files[0])
+                values.files = values.files[0];
+                for(let key in values){
+                    formData.append(key, values[key])
+                }
                 request.post(this.props.url,formData,{
                     header:{
                         //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到
@@ -60,13 +63,16 @@ class FileImportModal extends Component{
     render(){
         const props = this.props;
         const {visible,loading} = this.state;
-        const fields = props.fileds || []
+        /**
+         * 注意，fileds是因为早先打错字，做了个修补措施，应为fields
+         * */
+        const fields = props.fields ||  props.fileds || []
         return(
             <span style={props.style}>
                <Button size='small' onClick={()=>this.toggleVisible(true)}>
-                   <Icon type="upload" />导入
+                   <Icon type="upload" />{props.title}
                </Button>
-                <Modal title="导入" visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
+                <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {

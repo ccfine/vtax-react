@@ -4,22 +4,9 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button} from 'antd'
-import {AsyncTable,FileExport,AutoFileUpload} from '../../../../compoments'
-import {getFields} from '../../../../utils'
-
-const spanPaddingRight={
-    paddingRight:30
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
+import {Layout,Card,Row,Col,Form,Button,message,Popconfirm} from 'antd'
+import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
+import {getFields,request} from '../../../../utils'
 
 class InputTaxOnFixedAssets extends Component {
     state={
@@ -39,25 +26,43 @@ class InputTaxOnFixedAssets extends Component {
 
     columns = [
         {
+            title:'操作',
+            key:'actions',
+            render:(text,record)=>(
+                <div>
+                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
+                        <a style={{marginRight:"5px"}}>删除</a>
+                    </Popconfirm>
+                </div>
+            ),
+            fixed:'left',
+            width:'70px',
+            className:'text-center'
+        },{
             title:'发票类型',
             dataIndex:'invoiceType',
-            render:text=>{
-                if(text==='s'){
-                    return '专票'
-                }
-                if(text==='c'){
-                    return '普票'
-                }
-                return text;
-            }
         },{
             title: '期申报抵扣的进项税额',
-            dataIndex: 'recordName',
+            dataIndex: 'incomeTaxAmount',
         },{
             title: '本年申报抵扣的进项税额累计',
-            dataIndex: 'taxFeeCategory',
+            dataIndex: 'incomeTaxAmountSum',
         }
     ];
+    deleteRecord(record){
+        request.delete(`/account/income/fixedAssets/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable()
+            } else {
+                message.error(data.msg, 4);
+            }
+        })
+            .catch(err => {
+                message.error(err.message);
+                this.setState({loading:false})
+            })
+    }
 
     handleSubmit = e => {
         e && e.preventDefault();
@@ -65,7 +70,7 @@ class InputTaxOnFixedAssets extends Component {
             if (!err) {
                 const data = {
                     ...values,
-                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
+                    month: values.month && values.month.format('YYYY-MM')
                 }
                 this.setState({
                     filters:data
@@ -78,19 +83,71 @@ class InputTaxOnFixedAssets extends Component {
         });
     }
     componentDidMount(){
-        this.updateTable()
+        this.refreshTable()
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
     }
-    updateTable=()=>{
-        this.handleSubmit()
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
     }
-
     render(){
         const {tableUpDateKey,filters} = this.state;
+        const uploadArrList = [
+            {
+                label:'认证月份',
+                fieldName:'authMonth',
+                type:'monthPicker',
+                span:24,
+                formItemStyle:{
+                    labelCol:{
+                        span:6
+                    },
+                    wrapperCol:{
+                        span:11
+                    }
+                },
+                fieldDecoratorOptions:{
+                    rules:[
+                        {
+                            required:true,
+                            message:'请选择认证月份'
+                        }
+                    ]
+                },
+            },{
+                label:'文件',
+                fieldName:'files',
+                type:'fileUpload',
+                span:24,
+                formItemStyle:{
+                    labelCol:{
+                        span:6
+                    },
+                    wrapperCol:{
+                        span:17
+                    }
+                },
+                componentProps:{
+                    buttonText:'点击上传',
+                    accept:'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    explain:'文件格式为.XLS,并且不超过5M',
+                    //size:2
+                },
+                fieldDecoratorOptions:{
+                    rules:[
+                        {
+                            required:true,
+                            message:'请上传文件'
+                        }
+                    ]
+                },
+            }
+        ]
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -109,14 +166,28 @@ class InputTaxOnFixedAssets extends Component {
                                         type:'taxMain',
                                         span:6,
                                         fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                     },{
                                         label:'认证月份',
-                                        fieldName:'authMonth',
+                                        fieldName:'month',
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
-                                        }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择认证月份'
+                                                }
+                                            ]
+                                        },
                                     },
                                 ])
                             }
@@ -129,9 +200,16 @@ class InputTaxOnFixedAssets extends Component {
                     </Form>
                 </Card>
                 <Card extra={<div>
-                    <AutoFileUpload url={`project/upload/${this.props.taxSubjectId}`} fetchTable_1_Data={this.updateTable} />
+                    <PopUploadModal
+                        url="/account/income/fixedAssets/upload"
+                        title="导入"
+                        uploadList={uploadArrList}
+                        onSuccess={()=>{
+                            this.refreshTable()
+                        }}
+                        style={{marginRight:5}} />
                     <FileExport
-                        url='project/download'
+                        url='/account/income/fixedAssets/download'
                         title="下载导入模板"
                         setButtonStyle={{marginTop:10,marginRight:5}}
                         size='small'
@@ -139,7 +217,7 @@ class InputTaxOnFixedAssets extends Component {
                 </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/income/invoice/collection/list"
+                    <AsyncTable url="/account/income/fixedAssets/list"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -147,17 +225,6 @@ class InputTaxOnFixedAssets extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
-                                    renderFooter:data=>{
-                                        return (
-                                            <div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                    金额：<span style={code}>{data.pageAmount}</span>
-                                                    税额：<span style={code}>{data.pageTaxAmount}</span>
-                                                </div>
-                                            </div>
-                                        )
-                                    },
                                 }} />
                 </Card>
             </Layout>

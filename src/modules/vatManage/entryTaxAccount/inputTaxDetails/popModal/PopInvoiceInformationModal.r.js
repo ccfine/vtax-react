@@ -19,50 +19,7 @@ const code = {
     marginRight:30,
     padding: '2px 4px'
 }
-const columns = [
-    {
-        title: '认证时间',
-        dataIndex: 'authDate',
-        width:60,
-    },{
-        title: '销货单位名称',
-        dataIndex: 'sellerName',
-        width:100,
-    },{
-        title: '纳税人识别号',
-        dataIndex: 'sellerTaxNum',
-        width:100,
-    },{
-        title: '数据来源',
-        dataIndex: 'sourceType',
-        width:60,
-        render:text=>{
-            text = parseInt(text,0)
-            if(text===1){
-                return '手工采集'
-            }
-            if(text===2){
-                return '外部导入'
-            }
-            return ''
-        }
-    },{
-        title: '金额',
-        dataIndex: 'amount',
-        render:text=>fMoney(text),
-        width:100,
-    },{
-        title: '税额',
-        dataIndex: 'taxAmount',
-        render:text=>fMoney(text),
-        width:100,
-    },{
-        title: '价税合计',
-        dataIndex: 'totalAmount',
-        width: 100,
-        render:text=>fMoney(text),
-    }
-];
+
 class PopInvoiceInformationModal extends Component{
     static defaultProps={
         visible:true,
@@ -78,6 +35,77 @@ class PopInvoiceInformationModal extends Component{
          * */
         tableUpDateKey:Date.now(),
     }
+
+    columns = [
+        {
+            title: '数据来源',
+            dataIndex: 'sourceType',
+            width:100,
+            render:text=>{
+                text = parseInt(text,0)
+                if(text===1){
+                    return '手工采集'
+                }
+                if(text===2){
+                    return '外部导入'
+                }
+                return ''
+            },
+        },{
+            title: '纳税主体',
+            dataIndex: 'mainName',
+            width:180,
+        }, {
+            title: '发票类型',
+            dataIndex: 'invoiceType',
+            width:180,
+        },{
+            title: '发票代码',
+            dataIndex: 'invoiceCode',
+            width:180,
+        },{
+            title: '发票号码',
+            dataIndex: 'invoiceNum',
+            width:180,
+        },{
+            title: '开票日期',
+            dataIndex: 'billingDate',
+            width:100,
+        },{
+            title: '认证月份',
+            dataIndex: 'authMonth',
+            width:70,
+        },{
+            title: '认证时间',
+            dataIndex: 'authDate',
+            width:100,
+        },{
+            title: '销售单位名称',
+            dataIndex: 'sellerName',
+            width:180,
+        },{
+            title: '纳税人识别号',
+            dataIndex: 'sellerTaxNum',
+            width:180,
+        },{
+            title: '金额',
+            dataIndex: 'amount',
+            width:100,
+            render:text=>fMoney(text),
+        },{
+            title: '税额',
+            dataIndex: 'taxAmount',
+            width:100,
+            render:text=>fMoney(text),
+
+        },{
+            title: '价税合计',
+            dataIndex: 'totalAmount',
+            width:150,
+            render:text=>fMoney(text),
+        }
+    ];
+
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -96,9 +124,10 @@ class PopInvoiceInformationModal extends Component{
         this.props.form.resetFields();
         this.props.toggleModalVisible(false)
     }
-
-    updateTable=()=>{
-        this.handleSubmit()
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
     }
 
     componentWillReceiveProps(nextProps){
@@ -107,10 +136,11 @@ class PopInvoiceInformationModal extends Component{
              * 关闭的时候清空表单
              * */
             nextProps.form.resetFields();
-        }else{
+        }
+        if(!this.props.visible && nextProps.visible){
             //TODO: Modal在第一次弹出的时候不会被初始化，所以需要延迟加载
             setTimeout(()=>{
-                this.updateTable()
+                this.refreshTable()
             },200)
         }
     }
@@ -145,7 +175,7 @@ class PopInvoiceInformationModal extends Component{
                                 getFields(this.props.form,[
                                     {
                                         label:'发票号码',
-                                        fieldName:'invoiceCode',
+                                        fieldName:'invoiceNum',
                                         type:'input',
                                         span:6,
                                         componentProps:{
@@ -173,15 +203,15 @@ class PopInvoiceInformationModal extends Component{
 
                 </Card>
 
-                <AsyncTable url="/income/invoice/collection/list"
+                <AsyncTable url={`/income/invoice/collection/list?mainId=${props.params.mainId}&invoiceType=${props.params.invoiceType}`}
                             updateKey={tableUpDateKey}
                             filters={filters}
                             tableProps={{
                                 rowKey:record=>record.id,
                                 pagination:true,
                                 size:'small',
-                                columns:columns,
-                                scroll:{ x: 900, y: 200 },
+                                columns:this.columns,
+                                scroll:{ x: '210%', y: 200 },
                                 renderFooter:data=>{
                                     return (
                                         <div>
