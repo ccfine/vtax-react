@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {AsyncTable} from '../../../../compoments'
+import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
 import {Card} from 'antd'
 import {fMoney} from '../../../../utils'
 const columns=[
@@ -64,7 +64,7 @@ export default class TabPage extends Component{
         const props = this.props;
         return(
             <Card extra={<div>
-                {/*<FileExport
+                <FileExport
                     url='/account/output/billingSale/export'
                     title="导出"
                     size="small"
@@ -83,7 +83,7 @@ export default class TabPage extends Component{
                     title="下载导入模板"
                     setButtonStyle={{marginTop:10,marginRight:5}}
                     size='small'
-                />*/}
+                />
             </div>}
                   style={{marginTop:10}}
             >
