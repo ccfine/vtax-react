@@ -91,7 +91,7 @@ export default class TabPage extends Component{
             <Card title="大产证明细" style={{marginTop:'10px'}}>
             <SearchTable
                 actionOption={{
-                    body:(<Button  onClick={()=>{
+                    body:(<Button size='small' onClick={()=>{
                         this.setState({visible:true,action:'add',opid:undefined});
                     }}>添加</Button>)
                 }}

@@ -112,7 +112,7 @@ export default class TabPage extends Component{
             <div style={{padding:"0 15px"}}>
             <SearchTable
                 actionOption={{
-                    body:(<Button  onClick={()=>{
+                    body:(<Button size='small' onClick={()=>{
                         this.setState({visible:true,action:'add',opid:undefined});
                     }}>添加</Button>)
                 }}

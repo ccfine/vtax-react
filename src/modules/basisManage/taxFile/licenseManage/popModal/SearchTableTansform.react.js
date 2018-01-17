@@ -113,8 +113,8 @@ class SearchTable extends Component{
                                     {
                                         searchOption && searchOption.fields && 
                                         (<Col span={8}>
-                                        <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                        <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                        <Button size='small' style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                        <Button size='small' style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                                         </Col>)
                                     }
                                     <Col span={actionOption.span||2} offset={(searchOption && searchOption.fields)?6:(actionOption.span?(24-actionOption.span):22)}>
