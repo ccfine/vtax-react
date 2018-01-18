@@ -147,6 +147,7 @@ export default class OtherTaxAdjustment extends Component{
         return(
             <div>
                 <SearchTable
+                    doNotFetchDidMount={true}
                     searchOption={{
                         fields:searchFields
                     }}

@@ -4,34 +4,17 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Modal,Form,Row,message,Button,Icon} from 'antd'
+import {Modal,Form,Row,message,Button} from 'antd'
 import {request,getFields} from '../../../../../utils'
-const undoUploadArrList = [{
-        label:'认证月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:11
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择认证月份'
-                }
-            ]
-        },
-    }
-]
-class SubmitModal extends Component{
-    static defaultProps={
-        undoUpload:undoUploadArrList
+import PropTypes from 'prop-types'
+class FeildModal extends Component{
+    static propTypes ={
+        url: PropTypes.string.isRequired,
+        feilds:PropTypes.array.isRequired,
+        title: PropTypes.string,
+        onSuccess:PropTypes.func,
+        style:PropTypes.object,
+        buttonIcon:PropTypes.node
     }
     state={
         visible:false,
@@ -54,8 +37,11 @@ class SubmitModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                if(values.authMonth){
+                   values.authMonth = values.authMonth.format('YYYY-MM')
+                }
                 this.toggleLoading(true)
-                request.post(`${this.props.url}/${''}`,
+                request.post(`${this.props.url}`,values
                         )
                             .then(({data}) => {
                                 this.toggleLoading(false)
@@ -82,14 +68,13 @@ class SubmitModal extends Component{
         return(
             <span style={props.style}>
                 <Button size='small' onClick={()=>this.toggleVisible(true)}>
-                <Icon type="check" />
-                    {props.title}
+                    {props.buttonIcon}{props.title}
                 </Button>
                 <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {
-                                getFields(this.props.form,props.undoUpload)
+                                getFields(this.props.form,props.feilds)
                             }
                         </Row>
                     </Form>
@@ -99,4 +84,4 @@ class SubmitModal extends Component{
     }
 }
 
-export default Form.create()(SubmitModal)
+export default Form.create()(FeildModal)

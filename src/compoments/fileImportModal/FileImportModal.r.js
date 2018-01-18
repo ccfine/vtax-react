@@ -5,6 +5,7 @@ import React,{Component} from 'react'
 import {Button,Icon,Modal,Form,Row,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request,getFields} from '../../utils'
+import moment from 'moment'
 class FileImportModal extends Component{
     static propTypes={
         onSuccess:PropTypes.func
@@ -37,7 +38,12 @@ class FileImportModal extends Component{
                 const formData = new FormData();
                 values.files = values.files[0];
                 for(let key in values){
-                    formData.append(key, values[key])
+                    // 因为月份要转换下，暂时这样
+                    if(/month/i.test(key) && moment.isMoment(values[key])){
+                        formData.append(key, values[key].format('YYYY-MM'))
+                    }else{
+                        formData.append(key, values[key])
+                    }
                 }
                 request.post(this.props.url,formData,{
                     header:{

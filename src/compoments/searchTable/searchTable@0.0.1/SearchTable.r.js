@@ -13,6 +13,7 @@ class SearchTable extends Component{
         tableOption:PropTypes.object,
         spinning:PropTypes.bool,
         doNotFetchDidMount:PropTypes.bool,
+        backCondition:PropTypes.func,// 返回查询条件
     }
     static defaultProps = {
         spinning:false,
@@ -84,6 +85,9 @@ class SearchTable extends Component{
                         tableUpDateKey:Date.now()
                     })
                 });
+
+                // 把查询条件返回回去
+                this.props.backCondition && this.props.backCondition(values)
             }
         });
 
