@@ -131,7 +131,7 @@ export default class AsyncTable extends Component{
                 onChange={this.handleTableChange}
                 loading={!loaded}
                 footer={props.tableProps.renderFooter ? (currentPageData)=>{
-                    return props.tableProps.renderFooter(footerDate)
+                    return props.tableProps.renderFooter(typeof props.tableProps.dataSource === 'undefined' ? footerDate : props.tableProps.footerDate)
                 } : null}
             />
         )

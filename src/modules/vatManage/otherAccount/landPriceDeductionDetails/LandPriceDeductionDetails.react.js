@@ -91,7 +91,7 @@ class LandPriceDeductionDetails extends Component {
             if (!err) {
                 const data = {
                     ...values,
-                    month: values.month && values.month.format('YYYY-MM')
+                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
                 this.setState({
                     filters:data
@@ -238,7 +238,6 @@ class LandPriceDeductionDetails extends Component {
                                     },
                                 }} />
                 </Card>
-
 
                 {
                     selectedRowKeys && <PageTwo selectedRowKeys={selectedRowKeys} updateKey={tableUpDateKey}/>

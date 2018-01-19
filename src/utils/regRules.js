@@ -5,6 +5,10 @@
 
 
 export default {
+    userName:{
+        pattern:/^[a-zA-Z0-9]{6,20}?$/,
+        message:'请输入有效的用户名'
+    },
     password:{
         pattern:/(?![0-9]+$)(?![a-zA-Z]+$)(?!(![0-9A-Za-z])+$)\S{6,32}/,
         message:'请输入6-32位由数字与字母组合的密码'

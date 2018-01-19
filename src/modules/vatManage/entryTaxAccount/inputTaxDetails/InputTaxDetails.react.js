@@ -176,8 +176,8 @@ class InputTaxDetails extends Component {
                                             <div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                    金额：<span style={code}>{data.pageAmount}</span>
-                                                    税额：<span style={code}>{data.pageTaxAmount}</span>
+                                                    金额：<span style={code}>{fMoney(data.pageAmount)}</span>
+                                                    税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
                                                 </div>
                                             </div>
                                         )

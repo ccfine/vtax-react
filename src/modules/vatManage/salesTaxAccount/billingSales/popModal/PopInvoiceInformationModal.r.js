@@ -23,10 +23,10 @@ const columns = [
     {
         title: '发票代码',
         dataIndex: 'invoiceCode',
-        width:60,
+        width:100,
     },{
         title: '发票号码',
-        dataIndex: 'invoiceNum ',
+        dataIndex: 'invoiceNum',
         width:100,
     },{
         title:'发票类型',
@@ -40,7 +40,7 @@ const columns = [
             }
             return text;
         },
-        width:100,
+        width:60,
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
@@ -48,11 +48,11 @@ const columns = [
     },{
         title: '购货单位名称',
         dataIndex: 'purchaseName',
-        width:60,
+        width:100,
     },{
         title: '购方税号',
         dataIndex: 'purchaseTaxNum',
-        width:60,
+        width:150,
     },{
         title: '金额',
         dataIndex: 'amount',
@@ -182,29 +182,32 @@ class PopInvoiceInformationModal extends Component{
 
                 <AsyncTable url="/account/output/billingSale/detail/list"
                             updateKey={tableUpDateKey}
-                            filters={filters}
+                            filters={{
+                                ...props.filters,
+                                ...filters
+                            }}
                             tableProps={{
                                 rowKey:record=>record.id,
                                 pagination:true,
                                 size:'small',
                                 columns:columns,
-                                scroll:{ x: 900, y: 200 },
+                                scroll:{ x: '160%', y: 200 },
                                 renderFooter:data=>{
                                     return (
                                         <div>
                                             <div style={{marginBottom:10}}>
                                                 <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                                本页金额：<span style={code}>{data.pageAmount}</span>
-                                                本页税额：<span style={code}>{data.pageTaxAmount}</span>
-                                                本页价税：<span style={code}>{data.pageTotalAmount}</span>
-                                                本页总价：<span style={code}>{data.pageTotalPrice}</span>
+                                                本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
+                                                本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+                                                本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
+                                                本页总价：<span style={code}>{fMoney(data.pageTotalPrice)}</span>
                                             </div>
                                             <div style={{marginBottom:10}}>
                                                 <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                                总金额：<span style={code}>{data.allAmount}</span>
-                                                总税额：<span style={code}>{data.allTaxAmount}</span>
-                                                总价税：<span style={code}>{data.allTotalAmount}</span>
-                                                全部总价：<span style={code}>{data.allTotalPrice}</span>
+                                                总金额：<span style={code}>{fMoney(data.allAmount)}</span>
+                                                总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
+                                                总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
+                                                全部总价：<span style={code}>{fMoney(data.allTotalPrice)}</span>
                                             </div>
                                         </div>
                                     )

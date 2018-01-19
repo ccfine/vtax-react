@@ -236,6 +236,9 @@ class PopModal extends Component{
                                     initialValue:defaultData.term,
                                     rules:[
                                         {
+                                            required:true,
+                                            message:'请输入注册资本出资期限'
+                                        },{
                                             max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
@@ -250,6 +253,9 @@ class PopModal extends Component{
                                     initialValue:defaultData.registeredCapitalCurrency,
                                     rules:[
                                         {
+                                            required:true,
+                                            message:'请输入注册资本原币币种'
+                                        },{
                                             max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
@@ -261,7 +267,13 @@ class PopModal extends Component{
                         <Col span={8}>
                             <FormItem label='注册资本原币金额(万元)' {...formItemLayout}>
                                 {getFieldDecorator(`registeredCapitalAmount`,{
-                                    initialValue:fMoney(defaultData.registeredCapitalAmount)
+                                    initialValue:fMoney(defaultData.registeredCapitalAmount),
+                                    rules:[
+                                        {
+                                            required:true,
+                                            message:'请输入注册资本原币金额'
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled}
                                            onKeyUp={(e)=>this.handleKeyUp('registeredCapitalAmount')}
@@ -289,11 +301,14 @@ class PopModal extends Component{
                     </Row>
                     <Row>
                         <Col span={12}>
-                            <FormItem label='实收资本' {...formItemLayout}>
+                            <FormItem label='实收资本原币币种' {...formItemLayout}>
                                 {getFieldDecorator(`collectionCapitalCurrency`,{
                                     initialValue:defaultData.collectionCapitalCurrency,
                                     rules:[
                                         {
+                                            required:true,
+                                            message:'请输入实收资本原币币种'
+                                        },{
                                             max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                         }
                                     ]
@@ -305,7 +320,13 @@ class PopModal extends Component{
                         <Col span={12}>
                             <FormItem label='实收资本原币金额(万元)' {...formItemLayout}>
                                 {getFieldDecorator(`collectionCapitalAmount`,{
-                                    initialValue:fMoney(defaultData.collectionCapitalAmount)
+                                    initialValue: fMoney(defaultData.collectionCapitalAmount),
+                                    rules:[
+                                        {
+                                            required:true,
+                                            message:'请输入实收资本原币金额'
+                                        }
+                                    ]
                                 })(
                                     <Input disabled={disibled}
                                            onKeyUp={(e)=>this.handleKeyUp('collectionCapitalAmount')}
