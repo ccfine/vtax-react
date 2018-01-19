@@ -1,6 +1,7 @@
 import React from "react";
-import {Table,Card,Popconfirm} from "antd";
+import {Table,Card,Popconfirm,Icon,Button} from "antd";
 import PopModal from "./sourcePopModal/popModal";
+import {fMoney} from '../../../../../utils';
 
 const pointerStyle = {
     cursor:'pointer',
@@ -50,7 +51,9 @@ const getColumns =(context, length)=>[
         render:renderContent(length)
     }, {
         title: '金额',
-        dataIndex: 'amount'
+        dataIndex: 'amount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '票据类型',
         dataIndex: 'billType',
@@ -74,8 +77,8 @@ export default class StageTable extends React.Component{
     render(){
         const dataSource = this.props.dataSource && this.props.dataSource.filter((element)=>element.action!=="delete");
         return (
-            <Card title="" extra={<a  onClick={()=>{
-                this.setState({visible:true,action:"add",source:{}})}}>新增</a>} style={{ width: "100%" }}>
+            <Card title="" extra={<Button size='small' onClick={()=>{
+                this.setState({visible:true,action:"add",source:{}})}}><Icon type="plus" />新增</Button>} style={{ width: "100%" }}>
                 <Table 
                 columns={getColumns(this,dataSource?dataSource.length:0)} 
                 dataSource={dataSource} 

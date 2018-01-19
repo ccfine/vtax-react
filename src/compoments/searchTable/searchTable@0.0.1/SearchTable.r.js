@@ -13,6 +13,7 @@ class SearchTable extends Component{
         tableOption:PropTypes.object,
         spinning:PropTypes.bool,
         doNotFetchDidMount:PropTypes.bool,
+        backCondition:PropTypes.func,// 返回查询条件
     }
     static defaultProps = {
         spinning:false,
@@ -45,11 +46,13 @@ class SearchTable extends Component{
             this.handleSubmit()
         }
 
-        for(let key in nextProps.searchOption.filters){
-            if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
-                this.setState({
-                    filters:nextProps.searchOption.filters
-                })
+        if(nextProps.searchOption){
+            for(let key in nextProps.searchOption.filters){
+                if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
+                    this.setState({
+                        filters:nextProps.searchOption.filters
+                    })
+                }
             }
         }
     }
@@ -86,6 +89,9 @@ class SearchTable extends Component{
                         tableUpDateKey:Date.now()
                     })
                 });
+
+                // 把查询条件返回回去
+                this.props.backCondition && this.props.backCondition(values)
             }
         });
 
@@ -95,7 +101,7 @@ class SearchTable extends Component{
     }
     componentDidMount(){
         !this.props.doNotFetchDidMount && this.updateTable()
-        this.props.searchOption.filters && this.setState({
+        this.props.searchOption && this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
     }

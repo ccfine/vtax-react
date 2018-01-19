@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Popconfirm,message} from 'antd'
+import {Button,Popconfirm,message,Icon} from 'antd'
 import PopModal from './popModal'
 import {request} from '../../../../../../utils'
 const getSearchFields = projectId => [
@@ -45,7 +45,7 @@ const getColumns = context=> [
         dataIndex: 'licenseNumber',
     },{
         title: '项目分期',
-        dataIndex: 'stagesId'
+        dataIndex: 'stagesItemName'
     }, {
         title: '工程名称',
         dataIndex: 'projectName',
@@ -151,7 +151,7 @@ export default class TabPage extends Component{
                 actionOption={{
                     body:(<Button size='small' onClick={()=>{
                         this.setState({visible:true,action:'add',opid:undefined});
-                    }}>添加</Button>)
+                    }}><Icon type="plus" />新增</Button>)
                 }}
                 tableOption={{
                     columns:getColumns(this),
