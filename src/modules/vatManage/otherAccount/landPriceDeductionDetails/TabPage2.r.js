@@ -3,10 +3,24 @@
  */
 import React, { Component } from 'react'
 import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
-import {Card} from 'antd'
+import {Card,Popconfirm,Icon} from 'antd'
 import {fMoney} from '../../../../utils'
-const columns=[
+const getColumns=(context)=>[
     {
+        title:'操作',
+        render(text, record, index){
+            return(
+                <span>
+                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
+                        <a alt="删除" style={{marginRight:"5px"}}><Icon type="delete" /></a>
+                    </Popconfirm>
+                </span>
+            );
+        },
+        fixed:'left',
+        width:'100px',
+        dataIndex:'action'
+    }, {
         title: '项目名称',
         dataIndex: 'taxMethod',
     }, {
@@ -93,7 +107,7 @@ export default class TabPage extends Component{
                                 rowKey:record=>record.sysTaxRateId,
                                 pagination:false,
                                 size:'small',
-                                columns:columns,
+                                columns:getColumns(this),
                                 scroll:{x:'150%'},
                             }} />
 

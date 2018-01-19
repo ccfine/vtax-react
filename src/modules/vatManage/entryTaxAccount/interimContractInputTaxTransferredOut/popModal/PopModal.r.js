@@ -4,10 +4,10 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Card,Form,Button,Row,Col,Modal} from 'antd'
-import {SynchronizeTable} from '../../../../../compoments'
-import {getFields,htmlDecode} from '../../../../../utils'
-/*const spanPaddingRight={
+import {Card,Form,Button,Row,Col,Modal,message} from 'antd'
+import {AsyncTable} from '../../../../../compoments'
+import {getFields,htmlDecode,request} from '../../../../../utils'
+const spanPaddingRight={
     paddingRight:30
 }
 const code = {
@@ -18,14 +18,13 @@ const code = {
     border:'1px solid #eee',
     marginRight:30,
     padding: '2px 4px'
-}*/
+}
 
-const EditableCell = ({ editable, value, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
+const EditableCell = ({record, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
     return (
         <div>
             {
-                editable
-                    ? getFields(form,[
+                getFields(form,[
                         {
                             fieldName:`${column}`,
                             type:type,
@@ -47,7 +46,6 @@ const EditableCell = ({ editable, value, form, column, type,options,componentPro
                             }
                         }
                     ])
-                    : value
             }
         </div>
     );
@@ -62,38 +60,13 @@ const options = [
         value:'1'
     }
 ]
-
-const dataSource = [
-    {
-        id:'1',
-        contractTitle:'HT001',
-        projectStagingCode :'001',
-        projectStagingName:'项目分期名称41',
-        constructionAreaDataSource:'1',
-        constructionArea:'',
-        taxAssessmentRatio:'16.67%',
-        summary:true,
-    },{
-        id:'2',
-        contractTitle:'HT001',
-        projectStagingCode :'002',
-        projectStagingName:'项目分期名称2',
-        constructionAreaDataSource:'0',
-        constructionArea:'',
-        taxAssessmentRatio:'16.67%',
-        summary:true,
-    },{
-        id:'3',
-        contractTitle:'HT001',
-        projectStagingCode :'003',
-        projectStagingName:'项目分期名称3',
-        constructionAreaDataSource:'1',
-        constructionArea:'',
-        taxAssessmentRatio:'16.67%',
-        summary:true,
-    }
-]
 class PopModal extends Component{
+
+    state={
+        initData:[],
+        updateKey:Date.now()
+    }
+
     static defaultProps={
         visible:true,
     }
@@ -101,36 +74,36 @@ class PopModal extends Component{
     columns = [
         {
             title: '合同名称',
-            dataIndex: 'contractTitle',
+            dataIndex: 'contractNum',
             width:100,
             render:text=><div dangerouslySetInnerHTML={{  __html: htmlDecode(text) }}></div>,
         },{
             title: '项目分期编码',
-            dataIndex: 'projectStagingCode',
+            dataIndex: 'stagesNum',
             width:100,
         },{
             title: '项目分期名称',
-            dataIndex: 'projectStagingName',
+            dataIndex: 'stagesName',
             width:100,
         }, {
             title: '建筑面积数据来源',
-            dataIndex: 'constructionAreaDataSource',
+            dataIndex: 'sourceType',
             width:100,
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].constructionAreaDataSource`,'select',options)
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].sourceType`,'select',options)
         },{
             title: '建筑面积(m²)',
             width:100,
-            dataIndex: 'constructionArea',
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].constructionArea`,'numeric')
+            dataIndex: 'buildingArea',
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].buildingArea`,'numeric')
         },{
             title: '税务分摊比例',
             width:200,
-            dataIndex: 'taxAssessmentRatio',
+            dataIndex: 'taxScale',
         }
     ];
     renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:text},TextAreaAutoSize={}) {
-        return  <EditableCell
-                editable={record.summary}
+        return  parseInt(this.porps.selectedRows[0].status, 0) === 1 ? <EditableCell
+                record={record}
                 value={text}
                 form={this.props.form}
                 column={column}
@@ -140,12 +113,14 @@ class PopModal extends Component{
                 componentProps={TextAreaAutoSize}
                 //onChange={value => this.handleChange(value, record.key, column)}
             />
+            :
+            text
     }
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
 
-            const newData = [...dataSource];
+            const newData = [...this.state.initData];
             let arrList = newData.map((item,i)=>{
                 return {
                     ...item,
@@ -155,8 +130,8 @@ class PopModal extends Component{
 
             console.log(arrList);
 
-            /*if (!err) {
-                request.post('/account/income/taxstructure/save',{list:arrList})
+            if (!err) {
+                request.post('/account/income/taxContract/proportion/determine',{list:arrList})
                     .then(({data})=>{
                         if(data.code===200){
                             const props = this.props;
@@ -168,7 +143,7 @@ class PopModal extends Component{
                         }
                     })
 
-            }*/
+            }
         });
     }
     handleReset = () => {
@@ -176,21 +151,29 @@ class PopModal extends Component{
         this.props.toggleModalVisible(false)
     }
     componentWillReceiveProps(nextProps){
-        //console.log(nextProps.tableUpDateKey, this.props.tableUpDateKey)
-        /*if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-            request.get('/account/income/taxstructure/list',{
-                params:{
-                    ...nextProps.filters
-                }
-            })
-                .then(({data}) => {
-                    console.log(data.data.page.records[0].status)
-                    if(data.code===200){
-                        this.setState({
-                            initData:data.data.page.records,
-                        })
-                    }
+        if(!nextProps.visible){
+            /**
+             * 关闭的时候清空表单
+             * */
+            nextProps.form.resetFields();
+        }
+        if(!this.props.visible && nextProps.visible){
+            //TODO: Modal在第一次弹出的时候不会被初始化，所以需要延迟加载
+            setTimeout(()=>{
+                this.setState({
+                    updateKey:Date.now()
                 });
+            },200)
+
+        }
+
+        /*if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
+            console.log(nextProps.tableUpDateKey, this.props.tableUpDateKey)
+            setTimeout(()=>{
+                this.setState({
+                    updateKey:Date.now()
+                });
+            },200)
         }*/
     }
 
@@ -216,27 +199,12 @@ class PopModal extends Component{
 
                 <Card style={{marginTop:10}}>
                     <Form onSubmit={this.handleSubmit}>
-                        <SynchronizeTable data={dataSource}
-                                          updateKey={props.tableUpDateKey}
-                                          tableProps={{
-                                              rowKey:record=>record.id,
-                                              pagination:false,
-                                              size:'small',
-                                              columns:this.columns,
-                                              /*renderFooter:data=>{
-                                                  return (
-                                                      <div>
-                                                          <div style={{marginBottom:10}}>
-                                                              <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                              建筑面积(m²)：<span style={code}>{data.totalAdjustAmount}</span>
-                                                          </div>
-                                                      </div>
-                                                  )
-                                              }*/
-                                          }} />
-
-                        {/*<AsyncTable url="/account/income/taxstructure/list"
-                                    updateKey={props.tableUpDateKey}
+                        <AsyncTable url="/account/income/taxContract/proportion/list"
+                                    updateKey={this.state.updateKey}
+                                    filters={{
+                                        contractNum: props.selectedRows.length >0 && props.selectedRows[0].contractNum,
+                                        authMonth: props.filters.authMonth,
+                                    }}
                                     tableProps={{
                                         rowKey:record=>record.id,
                                         pagination:false,
@@ -252,7 +220,7 @@ class PopModal extends Component{
                                                 </div>
                                             )
                                         }
-                                    }} />*/}
+                                    }} />
 
                     </Form>
                 </Card>

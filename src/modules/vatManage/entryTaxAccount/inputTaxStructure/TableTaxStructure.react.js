@@ -2,9 +2,9 @@
  * Created by liuliyuan on 18/1/16.
  */
 import React,{Component} from 'react'
-import {Card,Form,Button,Icon,message,Spin} from 'antd'
+import {Card,Form,Button,Icon,message} from 'antd'
 import {AsyncTable} from '../../../../compoments'
-import {getFields,htmlDecode,regRules,request} from '../../../../utils'
+import {getFields,htmlDecode,regRules,request,fMoney} from '../../../../utils'
 const spanPaddingRight={
     paddingRight:30
 }
@@ -59,8 +59,7 @@ const EditableCell = ({ editable, value, form, column, type,rules,componentProps
 }
 class TableTaxStructure extends Component {
     state={
-        initData:[],
-        loading:false
+        dataSource:[],
     }
     columns = [
         {
@@ -117,7 +116,7 @@ class TableTaxStructure extends Component {
                 let url= null;
                 switch (type){
                     case '保存':
-                        const newData = [...this.state.initData];
+                        const newData = [...this.state.dataSource];
                         let arrList = newData.map((item,i)=>{
                             return {
                                 ...item,
@@ -152,10 +151,8 @@ class TableTaxStructure extends Component {
         });
     }
     requestPost=(url,type,data={})=>{
-        this.setState({ loading:true })
         request.post(url,data)
             .then(({data})=>{
-                this.setState({ loading:false })
                 if(data.code===200){
                     const props = this.props;
                     message.success(`${type}成功!`);
@@ -171,7 +168,6 @@ class TableTaxStructure extends Component {
             params:params
         })
             .then(({data}) => {
-                this.setState({ loading:false })
                 if(data.code===200){
                     const props = this.props;
                     message.success('重算成功!');
@@ -184,71 +180,62 @@ class TableTaxStructure extends Component {
     }
     componentWillReceiveProps(nextProps){
         //console.log(nextProps.tableUpDateKey, this.props.tableUpDateKey)
-        if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-                request.get('/account/income/taxstructure/list',{
-                    params:{
-                        ...nextProps.filters
-                    }
-                })
-                    .then(({data}) => {
-                    console.log(data.data.page.records[0].status)
-                        if(data.code===200){
-                            this.setState({
-                                initData:data.data.page.records,
-                            })
-                        }
-                    });
-        }
+        /*if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
+
+        }*/
     }
     render(){
         const props = this.props;
-        const {initData} = this.state;
+        const {dataSource} = this.state;
         return (
-            <Spin spinning={this.state.loading}>
-                <Card extra={
-                    initData.length > 0 && <div>
-                        {
-                            parseInt(initData[0].status, 0)=== 1 ?
-                                <div>
-                                    <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
-                                    <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
-                                    <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
-                                </div>
-                                :
-                                <div>
-                                    <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
-                                </div>
-                        }
-                    </div>
-                }
-                      style={{marginTop:10}}>
-                    <Form onSubmit={this.handleSaveSubmit}>
-                        <AsyncTable url="/account/income/taxstructure/list"
-                                    updateKey={props.tableUpDateKey}
-                                    filters={props.filters}
-                                    tableProps={{
-                                        rowKey:record=>record.id,
-                                        pagination:false,
-                                        size:'small',
-                                        columns:this.columns,
-                                        renderFooter:data=>{
-                                            return (
-                                                <div>
-                                                    <div style={{marginBottom:10}}>
-                                                        <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                        金额：<span style={code}>{data.totalAdjustAmount}</span>
-                                                        税额：<span style={code}>{data.totalAdjustTaxAmount}</span>
-                                                        价税：<span style={code}>{data.totalAmount}</span>
-                                                        总价：<span style={code}>{data.totalTaxAmount}</span>
-                                                    </div>
+            <Card extra={
+                dataSource.length > 0 && <div>
+                    {
+                        parseInt(dataSource[0].status, 0)=== 1 ?
+                            <div>
+                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
+                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
+                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
+                            </div>
+                            :
+                            <div>
+                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
+                            </div>
+                    }
+                </div>
+            }
+                  style={{marginTop:10}}>
+                <Form onSubmit={this.handleSaveSubmit}>
+                    <AsyncTable url="/account/income/taxstructure/list"
+                                updateKey={props.tableUpDateKey}
+                                filters={props.filters}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:false,
+                                    size:'small',
+                                    columns:this.columns,
+                                    onDataChange:(dataSource)=>{
+                                        this.setState({
+                                            dataSource
+                                        })
+                                    },
+                                    renderFooter:data=>{
+                                        return (
+                                            <div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
+                                                    金额：<span style={code}>{fMoney(data.totalAdjustAmount)}</span>
+                                                    税额：<span style={code}>{fMoney(data.totalAdjustTaxAmount)}</span>
+                                                    价税：<span style={code}>{fMoney(data.totalAmount)}</span>
+                                                    总价：<span style={code}>{fMoney(data.totalTaxAmount)}</span>
                                                 </div>
-                                            )
-                                        }
-                                    }} />
+                                            </div>
+                                        )
+                                    }
+                                }} />
 
-                    </Form>
-                </Card>
-            </Spin>
+                </Form>
+            </Card>
         )
     }
 }

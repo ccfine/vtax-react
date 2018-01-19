@@ -203,9 +203,13 @@ class PopInvoiceInformationModal extends Component{
 
                 </Card>
 
-                <AsyncTable url={`/income/invoice/collection/list?mainId=${props.params.mainId}&invoiceType=${props.params.invoiceType}`}
+                <AsyncTable url={'/income/invoice/collection/list'}
                             updateKey={tableUpDateKey}
-                            filters={filters}
+                            filters={{
+                                mainId:props.params.mainId,
+                                invoiceType:props.params.invoiceType,
+                                ...filters
+                            }}
                             tableProps={{
                                 rowKey:record=>record.id,
                                 pagination:true,
@@ -217,17 +221,17 @@ class PopInvoiceInformationModal extends Component{
                                         <div>
                                             <div style={{marginBottom:10}}>
                                                 <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                                本页金额：<span style={code}>{data.pageAmount}</span>
-                                                本页税额：<span style={code}>{data.pageTaxAmount}</span>
-                                                本页价税：<span style={code}>{data.pageTotalAmount}</span>
-                                                本页总价：<span style={code}>{data.pageTotalPrice}</span>
+                                                本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
+                                                本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+                                                本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
+                                                本页总价：<span style={code}>{fMoney(data.pageTotalPrice)}</span>
                                             </div>
                                             <div style={{marginBottom:10}}>
                                                 <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                                总金额：<span style={code}>{data.allAmount}</span>
-                                                总税额：<span style={code}>{data.allTaxAmount}</span>
-                                                总价税：<span style={code}>{data.allTotalAmount}</span>
-                                                全部总价：<span style={code}>{data.allTotalPrice}</span>
+                                                总金额：<span style={code}>{fMoney(data.allAmount)}</span>
+                                                总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
+                                                总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
+                                                全部总价：<span style={code}>{fMoney(data.allTotalPrice)}</span>
                                             </div>
                                         </div>
                                     )
