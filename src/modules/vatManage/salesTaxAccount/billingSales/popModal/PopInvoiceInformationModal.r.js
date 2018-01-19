@@ -23,10 +23,10 @@ const columns = [
     {
         title: '发票代码',
         dataIndex: 'invoiceCode',
-        width:60,
+        width:100,
     },{
         title: '发票号码',
-        dataIndex: 'invoiceNum ',
+        dataIndex: 'invoiceNum',
         width:100,
     },{
         title:'发票类型',
@@ -40,7 +40,7 @@ const columns = [
             }
             return text;
         },
-        width:100,
+        width:60,
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
@@ -48,11 +48,11 @@ const columns = [
     },{
         title: '购货单位名称',
         dataIndex: 'purchaseName',
-        width:60,
+        width:100,
     },{
         title: '购方税号',
         dataIndex: 'purchaseTaxNum',
-        width:60,
+        width:150,
     },{
         title: '金额',
         dataIndex: 'amount',
@@ -182,13 +182,16 @@ class PopInvoiceInformationModal extends Component{
 
                 <AsyncTable url="/account/output/billingSale/detail/list"
                             updateKey={tableUpDateKey}
-                            filters={filters}
+                            filters={{
+                                ...props.filters,
+                                ...filters
+                            }}
                             tableProps={{
                                 rowKey:record=>record.id,
                                 pagination:true,
                                 size:'small',
                                 columns:columns,
-                                scroll:{ x: 900, y: 200 },
+                                scroll:{ x: '160%', y: 200 },
                                 renderFooter:data=>{
                                     return (
                                         <div>

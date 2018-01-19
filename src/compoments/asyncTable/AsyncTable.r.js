@@ -43,9 +43,9 @@ export default class AsyncTable extends Component{
             });
         }
     }
-    onSelectChange = (selectedRowKeys) => {
+    onSelectChange = (selectedRowKeys,selectedRows) => {
         this.setState({ selectedRowKeys });
-        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys)
+        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys,selectedRows)
     }
     fetch = (params = {},nextProps) => {
         const props = nextProps || this.props;
@@ -80,7 +80,7 @@ export default class AsyncTable extends Component{
                 });
 
                 /**假如设置了单选或多选，重新异步请求数据的时候选中项也要清空，也要主动触发一下selectedRowKeys的onChange*/
-                props.tableProps.onRowSelect && props.tableProps.onRowSelect([])
+                props.tableProps.onRowSelect && props.tableProps.onRowSelect([],[])
             }else{
                 message.error(data.msg)
                 this.mounted && this.setState({
@@ -124,13 +124,13 @@ export default class AsyncTable extends Component{
         return(
             <Table
                 {...props.tableProps}
-                dataSource={dataSource}
+                dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
                 rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
                 pagination={props.tableProps.pagination ? pagination : false}
                 onChange={this.handleTableChange}
                 loading={!loaded}
                 footer={props.tableProps.renderFooter ? (currentPageData)=>{
-                    return props.tableProps.renderFooter(footerDate)
+                    return props.tableProps.renderFooter(typeof props.tableProps.dataSource === 'undefined' ? footerDate : props.tableProps.footerDate)
                 } : null}
             />
         )

@@ -206,8 +206,7 @@ class PopInvoiceInformationModal extends Component{
                 <AsyncTable url={'/income/invoice/collection/list'}
                             updateKey={tableUpDateKey}
                             filters={{
-                                mainId:props.params.mainId,
-                                invoiceType:props.params.invoiceType,
+                                ...props.params,
                                 ...filters
                             }}
                             tableProps={{

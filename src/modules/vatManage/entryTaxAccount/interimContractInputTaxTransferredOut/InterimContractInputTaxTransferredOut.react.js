@@ -225,7 +225,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                         this.requestPost(url,type);
                         break;
                     case '撤回':
-                        url = `/account/income/taxContract/adjustment/revoke/${data.ainId}/${data.authMonth}`;
+                        url = `/account/income/taxContract/adjustment/revoke/${data.mainId}/${data.authMonth}`;
                         this.requestPost(url,type);
                         break;
                     case '重算':
@@ -235,7 +235,6 @@ class InterimContractInputTaxTransferredOut extends Component {
                     default:
 
                 }
-                console.log(data);
                 this.setState({
                     filters:data
                 },()=>{
@@ -434,6 +433,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                     id={selectedRowKeys}
                     filters={filters}
                     selectedRows={selectedRows}
+                    refreshTable={this.refreshTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>

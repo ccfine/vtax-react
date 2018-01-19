@@ -38,14 +38,14 @@ class BillingSales extends Component {
             children: [
                 {
                     title: '数量',
-                    dataIndex: 'invoiceTypeSNumber',
+                    dataIndex: 'specialInvoiceCount',
                 },{
                     title: '销售额',
-                    dataIndex: 'invoiceTypeSSale',
+                    dataIndex: 'specialInvoiceAmount',
                     render:text=>fMoney(text),
                 },{
                     title: '销项（应纳）税额 ',
-                    dataIndex: 'invoiceTypeSTaxAmount',
+                    dataIndex: 'specialInvoiceTaxAmount',
                     render:text=>fMoney(text),
                 }
             ]
@@ -54,7 +54,7 @@ class BillingSales extends Component {
             children: [
                 {
                     title: '数量',
-                    dataIndex: 'invoiceTypeCNumber',
+                    dataIndex: 'otherInvoiceCount',
                     render:(text,record)=>(
                         <a onClick={()=>{
                             this.setState({
@@ -66,11 +66,11 @@ class BillingSales extends Component {
                     )
                 },{
                     title: '销售额',
-                    dataIndex: 'invoiceTypeCSale',
+                    dataIndex: 'otherInvoiceAmount',
                     render:text=>fMoney(text),
                 },{
                     title: '销项（应纳）税额 ',
-                    dataIndex: 'invoiceTypeCTaxAmount',
+                    dataIndex: 'otherInvoiceTaxAmount',
                     render:text=>fMoney(text),
                 }
             ]
@@ -109,14 +109,14 @@ class BillingSales extends Component {
             children: [
                 {
                     title: '数量',
-                    dataIndex: 'invoiceTypeSNumber',
+                    dataIndex: 'specialInvoiceCount',
                 },{
                     title: '销售额',
-                    dataIndex: 'invoiceTypeSSale',
+                    dataIndex: 'specialInvoiceAmount',
                     render:text=>fMoney(text),
                 },{
                     title: '销项（应纳）税额 ',
-                    dataIndex: 'invoiceTypeSTaxAmount',
+                    dataIndex: 'specialInvoiceTaxAmount',
                     render:text=>fMoney(text),
                 }
             ]
@@ -125,7 +125,7 @@ class BillingSales extends Component {
             children: [
                 {
                     title: '数量',
-                    dataIndex: 'invoiceTypeCNumber',
+                    dataIndex: 'otherInvoiceCount',
                     render:(text,record)=>(
                         <a onClick={()=>{
                             this.setState({
@@ -137,11 +137,11 @@ class BillingSales extends Component {
                     )
                 },{
                     title: '销售额',
-                    dataIndex: 'invoiceTypeCSale',
+                    dataIndex: 'otherInvoiceAmount',
                     render:text=>fMoney(text),
                 },{
                     title: '销项（应纳）税额 ',
-                    dataIndex: 'invoiceTypeCTaxAmount',
+                    dataIndex: 'otherInvoiceTaxAmount',
                     render:text=>fMoney(text),
                 }
             ]
@@ -154,7 +154,7 @@ class BillingSales extends Component {
             if (!err) {
                 const data = {
                     ...values,
-                    month: values.month && values.month.format('YYYY-MM')
+                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
                 this.setState({
                     filters:data
@@ -277,6 +277,7 @@ class BillingSales extends Component {
                     title="发票信息"
                     visible={visible}
                     id={sysTaxRateId}
+                    filters={filters}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>

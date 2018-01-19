@@ -6,7 +6,8 @@
 import React,{Component} from 'react'
 import {Card,Form,Button,Row,Col,Modal,message} from 'antd'
 import {AsyncTable} from '../../../../../compoments'
-import {getFields,htmlDecode,request} from '../../../../../utils'
+import {getFields,htmlDecode,request,accDiv} from '../../../../../utils'
+import {List} from 'immutable'
 const spanPaddingRight={
     paddingRight:30
 }
@@ -25,46 +26,52 @@ const EditableCell = ({record, form, column, type,options,componentProps,fieldDe
         <div>
             {
                 getFields(form,[
-                        {
-                            fieldName:`${column}`,
-                            type:type,
-                            span:24,
-                            options:options,
-                            formItemStyle:{
-                                labelCol:{
-                                    span:24
-                                },
-                                wrapperCol:{
-                                    span:24
-                                }
+                    {
+                        fieldName:`${column}`,
+                        type:type,
+                        span:24,
+                        options:options,
+                        formItemStyle:{
+                            labelCol:{
+                                span:20
                             },
-                            componentProps:{
-                                ...componentProps
-                            },
-                            fieldDecoratorOptions:{
-                                ...fieldDecoratorOptions
+                            wrapperCol:{
+                                span:20
                             }
+                        },
+                        componentProps:{
+                            ...componentProps
+                        },
+                        fieldDecoratorOptions:{
+                            ...fieldDecoratorOptions
                         }
-                    ])
+                    }
+                ])
             }
         </div>
     );
 }
+
 const options = [
     {
-        text:'施工许可证',
+        text:'手工录入',
         value:'0'
-    },
-    {
-        text:'预售许可证',
+    },{
+        text:'施工许可证',
         value:'1'
+    },{
+        text:'预售许可证',
+        value:'2'
     }
 ]
+
 class PopModal extends Component{
 
     state={
-        initData:[],
-        updateKey:Date.now()
+        $$dataSource:List([]),
+        footerDate:{},
+        updateKey:Date.now(),
+        isShowDataSource:false,
     }
 
     static defaultProps={
@@ -75,16 +82,16 @@ class PopModal extends Component{
         {
             title: '合同名称',
             dataIndex: 'contractNum',
-            width:100,
+            width:80,
             render:text=><div dangerouslySetInnerHTML={{  __html: htmlDecode(text) }}></div>,
         },{
             title: '项目分期编码',
             dataIndex: 'stagesNum',
-            width:100,
+            width:80,
         },{
             title: '项目分期名称',
             dataIndex: 'stagesName',
-            width:100,
+            width:80,
         }, {
             title: '建筑面积数据来源',
             dataIndex: 'sourceType',
@@ -92,52 +99,90 @@ class PopModal extends Component{
             render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].sourceType`,'select',options)
         },{
             title: '建筑面积(m²)',
-            width:100,
+            width:60,
             dataIndex: 'buildingArea',
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].buildingArea`,'numeric')
         },{
             title: '税务分摊比例',
-            width:200,
+            width:60,
             dataIndex: 'taxScale',
         }
     ];
-    renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:text},TextAreaAutoSize={}) {
-        return  parseInt(this.porps.selectedRows[0].status, 0) === 1 ? <EditableCell
-                record={record}
-                value={text}
-                form={this.props.form}
-                column={column}
-                type={type}
-                options={options}
-                fieldDecoratorOptions={fieldDecoratorOptions}
-                componentProps={TextAreaAutoSize}
-                //onChange={value => this.handleChange(value, record.key, column)}
-            />
-            :
-            text
+    handleChange=(value,record)=>{
+        const params = {
+            stagesId:record.stagesId,
+            source:value,
+        }
+        let sum  = 0;
+        request.get('/account/income/taxContract/proportion/source',{
+            params:params
+        }).then(({data}) => {
+            if (data.code === 200) {
+
+                //修改 建筑面积 的数据
+                this.setState(prevState=>({
+                    $$dataSource:prevState.$$dataSource.set(record.key, {
+                        ...record,
+                        buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea
+                    })
+                }),()=>{
+                    //计算总和
+                    this.state.$$dataSource.forEach(element=>{
+                        sum += parseFloat(element.buildingArea);
+                    })
+
+                    const thisTaxScale = accDiv(data.data.buildingArea,sum);
+                    const taxSale = parseFloat(thisTaxScale.toString().substring(0,4));
+
+                    this.setState(prevState=>{
+                        return {
+                            $$dataSource:prevState.$$dataSource.set(record.key, {
+                                ...record,
+                                buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea,
+                                taxScale: taxSale
+                            }),
+                            footerDate:{
+                                allBuildingArea:sum //赋值总和
+                            },
+                            isShowDataSource:true,
+                        }
+
+                    })
+                })
+
+            }
+        });
+    }
+    renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:`${text}`}) {
+
+        return parseInt(record.status, 0) === 1 ? <EditableCell
+            record={record}
+            value={text}
+            form={this.props.form}
+            column={column}
+            type={type}
+            options={options}
+            fieldDecoratorOptions={fieldDecoratorOptions}
+            componentProps={
+                {
+                    onChange:(value)=>this.handleChange(value,record)
+                }
+            }
+            //onChange={value => this.handleChange(value, record.key, column)}
+        />
+            : text
     }
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
 
-            const newData = [...this.state.initData];
-            let arrList = newData.map((item,i)=>{
-                return {
-                    ...item,
-                    ...values.data[i+1],
-                }
-            });
-
-            console.log(arrList);
-
             if (!err) {
-                request.post('/account/income/taxContract/proportion/determine',{list:arrList})
+                request.post('/account/income/taxContract/proportion/determine',{list:this.state.$$dataSource.toArray()})
                     .then(({data})=>{
                         if(data.code===200){
-                            const props = this.props;
                             message.success('保存成功!');
-                            props.refreshTable();
-                            this.props.form.resetFields()
+                            this.props.refreshTable();
+                            this.props.form.resetFields();
+                            this.props.toggleModalVisible(false);
                         }else{
                             message.error(`保存失败:${data.msg}`)
                         }
@@ -166,18 +211,10 @@ class PopModal extends Component{
             },200)
 
         }
-
-        /*if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-            console.log(nextProps.tableUpDateKey, this.props.tableUpDateKey)
-            setTimeout(()=>{
-                this.setState({
-                    updateKey:Date.now()
-                });
-            },200)
-        }*/
     }
 
     render(){
+        const {$$dataSource,footerDate,updateKey,isShowDataSource} = this.state;
         const props = this.props;
         return(
             <Modal
@@ -200,7 +237,7 @@ class PopModal extends Component{
                 <Card style={{marginTop:10}}>
                     <Form onSubmit={this.handleSubmit}>
                         <AsyncTable url="/account/income/taxContract/proportion/list"
-                                    updateKey={this.state.updateKey}
+                                    updateKey={updateKey}
                                     filters={{
                                         contractNum: props.selectedRows.length >0 && props.selectedRows[0].contractNum,
                                         authMonth: props.filters.authMonth,
@@ -210,12 +247,20 @@ class PopModal extends Component{
                                         pagination:false,
                                         size:'small',
                                         columns:this.columns,
+                                        scroll:{x: '100%', y: 400 },
+                                        dataSource: (isShowDataSource && $$dataSource.toArray()) || undefined,
+                                        footerDate: (isShowDataSource && footerDate) || undefined,
+                                        onDataChange:(dataSource)=>{
+                                            this.setState({
+                                                $$dataSource:List(dataSource)
+                                            })
+                                        },
                                         renderFooter:data=>{
                                             return (
                                                 <div>
                                                     <div style={{marginBottom:10}}>
                                                         <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                        建筑面积(m²)：<span style={code}>{data.totalAdjustAmount}</span>
+                                                        建筑面积(m²)：<span style={code}>{data.allBuildingArea}</span>
                                                     </div>
                                                 </div>
                                             )
