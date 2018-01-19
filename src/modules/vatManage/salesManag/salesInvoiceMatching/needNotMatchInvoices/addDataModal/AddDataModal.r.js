@@ -93,15 +93,21 @@ const columns = [
     },
     {
         title:'税率',
-        dataIndex:'taxRate'
+        dataIndex:'taxRate',
+        render:text=>text? `${text}%`: text,
+        className:'text-right'
     },
     {
         title:'税额',
-        dataIndex:'taxAmount'
+        dataIndex:'taxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'价税合计',
-        dataIndex:'totalAmount'
+        dataIndex:'totalAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     }
 ];
 

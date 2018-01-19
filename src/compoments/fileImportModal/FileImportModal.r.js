@@ -4,6 +4,7 @@
 import React,{Component} from 'react'
 import {Button,Icon,Modal,Form,Row,message} from 'antd'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 import {request,getFields} from '../../utils'
 import moment from 'moment'
 class FileImportModal extends Component{
@@ -38,12 +39,19 @@ class FileImportModal extends Component{
                 const formData = new FormData();
                 values.files = values.files[0];
                 for(let key in values){
-                    // 因为月份要转换下，暂时这样
-                    if(/month/i.test(key) && moment.isMoment(values[key])){
-                        formData.append(key, values[key].format('YYYY-MM'))
-                    }else{
-                        formData.append(key, values[key])
+                    if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
+                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
+                        values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
+                        values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
+                        values[key] = undefined;
                     }
+                    if(moment.isMoment(values[key])){
+                        //格式化一下时间 YYYY-MM类型
+                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM');
+                        }
+                    }
+                    formData.append(key, values[key])
                 }
                 request.post(this.props.url,formData,{
                     header:{
