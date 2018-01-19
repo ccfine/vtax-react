@@ -44,11 +44,13 @@ class SearchTable extends Component{
             })
         }
 
-        for(let key in nextProps.searchOption.filters){
-            if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
-                this.setState({
-                    filters:nextProps.searchOption.filters
-                })
+        if(nextProps.searchOption){
+            for(let key in nextProps.searchOption.filters){
+                if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
+                    this.setState({
+                        filters:nextProps.searchOption.filters
+                    })
+                }
             }
         }
     }
@@ -97,7 +99,7 @@ class SearchTable extends Component{
     }
     componentDidMount(){
         !this.props.doNotFetchDidMount && this.updateTable()
-        this.props.searchOption.filters && this.setState({
+        this.props.searchOption && this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
     }

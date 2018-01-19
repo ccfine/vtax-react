@@ -48,10 +48,10 @@ const getColumns = context=> [
         dataIndex: 'issueDate',
     },{
         title: '项目分期 ',
-        dataIndex: 'stagesId',
+        dataIndex: 'stagesItemName',
     }, {
         title: '土地使用权出让合同',
-        dataIndex: 'bbb', //>??????
+        dataIndex: 'contractNum', //>??????
     },{
         title: '坐落地',
         dataIndex: 'position',

@@ -118,12 +118,12 @@ export default class LandPriceManage extends Component{
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:getFields('查询',6,{
+                        fields:getFields('查询',8,{
                             labelCol:{
-                                span:6
+                                span:8
                             },
                             wrapperCol:{
-                                span:18
+                                span:16
                             }
                         })
                     }}

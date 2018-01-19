@@ -139,6 +139,10 @@ form .ant-pagination .ant-select{
   width: auto;
 }
 
+/*select表单输入框偏下的问题*/
+form .ant-select:only-child, form .ant-cascader-picker:only-child {
+  top: -1.0px;
+}
 
 /*amount table class*/
 .amount-code{
