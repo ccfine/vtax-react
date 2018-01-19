@@ -9,7 +9,7 @@ import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
 import PrePaidHousingSales from './prePaidHousingSales'
 import DeductProjectSummary from './deductProjectSummary'
-const PrepayTax =()=><div>预缴税款台账</div>
+import PrepayTax from './prepayTax'
 const BusinessTaxChangeTaxAnalysisNegative =()=><div>营改增税负分析测算台账</div>
 const TaxCalculation =()=><div>税款计算台账</div>
 

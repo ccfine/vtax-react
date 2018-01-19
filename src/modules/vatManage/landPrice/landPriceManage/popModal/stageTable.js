@@ -1,6 +1,7 @@
 import React from "react";
 import {Table,Card} from "antd";
 import StageModal from './stagePopModal';
+import {fMoney} from '../../../../../utils';
 
 const pointerStyle = {
     cursor:'pointer',
@@ -54,6 +55,8 @@ const getColumns =(context,length)=>[
     },{
         title: '分摊后土地价款',
         dataIndex: 'apportionLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '可抵扣的土地价款比例',
         dataIndex: 'deductibleLandPriceProportion',
@@ -70,12 +73,16 @@ const getColumns =(context,length)=>[
     },{
         title: '可抵扣土地价款',
         dataIndex: 'deductibleLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '已售建筑面积（㎡）',
         dataIndex: 'saleArea',
     },{
         title: '已实际抵扣土地价款',
         dataIndex: 'actualDeductibleLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '单方土地成本',
         dataIndex: 'singleLandCost',

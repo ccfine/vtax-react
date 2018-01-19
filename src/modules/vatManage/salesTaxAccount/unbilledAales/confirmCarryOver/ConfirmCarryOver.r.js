@@ -195,13 +195,26 @@ export default class ConfirmCarryOver extends Component{
                 style={{
                     marginTop:-16
                 }}
+                doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields,
                     getFieldsValues:values=>{
-                        values.month = values.month.format('YYYY-MM')
-                        this.setState({
-                            searchFieldsValues:values
-                        })
+                        if(JSON.stringify(values) === "{}"){
+                            this.setState({
+                                mainId:undefined,
+                                receiveMonth:undefined
+                            })
+                        }else{
+                            if(values.month){
+                                values.month = values.month.format('YYYY-MM')
+                            }
+                            this.setState(prevState=>({
+                                searchFieldsValues:{
+                                    ...prevState.searchFieldsValues,
+                                    ...values
+                                }
+                            }))
+                        }
                     },
                     cardProps:{
                         style:{

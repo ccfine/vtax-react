@@ -2,10 +2,10 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component} from 'react'
-import {Button,Popconfirm,message} from 'antd'
+import {Button,Popconfirm,message,Icon} from 'antd'
 import {SearchTable} from '../../../../compoments'
 import PopModal from './popModal'
-import {request} from '../../../../utils'
+import {request,fMoney} from '../../../../utils'
 const buttonStyle = {
     margin:'0 5px'
 }
@@ -87,15 +87,22 @@ const getColumns =(context)=>[{
     },{
         title: '税率',
         dataIndex: 'taxRate',
+        render:(text)=>(text?`${text}%`:text)
     },{
         title: '销售额（不含税）',
         dataIndex: 'amountWithoutTax',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '销项（应纳）税额',
         dataIndex: 'taxAmountWithTax',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '服务、不动产和无形资产扣除项目本期实际扣除金额（含税）',
         dataIndex: 'deductionAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '调整原因',
         dataIndex: 'adjustReason',
@@ -147,6 +154,7 @@ export default class OtherTaxAdjustment extends Component{
         return(
             <div>
                 <SearchTable
+                    doNotFetchDidMount={true}
                     searchOption={{
                         fields:searchFields
                     }}
@@ -159,7 +167,7 @@ export default class OtherTaxAdjustment extends Component{
                         url:'/account/output/othertax/list',
                         cardProps:{
                             extra:(<div>
-                                <Button size='small' style={buttonStyle} onClick={()=>{this.setState({visible:true,action:'add',opid:undefined})}}>添加</Button>
+                                <Button size='small' style={buttonStyle} onClick={()=>{this.setState({visible:true,action:'add',opid:undefined})}}><Icon type="plus" />新增</Button>
                             </div>)
                         }
                     }}

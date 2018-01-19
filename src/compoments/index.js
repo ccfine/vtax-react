@@ -21,6 +21,7 @@ import FileImportModal from './fileImportModal'
 import CountTable from './countTable'
 import {PopUploadModal,PopUndoUploadModal} from './popUploadModal'
 import ButtonModalWithForm from './buttonModalWithForm'
+import ButtonWithFileDownLoadModal from './buttonWithFileDownLoadModal'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -37,5 +38,6 @@ export {
     CountTable,
     PopUploadModal,
     PopUndoUploadModal,
-    ButtonModalWithForm
+    ButtonModalWithForm,
+    ButtonWithFileDownLoadModal
 }

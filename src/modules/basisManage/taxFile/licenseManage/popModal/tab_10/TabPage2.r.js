@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Popconfirm,message,Card} from 'antd'
+import {Button,Popconfirm,message,Card,Icon} from 'antd'
 import PopModal from './detailModal'
 import {request} from '../../../../../../utils'
 const getColumns = context=> [
@@ -93,7 +93,7 @@ export default class TabPage extends Component{
                 actionOption={{
                     body:(<Button size='small' onClick={()=>{
                         this.setState({visible:true,action:'add',opid:undefined});
-                    }}>添加</Button>)
+                    }}><Icon type="plus" />新增</Button>)
                 }}
                 tableOption={{
                     columns:getColumns(this),

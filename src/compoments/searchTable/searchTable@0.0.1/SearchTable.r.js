@@ -13,10 +13,12 @@ class SearchTable extends Component{
         tableOption:PropTypes.object,
         spinning:PropTypes.bool,
         doNotFetchDidMount:PropTypes.bool,
+        backCondition:PropTypes.func,// 返回查询条件
     }
     static defaultProps = {
         spinning:false,
-        doNotFetchDidMount:false
+        doNotFetchDidMount:false,
+        searchOption:{}
     }
     constructor(props){
         super(props)
@@ -38,16 +40,19 @@ class SearchTable extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(this.props.tableOption.key !== nextProps.tableOption.key){
-            this.setState({
+            /*this.setState({
                 tableUpDateKey:nextProps.tableOption.key,
-            })
+            })*/
+            this.handleSubmit()
         }
 
-        for(let key in nextProps.searchOption.filters){
-            if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
-                this.setState({
-                    filters:nextProps.searchOption.filters
-                })
+        if(nextProps.searchOption){
+            for(let key in nextProps.searchOption.filters){
+                if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
+                    this.setState({
+                        filters:nextProps.searchOption.filters
+                    })
+                }
             }
         }
     }
@@ -84,6 +89,9 @@ class SearchTable extends Component{
                         tableUpDateKey:Date.now()
                     })
                 });
+
+                // 把查询条件返回回去
+                this.props.backCondition && this.props.backCondition(values)
             }
         });
 
@@ -93,7 +101,7 @@ class SearchTable extends Component{
     }
     componentDidMount(){
         !this.props.doNotFetchDidMount && this.updateTable()
-        this.props.searchOption.filters && this.setState({
+        this.props.searchOption && this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
     }
@@ -129,6 +137,7 @@ class SearchTable extends Component{
                                                 form.resetFields()
                                                 //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
                                                 searchOption.getFieldsValues && searchOption.getFieldsValues({})
+                                                searchOption.onFieldsChange && searchOption.onFieldsChange({})
                                             }}>重置</Button>
                                         </Col>
                                     </Row>
@@ -169,5 +178,6 @@ export default Form.create({
     onValuesChange:(props,values)=>{
         //给外部一个获得搜索条件的回调
         props.searchOption.getFieldsValues && props.searchOption.getFieldsValues(values)
+        props.searchOption.onFieldsChange && props.searchOption.onFieldsChange(values)
     }
 })(SearchTable)

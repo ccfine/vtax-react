@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import {SearchTable} from '../../../../compoments';
 import PopModal from "./popModal";
+import {fMoney} from '../../../../utils'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff',
@@ -52,9 +53,13 @@ const getColumns =(context)=>[
     },{
         title: '可抵扣地价款',
         dataIndex: 'deductibleLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '实际已扣除土地价款',
         dataIndex: 'actualDeductibleLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '已售建筑面积(m²)',
         dataIndex: 'saleArea',

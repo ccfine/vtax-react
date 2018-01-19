@@ -165,14 +165,13 @@ class PopModal extends Component{
                         getFields(form,[{
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem([],readonly,false),
+                            ...setComItem({key:record.stagesId,label:record.stagesItemName},readonly),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
                                 fieldValueName:'id',
-                                fetchAble:false,
+                                fetchAble:true,
                                 url:`/project/stages/${this.props.projectid}`,
-                                initialValue:{key:record.stagesId}, // 传这里有效
                                 selectOptions:{
                                     labelInValue:true,
                                     disabled:readonly,

@@ -136,9 +136,13 @@ class PopModal extends Component{
         }
 
         let stages = [];
-        record.projectStagesId && record.projectStagesId.split(',').forEach(element => {
-            stages.push({key:element});
-        });
+        if(record.projectStagesId && record.projectStagesName){
+            let names = record.projectStagesName.split(','),
+                ids = record.projectStagesId.split(',');
+            names.length === ids.length && ids.forEach((ele,index)=>{
+                stages.push({key:ele,label:names[index]});
+            })
+        }
         return (
             <Modal 
             title={title}
@@ -191,12 +195,12 @@ class PopModal extends Component{
                         getFields(form,[{
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem([],readonly),
+                            ...setComItem(stages,readonly),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
                                 fieldValueName:'id',
-                                fetchAble:false,
+                                fetchAble:true,
                                 url:`/project/stages/${this.props.projectid}`,
                                 initialValue:stages, // 传这里有效
                                 selectOptions:{

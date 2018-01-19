@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {Modal,Form,Button,message,Spin,Row,Tree} from 'antd'
+import {Modal,Form,Button,message,Spin,Row,Tree,Divider} from 'antd'
 import {getFields,request} from '../../../../../../utils'
 const TreeNode = Tree.TreeNode;
 const formItemLayout = {
@@ -77,7 +77,7 @@ class PopModal extends Component{
             title='选择应税项目'
             visible={this.props.visible}
             width='700px'
-            bodyStyle={{maxHeight:"500px",overflow:"auto"}}
+            bodyStyle={{height:"450px",overflow:"auto"}}
             onCancel={()=>{this.props.hideModal()}}
             footer={[
                 <Button key="back" onClick={()=>{this.props.hideModal()}}>取消</Button>,
@@ -87,15 +87,17 @@ class PopModal extends Component{
               ]}
             >
             <Spin spinning={this.state.loading}>
-              <Tree
-              showLine={true}
-              onSelect={this.onSelect}
-              >
-                {this.renderTreeNodes(this.state.treeData)}
-              </Tree>
+                <div style={{height:250}}>
+                    <Tree
+                    showLine={true}
+                    onSelect={this.onSelect}
+                    >
+                        {this.renderTreeNodes(this.state.treeData)}
+                    </Tree>
+                </div>
             </Spin>
 
-
+            <Divider />
                 <Form>
                     <Row>
                         {

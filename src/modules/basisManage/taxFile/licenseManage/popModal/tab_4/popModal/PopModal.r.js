@@ -135,9 +135,13 @@ class PopModal extends Component{
             title="修改"
         }
         let contracts = [];
-        record.leaseContractId && record.leaseContractId.split(',').forEach(element => {
-            contracts.push({key:element});
-        });
+        if(record.leaseContractId && record.leaseContractNum){
+            let nums = record.leaseContractNum.split(','),
+            ids = record.leaseContractId.split(',');
+            nums.length === ids.length && ids.forEach((element,index) => {
+                contracts.push({key:element,label:nums[index]});
+            });
+        }
 
         return (
             <Modal 
@@ -206,14 +210,13 @@ class PopModal extends Component{
                         {
                             label:'土地出让合同编号',
                             fieldName:'leaseContract',
-                            ...setComItem([],readonly),
+                            ...setComItem(contracts,readonly),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'contractNum',
                                 fieldValueName:'id',
-                                fetchAble:false,
+                                fetchAble:true,
                                 url:`/contract/land/list/all/${this.props.projectid}`,
-                                initialValue:contracts, // 传这里有效
                                 selectOptions:{
                                     mode:"multiple",
                                     disabled:readonly,

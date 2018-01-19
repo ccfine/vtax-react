@@ -41,7 +41,7 @@ const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
         },
         {
             label:'单元',
-            fieldName:'roomNumber',
+            fieldName:'element',
             type:'element',
             span:6
         },

@@ -15,7 +15,8 @@ export default class AsyncTable extends Component{
                 showSizeChanger:true,
                 showQuickJumper:true,
                 pageSize:props.tableProps.pageSize || 10,
-                showTotal:total => `总共 ${total} 条`
+                showTotal:total => `总共 ${total} 条`,
+                pageSizeOptions:['10','20','30','40','50','60','70','80','90','100']
             },
             summaryData:[],
             footerDate:{},
@@ -43,9 +44,9 @@ export default class AsyncTable extends Component{
             });
         }
     }
-    onSelectChange = (selectedRowKeys,selectedRows) => {
+    onSelectChange = (selectedRowKeys,selectedRowData) => {
         this.setState({ selectedRowKeys });
-        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys,selectedRows)
+        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys,selectedRowData)
     }
     fetch = (params = {},nextProps) => {
         const props = nextProps || this.props;

@@ -2,10 +2,10 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Button,Popconfirm,message} from 'antd'
+import {Button,Popconfirm,message,Icon} from 'antd'
 import SearchTable from '../SearchTableTansform.react'
 import PopModal from './popModal'
-import {request} from '../../../../../../utils'
+import {request,fMoney} from '../../../../../../utils'
 const getColumns = context=>[
     {
         title:'操作',
@@ -54,6 +54,8 @@ const getColumns = context=>[
     },{
         title: '土地价款',
         dataIndex: 'landPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '建筑面积',
         dataIndex: 'coveredArea',
@@ -67,10 +69,6 @@ const getColumns = context=>[
         title: '合同签订日期',
         dataIndex: 'signingDate',
     }
-    // },{
-    //     title:'备注',
-    //     dataIndex:'remark'
-    // }
 ];
 
 export default class TabPage extends Component{
@@ -114,7 +112,7 @@ export default class TabPage extends Component{
                 actionOption={{
                     body:(<Button size='small' onClick={()=>{
                         this.setState({visible:true,action:'add',opid:undefined});
-                    }}>添加</Button>)
+                    }}><Icon type="plus" />新增</Button>)
                 }}
                 searchOption={undefined}
                 tableOption={{

@@ -108,15 +108,21 @@ const getColumns = context =>[
     },
     {
         title:'税率',
-        dataIndex:'taxRate'
+        dataIndex:'taxRate',
+        render:text=>text? `${text}%`: text,
+        className:'text-right'
     },
     {
         title:'税额',
-        dataIndex:'taxAmount'
+        dataIndex:'taxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'价税合计',
-        dataIndex:'totalAmount'
+        dataIndex:'totalAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'规格型号',
@@ -152,7 +158,9 @@ const getColumns = context =>[
     },
     {
         title:'成交总价',
-        dataIndex:'totalPrice'
+        dataIndex:'totalPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
     {
         title:'匹配方式',
@@ -234,17 +242,17 @@ export default class UnmatchedData extends Component{
                             <div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                    本页金额：<span className="amount-code">{data.pageAmount}</span>
-                                    本页税额：<span className="amount-code">{data.pageTaxAmount}</span>
-                                    本页价税：<span className="amount-code">{data.pageTotalAmount}</span>
-                                    本页总价：<span className="amount-code">{data.pageTotalPrice}</span>
+                                    本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                    本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                    本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                    本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                 </div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
-                                    总金额：<span className="amount-code">{data.allAmount}</span>
-                                    总税额：<span className="amount-code">{data.allTaxAmount}</span>
-                                    总价税：<span className="amount-code">{data.allTotalAmount}</span>
-                                    全部总价：<span className="amount-code">{data.allTotalPrice}</span>
+                                    总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                    总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                    总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                    全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                 </div>
                             </div>
                         )

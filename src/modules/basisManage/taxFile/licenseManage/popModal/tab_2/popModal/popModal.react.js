@@ -23,13 +23,21 @@ class PopModal extends Component{
     state={
         loading:false,
         formLoading:false,
-        submited:false
+        submited:false,
+        updateSelectKey:Date.now()
     }
     hideModal(){
         this.props.hideModal();
         // 回归初始状态
         this.props.form.resetFields();
         this.setState({loading:false});
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.visible!==nextProps.visible && nextProps.visible){
+            this.setState({
+                updateSelectKey:Date.now()
+            })
+        }
     }
     handleOk(){
         this.props.form.validateFields((err, values) => {
@@ -76,13 +84,12 @@ class PopModal extends Component{
                         getFields(form,[{
                             label:'合同编号',
                             fieldName:'contract',
-                            ...setComItem(record.contractNum),
+                            ...setComItem({key:record.leaseContractId,label:record.contractNum}),
                             componentProps:{
                                 fieldTextName:'contractNum',
                                 fieldValueName:'id',
-                                fetchAble:false,
-                                initialValue:{key:record.contractNum},
-                                url:`/contract/land/list/all/${record.projectId}`,
+                                fetchAble:true,
+                                url:`/contract/land/list/all/${record.projectId}?${this.state.updateSelectKey}`,
                                 selectOptions:{
                                     labelInValue:true
                                 }

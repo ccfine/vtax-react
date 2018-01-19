@@ -281,11 +281,11 @@ class RoomTransactionFile extends Component{
                                             <div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                                    本页总价：<span className="amount-code">{data.pageTotalPrice}</span>
+                                                    本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                                 </div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
-                                                    全部总价：<span className="amount-code">{data.allTotalPrice}</span>
+                                                    全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                                 </div>
                                             </div>
                                         )
