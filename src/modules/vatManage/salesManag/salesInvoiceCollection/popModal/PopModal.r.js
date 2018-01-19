@@ -5,7 +5,15 @@ import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields,regRules} from '../../../../../utils'
 import moment from 'moment'
-const confirm = Modal.confirm
+const confirm = Modal.confirm;
+const formItemStyle={
+        labelCol:{
+            span:9
+        },
+        wrapperCol:{
+            span:15
+        }
+}
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
@@ -178,7 +186,7 @@ class PopModal extends Component{
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={1000}
+                width={800}
                 style={{
                     maxWidth:'90%'
                 }}
@@ -220,7 +228,7 @@ class PopModal extends Component{
                 }
                 title={title}>
                 <Spin spinning={!loaded}>
-                    <Form style={{height:'470px',overflowY:'scroll'}}>
+                    <Form style={{height:'420px',overflowY:'scroll'}}>
                         <Row>
                             {
                                 getFields(props.form,[
@@ -237,6 +245,7 @@ class PopModal extends Component{
                                                 }
                                             ]
                                         },
+                                        formItemStyle,
                                         componentProps:{
                                             disabled
                                         }
@@ -257,6 +266,7 @@ class PopModal extends Component{
                                                 }
                                             ]
                                         },
+                                        formItemStyle,
                                         componentProps:{
                                             disabled,
                                             conditionValue:getFieldValue('taxRate') ? {
@@ -299,6 +309,7 @@ class PopModal extends Component{
                                                 value:'2'
                                             }
                                         ],
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxMethod'],
                                             rules:[
@@ -341,6 +352,7 @@ class PopModal extends Component{
                                                 value:'c'
                                             }
                                         ],
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['invoiceType'],
                                             rules:[
@@ -361,6 +373,7 @@ class PopModal extends Component{
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxableItem'],
                                         },
+                                        formItemStyle,
                                         componentProps:{
                                             disabled:true
                                         }
@@ -369,6 +382,7 @@ class PopModal extends Component{
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['invoiceNum'],
                                             rules:[
@@ -387,6 +401,7 @@ class PopModal extends Component{
                                         label:'发票代码',
                                         fieldName:'invoiceCode',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['invoiceCode'],
                                             rules:[
@@ -410,6 +425,7 @@ class PopModal extends Component{
                                         label:'发票明细号',
                                         fieldName:'invoiceDetailNum',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['invoiceDetailNum'],
                                             rules:[
@@ -424,6 +440,7 @@ class PopModal extends Component{
                                         label:'开票日期',
                                         fieldName:'billingDate',
                                         type:'datePicker',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:shouldShowDefaultData ? moment(`${initData['billingDate']}`,"YYYY-MM-DD") : undefined,
                                             rules:[
@@ -443,6 +460,7 @@ class PopModal extends Component{
                                         label:'商品名称',
                                         fieldName:'commodityName',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commodityName'],
                                             rules:[
@@ -461,6 +479,7 @@ class PopModal extends Component{
                                         label:'规格型号',
                                         fieldName:'specificationModel',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['specificationModel'],
                                             rules:[
@@ -475,6 +494,7 @@ class PopModal extends Component{
                                         label:'购货单位名称',
                                         fieldName:'purchaseName',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['purchaseName'],
                                             rules:[
@@ -493,6 +513,7 @@ class PopModal extends Component{
                                         label:'购方税号',
                                         fieldName:'purchaseTaxNum',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['purchaseTaxNum'],
                                             rules:[
@@ -511,6 +532,7 @@ class PopModal extends Component{
                                         label:'地址',
                                         fieldName:'address',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['address'],
                                             rules:[
@@ -525,6 +547,7 @@ class PopModal extends Component{
                                         label:'电话',
                                         fieldName:'phone',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['phone'],
                                             rules:[
@@ -539,6 +562,7 @@ class PopModal extends Component{
                                         label:'开户行',
                                         fieldName:'bank',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['bank'],
                                             rules:[
@@ -553,6 +577,7 @@ class PopModal extends Component{
                                         label:'帐号',
                                         fieldName:'account',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['account'],
                                             rules:[
@@ -567,6 +592,7 @@ class PopModal extends Component{
                                         label:'金额',
                                         fieldName:'amount',
                                         type:'numeric',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['amount'] ? `${initData['amount']}` : undefined,
                                             rules:[
@@ -585,6 +611,7 @@ class PopModal extends Component{
                                         label:'税率',
                                         fieldName:'taxRate',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxRate'] ? `${initData['taxRate']}` : undefined,
                                         },
@@ -596,6 +623,7 @@ class PopModal extends Component{
                                         label:'税额',
                                         fieldName:'taxAmount',
                                         type:'numeric',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxAmount'] ? `${initData['taxAmount']}` : undefined,
                                             rules:[
@@ -614,6 +642,7 @@ class PopModal extends Component{
                                         label:'价税合计',
                                         fieldName:'totalAmount',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:( parseFloat( getFieldValue('amount') ) +  parseFloat( getFieldValue('taxAmount') ) ) || initData['totalAmount'],
                                         },
@@ -634,10 +663,10 @@ class PopModal extends Component{
                                         span:24,
                                         formItemStyle:{
                                             labelCol:{
-                                                span:2
+                                                span:3
                                             },
                                             wrapperCol:{
-                                                span:22
+                                                span:21
                                             }
                                         },
                                         componentProps:{
@@ -648,6 +677,7 @@ class PopModal extends Component{
                                         label:'收款人',
                                         fieldName:'payee',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['payee'],
                                             rules:[
@@ -662,6 +692,7 @@ class PopModal extends Component{
                                         label:'复核',
                                         fieldName:'checker',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['checker'],
                                             rules:[
@@ -676,6 +707,7 @@ class PopModal extends Component{
                                         label:'开票人',
                                         fieldName:'drawer',
                                         type:'input',
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['drawer'],
                                             rules:[

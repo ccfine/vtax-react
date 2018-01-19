@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import {Button,Icon,Modal} from 'antd'
 import {SearchTable,FileExport} from '../../../../compoments'
+import {fMoney} from '../../../../utils'
 import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
 const pointerStyle = {
@@ -139,12 +140,18 @@ const getColumns = context =>[
     },{
         title: '金额',
         dataIndex: 'amount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '税额',
         dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '税收分类编码',
         dataIndex: 'taxClassificationCoding',
@@ -160,7 +167,7 @@ const getColumns = context =>[
             if(text===2){
                 return '外部导入'
             }
-            return ''
+            return text
         }
     }
 ];
@@ -215,7 +222,7 @@ export default class Test extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:20,
                     columns:getColumns(this),
                     url:'/output/invoice/collection/list',
                     extra:<div>

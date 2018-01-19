@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
+import {fMoney} from '../../../../utils'
 import PopModal from './popModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -158,12 +159,18 @@ const getColumns = context =>[
     },{
         title: '营业税收款金额',
         dataIndex: 'businessTaxCollectionAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '营业税结转收入金额',
         dataIndex: 'turnoverOfBusinessTax',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '营业税开票金额',
         dataIndex: 'businessTaxInvoiceAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '操作员',
         dataIndex: 'realname',

@@ -16,7 +16,8 @@ class SearchTable extends Component{
     }
     static defaultProps = {
         spinning:false,
-        doNotFetchDidMount:false
+        doNotFetchDidMount:false,
+        searchOption:{}
     }
     constructor(props){
         super(props)
@@ -38,9 +39,10 @@ class SearchTable extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(this.props.tableOption.key !== nextProps.tableOption.key){
-            this.setState({
+            /*this.setState({
                 tableUpDateKey:nextProps.tableOption.key,
-            })
+            })*/
+            this.handleSubmit()
         }
 
         for(let key in nextProps.searchOption.filters){
@@ -129,6 +131,7 @@ class SearchTable extends Component{
                                                 form.resetFields()
                                                 //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
                                                 searchOption.getFieldsValues && searchOption.getFieldsValues({})
+                                                searchOption.onFieldsChange && searchOption.onFieldsChange({})
                                             }}>重置</Button>
                                         </Col>
                                     </Row>
@@ -169,5 +172,6 @@ export default Form.create({
     onValuesChange:(props,values)=>{
         //给外部一个获得搜索条件的回调
         props.searchOption.getFieldsValues && props.searchOption.getFieldsValues(values)
+        props.searchOption.onFieldsChange && props.searchOption.onFieldsChange(values)
     }
 })(SearchTable)

@@ -15,7 +15,8 @@ export default class AsyncTable extends Component{
                 showSizeChanger:true,
                 showQuickJumper:true,
                 pageSize:props.tableProps.pageSize || 10,
-                showTotal:total => `总共 ${total} 条`
+                showTotal:total => `总共 ${total} 条`,
+                pageSizeOptions:['10','20','30','40','50','60','70','80','90','100']
             },
             summaryData:[],
             footerDate:{},
@@ -43,9 +44,9 @@ export default class AsyncTable extends Component{
             });
         }
     }
-    onSelectChange = (selectedRowKeys) => {
+    onSelectChange = (selectedRowKeys,selectedRowData) => {
         this.setState({ selectedRowKeys });
-        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys)
+        this.props.tableProps.onRowSelect && this.props.tableProps.onRowSelect(selectedRowKeys,selectedRowData)
     }
     fetch = (params = {},nextProps) => {
         const props = nextProps || this.props;
@@ -80,7 +81,7 @@ export default class AsyncTable extends Component{
                 });
 
                 /**假如设置了单选或多选，重新异步请求数据的时候选中项也要清空，也要主动触发一下selectedRowKeys的onChange*/
-                props.tableProps.onRowSelect && props.tableProps.onRowSelect([])
+                props.tableProps.onRowSelect && props.tableProps.onRowSelect([],[])
             }else{
                 message.error(data.msg)
                 this.mounted && this.setState({
@@ -124,7 +125,7 @@ export default class AsyncTable extends Component{
         return(
             <Table
                 {...props.tableProps}
-                dataSource={dataSource}
+                dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
                 rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
                 pagination={props.tableProps.pagination ? pagination : false}
                 onChange={this.handleTableChange}

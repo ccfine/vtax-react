@@ -1,11 +1,10 @@
 /**
  * Created by liurunbin on 2018/1/17.
  * 售房预缴台账
- * TODO:售房预缴台账，没有接口
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal,ButtonModalWithForm} from '../../../../compoments'
+import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
 import {fMoney,request} from '../../../../utils'
 const searchFields = (getFieldValue)=> {
     return [
@@ -75,7 +74,7 @@ const searchFields = (getFieldValue)=> {
         },
         {
             label:'过滤期间',
-            fieldName:'month',
+            fieldName:'receiveMonth',
             type:'monthPicker',
             span:6,
             formItemStyle:{
@@ -110,7 +109,7 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
-            fieldName:'231'
+            fieldName:'buildingName'
         },
         {
             label:'房号',
@@ -128,7 +127,7 @@ const searchFields = (getFieldValue)=> {
         },
         {
             label:'收款时房屋状态',
-            fieldName:'state',
+            fieldName:'housingStatus',
             type:'select',
             span:6,
             formItemStyle:{
@@ -142,11 +141,11 @@ const searchFields = (getFieldValue)=> {
             options:[
                 {
                     text:'现房',
-                    value:'1'
+                    value:'2'
                 },
                 {
                     text:'期房',
-                    value:'2'
+                    value:'1'
                 }
             ]
         },
@@ -183,69 +182,94 @@ const searchFields = (getFieldValue)=> {
 const columns = [
     {
         title:'纳税主体',
-        dataIndex:'mainName'
+        dataIndex:'mainName',
+        width:'150px'
     },
     {
         title:'项目',
-        dataIndex:'purchaseTaxNum'
+        dataIndex:'projectName',
+        width:'120px'
     },
     {
         title:'分期',
-        dataIndex:'purchaseName'
+        dataIndex:'stagesName',
+        width:'100px'
     },
     {
         title:'楼栋名称',
-        dataIndex:'invoiceCode'
+        dataIndex:'buildingName',
+        width:'100px'
     },
     {
         title:'单元',
-        dataIndex:'invoiceNum'
+        dataIndex:'element',
+        width:'60px'
     },
     {
         title:'房号',
-        dataIndex:'invoiceType',
+        dataIndex:'roomNumber',
+        width:'60px'
     },
     {
         title:'交付时间',
-        dataIndex:'commodityName',
+        dataIndex:'deliveryTime',
+        width:'75px',
+        className:'text-center',
     },
     {
         title:'收款日期',
-        dataIndex:'billingDate',
+        dataIndex:'receiveMonth',
+        width:'70px',
+        className:'text-center',
     },
     {
         title:'收款时房屋状态',
-        dataIndex:'amount',
-        render:text=>fMoney(text),
-        className:'table-money'
+        dataIndex:'housingStatus',
+        width:'100px',
+        className:'text-center',
+        render:text=>{
+            text = parseInt(text,0);
+            if(text===1){
+                return '期房'
+            }
+            if(text===2){
+                return '现房'
+            }
+            return text;
+        }
     },
     {
         title:'累计预售价款',
-        dataIndex:'taxRate',
+        dataIndex:'cumulativePrepaidPayment',
         render:text=>fMoney(text),
+        width:'120px',
         className:'table-money'
     },
     {
         title:'当期结转收入金额',
-        dataIndex:'tax32Amount',
+        dataIndex:'currentIncomeAmount',
         render:text=>fMoney(text),
+        width:'120px',
         className:'table-money'
     },
     {
         title:'累计结转收入金额',
-        dataIndex:'totalAm1211ount',
+        dataIndex:'cumulativeIncomeAmount',
         render:text=>fMoney(text),
+        width:'120px',
         className:'table-money'
     },
     {
         title:'预缴销售额',
-        dataIndex:'totalAmo1231unt',
+        dataIndex:'prepaidSales',
         render:text=>fMoney(text),
+        width:'120px',
         className:'table-money'
     },
     {
         title:'房间编码',
-        dataIndex:'totalAmount3'
+        dataIndex:'roomCode',
+        width:'110px',
     }
 ];
 
@@ -254,6 +278,7 @@ export default class PrePaidHousingSales extends Component{
         selectedRowKeys:[],
         tableKey:Date.now(),
         searchTableLoading:false,
+        searchFieldsValues:{}
     }
     toggleSearchTableLoading = b =>{
         this.setState({
@@ -274,7 +299,7 @@ export default class PrePaidHousingSales extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleSearchTableLoading(true)
-                request.delete(`/output/invoice/marry/unwanted/revoke/${this.state.selectedRowKeys.toString()}`)
+                request.delete(`/account/salehouse/delete/${this.state.selectedRowKeys.toString()}`)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
@@ -293,22 +318,74 @@ export default class PrePaidHousingSales extends Component{
         });
 
     }
+    handleClickActions = action => () =>{
+        let actionText,
+            actionUrl;
+        switch (action){
+            case 'submit':
+                actionText='提交';
+                actionUrl='/account/salehouse/submit';
+                break;
+            case 'restore':
+                actionText='撤回';
+                actionUrl='/account/salehouse/restore';
+                break;
+            default:
+                break;
+        }
+        this.toggleSearchTableLoading(true)
+        const {mainId,receiveMonth} = this.state.searchFieldsValues;
+        request.post(`${actionUrl}/${mainId}/${receiveMonth}`)
+            .then(({data})=>{
+                this.toggleSearchTableLoading(false)
+                if(data.code===200){
+                    message.success(`${actionText}成功！`);
+                    this.refreshTable();
+                }else{
+                    message.error(`${actionText}失败:${data.msg}`)
+                }
+            }).catch(err=>{
+            this.toggleSearchTableLoading(false)
+        })
+    }
     render(){
-        const {selectedRowKeys,searchTableLoading,tableKey} = this.state;
+        const {selectedRowKeys,searchTableLoading,tableKey,} = this.state;
+        const {mainId,receiveMonth} = this.state.searchFieldsValues
         return(
             <SearchTable
                 searchOption={{
                     fields:searchFields,
                     cardProps:{
                         className:''
+                    },
+                    onFieldsChange:values=>{
+                        if(JSON.stringify(values) === "{}"){
+                            this.setState({
+                                searchFieldsValues:{
+                                    mainId:undefined,
+                                    receiveMonth:undefined
+                                }
+                            })
+                        }else if(values.mainId || values.receiveMonth){
+                            if(values.receiveMonth){
+                                values.receiveMonth = values.receiveMonth.format('YYYY-MM')
+                            }
+                            this.setState(prevState=>({
+                                searchFieldsValues:{
+                                    ...prevState.searchFieldsValues,
+                                    ...values
+                                }
+                            }))
+                        }
                     }
                 }}
+                doNotFetchDidMount={true}
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/output/room/files/list',
+                    url:'/account/salehouse/list',
                     onRowSelect:(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
@@ -316,7 +393,7 @@ export default class PrePaidHousingSales extends Component{
                     },
                     extra:<div>
                         <FileImportModal
-                            url="/output/room/files/upload"
+                            url="/account/salehouse/upload"
                             fields={[
                                 {
                                     label:'纳税主体',
@@ -335,14 +412,14 @@ export default class PrePaidHousingSales extends Component{
                                         rules:[
                                             {
                                                 required:true,
-                                                message:'请选择过滤期间'
+                                                message:'请选择纳税主体'
                                             }
                                         ]
                                     },
                                 },
                                 {
                                     label:'导入月份',
-                                    fieldName:'month',
+                                    fieldName:'receiveMonth',
                                     type:'monthPicker',
                                     span:24,
                                     formItemStyle:{
@@ -368,113 +445,40 @@ export default class PrePaidHousingSales extends Component{
                             }}
                             style={{marginRight:5}} />
                         <FileExport
-                            url={`/account/output/notInvoiceSale/export`}
+                            url={`account/salehouse/download`}
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button size="small" style={{marginRight:5}} type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
-                        <ButtonModalWithForm
-                            style={{
-                                marginRight:5
-                            }}
-                            buttonOptions={{
-                                text:'提交',
-                                icon:'file-add'
-                            }}
-                            modalOptions={{
-                                title:'提交'
-                            }}
-                            formOptions={{
-                                type:'post',
-                                url:'/aaa',
-                                fields:[
-                                    {
-                                        label:'月份',
-                                        fieldName:'month',
-                                        type:'monthPicker',
-                                        span:24,
-                                        formItemStyle:{
-                                            labelCol:{
-                                                span:6
-                                            },
-                                            wrapperCol:{
-                                                span:10
-                                            }
-                                        },
-                                        fieldDecoratorOptions:{
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择月份'
-                                                }
-                                            ]
-                                        },
-                                    },
-                                ]
-                            }}
-                        />
-                        <ButtonModalWithForm
-                            buttonOptions={{
-                                text:'撤回提交',
-                                icon:'rollback'
-                            }}
-                            modalOptions={{
-                                title:'撤回提交'
-                            }}
-                            formOptions={{
-                                type:'put',
-                                url:'/aaa',
-                                fields:[
-                                    {
-                                        label:'月份',
-                                        fieldName:'month',
-                                        type:'monthPicker',
-                                        span:24,
-                                        formItemStyle:{
-                                            labelCol:{
-                                                span:6
-                                            },
-                                            wrapperCol:{
-                                                span:10
-                                            }
-                                        },
-                                        fieldDecoratorOptions:{
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择月份'
-                                                }
-                                            ]
-                                        },
-                                    },
-                                ]
-                            }}
-                        />
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth)}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth)}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(
                             <div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                    本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                    本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                    本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
+                                    累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
+                                    累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
+                                    当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
+                                    当期预收价款：<span className="amount-code">{fMoney(data.pageCurrentPrepaidPayment)}</span>
+                                    预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
                                 </div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
-                                    总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                    总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                    总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                    全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
+                                    累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
+                                    累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
+                                    当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
+                                    当期预收价款：<span className="amount-code">{fMoney(data.totalCurrentPrepaidPayment)}</span>
+                                    预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
                                 </div>
                             </div>
                         )
                     },
                     scroll:{
-                        y:'400px',
-                        x:'150%'
+                        x:'1430px',
+                        y:'400px'
                     },
                     rowSelection:{
                         getCheckboxProps:record=>({
@@ -482,7 +486,7 @@ export default class PrePaidHousingSales extends Component{
                              * 设置该数据是否可以选中
                              * 条件为数据状态是暂存的才可以被删除
                              * */
-                            disabled:true
+                            disabled:parseInt(record.status,0) === 2
                         })
                     }
                 }}
