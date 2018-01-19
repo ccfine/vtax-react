@@ -2,13 +2,13 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component} from 'react'
-import {Button,Icon,Divider} from 'antd'
-import {SearchTable,FileImportModal} from '../../../../compoments'
+import {Icon,Divider} from 'antd'
+import {SearchTable,FileImportModal,FileExport} from '../../../../compoments'
 import FeildModal from './popModal'
-import {request} from '../../../../utils'
+import {request, fMoney} from '../../../../utils'
 import moment from 'moment'
 const buttonStyle = {
-    margin:'0 5px'
+    marginLeft:5
 }
 
 const getFields = (title,span,formItemStyle,record={})=> [
@@ -20,12 +20,10 @@ const getFields = (title,span,formItemStyle,record={})=> [
         formItemStyle,
         fieldDecoratorOptions:{
             initialValue:record.mainId,
-            rules:[
-            {
+            rules:[{
                 required:true,
                 message:'必录'
-            }
-            ]
+            }]
         }
     },
     {
@@ -39,12 +37,10 @@ const getFields = (title,span,formItemStyle,record={})=> [
         },
         fieldDecoratorOptions:{
             initialValue:moment(record.authMonth),
-            rules:[
-            {
+            rules:[{
                 required:true,
                 message:'必录'
-            }
-            ]
+            }]
         }
     }
 ]
@@ -80,6 +76,8 @@ const getColumns =(context)=>[
     },{
         title: '转出税额',
         dataIndex: 'outTaxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     }
 ];
 
@@ -118,7 +116,7 @@ export default class LandPriceManage extends Component{
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:getFields('查询',8,{
+                        fields:getFields('查询',6,{
                             labelCol:{
                                 span:8
                             },
@@ -136,7 +134,6 @@ export default class LandPriceManage extends Component{
                         key:this.state.updateKey,
                         cardProps:{
                             extra:(<div>
-                                {/* <Spin spinning={this.state.statusLoading}> */}
                                     { this.state.status &&
                                     <span>
                                         <span style={buttonStyle}>
@@ -150,7 +147,6 @@ export default class LandPriceManage extends Component{
                                         </span>
                                     </span>
                                     }
-                                {/* </Spin> */}
                                 <FeildModal
                                     style={buttonStyle}
                                     title='提交'
@@ -181,8 +177,10 @@ export default class LandPriceManage extends Component{
                                     },this.state.statusParam)}
                                     onSuccess={this.updateStatus}
                                 ></FeildModal>
-                                <Button href={`${window.baseURL}/account/income/taxout/download`} target='_blank' size='small' style={buttonStyle}><Icon type="arrow-down"/>下载模板</Button>
+                                <FileExport url={`${window.baseURL}/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
+                                {/* <Button href={`${window.baseURL}/account/income/taxout/download`} target='_blank' size='small' style={buttonStyle}><Icon type="arrow-down"/>下载模板</Button> */}
                                 <FileImportModal
+                                    style={buttonStyle}
                                     url="/account/income/taxout/upload"
                                     title="导入"
                                     fields={getFields('导入',24,{
