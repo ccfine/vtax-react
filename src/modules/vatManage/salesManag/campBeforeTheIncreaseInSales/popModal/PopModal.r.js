@@ -170,7 +170,15 @@ class PopModal extends Component{
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={800}
                 style={{
-                    maxWidth:'90%'
+                    position:'absolute',
+                    height:'416px',
+                    maxWidth:'90%',
+                    left:0,
+                    top:0,
+                    bottom:0,
+                    right:0,
+                    padding:0,
+                    margin:'auto'
                 }}
                 visible={props.visible}
                 footer={
