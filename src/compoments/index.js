@@ -22,6 +22,7 @@ import CountTable from './countTable'
 import {PopUploadModal,PopUndoUploadModal} from './popUploadModal'
 import ButtonModalWithForm from './buttonModalWithForm'
 import ButtonWithFileDownLoadModal from './buttonWithFileDownLoadModal'
+import {FetchTable} from './fetchTable'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -39,5 +40,6 @@ export {
     PopUploadModal,
     PopUndoUploadModal,
     ButtonModalWithForm,
-    ButtonWithFileDownLoadModal
+    ButtonWithFileDownLoadModal,
+    FetchTable,
 }
