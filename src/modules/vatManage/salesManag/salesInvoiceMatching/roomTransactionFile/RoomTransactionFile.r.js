@@ -16,7 +16,17 @@ const getColumns = context => [
                 cursor:'pointer'
             }} onClick={()=>{
                 if(parseInt(record.matchingStatus,0) ===1){
-                    message.error('只能删除未匹配的数据');
+                    const errorModalRef = Modal.warning({
+                        title: '友情提醒',
+                        content: '只能删除未匹配的数据!',
+                        okText: '确定',
+                        onOk:()=>{
+                            errorModalRef.destroy()
+                        },
+                        onCancel() {
+                            errorModalRef.destroy()
+                        },
+                    });
                     return false;
                 }
                 const modalRef = Modal.confirm({
@@ -241,6 +251,22 @@ class RoomTransactionFile extends Component{
                                         fieldName:'transactionDate',
                                         type:'rangePicker',
                                         span:6
+                                    },
+                                    {
+                                        label:'匹配状态',
+                                        fieldName:'matchingStatus',
+                                        type:'select',
+                                        span:6,
+                                        options:[
+                                            {
+                                                text:'未匹配',
+                                                value:'0'
+                                            },
+                                            {
+                                                text:'已匹配',
+                                                value:'1'
+                                            }
+                                        ]
                                     },
                                 ])
                             }

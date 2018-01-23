@@ -187,7 +187,7 @@ const getColumns = context => [
     {
         title:'开票日期',
         dataIndex:'billingDate',
-        width:'70px'
+        width:'75px'
     },
     {
         title:'金额',

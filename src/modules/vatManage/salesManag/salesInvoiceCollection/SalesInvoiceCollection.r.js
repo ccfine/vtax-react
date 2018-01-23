@@ -39,8 +39,11 @@ const searchFields = [
     },
     {
         label:'税率',
-        type:'input',
+        type:'numeric',
         fieldName:'taxRate',
+        componentProps:{
+            valueType:'int'
+        },
         fieldDecoratorOptions:{}
     },
     {
@@ -127,7 +130,7 @@ const getColumns = context =>[
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
-        width:'70px'
+        width:'75px'
     },{
         title: '购货单位',
         dataIndex: 'purchaseName',
@@ -246,7 +249,25 @@ export default class Test extends Component{
                     </div>,
                     scroll:{
                         x:'180%'
-                    }
+                    },
+                    renderFooter:data=>{
+                        return(
+                            <div>
+                                <div style={{marginBottom:10}}>
+                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                    本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                    本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                    本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                </div>
+                                <div style={{marginBottom:10}}>
+                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                    总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                    总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                    总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                </div>
+                            </div>
+                        )
+                    },
                 }}
             >
                 <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />

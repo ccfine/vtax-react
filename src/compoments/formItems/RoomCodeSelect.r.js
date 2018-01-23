@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Select,Icon,Modal,Button} from 'antd'
+import {Select,Icon,Modal} from 'antd'
 import {SearchTable} from '../../compoments'
 import {fMoney} from '../../utils'
 import PropTypes from 'prop-types'
@@ -127,8 +127,9 @@ const getColumns = context => [
         title:'操作',
         key:'actions',
         width:'60px',
+        className:'text-center',
         render:(text,record)=>(
-            <Button
+            <span
                 size='small'
                 onClick={()=>{
                     const {setFieldsValue,fieldName} = context.props;
@@ -150,13 +151,13 @@ const getColumns = context => [
                     context.props.toggleModalVisible(false)
 
                 }}
-                style={{cursor:'pointer',color:'#1890ff'}}>选择</Button>
+                style={{cursor:'pointer',color:'#1890ff'}}>选择</span>
         )
     },
     {
         title: '楼栋名称',
         dataIndex: 'buildingName',
-        width:'80px'
+        width:'90px'
     }, {
         title: '单元',
         dataIndex: 'element',
@@ -172,11 +173,11 @@ const getColumns = context => [
     }, {
         title: '身份证号/纳税识别号',
         dataIndex: 'taxIdentificationCode',
-        width:'135px'
+        width:'150px'
     }, {
         title: '房间编码',
         dataIndex: 'roomCode',
-        width:'100px'
+        width:'65px'
     }, {
         title: '成交总价',
         dataIndex: 'totalPrice',
@@ -231,7 +232,15 @@ class RoomCodeSelectPage extends Component{
                 }}
                 footer={false}
                 style={{
+                    position:'absolute',
+                    height:'471px',
                     maxWidth:'80%',
+                    left:0,
+                    top:0,
+                    bottom:0,
+                    right:0,
+                    padding:0,
+                    margin:'auto'
                 }}
                 visible={visible}>
                     <SearchTable
@@ -252,7 +261,7 @@ class RoomCodeSelectPage extends Component{
                                 title:''
                             },
                             scroll:{
-                                y:300
+                                y:200
                             }
                         }}
                     />
