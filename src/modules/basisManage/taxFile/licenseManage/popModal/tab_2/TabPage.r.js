@@ -55,6 +55,7 @@ export default class TabPage extends Component{
         return(
             <div>
             <SearchTable
+                searchOption={null}
                 tableOption={{
                     columns:getColumns(this),
                     scroll:{x:'100%'},
@@ -62,8 +63,7 @@ export default class TabPage extends Component{
                     url:`/project/stage/list/${props.projectId}`,
                     cardProps:{
                         bordered:false,
-                        style:{marginTop:"0px"},
-                        bodyStyle:{width:'600px'}
+                        style:{marginTop:"0px"}
                     }
                 }}
             >
