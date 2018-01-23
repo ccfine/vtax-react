@@ -13,7 +13,7 @@ const formItemLayout = {
       sm: { span: 16 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -22,7 +22,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required:required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -149,13 +149,14 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+            maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.mainId?{key:record.mainId}:undefined,readonly || NotModifyWhenEdit),
+                            ...setComItem(record.mainId?{key:record.mainId}:undefined,readonly || NotModifyWhenEdit,true,'请选择纳税主体'),
                             label:'纳税主体',
                             fieldName:'main',
                             type:'taxMain',
@@ -165,7 +166,7 @@ class PopModal extends Component{
                             }
                         },
                         {
-                            ...setComItem(moment(record.adjustDate),readonly),
+                            ...setComItem(moment(record.adjustDate),readonly,true,'请选择调整日期'),
                             label:'调整日期',
                             fieldName:'adjustDate',
                             type:'datePicker',
@@ -176,14 +177,14 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.project,readonly),
+                            ...setComItem(record.project,readonly,true,'请选择项目'),
                             label:'项目',
                             fieldName:'project',
                             type:'select',
                             options:[{text:'涉税调整',value:'1'},{text:'纳税检查调整',value:'2'}]
                         },
                         {
-                            ...setComItem(record.taxableProjectName,readonly),
+                            ...setComItem(record.taxableProjectName,readonly,true,'请选择应税项目'),
                             label:'应税项目',
                             fieldName:'taxableProjectName',
                             type:'input',
@@ -198,7 +199,7 @@ class PopModal extends Component{
                     <Row>
                             {
                             getFields(form,[{
-                                ...setComItem(record.businessType,readonly),
+                                ...setComItem(record.businessType,readonly,true,'请选择业务类型'),
                                 label:'业务类型',
                                 fieldName:'businessType',
                                 type:'select',
@@ -227,13 +228,13 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.amountWithoutTax,readonly),
+                            ...setComItem(record.amountWithoutTax,readonly,true,'请输入销售额（不含税）'),
                             label:'销售额（不含税）',
                             fieldName:'amountWithoutTax',
                             type:'numeric'
                         },
                         {
-                            ...setComItem(record.taxAmountWithTax,readonly),
+                            ...setComItem(record.taxAmountWithTax,readonly,true,'请输入销项（应纳）税额'),
                             label:'销项（应纳）税额',
                             fieldName:'taxAmountWithTax',
                             type:'numeric'
@@ -266,7 +267,7 @@ class PopModal extends Component{
                     <Row>
                     {
                         getFields(form,[{
-                            ...setComItem(record.adjustReason,readonly),
+                            ...setComItem(record.adjustReason,readonly,true,'请选择调整原因'),
                             label:'调整原因',
                             fieldName:'adjustReason',
                             type:'select',

@@ -15,7 +15,7 @@ const formItemLayout = {
       sm: { span: 15 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -24,7 +24,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -50,7 +50,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -146,20 +147,21 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.licenseNumber,(readonly || this.props.action==="modify")),
+                            ...setComItem(record.licenseNumber,(readonly || this.props.action==="modify"),true,'请输入竣工备案编号'),
                             label:'竣工备案编号',
                             fieldName:'licenseNumber'
                         },
                         {
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem({key:record.stagesId,label:record.stagesItemName},readonly),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -183,7 +185,7 @@ class PopModal extends Component{
                             fieldName:'projectName'
                         },
                         {
-                            ...setComItem(record.projectNum,readonly),
+                            ...setComItem(record.projectNum,readonly,true,'请输入工程编号'),
                             label:'工程编号',
                             fieldName:'projectNum'
                         }])
@@ -193,7 +195,7 @@ class PopModal extends Component{
                         {
                         getFields(form,[
                         {
-                            ...setComItem(record.buildingArea ,readonly),
+                            ...setComItem(record.buildingArea ,readonly,true,'请输入建筑面积(m²)'),
                             label:'建筑面积(m²)',
                             fieldName:'buildingArea',
                             type:'numeric',
@@ -259,12 +261,12 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(moment(record.startDate),readonly),
+                            ...setComItem(moment(record.startDate),readonly,true,'请选择开工日期'),
                             label:'开工日期',
                             fieldName:'startDate',
                             type:'datePicker',
                         },{
-                            ...setComItem(moment(record.endDate),readonly),
+                            ...setComItem(moment(record.endDate),readonly,true,'请选择竣工验收日期'),
                             label:'竣工验收日期',
                             fieldName:'endDate',
                             type:'datePicker',
@@ -274,7 +276,7 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(moment(record.issuingDate),readonly),
+                            ...setComItem(moment(record.issuingDate),readonly,true,'请选择发证日期'),
                             label:'发证日期',
                             fieldName:'issuingDate',
                             type:'datePicker',
