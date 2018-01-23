@@ -34,7 +34,15 @@ const columns = [{
 },{
     title: '营业状态',
     dataIndex: 'operatingStatus',
-    render:text=>parseInt(text,0) ===1 ? <span style={{color: "#87d068"}}>营业</span> : <span style={{color: "red"}}>停业</span>,
+    render:text=>{
+        if(text==='01'){
+            return <span style={{color: "#87d068"}}>营业</span>;
+        }
+        if(text==='02'){
+            return <span style={{color: "red"}}>停业</span>
+        }
+        return ''
+    }
 },{
     title: '更新人',
     dataIndex: 'lastModifiedBy',
@@ -161,8 +169,8 @@ class AubjectOfTaxPayment extends Component {
                             }
 
                             <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                <Button style={{marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>

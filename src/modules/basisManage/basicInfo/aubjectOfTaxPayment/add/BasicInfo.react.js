@@ -126,7 +126,7 @@ class BasicInfo extends Component {
         const {defaultData} = this.props;
 
         const dateFormat = 'YYYY-MM-DD';
-        let disibled = this.props.type ==='view';
+        let disabled = this.props.type ==='view';
         let shouldShowDefaultData = false;
         if(this.props.type==='edit' || this.props.type==='view'){
             shouldShowDefaultData = true;
@@ -150,6 +150,7 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.code',
                 initialValue:defaultData.code,
+                disabled:shouldShowDefaultData,
                 rules: [
                     {
                         required: true, message: '请输入编码',
@@ -164,6 +165,7 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.name',
                 initialValue:defaultData.name,
+                disabled:shouldShowDefaultData,
                 rules: [
                     {
                         required: true, message: '请输入纳税主体',
@@ -178,6 +180,7 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.taxNum',
                 initialValue:defaultData.taxNum,
+                disabled:shouldShowDefaultData,
                 rules: [
                     {
                         required: true, message: '请输入社会信用代码',
@@ -192,6 +195,7 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.busLicenseNum',
                 initialValue:defaultData.busLicenseNum,
+                disabled:shouldShowDefaultData,
                 rules: [
                     {
                         required: true, message: '请输入管理单位公司注册证书营业执照号',
@@ -331,10 +335,6 @@ class BasicInfo extends Component {
                 rules: [
                     {
                         required: true, message: '请输入办公电话',
-                    },{
-                        pattern: regRules.number.pattern, message: regRules.number.message,
-                    },{
-                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                     }
                 ],
             }, {
@@ -411,13 +411,6 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.operaterPhone',
                 initialValue:defaultData.operaterPhone,
-                rules: [
-                    {
-                        pattern: regRules.number.pattern, message: regRules.number.message,
-                    },{
-                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                    }
-                ],
             }, {
                 label: '增值税专用发票最高限额',
                 type: 'select',
@@ -499,13 +492,6 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.nationalTaxPhone',
                 initialValue:defaultData.nationalTaxPhone,
-                rules: [
-                    {
-                        pattern: regRules.number.pattern, message: regRules.number.message,
-                    },{
-                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                    }
-                ],
             }, {
                 label: '主管地税机关',
                 type: 'cascader',
@@ -528,13 +514,6 @@ class BasicInfo extends Component {
                 type: 'text',
                 fieldName: 'jbxx.localTaxPhone',
                 initialValue:defaultData.localTaxPhone,
-                rules: [
-                    {
-                        pattern: regRules.number.pattern, message: regRules.number.message,
-                    },{
-                        max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                    }
-                ],
             }, {
                 label: '更新人',
                 type: 'text',
@@ -567,21 +546,21 @@ class BasicInfo extends Component {
         for (let i = 0; i < data.length; i++) {
             let inputComponent;
             if (data[i].type === 'text') {
-                inputComponent = <Input disabled={disibled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
+                inputComponent = <Input disabled={disabled || data[i].disabled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
             } else if (data[i].type === 'rangePicker') {
-                inputComponent = <DatePicker disabled={disibled} placeholder={`请输入${data[i].label}`} format="YYYY-MM-DD" style={{width:'100%'}} />;
+                inputComponent = <DatePicker disabled={disabled || data[i].disabled} placeholder={`请输入${data[i].label}`} format="YYYY-MM-DD" style={{width:'100%'}} />;
             } else if (data[i].type === 'select') {
                 inputComponent = (
-                    <Select disabled={disibled} placeholder="请选择">
+                    <Select disabled={disabled || data[i].disabled} placeholder="请选择">
                         {
                             data[i].items.map((item, i) => <Option key={i} value={`${item.id}`}>{item.name}</Option>)
                         }
                     </Select>
                 )
             }else if(data[i].type ==='checked'){
-                inputComponent = <Checkbox disabled={disibled}  />;
+                inputComponent = <Checkbox disabled={disabled || data[i].disabled}  />;
             }else if(data[i].type ==='cascader') {
-                inputComponent = <Cascader disabled={disibled} options={data[i].items} placeholder={`请输入${data[i].label}`}/>;
+                inputComponent = <Cascader disabled={disabled || data[i].disabled} options={data[i].items} placeholder={`请输入${data[i].label}`}/>;
             }else if(data[i].type ==='industry'){
                 inputComponent = <Input disabled={true} placeholder={`请输入${data[i].label}`} addonAfter={<a style={{cursor: this.props.type ==='view' && 'not-allowed'}} onClick={this.props.type !=='view' ? this.showIndustryModal : null}>
                     <Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />

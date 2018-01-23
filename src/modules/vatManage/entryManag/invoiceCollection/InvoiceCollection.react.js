@@ -222,7 +222,7 @@ class InvoiceCollection extends Component {
                                     },{
                                         label:'认证月份',
                                         fieldName:'authMonth',
-                                        type:'rangePicker',
+                                        type:'monthRangePicker',
                                         span:6,
                                         fieldDecoratorOptions:{
                                         },
@@ -281,7 +281,7 @@ class InvoiceCollection extends Component {
                               style={buttonStyle}
                               onClick={()=>{
                                   let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
-                                  if(sourceType === 1 ) {
+                                  if(sourceType === 2 ) {
                                       const ref = Modal.warning({
                                           title: '友情提醒',
                                           content: '该发票信息是外部导入，无法删除！',
@@ -340,6 +340,7 @@ class InvoiceCollection extends Component {
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
                                                     本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
                                                     本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+
                                                     本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
                                                 </div>
                                                 <div style={{marginBottom:10}}>

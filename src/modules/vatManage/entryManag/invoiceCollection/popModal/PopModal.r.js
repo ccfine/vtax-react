@@ -115,11 +115,10 @@ class PopModal extends Component{
             {
                 components:<CusFormItem.TaxMain
                     fieldName="incomeInvoiceCollectionDO.mainId"
-                    initialValue={initData.mainId}
                     formItemStyle={formItemLayout}
                     form={this.props.form}
-
                     fieldDecoratorOptions={{
+                        initialValue:initData.mainId,
                         rules:[
                             {
                                 required:true,
@@ -260,8 +259,6 @@ class PopModal extends Component{
                         required:true,
                         message:'请输入电话'
                     },{
-                        pattern: regRules.number.pattern, message: regRules.number.message,
-                    },{
                         ...max20
                     }
                 ]
@@ -394,6 +391,7 @@ class PopModal extends Component{
     cellAmountSum=(arr,totalAmount)=>{
         const form = this.props.form;
         const data = this.state.detailsDate;
+        console.log(data);
         if(data.length >0 ) {
             arr.forEach((n) => {
                 let sum = 0;
@@ -411,9 +409,12 @@ class PopModal extends Component{
                     [`incomeInvoiceCollectionDO.${totalAmount}`]: fMoney(count),
                 });
             });
-
-
-
+        }else{
+            form.setFieldsValue({
+                'incomeInvoiceCollectionDO.amount': fMoney(0),
+                'incomeInvoiceCollectionDO.taxAmount': fMoney(0),
+                [`incomeInvoiceCollectionDO.${totalAmount}`]: fMoney(0),
+            });
         }
     }
 
@@ -737,32 +738,32 @@ class PopModal extends Component{
                             </div>}
                             style={{marginTop:10}}>
 
-                             <SynchronizeTable data={detailsDate}
-                                          updateKey={tableUpDateKey}
-                                          tableProps={{
-                                              rowKey:record=>record.id,
-                                              pagination:true,
-                                              bordered:true,
-                                              size:'middle',
-                                              columns:this.columns,
-                                              rowSelection:rowSelection,
-                                              footer:(currentPageData) => {
-                                                  return (
-                                                      <Row gutter={24}>
-                                                          <Col span={8}>
-                                                              金额合计：<span ref='amount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.amount')}</span>
-                                                          </Col>
-                                                          <Col span={8}>
-                                                              税额合计：<span ref='taxAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.taxAmount')}</span>
-                                                          </Col>
-                                                          <Col span={8}>
-                                                              价税合计：<span ref='totalAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.totalAmount')}</span>
-                                                          </Col>
-                                                      </Row>
-                                                  )
-                                              }
-                                          }}
-                             />
+                            <SynchronizeTable data={detailsDate}
+                                              updateKey={tableUpDateKey}
+                                              tableProps={{
+                                                  rowKey:record=>record.id,
+                                                  pagination:true,
+                                                  bordered:true,
+                                                  size:'middle',
+                                                  columns:this.columns,
+                                                  rowSelection:rowSelection,
+                                                  footer:(currentPageData) => {
+                                                      return (
+                                                          <Row gutter={24}>
+                                                              <Col span={8}>
+                                                                  金额合计：<span ref='amount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.amount')}</span>
+                                                              </Col>
+                                                              <Col span={8}>
+                                                                  税额合计：<span ref='taxAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.taxAmount')}</span>
+                                                              </Col>
+                                                              <Col span={8}>
+                                                                  价税合计：<span ref='totalAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.totalAmount')}</span>
+                                                              </Col>
+                                                          </Row>
+                                                      )
+                                                  }
+                                              }}
+                            />
 
                             <PopsModal
                                 visible={visible}

@@ -134,7 +134,7 @@ class PopUndoUploadModal extends Component{
                   <Icon type="file-add" />
                     {props.title}
                 </Button>
-                <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
+                <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)} maskClosable={false}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {

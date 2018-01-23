@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Card,Row,Col,Form,Button,Modal } from 'antd'
-import {AsyncTable,FileExport} from '../../../../../compoments'
+import {AsyncTable} from '../../../../../compoments'
 import {getFields,fMoney} from '../../../../../utils'
 const spanPaddingRight={
     paddingRight:30
@@ -191,22 +191,23 @@ class PopInvoiceInformationModal extends Component{
                         </Row>
                     </Form>
                 </Card>
-                <Card extra={<div>
-                    <FileExport
-                        url='/income/invoice/marry/download'
-                        title="导出"
-                        size="small"
-                        setButtonStyle={{marginRight:5}}
-                    />
-                </div>}
-                      style={{marginTop:10}}>
-
+                {/*extra={<div>
+                <FileExport
+                    url='/income/invoice/marry/download'
+                    title="导出"
+                    size="small"
+                    setButtonStyle={{marginRight:5}}
+                />
+            </div>}*/}
+                <Card  style={{marginTop:10}}>
                 </Card>
 
                 <AsyncTable url={'/income/invoice/collection/list'}
                             updateKey={tableUpDateKey}
                             filters={{
                                 ...props.params,
+                                authMonthStart:props.filters.authMonth,
+                                authMonthEnd:props.filters.authMonth,
                                 ...filters
                             }}
                             tableProps={{
@@ -236,6 +237,7 @@ class PopInvoiceInformationModal extends Component{
                                     )
                                 },
                             }} />
+
             </Modal>
         )
     }
