@@ -79,7 +79,9 @@ export default class FetchTable extends React.Component{
                 /**假如设置了单选或多选，重新异步请求数据的时候选中项也要清空，也要主动触发一下selectedRowKeys的onChange*/
                 /**参考AsyncTable.r.js 文件的 props.tableProps.onRowSelect && props.tableProps.onRowSelect([],[]) */
                 /**基于以上需求，增加一个回调，不在这里做selection选择状态的管理 */
-                props.refresh && props.refresh();
+                /**props.refresh && props.refresh();**/
+                /**以 首页/增值税管理/进项管理/进项发票采集 为例子修改 */
+                props.tableProps.rowSelection && props.tableProps.rowSelection.onChange && props.tableProps.rowSelection.onChange(undefined,undefined);
             }else{
                 message.error(data.msg)
                 this.mounted && this.setState({

@@ -51,7 +51,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.props.form.resetFields();
+                this.setState({formLoading:false,record:{},typelist:[]});
             }
         }
     }
@@ -60,12 +61,12 @@ class PopModal extends Component{
     }
     hideSelfModal=()=>{
         this.props.form.resetFields();
-        this.setState({record:{}});
+        this.setState({formLoading:false,record:{},typelist:[]});
         this.props.hideModal();
     }
     selectTax = (item)=>{
-        this.setState({record:{taxableProjectId:item.id,taxableProjectName:item.name,businessType:undefined,...this.state.record}});
-        this.props.form.setFieldsValue({taxableProjectName:item.name})
+        this.setState({record:{...this.state.record,taxableProjectId:item.id,taxableProjectName:item.name,businessType:undefined}});
+        this.props.form.setFieldsValue({taxableProjectName:item.name,businessType:undefined,taxRate:undefined})
         this.fetchTypeList(item.id);
     }
     fetchTypeList=(id)=>{
@@ -160,7 +161,7 @@ class PopModal extends Component{
                             type:'taxMain',
                             componentProps:{
                                 labelInValue:true,
-                                disabled:readonly
+                                disabled:readonly || NotModifyWhenEdit
                             }
                         },
                         {
