@@ -48,7 +48,8 @@ const EditableCell = ({ editable, value, form, column, type,rules,componentProps
                             ...componentProps
                         },
                         fieldDecoratorOptions:{
-                            rules
+                            initialValue:value,
+                            rules,
                         }
                     }
                 ])
@@ -57,9 +58,14 @@ const EditableCell = ({ editable, value, form, column, type,rules,componentProps
         </div>
     );
 }
+
+
 class TableTaxStructure extends Component {
     state={
         dataSource:[],
+        resetDataSource:[],
+        footerDate:{},
+        isShowResetDataSource:false,
     }
     columns = [
         {
@@ -120,7 +126,7 @@ class TableTaxStructure extends Component {
                         let arrList = newData.map((item,i)=>{
                             return {
                                 ...item,
-                                ...values.data[i+1],
+                                ...values.data[i],
                             }
                         });
                         //console.log(arrList);
@@ -169,9 +175,12 @@ class TableTaxStructure extends Component {
         })
             .then(({data}) => {
                 if(data.code===200){
-                    const props = this.props;
                     message.success('重算成功!');
-                    props.refreshTable();
+                    this.setState({
+                        resetDataSource:data.data.page.records,
+                        footerDate:data.data,
+                        isShowResetDataSource:true
+                    })
                     this.props.form.resetFields()
                 }else{
                     message.error(`重算失败:${data.msg}`)
@@ -186,7 +195,7 @@ class TableTaxStructure extends Component {
     }
     render(){
         const props = this.props;
-        const {dataSource} = this.state;
+        const {dataSource,resetDataSource,footerDate,isShowResetDataSource} = this.state;
         return (
             <Card extra={
                 dataSource.length > 0 && <div>
@@ -214,6 +223,8 @@ class TableTaxStructure extends Component {
                                     pagination:false,
                                     size:'small',
                                     columns:this.columns,
+                                    dataSource: (isShowResetDataSource && resetDataSource) || undefined,
+                                    footerDate: (isShowResetDataSource && footerDate) || undefined,
                                     onDataChange:(dataSource)=>{
                                         this.setState({
                                             dataSource
@@ -226,8 +237,8 @@ class TableTaxStructure extends Component {
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
                                                     金额：<span style={code}>{fMoney(data.totalAdjustAmount)}</span>
                                                     税额：<span style={code}>{fMoney(data.totalAdjustTaxAmount)}</span>
-                                                    价税：<span style={code}>{fMoney(data.totalAmount)}</span>
-                                                    总价：<span style={code}>{fMoney(data.totalTaxAmount)}</span>
+                                                    调整金额：<span style={code}>{fMoney(data.totalAmount)}</span>
+                                                    调整税额：<span style={code}>{fMoney(data.totalTaxAmount)}</span>
                                                 </div>
                                             </div>
                                         )

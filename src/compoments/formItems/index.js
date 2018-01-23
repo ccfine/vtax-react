@@ -8,6 +8,7 @@ import TaxClassCodingSelect from './TaxClassCodingSelect.r'
 import NumericInput from './NumericInput.r'
 import FileUpload from './FileUpload.r'
 import RoomCodeSelect from './RoomCodeSelect.r'
+import MonthRangePicker from './MonthRangePicker.r'
 export default {
     TaxMain,
     AsyncSelect,
@@ -15,5 +16,6 @@ export default {
     TaxClassCodingSelect,
     NumericInput,
     FileUpload,
-    RoomCodeSelect
+    RoomCodeSelect,
+    MonthRangePicker
 }

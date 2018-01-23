@@ -70,7 +70,7 @@ class InputTaxOnFixedAssets extends Component {
             if (!err) {
                 const data = {
                     ...values,
-                    month: values.month && values.month.format('YYYY-MM')
+                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
                 this.setState({
                     filters:data
@@ -97,57 +97,6 @@ class InputTaxOnFixedAssets extends Component {
     }
     render(){
         const {tableUpDateKey,filters} = this.state;
-        const uploadArrList = [
-            {
-                label:'认证月份',
-                fieldName:'authMonth',
-                type:'monthPicker',
-                span:24,
-                formItemStyle:{
-                    labelCol:{
-                        span:6
-                    },
-                    wrapperCol:{
-                        span:11
-                    }
-                },
-                fieldDecoratorOptions:{
-                    rules:[
-                        {
-                            required:true,
-                            message:'请选择认证月份'
-                        }
-                    ]
-                },
-            },{
-                label:'文件',
-                fieldName:'files',
-                type:'fileUpload',
-                span:24,
-                formItemStyle:{
-                    labelCol:{
-                        span:6
-                    },
-                    wrapperCol:{
-                        span:17
-                    }
-                },
-                componentProps:{
-                    buttonText:'点击上传',
-                    accept:'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    explain:'文件格式为.XLS,并且不超过5M',
-                    //size:2
-                },
-                fieldDecoratorOptions:{
-                    rules:[
-                        {
-                            required:true,
-                            message:'请上传文件'
-                        }
-                    ]
-                },
-            }
-        ]
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -175,7 +124,7 @@ class InputTaxOnFixedAssets extends Component {
                                         },
                                     },{
                                         label:'认证月份',
-                                        fieldName:'month',
+                                        fieldName:'authMonth',
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
@@ -203,7 +152,6 @@ class InputTaxOnFixedAssets extends Component {
                     <PopUploadModal
                         url="/account/income/fixedAssets/upload"
                         title="导入"
-                        uploadList={uploadArrList}
                         onSuccess={()=>{
                             this.refreshTable()
                         }}

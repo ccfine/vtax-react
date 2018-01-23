@@ -100,12 +100,13 @@ class InvoiceMatching extends Component {
             }
         }
     ];
+
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.authMonth && values.authMonth.length!==0){
-                    values.authMonthStartStart = values.authMonth[0].format('YYYY-MM')
+                    values.authMonthStar = values.authMonth[0].format('YYYY-MM')
                     values.authMonthEnd= values.authMonth[1].format('YYYY-MM')
                     values.authMonth = undefined;
                 }
@@ -202,7 +203,10 @@ class InvoiceMatching extends Component {
             default :
             //no default
         }
-
+        const causeDifference = {
+            title: '差异原因',
+            dataIndex: 'causeDifference'
+        }
         return (
             <AsyncTable url={url}
                         updateKey={tableUpDateKey}
@@ -211,7 +215,7 @@ class InvoiceMatching extends Component {
                             rowKey:record=>record.id,
                             pagination:true,
                             size:'small',
-                            columns:this.columns,
+                            columns: this.state.activeKey !=='tab1' ? this.columns.concat(causeDifference) : this.columns,
                             rowSelection:rowSelection,
                             renderFooter:data=>{
                                 return (
@@ -255,7 +259,7 @@ class InvoiceMatching extends Component {
             content:this.tabInitDate('tab1')
         },{
             key: 'tab2',
-            tab: '无法匹',
+            tab: '无法匹配',
             content:this.tabInitDate('tab2')
         }, {
             key: 'tab3',

@@ -94,7 +94,7 @@ class PopModal extends Component{
                     }
                 ],
                 setCondition:{
-                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
                 },
             }, {
                 label: '单价',
@@ -109,7 +109,7 @@ class PopModal extends Component{
                 ],
                 setCondition:{
                     onKeyUp:(e)=>this.handleKeyUp('unitPrice'),
-                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
                 },
             }, {
                 label: '金额',
@@ -125,12 +125,15 @@ class PopModal extends Component{
                 setCondition:{
                     formatter:value => `${value}%`,
                     parser:value => value.replace('%', ''),
-                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount'),
+                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
                 },
                 rules: [
                     {
                         required:true,
                         message:'请输入税率'
+                    },{
+                        pattern:regRules.integer.pattern,
+                        message:regRules.integer.message,
                     }
                 ],
             }, {
@@ -139,6 +142,17 @@ class PopModal extends Component{
                 fieldName: 'taxAmount',
                 initialValue:fMoney(initData.taxAmount),
                 disabled:true,
+            }, {
+                label: '价税合计',
+                type: 'text',
+                fieldName: 'totalAmount',
+                initialValue:fMoney(initData.totalAmount),
+                disabled:true,
+                rules: [
+                    {
+                        ...max20
+                    }
+                ],
             }
         ];
 
@@ -182,18 +196,13 @@ class PopModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                let amount = parseFloat(`${values.amount}`.replace(/\$\s?|(,*)/g, ''));
-                let taxAmount = parseFloat(`${values.taxAmount}`.replace(/\$\s?|(,*)/g, ''));
-                let sum = amount+taxAmount;
-                const obj = {...values,totalAmount:sum};
-
                 const type = this.props.modalConfig.type;
                 switch (type){
                     case 'add':
-                        this.addDate(this.props.initData, obj);
+                        this.addDate(this.props.initData, values);
                         break;
                     case 'edit':
-                        this.updateDate(this.props.selectedRowKeys[0], obj);
+                        this.updateDate(this.props.selectedRowKeys[0], values);
                         break;
                     default:
                         //no default
@@ -213,29 +222,42 @@ class PopModal extends Component{
 
     }
 
-
-    handleCalcAmoutTaxAmount=(n1,n2,n3,t2,t)=>{
-        this.handleAmout(n1,n2,n3);
-        this.handleTaxAmount(n3,t2,t);
-    }
-
-    handleTaxAmount=(num1,num2,name)=>{
+    //计算金额的总和
+   handleCellAmountSum=(amount,taxAmount,totalAmount)=>{
         const form = this.props.form;
-        let v1 = form.getFieldValue(`${num1}`).replace(/\$\s?|(,*)/g, '');
-        let v2 = (form.getFieldValue(`${num2}`)) /100;
-        const count = v1*v2;
+        const v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
+        const v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
+        const sum = v1+v2
         form.setFieldsValue({
-            [name]: fMoney(count),
+            [totalAmount]: fMoney(sum),
         });
     }
-    handleAmout=(num1,num2,name)=>{
+
+    handleCalcAmoutTaxAmount=(qty,unitPrice,amount,taxRate,taxAmount,totalAmount)=>{
+        this.handleAmout(qty,unitPrice,amount);
+        this.handleTaxAmount(amount,taxRate,taxAmount);
+        this.handleCellAmountSum(amount,taxAmount,totalAmount);
+    }
+    handleTaxAmount=(amount,taxRate,taxAmount)=>{
         const form = this.props.form;
-        let v1 = form.getFieldValue(`${num1}`);
-        let v2 = form.getFieldValue(`${num2}`).replace(/\$\s?|(,*)/g, '');
+        let v1 = form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, '');
+        let v2 = (form.getFieldValue(`${taxRate}`)) /100;
+        const count = v1*v2;
+        form.setFieldsValue({
+            [taxAmount]: fMoney(count),
+        });
+    }
+    handleAmout=(qty,unitPrice,amount)=>{
+        const form = this.props.form;
+        let v1 = form.getFieldValue(`${qty}`);
+        let v2 = form.getFieldValue(`${unitPrice}`).replace(/\$\s?|(,*)/g, '');
+        if(typeof (v1) === 'undefined'){
+            v1 = 0
+        }
         const count = accMul(v1,v2);
         form.setFieldsValue({
-            [num2]:fMoney(v2),
-            [name]: fMoney(count),
+            [unitPrice]:fMoney(v2),
+            [amount]: fMoney(count),
         });
     }
 
@@ -276,7 +298,6 @@ class PopModal extends Component{
             if(item.id === id){
                 return {
                     ...item,
-                    totalAmount:item.amount+item.taxAmount,
                     ...selectedRows,
                 }
             }
@@ -349,7 +370,7 @@ class PopModal extends Component{
                 <Form onSubmit={this.handleSubmit}>
                     <Row>
                         {
-                            this.getFields(0,8)
+                            this.getFields(0,9)
                         }
                     </Row>
                 </Form>

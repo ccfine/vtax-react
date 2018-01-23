@@ -149,6 +149,7 @@ class Add extends Component {
                    jbxx:{
                        ...values.jbxx,
                        industry:this.state.industry.key,
+                       status:this.state.status,
                        id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
                        operatingProvince: values.jbxx.operatingProvince[0],
                        operatingCity:values.jbxx.operatingProvince[1],
@@ -181,6 +182,9 @@ class Add extends Component {
                        .then(({data}) => {
                            if (data.code === 200) {
                                message.success('新增成功！', 4)
+                               //编辑成功，关闭当前窗口,刷新父级组件
+                               this.props.toggleModalVisible(false);
+                               this.props.updateTable();
                                this.setStatus(2);
                                this.mounted && this.setState({
                                    submitLoading: false,
@@ -230,7 +234,10 @@ class Add extends Component {
                            })
                        })
                }
-           }
+             }else{
+                console.log(err);
+                debugger
+             }
         })
     }
     handleDelete=()=>{
@@ -263,7 +270,6 @@ class Add extends Component {
         request.put(`/taxsubject/update/${(this.props.selectedRowKeys && this.props.selectedRowKeys[0]) || this.state.id}/${status}`
         )
             .then(({data}) => {
-                    console.log(data)
                 if (data.code === 200) {
                     message.success(`${mes}成功！`, 4);
                     //编辑成功，关闭当前窗口,刷新父级组件
@@ -330,6 +336,7 @@ class Add extends Component {
                 jbxx:{},
                 szjd: null,
                 industry:{},
+                activeKey:'1',
             })
         }
 
@@ -337,7 +344,7 @@ class Add extends Component {
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            if(nextProps.selectedRowKeys.length>0){
+            if(nextProps.selectedRowKeys && nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
                 this.setStatus(parseInt(nextProps.selectedRows[0].status, 0));
             }
@@ -431,7 +438,7 @@ class Add extends Component {
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
-                                <TabPane tab="股东持股" key="3">
+                                <TabPane tab="股东及持股" key="3">
                                     <Shareholding
                                         type={type}
                                         defaultData={gdjcg}

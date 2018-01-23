@@ -189,6 +189,7 @@ class InputTaxDetails extends Component {
                     title="发票信息"
                     visible={visible}
                     params={params}
+                    filters={filters}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>
