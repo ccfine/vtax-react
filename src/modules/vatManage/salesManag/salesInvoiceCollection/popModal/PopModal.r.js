@@ -610,13 +610,14 @@ class PopModal extends Component{
                                     {
                                         label:'税率',
                                         fieldName:'taxRate',
-                                        type:'input',
+                                        type:'numeric',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxRate'] ? `${initData['taxRate']}` : undefined,
                                         },
                                         componentProps:{
-                                            disabled:true
+                                            disabled:true,
+                                            valueType:'int'
                                         }
                                     },
                                     {

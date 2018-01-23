@@ -175,7 +175,13 @@ export default class PrepayTax extends Component{
         searchTableLoading:false,
         searchFieldsValues:{
 
-        }
+        },
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:''
     }
     refreshTable = ()=>{
         this.setState({
@@ -222,7 +228,7 @@ export default class PrepayTax extends Component{
         })
     }
     render(){
-        const {searchTableLoading,tableKey} = this.state;
+        const {searchTableLoading,tableKey,submitDate,dataStatus} = this.state;
         const {mainId,receiveMonth} = this.state.searchFieldsValues
 
         return(

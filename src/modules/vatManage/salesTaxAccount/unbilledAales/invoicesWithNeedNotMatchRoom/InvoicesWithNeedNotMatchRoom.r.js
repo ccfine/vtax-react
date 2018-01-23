@@ -28,7 +28,10 @@ const searchFields = [
     {
         label:'税率',
         fieldName:'taxRate',
-        type:'input',
+        type:'numeric',
+        componentProps:{
+            valueType:'int'
+        },
     }
 ]
 const columns = [
