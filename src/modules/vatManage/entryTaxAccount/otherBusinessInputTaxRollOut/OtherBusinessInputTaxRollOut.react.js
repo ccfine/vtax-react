@@ -22,7 +22,7 @@ const getFields = (title,span,formItemStyle,record={})=> [
             initialValue:record.mainId,
             rules:[{
                 required:true,
-                message:'必录'
+                message:'请选择纳税主体'
             }]
         }
     },
@@ -39,7 +39,7 @@ const getFields = (title,span,formItemStyle,record={})=> [
             initialValue:moment(record.authMonth),
             rules:[{
                 required:true,
-                message:'必录'
+                message:`请选择${title}月份`
             }]
         }
     }
@@ -178,7 +178,6 @@ export default class LandPriceManage extends Component{
                                     onSuccess={this.updateStatus}
                                 ></FeildModal>
                                 <FileExport url={`${window.baseURL}/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
-                                {/* <Button href={`${window.baseURL}/account/income/taxout/download`} target='_blank' size='small' style={buttonStyle}><Icon type="arrow-down"/>下载模板</Button> */}
                                 <FileImportModal
                                     style={buttonStyle}
                                     url="/account/income/taxout/upload"
