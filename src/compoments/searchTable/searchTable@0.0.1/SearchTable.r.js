@@ -160,6 +160,7 @@ class SearchTable extends Component{
                                         pagination:true,
                                         pageSize:tableOption.pageSize || 10,
                                         size:'small',
+                                        onRow:tableOption.onRow || undefined,
                                         rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
                                         onRowSelect:tableOption.onRowSelect || undefined,
                                         columns:tableOption.columns,

@@ -1,10 +1,11 @@
 /**
- * Created by liurunbin on 2018/1/18.
+ * Created by liurunbin on 2018/1/24.
  */
 import React,{Component} from 'react'
-import {Button,Icon,message} from 'antd'
-import {SearchTable,FileExport,ButtonWithFileUploadModal} from '../../../../compoments'
+import {Button,Icon,message,Form} from 'antd'
+import {SearchTable} from '../../../../compoments'
 import {fMoney,request} from '../../../../utils'
+import EditableCell from './EditableCell.r'
 const searchFields = (getFieldValue)=> {
     return [
         {
@@ -22,11 +23,11 @@ const searchFields = (getFieldValue)=> {
             },
             fieldDecoratorOptions:{
                 rules:[
-                 {
-                 required:true,
-                 message:'请选择纳税主体'
-                 }
-                 ]
+                    /*{
+                        required:true,
+                        message:'请选择纳税主体'
+                    }*/
+                ]
             },
         },
         {
@@ -44,157 +45,48 @@ const searchFields = (getFieldValue)=> {
             },
             fieldDecoratorOptions:{
                 rules:[
-                 {
-                 required:true,
-                 message:'请选择查询期间'
-                 }
-                 ]
+                   /* {
+                        required:true,
+                        message:'请选择查询期间'
+                    }*/
+                ]
             },
             componentProps:{
                 format:'YYYY-MM'
             }
-        },
-        {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:6,
-            formItemStyle:{
-                labelCol:{
-                    span:8
-                },
-                wrapperCol:{
-                    span:16
-                }
-            },
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('mainId') || false,
-                url:`/project/list/${getFieldValue('mainId')}`,
-            }
-        },
+        }
     ]
 }
-const columns = [
-
-    {
-        title:'操作',
-        key:'actions',
-        render:(text,record)=>(
-            <div>
-                {
-                    record.status === 2 && (
-                        <ButtonWithFileUploadModal
-                            id={record.id}
-                            style={{marginRight:5}} title='附件' />
-                    )
-                }
-            </div>
-        )
-    },
-    {
-        title:'项目编号',
-        dataIndex:'projectNum',
-    },
+const getColumns = getFieldDecorator => [
     {
         title:'项目名称',
         dataIndex:'projectName',
     },
     {
-        title:'项目地址',
-        dataIndex:'projectAddress',
-    },
-    {
-        title:'预征项目',
-        dataIndex:'preProject',
-    },
-    {
-        title:'销售额（含税）',
-        dataIndex:'amountWithTax',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'销售额（不含税）',
-        dataIndex:'amountWithoutTax',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'实际销售额（不含税）',
-        dataIndex:'actualAmountWithoutTax',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'实际预征税额',
-        dataIndex:'actualPreTaxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'计税方法',
-        dataIndex:'taxMethod',
-        className:'text-center',
-        render:text=>{
-            text = parseInt(text,0);
-            if(text===1){
-                return '一般计税方法'
-            }
-            if(text===2){
-                return '简易计税方法'
-            }
-            return text;
+        title:'一般货物及劳务和应税服务',
+        dataIndex:'deductAmount',
+        render:(text,record)=>{
+            return <EditableCell fieldName={record.id} getFieldDecorator={getFieldDecorator} editAble={record.editAble} />
         }
     },
     {
-        title:'扣除金额',
-        dataIndex:'deductAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'预征率',
+        title:'即征即退货物及劳务和应税服务',
         dataIndex:'currentIncomeAmount',
         render:text=>fMoney(text),
         className:'table-money'
-    },
-    {
-        title:'上期未退税（负数）',
-        dataIndex:'taxRebates',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'预征税额',
-        dataIndex:'preTaxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'调整销售额（不含税）',
-        dataIndex:'adjustSales',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'调整备注',
-        dataIndex:'adjustRemark',
     }
 ];
 const transformDataStatus = status =>{
     status = parseInt(status,0)
     if(status===1){
-        return '暂存';
+        return '保存';
     }
     if(status===2){
         return '提交'
     }
     return status
 }
-export default class PrepayTax extends Component{
+class TaxCalculation extends Component{
     state={
         tableKey:Date.now(),
         searchTableLoading:false,
@@ -202,7 +94,8 @@ export default class PrepayTax extends Component{
 
         },
 
-        tableUrl:'/account/prepaytax/list',
+        //tableUrl:'/account/prepaytax/list',
+        tableUrl:'list',
         /**
          *修改状态和时间
          * */
@@ -267,11 +160,21 @@ export default class PrepayTax extends Component{
             this.toggleSearchTableLoading(false)
         })
     }
+    save = e =>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            console.log(values)
+            if(!err){
+                this.refreshTable()
+            }
+        })
+    }
     render(){
         const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
-        const {mainId,receiveMonth} = this.state.searchFieldsValues
-
+        const {mainId,receiveMonth} = this.state.searchFieldsValues;
+        const {getFieldDecorator} = this.props.form;
         return(
+        <div>
             <SearchTable
                 searchOption={{
                     fields:searchFields,
@@ -305,10 +208,13 @@ export default class PrepayTax extends Component{
                         }
                     }
                 }}
-                doNotFetchDidMount={true}
+                //doNotFetchDidMount={true}
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
+                    onRow:record=>({
+                        onDoubleClick:()=>{console.log(record)}
+                    }),
                     onDataChange:data=>{
                         if(data && data.length !==0){
                             this.setState({
@@ -318,7 +224,7 @@ export default class PrepayTax extends Component{
                         }
                     },
                     pageSize:100,
-                    columns:columns,
+                    columns:getColumns(getFieldDecorator),
                     url:tableUrl,
                     extra:<div>
                         {
@@ -331,45 +237,20 @@ export default class PrepayTax extends Component{
                                 }
                             </div>
                         }
-                        <FileExport
-                            url={`account/prepaytax/export`}
-                            title="导出"
-                            size="small"
-                            setButtonStyle={{marginRight:5}}
-                        />
+                        <Button size="small" style={{marginRight:5}} onClick={this.save}><Icon type="save" />保存</Button>
                         <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && receiveMonth)} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>
                         <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth)}><Icon type="file-add" />提交</Button>
                         <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth)}><Icon type="rollback" />撤回提交</Button>
-                    </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>合计：</span>
-                                    实际销售额（不含税）：<span className="amount-code">{fMoney(data.actualAmountWithoutTax)}</span>
-                                    实际预征税额：<span className="amount-code">{fMoney(data.actualPreTaxAmount)}</span>
-                                    调整销售额（不含税）：<span className="amount-code">{fMoney(data.adjustSales)}</span>
-                                    销售额（含税）：<span className="amount-code">{fMoney(data.amountWithTax)}</span>
-                                </div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>合计：</span>
-                                    销售额（不含税）：<span className="amount-code">{fMoney(data.amountWithoutTax)}</span>
-                                    扣除金额 ：<span className="amount-code">{fMoney(data.deductAmount)}</span>
-                                    预征税额 ：<span className="amount-code">{fMoney(data.preTaxAmount)}</span>
-                                    上期未退税（负数）：<span className="amount-code">{fMoney(data.taxRebates)}</span>
-                                </div>
-                            </div>
-                        )
-                    },
-                    scroll:{
-                        x:'1400px',
-                    },
+                    </div>
                 }}
             >
             </SearchTable>
+        </div>
+
         )
     }
 }
+export default Form.create()(TaxCalculation)

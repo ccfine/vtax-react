@@ -73,6 +73,7 @@ export default class AsyncTable extends Component{
                     /**
                      * 有的列表接口返回的结构不一样
                      * */
+                    //dataSource:[...dataSource,{id:'sss'}],
                     dataSource,
                     footerDate: data.data,
                     selectedRowKeys:[],
@@ -123,17 +124,19 @@ export default class AsyncTable extends Component{
             ...props.tableProps.rowSelection
         };
         return(
-            <Table
-                {...props.tableProps}
-                dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
-                rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
-                pagination={props.tableProps.pagination ? pagination : false}
-                onChange={this.handleTableChange}
-                loading={!loaded}
-                footer={props.tableProps.renderFooter ? (currentPageData)=>{
-                    return props.tableProps.renderFooter(typeof props.tableProps.dataSource === 'undefined' ? footerDate : props.tableProps.footerDate)
-                } : null}
-            />
+            <div ref="asyncTable">
+                <Table
+                    {...props.tableProps}
+                    dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
+                    rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
+                    pagination={props.tableProps.pagination ? pagination : false}
+                    onChange={this.handleTableChange}
+                    loading={!loaded}
+                    footer={props.tableProps.renderFooter ? (currentPageData)=>{
+                        return props.tableProps.renderFooter(typeof props.tableProps.dataSource === 'undefined' ? footerDate : props.tableProps.footerDate)
+                    } : null}
+                />
+            </div>
         )
     }
 }
