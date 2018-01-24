@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules} from '../../../../../utils'
+import {request,getFields,regRules,fMoney} from '../../../../../utils'
 import moment from 'moment'
 const confirm = Modal.confirm;
 const formItemStyle={
@@ -86,6 +86,7 @@ class PopModal extends Component{
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            console.log(values)
             if (!err) {
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
@@ -94,12 +95,24 @@ class PopModal extends Component{
                         values[key] = values[key].format('YYYY-MM-DD');
                     }
                     if(key ==='taxClassificationCoding'){
-                        values[key] = values[key]['id']
+                        const taxClassificationCodingObj = values[key];
+                        values[key] = taxClassificationCodingObj['id'];
+
+                        //这个字段是选择之后带过来的，不需要手动输入
+                        values['taxableProjectId'] = taxClassificationCodingObj['taxableProjectId'];
+                    }
+
+                    if(key==='taxAmount' || key === 'totalAmount'){
+                        values[key] = values[key].replace(/,/g,'')
                     }
                 }
 
                 if(type==='edit'){
-                    values.id=this.state.initData['id']
+                    /**
+                     * 这两个值没有在input里输入，所以需要手动带入
+                     * */
+                    values.id=this.state.initData['id'];
+                    values.taxableProjectId = this.state.initData['taxableProjectId'];
                     this.updateRecord(values)
                 }else if(type==='add'){
                     this.createRecord(values)
@@ -182,6 +195,9 @@ class PopModal extends Component{
         if(type==='type'){
             disabled=true
         }
+
+        const taxRateValue = getFieldValue('taxRate'),
+            amountValue = getFieldValue('amount');
         return(
             <Modal
                 maskClosable={false}
@@ -333,6 +349,14 @@ class PopModal extends Component{
                                                     setFieldsValue({
                                                         taxRate:rateValue
                                                     })
+
+                                                    if(amountValue){
+                                                        let taxAmount = parseFloat(amountValue) * parseFloat(rateValue) / 100;
+                                                        setFieldsValue({
+                                                            taxAmount:fMoney(taxAmount),
+                                                            totalAmount:fMoney( parseFloat(amountValue) + taxAmount )
+                                                        })
+                                                    }
                                                 }
 
                                             }
@@ -368,10 +392,10 @@ class PopModal extends Component{
                                     },
                                     {
                                         label:'应税项目',
-                                        fieldName:'taxableItem',
+                                        fieldName:'taxableProjectName',
                                         type:'input',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['taxableItem'],
+                                            initialValue:initData['taxableProjectName'],
                                         },
                                         formItemStyle,
                                         componentProps:{
@@ -604,20 +628,31 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
-                                            disabled
+                                            disabled,
+                                            onChange:value=>{
+                                                if(taxRateValue && value){
+                                                    /**
+                                                     * 如果有税率了，就计算税额和价税合计
+                                                     * */
+                                                    let taxAmount = parseFloat(value) * parseFloat(taxRateValue) / 100;
+                                                    setFieldsValue({
+                                                        taxAmount:fMoney(taxAmount),
+                                                        totalAmount:fMoney( parseFloat(value) + taxAmount )
+                                                    })
+                                                }
+                                            }
                                         }
                                     },
                                     {
                                         label:'税率',
                                         fieldName:'taxRate',
-                                        type:'numeric',
+                                        type:'input',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['taxRate'] ? `${initData['taxRate']}` : undefined,
                                         },
                                         componentProps:{
                                             disabled:true,
-                                            valueType:'int'
                                         }
                                     },
                                     {
@@ -626,7 +661,7 @@ class PopModal extends Component{
                                         type:'numeric',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['taxAmount'] ? `${initData['taxAmount']}` : undefined,
+                                            initialValue:initData['taxAmount'] ? `${fMoney(initData['taxAmount'])}` : undefined,
                                             rules:[
                                                 regRules.input_length_20,
                                                 {
@@ -636,7 +671,7 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
-                                            disabled
+                                            disabled:true
                                         }
                                     },
                                     {
@@ -645,7 +680,7 @@ class PopModal extends Component{
                                         type:'input',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:( parseFloat( getFieldValue('amount') ) +  parseFloat( getFieldValue('taxAmount') ) ) || initData['totalAmount'],
+                                            initialValue:fMoney(initData['totalAmount']) || undefined,
                                         },
                                         componentProps:{
                                             disabled:true

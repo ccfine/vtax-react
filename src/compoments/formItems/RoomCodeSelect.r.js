@@ -130,7 +130,6 @@ const getColumns = context => [
         className:'text-center',
         render:(text,record)=>(
             <span
-                size='small'
                 onClick={()=>{
                     const {setFieldsValue,fieldName} = context.props;
                     let fieldData =  {

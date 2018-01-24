@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,message} from 'antd'
-import {SearchTable,FileExport,ButtonWithFileDownLoadModal} from '../../../../compoments'
+import {SearchTable,FileExport,ButtonWithFileUploadModal} from '../../../../compoments'
 import {fMoney,request} from '../../../../utils'
 const searchFields = (getFieldValue)=> {
     return [
@@ -78,6 +78,22 @@ const searchFields = (getFieldValue)=> {
     ]
 }
 const columns = [
+
+    {
+        title:'操作',
+        key:'actions',
+        render:(text,record)=>(
+            <div>
+                {
+                    record.status === 2 && (
+                        <ButtonWithFileUploadModal
+                            id={record.id}
+                            style={{marginRight:5}} title='附件' />
+                    )
+                }
+            </div>
+        )
+    },
     {
         title:'项目编号',
         dataIndex:'projectNum',
@@ -168,7 +184,16 @@ const columns = [
         dataIndex:'adjustRemark',
     }
 ];
-
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '保存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
 export default class PrepayTax extends Component{
     state={
         tableKey:Date.now(),
@@ -177,6 +202,7 @@ export default class PrepayTax extends Component{
 
         },
 
+        tableUrl:'/account/prepaytax/list',
         /**
          *修改状态和时间
          * */
@@ -193,17 +219,32 @@ export default class PrepayTax extends Component{
             searchTableLoading
         })
     }
+    recount = ()=>{
+        this.setState({
+            tableUrl:'/account/prepaytax/reset',
+            tableKey:Date.now()
+        },()=>{
+            this.setState({
+                tableUrl:'/account/prepaytax/list'
+            })
+        })
+    }
     handleClickActions = action => ()=>{
         let actionText,
             actionUrl;
+
+        if(action ==='recount'){
+            this.recount()
+            return false;
+        }
         switch (action){
             case 'submit':
                 actionText='提交';
-                actionUrl='/account/salehouse/restore';
+                actionUrl='/account/prepaytax/submit';
                 break;
             case 'restore':
                 actionText='撤回';
-                actionUrl='/account/salehouse/restore';
+                actionUrl='/account/prepaytax/restore';
                 break;
             case 'recount':
                 actionText='重算';
@@ -213,8 +254,7 @@ export default class PrepayTax extends Component{
                 break;
         }
         this.toggleSearchTableLoading(true)
-        const {mainId,receiveMonth} = this.state.searchFieldsValues;
-        request.post(`${actionUrl}/${mainId}/${receiveMonth}`)
+        request.post(actionUrl,this.state.searchFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -228,7 +268,7 @@ export default class PrepayTax extends Component{
         })
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus} = this.state;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
         const {mainId,receiveMonth} = this.state.searchFieldsValues
 
         return(
@@ -237,6 +277,12 @@ export default class PrepayTax extends Component{
                     fields:searchFields,
                     cardProps:{
                         className:''
+                    },
+                    onResetFields:()=>{
+                        this.setState({
+                            submitDate:'',
+                            dataStatus:''
+                        })
                     },
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
@@ -263,28 +309,34 @@ export default class PrepayTax extends Component{
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
+                    onDataChange:data=>{
+                        if(data && data.length !==0){
+                            this.setState({
+                                submitDate:data[0].lastModifiedDate,
+                                dataStatus:data[0].status
+                            })
+                        }
+                    },
                     pageSize:100,
                     columns:columns,
-                    url:'/account/prepaytax/list',
+                    url:tableUrl,
                     extra:<div>
-                        <div style={{marginRight:30,display:'inline-block'}}>
-                            <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>暂存</label></span>
-                            <span>提交时间：2017-01-12 17:22</span>
-                        </div>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <FileExport
                             url={`account/prepaytax/export`}
                             title="导出"
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
-                        <ButtonWithFileDownLoadModal
-                            fetchOptions={{
-                                url:'/card/land/use/file/list/952736190626439170'
-                            }}
-                            downLoadOptions={{
-                                url:'/'
-                            }}
-                            style={{marginRight:5}} title='附件' />
                         <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && receiveMonth)} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算

@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Select,Icon,Modal,Button} from 'antd'
+import {Select,Icon,Modal} from 'antd'
 import {SearchTable} from '../../compoments'
 import PropTypes from 'prop-types'
 export default class TaxClassCodingSelect extends Component{
@@ -62,36 +62,51 @@ export default class TaxClassCodingSelect extends Component{
 }
 
 
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:14
+    }
+}
 const searchFields = [
     {
         label:'税收分类编码',
         type:'input',
         fieldName:'num',
+        formItemStyle
     },
     {
         label:'商品名称',
         type:'input',
-        fieldName:'commodityName'
+        fieldName:'commodityName',
+        formItemStyle
     },
     {
         label:'应税项目',
         type:'input',
         fieldName:'taxableProjectName',
+        formItemStyle
     },
     {
         label:'税率',
-        type:'input',
+        type:'numeric',
         fieldName:'taxRate',
+        componentProps:{
+            valueType:'int'
+        },
+        formItemStyle
     }
 ]
 const getColumns = context => [
     {
         title:'操作',
         key:'actions',
-        width:'10%',
+        width:'50px',
+        className:'text-center',
         render:(text,record)=>(
-            <Button
-                size='small'
+            <span
                 onClick={()=>{
                     const {setFieldsValue,fieldName,conditionValue} = context.props;
                     let fieldData =  {
@@ -111,7 +126,7 @@ const getColumns = context => [
                                     [fieldName]:fieldData
                                 })
                                 setFieldsValue({
-                                    'taxableItem':record.taxableItem
+                                    'taxableProjectName':record.taxableProjectName,
                                 })
                                 context.props.onChange && context.props.onChange(fieldData)
                                 context.props.toggleModalVisible(false)
@@ -125,14 +140,14 @@ const getColumns = context => [
                             [fieldName]:fieldData
                         })
                         setFieldsValue({
-                            'taxableItem':record.taxableItem
+                            'taxableProjectName':record.taxableProjectName
                         })
                         context.props.onChange && context.props.onChange(fieldData)
                         context.props.toggleModalVisible(false)
                     }
 
                 }}
-                style={{cursor:'pointer',color:'#1890ff'}}>选择</Button>
+                style={{cursor:'pointer',color:'#1890ff'}}>选择</span>
         )
     },
     {
@@ -145,16 +160,15 @@ const getColumns = context => [
         width:'18%'
     }, {
         title: '应税项目',
-        dataIndex: 'taxableItem',
-        width:'18%'
+        dataIndex: 'taxableProjectName',
     }, {
         title: '一般增值税税率',
         dataIndex: 'commonlyTaxRate',
-        width:'18%'
+        width:'95px'
     }, {
         title: '简易增值税税率',
         dataIndex: 'simpleTaxRate',
-        width:'18'
+        width:'95px'
     }
 ]
 class TaxClassSelectPage extends Component{
@@ -194,10 +208,18 @@ class TaxClassSelectPage extends Component{
                 title="选择税收分类"
                 maskClosable={false}
                 onCancel={()=>toggleModalVisible(false)}
-                width={1000}
+                width={800}
                 footer={false}
                 style={{
+                    position:'absolute',
+                    height:'471px',
                     maxWidth:'80%',
+                    left:0,
+                    top:0,
+                    bottom:0,
+                    right:0,
+                    padding:0,
+                    margin:'auto'
                 }}
                 visible={visible}>
                     <SearchTable

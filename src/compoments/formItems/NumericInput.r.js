@@ -36,9 +36,11 @@ class NumericInput extends React.Component {
         onBlur && onBlur();
     }
     render() {
+        const props = {...this.props};
+        delete props['valueType'];
         return (
             <Input
-                {...this.props}
+                {...props}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
                 maxLength="25"
