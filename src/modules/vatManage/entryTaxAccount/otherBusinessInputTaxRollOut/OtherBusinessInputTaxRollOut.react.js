@@ -166,7 +166,7 @@ export default class LandPriceManage extends Component{
                                     style={buttonStyle}
                                     title='撤回提交'
                                     buttonIcon={<Icon type="rollback" />}
-                                    url='/account/income/taxout/withdrawSubmit'
+                                    url='/account/income/taxout/revoke'
                                     feilds={getFields('撤回',24,{
                                         labelCol:{
                                             span:6

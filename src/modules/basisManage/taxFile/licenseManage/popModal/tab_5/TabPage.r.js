@@ -58,9 +58,11 @@ const getColumns = context=> [
     },{
         title: '项目分期',
         dataIndex: 'projectStagesName',
+        width:300
     },{
         title: '土地年限',
         dataIndex: 'ageLimit',
+        width:60
     },{
         title: '使用权面积(m²)',
         dataIndex: 'rightArea',
@@ -136,7 +138,7 @@ export default class TabPage extends Component{
                 tableOption={{
                     columns:getColumns(this),
                     url:`/card/land/use/list/${props.projectId}`,
-                    scroll:{x:'140%'},
+                    scroll:{x:'200%'},
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false
