@@ -87,7 +87,7 @@ class PopModal extends Component{
               ]}
             >
             <Spin spinning={this.state.loading}>
-                <div style={{height:250}}>
+                <div style={{height:250,overflowY:'auto'}}>
                     <Tree
                     showLine={true}
                     onSelect={this.onSelect}

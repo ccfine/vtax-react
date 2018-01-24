@@ -3,7 +3,7 @@ import { Modal, Form, Input, Row, Col, Radio, Icon ,message, Spin} from 'antd';
 import {CusFormItem} from "../../../../../compoments";
 import StageTable from './stageTable';
 import SourceModal from "./sourcePopModal";
-import {request} from '../../../../../utils'
+import {request,fMoney} from '../../../../../utils'
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const {NumericInput} = CusFormItem;
@@ -26,7 +26,7 @@ class LandPriceModal extends React.Component{
     }
     updateSource(table){
         // 更新土价来源
-        let allAmount = Array.isArray(table)?table[table.length-1].amount:0; 
+        let allAmount = Array.isArray(table)?table[table.length-1].amount:''; 
         this.setState({priceSource:table,record:Object.assign({},this.state.record,{adjustLandPrice:allAmount})});
     }
     updateStage(item){
@@ -168,6 +168,7 @@ class LandPriceModal extends React.Component{
             style={{maxWidth:'90%'}}
             width={920}
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
+            maskClosable={false}
           >
           <Spin spinning={this.state.loading}>
           <Form>
@@ -253,7 +254,7 @@ class LandPriceModal extends React.Component{
                         {...formItemLayout}
                         label="调整后土地价款"
                         >
-                        {getFieldDecorator('adjustLandPrice',{initialValue:this.state.record.adjustLandPrice})(
+                        {getFieldDecorator('adjustLandPrice',{initialValue:fMoney(this.state.record.adjustLandPrice)})(
                             <Input disabled={this.props.readOnly}
                                 suffix={<Icon type="search" style={{cursor:"pointer",padding:"10px",position:"absolute",right:"-11px",top:"-16px"}} onClick={()=>{this.showModal()}} />}
                             />

@@ -12,7 +12,7 @@ const formItemLayout = {
       sm: { span: 15 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -21,7 +21,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -47,7 +47,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -131,6 +132,7 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
@@ -138,11 +140,11 @@ class PopModal extends Component{
                         {
                         getFields(form,[
                         {
-                            ...setComItem(record.building,readonly),
+                            ...setComItem(record.building,readonly,true,'请输入栋号'),
                             label:'栋号',
                             fieldName:'building'
                         },{
-                            ...setComItem(record.unitNumber,readonly),
+                            ...setComItem(record.unitNumber,readonly,true,'请输入单元号'),
                             label:'单元号',
                             fieldName:'unitNumber'
                         }])
@@ -152,11 +154,11 @@ class PopModal extends Component{
                         {
                         getFields(form,[                        
                         {
-                            ...setComItem(record.accountNumber,readonly),
+                            ...setComItem(record.accountNumber,readonly,true,'请输入户号'),
                             label:'户号',
                             fieldName:'accountNumber'
                         },{
-                            ...setComItem(record.buildingArea,readonly),
+                            ...setComItem(record.buildingArea,readonly,true,'请输入建筑面积（㎡）'),
                             label:'建筑面积（㎡）',
                             fieldName:'buildingArea',
                             type:'numeric',
@@ -166,7 +168,7 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.shareArea ,readonly),
+                            ...setComItem(record.shareArea ,readonly,true,'请输入分摊面积（㎡）'),
                             label:'分摊面积（㎡）',
                             fieldName:'shareArea',
                             type:'numeric',

@@ -15,7 +15,7 @@ const formItemLayout = {
       sm: { span: 15 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -24,7 +24,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -50,7 +50,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -142,18 +143,19 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.licenseKey,(readonly || this.props.action==="modify")),
+                            ...setComItem(record.licenseKey,(readonly || this.props.action==="modify"),true,'请输入建设工程规划许可证号'),
                             label:'建设工程规划许可证号',
                             fieldName:'licenseKey'
                         },
                         {
-                            ...setComItem(record.organization ,readonly),
+                            ...setComItem(record.organization ,readonly,true,'请输入建设单位'),
                             label:'建设单位',
                             fieldName:'organization'
                         }])
@@ -162,7 +164,7 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.projectName,readonly),
+                            ...setComItem(record.projectName,readonly,true,'请输入项目名称'),
                             label:'项目名称',
                             fieldName:'projectName'
                         },
@@ -176,12 +178,12 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.scale,readonly),
+                            ...setComItem(record.scale,readonly,true,'请输入建设规模（㎡）'),
                             label:'建设规模（㎡）',
                             fieldName:'scale',
                             type:'numeric',
                         },{
-                            ...setComItem(record.upArea ,readonly),
+                            ...setComItem(record.upArea ,readonly,true,'请输入其中：地上建筑面积（㎡）'),
                             label:'其中：地上建筑面积（㎡）',
                             fieldName:'upArea',
                             type:'numeric',
@@ -191,7 +193,7 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.downArea,readonly),
+                            ...setComItem(record.downArea,readonly,true,'请输入其中：地下建筑面积（㎡）'),
                             label:'其中：地下建筑面积（㎡）',
                             fieldName:'downArea',
                             type:'numeric',
@@ -199,7 +201,7 @@ class PopModal extends Component{
                         {
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem({key:record.stagesId,label:record.stagesItemName},readonly),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -217,7 +219,7 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(moment(record.evidenceDate),readonly),
+                            ...setComItem(moment(record.evidenceDate),readonly,true,'请选择取证日期'),
                             label:'取证日期',
                             fieldName:'evidenceDate',
                             type:'datePicker',

@@ -15,7 +15,7 @@ const formItemLayout = {
       sm: { span: 12 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'8',
     type:'input',
     formItemStyle:formItemLayout,
@@ -24,7 +24,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required:required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -50,7 +50,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -138,24 +139,25 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.reply,(readonly || this.props.action==="modify")),
+                            ...setComItem(record.reply,(readonly || this.props.action==="modify"),true,'请输入批复文号'),
                             label:'批复文号',
                             fieldName:'reply'
                         },
                         {
-                            ...setComItem(record.coveredArea,readonly),
+                            ...setComItem(record.coveredArea,readonly,true,'请输入占地面积（㎡）'),
                             label:'占地面积（㎡）',
                             fieldName:'coveredArea',
                             type:'numeric',
                         },
                         {
-                            ...setComItem(record.totalBuildingArea,readonly),
+                            ...setComItem(record.totalBuildingArea,readonly,true,'请输入总建筑面积（㎡）'),
                             label:'总建筑面积（㎡）',
                             fieldName:'totalBuildingArea',
                             type:'numeric',
@@ -171,12 +173,12 @@ class PopModal extends Component{
                             fieldName:'type'
                         },
                         {
-                            ...setComItem(record.totalAmount,readonly),
+                            ...setComItem(record.totalAmount,readonly,true,'请输入投资总额'),
                             label:'投资总额',
                             fieldName:'totalAmount',
                             type:'numeric',
                         },{
-                            ...setComItem(record.developers,readonly),
+                            ...setComItem(record.developers,readonly,true,'请输入开发商'),
                             label:'开发商',
                             fieldName:'developers',
                         }
@@ -186,13 +188,13 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(moment(record.validityDate),readonly),
+                            ...setComItem(moment(record.validityDate),readonly,true,'请选择有效期'),
                             label:'有效期',
                             fieldName:'validityDate',
                             type:'datePicker',
                         },
                         {
-                            ...setComItem(moment(record.projectType),readonly),
+                            ...setComItem(moment(record.projectType),readonly,true,'请选择批复日期'),
                             label:'批复日期',
                             fieldName:'approvalDate',
                             type:'datePicker',

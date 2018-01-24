@@ -81,7 +81,9 @@ class FileModal extends React.Component{
                     <Button key="close" type="primary" onClick={this.props.hideModal}>
                     关闭
                     </Button>,
-                ]}>
+                ]}
+                maskClosable={false}
+                >
                  <Upload {...getProps(this)}> 
                     <Button loading={this.state.uploadLoading}>
                             <Icon type="upload" /> 上传

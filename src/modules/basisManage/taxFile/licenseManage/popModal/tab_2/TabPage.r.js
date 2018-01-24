@@ -53,7 +53,7 @@ export default class TabPage extends Component{
     render(){
         const props = this.props;
         return(
-            <div>
+            <div style={{margin:'0 15px'}}>
             <SearchTable
                 searchOption={null}
                 tableOption={{

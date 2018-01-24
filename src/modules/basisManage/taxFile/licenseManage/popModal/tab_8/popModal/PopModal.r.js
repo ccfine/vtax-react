@@ -15,7 +15,7 @@ const formItemLayout = {
       sm: { span: 15 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -24,7 +24,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -49,7 +49,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -142,18 +143,19 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.licenseNumber,(readonly || this.props.action==="modify")),
+                            ...setComItem(record.licenseNumber,(readonly || this.props.action==="modify"),true,'请输入预售许可证编号'),
                             label:'预售许可证编号',
                             fieldName:'licenseNumber'
                         },
                         {
-                            ...setComItem(moment(record.issueDate),readonly),
+                            ...setComItem(moment(record.issueDate),readonly,true,'请选择发证日期'),
                             label:'发证日期',
                             fieldName:'issueDate',
                             type:'datePicker',
@@ -165,7 +167,7 @@ class PopModal extends Component{
                         getFields(form,[{
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem({key:record.stagesId,label:record.stagesItemName},readonly),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -179,7 +181,7 @@ class PopModal extends Component{
                             }
                         },
                         {
-                            ...setComItem(record.contractNum,readonly),
+                            ...setComItem(record.contractNum,readonly,true,'请输入土地使用权出让合同'),
                             label:'土地使用权出让合同', 
                             fieldName:'contractNum'
                         }])
@@ -192,7 +194,7 @@ class PopModal extends Component{
                             label:'坐落地',
                             fieldName:'position'
                         },{
-                            ...setComItem(record.projectName,readonly),
+                            ...setComItem(record.projectName,readonly,true,'请输入项目名称'),
                             label:'项目名称',
                             fieldName:'projectName'
                         }])
@@ -201,11 +203,11 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.certificate ,readonly),
+                            ...setComItem(record.certificate ,readonly,true,'请输入房屋产权证编号'),
                             label:'房屋产权证编号',
                             fieldName:'certificate'
                         },{
-                            ...setComItem(record.downArea,readonly),
+                            ...setComItem(record.downArea,readonly,true,'请输入土地、规划用途'),
                             label:'土地、规划用途',
                             fieldName:'landUse'
                         }])
@@ -214,12 +216,12 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.buildingArea,readonly),
+                            ...setComItem(record.buildingArea,readonly,true,'请输入预售建筑面积（㎡）'),
                             label:'预售建筑面积（㎡）',
                             fieldName:'buildingArea',
                             type:'numeric',
                         },{
-                            ...setComItem(record.upArea ,readonly),
+                            ...setComItem(record.upArea ,readonly,true,'请输入地上建筑面积（㎡）'),
                             label:'地上建筑面积（㎡）',
                             fieldName:'upArea',
                             type:'numeric',
@@ -229,12 +231,12 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.downArea ,readonly),
+                            ...setComItem(record.downArea ,readonly,true,'请输入地下建筑面积（㎡）'),
                             label:'地下建筑面积（㎡）',
                             fieldName:'downArea',
                             type:'numeric',
                         },{
-                            ...setComItem(record.buildingNum ,readonly),
+                            ...setComItem(record.buildingNum ,readonly,true,'请输入幢号'),
                             label:'幢号',
                             fieldName:'buildingNum'
                         }])
@@ -243,11 +245,11 @@ class PopModal extends Component{
                         <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.pliesNum,readonly),
+                            ...setComItem(record.pliesNum,readonly,true,'请输入层数'),
                             label:'层数',
                             fieldName:'pliesNum'
                         },{
-                            ...setComItem(record.houseType,readonly),
+                            ...setComItem(record.houseType,readonly,true,'请输入房屋类型'),
                             label:'房屋类型',
                             fieldName:'houseType',
                         }

@@ -57,7 +57,7 @@ const getColumns =(context)=>[{
         );
     },
     fixed:'left',
-    width:'100px',
+    width:'70px',
     dataIndex:'action'
 },{
         title: '纳税主体',
@@ -87,7 +87,8 @@ const getColumns =(context)=>[{
     },{
         title: '税率',
         dataIndex: 'taxRate',
-        render:(text)=>(text?`${text}%`:text)
+        render:(text)=>(text?`${text}%`:text),
+        width:'50px',
     },{
         title: '销售额（不含税）',
         dataIndex: 'amountWithoutTax',
@@ -102,7 +103,8 @@ const getColumns =(context)=>[{
         title: '服务、不动产和无形资产扣除项目本期实际扣除金额（含税）',
         dataIndex: 'deductionAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'100px',
     },{
         title: '调整原因',
         dataIndex: 'adjustReason',
@@ -160,7 +162,7 @@ export default class OtherTaxAdjustment extends Component{
                     }}
                     
                     tableOption={{
-                        scroll:{x:'100%'},
+                        scroll:{x:'150%'},
                         pageSize:10,
                         columns:getColumns(this),
                         key:this.state.updateKey,

@@ -15,7 +15,7 @@ const formItemLayout = {
       sm: { span: 15 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -24,7 +24,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -50,7 +50,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -98,8 +99,6 @@ class PopModal extends Component{
                     result = request.post('/card/land/use/add', obj);
                     sucessMsg='新增成功，点击【附件信息】进行文件上传';
                 }
-
-
 
                 this.setState({loading:true});
                 result && result.then(({data}) => {
@@ -159,18 +158,19 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.licenseKey,(readonly || this.props.action==="modify")),
+                            ...setComItem(record.licenseKey,(readonly || this.props.action==="modify"),true,'请输入土地证编号'),
                             label:'土地证编号',
                             fieldName:'licenseKey'
                         },
                         {
-                            ...setComItem(record.organization,readonly),
+                            ...setComItem(record.organization,readonly,true,'请输入用地单位'),
                             label:'用地单位',
                             fieldName:'organization'
                         }])
@@ -179,12 +179,12 @@ class PopModal extends Component{
                     <Row>    
                     {
                         getFields(form,[{
-                            ...setComItem(record.position,readonly),
+                            ...setComItem(record.position,readonly,true,'请输入地块位置'),
                             label:'地块位置',
                             fieldName:'position'
                         },
                         {
-                            ...setComItem(record.acquireWay,readonly),
+                            ...setComItem(record.acquireWay,readonly,true,'请输入取得方式'),
                             label:'取得方式',
                             fieldName:'acquireWay'
                         }])
@@ -195,7 +195,7 @@ class PopModal extends Component{
                         getFields(form,[{
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem(stages,readonly),
+                            ...setComItem(stages,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -219,12 +219,12 @@ class PopModal extends Component{
                     <Row>    
                     {
                         getFields(form,[{
-                            ...setComItem(record.ageLimit,readonly),
+                            ...setComItem(record.ageLimit,readonly,true,'请输入土地年限'),
                             label:'土地年限',
                             fieldName:'ageLimit',
                             type:'numeric',
                         },{
-                            ...setComItem(record.rightArea,readonly),
+                            ...setComItem(record.rightArea,readonly,true,'请输入使用权面积（㎡）'),
                             label:'使用权面积（㎡）',
                             fieldName:'rightArea',
                             type:'numeric',
@@ -234,12 +234,12 @@ class PopModal extends Component{
                     <Row>    
                     {
                         getFields(form,[{
-                            ...setComItem(record.shareArea,readonly),
+                            ...setComItem(record.shareArea,readonly,true,'请输入其中：分摊面积（㎡）'),
                             label:'其中：分摊面积（㎡）',
                             fieldName:'shareArea',
                             type:'numeric',
                         },{
-                            ...setComItem(record.ownArea,readonly),
+                            ...setComItem(record.ownArea,readonly,true,'请输入其中：独有面积（㎡）'),
                             label:'其中：独有面积（㎡）',
                             fieldName:'ownArea',
                             type:'numeric',
@@ -249,7 +249,7 @@ class PopModal extends Component{
                     <Row>    
                     {
                         getFields(form,[{
-                            ...setComItem(moment(record.evidenceDate),readonly),
+                            ...setComItem(moment(record.evidenceDate),readonly,true,'请选择取证日期'),
                             label:'取证日期',
                             fieldName:'evidenceDate',
                             type:'datePicker',

@@ -333,6 +333,7 @@ class PopModal extends React.Component{
             style={{maxWidth:'90%'}}
             width={820}
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
+            maskClosable={false}
           >
              {
                  this.renderForm(formItemLayout,getFieldDecorator)

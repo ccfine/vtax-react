@@ -15,7 +15,7 @@ const formItemLayout = {
       sm: { span: 15 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true)=>({
+const setComItem=(initialValue,readonly=false,required=true,message)=>({
     span:'12',
     type:'input',
     formItemStyle:formItemLayout,
@@ -24,7 +24,7 @@ const setComItem=(initialValue,readonly=false,required=true)=>({
         rules:[
         {
             required,
-            message:'必录'
+            message:message
         }
         ]
     },
@@ -50,7 +50,8 @@ class PopModal extends Component{
                     }
                 });
             }else{
-                this.setState({formLoading:false});
+                this.setState({formLoading:false,record:{}});
+                this.props.form.resetFields();
             }
         }
     }
@@ -145,18 +146,19 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
+              maskClosable={false}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.warrantNum ,(readonly || this.props.action==="modify")),
+                            ...setComItem(record.warrantNum ,(readonly || this.props.action==="modify"),true,'请输入权证号'),
                             label:'权证号',
                             fieldName:'warrantNum'
                         },
                         {
-                            ...setComItem(record.warrantName,readonly),
+                            ...setComItem(record.warrantName,readonly,true,'请输入权证名称'),
                             label:'权证名称',
                             fieldName:'warrantName'
                         }])
@@ -166,12 +168,12 @@ class PopModal extends Component{
                         {
                         getFields(form,[
                         {
-                            ...setComItem(record.warrantUser,readonly),
+                            ...setComItem(record.warrantUser,readonly,true,'请输入权利人'),
                             label:'权利人',
                             fieldName:'warrantUser'
                         },
                         {
-                            ...setComItem(record.position,readonly),
+                            ...setComItem(record.position,readonly,true,'请输入坐落'),
                             label:'坐落',
                             fieldName:'position'
                         }])
@@ -186,7 +188,7 @@ class PopModal extends Component{
                             fieldName:'acquireWay'
                         },
                         {
-                            ...setComItem(record.landUse,readonly),
+                            ...setComItem(record.landUse,readonly,true,'请输入用途'),
                             label:'用途',
                             fieldName:'landUse'
                         }])
@@ -196,7 +198,7 @@ class PopModal extends Component{
                         {
                         getFields(form,[
                         {
-                            ...setComItem(record.landArea,readonly),
+                            ...setComItem(record.landArea,readonly,true,'请输入宗地面积（㎡）'),
                             label:'宗地面积（㎡）',
                             fieldName:'landArea',
                             type:'numeric',
@@ -213,12 +215,12 @@ class PopModal extends Component{
                         {
                         getFields(form,[
                         {
-                            ...setComItem(record.num,readonly),
+                            ...setComItem(record.num,readonly,true,'请输入地号'),
                             label:'地号',
                             fieldName:'num'
                         },
                         {
-                            ...setComItem(moment(record.limitDate),readonly),
+                            ...setComItem(moment(record.limitDate),readonly,true,'请选择使用期限'),
                             label:'使用期限',
                             fieldName:'limitDate',
                             type:'datePicker',
@@ -229,7 +231,7 @@ class PopModal extends Component{
                         {
                         getFields(form,[
                         {
-                            ...setComItem(moment(record.boardingTime),readonly),
+                            ...setComItem(moment(record.boardingTime),readonly,true,'请选择登记时间'),
                             label:'登记时间',
                             fieldName:'boardingTime',
                             type:'datePicker',
@@ -237,7 +239,7 @@ class PopModal extends Component{
                         {
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem({key:record.stagesId,label:record.stagesItemName},readonly),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -255,12 +257,12 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.liquidationStage,readonly),
+                            ...setComItem(record.liquidationStage,readonly,true,'请输入清算分期'),
                             label:'清算分期',
                             fieldName:'liquidationStage',
                             type:'numeric',
                         },{
-                            ...setComItem(record.rooms,readonly),
+                            ...setComItem(record.rooms,readonly,true,'请输入套数'),
                             label:'套数',
                             fieldName:'rooms',
                             type:'numeric',
@@ -270,7 +272,7 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(moment(record.issuingDate),readonly),
+                            ...setComItem(moment(record.issuingDate),readonly,true,'请选择发证日期'),
                             label:'发证日期',
                             fieldName:'issuingDate',
                             type:'datePicker',
