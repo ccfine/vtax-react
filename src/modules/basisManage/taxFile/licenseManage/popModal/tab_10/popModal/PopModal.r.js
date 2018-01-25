@@ -204,7 +204,7 @@ class PopModal extends Component{
                             type:'numeric',
                         },
                         {
-                            ...setComItem(record.buildingArea,readonly,false),
+                            ...setComItem(record.buildingArea,readonly,true,'请输入建筑面积（㎡）'),
                             label:'建筑面积（㎡）',
                             fieldName:'buildingArea',
                             type:'numeric',
