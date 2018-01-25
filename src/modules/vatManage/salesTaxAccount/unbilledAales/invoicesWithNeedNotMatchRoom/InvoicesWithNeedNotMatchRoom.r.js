@@ -71,8 +71,6 @@ const columns = [
     {
         title:'货物名称',
         dataIndex:'commodityName',
-        render:text=>fMoney(text),
-        className:'table-money'
     },
     {
         title:'开票日期',
