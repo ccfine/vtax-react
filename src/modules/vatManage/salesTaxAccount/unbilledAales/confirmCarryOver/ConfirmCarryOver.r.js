@@ -169,19 +169,13 @@ const columns = [
         ]
     }
 ];
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class ConfirmCarryOver extends Component{
     state={
         visible:false,
         searchFieldsValues:{
 
         },
+        hasData:false
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -189,7 +183,7 @@ export default class ConfirmCarryOver extends Component{
         })
     }
     render(){
-        const {visible,searchFieldsValues} = this.state;
+        const {visible,searchFieldsValues,hasData} = this.state;
         return(
             <SearchTable
                 style={{
@@ -198,25 +192,6 @@ export default class ConfirmCarryOver extends Component{
                 doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields,
-                    getFieldsValues:values=>{
-                        if(JSON.stringify(values) === "{}"){
-                            this.setState({
-                                month:undefined,
-                                projectId:undefined,
-                                stagesId:undefined
-                            })
-                        }else{
-                            if(values.month){
-                                values.month = values.month.format('YYYY-MM')
-                            }
-                            this.setState(prevState=>({
-                                searchFieldsValues:{
-                                    ...prevState.searchFieldsValues,
-                                    ...values
-                                }
-                            }))
-                        }
-                    },
                     cardProps:{
                         style:{
                             borderTop:0
@@ -227,14 +202,22 @@ export default class ConfirmCarryOver extends Component{
                     pageSize:10,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/list',
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        })
+                    },
                     extra:<div>
                         <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />汇总表</Button>
                         <FileExport
-                            url={`/account/output/notInvoiceSale/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`/account/output/notInvoiceSale/export`}
                             title="导出"
                             size="small"
-                            disabled={!searchFieldsValues.month}
-                            setButtonStyle={{marginRight:5}}
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                         />
                     </div>,
                     renderFooter:data=>{

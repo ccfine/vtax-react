@@ -180,14 +180,6 @@ const getColumns = context =>[
         }
     },
 ];
-
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class UnmatchedData extends Component{
     state={
         visible:false,
@@ -195,7 +187,8 @@ export default class UnmatchedData extends Component{
         searchFieldsValues:{
 
         },
-        selectedData:{}
+        selectedData:{},
+        hasData:false
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -208,7 +201,7 @@ export default class UnmatchedData extends Component{
         })
     }
     render(){
-        const {visible,tableKey,searchFieldsValues,selectedData} = this.state;
+        const {visible,tableKey,searchFieldsValues,selectedData,hasData} = this.state;
         return(
             <SearchTable
                 style={{
@@ -232,12 +225,22 @@ export default class UnmatchedData extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/output/invoice/marry/unmatched/list',
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        })
+                    },
                     extra:<div>
                         <FileExport
-                            url={`/output/invoice/marry/unmatched/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`/output/invoice/marry/unmatched/export`}
                             title="导出未匹配发票"
                             size="small"
                             setButtonStyle={{marginRight:5}}
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                         />
                     </div>,
                     renderFooter:data=>{

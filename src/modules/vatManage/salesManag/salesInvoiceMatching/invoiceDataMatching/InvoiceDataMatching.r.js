@@ -264,20 +264,13 @@ const getColumns = context => [
         }
     },
 ]
-
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class InvoiceDataMatching extends Component{
     state={
         tableKey:Date.now(),
         searchFieldsValues:{
         },
-        matching:false
+        matching:false,
+        hasData:false
     }
     refreshTable = ()=>{
         this.setState({
@@ -317,7 +310,7 @@ export default class InvoiceDataMatching extends Component{
         })
     }
     render(){
-        const {tableKey,searchFieldsValues,matching} = this.state;
+        const {tableKey,searchFieldsValues,matching,hasData} = this.state;
         return(
             <SearchTable
                 style={{
@@ -326,11 +319,6 @@ export default class InvoiceDataMatching extends Component{
                 spinning={matching}
                 searchOption={{
                     fields:searchFields,
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
                     cardProps:{
                         style:{
                             borderTop:0
@@ -341,6 +329,12 @@ export default class InvoiceDataMatching extends Component{
                     key:tableKey,
                     pageSize:10,
                     columns:getColumns(this),
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        })
+                    },
                     url:'/output/invoice/marry/already/list',
                     extra:<div>
                         <span style={{marginRight:5,color:'#f5222d'}}>红色表示纳税人识别号与证件号码不一致;蓝色表示购货单位名称与客户名称不一致;紫色表示发票计税合计与房间成交总价不一致。</span>
@@ -352,9 +346,13 @@ export default class InvoiceDataMatching extends Component{
                             数据匹配
                         </Button>
                         <FileExport
-                            url={`/output/invoice/marry/already/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`/output/invoice/marry/already/export`}
                             title="导出匹配列表"
                             size="small"
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                         />
                     </div>,
                     renderFooter:data=>{
