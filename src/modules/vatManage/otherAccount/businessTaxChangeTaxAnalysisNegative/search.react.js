@@ -30,7 +30,7 @@ let Search = (props) => {
                             fieldDecoratorOptions: {
                                 rules: [{
                                     required: true,
-                                    message: '必录'
+                                    message: '请选择纳税主体'
                                 }]
                             }
                         },
@@ -44,7 +44,7 @@ let Search = (props) => {
                             fieldDecoratorOptions: {
                                 rules: [{
                                     required: true,
-                                    message: '必录'
+                                    message: '请选择查询月份'
                                 }]
                             }
                         }])
