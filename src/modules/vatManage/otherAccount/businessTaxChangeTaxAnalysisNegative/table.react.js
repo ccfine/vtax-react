@@ -417,12 +417,12 @@ export default class extends React.Component {
             }
         })
     }
-    commonSubmit = (url, params, action, message) => {
+    commonSubmit = (url, params, action, messageInfo) => {
         this.setState({ [action]: true });
         request.post(url, params)
             .then(({ data }) => {
                 if (data.code === 200) {
-                    message.success(message, 4)
+                    message.success(messageInfo, 4)
                     this.setState({ [action]: false });
                     this.fetchTable('/account/other/camping/list', this.props.filter);
                 } else {
