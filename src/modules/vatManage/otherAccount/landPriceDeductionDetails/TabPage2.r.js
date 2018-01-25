@@ -8,39 +8,39 @@ import {fMoney,request} from '../../../../utils'
 const getColumns=(context)=>[
     {
         title: '项目名称',
-        dataIndex: 'taxMethod',
+        dataIndex: 'projectName',
     }, {
         title: '项目分期',
-        dataIndex: 'name',
+        dataIndex: 'stagesName',
     },{
         title: '楼栋名称',
-        dataIndex: 'invoiceTypeSNumber',
+        dataIndex: 'buildingName',
     },{
         title: '单元',
-        dataIndex: 'invoiceTypeSSale',
+        dataIndex: 'element',
     },{
         title: '房号',
-        dataIndex: 'invoiceTypeSTaxAmount',
+        dataIndex: 'roomNumber',
     },{
         title: '客户名称',
-        dataIndex: 'invoiceTypeCNumber',
+        dataIndex: 'customerName',
     },{
         title: '身份证号码/纳税识别号',
-        dataIndex: 'invoiceTypeCSale',
+        dataIndex: 'taxIdentificationCode',
     },{
         title: '合同价款（含税）',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'taxContractPrice',
         render:text=>fMoney(text),
     },{
         title: '建筑面积（实测）',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'actualBuildingArea',
     },{
         title: '收入确认金额',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'price',
         render:text=>fMoney(text),
     },{
         title: '当期销售建筑面积',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'salesBuildingArea',
     }
 ];
 
@@ -118,7 +118,7 @@ export default class TabPage extends Component{
             </div>}
                   style={{marginTop:10}}
             >
-                <AsyncTable url="/account/output/billingSale/list?isEstate=0"
+                <AsyncTable url="/carryover/incomeDetails/list"
                             updateKey={props.updateKey}
                             tableProps={{
                                 rowKey:record=>record.sysTaxRateId,

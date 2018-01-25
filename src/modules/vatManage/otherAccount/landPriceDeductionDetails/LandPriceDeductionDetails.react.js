@@ -69,61 +69,82 @@ const searchFields = (getFieldValue)=> {
 const columns= [
     {
         title: '纳税主体',
-        dataIndex: 'taxMethod',
+        dataIndex: 'mainName',
     }, {
         title: '项目名称',
-        dataIndex: 'name',
+        dataIndex: 'projectName',
     },{
         title: '土地出让合同',
-        dataIndex: 'invoiceTypeSNumber',
+        dataIndex: 'contractNum',
     },{
         title: '项目分期',
-        dataIndex: 'invoiceTypeSSale',
+        dataIndex: 'stagesName',
     },{
         title: '是否清算 ',
-        dataIndex: 'invoiceTypeSTaxAmount',
+        dataIndex: 'isLiquidation',
+        render:text=>{
+            text = parseInt(text,0);
+            if(text===1){
+                return '已清算'
+            }
+            if(text===2){
+                return '未清算'
+            }
+            return text;
+        }
     },{
         title: '可售面积(㎡)',
-        dataIndex: 'invoiceTypeCNumber',
+        dataIndex: 'upAreaSale',
     },{
         title: '计税方法',
-        dataIndex: 'invoiceTypeCSale',
+        dataIndex: 'taxMethod',
+        render:text=>{
+            //1一般计税方法，2简易计税方法 ,
+            text = parseInt(text,0);
+            if(text===1){
+                return '一般计税方法'
+            }
+            if(text ===2){
+                return '简易计税方法'
+            }
+            return text;
+        }
     },{
         title: '分摊抵扣的土地价款',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'deductibleLandPrice',
         render:text=>fMoney(text),
     },{
         title: '单方土地成本',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'singleLandCost',
     },{
         title: '上期累计销售的建筑面积(㎡)',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'saleArea',
     },{
         title: '上期累计已扣除土地价款',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'actualDeductibleLandPrice',
         render:text=>fMoney(text),
     },{
         title: '当期销售建筑面积（㎡）',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'salesBuildingArea',
     },{
         title: '当期应扣除土地价款',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'deductPrice',
         render:text=>fMoney(text),
     },{
         title: '收入确认金额',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'price',
         render:text=>fMoney(text),
     },{
         title: '税率',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'taxRate',
         render:text=>fMoney(text),
     },{
         title: '税额',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'taxAmount',
         render:text=>fMoney(text),
     },{
         title: '价税合计',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'totalAmount',
         render:text=>fMoney(text),
     }
 ];
@@ -145,6 +166,8 @@ export default class LandPriceDeductionDetails extends Component{
         selectedRows:[],
         dataSource:[],
         searchTableLoading:false,
+
+        tableUrl:'/account/landPrice/deductedDetails/list',
     }
     refreshTable = ()=>{
         this.setState({
@@ -156,16 +179,31 @@ export default class LandPriceDeductionDetails extends Component{
             searchTableLoading:b
         })
     }
+    recount = ()=>{
+        this.setState({
+            tableUrl:'/account/landPrice/deductedDetails/reset',
+            tableKey:Date.now()
+        },()=>{
+            this.setState({
+                tableUrl:'/account/landPrice/deductedDetails/list'
+            })
+        })
+    }
     handleClick=type=>{
         let url = '';
+        if(type ==='recount'){
+            this.recount()
+            return false;
+        }
         switch (type){
             case '提交':
-                url='/account/other/reduceTaxDetail/submit';
+                url='/account/landPrice/deductedDetails/submit';
                 break;
             case '撤回':
-                url='/account/other/reduceTaxDetail/revoke';
+                url='/account/landPrice/deductedDetails/revoke';
                 break;
             default:
+                break;
         }
         this.toggleSearchTableLoading(true)
         request.post(url,this.state.searchFieldsValues)
@@ -183,7 +221,7 @@ export default class LandPriceDeductionDetails extends Component{
     }
 
     render(){
-        const {tableKey,updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,dataSource} = this.state;
+        const {tableKey,updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,dataSource,tableUrl} = this.state;
         return(
             <div>
                 <SearchTable
@@ -217,7 +255,7 @@ export default class LandPriceDeductionDetails extends Component{
                                 selectedRowKeys
                             })
                         },
-                        url:'/carryover/incomeDetails/list',
+                        url:tableUrl,
                         extra: <div>
                             {
                                 dataSource.length > 0 && <span>
@@ -233,7 +271,7 @@ export default class LandPriceDeductionDetails extends Component{
                                                     size="small"
                                                     setButtonStyle={{marginRight:5}}
                                                 />
-                                                <Button size='small' style={{marginRight:5}}>
+                                                <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('重算')}>
                                                     <Icon type="retweet" />
                                                     重算
                                                 </Button>
