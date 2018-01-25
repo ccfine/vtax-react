@@ -179,14 +179,6 @@ const getColumns = context =>[
         dataIndex: 'lastModifiedDate',
     }
 ];
-
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class CampBeforeTheIncreaseInSales extends Component{
     state={
         visible:false,
@@ -196,7 +188,8 @@ export default class CampBeforeTheIncreaseInSales extends Component{
         tableKey:Date.now(),
         searchFieldsValues:{
 
-        }
+        },
+        hasData:false
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -217,31 +210,23 @@ export default class CampBeforeTheIncreaseInSales extends Component{
         })
     }
     render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields,
-                    getFieldsValues:values=>{
-                        if(JSON.stringify(values) === "{}"){
-                            this.setState({
-                                searchFieldsValues:{}
-                            })
-                        }else{
-                            this.setState(prevState=>({
-                                searchFieldsValues:{
-                                    ...prevState.searchFieldsValues,
-                                    ...values
-                                }
-                            }))
-                        }
-                    }
+                    fields:searchFields
                 }}
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/output/sellinghouse/list',
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        })
+                    },
                     extra:<div>
                         <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                             <Icon type="file-add" />
@@ -254,9 +239,13 @@ export default class CampBeforeTheIncreaseInSales extends Component{
                             }}
                             style={{marginRight:5}} />
                         <FileExport
-                            url={`output/sellinghouse/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`output/sellinghouse/export`}
                             title="导出"
                             size="small"
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                             setButtonStyle={{marginRight:5}}
                         />
                     </div>,

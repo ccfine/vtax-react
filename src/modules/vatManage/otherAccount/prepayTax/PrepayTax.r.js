@@ -207,7 +207,9 @@ export default class PrepayTax extends Component{
          *修改状态和时间
          * */
         dataStatus:'',
-        submitDate:''
+        submitDate:'',
+
+        hasData:false
     }
     refreshTable = ()=>{
         this.setState({
@@ -268,8 +270,8 @@ export default class PrepayTax extends Component{
         })
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
-        const {mainId,receiveMonth} = this.state.searchFieldsValues
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData} = this.state;
+        const {mainId,receiveMonth} = searchFieldsValues;
 
         return(
             <SearchTable
@@ -309,13 +311,17 @@ export default class PrepayTax extends Component{
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
-                    onDataChange:data=>{
+                    onSuccess:(params,data)=>{
                         if(data && data.length !==0){
                             this.setState({
                                 submitDate:data[0].lastModifiedDate,
                                 dataStatus:data[0].status
                             })
                         }
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        })
                     },
                     pageSize:100,
                     columns:columns,
@@ -336,8 +342,12 @@ export default class PrepayTax extends Component{
                             title="导出"
                             size="small"
                             setButtonStyle={{marginRight:5}}
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                         />
-                        <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && receiveMonth)} size='small' style={{marginRight:5}}>
+                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>

@@ -174,14 +174,6 @@ const getColumns = context =>[
         }
     }
 ];
-
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class Test extends Component{
     state={
         visible:false,

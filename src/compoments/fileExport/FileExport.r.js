@@ -9,7 +9,7 @@ import {Button,Icon} from 'antd';
 const parseJsonToParams = data=>{
     let str = '';
     for(let key in data){
-        if(typeof data[key] !== 'undefined'){
+        if(typeof data[key] !== 'undefined' && data[key] !== ''){
             str += `${key}=${data[key]}&`
         }
     }
