@@ -116,14 +116,7 @@ export default class LandPriceManage extends Component{
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:getFields('查询',6,{
-                            labelCol:{
-                                span:8
-                            },
-                            wrapperCol:{
-                                span:16
-                            }
-                        })
+                        fields:getFields('查询',8)
                     }}
                     backCondition={this.updateStatus}
                     tableOption={{
@@ -177,7 +170,7 @@ export default class LandPriceManage extends Component{
                                     },this.state.statusParam)}
                                     onSuccess={this.updateStatus}
                                 ></FeildModal>
-                                <FileExport url={`${window.baseURL}/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
+                                <FileExport url={`/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
                                 <FileImportModal
                                     style={buttonStyle}
                                     url="/account/income/taxout/upload"
