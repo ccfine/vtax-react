@@ -26,16 +26,18 @@ const max50={
 const TextAreaAutoSize = {
     autosize:{ minRows: 2, maxRows: 6 }
 }
-const EditableCell = ({ editable, value, form, column, type,rules,componentProps }) => {
+const EditableCell = ({ title, editable, value, form, column, type,rules,componentProps }) => {
     return (
         <div>
             {
                 editable
                     ? getFields(form,[
                     {
+                        label:title,
                         fieldName:`${column}`,
                         type:type,
                         span:24,
+                        notLabel:true,
                         formItemStyle:{
                             labelCol:{
                                 span:24
@@ -77,33 +79,34 @@ class TableTaxStructure extends Component {
             title: '金额',
             dataIndex: 'amount',
             width:100,
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].amount`,'numeric')
+            render: (text, record) =>this.renderColumns('金额',text, record, `data[${record.id}].amount`,'numeric')
         },{
             title: '税额',
             dataIndex: 'taxAmount',
             width:100,
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].taxAmount`,'numeric')
+            render: (text, record) =>this.renderColumns('税额',text, record, `data[${record.id}].taxAmount`,'numeric')
         }, {
             title: '调整金额',
             dataIndex: 'adjustAmount',
             width:100,
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].adjustAmount`,'numeric')
+            render: (text, record) =>this.renderColumns('调整金额',text, record, `data[${record.id}].adjustAmount`,'numeric')
         },{
             title: '调整税额',
             width:100,
             dataIndex: 'adjustTaxAmount',
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].adjustTaxAmount`,'numeric')
+            render: (text, record) =>this.renderColumns('调整税额',text, record, `data[${record.id}].adjustTaxAmount`,'numeric')
         },{
             title: '调整说明',
             width:200,
             dataIndex: 'adjustDescription',
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.id}].adjustDescription`, 'textArea',[max50],TextAreaAutoSize)
+            render: (text, record) =>this.renderColumns('调整说明',text, record, `data[${record.id}].adjustDescription`, 'textArea',[max50],TextAreaAutoSize)
         }
     ];
 
-    renderColumns(text, record, column,type,rules=[],TextAreaAutoSize={}) {
+    renderColumns(title,text, record, column,type,rules=[],TextAreaAutoSize={}) {
         return  parseInt(record.status, 0) === 1 ? <EditableCell
             editable={!record.summary}
+            title={title}
             value={text}
             form={this.props.form}
             column={column}

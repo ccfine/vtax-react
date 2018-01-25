@@ -3,13 +3,70 @@
  * createTime   : 2017/12/14 12:10
  * description  :
  */
-import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon} from 'antd'
-import {AsyncTable,FileExport} from '../../../../compoments'
-import {getFields,fMoney} from '../../../../utils'
+import React, { Component } from 'react'
+import {fMoney,request} from '../../../../utils'
+import {SearchTable,FileExport} from '../../../../compoments'
+import {Button,Icon,message} from 'antd'
 import PageTwo from './TabPage2.r'
 
-const columns = [
+const searchFields = (getFieldValue)=> {
+    return [
+        {
+            label:'纳税主体',
+            fieldName:'mainId',
+            type:'taxMain',
+            span:6,
+            fieldDecoratorOptions:{
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            },
+        }, {
+            label:'项目名称',
+            fieldName:'projectId',
+            type:'asyncSelect',
+            span:6,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('mainId') || false,
+                url:`/project/list/${getFieldValue('mainId')}`,
+            }
+        }, {
+            label:'项目分期',
+            fieldName:'stagesId',
+            type:'asyncSelect',
+            span:6,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('projectId') || false,
+                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+            }
+        },{
+            label:'查询期间',
+            fieldName:'authMonth',
+            type:'monthPicker',
+            span:6,
+            componentProps:{
+            },
+            fieldDecoratorOptions:{
+                rules:[
+                    {
+                        required:true,
+                        message:'请选查询期间'
+                    }
+                ]
+            },
+        }
+    ]
+}
+const columns= [
     {
         title: '纳税主体',
         dataIndex: 'taxMethod',
@@ -70,182 +127,160 @@ const columns = [
         render:text=>fMoney(text),
     }
 ];
-class LandPriceDeductionDetails extends Component {
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        str += `${key}=${data[key]}&`
+    }
+    return str;
+}
+export default class LandPriceDeductionDetails extends Component{
     state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{
-            pageSize:20
-        },
+        updateKey:Date.now(),
+        tableKey:Date.now(),
+        searchFieldsValues:{
 
-        /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
-         * */
-        tableUpDateKey:Date.now(),
-        selectedRowKeys:undefined,
-    }
-    handleSubmit = e => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                const data = {
-                    ...values,
-                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
-                }
-                this.setState({
-                    filters:data
-                },()=>{
-                    this.setState({
-                        tableUpDateKey:Date.now()
-                    })
-                });
-            }
-        });
-    }
-    componentDidMount(){
-        //this.refreshTable()
+        },
+        selectedRowKeys:[],
+        selectedRows:[],
+        dataSource:[],
+        searchTableLoading:false,
     }
     refreshTable = ()=>{
         this.setState({
-            tableUpDateKey:Date.now()
+            tableKey:Date.now()
         })
     }
-    render(){
-        const {tableUpDateKey,filters,selectedRowKeys} = this.state;
-        const {getFieldValue} = this.props.form;
-        return(
-            <Layout style={{background:'transparent'}} >
-                <Card
-                    style={{
-                        borderTop:'none'
-                    }}
-                    className="search-card"
-                >
-                    <Form onSubmit={this.handleSubmit}>
-                        <Row>
-                            {
-                                getFields(this.props.form,[
-                                    {
-                                        label:'纳税主体',
-                                        fieldName:'mainId',
-                                        type:'taxMain',
-                                        span:6,
-                                        fieldDecoratorOptions:{
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择纳税主体'
-                                                }
-                                            ]
-                                        },
-                                    },{
-                                        label:'项目名称',
-                                        fieldName:'projectId',
-                                        type:'asyncSelect',
-                                        span:6,
-                                        componentProps:{
-                                            fieldTextName:'itemName',  //名字
-                                            fieldValueName:'id',       //值
-                                            doNotFetchDidMount:true,    //是否初始化异步请求数据
-                                            fetchAble:getFieldValue('mainId') || false, //获取参数
-                                            url:`/project/list/${getFieldValue('mainId')}`,
-                                        }
-                                    },{
-                                        label:'项目分期',
-                                        fieldName:'stagesId',
-                                        type:'asyncSelect',
-                                        span:6,
-                                        componentProps:{
-                                            fieldTextName:'itemName',
-                                            fieldValueName:'id',
-                                            doNotFetchDidMount:true,
-                                            fetchAble:getFieldValue('projectId') || false,
-                                            url:`/project/stages/${getFieldValue('projectId') || ''}`,
-                                        }
-                                    },{
-                                        label:'查询期间',
-                                        fieldName:'duringTheInquiry',
-                                        type:'monthPicker',
-                                        span:6,
-                                        componentProps:{
-                                        },
-                                        fieldDecoratorOptions:{
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选查询期间'
-                                                }
-                                            ]
-                                        },
-                                    },
-                                ])
-                            }
-
-                            <Col span={24} style={{textAlign:'right'}}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Card>
-                <Card extra={<div>
-                    <div style={{marginRight:30,display:'inline-block'}}>
-                        <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>暂存</label></span>
-                        <span>提交时间：2017-01-12 17:22</span>
-                    </div>
-                    <FileExport
-                        url='/income/invoice/marry/download'
-                        title="导出"
-                        size="small"
-                        setButtonStyle={{marginRight:5}}
-                    />
-                    <Button size='small' style={{marginRight:5}}>
-                        <Icon type="retweet" />
-                        重算
-                    </Button>
-                    {/*<Button size='small' style={{marginRight:5}}>
-                        <Icon type="check" />
-                        清算
-                    </Button>*/}
-                    <Button size='small' style={{marginRight:5}}>
-                        <Icon type="check" />
-                        提交
-                    </Button>
-                    <Button size='small' style={{marginRight:5}}>
-                        <Icon type="rollback" />
-                        撤回提交
-                    </Button>
-                </div>}
-                      style={{marginTop:10}}>
-
-                    <AsyncTable url="/account/output/billingSale/list?isEstate=1"
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.sysTaxRateId,
-                                    pagination:false,
-                                    size:'small',
-                                    columns:columns,
-                                    scroll:{x:'200%'},
-                                    onRowSelect:(selectedRowKeys)=>{
-                                        this.setState({
-                                            selectedRowKeys:selectedRowKeys[0]
-                                        })
-                                    },
-                                    rowSelection:{
-                                        type:'radio',
-                                    },
-                                }} />
-                </Card>
-
-                {
-                    selectedRowKeys && <PageTwo selectedRowKeys={selectedRowKeys} updateKey={tableUpDateKey}/>
+    toggleSearchTableLoading = b =>{
+        this.setState({
+            searchTableLoading:b
+        })
+    }
+    handleClick=type=>{
+        let url = '';
+        switch (type){
+            case '提交':
+                url='/account/other/reduceTaxDetail/submit';
+                break;
+            case '撤回':
+                url='/account/other/reduceTaxDetail/revoke';
+                break;
+            default:
+        }
+        this.toggleSearchTableLoading(true)
+        request.post(url,this.state.searchFieldsValues)
+            .then(({data})=>{
+                this.toggleSearchTableLoading(false)
+                if(data.code===200){
+                    message.success(`${type}成功!`);
+                    this.refreshTable();
+                }else{
+                    message.error(`${type}失败:${data.msg}`)
                 }
+            }).catch(err=>{
+            this.toggleSearchTableLoading(false)
+        })
+    }
 
+    render(){
+        const {tableKey,updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,dataSource} = this.state;
+        return(
+            <div>
+                <SearchTable
+                    spinning={searchTableLoading}
+                    doNotFetchDidMount={true}
+                    searchOption={{
+                        fields:searchFields,
+                        cardProps:{
+                            style:{
+                                borderTop:0
+                            }
+                        }
+                    }}
+                    backCondition={(values)=>{
+                        this.setState({
+                            searchFieldsValues:values
+                        })
+                    }}
+                    tableOption={{
+                        key:tableKey,
+                        pageSize:10,
+                        columns:columns,
+                        cardProps:{
+                          title:'项目分期信息'
+                        },
+                        rowSelection:{
+                            type:'radio',
+                        },
+                        onRowSelect:(selectedRowKeys)=>{
+                            this.setState({
+                                selectedRowKeys
+                            })
+                        },
+                        url:'/carryover/incomeDetails/list',
+                        extra: <div>
+                            {
+                                dataSource.length > 0 && <span>
+                                            <div style={{marginRight:30,display:'inline-block'}}>
+                                                <span style={{marginRight:20}}>状态：<label style={{color:parseInt(dataSource[0].status, 0) === 1 ? 'red' : 'green'}}>{parseInt(dataSource[0].status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                                <span>提交时间：{dataSource[0].lastModifiedDate}</span>
+                                            </div>
+                                    {
+                                        parseInt(dataSource[0].status, 0) === 1 ? <span>
+                                                <FileExport
+                                                    url={`/account/other/reduceTaxDetail/export?${parseJsonToParams(searchFieldsValues)}`}
+                                                    title="导出"
+                                                    size="small"
+                                                    setButtonStyle={{marginRight:5}}
+                                                />
+                                                <Button size='small' style={{marginRight:5}}>
+                                                    <Icon type="retweet" />
+                                                    重算
+                                                </Button>
+                                                {/*<Button size='small' style={{marginRight:5}}>
+                                                    <Icon type="check" />
+                                                    清算
+                                                </Button>*/}
+                                                <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('提交')}>
+                                                    <Icon type="check" />
+                                                    提交
+                                                </Button>
+                                                <Button size="small" type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
+                                            </span>
+                                            :
+                                            <span>
+                                                <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('撤回')}>
+                                                    <Icon type="rollback" />
+                                                    撤回提交
+                                                </Button>
+                                            </span>
+                                    }
+                                    </span>
+                            }
+                        </div>,
+                        renderFooter:data=>{
+                            return(
+                                <div>
+                                    <div style={{marginBottom:10}}>
+                                        <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                        减免税金额：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                    </div>
+                                </div>
+                            )
+                        },
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
+                        }
+                    }}
+                >
+                </SearchTable>
 
-            </Layout>
+                <PageTwo id={selectedRowKeys} selectedRows={selectedRows} filters={searchFieldsValues} updateKey={updateKey}/>
+            </div>
         )
     }
 }
-export default Form.create()(LandPriceDeductionDetails)
