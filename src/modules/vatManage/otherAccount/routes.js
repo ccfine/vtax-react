@@ -11,7 +11,7 @@ import PrePaidHousingSales from './prePaidHousingSales'
 import DeductProjectSummary from './deductProjectSummary'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
-const BusinessTaxChangeTaxAnalysisNegative =()=><div>营改增税负分析测算台账</div>
+import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/otherAccount`

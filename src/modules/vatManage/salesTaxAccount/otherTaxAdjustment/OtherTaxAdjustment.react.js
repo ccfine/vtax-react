@@ -14,13 +14,13 @@ const searchFields = [
     {
         label:'纳税主体',
         type:'taxMain',
-        span:6,
+        span:8,
         fieldName:'mainId',
         fieldDecoratorOptions:{
             rules:[
             {
                 required:true,
-                message:'必录'
+                message:'请选择纳税主体'
             }
             ]
         }
@@ -29,14 +29,14 @@ const searchFields = [
         label:'调整日期',
         fieldName:'adjustDate',
         type:'monthPicker',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
             rules:[
             {
                 required:true,
-                message:'必录'
+                message:'请选择调整日期'
             }
             ]
         }

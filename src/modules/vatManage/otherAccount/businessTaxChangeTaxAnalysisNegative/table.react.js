@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Card, Button, Icon, message } from 'antd'
-import { request } from '../../../../utils'
+import { request,fMoney } from '../../../../utils'
 import { CusFormItem } from '../../../../compoments'
 import moment from 'moment'
 const NumericItem = CusFormItem.NumericInput
@@ -72,7 +72,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             dataIndex: 'addedTaxRate',
             render: (text, record, index) => {
                 const obj = {
-                    children: text,
+                    children: text?`${text}%`:'',
                     props: {},
                 };
                 if (record.isBigCount || record.isLittleCount) {
@@ -86,7 +86,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             dataIndex: 'businessTaxRate',
             render: (text, record, index) => {
                 const obj = {
-                    children: text,
+                    children: text?`${text}%`:'',
                     props: {},
                 };
                 if (record.isBigCount || record.isLittleCount) {
@@ -104,6 +104,8 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             children: [{
                 title: '1',
                 dataIndex: 'addedAmountWithout',
+                render:text=>fMoney(text),
+                className:'table-money'
             }]
         },
         {
@@ -111,6 +113,8 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             children: [{
                 title: '2=1×增值税税率或增收率',
                 dataIndex: 'addedAmountInvoice',
+                render:text=>fMoney(text),
+                className:'table-money'
             }]
         },
         {
@@ -118,6 +122,8 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             children: [{
                 title: '3=1+2',
                 dataIndex: 'addedTotalAmount',
+                render:text=>fMoney(text),
+                className:'table-money'
             }]
         },
         {
@@ -125,6 +131,8 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             children: [{
                 title: '4',
                 dataIndex: 'addedEstate',
+                render:text=>fMoney(text),
+                className:'table-money'
             }]
         },
         {
@@ -135,13 +143,17 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                     children: [{
                         title: '5=3-4',
                         dataIndex: 'addedWithoutDeduct',
+                        render:text=>fMoney(text),
+                        className:'table-money'
                     }]
                 },
                 {
-                    title: '销项应纳税额',
+                    title: '销项（应纳）税额',
                     children: [{
-                        title: '6=增值税-5/(100%+增值税税率或增收率)',
+                        title: '6=5+(100%+增值税税率或增收率)',
                         dataIndex: 'addedInvoiceDeduct',
+                        render:text=>fMoney(text),
+                        className:'table-money'
                     }]
                 }
             ]
@@ -151,6 +163,8 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
             children: [{
                 title: '7',
                 dataIndex: 'addedInvoiceRate',
+                render:text=>fMoney(text),
+                className:'table-money'
             }]
         },
         {
@@ -160,7 +174,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                 dataIndex: 'addedAmountCommonly',
                 render: (text, record, index) => {
                     const obj = {
-                        children: text,
+                        children:fMoney(text),
                         props: {},
                     };
 
@@ -171,13 +185,16 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                     }
 
                     return obj;
-                }
+                },
+                className:'table-money'
             }]
         }, {
             title: '增值税应纳税额测算',
             children: [{
                 title: '9',
                 dataIndex: 'addedAmountPayable',
+                render:text=>fMoney(text),
+                className:'table-money'
             }]
         },
     ],
@@ -194,11 +211,12 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                         dataIndex: 'businessStartAmount',
                         render: (text, record, index) => {
                             if (record.isLittleCount || record.isBigCount || index === tax1Count - 1 || index >= tax1Count + tax2Count || context.state.currentStatus.status === 2) {
-                                return text;
+                                return fMoney(text);
                             } else {
                                 return (<NumericItem value={text} style={{ width: 100 }} size='small' onChange={(value) => { context.inputChange({ businessStartAmount: value }, index) }} />);
                             }
-                        }
+                        },
+                        className:'table-money'
                     }]
                 },
                 {
@@ -208,11 +226,12 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                         dataIndex: 'businessCurrentAmount',
                         render: (text, record, index) => {
                             if (record.isLittleCount || record.isBigCount || index === tax1Count - 1 || index >= tax1Count + tax2Count || context.state.currentStatus.status === 2) {
-                                return text;
+                                return fMoney(text);
                             } else {
                                 return (<NumericItem value={text} style={{ width: 100 }} size='small' onChange={(value) => { context.inputChange({ businessCurrentAmount: value }, index) }} />);
                             }
-                        }
+                        },
+                        className:'table-money'
                     }]
                 },
                 {
@@ -220,13 +239,17 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                     children: [{
                         title: '12=10+11',
                         dataIndex: 'businessShouldDeduct',
+                        render:text=>fMoney(text),
+                        className:'table-money'
                     }]
                 },
                 {
                     title: '本期实际扣除金额',
                     children: [{
-                        title: '13(13<=3 && 13<=12)',
+                        title: '13(13<=3且13<=12)',
                         dataIndex: 'businessActualDeduct',
+                        render:text=>fMoney(text),
+                        className:'table-money'
                     }]
                 },
                 {
@@ -234,6 +257,8 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                     children: [{
                         title: '14=12-13',
                         dataIndex: 'businessEndAmount',
+                        render:text=>fMoney(text),
+                        className:'table-money'
                     }]
                 }
             ]
@@ -244,12 +269,16 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
     children: [{
         title: '15=3-13',
         dataIndex: 'businessTaxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     }]
 }, {
     title: '营业税应纳税额',
     children: [{
         title: '16=15×营业税税率',
         dataIndex: 'businessShouldAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     }]
 }
 ];
@@ -380,8 +409,7 @@ export default class extends React.Component {
         currentStatus: {},
         saveLoading: false,
         revokeLoading: false,
-        submitLoading: false,
-        reCalculateLoading: false
+        submitLoading: false
     }
     inputChange = (obj, index) => {
         let newDataSource = [...this.state.dataSource]
@@ -418,21 +446,21 @@ export default class extends React.Component {
         })
     }
     commonSubmit = (url, params, action, messageInfo) => {
-        this.setState({ [action]: true });
+        this.setState({ [`${action}Loading`]: true });
         request.post(url, params)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success(messageInfo, 4)
-                    this.setState({ [action]: false });
+                    this.setState({ [`${action}Loading`]: false });
                     this.fetchTable('/account/other/camping/list', this.props.filter);
                 } else {
                     message.error(data.msg, 4)
-                    this.setState({ [action]: false });
+                    this.setState({ [`${action}Loading`]: false });
                 }
             })
             .catch(err => {
                 message.error(err.message)
-                this.setState({ [action]: false });
+                this.setState({ [`${action}Loading`]: false });
             })
     }
     render() {
@@ -448,7 +476,7 @@ export default class extends React.Component {
                         <Icon type="hdd" />
                         保存
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} onClick={this.reCalculate} loading={this.state.reCalculateLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} onClick={this.reCalculate} >
                         <Icon type="retweet" />
                         重算
                     </Button>
