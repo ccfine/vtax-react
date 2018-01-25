@@ -3,65 +3,52 @@
  */
 import React, { Component } from 'react'
 import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
-import {Card,Popconfirm,Icon} from 'antd'
-import {fMoney} from '../../../../utils'
+import {Card,Modal,Icon,message,Button} from 'antd'
+import {fMoney,request} from '../../../../utils'
 const getColumns=(context)=>[
     {
-        title:'操作',
-        render(text, record, index){
-            return(
-                <span>
-                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
-                        <a alt="删除" style={{marginRight:"5px"}}><Icon type="delete" /></a>
-                    </Popconfirm>
-                </span>
-            );
-        },
-        fixed:'left',
-        width:'100px',
-        dataIndex:'action'
-    }, {
         title: '项目名称',
-        dataIndex: 'taxMethod',
+        dataIndex: 'projectName',
     }, {
         title: '项目分期',
-        dataIndex: 'name',
+        dataIndex: 'stagesName',
     },{
         title: '楼栋名称',
-        dataIndex: 'invoiceTypeSNumber',
+        dataIndex: 'buildingName',
     },{
         title: '单元',
-        dataIndex: 'invoiceTypeSSale',
+        dataIndex: 'element',
     },{
         title: '房号',
-        dataIndex: 'invoiceTypeSTaxAmount',
+        dataIndex: 'roomNumber',
     },{
         title: '客户名称',
-        dataIndex: 'invoiceTypeCNumber',
+        dataIndex: 'customerName',
     },{
         title: '身份证号码/纳税识别号',
-        dataIndex: 'invoiceTypeCSale',
+        dataIndex: 'taxIdentificationCode',
     },{
         title: '合同价款（含税）',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'taxContractPrice',
         render:text=>fMoney(text),
     },{
         title: '建筑面积（实测）',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'actualBuildingArea',
     },{
         title: '收入确认金额',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'price',
         render:text=>fMoney(text),
     },{
         title: '当期销售建筑面积',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'salesBuildingArea',
     }
 ];
 
 export default class TabPage extends Component{
     state={
         visible:false,
-        updateKey:Date.now()
+        updateKey:Date.now(),
+        selectedRowKeys:[],
     }
     hideModal(){
         this.setState({visible:false});
@@ -74,10 +61,39 @@ export default class TabPage extends Component{
             this.setState({updateKey:Date.now()});
         }
     }
-    render(){        
+    deleteData = () =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要删除选中的记录？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleSearchTableLoading(true)
+                request.delete(`/account/other/reduceTaxDetail/delete/${this.state.selectedRowKeys.toString()}`)
+                    .then(({data})=>{
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            message.success('删除成功！');
+                            this.refreshTable();
+                        }else{
+                            message.error(`删除失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    this.toggleSearchTableLoading(false)
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+
+    }
+    render(){
+        const {selectedRowKeys} = this.state;
         const props = this.props;
         return(
-            <Card extra={<div>
+            <Card title="结转收入明细" extra={<div>
                 <FileExport
                     url='/account/output/billingSale/export'
                     title="导出"
@@ -98,16 +114,22 @@ export default class TabPage extends Component{
                     setButtonStyle={{marginTop:10,marginRight:5}}
                     size='small'
                 />
+                <Button size="small" type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
             </div>}
                   style={{marginTop:10}}
             >
-                <AsyncTable url="/account/output/billingSale/list?isEstate=0"
+                <AsyncTable url="/carryover/incomeDetails/list"
                             updateKey={props.updateKey}
                             tableProps={{
                                 rowKey:record=>record.sysTaxRateId,
                                 pagination:false,
                                 size:'small',
                                 columns:getColumns(this),
+                                onRowSelect:(selectedRowKeys)=>{
+                                    this.setState({
+                                        selectedRowKeys
+                                    })
+                                },
                                 scroll:{x:'150%'},
                             }} />
 

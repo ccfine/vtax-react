@@ -65,7 +65,7 @@ class InvoiceCollection extends Component {
             dataIndex: 'mainName',
         }, {
             title: '发票类型',
-            dataIndex: 'invoiceType',
+            dataIndex: 'invoiceTypeName',
         },{
             title: '发票代码',
             dataIndex: 'invoiceCode',
@@ -152,7 +152,6 @@ class InvoiceCollection extends Component {
         this.handleSubmit()
     }
     showModal=type=>{
-
        if(type === 'edit'){
            let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
            if(sourceType === 2 ){

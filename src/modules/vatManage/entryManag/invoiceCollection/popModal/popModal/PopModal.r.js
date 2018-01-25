@@ -2,9 +2,8 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,InputNumber} from 'antd';
-import {regRules,fMoney,accMul} from '../../../../../../utils'
-const FormItem = Form.Item;
+import {Button,Modal,Form,Row,Col} from 'antd';
+import {regRules,fMoney,accMul,getFields} from '../../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -17,179 +16,6 @@ class PopModal extends Component{
         initData:{
 
         }
-    }
-
-
-    getFields(start,end) {
-        const props = this.props;
-        const {getFieldDecorator} = this.props.form;
-        const {initData} = this.state;
-
-        let disabled =  props.modalConfig.type ==='view';
-
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 },
-        };
-        const formItemLayout2 = {
-            labelCol: { span: 3},
-            wrapperCol: { span: 19 },
-        };
-
-        const children = [];
-        const max20={
-            max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-        }
-        const data = [
-            {
-                label: '货物或应税劳务名称',
-                type: 'text',
-                fieldName: 'goodsServicesName',
-                initialValue:initData.goodsServicesName,
-                rules: [
-                    {
-                        required: true, message: '请输入货物或应税劳务名称',
-                    },{
-                        ...max20
-                    }
-                ],
-            }, {
-                label: '规格型号',
-                type: 'text',
-                fieldName: 'specificationModel',
-                initialValue:initData.specificationModel,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入规格型号'
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '单位',
-                type: 'text',
-                fieldName: 'unit',
-                initialValue: initData.unit,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入单位'
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '数量',
-                type: 'text',
-                fieldName: 'qty',
-                initialValue: initData.qty,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入数量'
-                    },{
-                        pattern:regRules.integer.pattern,
-                        message: regRules.integer.message,
-                    }
-                ],
-                setCondition:{
-                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
-                },
-            }, {
-                label: '单价',
-                type: 'text',
-                fieldName: 'unitPrice',
-                initialValue:fMoney(initData.unitPrice),
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入单价'
-                    }
-                ],
-                setCondition:{
-                    onKeyUp:(e)=>this.handleKeyUp('unitPrice'),
-                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
-                },
-            }, {
-                label: '金额',
-                type: 'text',
-                fieldName: 'amount',
-                initialValue:fMoney(initData.amount),
-                disabled:true,
-            }, {
-                label: '税率',
-                type: 'inputNumber',
-                fieldName: 'taxRate',
-                initialValue:fMoney(initData.taxRate),
-                setCondition:{
-                    formatter:value => `${value}%`,
-                    parser:value => value.replace('%', ''),
-                    onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
-                },
-                rules: [
-                    {
-                        required:true,
-                        message:'请输入税率'
-                    },{
-                        pattern:regRules.integer.pattern,
-                        message:regRules.integer.message,
-                    }
-                ],
-            }, {
-                label: '税额',
-                type: 'text',
-                fieldName: 'taxAmount',
-                initialValue:fMoney(initData.taxAmount),
-                disabled:true,
-            }, {
-                label: '价税合计',
-                type: 'text',
-                fieldName: 'totalAmount',
-                initialValue:fMoney(initData.totalAmount),
-                disabled:true,
-                rules: [
-                    {
-                        ...max20
-                    }
-                ],
-            }
-        ];
-
-        for (let i = 0; i < data.length; i++) {
-            let inputComponent;
-
-            if(!data[i].components){
-                if (data[i].type === 'text') {
-                    inputComponent = <Input disabled={ data[i].disabled ? data[i].disabled : disabled} {...data[i].setCondition} placeholder={`请输入${data[i].label}`}/>;
-                } else if (data[i].type === 'inputNumber') {
-                    inputComponent = <InputNumber disabled={disabled} {...data[i].setCondition} style={{width:'100%'}} />;
-                }
-            }else{
-                inputComponent = data[i].components
-            }
-
-            if(!data[i].components) {
-                children.push(
-                    <Col span={data[i].span || 12} key={i}>
-                        <FormItem
-                            {...(data[i].span === 24 ? formItemLayout2 : formItemLayout)}
-                            label={data[i].label}
-                        >
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue,
-                                rules: data[i].rules,
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            }
-
-
-        }
-        return children.slice(start, end || null);
     }
 
     handleSubmit = (e,isContinue) => {
@@ -225,8 +51,14 @@ class PopModal extends Component{
     //计算金额的总和
    handleCellAmountSum=(amount,taxAmount,totalAmount)=>{
         const form = this.props.form;
-        const v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
-        const v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
+        let v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
+        let v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
+        if(typeof (v1) === 'undefined'){
+           v1 = 0
+        }
+        if(typeof (v2) === 'undefined'){
+           v2 = 0
+        }
         const sum = v1+v2
         form.setFieldsValue({
             [totalAmount]: fMoney(sum),
@@ -242,6 +74,12 @@ class PopModal extends Component{
         const form = this.props.form;
         let v1 = form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, '');
         let v2 = (form.getFieldValue(`${taxRate}`)) /100;
+        if(typeof (v1) === 'undefined'){
+            v1 = 0
+        }
+        if(typeof (v2) === 'undefined'){
+            v2 = 0
+        }
         const count = v1*v2;
         form.setFieldsValue({
             [taxAmount]: fMoney(count),
@@ -253,6 +91,9 @@ class PopModal extends Component{
         let v2 = form.getFieldValue(`${unitPrice}`).replace(/\$\s?|(,*)/g, '');
         if(typeof (v1) === 'undefined'){
             v1 = 0
+        }
+        if(typeof (v2) === 'undefined'){
+            v2 = 0
         }
         const count = accMul(v1,v2);
         form.setFieldsValue({
@@ -331,6 +172,7 @@ class PopModal extends Component{
         this.mounted=null
     }
     render(){
+        const {initData} = this.state;
         const props = this.props;
         let title='';
         const type = props.modalConfig.type;
@@ -347,6 +189,17 @@ class PopModal extends Component{
             default:
                 title = '添加';
                 break;
+        }
+        const max20={
+            max:regRules.input_length_20.max, message: regRules.input_length_20.message,
+        }
+        const formItemStyle={
+            labelCol:{
+                span:8
+            },
+            wrapperCol:{
+                span:14
+            }
         }
         return(
             <Modal
@@ -370,7 +223,173 @@ class PopModal extends Component{
                 <Form onSubmit={this.handleSubmit}>
                     <Row>
                         {
-                            this.getFields(0,9)
+                            getFields(this.props.form,[
+                                {
+                                    label:'货物或应税劳务名称',
+                                    fieldName:'goodsServicesName',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData.goodsServicesName,
+                                        rules: [
+                                            {
+                                                required: true, message: '请输入货物或应税劳务名称',
+                                            },{
+                                                ...max20
+                                            }
+                                        ],
+                                    }
+                                },{
+                                    label:'规格型号',
+                                    fieldName:'specificationModel',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData.specificationModel,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入规格型号'
+                                            },{
+                                                ...max20
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'单位',
+                                    fieldName:'unit',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData.unit,
+                                        rules:[
+                                            {
+                                                required: true,
+                                                message: '请输入单位'
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'数量',
+                                    fieldName:'qty',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData.qty,
+                                        rules:[
+                                            regRules.integer,
+                                            {
+                                                required:true,
+                                                message:'请输入数量'
+                                            }
+                                        ],
+                                    }
+                                },{
+                                    label:'单价',
+                                    fieldName:'unitPrice',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        onKeyUp:(e)=>this.handleKeyUp('unitPrice'),
+                                        onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:fMoney(initData.unitPrice),
+                                        rules:[
+                                            {
+                                                required: true,
+                                                message: '请输入单价'
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'金额',
+                                    fieldName:'amount',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled:true,
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:fMoney(initData.amount),
+                                        rules:[
+                                            {
+                                                ...max20
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'税率',
+                                    fieldName:'taxRate',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        valueType:'int',
+                                        onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData.taxRate,
+                                        rules: [
+                                            regRules.integer,
+                                            {
+                                                required:true,
+                                                message:'请输入税率'
+                                            }
+                                        ],
+                                    }
+                                },{
+                                    label:'税额',
+                                    fieldName:'taxAmount',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled:true,
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:initData.taxAmount,
+                                        rules: [
+                                            {
+                                                required:true,
+                                                message:'请输入税率'
+                                            }
+                                        ],
+                                    }
+                                },{
+                                    label:'价税合计',
+                                    fieldName:'totalAmount',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled:true,
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:fMoney(initData.totalAmount),
+                                        rules:[
+                                            {
+                                                ...max20
+                                            }
+                                        ]
+                                    }
+                                }
+                            ])
                         }
                     </Row>
                 </Form>

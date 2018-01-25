@@ -24,6 +24,8 @@ class BillingSales extends Component {
         tableUpDateKey:Date.now(),
         visible:false,
         sysTaxRateId:undefined,
+        dataSource1:[],
+        dataSource2:[],
     }
 
     columns = [
@@ -39,6 +41,15 @@ class BillingSales extends Component {
                 {
                     title: '数量',
                     dataIndex: 'specialInvoiceCount',
+                    render:(text,record)=>(
+                        <a onClick={()=>{
+                            this.setState({
+                                sysTaxRateId:record.sysTaxRateId,
+                            },()=>{
+                                this.toggleModalVisible(true)
+                            })
+                        }}>{text}</a>
+                    )
                 },{
                     title: '销售额',
                     dataIndex: 'specialInvoiceAmount',
@@ -110,6 +121,15 @@ class BillingSales extends Component {
                 {
                     title: '数量',
                     dataIndex: 'specialInvoiceCount',
+                    render:(text,record)=>(
+                        <a onClick={()=>{
+                            this.setState({
+                                sysTaxRateId:record.sysTaxRateId,
+                            },()=>{
+                                this.toggleModalVisible(true)
+                            })
+                        }}>{text}</a>
+                    )
                 },{
                     title: '销售额',
                     dataIndex: 'specialInvoiceAmount',
@@ -180,7 +200,7 @@ class BillingSales extends Component {
         })
     }
     render(){
-        const {tableUpDateKey,filters,visible,sysTaxRateId} = this.state;
+        const {tableUpDateKey,filters,dataSource1,dataSource2,visible,sysTaxRateId} = this.state;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -207,7 +227,7 @@ class BillingSales extends Component {
                                             ]
                                         },
                                     },{
-                                        label:'认证月份',
+                                        label:'查询期间',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
                                         span:6,
@@ -232,12 +252,18 @@ class BillingSales extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card extra={<div>
+                <Card title="开票销售统计表-房地产" extra={<div>
                     <FileExport
                         url='/income/invoice/marry/download'
-                        title="导出"
-                        size="small"
-                        setButtonStyle={{marginRight:5}}
+                        fileExportProps={{
+                            title:'导入',
+                            disabled:!dataSource1.length>0,
+                            filters:{
+                                isEstate:1,
+                                mainId:filters.mainId,
+                                authMonth:filters.authMonth
+                            }
+                        }}
                     />
                 </div>}
                       style={{marginTop:10}}>
@@ -250,14 +276,25 @@ class BillingSales extends Component {
                                     pagination:false,
                                     size:'small',
                                     columns:this.columns,
+                                    onDataChange:(dataSource1)=>{
+                                        this.setState({
+                                            dataSource1
+                                        })
+                                    }
                                 }} />
                 </Card>
-                <Card extra={<div>
+                <Card title="开票销售统计表-非地产" extra={<div>
                     <FileExport
                         url='/account/output/billingSale/export'
-                        title="导出"
-                        size="small"
-                        setButtonStyle={{marginRight:5}}
+                        fileExportProps={{
+                            title:'导出',
+                            disabled:!dataSource2.length>0,
+                            exportFilters:{
+                                isEstate:0,
+                                mainId:filters.mainId,
+                                authMonth:filters.authMonth
+                            }
+                        }}
                     />
                 </div>}
                            style={{marginTop:10}}>
@@ -270,6 +307,11 @@ class BillingSales extends Component {
                                     pagination:false,
                                     size:'small',
                                     columns:this.notColumns,
+                                    onDataChange:(dataSource2)=>{
+                                        this.setState({
+                                            dataSource2
+                                        })
+                                    }
                                 }} />
                 </Card>
 

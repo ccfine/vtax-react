@@ -4,11 +4,8 @@
  * description  :
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,InputNumber} from 'antd';
-import {regRules} from '../../../../../../utils'
-const FormItem = Form.Item;
-const Option = Select.Option;
-const { TextArea } = Input;
+import {Button,Modal,Form,Row,Col} from 'antd';
+import {getFields,regRules} from '../../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -113,15 +110,6 @@ class PopModal extends Component{
     render(){
         const props = this.props;
         const {defaultData} = this.state;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 },
-        };
-        const formItemLayout2 = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 18 },
-        };
         let title='';
         let disabled = false;
         const type = props.modalConfig.type;
@@ -160,94 +148,104 @@ class PopModal extends Component{
                 title={title}>
                 <Form onSubmit={this.handleSubmit}>
                     <Row>
-                        <Col span={12}>
-                            <FormItem label='股东类型' {...formItemLayout}>
-                                {getFieldDecorator(`stockholderType`,{
-                                    initialValue:defaultData.stockholderType,
-                                    rules:[
+                        {
+                            getFields(this.props.form,[
+                                {
+                                    label:'股东类型',
+                                    fieldName:'stockholderType',
+                                    type:'select',
+                                    span:12,
+                                    options:[
                                         {
-                                            required:true,
-                                            message:'请选择股东类型'
-                                        }
-                                    ]
-                                })(
-                                    <Select
-                                        disabled={disabled}
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value={'1'}>我方股东</Option>
-                                        <Option value={'2'}>他方股东</Option>
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='股东' {...formItemLayout2}>
-                                {getFieldDecorator(`stockholder`,{
-                                    initialValue:defaultData.stockholder,
-                                    rules:[
+                                            text:'我方股东',
+                                            value:'1'
+                                        },
                                         {
-                                            required:true,
-                                            message:'请输入股东'
-                                        },{
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            text:'他方股东',
+                                            value:'2'
                                         }
-                                    ]
-                                })(
-                                    <Input disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label='股权比例' {...formItemLayout}>
-                                {getFieldDecorator(`stockRightRatio`,{
-                                    initialValue:defaultData.stockRightRatio
-                                })(
-                                    <InputNumber
-                                        disabled={disabled}
-                                        min={0}
-                                        max={100}
-                                        formatter={value => `${value}%`}
-                                        parser={value => value.replace('%', '')}
-                                    />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='权益比例' {...formItemLayout}>
-                                {getFieldDecorator(`rightsRatio`,{
-                                    initialValue:defaultData.rightsRatio
-                                })(
-                                    <InputNumber
-                                        disabled={disabled}
-                                        min={0}
-                                        max={100}
-                                        formatter={value => `${value}%`}
-                                        parser={value => value.replace('%', '')}
-                                    />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='备注' {...formItemLayout2}>
-                                {getFieldDecorator(`remark`,{
-                                    initialValue:defaultData.remark,
-                                    rules:[
-                                        {
-                                            max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
+                                    ],
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.stockholderType,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请选择股东类型'
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'股东',
+                                    fieldName:'stockholder',
+                                    type:'input',
+                                    span:12,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.stockholder,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入股东'
+                                            },{
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'股权比例',
+                                    fieldName:'stockRightRatio',
+                                    type:'numeric',
+                                    span:12,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.stockRightRatio,
+                                    }
+                                },{
+                                    label:'权益比例',
+                                    fieldName:'rightsRatio',
+                                    type:'numeric',
+                                    span:12,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.rightsRatio,
+                                    }
+                                },{
+                                    label:'备注',
+                                    fieldName:'remark',
+                                    type:'textArea',
+                                    span:24,
+                                    formItemStyle:{
+                                        labelCol:{
+                                            span:3
+                                        },
+                                        wrapperCol:{
+                                            span:21
                                         }
-                                    ]
-                                })(
-                                    <TextArea disabled={disabled} />
-                                )}
-                            </FormItem>
-                        </Col>
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.remark,
+                                        rules:[
+                                            {
+                                                max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
+                                            }
+                                        ]
+                                    }
+                                }
+                            ])
+                        }
+
                     </Row>
                 </Form>
             </Modal>

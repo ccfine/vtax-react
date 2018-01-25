@@ -191,7 +191,8 @@ export default class Test extends Component{
         tableKey:Date.now(),
         searchFieldsValues:{
 
-        }
+        },
+        hasData:false
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -212,22 +213,23 @@ export default class Test extends Component{
         })
     }
     render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields,
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    }
+                    fields:searchFields
                 }}
                 tableOption={{
                     key:tableKey,
                     pageSize:20,
                     columns:getColumns(this),
                     url:'/output/invoice/collection/list',
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !==0
+                        })
+                    },
                     extra:<div>
                         <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                             <Icon type="file-add" />
@@ -235,9 +237,13 @@ export default class Test extends Component{
                         </Button>
                         <FileImportModal style={{marginRight:5}} />
                         <FileExport
-                            url={`output/invoice/collection/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`output/invoice/collection/export`}
                             title="导出"
                             size="small"
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                             setButtonStyle={{marginRight:5}}
                         />
                         <FileExport

@@ -160,9 +160,11 @@ class SearchTable extends Component{
                                         pagination:true,
                                         pageSize:tableOption.pageSize || 10,
                                         size:'small',
+                                        onRow:tableOption.onRow || undefined,
                                         rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
                                         onRowSelect:tableOption.onRowSelect || undefined,
                                         columns:tableOption.columns,
+                                        onSuccess:tableOption.onSuccess || undefined,
                                         scroll:tableOption.scroll || undefined,
                                         onDataChange:tableOption.onDataChange || undefined,
                                         renderFooter:tableOption.renderFooter || undefined

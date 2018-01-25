@@ -51,12 +51,13 @@ export default class AsyncTable extends Component{
     fetch = (params = {},nextProps) => {
         const props = nextProps || this.props;
         this.setState({ loaded: false });
+        const composeParams = {
+            size: this.state.pagination.pageSize,
+            ...params,
+            ...props.filters
+        };
         request.get(props.url,{
-            params:{
-                size: this.state.pagination.pageSize,
-                ...params,
-                ...props.filters
-            }
+            params:composeParams
         }).then(({data}) => {
             if(data.code===200){
                 const pagination = { ...this.state.pagination };
@@ -73,11 +74,17 @@ export default class AsyncTable extends Component{
                     /**
                      * 有的列表接口返回的结构不一样
                      * */
+                    //dataSource:[...dataSource,{id:'sss'}],
                     dataSource,
                     footerDate: data.data,
                     selectedRowKeys:[],
                     //summaryData:summaryData,
                     pagination
+                },()=>{
+                    /**
+                     * 成功之后回调，返回参数和数据
+                     * */
+                    this.props.tableProps.onSuccess && this.props.tableProps.onSuccess(composeParams,this.state.dataSource)
                 });
 
                 /**假如设置了单选或多选，重新异步请求数据的时候选中项也要清空，也要主动触发一下selectedRowKeys的onChange*/
@@ -123,17 +130,19 @@ export default class AsyncTable extends Component{
             ...props.tableProps.rowSelection
         };
         return(
-            <Table
-                {...props.tableProps}
-                dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
-                rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
-                pagination={props.tableProps.pagination ? pagination : false}
-                onChange={this.handleTableChange}
-                loading={!loaded}
-                footer={props.tableProps.renderFooter ? (currentPageData)=>{
-                    return props.tableProps.renderFooter(typeof props.tableProps.dataSource === 'undefined' ? footerDate : props.tableProps.footerDate)
-                } : null}
-            />
+            <div ref="asyncTable">
+                <Table
+                    {...props.tableProps}
+                    dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
+                    rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
+                    pagination={props.tableProps.pagination ? pagination : false}
+                    onChange={this.handleTableChange}
+                    loading={!loaded}
+                    footer={props.tableProps.renderFooter ? (currentPageData)=>{
+                        return props.tableProps.renderFooter(typeof props.tableProps.dataSource === 'undefined' ? footerDate : props.tableProps.footerDate)
+                    } : null}
+                />
+            </div>
         )
     }
 }
