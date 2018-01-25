@@ -237,10 +237,13 @@ export default class Test extends Component{
                         </Button>
                         <FileImportModal style={{marginRight:5}} />
                         <FileExport
-                            url={`output/invoice/collection/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`output/invoice/collection/export`}
                             title="导出"
                             size="small"
                             disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                             setButtonStyle={{marginRight:5}}
                         />
                         <FileExport
