@@ -91,9 +91,9 @@ export default class LandPriceManage extends Component{
                 >
                 </SearchTable>
                 <PopModal 
-                visible={this.state.visible} 
-                readOnly={this.state.readOnly} 
-                hideModal={()=>{this.hideModal()}} 
+                visible={this.state.visible}
+                readOnly={this.state.readOnly}
+                hideModal={()=>{this.hideModal()}}
                 id={this.state.opid}
                 updateKey={this.state.updateKey}/>
             </div>
