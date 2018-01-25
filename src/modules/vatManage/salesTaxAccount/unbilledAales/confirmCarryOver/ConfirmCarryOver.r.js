@@ -201,8 +201,9 @@ export default class ConfirmCarryOver extends Component{
                     getFieldsValues:values=>{
                         if(JSON.stringify(values) === "{}"){
                             this.setState({
-                                mainId:undefined,
-                                receiveMonth:undefined
+                                month:undefined,
+                                projectId:undefined,
+                                stagesId:undefined
                             })
                         }else{
                             if(values.month){
@@ -232,6 +233,7 @@ export default class ConfirmCarryOver extends Component{
                             url={`/account/output/notInvoiceSale/export?${parseJsonToParams(searchFieldsValues)}`}
                             title="导出"
                             size="small"
+                            disabled={!searchFieldsValues.month}
                             setButtonStyle={{marginRight:5}}
                         />
                     </div>,

@@ -223,9 +223,18 @@ export default class CampBeforeTheIncreaseInSales extends Component{
                 searchOption={{
                     fields:searchFields,
                     getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
+                        if(JSON.stringify(values) === "{}"){
+                            this.setState({
+                                searchFieldsValues:{}
+                            })
+                        }else{
+                            this.setState(prevState=>({
+                                searchFieldsValues:{
+                                    ...prevState.searchFieldsValues,
+                                    ...values
+                                }
+                            }))
+                        }
                     }
                 }}
                 tableOption={{
