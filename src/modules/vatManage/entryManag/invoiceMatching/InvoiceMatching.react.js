@@ -47,7 +47,6 @@ class InvoiceMatching extends Component {
         },
         activeKey:'tab1'
     }
-
     columns = [
         {
             title: '纳税主体',
@@ -60,13 +59,13 @@ class InvoiceMatching extends Component {
             dataIndex: 'invoiceNum',
         }, {
             title: '发票类型',
-            dataIndex: 'invoiceType',
+            dataIndex: 'invoiceTypeName',
         },{
             title: '开票日期',
             dataIndex: 'billingDate',
         },{
             title: '认证时间',
-            dataIndex: 'authDate',
+            dataIndex: this.state.activeKey !=='tab3' ? 'authMonth' : 'authDate',
         },{
             title: '销售单位名称',
             dataIndex: 'sellerName',
@@ -100,7 +99,6 @@ class InvoiceMatching extends Component {
             }
         }
     ];
-
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {

@@ -2,11 +2,12 @@
  * Created by liurunbin on 2017/12/28.
  */
 import React from 'react';
-import {Col,Form,Input,DatePicker,Select} from 'antd'
+import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader } from 'antd'
 import {CusFormItem} from '../compoments'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const Option = Select.Option;
+const CheckboxGroup = Checkbox.Group;
 const { RangePicker,MonthPicker } = DatePicker;
 const normFile = (e) => {
     console.log('Upload event:', e);
@@ -80,6 +81,18 @@ const getFields = (form,fieldsData=[]) =>{
             case 'textArea':
                 CusComponent = TextArea;
                 break;
+            case 'checkbox':
+                CusComponent = Checkbox;
+                break;
+            case 'checkboxGroup':
+                CusComponent = CheckboxGroup;
+                break;
+            case 'cascader':
+                CusComponent = Cascader;
+                break;
+            case 'industry':
+                CusComponent = CusFormItem.Industry;
+                break;
             default:
                 CusComponent = Input
         }
@@ -95,7 +108,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} >
+                            <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
                                 {
                                     item.options.map((option,i)=>(
                                         <Option key={i} value={option.value}>{option.text}</Option>
@@ -106,7 +119,7 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else if(type==='taxClassCodingSelect'){
+        }else if(type==='taxClassCodingSelect' || type==='industry'){
             // 给这个税收分类编码特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
             return (
                 <Col key={i} span={item['span'] || 8}>
@@ -146,14 +159,39 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else{
-            return (
+        }else if(type==='checkbox'){
+            return(
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
+                            valuePropName: 'checked',
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} style={{width:'100%'}} />
+                            <CusComponent {...item['componentProps']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else if(type==='checkboxGroup' || type==='cascader'){
+            return(
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} options={item['options']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else{
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} placeholder={`请输入${item['label']}`} style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

@@ -4,43 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
-import { Checkbox, Row, Col, Form } from 'antd'
+import {Row} from 'antd'
+import {getFields} from '../../../../../utils'
 import './styles.less'
-
-const FormItem = Form.Item;
-const CheckboxGroup = Checkbox.Group;
 
 class TaxIdentification extends Component {
 
-    state = {
-    }
-
-    componentDidMount() {
-
-    }
-
-    mounted = true;
-    componentWillUnmount(){
-        this.mounted = null;
-    }
-
-    componentWillReceiveProps(nextProps){
-
-    }
-
     render() {
-
-        const { getFieldDecorator } = this.props.form;
-
-        let disibled = this.props.type ==='view';
-        const checkboxformItemLayout = {
-            labelCol: {
-                span: 3
-            },
-            wrapperCol: {
-                span: 20
-            },
-        };
         const {defaultData} = this.props;
         const list= [
             {
@@ -52,10 +22,10 @@ class TaxIdentification extends Component {
                         label: '增值税',
                         value: 'zzs',
                     },{
-                    label: '消费税',
-                    value: 'xfs',
-                    disabled: true,
-                }
+                        label: '消费税',
+                        value: 'xfs',
+                        disabled: true,
+                    }
                     ]
             },{
             label:'所得税',
@@ -66,10 +36,10 @@ class TaxIdentification extends Component {
                     label: '企业所得税',
                     value: 'qysds',
                 },{
-                label: '个人所得税',
-                value: 'grsds',
-                disabled: true,
-            },
+                    label: '个人所得税',
+                    value: 'grsds',
+                    disabled: true,
+                },
                 ]
         },{
             label:'财产税',
@@ -81,14 +51,14 @@ class TaxIdentification extends Component {
                     value: 'fcs',
                     disabled: true,
                 },{
-                label: '车船税',
-                value: 'ccs',
-                disabled: true,
-            },{
-                label: '契税',
-                value: 'qs',
-                disabled: true,
-            },
+                    label: '车船税',
+                    value: 'ccs',
+                    disabled: true,
+                },{
+                    label: '契税',
+                    value: 'qs',
+                    disabled: true,
+                },
                 ]
         },{
             label:'行为税',
@@ -100,14 +70,14 @@ class TaxIdentification extends Component {
                     value: 'yhs',
                     disabled: true,
                 },{
-                label: '车辆购置税',
-                value: 'clgzs',
-                disabled: true,
-            },{
-                label: '城市维护建设税',
-                value: 'cswhjss',
-                disabled: true,
-            },
+                    label: '车辆购置税',
+                    value: 'clgzs',
+                    disabled: true,
+                },{
+                    label: '城市维护建设税',
+                    value: 'cswhjss',
+                    disabled: true,
+                },
                 ]
         },{
             label:'资源税',
@@ -119,22 +89,22 @@ class TaxIdentification extends Component {
                     value: 'zys',
                     disabled: true,
                 },{
-                label: '土地增值税',
-                value: 'tdzzs',
-                disabled: true,
-            },{
-                label: '耕地占用税',
-                value: 'gdzys',
-                disabled: true,
-            },{
-                label: '矿区使用税',
-                value: 'kqsys',
-                disabled: true,
-            },{
-                label: '城镇土地使用税',
-                value: 'cztdsys',
-                disabled: true,
-            },
+                    label: '土地增值税',
+                    value: 'tdzzs',
+                    disabled: true,
+                },{
+                    label: '耕地占用税',
+                    value: 'gdzys',
+                    disabled: true,
+                },{
+                    label: '矿区使用税',
+                    value: 'kqsys',
+                    disabled: true,
+                },{
+                    label: '城镇土地使用税',
+                    value: 'cztdsys',
+                    disabled: true,
+                },
                 ]
         },{
             label:'其他税费',
@@ -146,27 +116,27 @@ class TaxIdentification extends Component {
                     value: 'jyffj',
                     disabled: true,
                 },{
-                label: '地方教育费附加',
-                value: 'dfjyffj',
-                disabled: true,
-            },{
-                label: '堤围防护费',
-                value: 'dwfhf',
-                disabled: true,
-            },{
-                label: '水利基金',
-                value: 'sljj',
-                disabled: true,
-            },{
-                label: '价格调节基金',
-                value: 'jgtjjj',
-                disabled: true,
-            },{
-                label: '残疾人保障金',
-                value: 'cjrbzj',
-                disabled: true,
-            },
-                ]
+                    label: '地方教育费附加',
+                    value: 'dfjyffj',
+                    disabled: true,
+                },{
+                    label: '堤围防护费',
+                    value: 'dwfhf',
+                    disabled: true,
+                },{
+                    label: '水利基金',
+                    value: 'sljj',
+                    disabled: true,
+                },{
+                    label: '价格调节基金',
+                    value: 'jgtjjj',
+                    disabled: true,
+                },{
+                    label: '残疾人保障金',
+                    value: 'cjrbzj',
+                    disabled: true,
+                }
+            ]
         }
             ]
 
@@ -176,20 +146,33 @@ class TaxIdentification extends Component {
                     list.map((item,i)=>{
                         return (
                             <Row key={i}>
-                                <Col span={24}>
-                                    <FormItem
-                                        {...checkboxformItemLayout}
-                                        label={item.label}
-                                        className='vTax-CheckboxGroup'
-                                    >
-                                        {getFieldDecorator(item.fieldName, {
-                                            initialValue:item.initialValue,
-                                        })(
-                                            <CheckboxGroup disabled={disibled} options={item.data} />
-                                        )}
-                                    </FormItem>
+                                {
+                                    getFields(this.props.form,[
+                                        {
+                                            label:item.label,
+                                            fieldName:item.fieldName,
+                                            type:'checkboxGroup',
+                                            span:24,
+                                            formItemStyle:{
+                                                labelCol:{
+                                                    span:3
+                                                },
+                                                wrapperCol:{
+                                                    span:21
+                                                },
+                                                className:'vTax-CheckboxGroup',
+                                            },
+                                            options:item.data,
+                                            componentProps:{
+                                                disabled:item.disibled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:item.initialValue,
+                                            }
+                                        }
 
-                                </Col>
+                                    ])
+                                }
                             </Row>
                         )
                     })

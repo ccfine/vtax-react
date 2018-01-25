@@ -18,7 +18,7 @@ class FileExport extends Component{
     static defaultProps={
         setButtonStyle:{
         },
-        size:'',
+        size:'small',
     }
 
     handleDownload=()=>{

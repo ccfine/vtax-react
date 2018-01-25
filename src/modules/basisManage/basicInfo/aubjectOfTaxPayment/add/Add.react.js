@@ -139,6 +139,7 @@ class Add extends Component {
     handleSubmit = (e) => {
         e && e && e.preventDefault();
          this.props.form.validateFields((err, values) => {
+             console.log(err, values);
          if (!err) {
                const type = this.props.modalConfig.type;
                const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
@@ -172,6 +173,7 @@ class Add extends Component {
                }
 
                console.log(data);
+               debugger
 
                this.mounted && this.setState({
                    submitLoading: true
@@ -235,8 +237,9 @@ class Add extends Component {
                        })
                }
              }else{
-                console.log(err);
-                debugger
+                if(err.jbxx){
+                    this.setState({ activeKey:'1' });
+                }
              }
         })
     }
@@ -289,7 +292,6 @@ class Add extends Component {
                 })
             })
     }
-
     fetch = (id)=> {
         this.setState({
             submitLoading: true
@@ -313,17 +315,23 @@ class Add extends Component {
                 }
             });
     }
-
-    componentDidMount() {
-
-
+    //根据id查询行业
+    getIndustryTitle=(id)=>{
+        console.log(id);
+        request.get(`/taxsubject/get/industry/${id}`)
+            .then(({data})=>{
+                if(data.code ===200){
+                    this.changeIndustry({
+                        key:data.data.key,
+                        label:data.data.title,
+                    })
+                }
+            })
     }
-
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
     }
-
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
             /**
@@ -347,6 +355,7 @@ class Add extends Component {
             if(nextProps.selectedRowKeys && nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
                 this.setStatus(parseInt(nextProps.selectedRows[0].status, 0));
+                this.getIndustryTitle(nextProps.selectedRows[0].industry)
             }
 
         }

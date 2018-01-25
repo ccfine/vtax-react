@@ -39,6 +39,15 @@ class BillingSales extends Component {
                 {
                     title: '数量',
                     dataIndex: 'specialInvoiceCount',
+                    render:(text,record)=>(
+                        <a onClick={()=>{
+                            this.setState({
+                                sysTaxRateId:record.sysTaxRateId,
+                            },()=>{
+                                this.toggleModalVisible(true)
+                            })
+                        }}>{text}</a>
+                    )
                 },{
                     title: '销售额',
                     dataIndex: 'specialInvoiceAmount',
@@ -110,6 +119,15 @@ class BillingSales extends Component {
                 {
                     title: '数量',
                     dataIndex: 'specialInvoiceCount',
+                    render:(text,record)=>(
+                        <a onClick={()=>{
+                            this.setState({
+                                sysTaxRateId:record.sysTaxRateId,
+                            },()=>{
+                                this.toggleModalVisible(true)
+                            })
+                        }}>{text}</a>
+                    )
                 },{
                     title: '销售额',
                     dataIndex: 'specialInvoiceAmount',
@@ -207,7 +225,7 @@ class BillingSales extends Component {
                                             ]
                                         },
                                     },{
-                                        label:'认证月份',
+                                        label:'查询期间',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
                                         span:6,
@@ -232,7 +250,7 @@ class BillingSales extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card extra={<div>
+                <Card title="开票销售统计表-房地产" extra={<div>
                     <FileExport
                         url='/income/invoice/marry/download'
                         title="导出"
@@ -252,7 +270,7 @@ class BillingSales extends Component {
                                     columns:this.columns,
                                 }} />
                 </Card>
-                <Card extra={<div>
+                <Card title="开票销售统计表-非地产" extra={<div>
                     <FileExport
                         url='/account/output/billingSale/export'
                         title="导出"
