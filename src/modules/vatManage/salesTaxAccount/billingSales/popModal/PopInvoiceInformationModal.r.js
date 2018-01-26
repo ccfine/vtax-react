@@ -84,6 +84,7 @@ class PopInvoiceInformationModal extends Component{
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey:Date.now(),
+        dataSource:[],
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -122,7 +123,7 @@ class PopInvoiceInformationModal extends Component{
         }
     }
     render(){
-        const {tableUpDateKey,filters } = this.state;
+        const {tableUpDateKey,filters,dataSource } = this.state;
         const props = this.props;
         return(
             <Modal
@@ -170,10 +171,14 @@ class PopInvoiceInformationModal extends Component{
                 </Card>
                 <Card extra={<div>
                     <FileExport
-                        url='/account/output/billingSale/export'
-                        title="导出"
-                        size="small"
+                        url='/account/output/billingSale/detail/export'
+                        title='导出'
                         setButtonStyle={{marginRight:5}}
+                        disabled={!dataSource.length>0}
+                        params={{
+                            ...props.filters,
+                            ...filters
+                        }}
                     />
                 </div>}
                       style={{marginTop:10}}>
@@ -192,6 +197,11 @@ class PopInvoiceInformationModal extends Component{
                                 size:'small',
                                 columns:columns,
                                 scroll:{ x: '160%', y: 200 },
+                                onDataChange:(dataSource)=>{
+                                    this.setState({
+                                        dataSource
+                                    })
+                                },
                                 renderFooter:data=>{
                                     return (
                                         <div>
@@ -200,14 +210,12 @@ class PopInvoiceInformationModal extends Component{
                                                 本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
                                                 本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
                                                 本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
-                                                本页总价：<span style={code}>{fMoney(data.pageTotalPrice)}</span>
                                             </div>
                                             <div style={{marginBottom:10}}>
                                                 <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
                                                 总金额：<span style={code}>{fMoney(data.allAmount)}</span>
                                                 总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
                                                 总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
-                                                全部总价：<span style={code}>{fMoney(data.allTotalPrice)}</span>
                                             </div>
                                         </div>
                                     )

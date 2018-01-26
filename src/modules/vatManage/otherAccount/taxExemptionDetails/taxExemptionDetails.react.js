@@ -122,13 +122,6 @@ const getColumns = context=> [
         dataIndex: 'invoiceTypeCTaxAmount',
     }
 ];
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class TaxExemptionDetails extends Component{
     state={
         tableKey:Date.now(),
@@ -206,6 +199,7 @@ export default class TaxExemptionDetails extends Component{
 
     render(){
         const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,dataSource} = this.state;
+        const {mainId,authMonth} = this.state.searchFieldsValues;
         return(
             <SearchTable
                 spinning={searchTableLoading}
@@ -216,12 +210,27 @@ export default class TaxExemptionDetails extends Component{
                         style:{
                             borderTop:0
                         }
+                    },
+                    onFieldsChange:values=>{
+                        if(JSON.stringify(values) === "{}"){
+                            this.setState({
+                                searchFieldsValues:{
+                                    mainId:undefined,
+                                    authMonth:undefined
+                                }
+                            })
+                        }else if(values.mainId || values.authMonth){
+                            if(values.authMonth){
+                                values.authMonth = values.authMonth.format('YYYY-MM')
+                            }
+                            this.setState(prevState=>({
+                                searchFieldsValues:{
+                                    ...prevState.searchFieldsValues,
+                                    ...values
+                                }
+                            }))
+                        }
                     }
-                }}
-                backCondition={(values)=>{
-                    this.setState({
-                        searchFieldsValues:values
-                    })
                 }}
                 tableOption={{
                     key:tableKey,
@@ -235,46 +244,57 @@ export default class TaxExemptionDetails extends Component{
                     url:'/account/other/reduceTaxDetail/list',
                     extra: <div>
                         {
-                            dataSource.length > 0 && <span>
-                                        <div style={{marginRight:30,display:'inline-block'}}>
+                            dataSource.length > 0 && <div style={{marginRight:30,display:'inline-block'}}>
                                             <span style={{marginRight:20}}>状态：<label style={{color:parseInt(dataSource[0].status, 0) === 1 ? 'red' : 'green'}}>{parseInt(dataSource[0].status, 0) === 1 ? '保存' : '提交'}</label></span>
                                             <span>提交时间：{dataSource[0].lastModifiedDate}</span>
                                         </div>
-                                    {
-                                        parseInt(dataSource[0].status, 0) === 1 ? <span>
-                                            <FileImportModal
-                                                url="/account/other/reduceTaxDetail/upload"
-                                                fields={fieldList}
-                                                onSuccess={this.refreshTable}
-                                                style={{marginRight:5}}
-                                            />
-                                            <FileExport
-                                                url='/account/other/reduceTaxDetail/detail/download'
-                                                title="下载导入模板"
-                                                setButtonStyle={{marginRight:5}}
-                                            />
-                                            <FileExport
-                                                url={`/account/other/reduceTaxDetail/export?${parseJsonToParams(searchFieldsValues)}`}
-                                                title="导出"
-                                                size="small"
-                                                setButtonStyle={{marginRight:5}}
-                                            />
-                                            <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('提交')}>
-                                                <Icon type="check" />
-                                                提交
-                                            </Button>
-                                            <Button size="small" type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
-                                        </span>
-                                            :
-                                        <span>
-                                            <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('撤回')}>
-                                                <Icon type="rollback" />
-                                                撤回提交
-                                            </Button>
-                                        </span>
-                                    }
-                                </span>
-                            }
+                        }
+                        <FileImportModal
+                            url="/account/other/reduceTaxDetail/upload"
+                            fields={fieldList}
+                            disabled={!dataSource.length>0}
+                            onSuccess={this.refreshTable}
+                            style={{marginRight:5}}
+                        />
+                        <FileExport
+                            url='/account/other/reduceTaxDetail/detail/download'
+                            title="下载导入模板"
+                            disabled={!dataSource.length>0}
+                            setButtonStyle={{marginRight:5}}
+                        />
+                        <Button
+                            size="small"
+                            type='danger'
+                            style={{marginRight:5}}
+                            onClick={this.deleteData}
+                            disabled={selectedRowKeys.length === 0}>
+                            <Icon type="delete" />删除
+                        </Button>
+                        <FileExport
+                            url='/account/other/reduceTaxDetail/export'
+                            title='导出'
+                            setButtonStyle={{marginRight:5}}
+                            disabled={!dataSource.length>0}
+                            params={{
+                                ...searchFieldsValues
+                            }}
+                        />
+                        <Button
+                            size='small'
+                            style={{marginRight:5}}
+                            disabled={!((mainId && authMonth) && (dataSource.length>0 && parseInt(dataSource[0].status, 0) === 1))}
+                            onClick={()=>this.handleClick('提交')}>
+                            <Icon type="check" />
+                            提交
+                        </Button>
+                        <Button
+                            size='small'
+                            style={{marginRight:5}}
+                            disabled={!((mainId && authMonth) && (dataSource.length>0 && parseInt(dataSource[0].status, 0) === 2))}
+                            onClick={()=>this.handleClick('撤回')}>
+                            <Icon type="rollback" />
+                            撤回提交
+                        </Button>
                     </div>,
                     renderFooter:data=>{
                         return(

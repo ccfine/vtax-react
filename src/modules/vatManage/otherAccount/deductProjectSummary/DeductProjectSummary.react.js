@@ -21,7 +21,7 @@ export default class DeductProjectSummary extends Component {
     render(){
         const {activeKey} = this.state;
         return(
-                <Tabs style={{background:'#fff'}} onChange={this.onTabChange} type="card" activeKey={activeKey}>
+                <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
                     <TabPane tab="土地价款扣除界面" key="1">
                         <LandPriceDeduction />
                     </TabPane>

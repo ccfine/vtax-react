@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {fMoney,request} from '../../../../utils'
-import {SearchTable,FileExport} from '../../../../compoments'
+import {SearchTable} from '../../../../compoments'
 import {Button,Icon,message} from 'antd'
 import PageTwo from './TabPage2.r'
 
@@ -148,30 +148,22 @@ const columns= [
         render:text=>fMoney(text),
     }
 ];
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 export default class LandPriceDeductionDetails extends Component{
     state={
         updateKey:Date.now(),
-        tableKey:Date.now(),
         searchFieldsValues:{
 
         },
-        selectedRowKeys:[],
+        selectedRowKeys:undefined,
         selectedRows:[],
-        dataSource:[],
         searchTableLoading:false,
-
+        statusParam:{},
+        dataSource:[],
         tableUrl:'/account/landPrice/deductedDetails/list',
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            updateKey:Date.now()
         })
     }
     toggleSearchTableLoading = b =>{
@@ -182,7 +174,7 @@ export default class LandPriceDeductionDetails extends Component{
     recount = ()=>{
         this.setState({
             tableUrl:'/account/landPrice/deductedDetails/reset',
-            tableKey:Date.now()
+            updateKey:Date.now()
         },()=>{
             this.setState({
                 tableUrl:'/account/landPrice/deductedDetails/list'
@@ -191,7 +183,7 @@ export default class LandPriceDeductionDetails extends Component{
     }
     handleClick=type=>{
         let url = '';
-        if(type ==='recount'){
+        if(type ==='重算'){
             this.recount()
             return false;
         }
@@ -201,6 +193,9 @@ export default class LandPriceDeductionDetails extends Component{
                 break;
             case '撤回':
                 url='/account/landPrice/deductedDetails/revoke';
+                break;
+            case '重算':
+                url='/account/landPrice/deductedDetails/reset';
                 break;
             default:
                 break;
@@ -219,9 +214,24 @@ export default class LandPriceDeductionDetails extends Component{
             this.toggleSearchTableLoading(false)
         })
     }
+    updateStatus=(values)=>{
+        request.get('/account/landPrice/deductedDetails/listMain',{params:values}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    statusParam: data.data
+                })
+            }
+        })
+    }
+    componentWillReceiveProps(props){
+        if(props.updateKey !== this.props.updateKey){
+            this.setState({updateKey:props.updateKey});
+        }
+    }
 
     render(){
-        const {tableKey,updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,dataSource,tableUrl} = this.state;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,tableUrl,statusParam,dataSource} = this.state;
+        const {mainId,authMonth} = this.state.searchFieldsValues;
         return(
             <div>
                 <SearchTable
@@ -233,68 +243,82 @@ export default class LandPriceDeductionDetails extends Component{
                             style:{
                                 borderTop:0
                             }
+                        },
+                        onFieldsChange:values=>{
+                            if(JSON.stringify(values) === "{}"){
+                                this.setState({
+                                    searchFieldsValues:{
+                                        mainId:undefined,
+                                        authMonth:undefined
+                                    }
+                                })
+                            }else if(values.mainId || values.authMonth){
+                                if(values.authMonth){
+                                    values.authMonth = values.authMonth.format('YYYY-MM')
+                                }
+                                this.setState(prevState=>({
+                                    searchFieldsValues:{
+                                        ...prevState.searchFieldsValues,
+                                        ...values
+                                    }
+                                }))
+                            }
                         }
                     }}
-                    backCondition={(values)=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    }}
+                    backCondition={this.updateStatus}
                     tableOption={{
-                        key:tableKey,
+                        key:updateKey,
                         pageSize:10,
                         columns:columns,
                         cardProps:{
-                          title:'项目分期信息'
+                            title:'项目分期信息'
+                        },
+                        onRowSelect:(selectedRowKeys,selectedRows)=>{
+                            this.setState({
+                                selectedRowKeys:selectedRowKeys[0],
+                                selectedRows,
+                            })
                         },
                         rowSelection:{
                             type:'radio',
                         },
-                        onRowSelect:(selectedRowKeys)=>{
-                            this.setState({
-                                selectedRowKeys
-                            })
-                        },
                         url:tableUrl,
                         extra: <div>
                             {
-                                dataSource.length > 0 && <span>
-                                            <div style={{marginRight:30,display:'inline-block'}}>
-                                                <span style={{marginRight:20}}>状态：<label style={{color:parseInt(dataSource[0].status, 0) === 1 ? 'red' : 'green'}}>{parseInt(dataSource[0].status, 0) === 1 ? '保存' : '提交'}</label></span>
-                                                <span>提交时间：{dataSource[0].lastModifiedDate}</span>
-                                            </div>
-                                    {
-                                        parseInt(dataSource[0].status, 0) === 1 ? <span>
-                                                <FileExport
-                                                    url={`/account/other/reduceTaxDetail/export?${parseJsonToParams(searchFieldsValues)}`}
-                                                    title="导出"
-                                                    size="small"
-                                                    setButtonStyle={{marginRight:5}}
-                                                />
-                                                <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('重算')}>
-                                                    <Icon type="retweet" />
-                                                    重算
-                                                </Button>
-                                                {/*<Button size='small' style={{marginRight:5}}>
+                                (JSON.stringify(statusParam) !== "{}" && dataSource.length>0) &&
+                                <div style={{marginRight:30,display:'inline-block'}}>
+                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                    <span>提交时间：{statusParam.lastModifiedDate}</span>
+                                </div>
+                            }
+                            <Button
+                                size='small'
+                                style={{marginRight:5}}
+                                disabled={!((mainId && authMonth)&&(statusParam && parseInt(statusParam.status, 0) === 1))}
+                                onClick={()=>this.handleClick('重算')}>
+                                <Icon type="retweet" />
+                                重算
+                            </Button>
+                            {/*<Button size='small' style={{marginRight:5}}>
                                                     <Icon type="check" />
                                                     清算
                                                 </Button>*/}
-                                                <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('提交')}>
-                                                    <Icon type="check" />
-                                                    提交
-                                                </Button>
-                                                <Button size="small" type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
-                                            </span>
-                                            :
-                                            <span>
-                                                <Button size='small' style={{marginRight:5}} onClick={()=>this.handleClick('撤回')}>
-                                                    <Icon type="rollback" />
-                                                    撤回提交
-                                                </Button>
-                                            </span>
-                                    }
-                                    </span>
-                            }
+                            <Button
+                                size='small'
+                                style={{marginRight:5}}
+                                disabled={!((mainId && authMonth)&&(statusParam && parseInt(statusParam.status, 0) === 1))}
+                                onClick={()=>this.handleClick('提交')}>
+                                <Icon type="check" />
+                                提交
+                            </Button>
+                            <Button
+                                size='small'
+                                style={{marginRight:5}}
+                                disabled={!((mainId && authMonth)&&(statusParam && parseInt(statusParam.status, 0) === 2))}
+                                onClick={()=>this.handleClick('撤回')}>
+                                <Icon type="rollback" />
+                                撤回提交
+                            </Button>
                         </div>,
                         renderFooter:data=>{
                             return(
