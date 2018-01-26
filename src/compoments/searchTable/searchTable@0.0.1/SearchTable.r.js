@@ -13,7 +13,8 @@ class SearchTable extends Component{
         tableOption:PropTypes.object,
         spinning:PropTypes.bool,
         doNotFetchDidMount:PropTypes.bool,
-        backCondition:PropTypes.func,// 返回查询条件
+        backCondition:PropTypes.func,// 返回查询条件,
+        beforeSearch:PropTypes.func,
     }
     static defaultProps = {
         spinning:false,
@@ -33,7 +34,6 @@ class SearchTable extends Component{
              * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
              * */
             tableUpDateKey:props.tableOption.key || Date.now(),
-
             visible:false,
             expand:true
         }
@@ -78,6 +78,7 @@ class SearchTable extends Component{
                         }*/
                     }
                 }
+
                 this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{

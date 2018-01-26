@@ -337,6 +337,15 @@ class InterimContractInputTaxTransferredOut extends Component {
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
+                        <FileExport
+                            url='/account/income/taxContract/adjustment/export'
+                            title='导出'
+                            setButtonStyle={{marginRight:5}}
+                            disabled={!dataSource.length>0}
+                            params={{
+                                ...filters
+                            }}
+                        />
                         {
                             dataSource.length > 0 && <span>
                                 {
@@ -363,12 +372,6 @@ class InterimContractInputTaxTransferredOut extends Component {
                                                 <Icon type="form" />
                                                 差异调整凭证
                                             </Button>*/}
-                                            <FileExport
-                                                url='/account/income/taxContract/adjustment/export'
-                                                title="导出"
-                                                size="small"
-                                                setButtonStyle={{marginRight:5}}
-                                            />
                                         </span>
                                         :
                                         <span>
