@@ -226,9 +226,13 @@ export default class PrepayTax extends Component{
             tableUrl:'/account/prepaytax/reset',
             tableKey:Date.now()
         },()=>{
-            this.setState({
-                tableUrl:'/account/prepaytax/list'
-            })
+
+            //TODO 重算逻辑等待后端梳理
+            setTimeout(()=>{
+                this.setState({
+                    tableUrl:'/account/prepaytax/list'
+                })
+            },500)
         })
     }
     handleClickActions = action => ()=>{
