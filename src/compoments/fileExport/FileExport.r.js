@@ -21,13 +21,15 @@ class FileExport extends Component{
         setButtonStyle:PropTypes.object,
         url:PropTypes.string.isRequired,
         title:PropTypes.string.isRequired,
-        params:PropTypes.object
+        params:PropTypes.object,
+        WrapComponent:PropTypes.any
     }
 
     static defaultProps={
         setButtonStyle:{
         },
         size:'small',
+        WrapComponent:Button
     }
 
     handleDownload=()=>{
@@ -46,11 +48,11 @@ class FileExport extends Component{
     }
 
     render(){
-        const {setButtonStyle,size,title,disabled} = this.props;
+        const {setButtonStyle,size,title,disabled,WrapComponent} = this.props;
         return(
-            <Button size={size} style={{...setButtonStyle}} disabled={disabled} onClick={this.handleDownload.bind(this)}>
+            <WrapComponent size={size} style={{...setButtonStyle}} disabled={disabled} onClick={this.handleDownload.bind(this)}>
                 <Icon type="download" /> {title}
-            </Button>
+            </WrapComponent>
         )
     }
 }

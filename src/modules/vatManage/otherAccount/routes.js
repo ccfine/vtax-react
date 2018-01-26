@@ -3,7 +3,6 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import React from 'react'
 import {wrapPage} from '../../../compoments'
 import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
