@@ -4,10 +4,10 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Button,Icon,Modal,Row,Col,Steps, message,List, Card} from 'antd'
+import {Button,Icon,Modal,Row,Col,Steps,List, Card} from 'antd'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
-import {request,composeMenus} from '../../../../utils'
+import {composeMenus} from '../../../../utils'
 import routes from '../../../../modules/routes'
 import './styles.less'
 
@@ -164,7 +164,7 @@ export default class ApplyDeclarationPopModal extends Component{
             if (!item.name  || item.path === '/web' ) {
                 return null;
             }else{
-                list2.push(item)
+                return list2.push(item)
             }
         })
         list.forEach((t) => {

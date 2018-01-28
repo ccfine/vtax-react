@@ -190,7 +190,6 @@ class InvoiceCollection extends Component {
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
         const {state} = this.props.location;
-        console.log(this.props.location)
         const rowSelection = {
             type:'radio',
             width:70,
@@ -216,7 +215,7 @@ class InvoiceCollection extends Component {
                                         type:'taxMain',
                                         span:6,
                                         fieldDecoratorOptions:{
-                                            initialValue: state && state.filters.mainId || undefined,
+                                            initialValue: (state && state.filters.mainId) || undefined,
                                         },
                                     },{
                                         label:'发票号码',
