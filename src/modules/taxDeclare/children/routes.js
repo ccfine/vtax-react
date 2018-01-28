@@ -3,11 +3,9 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import React from 'react'
 import {wrapPage} from '../../../compoments'
-
-const CreateADeclare =()=><div>创建申报</div>
-const SearchDeclare =()=><div>查询申报</div>
+import CreateADeclare from '../../taxDeclare/createADeclare'
+import SearchDeclare from '../../taxDeclare/searchDeclare'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/taxDeclare`
