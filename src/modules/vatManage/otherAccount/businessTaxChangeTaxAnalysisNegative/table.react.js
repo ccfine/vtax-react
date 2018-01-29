@@ -150,7 +150,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                 {
                     title: '销项（应纳）税额',
                     children: [{
-                        title: '6=5+(100%+增值税税率或增收率)',
+                        title: '6=5÷(100%+增值税税率或征收率)×增值税税率或征收率',
                         dataIndex: 'addedInvoiceDeduct',
                         render:text=>fMoney(text),
                         className:'table-money'
@@ -246,7 +246,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                 {
                     title: '本期实际扣除金额',
                     children: [{
-                        title: '13(13<=3且13<=12)',
+                        title: '13（13≤3且13≤12）',
                         dataIndex: 'businessActualDeduct',
                         render:text=>fMoney(text),
                         className:'table-money'
