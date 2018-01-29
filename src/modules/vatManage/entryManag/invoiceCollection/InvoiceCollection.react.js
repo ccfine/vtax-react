@@ -7,6 +7,7 @@ import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
 import {AsyncTable,FileExport,PopUploadModal,PopUndoUploadModal} from '../../../../compoments'
 import {request,requestDict,fMoney,getFields} from '../../../../utils'
+import { withRouter } from 'react-router'
 import PopModal from './popModal'
 const confirm = Modal.confirm;
 const buttonStyle={
@@ -129,8 +130,11 @@ class InvoiceCollection extends Component {
                 nssbData:result
             })
         });
-        this.updateTable()
 
+        const {location} = this.props;
+        if (location.state && location.state.filters) {
+            this.updateTable()
+        }
     }
     componentWillReceiveProps(nextProps){
         if(this.props.taxSubjectId!==nextProps.taxSubjectId){
@@ -185,6 +189,7 @@ class InvoiceCollection extends Component {
 
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
+        const {state} = this.props.location;
         const rowSelection = {
             type:'radio',
             width:70,
@@ -210,6 +215,7 @@ class InvoiceCollection extends Component {
                                         type:'taxMain',
                                         span:6,
                                         fieldDecoratorOptions:{
+                                            initialValue: (state && state.filters.mainId) || undefined,
                                         },
                                     },{
                                         label:'发票号码',
@@ -364,4 +370,4 @@ class InvoiceCollection extends Component {
         )
     }
 }
-export default Form.create()(InvoiceCollection)
+export default Form.create()(withRouter(InvoiceCollection))

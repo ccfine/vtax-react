@@ -179,7 +179,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} options={item['options']} />
+                            <CusComponent {...item['componentProps']} options={item['options']} />
                         )}
                     </FormItem>
                 </Col>
@@ -191,7 +191,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} placeholder={`请输入${item['label']}`} style={{width:'100%'}} />
+                            <CusComponent {...item['componentProps']} style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>
