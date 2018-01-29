@@ -494,7 +494,7 @@ export default class extends React.Component {
                     columns={getColumns(this, tax1Count, tax2Count)}
                     dataSource={dataSource}
                     size="small"
-                    scroll={{ x: '210%' }}
+                    scroll={{ x: '240%' }}
                     pagination={false}
                     rowKey='key'
                 />

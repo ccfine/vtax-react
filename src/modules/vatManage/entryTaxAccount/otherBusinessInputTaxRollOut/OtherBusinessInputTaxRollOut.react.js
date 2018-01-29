@@ -88,7 +88,6 @@ export default class LandPriceManage extends Component {
         readOnly: false,
         updateKey: Date.now(),
         filters: undefined,
-        statusLoading: false,
         status: undefined,
         statusParam: undefined
     }
@@ -96,7 +95,6 @@ export default class LandPriceManage extends Component {
         this.setState({ visible: false });
     }
     updateStatus = (values = this.state.statusParam) => {
-        this.setState({ statusLoading: true });
         request.get('/account/income/taxout/listMain', { params: values }).then(({ data }) => {
             if (data.code === 200) {
                 let status = {};
@@ -107,7 +105,9 @@ export default class LandPriceManage extends Component {
                         status.text = (<span style={{ color: 'green' }}>提交</span>)
                     }
                     status.submitDate = data.data.lastModifiedDate
-                    this.setState({ statusLoading: false, status: status, statusParam: values });
+                    this.setState({ status: status, statusParam: values });
+                }else{
+                    this.setState({ status: undefined, statusParam: undefined });
                 }
             }
         })
