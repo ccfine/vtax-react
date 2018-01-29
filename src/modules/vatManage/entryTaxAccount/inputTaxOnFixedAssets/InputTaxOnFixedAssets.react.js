@@ -141,9 +141,11 @@ class InputTaxOnFixedAssets extends Component {
                                 ])
                             }
 
-                            <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            <Col span={12} style={{textAlign:'right'}}>
+                                <Form.Item>
+                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                </Form.Item>
                             </Col>
                         </Row>
                     </Form>
