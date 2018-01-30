@@ -10,7 +10,7 @@ export default class FetchTable extends React.Component{
         tableProps:PropTypes.object.isRequired,
         updateKey:PropTypes.oneOfType([PropTypes.number,PropTypes.string]),
         filters:PropTypes.object,
-        refresh:PropTypes.func
+        doNotFetchDidMount:PropTypes.bool,
     }
     static defaultProps={
         updateKey:Date.now(),
@@ -31,7 +31,7 @@ export default class FetchTable extends React.Component{
         };
     }
     componentDidMount(){
-        this.fetch(this.props.url, 1, 10);
+        this.props.doNotFetchDidMount || this.fetch(this.props.url, 1, 10);
     }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey !== nextProps.updateKey){
