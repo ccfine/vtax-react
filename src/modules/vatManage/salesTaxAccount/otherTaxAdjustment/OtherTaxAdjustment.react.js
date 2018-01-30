@@ -5,43 +5,55 @@ import React, { Component} from 'react'
 import {Button,Popconfirm,message,Icon} from 'antd'
 import {SearchTable} from '../../../../compoments'
 import PopModal from './popModal'
-import {request,fMoney} from '../../../../utils'
+import {request,fMoney,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
 const buttonStyle = {
     margin:'0 5px'
 }
 
-const searchFields = [
-    {
-        label:'纳税主体',
-        type:'taxMain',
-        span:8,
-        fieldName:'mainId',
-        fieldDecoratorOptions:{
-            rules:[
-            {
-                required:true,
-                message:'请选择纳税主体'
-            }
-            ]
-        }
-    },
-    {
-        label:'调整日期',
-        fieldName:'adjustDate',
-        type:'monthPicker',
-        span:8,
-        componentProps:{
+const searchFields =(disabled)=>{
+    return [
+        {
+            label:'纳税主体',
+            type:'taxMain',
+            span:8,
+            fieldName:'mainId',
+            componentProps:{
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            },
         },
-        fieldDecoratorOptions:{
-            rules:[
-            {
-                required:true,
-                message:'请选择调整日期'
-            }
-            ]
+        {
+            label:'调整日期',
+            fieldName:'adjustDate',
+            type:'monthPicker',
+            span:8,
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择调整日期'
+                    }
+                ]
+            },
         }
-    }
-]
+    ]
+}
 const getColumns =(context)=>[{
     title:'操作',
     render(text, record, index){
@@ -126,7 +138,7 @@ const getColumns =(context)=>[{
     }
 ];
 
-export default class OtherTaxAdjustment extends Component{
+class OtherTaxAdjustment extends Component{
     state={
         visible:false, // 控制Modal是否显示
         opid:"", // 当前操作的记录
@@ -152,13 +164,21 @@ export default class OtherTaxAdjustment extends Component{
             message.error(err.message);
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.update()
+        }
+    }
     render(){
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <div>
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields
+                        fields:searchFields(disabled)
                     }}
                     
                     tableOption={{
@@ -185,3 +205,4 @@ export default class OtherTaxAdjustment extends Component{
         )
     }
 }
+export default withRouter(OtherTaxAdjustment)

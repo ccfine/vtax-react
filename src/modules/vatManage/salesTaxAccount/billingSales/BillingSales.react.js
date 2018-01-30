@@ -6,8 +6,11 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Icon} from 'antd'
 import {AsyncTable,FileExport} from '../../../../compoments'
-import {getFields,fMoney,request} from '../../../../utils'
+import {getFields,fMoney,request,getUrlParam} from '../../../../utils'
 import PopInvoiceInformationModal from './popModal'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
 const columns = [
     {
         title: '项目',
@@ -243,7 +246,10 @@ class BillingSales extends Component {
             });
     }
     componentDidMount(){
-        //this.refreshTable()
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit()
+        }
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -268,6 +274,8 @@ class BillingSales extends Component {
         const {tableUpDateKey,filters,dataSource1,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
         const disabled = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource1.length > 0));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource1.length > 0));
+        const {search} = this.props.location;
+        let disabled3 = !!search;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -285,7 +293,11 @@ class BillingSales extends Component {
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled:disabled3
+                                        },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -299,8 +311,11 @@ class BillingSales extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
+                                            format:'YYYY-MM',
+                                            disabled:disabled3
                                         },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -436,4 +451,4 @@ class BillingSales extends Component {
         )
     }
 }
-export default Form.create()(BillingSales)
+export default Form.create()(withRouter(BillingSales))

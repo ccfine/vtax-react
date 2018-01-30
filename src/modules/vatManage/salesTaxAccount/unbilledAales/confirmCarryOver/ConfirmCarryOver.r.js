@@ -3,19 +3,25 @@
  * 确认结转收入
  */
 import React, { Component } from 'react'
-import {fMoney,} from '../../../../../utils'
-import {SearchTable,FileExport} from '../../../../../compoments'
 import {Button,Icon} from 'antd'
+import {SearchTable,FileExport} from '../../../../../compoments'
+import {fMoney,getUrlParam} from '../../../../../utils'
 import ManualMatchRoomModal from './SummarySheetModal'
-const searchFields = (getFieldValue)=> {
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
+const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            componentProps:{
+                disabled,
+            },
             fieldDecoratorOptions:{
-
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
             },
         },
         {
@@ -49,7 +55,12 @@ const searchFields = (getFieldValue)=> {
             fieldName:'month',
             type:'monthPicker',
             span:6,
+            componentProps:{
+                format:'YYYY-MM',
+                disabled:disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -57,9 +68,6 @@ const searchFields = (getFieldValue)=> {
                     }
                 ]
             },
-            componentProps:{
-                format:'YYYY-MM'
-            }
         }
     ]
 }
@@ -169,9 +177,11 @@ const columns = [
         ]
     }
 ];
-export default class ConfirmCarryOver extends Component{
+class ConfirmCarryOver extends Component{
     state={
+        tableKey:Date.now(),
         visible:false,
+        doNotFetchDidMount:true,
         searchFieldsValues:{
 
         },
@@ -182,16 +192,35 @@ export default class ConfirmCarryOver extends Component{
             visible
         })
     }
+    refreshTable = ()=>{
+        this.setState({
+            tableKey:Date.now()
+        })
+    }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({
+                doNotFetchDidMount:false
+            })
+        }else{
+            this.setState({
+                doNotFetchDidMount:true
+            })
+        }
+    }
     render(){
-        const {visible,searchFieldsValues,hasData} = this.state;
+        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={doNotFetchDidMount}
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -199,6 +228,7 @@ export default class ConfirmCarryOver extends Component{
                     }
                 }}
                 tableOption={{
+                    key:tableKey,
                     pageSize:10,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/list',
@@ -276,3 +306,4 @@ export default class ConfirmCarryOver extends Component{
         )
     }
 }
+export default withRouter(ConfirmCarryOver)

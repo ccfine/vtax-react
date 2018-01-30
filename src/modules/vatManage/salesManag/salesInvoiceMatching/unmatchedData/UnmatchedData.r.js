@@ -2,49 +2,64 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney} from '../../../../../utils'
+import {fMoney,getUrlParam} from '../../../../../utils'
 import {SearchTable,FileExport} from '../../../../../compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
-const searchFields = [
-    {
-        label:'纳税主体',
-        type:'taxMain',
-        fieldName:'mainId',
-    },
-    {
-        label:'开票时间',
-        type:'rangePicker',
-        fieldName:'billingDate',
-        fieldDecoratorOptions:{},
-        componentProps:{}
-    },
-    {
-        label:'货物名称',
-        type:'input',
-        fieldName:'commodityName',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'购货单位名称',
-        type:'input',
-        fieldName:'purchaseName',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'发票号码',
-        type:'input',
-        fieldName:'invoiceNum',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'税率',
-        type:'numeric',
-        fieldName:'taxRate',
-        componentProps:{
-            valueType:'int'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
+const searchFields=(disabled)=> {
+    return [
+        {
+            label: '纳税主体',
+            type: 'taxMain',
+            fieldName: 'mainId',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+            },
+        },
+        {
+            label: '开票时间',
+            type: 'rangePicker',
+            fieldName: 'billingDate',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+            }
+        },
+        {
+            label: '货物名称',
+            type: 'input',
+            fieldName: 'commodityName',
+            fieldDecoratorOptions: {}
+        },
+        {
+            label: '购货单位名称',
+            type: 'input',
+            fieldName: 'purchaseName',
+            fieldDecoratorOptions: {}
+        },
+        {
+            label: '发票号码',
+            type: 'input',
+            fieldName: 'invoiceNum',
+            fieldDecoratorOptions: {}
+        },
+        {
+            label: '税率',
+            type: 'numeric',
+            fieldName: 'taxRate',
+            componentProps: {
+                valueType: 'int'
+            }
         }
-    }
-]
+    ]
+}
 const getColumns = context =>[
     {
         title: '操作',
@@ -180,7 +195,7 @@ const getColumns = context =>[
         }
     },
 ];
-export default class UnmatchedData extends Component{
+class UnmatchedData extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
@@ -200,15 +215,25 @@ export default class UnmatchedData extends Component{
             tableKey:Date.now()
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+    }
     render(){
         const {visible,tableKey,searchFieldsValues,selectedData,hasData} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     getFieldsValues:values=>{
                         this.setState({
                             searchFieldsValues:values
@@ -273,3 +298,4 @@ export default class UnmatchedData extends Component{
         )
     }
 }
+export default withRouter(UnmatchedData)

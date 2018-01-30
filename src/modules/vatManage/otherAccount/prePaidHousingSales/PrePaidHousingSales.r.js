@@ -5,8 +5,11 @@
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import {fMoney,request} from '../../../../utils'
-const searchFields = (getFieldValue)=> {
+import {fMoney,request,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
+const searchFields =(disabled)=> (getFieldValue)=> {
     return [
         {
             label:'纳税主体',
@@ -21,7 +24,11 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
+            componentProps:{
+                disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -85,7 +92,12 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -93,9 +105,6 @@ const searchFields = (getFieldValue)=> {
                     }
                 ]
             },
-            componentProps:{
-                format:'YYYY-MM'
-            }
         },
         {
             label:'楼栋名称',
@@ -273,7 +282,7 @@ const columns = [
     }
 ];
 
-export default class PrePaidHousingSales extends Component{
+class PrePaidHousingSales extends Component{
     state={
         selectedRowKeys:[],
         tableKey:Date.now(),
@@ -348,13 +357,21 @@ export default class PrePaidHousingSales extends Component{
             this.toggleSearchTableLoading(false)
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }
+    }
     render(){
         const {selectedRowKeys,searchTableLoading,tableKey,} = this.state;
-        const {mainId,receiveMonth} = this.state.searchFieldsValues
+        const {mainId,receiveMonth} = this.state.searchFieldsValues;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     cardProps:{
                         className:''
                     },
@@ -495,3 +512,4 @@ export default class PrePaidHousingSales extends Component{
         )
     }
 }
+export default withRouter(PrePaidHousingSales)

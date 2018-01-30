@@ -9,7 +9,6 @@ import {Button,Modal,Form,Row,Col,Card,message} from 'antd';
 import {SearchTable} from '../../../../compoments'
 import {request,requestDict,getFields} from '../../../../utils'
 
-
 const searchFields = (getFieldValue,setFieldsValue)=> {
     return [
         {
@@ -39,14 +38,19 @@ const getColumns = context=> [
         dataIndex: 'taxType',
         render:text=>{
             //1增值税、2企业所得税
-            text = parseInt(text,0);
-            if(text===1){
-                return '增值税'
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t='增值税';
+                    break;
+                case 2:
+                    t='企业所得税';
+                    break;
+                default:
+                    t='增值税';
+                    break;
             }
-            if(text ===2){
-                return '企业所得税'
-            }
-            return text;
+            return t
         }
     }
 ];
@@ -124,29 +128,9 @@ class PopModal extends Component{
                 const data = this.state.selectedRows.map(item=>{
                     return {
                         ...item,
+                        id:null,
+                        taxType:1,
                         ...values,
-
-                        /*id: item.id,
-                        isProcess: item.isProcess,
-                        isProcessId: values.isProcessId,
-                        lastModifiedDate: item.lastModifiedDate,
-                        mainId: item.mainId,
-                        mainName: item.mainName,
-                        orgId: item.orgId,
-                        orgName: item.orgName,
-                        region: item.region,
-                        status: item.status,
-
-                        remark: values.remark,
-                        month: values.month,
-                        lastModifiedBy: values.lastModifiedBy,
-                        subordinatePeriodEnd: values.subordinatePeriodEnd,
-                        subordinatePeriodStart: values.subordinatePeriodStart,
-                        taxDeclaration: values.taxDeclaration,
-                        taxDeclarationId: values.taxDeclarationId,
-                        taxModality: values.taxModality,
-                        taxModalityId: values.taxModalityId,
-                        taxType: values.taxType*/
                     }
                 })
                 const type = this.props.modalConfig.type;
@@ -172,7 +156,7 @@ class PopModal extends Component{
                         })
                         .catch(err => {
                             message.error(err.message)
-                            this.toggleModalVisible(false)
+                            this.props.toggleModalVisible(false)
 
                         })
                 }
@@ -188,7 +172,6 @@ class PopModal extends Component{
             console.log(data)
                 this.setState({
                     initData:data.data,
-                    //tableKey:Date.now()
                 })
             })
     }
@@ -199,7 +182,7 @@ class PopModal extends Component{
              * */
             nextProps.form.resetFields();
             this.setState({
-                initData: {}
+                initData: {},
             })
         }
         if (this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add') {
@@ -249,6 +232,7 @@ class PopModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 visible={props.visible}
@@ -262,42 +246,43 @@ class PopModal extends Component{
                     </Row>
                 }
                 title={`${title}申报`}>
-
-                <SearchTable
-                    spinning={searchTableLoading}
-                    doNotFetchDidMount={true}
-                    searchOption={{
-                        fields:searchFields,
-                        cardProps:{
-                            style:{
-                                borderTop:0
+                {
+                    type !== 'view' && <SearchTable
+                        spinning={searchTableLoading}
+                        doNotFetchDidMount={true}
+                        searchOption={{
+                            fields:searchFields,
+                            cardProps:{
+                                style:{
+                                    borderTop:0
+                                }
+                            },
+                            onFieldsChange:values=>{
+                                this.setState({
+                                    searchFieldsValues:values
+                                })
                             }
-                        },
-                        onFieldsChange:values=>{
-                            this.setState({
-                                searchFieldsValues:values
-                            })
-                        }
-                    }}
-                    tableOption={{
-                        key:tableKey,
-                        pageSize:10,
-                        columns:getColumns(this),
-                        onRowSelect:(selectedRowKeys,selectedRows)=>{
-                            this.setState({
-                                selectedRowKeys:selectedRowKeys[0],
-                                selectedRows,
-                            })
-                        },
-                        url: '/tax/declaration/list', //'/tax/declaration/add/list',
-                    }}
-                >
-                </SearchTable>
+                        }}
+                        tableOption={{
+                            key:tableKey,
+                            pageSize:10,
+                            columns:getColumns(this),
+                            onRowSelect:(selectedRowKeys,selectedRows)=>{
+                                this.setState({
+                                    selectedRowKeys:selectedRowKeys[0],
+                                    selectedRows,
+                                })
+                            },
+                            url: '/tax/declaration/list',
+                        }}
+                    >
+                    </SearchTable>
+                }
+
 
                 <Card
                     style={{
-                        //borderTop:'none'
-                        marginTop:10
+                        marginTop: type !== 'view' && 10
                     }}
                     className="search-card"
                 >

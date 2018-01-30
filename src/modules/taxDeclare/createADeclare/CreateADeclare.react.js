@@ -10,7 +10,6 @@ import {SearchTable,FileExport} from '../../../compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
 
-
 const searchFields = [
     {
         label:'纳税主体',
@@ -68,6 +67,30 @@ const getColumns =(context)=>[
     {
         title: '申报状态',
         dataIndex: 'status',
+        render:text=>{
+            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠; ,
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t='申报办理';
+                    break;
+                case 2:
+                    t='申报审核';
+                    break;
+                case 3:
+                    t='申报审批';
+                    break;
+                case 4:
+                    t='申报完成';
+                    break;
+                case 5:
+                    t='归档';
+                    break;
+                default:
+                //no default
+            }
+            return t
+        }
     }, {
         title: '上一步完成时间',
         dataIndex: 'lastModifiedDate',
@@ -82,20 +105,25 @@ const getColumns =(context)=>[
         dataIndex: 'mainName',
     },{
         title: '所属期',
-        dataIndex: 'remark',
+        dataIndex: 'partTerm',
     },{
         title: '税（费）种',
         dataIndex: 'taxType',
         render:text=>{
-            //1增值税、2企业所得税
-            text = parseInt(text,0);
-            if(text===1){
-                return '增值税'
+            //1:增值税;2:企业所得税;
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t='增值税';
+                    break;
+                case 2:
+                    t='企业所得税';
+                    break;
+                default:
+                    t='增值税';
+                    break;
             }
-            if(text ===2){
-                return '企业所得税'
-            }
-            return text;
+            return t
         }
     },{
         title: '所属期起',
@@ -111,7 +139,7 @@ const getColumns =(context)=>[
         dataIndex: 'lastModifiedBy',
     },{
         title: '申报日期',
-        dataIndex: 'month',
+        dataIndex: 'declarationDate',
     }
 ];
 

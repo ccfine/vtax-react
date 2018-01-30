@@ -36,7 +36,7 @@ class NavRouter extends Component {
                     dataSource={this.composeNav(this.props.data)}
                     renderItem={item => (
                         <List.Item>
-                            <Card className="card">
+                            <Card className="nav-card">
                                     <Meta
                                         avatar={<Avatar className="IconImg" src={item.icon.url} style={{
                                             background:item.icon.backgroundColor

@@ -4,19 +4,25 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {fMoney,request} from '../../../../../utils'
-import {SearchTable} from '../../../../../compoments'
 import {Button,Icon,message} from 'antd'
+import {fMoney,request,getUrlParam} from '../../../../../utils'
+import {SearchTable} from '../../../../../compoments'
 import PageTwo from './TabPage2.r'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 
-const searchFields = (getFieldValue)=> {
+const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            componentProps:{
+                disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -30,8 +36,11 @@ const searchFields = (getFieldValue)=> {
             type:'monthPicker',
             span:6,
             componentProps:{
+                format:'YYYY-MM',
+                disabled
             },
             fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -39,7 +48,6 @@ const searchFields = (getFieldValue)=> {
                     }
                 ]
             },
-
         }, {
             label:'项目名称',
             fieldName:'projectId',
@@ -118,7 +126,7 @@ const columns= [
         render:text=>fMoney(text),
     }
 ];
-export default class tab1 extends Component{
+class tab1 extends Component{
     state={
         updateKey:Date.now(),
         searchFieldsValues:{
@@ -190,6 +198,19 @@ export default class tab1 extends Component{
             }
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({
+                searchFieldsValues:{
+                    mainId:getUrlParam('mainId') || undefined,
+                    month:moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        }
+    }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
             this.setState({updateKey:props.updateKey});
@@ -199,13 +220,15 @@ export default class tab1 extends Component{
     render(){
         const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam,dataSource} = this.state;
         const {mainId,month} = this.state.searchFieldsValues;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <div style={{marginTop: '-16px'}}>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields,
+                        fields:searchFields(disabled),
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -215,8 +238,8 @@ export default class tab1 extends Component{
                             if(JSON.stringify(values) === "{}"){
                                 this.setState({
                                     searchFieldsValues:{
-                                        mainId:undefined,
-                                        month:undefined
+                                        mainId:(disabled && getUrlParam('mainId')) || undefined,
+                                        month:(disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')) || undefined,
                                     }
                                 })
                             }else if(values.mainId || values.month){
@@ -304,3 +327,4 @@ export default class tab1 extends Component{
         )
     }
 }
+export default withRouter(tab1)

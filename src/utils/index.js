@@ -28,11 +28,10 @@ const fMoney = (s,n=2)=>{
         return t.split("").reverse().join("") + "." + r;
     }
 }
-
-const getQueryString=name=>{
-    let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-    let r = window.location.search.substr(1).match(reg);
-    if(r!==null)return  decodeURI(r[2]); return null;
+const getUrlParam = function(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return decodeURI(r[2]); return null; //返回参数值
 }
 const getDict = type => {
     return new Promise(function (resolve, reject) {
@@ -175,7 +174,7 @@ export {
     regRules,
     request,
     fMoney,
-    getQueryString,
+    getUrlParam,
     composeMenus,
     requestDict,
     accDiv,

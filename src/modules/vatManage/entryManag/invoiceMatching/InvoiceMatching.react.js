@@ -6,8 +6,10 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
 import {AsyncTable,AutoFileUpload,FileExport} from '../../../../compoments'
-import {request,fMoney,getFields} from '../../../../utils'
+import {request,fMoney,getFields,getUrlParam} from '../../../../utils'
 import PopDifferenceModal from './popModal'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 const TabPane = Tabs.TabPane;
 const buttonStyle={
     marginRight:5
@@ -121,7 +123,12 @@ class InvoiceMatching extends Component {
 
     }
     componentDidMount(){
-        this.updateTable()
+        const {search} = this.props.location;
+        if(!!search){
+            this.updateTable()
+        } else {
+            this.updateTable()
+        }
     }
     componentWillReceiveProps(nextProps){
         if(this.props.taxSubjectId!==nextProps.taxSubjectId){
@@ -205,10 +212,14 @@ class InvoiceMatching extends Component {
             title: '差异原因',
             dataIndex: 'causeDifference'
         }
+        const {search} = this.props.location;
         return (
             <AsyncTable url={url}
                         updateKey={tableUpDateKey}
-                        filters={filters}
+                        filters={{
+                            ...filters,
+                            authMonth:(!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')),
+                        }}
                         tableProps={{
                             rowKey:record=>record.id,
                             pagination:true,
@@ -264,7 +275,8 @@ class InvoiceMatching extends Component {
             tab: '发票信息不匹配',
             content:this.tabInitDate('tab3')
         }]
-
+        const {search} = this.props.location;
+        let disabled = !!search;
         return (
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -281,8 +293,12 @@ class InvoiceMatching extends Component {
                                         label:'纳税主体',
                                         fieldName:'mainId',
                                         type:'taxMain',
-                                        span:8,
+                                        span:6,
+                                        componentProps:{
+                                            disabled
+                                        },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                         },
                                     },
                                 ])
@@ -352,4 +368,4 @@ class InvoiceMatching extends Component {
         )
     }
 }
-export default Form.create()(InvoiceMatching)
+export default Form.create()(withRouter(InvoiceMatching))

@@ -2,17 +2,23 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {fMoney,request} from '../../../../../utils'
-import {SearchTable} from '../../../../../compoments'
 import {Button,Icon,message} from 'antd'
+import {fMoney,request,getUrlParam} from '../../../../../utils'
+import {SearchTable} from '../../../../../compoments'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 
-const searchFields = [
+const searchFields =(disabled)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
         span:6,
+        componentProps:{
+            disabled
+        },
         fieldDecoratorOptions:{
+            initialValue: (disabled && getUrlParam('mainId')) || undefined,
             rules:[
                 {
                     required:true,
@@ -26,8 +32,11 @@ const searchFields = [
         type:'monthPicker',
         span:6,
         componentProps:{
+            format:'YYYY-MM',
+            disabled
         },
         fieldDecoratorOptions:{
+            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -78,7 +87,7 @@ const columns = [{
     dataIndex: 'outputTax',
     render:text=>fMoney(text),
 }];
-export default class tab1 extends Component{
+class tab1 extends Component{
     state={
         updateKey:Date.now(),
         searchFieldsValues:{
@@ -144,7 +153,7 @@ export default class tab1 extends Component{
         })
     }
     updateStatus=(values)=>{
-        request.get('/account/landPrice/deductedDetails/listMain',{params:values}).then(({data}) => {
+        request.get('/account/othertax/deducted/main/get',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data
@@ -152,25 +161,32 @@ export default class tab1 extends Component{
             }
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable();
+        }
+    }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
             this.setState({updateKey:props.updateKey});
         }
     }
-
     render(){
         const {updateKey,searchTableLoading,statusParam,dataSource} = this.state;
         console.log(statusParam);
         const {mainId,month} = this.state.searchFieldsValues;
         const disabled = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource.length > 0));
         const disabled2 = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource.length > 0));
+        const {search} = this.props.location;
+        let disabled3 = !!search;
         return(
             <div style={{marginTop: '-16px'}}>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields,
+                        fields:searchFields(disabled3),
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -220,7 +236,7 @@ export default class tab1 extends Component{
                                 size='small'
                                 style={{marginRight:5}}
                                 disabled={disabled}
-                                onClick={this.handleReset()}>
+                                onClick={this.handleReset}>
                                 <Icon type="retweet" />
                                 重算
                             </Button>
@@ -268,3 +284,4 @@ export default class tab1 extends Component{
         )
     }
 }
+export default withRouter(tab1)

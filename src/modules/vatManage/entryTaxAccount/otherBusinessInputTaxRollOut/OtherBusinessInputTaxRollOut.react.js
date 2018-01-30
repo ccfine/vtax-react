@@ -5,47 +5,14 @@ import React, { Component } from 'react'
 import { Icon, Divider, Card } from 'antd'
 import { FileImportModal, FileExport, CardSearch, FetchTable } from '../../../../compoments'
 import FeildModal from './popModal'
-import { request, fMoney } from '../../../../utils'
+import {request,fMoney,getUrlParam} from '../../../../utils'
 import moment from 'moment'
+import { withRouter } from 'react-router'
 const buttonStyle = {
     marginLeft: 5
 }
-
-const getFields = (title, span, formItemStyle, record = {}) => [
-    {
-        label: '纳税主体',
-        type: 'taxMain',
-        span,
-        fieldName: 'mainId',
-        formItemStyle,
-        fieldDecoratorOptions: {
-            initialValue: record.mainId,
-            rules: [{
-                required: true,
-                message: '请选择纳税主体'
-            }]
-        }
-    },
-    {
-        label: `${title}月份`,
-        fieldName: 'authMonth',
-        type: 'monthPicker',
-        span,
-        formItemStyle,
-        componentProps: {
-            format: 'YYYY-MM'
-        },
-        fieldDecoratorOptions: {
-            initialValue: moment(record.authMonth),
-            rules: [{
-                required: true,
-                message: `请选择${title}月份`
-            }]
-        }
-    }
-]
-const getColumns = (context) => [
-    {
+const getColumns =(context)=>[
+   {
         title: '纳税主体',
         dataIndex: 'mainName',
     }, {
@@ -81,15 +48,15 @@ const getColumns = (context) => [
     }
 ];
 
-export default class LandPriceManage extends Component {
-    state = {
-        visible: false, // 控制Modal是否显示
-        opid: "", // 当前操作的记录
-        readOnly: false,
-        updateKey: Date.now(),
-        filters: undefined,
-        status: undefined,
-        statusParam: undefined
+class LandPriceManage extends Component{
+    state={
+        visible:false, // 控制Modal是否显示
+        opid:"", // 当前操作的记录
+        readOnly:false,
+        updateKey:Date.now(),
+        statusLoading:false,
+        status:undefined,
+        statusParam:undefined
     }
     hideModal() {
         this.setState({ visible: false });
@@ -112,54 +79,131 @@ export default class LandPriceManage extends Component {
             }
         })
     }
-    filterChange = (values) => {
-        values.authMonth = moment(values.authMonth).format('YYYY-MM');
-        this.setState({ updateKey: Date.now(), filters: values });
-        this.updateStatus(values);
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({updateKey:Date.now()})
+        }
+
     }
-    render() {
-        return (<div>
-            <CardSearch feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />
-            <Card title='其他业务进项税额转出台账' extra={(<div>
-                {this.state.status &&
-                    <span>
-                        <span style={buttonStyle}>
-                            <label>状态：</label>
-                            <span>{this.state.status.text}</span>
-                        </span>
-                        <Divider type="vertical" />
-                        <span style={buttonStyle}>
-                            <label>提交时间：</label>
-                            <span>{this.state.status.submitDate}</span>
-                        </span>
-                    </span>
+    render(){
+        const {search} = this.props.location;
+        let disabled = !!search;
+        const getFields = (title,span,formItemStyle,record={})=> [
+            {
+                label:'纳税主体',
+                type:'taxMain',
+                span,
+                fieldName:'mainId',
+                formItemStyle,
+                componentProps:{
+                    disabled,
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                    rules:[{
+                        required:true,
+                        message:'请选择纳税主体'
+                    }]
                 }
-                <FeildModal
-                    style={buttonStyle}
-                    title='提交'
-                    buttonIcon={<Icon type="check" />}
-                    url='/account/income/taxout/submit'
-                    feilds={getFields('提交', 24, {
-                        labelCol: {
-                            span: 6
-                        },
-                        wrapperCol: {
-                            span: 11
-                        }
-                    }, this.state.statusParam)}
-                    onSuccess={this.updateStatus}
-                ></FeildModal>
-                <FeildModal
-                    style={buttonStyle}
-                    title='撤回提交'
-                    buttonIcon={<Icon type="rollback" />}
-                    url='/account/income/taxout/revoke'
-                    feilds={getFields('撤回', 24, {
-                        labelCol: {
-                            span: 6
-                        },
-                        wrapperCol: {
-                            span: 11
+            },
+            {
+                label:`${title}月份`,
+                fieldName:'authMonth',
+                type:'monthPicker',
+                span,
+                formItemStyle,
+                componentProps:{
+                    format:'YYYY-MM',
+                    disabled,
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
+                    rules:[{
+                        required:true,
+                        message:`请选择${title}月份`
+                    }]
+                }
+            }
+        ]
+        return(
+                <SearchTable
+                    doNotFetchDidMount={true}
+                    searchOption={{
+                        fields:getFields('查询',8)
+                    }}
+                    backCondition={this.updateStatus}
+                    tableOption={{
+                        scroll:{x:'100%'},
+                        pageSize:10,
+                        columns:getColumns(this),
+                        url:'/account/income/taxout/list',
+                        key:this.state.updateKey,
+                        cardProps:{
+                            extra:(<div>
+                                    { this.state.status &&
+                                    <span>
+                                        <span style={buttonStyle}>
+                                            <label>状态：</label>
+                                            <span>{this.state.status.text}</span>
+                                        </span> 
+                                        <Divider type="vertical" />
+                                        <span style={buttonStyle}>
+                                            <label>提交时间：</label>
+                                            <span>{this.state.status.submitDate}</span>
+                                        </span>
+                                    </span>
+                                    }
+                                <FeildModal
+                                    style={buttonStyle}
+                                    title='提交'
+                                    buttonIcon = {<Icon type="check" />}
+                                    url='/account/income/taxout/submit'
+                                    feilds={getFields('提交',24,{
+                                        labelCol:{
+                                            span:6
+                                        },
+                                        wrapperCol:{
+                                            span:11
+                                        }
+                                    },this.state.statusParam)}
+                                    onSuccess={this.updateStatus}
+                                 />
+                                <FeildModal 
+                                    style={buttonStyle}
+                                    title='撤回提交'
+                                    buttonIcon={<Icon type="rollback" />}
+                                    url='/account/income/taxout/revoke'
+                                    feilds={getFields('撤回',24,{
+                                        labelCol:{
+                                            span:6
+                                        },
+                                        wrapperCol:{
+                                            span:11
+                                        }
+                                    },this.state.statusParam)}
+                                    onSuccess={this.updateStatus}
+                                />
+                                <FileExport url={`/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
+                                <FileImportModal
+                                    style={buttonStyle}
+                                    url="/account/income/taxout/upload"
+                                    title="导入"
+                                    fields={getFields('导入',24,{
+                                        labelCol:{
+                                            span:6
+                                        },
+                                        wrapperCol:{
+                                            span:11
+                                        }
+                                    })}
+                                    onSuccess={()=>{
+                                        
+                                        this.setState({updateKey:Date.now()})
+                                    }}
+                                />
+                            </div>),
+                            title:'其他业务进项税额转出台账'
                         }
                     }, this.state.statusParam)}
                     onSuccess={this.updateStatus}
@@ -198,3 +242,4 @@ export default class LandPriceManage extends Component {
         )
     }
 }
+export default withRouter(LandPriceManage)

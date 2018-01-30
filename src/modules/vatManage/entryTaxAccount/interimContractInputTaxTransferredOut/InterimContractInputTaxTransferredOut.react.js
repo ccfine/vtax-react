@@ -6,7 +6,9 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Popconfirm,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
-import {getFields,fMoney,request} from '../../../../utils'
+import {getFields,fMoney,request,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment'
 import PageTwo from './TabPage2.r'
 import PopModal from './popModal'
 
@@ -245,6 +247,15 @@ class InterimContractInputTaxTransferredOut extends Component {
             }
         });
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({
+                updateKey:Date.now()
+            })
+        }
+
+    }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
             this.setState({updateKey:props.updateKey});
@@ -252,6 +263,8 @@ class InterimContractInputTaxTransferredOut extends Component {
     }
     render(){
         const {updateKey,filters,selectedRowKeys,selectedRows,modalUpDateKey,visible,dataSource} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -269,7 +282,11 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -283,8 +300,10 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
+                                            disabled,
                                         },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -348,47 +367,50 @@ class InterimContractInputTaxTransferredOut extends Component {
                                 ...filters
                             }}
                         />
-                        {
-                            dataSource.length > 0 && <span>
-                                {
-                                    parseInt(dataSource[0].status, 0)=== 1 ?
-                                        <span>
-                                            <Button size='small' onClick={(e)=>this.handleSubmit(e,'提交')} style={{marginRight:5}}>
-                                                <Icon type="check" />
-                                                提交
-                                            </Button>
-                                            <Button size='small' onClick={(e)=>this.handleSubmit(e,'重算')} style={{marginRight:5}}>
-                                                <Icon type="retweet" />
-                                                重算
-                                            </Button>
-                                            <Button disabled={!selectedRowKeys} size='small' style={{marginRight:5}} onClick={()=>{
-                                                this.toggleModalVisible(true)
-                                                this.setState({
-                                                    modalUpDateKey:Date.now()
-                                                })
-                                            }}>
-                                                <Icon type="edit" />
-                                                设置税务分摊比例
-                                            </Button>
-                                            {/*<Button size='small' style={{marginRight:5}}>
-                                                <Icon type="form" />
-                                                差异调整凭证
-                                            </Button>*/}
-                                        </span>
-                                        :
-                                        <span>
-                                            <Button size='small' onClick={(e)=>this.handleSubmit(e,'撤回')} style={{marginRight:5}}>
-                                                <Icon type="rollback" />
-                                                撤回提交
-                                            </Button>
-                                        </span>
-                                }
-                                </span>
-                        }
+                        <Button
+                            disabled={!(dataSource.length > 0 && parseInt(dataSource[0].status, 0)=== 1)}
+                            size='small'
+                            onClick={(e)=>this.handleSubmit(e,'提交')}
+                            style={{marginRight:5}}>
+                            <Icon type="check" />
+                            提交
+                        </Button>
+                        <Button
+                            disabled={!(dataSource.length > 0 && parseInt(dataSource[0].status, 0)=== 1)}
+                            size='small'
+                            onClick={(e)=>this.handleSubmit(e,'重算')}
+                            style={{marginRight:5}}>
+                            <Icon type="retweet" />
+                            重算
+                        </Button>
+                        <Button
+                            disabled={!selectedRowKeys}
+                            size='small'
+                            style={{marginRight:5}}
+                                onClick={()=>{
+                                this.toggleModalVisible(true)
+                                this.setState({
+                                    modalUpDateKey:Date.now()
+                                })
+                            }}>
+                            <Icon type="edit" />
+                            设置税务分摊比例
+                        </Button>
+                        {/*<Button size='small' style={{marginRight:5}}>
+                            <Icon type="form" />
+                            差异调整凭证
+                        </Button>*/}
+                        <Button
+                            disabled={!(dataSource.length > 0 && parseInt(dataSource[0].status, 0)=== 2)}
+                            size='small'
+                            onClick={(e)=>this.handleSubmit(e,'撤回')}
+                            style={{marginRight:5}}>
+                            <Icon type="rollback" />
+                            撤回提交
+                        </Button>
+                    </div>
 
-                        </div>
-
-                        }
+                }
                       style={{marginTop:10}}
                 >
                     <AsyncTable url="/account/income/taxContract/adjustment/list"
@@ -410,9 +432,9 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         type:'radio',
                                     },
                                     onDataChange:(dataSource)=>{
-                                      this.setState({
-                                          dataSource
-                                      })
+                                        this.setState({
+                                            dataSource
+                                        })
                                     },
                                     renderFooter:data=>{
                                         return (
@@ -445,4 +467,4 @@ class InterimContractInputTaxTransferredOut extends Component {
         )
     }
 }
-export default Form.create()(InterimContractInputTaxTransferredOut)
+export default Form.create()(withRouter(InterimContractInputTaxTransferredOut))

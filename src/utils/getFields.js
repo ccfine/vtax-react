@@ -104,7 +104,7 @@ const getFields = (form,fieldsData=[]) =>{
         }else if(type==='select'){
             return (
                 <Col key={i} span={item['span'] || 8}>
-                    <FormItem label={item['label']} {...formItemStyle}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(

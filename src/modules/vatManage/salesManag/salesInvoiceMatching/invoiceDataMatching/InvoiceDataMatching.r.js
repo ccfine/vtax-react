@@ -3,25 +3,35 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {request,fMoney} from '../../../../../utils'
+import {request,fMoney,getUrlParam} from '../../../../../utils'
 import {SearchTable,FileExport} from '../../../../../compoments'
-
-const searchFields = (getFieldValue,setFieldsValue)=> {
+import { withRouter } from 'react-router'
+import moment from 'moment';
+const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            componentProps:{
+                disabled,
+            },
             fieldDecoratorOptions:{
-
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
             },
         },
         {
             label:'开票时间',
             fieldName:'billingDate',
             type:'rangePicker',
-            span:6
+            span:6,
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+            }
         },
         {
             label:'项目名称',
@@ -264,7 +274,7 @@ const getColumns = context => [
         }
     },
 ]
-export default class InvoiceDataMatching extends Component{
+class InvoiceDataMatching extends Component{
     state={
         tableKey:Date.now(),
         searchFieldsValues:{
@@ -309,8 +319,18 @@ export default class InvoiceDataMatching extends Component{
             message.error(`数据匹配失败:${err.message}`)
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+    }
     render(){
         const {tableKey,searchFieldsValues,matching,hasData} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 style={{
@@ -318,7 +338,7 @@ export default class InvoiceDataMatching extends Component{
                 }}
                 spinning={matching}
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -384,3 +404,4 @@ export default class InvoiceDataMatching extends Component{
         )
     }
 }
+export default withRouter(InvoiceDataMatching)

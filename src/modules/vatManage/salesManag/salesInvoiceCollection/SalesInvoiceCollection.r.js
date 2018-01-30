@@ -4,69 +4,85 @@
 import React, { Component } from 'react'
 import {Button,Icon,Modal} from 'antd'
 import {SearchTable,FileExport} from '../../../../compoments'
-import {fMoney} from '../../../../utils'
+import {fMoney,getUrlParam} from '../../../../utils'
 import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
 
-const searchFields = [
-    {
-        label:'纳税主体',
-        type:'taxMain',
-        fieldName:'mainId',
-    },
-    {
-        label:'发票号码',
-        type:'input',
-        fieldName:'invoiceNum',
-        fieldDecoratorOptions:{},
-        componentProps:{}
-    },
-    {
-        label:'税收分类编码',
-        type:'input',
-        fieldName:'taxClassificationCoding',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'开票日期',
-        type:'rangePicker',
-        fieldName:'billingDate',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'税率',
-        type:'numeric',
-        fieldName:'taxRate',
-        componentProps:{
-            valueType:'int'
-        },
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'商品名称',
-        type:'input',
-        fieldName:'commodityName',
-    },
-    {
-        label:'发票类型',
-        fieldName:'invoiceType',
-        type:'select',
-        options:[
-            {
-                text:'专票',
-                value:'s'
+const searchFields=(disabled)=> {
+    return [
+        {
+            label:'纳税主体',
+            type:'taxMain',
+            fieldName:'mainId',
+            componentProps:{
+                disabled,
             },
-            {
-                text:'普票',
-                value:'c'
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+            },
+        },
+        {
+            label:'发票号码',
+            type:'input',
+            fieldName:'invoiceNum',
+            fieldDecoratorOptions:{},
+            componentProps:{}
+        },
+        {
+            label:'税收分类编码',
+            type:'input',
+            fieldName:'taxClassificationCoding',
+            fieldDecoratorOptions:{}
+        },
+        {
+            label:'开票日期',
+            type:'rangePicker',
+            fieldName:'billingDate',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
             }
-        ]
-    },
-]
+        },
+        {
+            label:'税率',
+            type:'numeric',
+            fieldName:'taxRate',
+            componentProps:{
+                valueType:'int'
+            },
+            fieldDecoratorOptions:{}
+        },
+        {
+            label:'商品名称',
+            type:'input',
+            fieldName:'commodityName',
+        },
+        {
+            label:'发票类型',
+            fieldName:'invoiceType',
+            type:'select',
+            options:[
+                {
+                    text:'专票',
+                    value:'s'
+                },
+                {
+                    text:'普票',
+                    value:'c'
+                }
+            ]
+        },
+    ]
+}
 const getColumns = context =>[
     {
         title:'操作',
@@ -174,7 +190,7 @@ const getColumns = context =>[
         }
     }
 ];
-export default class Test extends Component{
+class Test extends Component{
     state={
         visible:false,
         modalConfig:{
@@ -204,12 +220,22 @@ export default class Test extends Component{
             tableKey:Date.now()
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+    }
     render(){
         const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields
+                    fields:searchFields(disabled)
                 }}
                 tableOption={{
                     key:tableKey,
@@ -273,3 +299,4 @@ export default class Test extends Component{
         )
     }
 }
+export default withRouter(Test)

@@ -4,26 +4,32 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {fMoney,request} from '../../../../utils'
-import {SearchTable} from '../../../../compoments'
 import {Button,Icon,message} from 'antd'
+import {SearchTable} from '../../../../compoments'
 import PageTwo from './TabPage2.r'
+import {fMoney,request,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 
-const searchFields = (getFieldValue)=> {
+const searchFields =(disabled)=> (getFieldValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            componentProps:{
+                disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
                 rules:[
                     {
                         required:true,
                         message:'请选择纳税主体'
                     }
                 ]
-            },
+            }
         }, {
             label:'项目名称',
             fieldName:'projectId',
@@ -54,8 +60,11 @@ const searchFields = (getFieldValue)=> {
             type:'monthPicker',
             span:6,
             componentProps:{
+                format:'YYYY-MM',
+                disabled
             },
             fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -148,7 +157,7 @@ const columns= [
         render:text=>fMoney(text),
     }
 ];
-export default class LandPriceDeductionDetails extends Component{
+class LandPriceDeductionDetails extends Component{
     state={
         updateKey:Date.now(),
         searchFieldsValues:{
@@ -223,6 +232,19 @@ export default class LandPriceDeductionDetails extends Component{
             }
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({
+                searchFieldsValues:{
+                    mainId:getUrlParam('mainId') || undefined,
+                    authMonth:moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        }
+    }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
             this.setState({updateKey:props.updateKey});
@@ -232,13 +254,15 @@ export default class LandPriceDeductionDetails extends Component{
     render(){
         const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,tableUrl,statusParam,dataSource} = this.state;
         const {mainId,authMonth} = this.state.searchFieldsValues;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <div>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields,
+                        fields:searchFields(disabled),
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -248,8 +272,8 @@ export default class LandPriceDeductionDetails extends Component{
                             if(JSON.stringify(values) === "{}"){
                                 this.setState({
                                     searchFieldsValues:{
-                                        mainId:undefined,
-                                        authMonth:undefined
+                                        mainId:(disabled && getUrlParam('mainId')) || undefined,
+                                        authMonth:(disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')) || undefined,
                                     }
                                 })
                             }else if(values.mainId || values.authMonth){
@@ -346,3 +370,4 @@ export default class LandPriceDeductionDetails extends Component{
         )
     }
 }
+export default withRouter(LandPriceDeductionDetails)
