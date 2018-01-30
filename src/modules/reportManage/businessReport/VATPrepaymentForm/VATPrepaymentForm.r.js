@@ -157,7 +157,7 @@ export default class MathSheet extends React.Component {
         super(props)
         this.onChange = this.onChange.bind(this);
         this.state = {
-            'A1': {key: 'A1', value: '200', expr: '200'},
+            'A1': {key: 'A1', value: '200', expr: '200',readOnly:true},
             'A2': {key: 'A2', value: '200', expr: '=A1+A3', className:'equation'},
             'A3': {key: 'A3', value: '', expr: ''},
             'A4': {key: 'A4', value: '', expr: ''},

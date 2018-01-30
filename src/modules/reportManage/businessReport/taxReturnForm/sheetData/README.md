@@ -1,5 +1,5 @@
 #Basic Usage
-sheetData file should Export data like array.
+create file and Export data like array.
 ```js
 //example
 export default [
