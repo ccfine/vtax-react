@@ -133,20 +133,22 @@ class DeclareFile extends Component {
                                     )}
                                 </FormItem>
                             </Col>
-                            <Col span={8}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            <Col span={8} style={{textAlign:'right'}}>
+                                <FormItem>
+                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                </FormItem>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
                 <Card title="查询结果"
                       extra={<div>
-                          <Button disabled={!selectedRowKeys} onClick={()=>this.showModal('add')} style={buttonStyle}>
+                          <Button disabled={!selectedRowKeys} size='small' onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />
                               查看附件
                           </Button>
-                          <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                          <Button size='small' onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="search" />
                               查看
                           </Button>
@@ -159,7 +161,7 @@ class DeclareFile extends Component {
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,
-                                    size:'middle',
+                                    size:'small',
                                     columns:columns,
                                     rowSelection:rowSelection
                                 }} />
