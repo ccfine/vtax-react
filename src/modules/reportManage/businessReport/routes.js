@@ -5,14 +5,14 @@
  */
 import React from 'react'
 import {wrapPage} from '../../../compoments'
-
+import RoomTransactionFile from './roomTransactionFile'
+import PrePaidSalesQuery from './prePaidHousingSales'
+import TaxReturnForm from './taxReturnForm'
 const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
 const VATPrepaymentForm =()=><div>增值税预缴表</div>
-const RoomTransactionFile =()=><div>房间交易档案</div>
 const RoomFileSummaryQuery =()=><div>房间档案汇总查询</div>
 const InterimContractInputTaxTransferredOutQuery =()=><div>跨期合同进项税额转出查询</div>
 const LandPriceDeductionDetails =()=><div>土地价款扣除明细查询</div>
-const PrePaidSalesQuery =()=><div>售房预缴查询</div>
 const TaxpayersQuery =()=><div>纳税主体查询</div>
 const TaxIncentives =()=><div>税收优惠</div>
 const TaxFileQuery =()=><div>税务档案查询</div>
@@ -136,6 +136,15 @@ const BusinessReport_Routes = [
         path:`${PATH}/declareQuery`,
         component:wrapPage('申报查询',DeclareQuery),
         name:'申报查询',
+        icon:{
+            url:`${ICON_URL_PATH}declareQuery.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        exact:true,
+    },{
+        path:`${PATH}/taxReturn`,
+        component:wrapPage('纳税申报表',TaxReturnForm),
+        name:'纳税申报表',
         icon:{
             url:`${ICON_URL_PATH}declareQuery.svg`,
             backgroundColor:'#2E8A57'

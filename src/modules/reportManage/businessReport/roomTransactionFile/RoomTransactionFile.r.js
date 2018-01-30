@@ -1,0 +1,164 @@
+/**
+ * Created by liurunbin on 2018/1/29.
+ */
+import React,{Component} from 'react'
+import {SearchTable} from '../../../../compoments'
+import {fMoney} from '../../../../utils'
+const searchFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:6,
+        fieldDecoratorOptions:{
+
+        },
+    },
+    {
+        label:'项目名称',
+        fieldName:'projectId',
+        type:'asyncSelect',
+        span:6,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/project/list/${getFieldValue('mainId')}`,
+        }
+    },
+    {
+        label:'项目分期',
+        fieldName:'stagesId',
+        type:'asyncSelect',
+        span:6,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('projectId') || false,
+            url:`/project/stages/${getFieldValue('projectId') || ''}`,
+        }
+    },
+    {
+        label:'房号',
+        fieldName:'roomNumber',
+        type:'input',
+        span:6
+    },
+    {
+        label:'客户名称',
+        fieldName:'customerName',
+        type:'input',
+        span:6
+    },
+    {
+        label:'发票号码',
+        fieldName:'invoiceNum',
+        type:'input',
+        span:6
+    },
+    {
+        label:'发票代码',
+        fieldName:'invoiceCode',
+        type:'input',
+        span:6
+    },
+    {
+        label:'交易日期',
+        fieldName:'transactionDate',
+        type:'rangePicker',
+        span:6
+    },
+    {
+        label:'匹配状态',
+        fieldName:'matchingStatus',
+        type:'select',
+        span:6,
+        options:[
+            {
+                text:'未匹配',
+                value:'0'
+            },
+            {
+                text:'已匹配',
+                value:'1'
+            }
+        ]
+    },
+]
+const columns = [
+    {
+        title:'纳税主体',
+        dataIndex:'mainName'
+    },
+    {
+        title:'客户名称',
+        dataIndex:'customerName'
+    },
+    {
+        title:'身份证号/纳税识别号',
+        dataIndex:'taxIdentificationCode'
+    },
+    {
+        title:'发票号码',
+        dataIndex:'invoiceNum'
+    },
+    {
+        title:'发票代码',
+        dataIndex:'invoiceCode'
+    },
+    {
+        title:'楼栋名称',
+        dataIndex:'buildingName'
+    },
+    {
+        title:'单元',
+        dataIndex:'element'
+    },
+    {
+        title:'房号',
+        dataIndex:'roomNumber'
+    },
+    {
+        title:'房间编码',
+        dataIndex:'roomCode'
+    },
+    {
+        title:'成交总价',
+        dataIndex:'totalPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
+    },
+    {
+        title:'房间面积',
+        dataIndex:'roomArea'
+    },
+    {
+        title:'匹配状态',
+        dataIndex:'matchingStatus',
+        render:text=>parseInt(text,0) === 0 ? '未匹配' : '已匹配' //0:未匹配,1:已匹配
+    },
+    {
+        title:'交易日期',
+        dataIndex:'transactionDate'
+    },
+]
+class RoomTransactionFile extends Component{
+    render(){
+        return(
+            <SearchTable
+                searchOption={{
+                    fields:searchFields
+                }}
+                tableOption={{
+                    columns,
+                    url:'/output/room/files/list'
+                }}
+            >
+            </SearchTable>
+        )
+    }
+}
+
+export default RoomTransactionFile

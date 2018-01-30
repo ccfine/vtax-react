@@ -163,3 +163,13 @@ form .ant-pagination .ant-select{
   margin-right:30px;
   padding: 2px 4px
 }
+
+
+/*data grid*/
+table.data-grid{
+  margin:auto;
+  width:100%
+}
+.data-grid-container .data-grid .cell{
+  vertical-align: middle;
+}
