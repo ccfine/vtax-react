@@ -2,9 +2,111 @@
  * Created by liurunbin on 2018/1/8.
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button} from 'antd'
-import {AsyncTable} from '../../../../../compoments'
-import {getFields} from '../../../../../utils'
+import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
+import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
+import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+const getColumns = context => [
+    {
+        title: '操作',
+        key: 'actions',
+        render: (text, record) => (
+            <span style={{
+                color:'#f5222d',
+                cursor:'pointer'
+            }} onClick={()=>{
+                if(parseInt(record.matchingStatus,0) ===1){
+                    const errorModalRef = Modal.warning({
+                        title: '友情提醒',
+                        content: '只能删除未匹配的数据!',
+                        okText: '确定',
+                        onOk:()=>{
+                            errorModalRef.destroy()
+                        },
+                        onCancel() {
+                            errorModalRef.destroy()
+                        },
+                    });
+                    return false;
+                }
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record.id,()=>{
+                            modalRef && modalRef.destroy();
+                            context.refreshTable()
+                        })
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }}>
+                删除
+            </span>
+        )
+    },
+    {
+        title:'纳税主体',
+        dataIndex:'mainName'
+    },
+    {
+        title:'客户名称',
+        dataIndex:'customerName'
+    },
+    {
+        title:'身份证号/纳税识别号',
+        dataIndex:'taxIdentificationCode'
+    },
+    {
+        title:'发票号码',
+        dataIndex:'invoiceNum'
+    },
+    {
+        title:'发票代码',
+        dataIndex:'invoiceCode'
+    },
+    {
+        title:'楼栋名称',
+        dataIndex:'buildingName'
+    },
+    {
+        title:'单元',
+        dataIndex:'element'
+    },
+    {
+        title:'房号',
+        dataIndex:'roomNumber'
+    },
+    {
+        title:'房间编码',
+        dataIndex:'roomCode'
+    },
+    {
+        title:'成交总价',
+        dataIndex:'totalPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
+    },
+    {
+        title:'房间面积',
+        dataIndex:'roomArea'
+    },
+    {
+        title:'匹配状态',
+        dataIndex:'matchingStatus',
+        render:text=>parseInt(text,0) === 0 ? '未匹配' : '已匹配' //0:未匹配,1:已匹配
+    },
+    {
+        title:'交易日期',
+        dataIndex:'transactionDate'
+    },
+]
 class RoomTransactionFile extends Component{
     state={
         /**
@@ -20,35 +122,67 @@ class RoomTransactionFile extends Component{
         tableUpDateKey:Date.now(),
 
         selectedRowKeys:null,
-
-
-        //项目名称
-        projectItems:[],
-
-        //项目分析
-        projectLimitItems:[]
     }
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values)
+                for(let key in values){
+                    if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
+                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
+                        values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
+                        values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
+                        values[key] = undefined;
+                    }
+                    if(moment.isMoment(values[key])){
+                        //格式化一下时间 YYYY-MM类型
+                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM');
+                        }
+
+                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                         values[key] = values[key].format('YYYY-MM-DD');
+                         }*/
+                    }
+                }
                 this.setState({
                     selectedRowKeys:null,
                     filters:values
                 },()=>{
-                    this.setState({
-                        tableUpDateKey:Date.now()
-                    })
+                    this.refreshTable()
                 });
             }
         });
-
+    }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit()
+        }else{
+            this.handleSubmit()
+        }
+    }
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
+    deleteRecord = (id,cb) => {
+        request.delete(`/output/room/files/delete/${id}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success('删除成功!');
+                    cb && cb()
+                }else{
+                    message.error(`删除失败:${data.msg}`)
+                }
+            })
     }
     render(){
         const {tableUpDateKey,filters} = this.state;
-        const initData = {}
         const {getFieldValue} = this.props.form;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent',marginTop:-16}} >
                 <Card
@@ -66,13 +200,16 @@ class RoomTransactionFile extends Component{
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
                                         fieldDecoratorOptions:{
-
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                         },
                                     },
                                     {
                                         label:'项目名称',
-                                        fieldName:'123',
+                                        fieldName:'projectId',
                                         type:'asyncSelect',
                                         span:6,
                                         componentProps:{
@@ -85,77 +222,96 @@ class RoomTransactionFile extends Component{
                                     },
                                     {
                                         label:'项目分期',
-                                        fieldName:'111',
+                                        fieldName:'stagesId',
                                         type:'asyncSelect',
                                         span:6,
                                         componentProps:{
                                             fieldTextName:'itemName',
                                             fieldValueName:'id',
                                             doNotFetchDidMount:true,
-                                            fetchAble:getFieldValue('123') || false,
-                                            url:`/project/stages/${getFieldValue('123') || ''}`,
+                                            fetchAble:getFieldValue('projectId') || false,
+                                            url:`/project/stages/${getFieldValue('projectId') || ''}`,
                                         }
                                     },
                                     {
                                         label:'房号',
-                                        fieldName:'taxableItem',
+                                        fieldName:'roomNumber',
                                         type:'input',
-                                        span:6,
-                                        fieldDecoratorOptions:{
-                                            initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
-                                        }
+                                        span:6
                                     },
                                     {
                                         label:'客户名称',
-                                        fieldName:'4423',
+                                        fieldName:'customerName',
                                         type:'input',
-                                        span:6,
-                                        fieldDecoratorOptions:{
-                                            initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
-                                        }
+                                        span:6
                                     },
                                     {
                                         label:'发票号码',
-                                        fieldName:'3',
+                                        fieldName:'invoiceNum',
                                         type:'input',
-                                        span:6,
-                                        fieldDecoratorOptions:{
-                                            initialValue:initData['taxableItem'],
-                                        },
-                                        componentProps:{
-                                            disabled:true
-                                        }
+                                        span:6
                                     },
                                     {
                                         label:'发票代码',
-                                        fieldName:'12441',
+                                        fieldName:'invoiceCode',
                                         type:'input',
+                                        span:6
+                                    },
+                                    {
+                                        label:'交易日期',
+                                        fieldName:'transactionDate',
+                                        type:'rangePicker',
                                         span:6,
-                                        fieldDecoratorOptions:{
-                                            initialValue:initData['taxableItem'],
-                                        },
                                         componentProps:{
-                                            disabled:true
+                                            disabled,
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
                                         }
+                                    },
+                                    {
+                                        label:'匹配状态',
+                                        fieldName:'matchingStatus',
+                                        type:'select',
+                                        span:6,
+                                        options:[
+                                            {
+                                                text:'未匹配',
+                                                value:'0'
+                                            },
+                                            {
+                                                text:'已匹配',
+                                                value:'1'
+                                            }
+                                        ]
                                     },
                                 ])
                             }
 
-                            <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            <Col style={{width:'100%',textAlign:'right'}}>
+                                <Button size="small" style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button size="small" style={{marginTop:5,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
-                <Card style={{marginTop:10}}>
-                    <AsyncTable url={'/'}
+                <Card style={{marginTop:10}} extra={
+                    <div>
+                        <FileImportModal
+                            url="/output/room/files/upload"
+                            onSuccess={()=>{
+                                this.refreshTable()
+                            }}
+                            style={{marginRight:5}} />
+                        <FileExport
+                            url='/output/room/files/download'
+                            title="下载导入模板"
+                            size="small"
+                            setButtonStyle={{marginRight:5}}
+                        />
+                    </div>
+                }>
+                    <AsyncTable url={'/output/room/files/list'}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -163,7 +319,21 @@ class RoomTransactionFile extends Component{
                                     pagination:true,
                                     pageSize:10,
                                     size:'small',
-                                    columns:[]
+                                    renderFooter:data=>{
+                                        return(
+                                            <div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                                    本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
+                                                </div>
+                                                <div style={{marginBottom:10}}>
+                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                                    全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    },
+                                    columns:getColumns(this)
                                 }} />
                 </Card>
             </Layout>
@@ -171,4 +341,4 @@ class RoomTransactionFile extends Component{
     }
 }
 
-export default Form.create()(RoomTransactionFile)
+export default Form.create()(withRouter(RoomTransactionFile))

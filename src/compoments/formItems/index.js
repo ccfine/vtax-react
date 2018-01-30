@@ -7,11 +7,17 @@ import YearSelect from './YearSelect.r'
 import TaxClassCodingSelect from './TaxClassCodingSelect.r'
 import NumericInput from './NumericInput.r'
 import FileUpload from './FileUpload.r'
+import RoomCodeSelect from './RoomCodeSelect.r'
+import MonthRangePicker from './MonthRangePicker.r'
+import Industry from './Industry.r'
 export default {
     TaxMain,
     AsyncSelect,
     YearSelect,
     TaxClassCodingSelect,
     NumericInput,
-    FileUpload
+    FileUpload,
+    RoomCodeSelect,
+    MonthRangePicker,
+    Industry
 }

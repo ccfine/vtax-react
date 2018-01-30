@@ -1,3 +1,6 @@
+/*
+select位置偏下问题源于ant版本，升级到3.1x即可
+*/
 .App {
   text-align: center;
 }
@@ -33,13 +36,13 @@
 }
 .ant-table{
   border-radius:0;
+  line-height:1.2;
 }
 .ant-table table,.ant-table-small{
   border-radius:0;
   border:none;
 }
-.ant-table-scroll{
-  border-right:1px solid #ccc;
+.ant-table-scroll .ant-table-body{
 }
 .ant-table-fixed-left td{
   border-left:1px solid #ccc;
@@ -48,6 +51,7 @@
 .ant-table-thead th{
   border-top:1px solid #ccc;
   border-bottom:1px solid #ccc;
+  text-align: center!important;
 }
 .ant-table-body td,.ant-table-thead th{
   border-right:1px solid #ccc;
@@ -65,7 +69,13 @@
   border-bottom:1px solid #ccc!important;
 }
 
-.ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td{
+.ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td,
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td{
+  padding:3px;
+}
+.ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,
+.ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td，
+.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td{
   padding:3px;
 }
 .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,.ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td{
@@ -76,6 +86,19 @@
 }
 .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
   background:#fafafa;
+}
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th,.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th{
+  background:#fafafa;
+}
+.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td,.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td{
+  padding:3px
+}
+
+.table-money,.text-right{
+  text-align: right;
+}
+.text-center{
+  text-align: center;
 }
 /*card*/
 .ant-card-head{
@@ -112,4 +135,41 @@
   margin-bottom:0;
 }
 
+/*Tab更紧凑，去除右边的填充，覆盖 .ant-tabs-nav .ant-tabs-tab 设置；modify by lchunxiu on 2018.1.10*/
+.ant-tabs-small .ant-tabs-nav .ant-tabs-tab{
+  margin-right:0;
+}
+
 /*button*/
+
+
+
+/*form item*/
+.ant-form-item-label,.ant-form-item-control{
+  line-height:35px;
+}
+/*重写分页里面的select width*/
+form .ant-pagination .ant-select{
+  width: auto;
+}
+
+/*amount table class*/
+.amount-code{
+  margin: 0 1px;
+  background: #f2f4f5;
+  border-radius: 3px;
+  font-size: .9em;
+  border:1px solid #eee;
+  margin-right:30px;
+  padding: 2px 4px
+}
+
+
+/*data grid*/
+table.data-grid{
+  margin:auto;
+  width:100%
+}
+.data-grid-container .data-grid .cell{
+  vertical-align: middle;
+}

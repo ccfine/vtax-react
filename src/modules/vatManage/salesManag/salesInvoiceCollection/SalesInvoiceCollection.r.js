@@ -4,65 +4,85 @@
 import React, { Component } from 'react'
 import {Button,Icon,Modal} from 'antd'
 import {SearchTable,FileExport} from '../../../../compoments'
+import {fMoney,getUrlParam} from '../../../../utils'
 import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
 
-const searchFields = [
-    {
-        label:'纳税主体',
-        type:'taxMain',
-        fieldName:'mainId',
-    },
-    {
-        label:'发票号码',
-        type:'input',
-        fieldName:'invoiceNum',
-        fieldDecoratorOptions:{},
-        componentProps:{}
-    },
-    {
-        label:'税收分类编码',
-        type:'input',
-        fieldName:'taxClassificationCoding',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'开票日期',
-        type:'rangePicker',
-        fieldName:'billingDate',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'税率',
-        type:'input',
-        fieldName:'taxRate',
-        fieldDecoratorOptions:{}
-    },
-    {
-        label:'商品名称',
-        type:'input',
-        fieldName:'commodityName',
-    },
-    {
-        label:'发票类型',
-        fieldName:'invoiceType',
-        type:'select',
-        options:[
-            {
-                text:'专票',
-                value:'s'
+const searchFields=(disabled)=> {
+    return [
+        {
+            label:'纳税主体',
+            type:'taxMain',
+            fieldName:'mainId',
+            componentProps:{
+                disabled,
             },
-            {
-                text:'普票',
-                value:'c'
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+            },
+        },
+        {
+            label:'发票号码',
+            type:'input',
+            fieldName:'invoiceNum',
+            fieldDecoratorOptions:{},
+            componentProps:{}
+        },
+        {
+            label:'税收分类编码',
+            type:'input',
+            fieldName:'taxClassificationCoding',
+            fieldDecoratorOptions:{}
+        },
+        {
+            label:'开票日期',
+            type:'rangePicker',
+            fieldName:'billingDate',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
             }
-        ]
-    },
-]
+        },
+        {
+            label:'税率',
+            type:'numeric',
+            fieldName:'taxRate',
+            componentProps:{
+                valueType:'int'
+            },
+            fieldDecoratorOptions:{}
+        },
+        {
+            label:'商品名称',
+            type:'input',
+            fieldName:'commodityName',
+        },
+        {
+            label:'发票类型',
+            fieldName:'invoiceType',
+            type:'select',
+            options:[
+                {
+                    text:'专票',
+                    value:'s'
+                },
+                {
+                    text:'普票',
+                    value:'c'
+                }
+            ]
+        },
+    ]
+}
 const getColumns = context =>[
     {
         title:'操作',
@@ -126,6 +146,7 @@ const getColumns = context =>[
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
+        width:'75px'
     },{
         title: '购货单位',
         dataIndex: 'purchaseName',
@@ -138,18 +159,25 @@ const getColumns = context =>[
     },{
         title: '金额',
         dataIndex: 'amount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '税额',
         dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '税收分类编码',
         dataIndex: 'taxClassificationCoding',
     },{
         title: '数据来源',
         dataIndex: 'sourceType',
+        width:'60px',
         render:text=>{
             text = parseInt(text,0);
             if(text===1){
@@ -158,19 +186,11 @@ const getColumns = context =>[
             if(text===2){
                 return '外部导入'
             }
-            return ''
+            return text
         }
     }
 ];
-
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
-export default class Test extends Component{
+class Test extends Component{
     state={
         visible:false,
         modalConfig:{
@@ -179,7 +199,8 @@ export default class Test extends Component{
         tableKey:Date.now(),
         searchFieldsValues:{
 
-        }
+        },
+        hasData:false
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -199,23 +220,34 @@ export default class Test extends Component{
             tableKey:Date.now()
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+    }
     render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields,
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    }
+                    fields:searchFields(disabled)
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:20,
                     columns:getColumns(this),
                     url:'/output/invoice/collection/list',
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !==0
+                        })
+                    },
                     extra:<div>
                         <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                             <Icon type="file-add" />
@@ -223,13 +255,17 @@ export default class Test extends Component{
                         </Button>
                         <FileImportModal style={{marginRight:5}} />
                         <FileExport
-                            url={`/output/invoice/collection/export?${parseJsonToParams(searchFieldsValues)}`}
+                            url={`output/invoice/collection/export`}
                             title="导出"
                             size="small"
+                            disabled={!hasData}
+                            params={
+                                searchFieldsValues
+                            }
                             setButtonStyle={{marginRight:5}}
                         />
                         <FileExport
-                            url='/output/invoice/collection/download'
+                            url='output/invoice/collection/download'
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}
@@ -237,7 +273,25 @@ export default class Test extends Component{
                     </div>,
                     scroll:{
                         x:'180%'
-                    }
+                    },
+                    renderFooter:data=>{
+                        return(
+                            <div>
+                                <div style={{marginBottom:10}}>
+                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                    本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                    本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                    本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                </div>
+                                <div style={{marginBottom:10}}>
+                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                    总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                    总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                    总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                </div>
+                            </div>
+                        )
+                    },
                 }}
             >
                 <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
@@ -245,3 +299,4 @@ export default class Test extends Component{
         )
     }
 }
+export default withRouter(Test)

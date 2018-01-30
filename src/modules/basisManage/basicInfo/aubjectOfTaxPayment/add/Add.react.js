@@ -139,6 +139,7 @@ class Add extends Component {
     handleSubmit = (e) => {
         e && e && e.preventDefault();
          this.props.form.validateFields((err, values) => {
+             console.log(err, values);
          if (!err) {
                const type = this.props.modalConfig.type;
                const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
@@ -149,6 +150,7 @@ class Add extends Component {
                    jbxx:{
                        ...values.jbxx,
                        industry:this.state.industry.key,
+                       status:this.state.status,
                        id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
                        operatingProvince: values.jbxx.operatingProvince[0],
                        operatingCity:values.jbxx.operatingProvince[1],
@@ -171,6 +173,7 @@ class Add extends Component {
                }
 
                console.log(data);
+               debugger
 
                this.mounted && this.setState({
                    submitLoading: true
@@ -181,6 +184,9 @@ class Add extends Component {
                        .then(({data}) => {
                            if (data.code === 200) {
                                message.success('新增成功！', 4)
+                               //编辑成功，关闭当前窗口,刷新父级组件
+                               this.props.toggleModalVisible(false);
+                               this.props.updateTable();
                                this.setStatus(2);
                                this.mounted && this.setState({
                                    submitLoading: false,
@@ -230,7 +236,11 @@ class Add extends Component {
                            })
                        })
                }
-           }
+             }else{
+                if(err.jbxx){
+                    this.setState({ activeKey:'1' });
+                }
+             }
         })
     }
     handleDelete=()=>{
@@ -263,7 +273,6 @@ class Add extends Component {
         request.put(`/taxsubject/update/${(this.props.selectedRowKeys && this.props.selectedRowKeys[0]) || this.state.id}/${status}`
         )
             .then(({data}) => {
-                    console.log(data)
                 if (data.code === 200) {
                     message.success(`${mes}成功！`, 4);
                     //编辑成功，关闭当前窗口,刷新父级组件
@@ -283,7 +292,6 @@ class Add extends Component {
                 })
             })
     }
-
     fetch = (id)=> {
         this.setState({
             submitLoading: true
@@ -307,17 +315,23 @@ class Add extends Component {
                 }
             });
     }
-
-    componentDidMount() {
-
-
+    //根据id查询行业
+    getIndustryTitle=(id)=>{
+        console.log(id);
+        request.get(`/taxsubject/get/industry/${id}`)
+            .then(({data})=>{
+                if(data.code ===200){
+                    this.changeIndustry({
+                        key:data.data.key,
+                        label:data.data.title,
+                    })
+                }
+            })
     }
-
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
     }
-
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
             /**
@@ -330,6 +344,7 @@ class Add extends Component {
                 jbxx:{},
                 szjd: null,
                 industry:{},
+                activeKey:'1',
             })
         }
 
@@ -337,9 +352,10 @@ class Add extends Component {
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            if(nextProps.selectedRowKeys.length>0){
+            if(nextProps.selectedRowKeys && nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
                 this.setStatus(parseInt(nextProps.selectedRows[0].status, 0));
+                this.getIndustryTitle(nextProps.selectedRows[0].industry)
             }
 
         }
@@ -431,7 +447,7 @@ class Add extends Component {
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
-                                <TabPane tab="股东持股" key="3">
+                                <TabPane tab="股东及持股" key="3">
                                     <Shareholding
                                         type={type}
                                         defaultData={gdjcg}

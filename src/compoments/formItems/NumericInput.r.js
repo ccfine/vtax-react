@@ -1,26 +1,26 @@
 import React from 'react'
 import { Input } from 'antd';
-
-/*function formatNumber(value) {
-    value += '';
-    const list = value.split('.');
-    const prefix = list[0].charAt(0) === '-' ? '-' : '';
-    let num = prefix ? list[0].slice(1) : list[0];
-    let result = '';
-    while (num.length > 3) {
-        result = `,${num.slice(-3)}${result}`;
-        num = num.slice(0, num.length - 3);
-    }
-    if (num) {
-        result = num + result;
-    }
-    return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
-}*/
+import PropTypes from 'prop-types';
 
 class NumericInput extends React.Component {
+    static propTypes={
+        /**
+         * 限制数值的类型,默认float限制2位小数
+         * */
+        valueType:PropTypes.oneOf(['float', 'int'])
+    }
+    static defaultProps={
+        valueType:'float'
+    }
     onChange = (e) => {
         const { value } = e.target;
-        const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+        /**
+         * 2位小数
+         * */
+        let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]{0,2})?$/;
+        if(this.props.valueType === 'int'){
+            reg = /^-?(0|[1-9][0-9]*)?$/;
+        }
         if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
             this.props.onChange(value);
         }
@@ -36,9 +36,11 @@ class NumericInput extends React.Component {
         onBlur && onBlur();
     }
     render() {
+        const props = {...this.props};
+        delete props['valueType'];
         return (
             <Input
-                {...this.props}
+                {...props}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
                 maxLength="25"

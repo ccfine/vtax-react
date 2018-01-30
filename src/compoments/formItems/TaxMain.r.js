@@ -68,6 +68,7 @@ export default class TaxMain extends Component{
         ]
     }
     onSearch = (value) => {
+        this.props.onSearch && this.props.onSearch(value)
         fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
     }
     componentDidMount(){
@@ -87,6 +88,7 @@ export default class TaxMain extends Component{
                         style={{ width: '100%' }}
                         optionFilterProp="children"
                         onSearch={this.onSearch}
+                        placeholder="请选择纳税主体"
                         {...componentProps}
                     >
                         {

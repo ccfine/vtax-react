@@ -2,10 +2,12 @@
  * Created by liurunbin on 2017/12/28.
  */
 import React from 'react';
-import {Col,Form,Input,DatePicker,Select} from 'antd'
+import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader } from 'antd'
 import {CusFormItem} from '../compoments'
 const FormItem = Form.Item;
+const { TextArea } = Input;
 const Option = Select.Option;
+const CheckboxGroup = Checkbox.Group;
 const { RangePicker,MonthPicker } = DatePicker;
 const normFile = (e) => {
     console.log('Upload event:', e);
@@ -15,7 +17,7 @@ const normFile = (e) => {
     return e && e.fileList;
 }
 const getFields = (form,fieldsData=[]) =>{
-    const {getFieldDecorator,setFieldsValue} = form;
+    const {getFieldDecorator,setFieldsValue,getFieldValue} = form;
     let defaultFormItemStyle={
         labelCol:{
             span:6
@@ -23,6 +25,11 @@ const getFields = (form,fieldsData=[]) =>{
         wrapperCol:{
             span:18
         }
+    }
+    if(typeof fieldsData === 'function'){
+        /**
+         * 当fieldsData为function的时候，必须要在最后返回fieldsData*/
+        fieldsData = fieldsData(getFieldValue,setFieldsValue)
     }
     return fieldsData.map((item,i)=>{
         let CusComponent;
@@ -37,6 +44,12 @@ const getFields = (form,fieldsData=[]) =>{
                 break;
             case 'rangePicker' :
                 CusComponent = RangePicker;
+                break;
+            case 'controlledRangePicker' :
+                CusComponent = CusFormItem.ControlledRangePicker;
+                break;
+            case 'monthRangePicker' :
+                CusComponent = CusFormItem.MonthRangePicker;
                 break;
             case 'select':
                 CusComponent = Select;
@@ -56,28 +69,46 @@ const getFields = (form,fieldsData=[]) =>{
             case 'taxClassCodingSelect':
                 CusComponent = CusFormItem.TaxClassCodingSelect;
                 break;
+            case 'roomCodeSelect':
+                CusComponent = CusFormItem.RoomCodeSelect;
+                break;
             case 'yearSelect':
                 CusComponent = CusFormItem.YearSelect;
                 break;
             case 'fileUpload':
                 CusComponent = CusFormItem.FileUpload;
                 break;
+            case 'textArea':
+                CusComponent = TextArea;
+                break;
+            case 'checkbox':
+                CusComponent = Checkbox;
+                break;
+            case 'checkboxGroup':
+                CusComponent = CheckboxGroup;
+                break;
+            case 'cascader':
+                CusComponent = Cascader;
+                break;
+            case 'industry':
+                CusComponent = CusFormItem.Industry;
+                break;
             default:
                 CusComponent = Input
         }
 
-        if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect'){
+        if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect' || type==='controlledRangePicker' || type==='monthRangePicker'){
             return <Col key={i} span={item['span'] || 8}>
-                <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
+                <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} decoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
             </Col>
         }else if(type==='select'){
             return (
                 <Col key={i} span={item['span'] || 8}>
-                    <FormItem label={item['label']} {...formItemStyle}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} >
+                            <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
                                 {
                                     item.options.map((option,i)=>(
                                         <Option key={i} value={option.value}>{option.text}</Option>
@@ -88,7 +119,7 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else if(type==='taxClassCodingSelect'){
+        }else if(type==='taxClassCodingSelect' || type==='industry'){
             // 给这个税收分类编码特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
             return (
                 <Col key={i} span={item['span'] || 8}>
@@ -97,6 +128,19 @@ const getFields = (form,fieldsData=[]) =>{
                             ...item['fieldDecoratorOptions']
                         })(
                             <CusComponent fieldName={item['fieldName']} setFieldsValue={setFieldsValue} {...item['componentProps']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else if(type==='roomCodeSelect'){
+            // 给这个房间编码选择特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent fieldName={item['fieldName']} getFieldValue={getFieldValue} setFieldsValue={setFieldsValue} {...item['componentProps']} />
                         )}
                     </FormItem>
                 </Col>
@@ -115,14 +159,39 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else{
-            return (
+        }else if(type==='checkbox'){
+            return(
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
+                            valuePropName: 'checked',
                             ...item['fieldDecoratorOptions']
                         })(
                             <CusComponent {...item['componentProps']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else if(type==='checkboxGroup' || type==='cascader'){
+            return(
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} options={item['options']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else{
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

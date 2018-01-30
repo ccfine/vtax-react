@@ -37,7 +37,7 @@ const TaxFile_Routes = [
         component:wrapPage('备案资料',FilingMaterial),
         name:'备案资料',
         icon:{
-            url:`${ICON_URL_PATH}inspectionReport.svg`,
+            url:`${ICON_URL_PATH}filingMaterial.svg`,
             backgroundColor:'#4DC1F0'
         },
         exact:true,

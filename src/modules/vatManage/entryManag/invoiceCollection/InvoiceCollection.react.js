@@ -1,12 +1,16 @@
+/**
+ * author       : liuliyuan
+ * createTime   : 2018/1/15 10:57
+ * description  :
+ */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal,DatePicker,Input,message } from 'antd'
-import {AsyncTable,CusFormItem} from '../../../../compoments'
-import {request,requestDict,fMoney} from '../../../../utils'
-import {FileExport} from '../../../../compoments'
-import {PopModal, PopUploadModal,PopUndoUploadModal} from './popModal'
-const { RangePicker } = DatePicker;
+import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
+import {AsyncTable,FileExport,PopUploadModal,PopUndoUploadModal} from '../../../../compoments'
+import {request,requestDict,fMoney,getFields,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+import PopModal from './popModal'
 const confirm = Modal.confirm;
-const FormItem = Form.Item;
 const buttonStyle={
     marginRight:5
 }
@@ -14,14 +18,6 @@ const spanPaddingRight={
     paddingRight:30
 }
 const code = {
-    /*margin: '0px 30px 0px 1px',
-    background: '#2db7f5',
-    borderRadius: '3px',
-    fontSize: '0.9em',
-    border: '1px solid #2db7f5',
-    color: '#fff',
-    padding: '2px 4px',*/
-
     margin:' 0 1px',
     background: '#f2f4f5',
     borderRadius: '3px',
@@ -46,12 +42,9 @@ class InvoiceCollection extends Component {
         selectedRowKeys:null,
         selectedRows:null,
         visible:false,
-        uploaderVisible:false,
-        undoUploadVisible:false,
         modalConfig:{
             type:''
         },
-        expand:true,
         nssbData:[]
     }
 
@@ -74,7 +67,7 @@ class InvoiceCollection extends Component {
             dataIndex: 'mainName',
         }, {
             title: '发票类型',
-            dataIndex: 'invoiceType',
+            dataIndex: 'invoiceTypeName',
         },{
             title: '发票代码',
             dataIndex: 'invoiceCode',
@@ -115,7 +108,7 @@ class InvoiceCollection extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.authMonth && values.authMonth.length!==0){
-                    values.authMonthStartStart = values.authMonth[0].format('YYYY-MM')
+                    values.authMonthStart = values.authMonth[0].format('YYYY-MM')
                     values.authMonthEnd= values.authMonth[1].format('YYYY-MM')
                     values.authMonth = undefined;
                 }
@@ -139,7 +132,6 @@ class InvoiceCollection extends Component {
             })
         });
         this.updateTable()
-
     }
     componentWillReceiveProps(nextProps){
         if(this.props.taxSubjectId!==nextProps.taxSubjectId){
@@ -157,21 +149,10 @@ class InvoiceCollection extends Component {
             visible
         })
     }
-    toggleUploadModalVisible=uploaderVisible=>{
-        this.setState({
-            uploaderVisible
-        })
-    }
-    toggleUndoUploadModalVisible=undoUploadVisible=>{
-        this.setState({
-            undoUploadVisible
-        })
-    }
     updateTable=()=>{
         this.handleSubmit()
     }
     showModal=type=>{
-
        if(type === 'edit'){
            let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
            if(sourceType === 2 ){
@@ -203,84 +184,97 @@ class InvoiceCollection extends Component {
         }
     }
 
-    showIsUpload=type=> {
-        if (type === 'upload') {
-            this.toggleUploadModalVisible(true)
-        }else{
-            this.toggleUndoUploadModalVisible(true)
-        }
-    }
-
     render() {
-        const {getFieldDecorator} = this.props.form;
-        const {tableUpDateKey,filters,selectedRowKeys,visible,uploaderVisible,undoUploadVisible,modalConfig,expand} = this.state;
-        const formItemStyle={
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:18
-            }
-        }
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
+        const {search} = this.props.location;
+        console.log(search)
+        console.log()
+        let disabled = !!(search && search.filters);
+
         const rowSelection = {
             type:'radio',
+            width:70,
+            fixed:true,
             selectedRowKeys,
             onChange: this.onChange
         };
         return (
             <Layout style={{background:'transparent'}} >
-                <Card>
-                    <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                <Card
+                    style={{
+                        borderTop:'none'
+                    }}
+                    className="search-card"
+                >
+                    <Form onSubmit={this.handleSubmit}>
                         <Row>
-                            <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
-                            </Col>
-                            <Col span={8}>
-                                <FormItem label='发票号码' {...formItemStyle}>
-                                    {getFieldDecorator('invoiceNum',{
-                                    })(
-                                        <Input size="small" />
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem
-                                    {...formItemStyle}
-                                    label="认证月份"
-                                >
-                                    {getFieldDecorator('authMonth', {
-                                    })(
-                                        <RangePicker
-                                            style={{width:'100%'}}
-                                            format="YYYY-MM"
-                                            size="small"
-                                        />
-                                    )}
-                                </FormItem>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col style={{textAlign:'right'}}>
-                                <Button size="small" style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button size="small" style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            {
+                                getFields(this.props.form,[
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:6,
+                                        componentProps:{
+                                            disabled
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                        },
+                                    },{
+                                        label:'发票号码',
+                                        fieldName:'invoiceNum',
+                                        type:'input',
+                                        span:6,
+                                        componentProps:{
+                                        },
+                                        fieldDecoratorOptions:{
+                                        },
+                                    },{
+                                        label:'认证月份',
+                                        fieldName:'authMonth',
+                                        type:'monthRangePicker',
+                                        span:6,
+                                        componentProps:{
+                                            format:"YYYY-MM",
+                                            disabled
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
+                                        },
+
+                                    }
+                                ])
+                            }
+                            <Col span={6}>
+                                <Button disabled={disabled} style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button disabled={disabled} style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
+
                 <Card
                       extra={<div>
                           <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />
                               新增
                           </Button>
-                          <Button size="small" onClick={()=>this.showIsUpload('upload')} style={buttonStyle}>
-                              <Icon type="upload" />
-                              导入
-                          </Button>
-                          <Button size="small" onClick={()=>this.showIsUpload('undo')} style={buttonStyle}>
-                              <Icon type="file-add" />
-                              撤销导入
-                          </Button>
+                          <PopUploadModal
+                              url="/income/invoice/collection/upload"
+                              title="导入"
+                              onSuccess={()=>{
+                                  this.updateTable()
+                              }}
+                              style={{marginRight:5}}
+                          />
+                          <PopUndoUploadModal
+                              url="/income/invoice/collection/revocation"
+                              title="撤销导入"
+                              onSuccess={()=>{
+                                  this.updateTable()
+                              }}
+                              style={{marginRight:5}} />
                           <FileExport
                               url='/income/invoice/collection/download'
                               title="下载导入样表"
@@ -300,7 +294,7 @@ class InvoiceCollection extends Component {
                               style={buttonStyle}
                               onClick={()=>{
                                   let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
-                                  if(sourceType === 1 ) {
+                                  if(sourceType === 2 ) {
                                       const ref = Modal.warning({
                                           title: '友情提醒',
                                           content: '该发票信息是外部导入，无法删除！',
@@ -351,22 +345,22 @@ class InvoiceCollection extends Component {
                                     size:'small',
                                     columns:this.columns,
                                     rowSelection:rowSelection,
+                                    scroll:{ x: '150%' },
                                     renderFooter:data=>{
                                         return (
                                             <div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                                    本页金额：<span style={code}>{data.pageAmount}</span>
-                                                    本页税额：<span style={code}>{data.pageTaxAmount}</span>
-                                                    本页价税：<span style={code}>{data.pageTotalAmount}</span>
-                                                    本页总价：<span style={code}>{data.pageTotalPrice}</span>
+                                                    本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
+                                                    本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+
+                                                    本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
                                                 </div>
                                                 <div style={{marginBottom:10}}>
                                                     <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                                    总金额：<span style={code}>{data.allAmount}</span>
-                                                    总税额：<span style={code}>{data.allTaxAmount}</span>
-                                                    总价税：<span style={code}>{data.allTotalAmount}</span>
-                                                    全部总价：<span style={code}>{data.allTotalPrice}</span>
+                                                    总金额：<span style={code}>{fMoney(data.allAmount)}</span>
+                                                    总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
+                                                    总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
                                                 </div>
                                             </div>
                                         )
@@ -380,22 +374,8 @@ class InvoiceCollection extends Component {
                     updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
-
-                <PopUploadModal
-                    visible={uploaderVisible}
-                    updateTable={this.updateTable}
-                    toggleUploadModalVisible={this.toggleUploadModalVisible}
-                    title="进项发票采集-导入"
-                />
-
-                <PopUndoUploadModal
-                    visible={undoUploadVisible}
-                    updateTable={this.updateTable}
-                    toggleUndoUploadModalVisible={this.toggleUndoUploadModalVisible}
-                    title="进项发票采集-撤销导入"
-                />
             </Layout>
         )
     }
 }
-export default Form.create()(InvoiceCollection)
+export default Form.create()(withRouter(InvoiceCollection))

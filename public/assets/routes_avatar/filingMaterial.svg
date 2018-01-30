@@ -1,39 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="29" viewBox="0 0 28 29">
-  <metadata><?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
-<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c138 79.159824, 2016/09/14-01:09:01        ">
-   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-      <rdf:Description rdf:about=""/>
-   </rdf:RDF>
-</x:xmpmeta>
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                                                                                                    
-                           
-<?xpacket end="w"?></metadata>
-<defs>
-    <style>
-      .cls-1 {
-        fill: #fff;
-        fill-rule: evenodd;
-      }
-    </style>
-  </defs>
-  <path id="形状_29" data-name="形状 29" class="cls-1" d="M685,183V169H665v14h-4v15h28V183h-4Zm-18-12h16v12H667V171Zm20,25H663V185h24v11Zm-18-20h12v-2H669v2Zm0,4h12v-2H669v2Zm-3,8,0.036,2H684v-2" transform="translate(-661 -169)"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="29px" viewBox="0 0 28 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined shape 2921</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-661.000000, -169.000000)">
+        <g id="税务档案" transform="translate(13.000000, 103.000000)" fill="#FFFFFF">
+            <g id="01-拷贝-7" transform="translate(611.000000, 29.000000)">
+                <path d="M61,51.000032 L65.000032,51.000032 L65.000032,65.999971 L36.999968,65.999971 L36.999968,51.000032 L40.999968,51.000032 L40.999968,36.999998 L61,36.999998 L61,51.000032 Z M42.999968,38.999963 L42.999968,51.000032 L59,51.000032 L59,38.999963 L42.999968,38.999963 Z M63.000032,64.000006 L63.000032,52.999997 L38.999968,52.999997 L38.999968,64.000006 L63.000032,64.000006 Z M44.999968,43.999953 L44.999968,41.999957 L57,41.999957 L57,43.999953 L44.999968,43.999953 Z M44.999968,48.000007 L44.999968,46.000042 L57,46.000042 L57,48.000007 L44.999968,48.000007 Z M42.000032,56.000022 L59.999936,56.000022 L59.999936,57.999987 L42.036352,57.998685 L42.000032,56.000022 Z" id="Combined-shape-2921"></path>
+            </g>
+        </g>
+    </g>
 </svg>

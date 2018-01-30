@@ -1,11 +1,6 @@
 /**
- * Created by liurunbin on 2017/12/21.
+ * author       : liuliyuan
+ * createTime   : 2018/1/15 10:57
+ * description  :
  */
-import PopModal from './PopModal.r'
-import PopUploadModal from './PopUploadModal.r'
-import PopUndoUploadModal from './PopUndoUploadModal.r'
-export {
-    PopModal,
-    PopUploadModal,
-    PopUndoUploadModal
-}
+export {default} from './PopModal.r'
