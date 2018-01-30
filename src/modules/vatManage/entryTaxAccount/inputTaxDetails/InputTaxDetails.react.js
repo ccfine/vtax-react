@@ -6,8 +6,11 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button} from 'antd'
 import {AsyncTable} from '../../../../compoments'
-import {getFields,fMoney} from '../../../../utils'
+import {getFields,fMoney,getUrlParam} from '../../../../utils'
 import PopInvoiceInformationModal from './popModal'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
 const spanPaddingRight={
     paddingRight:30
 }
@@ -90,9 +93,6 @@ class InputTaxDetails extends Component {
             }
         });
     }
-    /*componentDidMount(){
-        this.refreshTable()
-    }*/
     toggleModalVisible=visible=>{
         this.setState({
             visible
@@ -102,14 +102,17 @@ class InputTaxDetails extends Component {
         this.setState({
             tableUpDateKey:Date.now()
         })
-        //this.handleSubmit()
     }
-    /*updateTable=()=>{
-        this.handleSubmit()
-    }*/
-
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit()
+        }
+    }
     render(){
         const {tableUpDateKey,filters,visible,params} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -127,7 +130,11 @@ class InputTaxDetails extends Component {
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -141,8 +148,11 @@ class InputTaxDetails extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
+                                            format:'YYYY-MM',
+                                            disabled,
                                         },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -196,4 +206,4 @@ class InputTaxDetails extends Component {
         )
     }
 }
-export default Form.create()(InputTaxDetails)
+export default Form.create()(withRouter(InputTaxDetails))

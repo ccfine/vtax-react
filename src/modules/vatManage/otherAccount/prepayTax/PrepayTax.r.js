@@ -4,8 +4,11 @@
 import React,{Component} from 'react'
 import {Button,Icon,message} from 'antd'
 import {SearchTable,FileExport,ButtonWithFileUploadModal} from '../../../../compoments'
-import {fMoney,request} from '../../../../utils'
-const searchFields = (getFieldValue)=> {
+import {fMoney,request,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
+const searchFields =(disabled)=> (getFieldValue)=> {
     return [
         {
             label:'纳税主体',
@@ -20,14 +23,18 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
-            fieldDecoratorOptions:{
-                rules:[
-                 {
-                 required:true,
-                 message:'请选择纳税主体'
-                 }
-                 ]
+            componentProps:{
+                disabled
             },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            }
         },
         {
             label:'查询期间',
@@ -42,17 +49,19 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
-            fieldDecoratorOptions:{
-                rules:[
-                 {
-                 required:true,
-                 message:'请选择查询期间'
-                 }
-                 ]
-            },
             componentProps:{
-                format:'YYYY-MM'
-            }
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选查询期间'
+                    }
+                ]
+            },
         },
         {
             label:'项目名称',
@@ -194,7 +203,7 @@ const transformDataStatus = status =>{
     }
     return status
 }
-export default class PrepayTax extends Component{
+class PrepayTax extends Component{
     state={
         tableKey:Date.now(),
         searchTableLoading:false,
@@ -273,14 +282,21 @@ export default class PrepayTax extends Component{
             this.toggleSearchTableLoading(false)
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }
+    }
     render(){
         const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData} = this.state;
         const {mainId,receiveMonth} = searchFieldsValues;
-
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     cardProps:{
                         className:''
                     },
@@ -387,3 +403,4 @@ export default class PrepayTax extends Component{
         )
     }
 }
+export default withRouter(PrepayTax)

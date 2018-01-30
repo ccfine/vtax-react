@@ -6,8 +6,9 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
 import {AsyncTable,FileExport,PopUploadModal,PopUndoUploadModal} from '../../../../compoments'
-import {request,requestDict,fMoney,getFields} from '../../../../utils'
+import {request,requestDict,fMoney,getFields,getUrlParam} from '../../../../utils'
 import { withRouter } from 'react-router'
+import moment from 'moment';
 import PopModal from './popModal'
 const confirm = Modal.confirm;
 const buttonStyle={
@@ -130,11 +131,7 @@ class InvoiceCollection extends Component {
                 nssbData:result
             })
         });
-
-        const {location} = this.props;
-        if (location.state && location.state.filters) {
-            this.updateTable()
-        }
+        this.updateTable()
     }
     componentWillReceiveProps(nextProps){
         if(this.props.taxSubjectId!==nextProps.taxSubjectId){
@@ -189,7 +186,11 @@ class InvoiceCollection extends Component {
 
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
-        const {state} = this.props.location;
+        const {search} = this.props.location;
+        console.log(search)
+        console.log()
+        let disabled = !!(search && search.filters);
+
         const rowSelection = {
             type:'radio',
             width:70,
@@ -214,14 +215,19 @@ class InvoiceCollection extends Component {
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled
+                                        },
                                         fieldDecoratorOptions:{
-                                            initialValue: (state && state.filters.mainId) || undefined,
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                         },
                                     },{
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
                                         span:6,
+                                        componentProps:{
+                                        },
                                         fieldDecoratorOptions:{
                                         },
                                     },{
@@ -229,18 +235,21 @@ class InvoiceCollection extends Component {
                                         fieldName:'authMonth',
                                         type:'monthRangePicker',
                                         span:6,
-                                        fieldDecoratorOptions:{
-                                        },
                                         componentProps:{
-                                            format:"YYYY-MM"
-                                        }
+                                            format:"YYYY-MM",
+                                            disabled
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
+                                        },
+
                                     }
                                 ])
                             }
 
                             <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                <Button disabled={disabled} style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button disabled={disabled} style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>

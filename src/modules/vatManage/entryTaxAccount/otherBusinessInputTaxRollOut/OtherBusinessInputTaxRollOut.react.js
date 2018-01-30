@@ -5,45 +5,13 @@ import React, { Component} from 'react'
 import {Icon,Divider} from 'antd'
 import {SearchTable,FileImportModal,FileExport} from '../../../../compoments'
 import FeildModal from './popModal'
-import {request, fMoney} from '../../../../utils'
+import {request,fMoney,getUrlParam} from '../../../../utils'
 import moment from 'moment'
+import { withRouter } from 'react-router'
 const buttonStyle = {
     marginLeft:5
 }
 
-const getFields = (title,span,formItemStyle,record={})=> [
-    {
-        label:'纳税主体',
-        type:'taxMain',
-        span,
-        fieldName:'mainId',
-        formItemStyle,
-        fieldDecoratorOptions:{
-            initialValue:record.mainId,
-            rules:[{
-                required:true,
-                message:'请选择纳税主体'
-            }]
-        }
-    },
-    {
-        label:`${title}月份`,
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span,
-        formItemStyle,
-        componentProps:{
-            format:'YYYY-MM'
-        },
-        fieldDecoratorOptions:{
-            initialValue:moment(record.authMonth),
-            rules:[{
-                required:true,
-                message:`请选择${title}月份`
-            }]
-        }
-    }
-]
 const getColumns =(context)=>[
    {
         title: '纳税主体',
@@ -81,7 +49,7 @@ const getColumns =(context)=>[
     }
 ];
 
-export default class LandPriceManage extends Component{
+class LandPriceManage extends Component{
     state={
         visible:false, // 控制Modal是否显示
         opid:"", // 当前操作的记录
@@ -111,7 +79,53 @@ export default class LandPriceManage extends Component{
             }
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({updateKey:Date.now()})
+        }
+
+    }
     render(){
+        const {search} = this.props.location;
+        let disabled = !!search;
+        const getFields = (title,span,formItemStyle,record={})=> [
+            {
+                label:'纳税主体',
+                type:'taxMain',
+                span,
+                fieldName:'mainId',
+                formItemStyle,
+                componentProps:{
+                    disabled,
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                    rules:[{
+                        required:true,
+                        message:'请选择纳税主体'
+                    }]
+                }
+            },
+            {
+                label:`${title}月份`,
+                fieldName:'authMonth',
+                type:'monthPicker',
+                span,
+                formItemStyle,
+                componentProps:{
+                    format:'YYYY-MM',
+                    disabled,
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
+                    rules:[{
+                        required:true,
+                        message:`请选择${title}月份`
+                    }]
+                }
+            }
+        ]
         return(
                 <SearchTable
                     doNotFetchDidMount={true}
@@ -154,7 +168,7 @@ export default class LandPriceManage extends Component{
                                         }
                                     },this.state.statusParam)}
                                     onSuccess={this.updateStatus}
-                                ></FeildModal>
+                                 />
                                 <FeildModal 
                                     style={buttonStyle}
                                     title='撤回提交'
@@ -169,7 +183,7 @@ export default class LandPriceManage extends Component{
                                         }
                                     },this.state.statusParam)}
                                     onSuccess={this.updateStatus}
-                                ></FeildModal>
+                                />
                                 <FileExport url={`/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
                                 <FileImportModal
                                     style={buttonStyle}
@@ -197,3 +211,4 @@ export default class LandPriceManage extends Component{
         )
     }
 }
+export default withRouter(LandPriceManage)

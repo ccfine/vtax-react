@@ -5,8 +5,11 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button} from 'antd'
-import {getFields} from '../../../../utils'
+import {getFields,getUrlParam} from '../../../../utils'
 import TableTaxStructure from './TableTaxStructure.react'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
 class InputTaxStructure extends Component {
     state={
         /**
@@ -48,7 +51,15 @@ class InputTaxStructure extends Component {
             tableUpDateKey:Date.now()
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit()
+        }
+    }
     render(){
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -66,7 +77,11 @@ class InputTaxStructure extends Component {
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -80,8 +95,11 @@ class InputTaxStructure extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
+                                            format:'YYYY-MM',
+                                            disabled,
                                         },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -110,6 +128,6 @@ class InputTaxStructure extends Component {
         )
     }
 }
-export default Form.create()(InputTaxStructure)
+export default Form.create()(withRouter(InputTaxStructure))
 
 

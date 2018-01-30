@@ -7,110 +7,41 @@ import React,{Component} from 'react'
 import {Button,Icon,Modal,Row,Col,Steps,List, Card} from 'antd'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
-import {composeMenus} from '../../../../utils'
+import {composeMenus,request} from '../../../../utils'
 import routes from '../../../../modules/routes'
 import './styles.less'
 
 const Step = Steps.Step;
 const steps = [{
     title: '销项管理',
-    icon:<Icon type="user" />,
+    decConduct:0,
+    //icon:<img alt="销项管理" src={`${ICON_URL_PATH}salesManage.svg`} />,
+    //icon:<Icon type="user" />,
 }, {
     title: '进项管理',
-    icon:<Icon type="user" />,
+    decConduct:1,
+    //icon:<Icon type="solution" />,
 }, {
     title: '其他管理',
-    icon:<Icon type="user" />,
+    decConduct:2,
+    //icon:<Icon type="smile-o" />,
 }, {
     title: '税款计算',
-    icon:<Icon type="user" />,
+    decConduct:3,
+    //icon:<Icon type="smile-o" />,
 }, {
     title: '纳税申报表',
-    icon:<Icon type="user" />,
+    decConduct:4,
+    //icon:<Icon type="form" />,
 
 }];
-
-//销项管理
-const data = [
-    {
-        key:'1',
-        //title: '销项管理',
-        children:[
-            {
-                name:'销项发票采集',
-            },{
-                name:'销项发票匹配',
-            },{
-                name:'营改增前售房',
-            },{
-                name:'开票销售台账',
-            },{
-                name:'未开票销售台账',
-            }, {
-                name: '其他涉税调整台账',
-            },{
-                name:'其他业务未开票销售台账',
-            }
-        ]
-    }, {
-        key:'2',
-        //title: '进项管理',
-        children:[
-            {
-                name:'进项发票采集',
-            },{
-                name:'进项发票匹配',
-            },{
-                name:'进项税额明细台账',
-            },{
-                name:'进项税额结构台账',
-            },{
-                name:'固定资产进项税额台账',
-            },{
-                name:'跨期合同进项税额转出台账',
-            },{
-                name:'其他业务进项税额转出台账',
-            }
-        ]
-    }, {
-        key:'3',
-        //title: '其他管理',
-        children:[
-            {
-                name:'售房预缴台账',
-            },{
-                name:'预缴税款台账',
-            },{
-                name:'土地价款扣除明细台账',
-            },{
-                name:'扣除项目汇总台账',
-            },{
-                name:'减免税明细台账',
-            },{
-                name:'营改增税负分析测算台账',
-            }
-        ]
-    }, {
-        key:'4',
-        //title: '税款计算',
-        children:[
-            {
-                name: '税款计算台账',
-            }
-        ]
-    }, {
-        key:'5',
-        //title: '纳税申报表',
-        children:[
-            {
-                name: '纳税申报表',
-            },{
-                name: '增值税预缴表',
-            }
-        ]
-    },
-];
-
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        str += `${key}=${data[key]}&`
+    }
+    return str;
+}
 export default class ApplyDeclarationPopModal extends Component{
 
     static propTypes={
@@ -130,7 +61,7 @@ export default class ApplyDeclarationPopModal extends Component{
     state={
         visible:false,
         loading:false,
-
+        data:[],
         current: 0,
     }
     toggleLoading = loading =>{
@@ -139,25 +70,19 @@ export default class ApplyDeclarationPopModal extends Component{
         })
     }
     toggleVisible = visible =>{
-        /*if(visible){
-            this.props.form.resetFields()
-        }*/
         this.setState({
             visible
         })
     }
     handleCurrent=current=>{
-        this.setState({ current });
+        this.setState({
+            current
+        },()=>{
+            this.fetchDeclarationById(current)
+        });
     }
-    handleSubmit=()=>{
-
-    }
-    handleRevoke=()=>{
-
-    }
-
     getContent = (current,routes) => {
-        let list = data[current].children;
+        let list = this.state.data;
         let list2 =[];
         let dataSource = [];
         composeMenus(routes).map((item)=>{
@@ -171,8 +96,9 @@ export default class ApplyDeclarationPopModal extends Component{
             list2.forEach((d) => {
                 if(t.name === d.name){
                     dataSource.push({
-                        name:d.name,
+                        name:t.name,
                         path:d.path,
+                        status:t.status,
                     });
                 }
             })
@@ -180,24 +106,46 @@ export default class ApplyDeclarationPopModal extends Component{
 
         return (
             <List
-                grid={{ gutter: 16, column: 4 }}
+                grid={{ gutter: 16, column: 2 }}
                 dataSource={dataSource}
                 renderItem={item => (
                     <List.Item>
                         <Card>
-                            <Link to={{
+                            <Link style={{color: 'rgba(0, 0, 0, 0.65)'}} to={{
                                 pathname:item.path,  //`${item.path}?mainId=${this.props.selectedRows[0].id}`,
-                                //search:`?mainId=${this.props.selectedRows[0].id}`, //getQueryString('mainId') || undefined
-                                state:{
-                                    filters:{...this.props.selectedRows[0]}  //const {state} = this.props.location;  state && state.filters.mainId || undefined,
+                                search:`?${parseJsonToParams({mainId:this.props.selectedRows[0].mainId,
+                                    authMonthStart:this.props.selectedRows[0].subordinatePeriodStart,
+                                    authMonthEnd:this.props.selectedRows[0].subordinatePeriodEnd})}`, //getQueryString('mainId') || undefined
+                                state:{  //在跳转标签的时候值就不存在了
+                                    filters:{
+                                        mainId:this.props.selectedRows[0].mainId,
+                                        authMonthStart:this.props.selectedRows[0].subordinatePeriodStart,
+                                        authMonthEnd:this.props.selectedRows[0].subordinatePeriodEnd,
+                                    }  //const {state} = this.props.location;  state && state.filters.mainId || undefined,
                                 }
-                            }}>{item.name}</Link>
+                            }}>{item.name} 【{parseInt(item.status,0) === 1 ? <span style={{color:'red'}}>未提交</span> : <span style={{color:'#333'}}>已提交</span> }】</Link>
+
                         </Card>
                     </List.Item>
                 )}
             />
         )
     }
+    fetchDeclarationById =(decConduct)=>{
+        request.get(`/tax/decConduct/list?decConduct=${decConduct}`)
+            .then(({data})=>{
+                this.setState({
+                    data:data.data,
+                })
+            })
+    }
+    componentDidMount(){
+        this.fetchDeclarationById(this.state.current)
+    }
+    componentWillReceiveProps(nextProps) {
+
+    }
+
     render(){
         const props = this.props;
         const {visible,loading,current} = this.state;
@@ -211,12 +159,42 @@ export default class ApplyDeclarationPopModal extends Component{
                        confirmLoading={loading}
                        onCancel={()=>this.toggleVisible(false)}
                        width={900}
+                       style={{ top: 50 ,maxWidth:'80%'}}
                        footer={
                            <Row>
                                <Col span={12}></Col>
                                <Col span={12}>
-                                   <Button type="primary" onClick={this.handleSubmit}>批量提交</Button>
-                                   <Button type="primary" onClick={(e)=>this.handleRevoke}>批量撤回</Button>
+                                   <Button
+                                       type="primary"
+                                           //onClick={this.handleSubmit}
+                                       disabled
+                                       onClick={()=>{
+                                           const ref = Modal.warning({
+                                               content: '研发中...',
+                                               okText: '关闭',
+                                               onOk:()=>{
+                                                   ref.destroy();
+
+                                               }
+                                           });
+                                       }}>
+                                       批量提交
+                                   </Button>
+                                   <Button
+                                       type="primary"
+                                       disabled
+                                       //onClick={(e)=>this.handleRevoke}
+                                       onClick={()=>{
+                                           const ref = Modal.warning({
+                                               content: '研发中...',
+                                               okText: '关闭',
+                                               onOk:()=>{
+                                                   ref.destroy();
+                                               }
+                                           });
+                                       }}>
+                                        批量撤回
+                                   </Button>
                                    <Button onClick={()=>this.toggleVisible(false)}>取消</Button>
                                </Col>
                            </Row>

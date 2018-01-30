@@ -6,7 +6,9 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Popconfirm} from 'antd'
 import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
-import {getFields,request} from '../../../../utils'
+import {getFields,request,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment'
 
 class InputTaxOnFixedAssets extends Component {
     state={
@@ -83,7 +85,13 @@ class InputTaxOnFixedAssets extends Component {
         });
     }
     componentDidMount(){
-        this.refreshTable()
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -96,7 +104,9 @@ class InputTaxOnFixedAssets extends Component {
         })
     }
     render(){
-        const {tableUpDateKey,filters} = this.state;
+        const {tableUpDateKey,filters} = this.state
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -114,7 +124,11 @@ class InputTaxOnFixedAssets extends Component {
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -128,8 +142,10 @@ class InputTaxOnFixedAssets extends Component {
                                         type:'monthPicker',
                                         span:6,
                                         componentProps:{
+                                            disabled,
                                         },
                                         fieldDecoratorOptions:{
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -179,4 +195,4 @@ class InputTaxOnFixedAssets extends Component {
         )
     }
 }
-export default Form.create()(InputTaxOnFixedAssets)
+export default Form.create()(withRouter(InputTaxOnFixedAssets))

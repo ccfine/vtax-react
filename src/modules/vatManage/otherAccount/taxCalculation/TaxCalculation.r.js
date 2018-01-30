@@ -4,9 +4,12 @@
 import React,{Component} from 'react'
 import {Button,Icon,message,Form} from 'antd'
 import {SearchTable} from '../../../../compoments'
-import {fMoney,request} from '../../../../utils'
+import {fMoney,request,getUrlParam} from '../../../../utils'
 import EditableCell from './EditableCell.r'
-const searchFields = (getFieldValue)=> {
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
+const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
             label:'纳税主体',
@@ -21,14 +24,18 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
+            componentProps:{
+                disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
                 rules:[
-                    /*{
+                    {
                         required:true,
                         message:'请选择纳税主体'
-                    }*/
+                    }
                 ]
-            },
+            }
         },
         {
             label:'查询期间',
@@ -43,17 +50,19 @@ const searchFields = (getFieldValue)=> {
                     span:16
                 }
             },
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
             fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
-                   /* {
+                    {
                         required:true,
-                        message:'请选择查询期间'
-                    }*/
+                        message:'请选查询期间'
+                    }
                 ]
             },
-            componentProps:{
-                format:'YYYY-MM'
-            }
         }
     ]
 }
@@ -169,15 +178,24 @@ class TaxCalculation extends Component{
             }
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }
+    }
     render(){
         const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
         const {mainId,receiveMonth} = this.state.searchFieldsValues;
         const {getFieldDecorator} = this.props.form;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
         <div>
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     cardProps:{
                         className:''
                     },
@@ -253,4 +271,4 @@ class TaxCalculation extends Component{
         )
     }
 }
-export default Form.create()(TaxCalculation)
+export default Form.create()(withRouter(TaxCalculation))

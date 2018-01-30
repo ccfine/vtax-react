@@ -27,20 +27,22 @@ const EditableCell = ({record, form, column, type,options,componentProps,fieldDe
             {
                 getFields(form,[
                     {
+                        label:'建筑面积数据来源',
                         fieldName:`${column}`,
                         type:type,
                         span:24,
-                        options:options,
+                        notLabel:true,
                         formItemStyle:{
                             labelCol:{
-                                span:20
+                                span:24
                             },
                             wrapperCol:{
-                                span:20
+                                span:24
                             }
                         },
+                        options:options,
                         componentProps:{
-                            ...componentProps
+                            ...componentProps,
                         },
                         fieldDecoratorOptions:{
                             ...fieldDecoratorOptions
@@ -54,7 +56,7 @@ const EditableCell = ({record, form, column, type,options,componentProps,fieldDe
 
 const options = [
     {
-        text:'手工录入',
+        text:'建设工程规划许可证',
         value:'0'
     },{
         text:'施工许可证',
@@ -82,21 +84,21 @@ class PopModal extends Component{
         {
             title: '合同名称',
             dataIndex: 'contractNum',
-            width:80,
+            width:100,
             render:text=><div dangerouslySetInnerHTML={{  __html: htmlDecode(text) }}></div>,
         },{
             title: '项目分期编码',
             dataIndex: 'stagesNum',
-            width:80,
+            width:100,
         },{
             title: '项目分期名称',
             dataIndex: 'stagesName',
-            width:80,
+            width:100,
         }, {
             title: '建筑面积数据来源',
             dataIndex: 'sourceType',
-            width:100,
-            render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].sourceType`,'select',options)
+            render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].sourceType`,'select',options),
+            width:120,
         },{
             title: '建筑面积(m²)',
             width:60,
@@ -155,20 +157,20 @@ class PopModal extends Component{
     renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:`${text}`}) {
 
         return parseInt(record.status, 0) === 1 ? <EditableCell
-            record={record}
-            value={text}
-            form={this.props.form}
-            column={column}
-            type={type}
-            options={options}
-            fieldDecoratorOptions={fieldDecoratorOptions}
-            componentProps={
-                {
-                    onChange:(value)=>this.handleChange(value,record)
+                record={record}
+                value={text}
+                form={this.props.form}
+                column={column}
+                type={type}
+                options={options}
+                fieldDecoratorOptions={fieldDecoratorOptions}
+                componentProps={
+                    {
+                        onChange:(value)=>this.handleChange(value,record)
+                    }
                 }
-            }
-            //onChange={value => this.handleChange(value, record.key, column)}
-        />
+                //onChange={value => this.handleChange(value, record.key, column)}
+            />
             : text
     }
     handleSubmit = e => {
@@ -208,7 +210,7 @@ class PopModal extends Component{
                 this.setState({
                     updateKey:Date.now()
                 });
-            },200)
+            },100)
 
         }
     }
@@ -247,7 +249,7 @@ class PopModal extends Component{
                                         pagination:false,
                                         size:'small',
                                         columns:this.columns,
-                                        scroll:{x: '100%', y: 400 },
+                                        scroll:{y: 400 },
                                         dataSource: (isShowDataSource && $$dataSource.toArray()) || undefined,
                                         footerDate: (isShowDataSource && footerDate) || undefined,
                                         onDataChange:(dataSource)=>{

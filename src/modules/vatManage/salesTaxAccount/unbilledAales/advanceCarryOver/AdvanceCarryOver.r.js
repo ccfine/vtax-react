@@ -3,18 +3,23 @@
  * 预结转收入
  */
 import React, { Component } from 'react'
-import {fMoney,request} from '../../../../../utils'
-import {SearchTable,FileExport,FileImportModal} from '../../../../../compoments'
 import {Button,Icon,message,Modal} from 'antd'
-const searchFields = (getFieldValue)=> {
+import {SearchTable,FileExport,FileImportModal} from '../../../../../compoments'
+import {fMoney,request,getUrlParam} from '../../../../../utils'
+import { withRouter } from 'react-router'
+
+const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            componentProps:{
+                disabled,
+            },
             fieldDecoratorOptions:{
-
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
             },
         },
         {
@@ -98,7 +103,7 @@ const parseJsonToParams = data=>{
     }
     return str;
 }
-export default class AdvanceCarryOver extends Component{
+class AdvanceCarryOver extends Component{
     state={
         tableKey:Date.now(),
         searchFieldsValues:{
@@ -144,10 +149,19 @@ export default class AdvanceCarryOver extends Component{
                 modalRef.destroy()
             },
         });
-
+    }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
     }
     render(){
         const {tableKey,selectedRowKeys,searchTableLoading,searchFieldsValues} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 style={{
@@ -155,7 +169,7 @@ export default class AdvanceCarryOver extends Component{
                 }}
                 spinning={searchTableLoading}
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     getFieldsValues:values=>{
                         this.setState({
                             searchFieldsValues:values
@@ -203,3 +217,4 @@ export default class AdvanceCarryOver extends Component{
         )
     }
 }
+export default withRouter(AdvanceCarryOver)

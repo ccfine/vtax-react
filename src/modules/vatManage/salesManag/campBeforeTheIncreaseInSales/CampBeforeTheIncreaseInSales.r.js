@@ -4,22 +4,27 @@
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import {fMoney} from '../../../../utils'
+import {fMoney,getUrlParam} from '../../../../utils'
 import PopModal from './popModal'
+import { withRouter } from 'react-router'
+
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
 
-const searchFields = (getFieldValue,setFieldsValue)=> {
+const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            componentProps:{
+                disabled,
+            },
             fieldDecoratorOptions:{
-
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
             },
         },
         {
@@ -179,7 +184,7 @@ const getColumns = context =>[
         dataIndex: 'lastModifiedDate',
     }
 ];
-export default class CampBeforeTheIncreaseInSales extends Component{
+class CampBeforeTheIncreaseInSales extends Component{
     state={
         visible:false,
         modalConfig:{
@@ -209,12 +214,22 @@ export default class CampBeforeTheIncreaseInSales extends Component{
             tableKey:Date.now()
         })
     }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+    }
     render(){
         const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields
+                    fields:searchFields(disabled)
                 }}
                 tableOption={{
                     key:tableKey,
@@ -259,3 +274,4 @@ export default class CampBeforeTheIncreaseInSales extends Component{
         )
     }
 }
+export default withRouter(CampBeforeTheIncreaseInSales)

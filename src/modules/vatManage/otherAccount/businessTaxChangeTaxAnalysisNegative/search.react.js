@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Form, Row, Col, Button } from 'antd'
-import { getFields } from '../../../../utils'
+import { getFields,getUrlParam } from '../../../../utils'
 import moment from 'moment'
 const FormItem = Form.Item
 const handleSubmit = (props, e) => {
@@ -27,21 +27,28 @@ let Search = (props) => {
                             label: '纳税主体',
                             type: 'taxMain',
                             fieldName: 'mainId',
-                            fieldDecoratorOptions: {
-                                rules: [{
-                                    required: true,
-                                    message: '请选择纳税主体'
-                                }]
+                            componentProps:{
+                                disabled:props.disabled
+                            },
+                            fieldDecoratorOptions:{
+                                initialValue: (props.disabled && getUrlParam('mainId')) || undefined,
+                                rules:[
+                                    {
+                                        required:true,
+                                        message:'请选择纳税主体'
+                                    }
+                                ]
                             }
-                        },
-                        {
+                        }, {
                             label: `查询月份`,
                             fieldName: 'authMonth',
                             type: 'monthPicker',
                             componentProps: {
-                                format: 'YYYY-MM'
+                                format: 'YYYY-MM',
+                                disabled:props.disabled
                             },
                             fieldDecoratorOptions: {
+                                initialValue: (props.disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                                 rules: [{
                                     required: true,
                                     message: '请选择查询月份'

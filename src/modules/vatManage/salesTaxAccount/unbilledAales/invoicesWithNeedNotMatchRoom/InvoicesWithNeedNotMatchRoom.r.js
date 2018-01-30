@@ -3,37 +3,48 @@
  */
 import React,{Component} from 'react'
 import {SearchTable} from '../../../../../compoments'
-import {fMoney} from '../../../../../utils'
-const searchFields = [
-    {
-        label:'开票时间',
-        fieldName:'billingDate',
-        type:'rangePicker',
-    },
-    {
-        label:'货物名称',
-        fieldName:'commodityName',
-        type:'input',
-    },
-    {
-        label:'购货单位名称',
-        fieldName:'purchaseName',
-        type:'input',
-    },
-    {
-        label:'发票号码',
-        fieldName:'invoiceNum',
-        type:'input',
-    },
-    {
-        label:'税率',
-        fieldName:'taxRate',
-        type:'numeric',
-        componentProps:{
-            valueType:'int'
+import {fMoney,getUrlParam} from '../../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
+
+const searchFields = (disabled) => {
+    return [
+        {
+            label: '开票时间',
+            fieldName: 'billingDate',
+            type: 'rangePicker',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+            }
         },
-    }
-]
+        {
+            label: '货物名称',
+            fieldName: 'commodityName',
+            type: 'input',
+        },
+        {
+            label: '购货单位名称',
+            fieldName: 'purchaseName',
+            type: 'input',
+        },
+        {
+            label: '发票号码',
+            fieldName: 'invoiceNum',
+            type: 'input',
+        },
+        {
+            label: '税率',
+            fieldName: 'taxRate',
+            type: 'numeric',
+            componentProps: {
+                valueType: 'int'
+            },
+        }
+    ]
+}
 const columns = [
     {
         title:'纳税主体',
@@ -101,17 +112,36 @@ const columns = [
     }
 ];
 
-export default class InvoicesWithNeedNotMatchRoom extends Component{
+class InvoicesWithNeedNotMatchRoom extends Component{
+    state={
+        tableKey:Date.now(),
+    }
+    refreshTable = ()=>{
+        this.setState({
+            tableKey:Date.now()
+        })
+    }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }else{
+            this.refreshTable()
+        }
+    }
     render(){
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
                 searchOption={{
-                    fields:searchFields
+                    fields:searchFields(disabled)
                 }}
                 tableOption={{
+                    key:this.state.tableKey,
                     pageSize:10,
                     columns:columns,
                     url:'/output/invoice/marry/unwanted/list',
@@ -144,3 +174,4 @@ export default class InvoicesWithNeedNotMatchRoom extends Component{
         )
     }
 }
+export default withRouter(InvoicesWithNeedNotMatchRoom)

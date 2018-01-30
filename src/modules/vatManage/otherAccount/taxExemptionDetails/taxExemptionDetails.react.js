@@ -4,9 +4,11 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {fMoney,request} from '../../../../utils'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
 import {Button,Icon,Modal,message} from 'antd'
+import {fMoney,request,getUrlParam} from '../../../../utils'
+import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 
 const fieldList = [
     {
@@ -54,28 +56,35 @@ const fieldList = [
         },
     }
 ]
-const searchFields = [
+const searchFields =(disabled)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
         span:6,
+        componentProps:{
+            disabled
+        },
         fieldDecoratorOptions:{
+            initialValue: (disabled && getUrlParam('mainId')) || undefined,
             rules:[
                 {
                     required:true,
                     message:'请选择纳税主体'
                 }
             ]
-        },
+        }
     },{
         label:'查询期间',
         fieldName:'authMonth',
         type:'monthPicker',
         span:6,
         componentProps:{
+            format:'YYYY-MM',
+            disabled
         },
         fieldDecoratorOptions:{
+            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -122,7 +131,7 @@ const getColumns = context=> [
         dataIndex: 'invoiceTypeCTaxAmount',
     }
 ];
-export default class TaxExemptionDetails extends Component{
+class TaxExemptionDetails extends Component{
     state={
         tableKey:Date.now(),
         searchFieldsValues:{
@@ -196,16 +205,23 @@ export default class TaxExemptionDetails extends Component{
                 this.toggleSearchTableLoading(false)
             })
     }
-
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.refreshTable()
+        }
+    }
     render(){
         const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,dataSource} = this.state;
         const {mainId,authMonth} = this.state.searchFieldsValues;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <SearchTable
                 spinning={searchTableLoading}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields,
+                    fields:searchFields(disabled),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -319,3 +335,5 @@ export default class TaxExemptionDetails extends Component{
         )
     }
 }
+
+export default withRouter(TaxExemptionDetails)

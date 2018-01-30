@@ -4,8 +4,9 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
-import {getFields,request,fMoney} from '../../../../../utils'
-import moment from 'moment'
+import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 const getColumns = context => [
     {
         title: '操作',
@@ -154,7 +155,12 @@ class RoomTransactionFile extends Component{
         });
     }
     componentDidMount(){
-        this.handleSubmit()
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit()
+        }else{
+            this.handleSubmit()
+        }
     }
     refreshTable = ()=>{
         this.setState({
@@ -175,6 +181,8 @@ class RoomTransactionFile extends Component{
     render(){
         const {tableUpDateKey,filters} = this.state;
         const {getFieldValue} = this.props.form;
+        const {search} = this.props.location;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent',marginTop:-16}} >
                 <Card
@@ -192,8 +200,11 @@ class RoomTransactionFile extends Component{
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
                                         fieldDecoratorOptions:{
-
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                         },
                                     },
                                     {
@@ -250,7 +261,13 @@ class RoomTransactionFile extends Component{
                                         label:'交易日期',
                                         fieldName:'transactionDate',
                                         type:'rangePicker',
-                                        span:6
+                                        span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
+                                        }
                                     },
                                     {
                                         label:'匹配状态',
@@ -324,4 +341,4 @@ class RoomTransactionFile extends Component{
     }
 }
 
-export default Form.create()(RoomTransactionFile)
+export default Form.create()(withRouter(RoomTransactionFile))
