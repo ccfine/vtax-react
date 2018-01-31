@@ -17,7 +17,7 @@ class BusinessTaxChangeTaxAnalysisNegative extends React.Component {
         if(!!search){
             this.filterChange({
                 mainId:getUrlParam('mainId') || undefined,
-                authMonth:moment(getUrlParam('authMonthStart'), 'YYYY-MM') || undefined,
+                authMonth:moment(getUrlParam('authMonthStart')).format('YYYY-MM') || undefined,
             })
         }
     }
