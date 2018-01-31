@@ -71,6 +71,7 @@ export default class SourceModal extends React.Component{
             }}
             width={520}
             bodyStyle={{overflow:"auto",height:"400px"}}
+            maskClosable={false}
           >
           <SourceTable
                     dataSource={this.state.sourceTable} 
