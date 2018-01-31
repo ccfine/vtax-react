@@ -7,7 +7,7 @@ import moment from 'moment'
 class BusinessTaxChangeTaxAnalysisNegative extends React.Component {
     state={
         filter:undefined,
-            updateKey:Date.now()
+        updateKey:Date.now()
     }
     filterChange=(values)=>{
         this.setState({filter:values,updateKey:Date.now()})

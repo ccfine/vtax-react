@@ -1,29 +1,28 @@
 /**
  * Created by liurunbin on 2018/1/2.
  */
-import React, { Component} from 'react'
-import {Icon,Divider} from 'antd'
-import {SearchTable,FileImportModal,FileExport} from '../../../../compoments'
-import FeildModal from './popModal'
-import {request,fMoney,getUrlParam} from '../../../../utils'
+import React, { Component } from 'react'
+import { Icon, message,Button,Card,Spin } from 'antd'
+import { FileImportModal, FileExport,CardSearch,FetchTable } from '../../../../compoments'
+import { request, fMoney, getUrlParam } from '../../../../utils'
 import moment from 'moment'
 import { withRouter } from 'react-router'
 const buttonStyle = {
-    marginLeft:5
+    marginLeft: 5
 }
 
-const getColumns =(context)=>[
-   {
+const getColumns = (context) => [
+    {
         title: '纳税主体',
         dataIndex: 'mainName',
     }, {
         title: '应税项目',
         dataIndex: 'taxableItem',
-    },{
+    }, {
         title: '计税方法',
         dataIndex: 'taxMethod',
-        render(text, record, index){
-            switch(text){
+        render(text, record, index) {
+            switch (text) {
                 case '1':
                     return '一般计税方法';
                 case '2':
@@ -32,182 +31,187 @@ const getColumns =(context)=>[
                     return text;
             }
         }
-    },{
+    }, {
         title: '转出项目',
         dataIndex: 'outProjectItem',
-    },{
+    }, {
         title: '凭证号',
         dataIndex: 'voucherNum',
-    },{
+    }, {
         title: '日期',
         dataIndex: 'taxDate',
-    },{
+    }, {
         title: '转出税额',
         dataIndex: 'outTaxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
+        render: text => fMoney(text),
+        className: 'table-money'
     }
 ];
 
-class OtherBusinessInputTaxRollOut extends Component{
-    state={
-        visible:false, // 控制Modal是否显示
-        opid:"", // 当前操作的记录
-        readOnly:false,
-        updateKey:Date.now(),
-        statusLoading:false,
-        status:undefined,
-        statusParam:undefined
+class OtherBusinessInputTaxRollOut extends Component {
+    state = {
+        visible: false, // 控制Modal是否显示
+        opid: "", // 当前操作的记录
+        readOnly: false,
+        updateKey: Date.now(),
+        statusLoading: false,
+        status: undefined,
+        filter: undefined,
+        buttonDisabled:true,
+        submitLoading:false,
+        revokeLoading:false,
     }
-    hideModal(){
-        this.setState({visible:false});
+    hideModal() {
+        this.setState({ visible: false });
     }
-    updateStatus=(values=this.state.statusParam)=>{
-        this.setState({statusLoading:true});
-        request.get('/account/income/taxout/listMain',{params:values}).then(({data}) => {
+    updateStatus = (values = this.state.filter) => {
+        this.setState({ statusLoading: true,filter:values});
+        request.get('/account/income/taxout/listMain', { params: values }).then(({ data }) => {
             if (data.code === 200) {
-            let status = {};
-            if(data.data){
-                if(data.data.status === 1){
-                    status.text = '保存'
-                }else if(data.data.status === 2){
-                    status.text = (<span style={{color:'green'}}>提交</span>)
-                }
-                status.submitDate = data.data.lastModifiedDate 
-                this.setState({statusLoading:false,status:status,statusParam:values});
+                let status = {};
+                if (data.data) {
+                    if (data.data.status === 1) {
+                        status.text = '暂存'
+                    } else if (data.data.status === 2) {
+                        status.text = (<span style={{ color: 'green' }}>提交</span>)
+                    }
+                    status.submitDate = data.data.lastModifiedDate?moment(data.data.lastModifiedDate).format('YYYY-MM-DD HH:mm'):'';
+                    this.setState({ statusLoading: false, status: status, filter: values });
                 }
             }
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({updateKey:Date.now()})
-        }
-
+    commonSubmit = (url, params, action, messageInfo) => {
+        this.setState({ [`${action}Loading`]: true });
+        request.post(url, params)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    message.success(messageInfo, 4)
+                    this.setState({ [`${action}Loading`]: false});
+                    this.updateStatus(params);
+                } else {
+                    message.error(data.msg, 4)
+                    this.setState({ [`${action}Loading`]: false });
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.setState({ [`${action}Loading`]: false });
+            })
+    } 
+    submit = () => {
+        let params = { ...this.state.filter };
+        this.commonSubmit('/account/income/taxout/submit', params, 'submit', '提交成功');
     }
-    render(){
-        const {search} = this.props.location;
+    revoke = () => {
+        let params = { ...this.state.filter };
+        this.commonSubmit('/account/income/taxout/revoke', params, 'revoke', '撤回提交成功');
+    }
+    filterChange = (values) => {
+        values.authMonth = moment(values.authMonth).format('YYYY-MM');
+        this.setState({ updateKey: Date.now(), filters: values });
+        this.updateStatus(values);
+    }
+    render() {
+        const { search } = this.props.location;
         let disabled = !!search;
-        const getFields = (title,span,formItemStyle,record={})=> [
+        const getFields = (title, span, formItemStyle, record = {}) => [
             {
-                label:'纳税主体',
-                type:'taxMain',
+                label: '纳税主体',
+                type: 'taxMain',
                 span,
-                fieldName:'mainId',
+                fieldName: 'mainId',
                 formItemStyle,
-                componentProps:{
+                componentProps: {
                     disabled,
                 },
-                fieldDecoratorOptions:{
+                fieldDecoratorOptions: {
                     initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                    rules:[{
-                        required:true,
-                        message:'请选择纳税主体'
+                    rules: [{
+                        required: true,
+                        message: '请选择纳税主体'
                     }]
                 }
             },
             {
-                label:`${title}月份`,
-                fieldName:'authMonth',
-                type:'monthPicker',
+                label: `${title}月份`,
+                fieldName: 'authMonth',
+                type: 'monthPicker',
                 span,
                 formItemStyle,
-                componentProps:{
-                    format:'YYYY-MM',
+                componentProps: {
+                    format: 'YYYY-MM',
                     disabled,
                 },
-                fieldDecoratorOptions:{
+                fieldDecoratorOptions: {
                     initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
-                    rules:[{
-                        required:true,
-                        message:`请选择${title}月份`
+                    rules: [{
+                        required: true,
+                        message: `请选择${title}月份`
                     }]
                 }
             }
         ]
-        return(
-                <SearchTable
-                    doNotFetchDidMount={true}
-                    searchOption={{
-                        fields:getFields('查询',8)
+
+        let {buttonDisabled,status} = this.state;
+        return (
+            <div>
+            <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />
+            <Card title='其他业务进项税额转出台账' extra={(<div>
+                {
+                    status && (this.state.statusLoading?<Spin size="small" />:<div style={{ marginRight: 30, display: 'inline-block' }}>
+                        <span style={{ marginRight: 20 }}>状态：<label style={{ color: 'red' }}>{status.text}</label></span>
+                        <span>提交时间：{status.submitDate}</span>
+                    </div>)
+                }
+                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
+                    <Icon type="check" />
+                    提交
+                </Button>
+                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
+                    <Icon type="rollback" />
+                    撤回提交
+                </Button>
+                <FileExport url={`/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle} />
+                <FileImportModal
+                    style={buttonStyle}
+                    url="/account/income/taxout/upload"
+                    title="导入"
+                    fields={getFields('导入', 24, {
+                        labelCol: {
+                            span: 6
+                        },
+                        wrapperCol: {
+                            span: 11
+                        }
+                    })}
+                    onSuccess={() => {
+
+                        this.setState({ updateKey: Date.now() })
                     }}
-                    backCondition={this.updateStatus}
-                    tableOption={{
-                        scroll:{x:'100%'},
-                        pageSize:10,
-                        columns:getColumns(this),
-                        url:'/account/income/taxout/list',
-                        key:this.state.updateKey,
-                        cardProps:{
-                            extra:(<div>
-                                    { this.state.status &&
-                                    <span>
-                                        <span style={buttonStyle}>
-                                            <label>状态：</label>
-                                            <span>{this.state.status.text}</span>
-                                        </span> 
-                                        <Divider type="vertical" />
-                                        <span style={buttonStyle}>
-                                            <label>提交时间：</label>
-                                            <span>{this.state.status.submitDate}</span>
-                                        </span>
-                                    </span>
-                                    }
-                                <FeildModal
-                                    style={buttonStyle}
-                                    title='提交'
-                                    buttonIcon = {<Icon type="check" />}
-                                    url='/account/income/taxout/submit'
-                                    feilds={getFields('提交',24,{
-                                        labelCol:{
-                                            span:6
-                                        },
-                                        wrapperCol:{
-                                            span:11
-                                        }
-                                    },this.state.statusParam)}
-                                    onSuccess={this.updateStatus}
-                                 />
-                                <FeildModal 
-                                    style={buttonStyle}
-                                    title='撤回提交'
-                                    buttonIcon={<Icon type="rollback" />}
-                                    url='/account/income/taxout/revoke'
-                                    feilds={getFields('撤回',24,{
-                                        labelCol:{
-                                            span:6
-                                        },
-                                        wrapperCol:{
-                                            span:11
-                                        }
-                                    },this.state.statusParam)}
-                                    onSuccess={this.updateStatus}
-                                />
-                                <FileExport url={`/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle}/>
-                                <FileImportModal
-                                    style={buttonStyle}
-                                    url="/account/income/taxout/upload"
-                                    title="导入"
-                                    fields={getFields('导入',24,{
-                                        labelCol:{
-                                            span:6
-                                        },
-                                        wrapperCol:{
-                                            span:11
-                                        }
-                                    })}
-                                    onSuccess={()=>{
-                                        
-                                        this.setState({updateKey:Date.now()})
-                                    }}
-                                />
-                            </div>),
-                            title:'其他业务进项税额转出台账'
+                />
+            </div>)}>
+                <FetchTable
+                    doNotFetchDidMount={true}
+                    url='/account/income/taxout/list'
+                    updateKey={this.state.updateKey}
+                    tableProps={{
+                        pagination: true,
+                        columns: getColumns(this),
+                        rowKey: 'id',
+                        onDataChange:(data)=>{
+                            let hasData =data && data.length>0;
+                            this.setState({buttonDisabled:!hasData})  
+                        },
+                        renderCount:(data)=>{
+                            if(data.page && data.page.records && data.page.records.length>0){
+                                return [{mainName:'本页合计：',outTaxAmount:fMoney(data.pageOutTaxAmount),id:-1}];
+                            }
                         }
                     }}
-                >
-            </SearchTable>
+                    filters={this.state.filters} />
+            </Card>
+        </div>
         )
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Card, Button, Icon, message } from 'antd'
+import { Table, Card, Button, Icon, message ,Spin} from 'antd'
 import { request,fMoney } from '../../../../utils'
 import { CusFormItem } from '../../../../compoments'
 import moment from 'moment'
@@ -210,7 +210,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                         title: '10',
                         dataIndex: 'businessStartAmount',
                         render: (text, record, index) => {
-                            if (record.isLittleCount || record.isBigCount || index === tax1Count - 1 || index >= tax1Count + tax2Count || context.state.currentStatus.status === 2) {
+                            if (record.isLittleCount || record.isBigCount || index === tax1Count - 1 || index >= tax1Count + tax2Count || (context.state.currentStatus && context.state.currentStatus.status === 2)) {
                                 return fMoney(text);
                             } else {
                                 return (<NumericItem value={text} style={{ width: 100 }} size='small' onChange={(value) => { context.inputChange({ businessStartAmount: value }, index) }} />);
@@ -225,7 +225,7 @@ const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
                         title: '11',
                         dataIndex: 'businessCurrentAmount',
                         render: (text, record, index) => {
-                            if (record.isLittleCount || record.isBigCount || index === tax1Count - 1 || index >= tax1Count + tax2Count || context.state.currentStatus.status === 2) {
+                            if (record.isLittleCount || record.isBigCount || index === tax1Count - 1 || index >= tax1Count + tax2Count || (context.state.currentStatus && context.state.currentStatus.status === 2)) {
                                 return fMoney(text);
                             } else {
                                 return (<NumericItem value={text} style={{ width: 100 }} size='small' onChange={(value) => { context.inputChange({ businessCurrentAmount: value }, index) }} />);
@@ -345,8 +345,7 @@ const reConstructData = (data) => {
         tax2 = data.page.records[1].page.records,
         tax1Count = data.page.records[0],
         tax2Count = data.page.records[1],
-        mainCount = data,
-        statusData = tax1.length > 0 ? tax1[0] : {};
+        mainCount = data;
 
     // 第一种纳税方式数据
     tax1 && tax1.forEach(element => {
@@ -379,25 +378,7 @@ const reConstructData = (data) => {
     temp.isBigCount = true;
     temp.key = key++;
     newDataSource.push(temp);
-
-    let currentStatus = {};
-    currentStatus.status = statusData.status;
-    switch (statusData.status) {
-        case 0:
-            currentStatus.text = '暂存';
-            break;
-        case 1:
-            currentStatus.text = '保存';
-            break;
-        case 2:
-            currentStatus.text = '提交';
-            currentStatus.date = moment(statusData.lastModifiedDate).format('YYYY-MM-DD HH:mm');
-            break;
-        default:
-            currentStatus.text = '';
-    }
-
-    return { newDataSource, tax1Count: tax1.length + 1, tax2Count: tax1.length + 1, currentStatus };
+    return { newDataSource, tax1Count: tax1.length + 1, tax2Count: tax1.length + 1 };
 }
 
 export default class extends React.Component {
@@ -406,7 +387,8 @@ export default class extends React.Component {
         dataSource: undefined,
         tax1Count: 0,
         tax2Count: 0,
-        currentStatus: {},
+        currentStatus: undefined,
+        statusLoading:false,
         saveLoading: false,
         revokeLoading: false,
         submitLoading: false
@@ -440,9 +422,17 @@ export default class extends React.Component {
         this.setState({ loading: true });
         request.get(url, { params: filter }).then(({ data }) => {
             if (data.code === 200) {
-                let { newDataSource, tax1Count, tax2Count, currentStatus } = reConstructData(data.data);
-                this.setState({ dataSource: newDataSource, tax1Count, tax2Count, currentStatus, loading: false });
+                let { newDataSource, tax1Count, tax2Count } = reConstructData(data.data);
+                this.setState({ dataSource: newDataSource, tax1Count, tax2Count, loading: false });
+                this.updateStatus(filter)
+            }else {
+                message.error(data.msg, 4)
+                this.setState({ loading: false });
             }
+        })
+        .catch(err => {
+            message.error(err.message)
+            this.setState({ loading: false });
         })
     }
     commonSubmit = (url, params, action, messageInfo) => {
@@ -463,28 +453,53 @@ export default class extends React.Component {
                 this.setState({ [`${action}Loading`]: false });
             })
     }
+    updateStatus = (filter) => {
+        this.setState({ currentStatus: undefined,statusLoading:true });
+        request.get(`/account/other/camping/main`, { params: filter }).then(({ data }) => {
+            if (data.code === 200) {
+                let currentStatus = {},statusData=data.data;
+                currentStatus.status = statusData.status;
+                switch (statusData.status) {
+                    case 0:
+                        currentStatus.text = '暂存';
+                        break;
+                    case 1:
+                        currentStatus.text = '保存';
+                        break;
+                    case 2:
+                        currentStatus.text = '提交';
+                        currentStatus.date = moment(statusData.lastModifiedDate).format('YYYY-MM-DD HH:mm');
+                        break;
+                    default:
+                        currentStatus.text = '';
+                }
+                this.setState({ currentStatus,statusLoading:false});
+            }
+        })
+    }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
+        const buttonDisabled = !(dataSource && dataSource.length > 0);
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
-                    <div style={{ marginRight: 30, display: 'inline-block' }}>
+                    { currentStatus && (this.state.statusLoading?<Spin size="small" />:<div style={{ marginRight: 30, display: 'inline-block' }}>
                         <span style={{ marginRight: 20 }}>状态：<label style={{ color: 'red' }}>{currentStatus.text}</label></span>
                         <span>提交时间：{currentStatus.date}</span>
-                    </div>
-                    <Button size='small' style={{ marginRight: 5 }} onClick={this.save} loading={this.state.saveLoading}>
+                    </div>)}
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.save} loading={this.state.saveLoading}>
                         <Icon type="hdd" />
                         保存
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} onClick={this.reCalculate} >
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.reCalculate} >
                         <Icon type="retweet" />
                         重算
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} onClick={this.submit} loading={this.state.submitLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
                         <Icon type="check" />
                         提交
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} onClick={this.revoke} loading={this.state.revokeLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
                         <Icon type="rollback" />
                         撤回提交
                     </Button>
