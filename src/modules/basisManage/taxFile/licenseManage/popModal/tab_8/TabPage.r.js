@@ -27,7 +27,7 @@ const getColumns = context=> [
                 <a style={{marginRight:"5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
                 }}>修改</a>
-                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
+                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
                     <a style={{marginRight:"5px"}}>删除</a>
                 </Popconfirm>
                 <a onClick={()=>{

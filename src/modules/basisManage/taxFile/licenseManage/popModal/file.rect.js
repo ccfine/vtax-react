@@ -103,7 +103,7 @@ class FileModal extends React.Component {
                     dataSource={data}
                     renderItem={item => (
                         <List.Item actions={[
-                            <Popconfirm title="确定要删除吗?" onConfirm={() => { this.deleteRecord(item) }} onCancel={() => { }} okText="删除" cancelText="不删">
+                            <Popconfirm title="确定要删除吗?" onConfirm={() => { this.deleteRecord(item) }} onCancel={() => { }} okText="确认" cancelText="取消">
                                 <a style={noneStyle}><Icon type="delete"/> 删除</a>
                             </Popconfirm>,
                             <FileExport url={`/${this.props.url}/file/download/${item.id}`} size='small' title='下载' WrapComponent={MyA}/>

@@ -32,7 +32,7 @@ class InputTaxOnFixedAssets extends Component {
             key:'actions',
             render:(text,record)=>(
                 <div>
-                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="删除" cancelText="不删">
+                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
                         <a style={{marginRight:"5px"}}>删除</a>
                     </Popconfirm>
                 </div>

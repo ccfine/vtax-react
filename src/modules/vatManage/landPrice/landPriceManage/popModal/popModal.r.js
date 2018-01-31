@@ -76,6 +76,8 @@ class LandPriceModal extends React.Component{
                 notOffsetLandPrice:oldPriceInfo.notOffsetLandPrice,
                 setUp:oldPriceInfo.setUp
               };
+
+              priceInfo.landPrice = priceInfo.landPrice && priceInfo.landPrice.toString().replace(/,/g,'');
               requests.push(request.put("/landPriceInfo/update", priceInfo));
               
               // 修改土地来源
