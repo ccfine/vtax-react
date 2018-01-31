@@ -31,7 +31,7 @@ export default class Sheet extends Component{
     }
     fetchSheetData = url =>{
         this.toggleLoading(true);
-        request.get(url)
+        request.get(url,{params:{mainId:'950212281515552770',taxMonth:'2018-02'}})
             .then(({data})=>{
                 if(data.code===200){
                     let nextData = [
