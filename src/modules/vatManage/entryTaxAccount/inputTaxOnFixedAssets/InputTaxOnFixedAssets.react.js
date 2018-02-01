@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Popconfirm} from 'antd'
 import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
-import {getFields,request,getUrlParam} from '../../../../utils'
+import {getFields,request,getUrlParam,fMoney} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 
@@ -32,7 +32,7 @@ class InputTaxOnFixedAssets extends Component {
             key:'actions',
             render:(text,record)=>(
                 <div>
-                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
+                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
                         <a style={{marginRight:"5px"}}>删除</a>
                     </Popconfirm>
                 </div>
@@ -44,11 +44,13 @@ class InputTaxOnFixedAssets extends Component {
             title:'发票类型',
             dataIndex:'invoiceType',
         },{
-            title: '期申报抵扣的进项税额',
+            title: '当期申报抵扣的进项税额',
             dataIndex: 'incomeTaxAmount',
+            render:text=>fMoney(text)
         },{
             title: '本年申报抵扣的进项税额累计',
             dataIndex: 'incomeTaxAmountSum',
+            render:text=>fMoney(text)
         }
     ];
     deleteRecord(record){

@@ -77,7 +77,7 @@ const getColumns =context =>[
         render(text, record, index){
             return(
                 <span>
-                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
+                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
                         <a alt="删除" style={{marginRight:"5px"}}>删除</a>
                     </Popconfirm>
                 </span>

@@ -154,7 +154,7 @@ class PopUploadModal extends Component{
                <Button size='small' onClick={()=>this.toggleVisible(true)}>
                    <Icon type="upload" />{props.title}
                </Button>
-                <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)} maskClosable={false}>
+                <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)} maskClosable={false} destroyOnClose={true}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {

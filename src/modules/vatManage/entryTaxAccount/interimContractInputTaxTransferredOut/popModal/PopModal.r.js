@@ -132,25 +132,34 @@ class PopModal extends Component{
                         sum += parseFloat(element.buildingArea);
                     })
 
-                    const thisTaxScale = accDiv(data.data.buildingArea,sum);
-                    const taxSale = parseFloat(thisTaxScale.toString().substring(0,4));
-
+                    //计算当前值
                     this.setState(prevState=>{
                         return {
-                            $$dataSource:prevState.$$dataSource.set(record.key, {
-                                ...record,
-                                buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea,
-                                taxScale: taxSale
+                            $$dataSource:prevState.$$dataSource.map(item=>{
+                                if(record.stagesId !== item.stagesId){
+                                    const thisTaxScale2 = accDiv(item.buildingArea,sum);
+                                    const taxSale2 = parseFloat(thisTaxScale2.toString().substring(0,4));
+                                    return{
+                                        ...item,
+                                        taxScale:taxSale2
+                                    }
+                                }else{
+                                    const thisTaxScale = accDiv(data.data.buildingArea,sum);
+                                    const taxSale = parseFloat(thisTaxScale.toString().substring(0,4));
+                                    return {
+                                        ...item,
+                                        buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea,
+                                        taxScale: taxSale
+                                    }
+                                }
                             }),
                             footerDate:{
                                 allBuildingArea:sum //赋值总和
                             },
                             isShowDataSource:true,
                         }
-
                     })
                 })
-
             }
         });
     }
@@ -221,6 +230,7 @@ class PopModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 style={{ top: 50 ,maxWidth:'80%'}}

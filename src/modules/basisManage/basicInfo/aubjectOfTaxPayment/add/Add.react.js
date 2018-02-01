@@ -30,9 +30,6 @@ class Add extends Component {
         gqgx:[],
         jbxx:{},
         szjd: null,
-
-        industry:{},
-
         status:1,
         id:null,
     }
@@ -55,12 +52,6 @@ class Add extends Component {
             gqgx
         })
     }
-    //给其它组件传数据
-    changeIndustry=industry=>{
-        this.mounted && this.setState({
-            industry
-        })
-    }
     setStatus = status=>{
         this.mounted && this.setState({
             status:status
@@ -77,61 +68,18 @@ class Add extends Component {
 
     checkeGqgxId = (data)=>{
         return data.map((item)=>{
-            if(item.id.indexOf('t')> -1){
-                return {
-                    remark:item.remark,
-                    rightsRatio:item.rightsRatio,
-                    stockRightRatio:item.stockRightRatio,
-                    stockholder:item.stockholder,
-                    stockholderType:item.stockholderType,
-                }
-            }else{
-                return {
-                    id:item.id,
-                    remark:item.remark,
-                    rightsRatio:item.rightsRatio,
-                    stockRightRatio:item.stockRightRatio,
-                    stockholder:item.stockholder,
-                    stockholderType:item.stockholderType,
-                }
+            return {
+                ...item,
+                id: (item.id.indexOf('t') > -1) ? null : item.id
             }
         })
     }
 
     checkeGdjcgId = (data)=> {
         return data.map((item) => {
-            if (item.id.indexOf('t') > -1) {
-                return {
-                    capitalRemark: item.capitalRemark,
-                    collectionCapitalAmount: parseFloat(`${item.collectionCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    collectionCapitalCurrency: item.collectionCapitalCurrency,
-                    propertyRemark: item.propertyRemark,
-                    realStockholder: item.realStockholder,
-                    registeredCapitalAmount: parseFloat(`${item.registeredCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    registeredCapitalCurrency: item.registeredCapitalCurrency,
-                    registeredStockholder: item.registeredStockholder,
-                    situation: item.situation,
-                    stockRight: item.stockRight,
-                    stockholderType: item.stockholderType,
-                    term: item.term,
-                }
-
-            } else {
-                return {
-                    id: item.id,
-                    capitalRemark: item.capitalRemark,
-                    collectionCapitalAmount: parseFloat(`${item.collectionCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    collectionCapitalCurrency: item.collectionCapitalCurrency,
-                    propertyRemark: item.propertyRemark,
-                    realStockholder: item.realStockholder,
-                    registeredCapitalAmount: parseFloat(`${item.registeredCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    registeredCapitalCurrency: item.registeredCapitalCurrency,
-                    registeredStockholder: item.registeredStockholder,
-                    situation: item.situation,
-                    stockRight: item.stockRight,
-                    stockholderType: item.stockholderType,
-                    term: item.term,
-                }
+            return {
+                ...item,
+                id: (item.id.indexOf('t') > -1) ? null : item.id
             }
         })
     }
@@ -140,107 +88,109 @@ class Add extends Component {
         e && e && e.preventDefault();
          this.props.form.validateFields((err, values) => {
              console.log(err, values);
+
+
          if (!err) {
-               const type = this.props.modalConfig.type;
-               const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
-               const gqgx = this.checkeGqgxId(this.state.gqgx);
-               const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
-               const data = {
-                   ...values,
-                   jbxx:{
-                       ...values.jbxx,
-                       industry:this.state.industry.key,
-                       status:this.state.status,
-                       id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
-                       operatingProvince: values.jbxx.operatingProvince[0],
-                       operatingCity:values.jbxx.operatingProvince[1],
-                       operatingArea:values.jbxx.operatingProvince[2],
-                       nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
-                       nationalTaxCity:values.jbxx.nationalTaxProvince[1],
-                       nationalTaxArea:values.jbxx.nationalTaxProvince[2],
-
-                       localTaxProvince:values.jbxx.localTaxProvince[0],
-                       localTaxCity:values.jbxx.localTaxProvince[1],
-                       localTaxArea:values.jbxx.localTaxProvince[2],
-                       currencyAmount:values.jbxx.currencyAmount && parseFloat(`${values.jbxx.currencyAmount}`.replace(/\$\s?|(,*)/g, '')),
-                       receiptCurrencyAmount:values.jbxx.receiptCurrencyAmount && parseFloat(`${values.jbxx.receiptCurrencyAmount}`.replace(/\$\s?|(,*)/g, '')),
-                       registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
-                       openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
-                   },
-                   gdjcg:gdjcg ,
-                   gqgx:gqgx,
-                   szjd:szjd,
-               }
-
-               console.log(data);
-               debugger
-
-               this.mounted && this.setState({
-                   submitLoading: true
-               })
-               if (type === 'add') {
-                   request.post('/taxsubject/save', data
-                   )
-                       .then(({data}) => {
-                           if (data.code === 200) {
-                               message.success('新增成功！', 4)
-                               //编辑成功，关闭当前窗口,刷新父级组件
-                               this.props.toggleModalVisible(false);
-                               this.props.updateTable();
-                               this.setStatus(2);
-                               this.mounted && this.setState({
-                                   submitLoading: false,
-                                   id:data.data,
-                               })
-                           } else {
-                               message.error(data.msg, 4)
-                               this.mounted && this.setState({
-                                   submitLoading: false
-                               })
-                           }
-                       })
-                       .catch(err => {
-                           message.error(err.message)
-                           this.mounted && this.setState({
-                               submitLoading: false
-                           })
-
-                       })
-               }
-
-               if (type === 'edit') {
-
-                   request.put('/taxsubject/update', data
-                   )
-                       .then(({data}) => {
-
-                           if (data.code === 200) {
-                               message.success('编辑成功！', 4);
-                               //编辑成功，关闭当前窗口,刷新父级组件
-                               this.props.toggleModalVisible(false);
-                               this.props.updateTable();
-                               this.mounted && this.setState({
-                                   submitLoading: false
-                               })
-                           } else {
-                               message.error(data.msg, 4);
-                               this.mounted && this.setState({
-                                   submitLoading: false
-                               })
-                           }
-                       })
-                       .catch(err => {
-                           message.error(err.message)
-                           this.mounted && this.setState({
-                               submitLoading: false
-                           })
-                       })
-               }
-             }else{
-                if(err.jbxx){
-                    this.setState({ activeKey:'1' });
-                }
+             if(values.jbxx.industry.label && values.jbxx.industry.key){
+                 values.jbxx.industry = values.jbxx.industry.key
              }
+
+             const type = this.props.modalConfig.type;
+             const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
+             const gqgx = this.checkeGqgxId(this.state.gqgx);
+             const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
+             const data = {
+                ...values,
+                jbxx:{
+                   ...values.jbxx,
+                   status:this.state.status,
+                   id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
+                   operatingProvince: values.jbxx.operatingProvince[0],
+                   operatingCity:values.jbxx.operatingProvince[1],
+                   operatingArea:values.jbxx.operatingProvince[2],
+                   nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
+                   nationalTaxCity:values.jbxx.nationalTaxProvince[1],
+                   nationalTaxArea:values.jbxx.nationalTaxProvince[2],
+
+                   localTaxProvince:values.jbxx.localTaxProvince[0],
+                   localTaxCity:values.jbxx.localTaxProvince[1],
+                   localTaxArea:values.jbxx.localTaxProvince[2],
+                   registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
+                   openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
+                },
+                gdjcg:gdjcg ,
+                gqgx:gqgx,
+                szjd:szjd,
+             }
+
+            //console.log(data);
+
+            this.mounted && this.setState({
+               submitLoading: true
+            })
+            if (type === 'add') {
+               request.post('/taxsubject/save', data
+               )
+                   .then(({data}) => {
+                       if (data.code === 200) {
+                           message.success('新增成功！', 4)
+                           //编辑成功，关闭当前窗口,刷新父级组件
+                           this.props.toggleModalVisible(false);
+                           this.props.updateTable();
+                           this.setStatus(2);
+                           this.mounted && this.setState({
+                               submitLoading: false,
+                               id:data.data,
+                           })
+                       } else {
+                           message.error(data.msg, 4)
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       }
+                   })
+                   .catch(err => {
+                       message.error(err.message)
+                       this.mounted && this.setState({
+                           submitLoading: false
+                       })
+
+                   })
+            }
+
+            if (type === 'edit') {
+
+               request.put('/taxsubject/update', data
+               )
+                   .then(({data}) => {
+
+                       if (data.code === 200) {
+                           message.success('编辑成功！', 4);
+                           //编辑成功，关闭当前窗口,刷新父级组件
+                           this.props.toggleModalVisible(false);
+                           this.props.updateTable();
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       } else {
+                           message.error(data.msg, 4);
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       }
+                   })
+                   .catch(err => {
+                       message.error(err.message)
+                       this.mounted && this.setState({
+                           submitLoading: false
+                       })
+                   })
+            }
+            }else{
+            if(err.jbxx){
+                this.setState({ activeKey:'1' });
+            }
+            }
         })
     }
     handleDelete=()=>{
@@ -315,19 +265,6 @@ class Add extends Component {
                 }
             });
     }
-    //根据id查询行业
-    getIndustryTitle=(id)=>{
-        console.log(id);
-        request.get(`/taxsubject/get/industry/${id}`)
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.changeIndustry({
-                        key:data.data.key,
-                        label:data.data.title,
-                    })
-                }
-            })
-    }
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
@@ -343,7 +280,6 @@ class Add extends Component {
                 gqgx:[],
                 jbxx:{},
                 szjd: null,
-                industry:{},
                 activeKey:'1',
             })
         }
@@ -355,7 +291,6 @@ class Add extends Component {
             if(nextProps.selectedRowKeys && nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
                 this.setStatus(parseInt(nextProps.selectedRows[0].status, 0));
-                this.getIndustryTitle(nextProps.selectedRows[0].industry)
             }
 
         }
@@ -365,7 +300,7 @@ class Add extends Component {
     render() {
         const {modalConfig,visible,form,selectedRowKeys} = this.props;
 
-        const {jbxx,szjd,gdjcg,gqgx,industry,status} = this.state;
+        const {jbxx,szjd,gdjcg,gqgx,status} = this.state;
 
         let title='';
         const type = modalConfig.type;
@@ -387,6 +322,7 @@ class Add extends Component {
             <div>
                 <Modal
                     maskClosable={false}
+                    destroyOnClose={true}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
                     style={{ top: 40 }}
@@ -434,9 +370,7 @@ class Add extends Component {
                                         type={type}
                                         visible={visible}
                                         defaultData={jbxx}
-                                        industry={industry}
                                         selectedRowKeys={selectedRowKeys}
-                                        changeIndustry = {this.changeIndustry.bind(this)}
                                     />
                                 </TabPane>
                                 <TabPane tab="税种鉴定" key="2" forceRender={true}>

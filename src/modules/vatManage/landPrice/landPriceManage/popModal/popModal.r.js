@@ -175,6 +175,7 @@ class LandPriceModal extends React.Component{
             width={920}
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
             maskClosable={false}
+            destroyOnClose={true}
           >
           <Spin spinning={this.state.loading}>
           <Form>

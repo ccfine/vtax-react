@@ -139,7 +139,8 @@ class PopModal extends Component{
                   确认
                 </Button>,
               ]}
-              maskClosable={false}
+            maskClosable={false}
+            destroyOnClose={true}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>

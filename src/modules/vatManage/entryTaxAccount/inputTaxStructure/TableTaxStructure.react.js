@@ -50,12 +50,12 @@ const EditableCell = ({ title, editable, value, form, column, type,rules,compone
                             ...componentProps
                         },
                         fieldDecoratorOptions:{
-                            initialValue:value,
+                            initialValue:value === '' ? value : fMoney(value),
                             rules,
                         }
                     }
                 ])
-                    : value
+                    : title === '调整说明' ? value : fMoney(value)
             }
         </div>
     );
@@ -178,7 +178,7 @@ class TableTaxStructure extends Component {
         })
             .then(({data}) => {
                 if(data.code===200){
-                    message.success('重算成功!');
+                    //message.success('重算成功!');
                     this.setState({
                         resetDataSource:data.data.page.records,
                         footerDate:data.data,
@@ -186,15 +186,14 @@ class TableTaxStructure extends Component {
                     })
                     this.props.form.resetFields()
                 }else{
-                    message.error(`重算失败:${data.msg}`)
+                    message.error(data.msg)
                 }
             });
     }
     componentWillReceiveProps(nextProps){
-        //console.log(nextProps.tableUpDateKey, this.props.tableUpDateKey)
-        /*if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-
-        }*/
+        if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
+            this.fetch("/account/income/taxstructure/list",nextProps.filters);
+        }
     }
     render(){
         const props = this.props;

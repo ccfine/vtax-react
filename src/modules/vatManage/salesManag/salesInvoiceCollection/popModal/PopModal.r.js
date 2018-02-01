@@ -201,6 +201,7 @@ class PopModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={800}
                 style={{

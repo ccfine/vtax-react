@@ -150,6 +150,7 @@ class PopModal extends Component{
                 </Button>,
               ]}
             maskClosable={false}
+            destroyOnClose={true}
             >
             <Spin spinning={this.state.formLoading}>
                 <Form>

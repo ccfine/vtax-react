@@ -123,7 +123,7 @@ class ButtonWithFileUploadModal extends Component{
                     <Button size='small' onClick={()=>this.toggleVisible(true)}>
                    <Icon type="file" />{props.title}
                </Button>
-                <Modal title='附件' visible={visible} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>
+                <Modal title='附件' visible={visible} maskClosable={false} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>
                     <Spin spinning={!loaded}>
                     <Upload {...uploadProps}>
                         <Button size='small'>

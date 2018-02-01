@@ -84,6 +84,7 @@ class PopModal extends Component{
             <Modal
                 title="查看"
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 footer={false}
                 width={1920}

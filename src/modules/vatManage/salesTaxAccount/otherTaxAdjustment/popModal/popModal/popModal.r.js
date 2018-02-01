@@ -73,18 +73,20 @@ class PopModal extends Component{
         const form= this.props.form;
         const {record ={}} = this.state, readonly=false
         return (
-            <Modal 
-            title='选择应税项目'
-            visible={this.props.visible}
-            width='700px'
-            bodyStyle={{height:"450px",overflow:"auto"}}
-            onCancel={()=>{this.props.hideModal()}}
-            footer={[
-                <Button key="back" onClick={()=>{this.props.hideModal()}}>取消</Button>,
-                <Button key="submit" type="primary" onClick={()=>{this.handleOk()}}>
-                  确认
-                </Button>,
-              ]}
+            <Modal
+                maskClosable={false}
+                destroyOnClose={true}
+                title='选择应税项目'
+                visible={this.props.visible}
+                width='700px'
+                bodyStyle={{height:"450px",overflow:"auto"}}
+                onCancel={()=>{this.props.hideModal()}}
+                footer={[
+                    <Button key="back" onClick={()=>{this.props.hideModal()}}>取消</Button>,
+                    <Button key="submit" type="primary" onClick={()=>{this.handleOk()}}>
+                      确认
+                    </Button>,
+                  ]}
             >
             <Spin spinning={this.state.loading}>
                 <div style={{height:250,overflowY:'auto'}}>

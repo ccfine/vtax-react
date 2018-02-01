@@ -126,7 +126,7 @@ class ButtonModalWithForm extends Component{
                        buttonOptions.text
                    }
                </Button>
-                <Modal {...modalOptions} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
+                <Modal {...modalOptions} maskClosable={false} destroyOnClose={true} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {

@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import {Row,Card} from 'antd'
 import moment from 'moment';
-import {request,getFields,regRules,fMoney,requestDict} from '../../../../../utils'
+import {request,getFields,regRules,requestDict} from '../../../../../utils'
 import './styles.less'
 
 class BasicInfo extends Component {
@@ -20,25 +20,6 @@ class BasicInfo extends Component {
         maximumLimit:[],
         selectOptions:[],
     }
-
-    handleKeyUp=(name)=> {
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
-        form.setFieldsValue({
-            [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        });
-    }
-
-    handleBlur=(name)=>{
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`);
-        //console.log(value,fMoney(value));
-
-        form.setFieldsValue({
-            [name]: fMoney(value),
-        });
-    }
-
     //设置select值名不同
     setFormat=data=>{
         return data.map(item=>{
@@ -106,6 +87,7 @@ class BasicInfo extends Component {
     render() {
 
         const {defaultData} = this.props;
+        const {getFieldValue} = this.props.form
         const dateFormat = 'YYYY-MM-DD';
         let disabled = this.props.type ==='view';
         let shouldShowDefaultData = false;
@@ -120,6 +102,7 @@ class BasicInfo extends Component {
                 span:14
             }
         }
+
         return (
             <div className="basicInfo" style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
 
@@ -217,20 +200,27 @@ class BasicInfo extends Component {
                                     type:'industry',
                                     span:12,
                                     formItemStyle,
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData['industry'] ? {
+                                            label:defaultData['industry'] || '',
+                                            key:defaultData['industry'] || ''
+                                        } : undefined,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请选择所属行业'
+                                            }
+                                        ]
+                                    },
                                     componentProps:{
                                         disabled,
-                                        onChange:data=>{
-                                            this.props.changeIndustry(data)
-                                        }
-                                    },
-                                    fieldDecoratorOptions:{
-                                        initialValue:this.props.industry,
-                                        rules: [
-                                            {
-                                                required: true, message: '请选择所属行业',
-                                            }
-                                        ],
+                                        conditionValue:getFieldValue('jbxx.industry') ? {
+                                            industry:getFieldValue('jbxx.industry')
+                                        } : {
+                                            industry:defaultData['industry']
+                                        },
                                     }
+
                                 },{
                                     label:'注册类型',
                                     fieldName:'jbxx.registrationType',
@@ -608,14 +598,14 @@ class BasicInfo extends Component {
                                 },{
                                     label:'注册资本原币金额(万元)',
                                     fieldName:'jbxx.currencyAmount',
-                                    type:'input',
+                                    type:'numeric',
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:fMoney(defaultData.currencyAmount),
+                                        initialValue:defaultData.currencyAmount,
                                     }
                                 },{
                                     label:'实收资本原币币别',
@@ -637,14 +627,14 @@ class BasicInfo extends Component {
                                 },{
                                     label:'实收资本原币金额(万元)',
                                     fieldName:'jbxx.receiptCurrencyAmount',
-                                    type:'input',
+                                    type:'numeric',
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:fMoney(defaultData.receiptCurrencyAmount),
+                                        initialValue:defaultData.receiptCurrencyAmount,
                                     }
                                 },{
                                     label:'是否协同（喜盈佳）',

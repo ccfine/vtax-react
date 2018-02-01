@@ -39,8 +39,11 @@ export default class Industry extends Component{
     componentWillUnmount(){
         this.mounted=null;
     }
+    /*componentWillReceiveProps(nextProps){
+        console.log(nextProps.customizedValues.industry, this.props.customizedValues.industry)
+    }*/
     render(){
-        const {setFieldsValue,fieldName,onChange,disabled} = this.props;
+        const {setFieldsValue,fieldName,onChange,disabled,conditionValue} = this.props;
         const {visible} = this.state;
         return(
             <div onClick={()=>{
@@ -52,6 +55,7 @@ export default class Industry extends Component{
                 <IndustryTree
                     visible={visible}
                     disabled={disabled}
+                    conditionValue={conditionValue}
                     toggleModalVisible={this.toggleModalVisible}
                     fieldName={fieldName}
                     onChange={data=>onChange(data)}
@@ -96,7 +100,7 @@ class IndustryTree extends Component{
                     label:selectedNodes.title,
                 }
                 setFieldsValue({
-                    [fieldName]: fieldData.label,
+                    [fieldName]: fieldData,
                 });
                 onChange && onChange(fieldData);
                 toggleModalVisible(false)
@@ -131,7 +135,23 @@ class IndustryTree extends Component{
                 }
             })
     }
-
+    //根据id查询行业
+    getIndustryTitle=(id)=>{
+        request.get(`/taxsubject/get/industry/${id}`)
+            .then(({data})=>{
+                if(data.code ===200){
+                    const {setFieldsValue,fieldName,onChange} = this.props;
+                    let fieldData =  {
+                        key:data.data.key,
+                        label:data.data.title,
+                    }
+                    setFieldsValue({
+                        [fieldName]: fieldData,
+                    });
+                    onChange && onChange(fieldData);
+                }
+            })
+    }
     componentDidMount() {
         this.getIndustry()
     }
@@ -142,7 +162,9 @@ class IndustryTree extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-
+        if(typeof (nextProps.conditionValue.industry) !== 'undefined' && typeof (nextProps.conditionValue.industry) !== "object"){
+            this.getIndustryTitle(nextProps.conditionValue.industry)
+        }
     }
     render(){
         const {expandedKeys,autoExpandParent,selectedKeys} = this.state;
@@ -180,6 +202,7 @@ class IndustryTree extends Component{
             <Modal
                 title="选择所属行业"
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>toggleModalVisible(false)}
                 width={500}
                 footer={false}

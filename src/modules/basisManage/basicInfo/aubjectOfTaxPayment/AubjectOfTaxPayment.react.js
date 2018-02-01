@@ -94,6 +94,7 @@ class AubjectOfTaxPayment extends Component {
             if (!err) {
                 this.setState({
                     selectedRowKeys:null,
+                    selectedRows:null,
                     filters:values
                 },()=>{
                     this.setState({

@@ -207,6 +207,7 @@ class TaxClassSelectPage extends Component{
             <Modal
                 title="选择税收分类"
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>toggleModalVisible(false)}
                 width={800}
                 footer={false}

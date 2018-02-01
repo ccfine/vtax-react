@@ -60,7 +60,7 @@ class FileImportModal extends Component{
                <Button size='small' onClick={()=>this.toggleVisible(true)}>
                    <Icon type="upload" />导入
                </Button>
-                <Modal title="导入" visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
+                <Modal title="导入" maskClosable={false} destroyOnClose={true} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {

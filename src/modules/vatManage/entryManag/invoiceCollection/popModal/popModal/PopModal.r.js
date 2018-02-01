@@ -17,99 +17,6 @@ class PopModal extends Component{
 
         }
     }
-
-    handleSubmit = (e,isContinue) => {
-        e && e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const type = this.props.modalConfig.type;
-                switch (type){
-                    case 'add':
-                        this.addDate(this.props.initData, values);
-                        break;
-                    case 'edit':
-                        this.updateDate(this.props.selectedRowKeys[0], values);
-                        break;
-                    default:
-                        //no default
-                }
-                if(isContinue === 'continue'){
-                    this.props.form.resetFields();
-                    this.setState({
-                        initData: {}
-                    })
-                }else{
-                    this.props.toggleModalVisible(false);
-                }
-                this.props.setSelectedRowKeysAndselectedRows(null,{})
-
-            }
-        });
-
-    }
-
-    //计算金额的总和
-   handleCellAmountSum=(amount,taxAmount,totalAmount)=>{
-        const form = this.props.form;
-        let v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
-        let v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
-        if(typeof (v1) === 'undefined'){
-           v1 = 0
-        }
-        if(typeof (v2) === 'undefined'){
-           v2 = 0
-        }
-        const sum = v1+v2
-        form.setFieldsValue({
-            [totalAmount]: fMoney(sum),
-        });
-    }
-
-    handleCalcAmoutTaxAmount=(qty,unitPrice,amount,taxRate,taxAmount,totalAmount)=>{
-        this.handleAmout(qty,unitPrice,amount);
-        this.handleTaxAmount(amount,taxRate,taxAmount);
-        this.handleCellAmountSum(amount,taxAmount,totalAmount);
-    }
-    handleTaxAmount=(amount,taxRate,taxAmount)=>{
-        const form = this.props.form;
-        let v1 = form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, '');
-        let v2 = (form.getFieldValue(`${taxRate}`)) /100;
-        if(typeof (v1) === 'undefined'){
-            v1 = 0
-        }
-        if(typeof (v2) === 'undefined'){
-            v2 = 0
-        }
-        const count = v1*v2;
-        form.setFieldsValue({
-            [taxAmount]: fMoney(count),
-        });
-    }
-    handleAmout=(qty,unitPrice,amount)=>{
-        const form = this.props.form;
-        let v1 = form.getFieldValue(`${qty}`);
-        let v2 = form.getFieldValue(`${unitPrice}`).replace(/\$\s?|(,*)/g, '');
-        if(typeof (v1) === 'undefined'){
-            v1 = 0
-        }
-        if(typeof (v2) === 'undefined'){
-            v2 = 0
-        }
-        const count = accMul(v1,v2);
-        form.setFieldsValue({
-            [unitPrice]:fMoney(v2),
-            [amount]: fMoney(count),
-        });
-    }
-
-    handleKeyUp=(name)=> {
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
-        form.setFieldsValue({
-            [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        });
-    }
-
     addKey=data=>{
         const arr = [];
         data.forEach((item,i) => {
@@ -146,7 +53,88 @@ class PopModal extends Component{
         })
         this.props.setDetailsDate(data)
     }
+    //计算金额的总和
+    handleCellAmountSum=(amount,taxAmount,totalAmount)=>{
+        const form = this.props.form;
+        let v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
+        let v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
+        if(typeof (v1) === 'undefined'){
+            v1 = 0
+        }
+        if(typeof (v2) === 'undefined'){
+            v2 = 0
+        }
+        const sum = v1+v2
+        form.setFieldsValue({
+            [totalAmount]: fMoney(sum),
+        });
+    }
+    handleTaxAmount=(amount,taxRate,taxAmount)=>{
+        const form = this.props.form;
+        console.log(form.getFieldValue(`${taxRate}`))
+        let v1 = form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, '');
+        let v2 = (form.getFieldValue(`${taxRate}`)) /100;
+        if(typeof (v1) === 'undefined'){
+            v1 = 0
+        }
+        if(typeof (v2) === 'undefined' || isNaN(v2)){
+            v2 = 0
+        }
+        const count = v1*v2;
+        form.setFieldsValue({
+            [taxAmount]: fMoney(count),
+        });
+    }
+    handleAmout=(qty,unitPrice,amount)=>{
+        const form = this.props.form;
+        let v1 = form.getFieldValue(`${qty}`);
+        let v2 = form.getFieldValue(`${unitPrice}`);
+        if(typeof (v1) === 'undefined'){
+            v1 = 0
+        }
+        if(typeof (v2) === 'undefined'){
+            v2 = 0
+        }
+        const count = accMul(v1,v2);
+        form.setFieldsValue({
+            [unitPrice]:v2,
+            [amount]: fMoney(count),
+        });
+    }
+    handleCalcAmoutTaxAmount=(qty,unitPrice,amount,taxRate,taxAmount,totalAmount)=>{
+        this.handleAmout(qty,unitPrice,amount);
+        this.handleTaxAmount(amount,taxRate,taxAmount);
+        this.handleCellAmountSum(amount,taxAmount,totalAmount);
+    }
+    handleSubmit = (e,isContinue) => {
+        e && e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const type = this.props.modalConfig.type;
+                switch (type){
+                    case 'add':
+                        this.addDate(this.props.initData, values);
+                        break;
+                    case 'edit':
+                        this.updateDate(this.props.selectedRowKeys[0], values);
+                        break;
+                    default:
+                    //no default
+                }
+                if(isContinue === 'continue'){
+                    this.props.form.resetFields();
+                    this.setState({
+                        initData: {}
+                    })
+                }else{
+                    this.props.toggleModalVisible(false);
+                }
+                this.props.setSelectedRowKeysAndselectedRows(null,{})
 
+            }
+        });
+
+    }
     componentWillReceiveProps(nextProps) {
         if (!nextProps.visible) {
             /**
@@ -204,6 +192,7 @@ class PopModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 visible={props.visible}
@@ -304,11 +293,10 @@ class PopModal extends Component{
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
-                                        onKeyUp:(e)=>this.handleKeyUp('unitPrice'),
                                         onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:fMoney(initData.unitPrice),
+                                        initialValue:initData.unitPrice,
                                         rules:[
                                             {
                                                 required: true,
@@ -322,16 +310,11 @@ class PopModal extends Component{
                                     type:'numeric',
                                     span:12,
                                     formItemStyle,
-                                    componentProps:{
+                                    componentProps: {
                                         disabled:true,
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:fMoney(initData.amount),
-                                        rules:[
-                                            {
-                                                ...max20
-                                            }
-                                        ]
                                     }
                                 },{
                                     label:'税率',
@@ -382,11 +365,6 @@ class PopModal extends Component{
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:fMoney(initData.totalAmount),
-                                        rules:[
-                                            {
-                                                ...max20
-                                            }
-                                        ]
                                     }
                                 }
                             ])

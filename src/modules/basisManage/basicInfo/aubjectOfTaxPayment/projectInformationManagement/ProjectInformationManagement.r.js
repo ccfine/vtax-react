@@ -125,6 +125,8 @@ export default class ProjectInformationManagement extends Component{
                     项目信息管理
                 </Button>
                 <Modal
+                    maskClosable={false}
+                    destroyOnClose={true}
                     title="项目管理"
                     visible={this.state.visible}
                     width={1000}

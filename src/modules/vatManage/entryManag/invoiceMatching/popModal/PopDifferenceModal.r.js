@@ -82,6 +82,7 @@ class PopDifferenceModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={450}
                 visible={props.visible}

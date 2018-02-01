@@ -154,51 +154,54 @@ export default class ApplyDeclarationPopModal extends Component{
                <Button size={props.size} disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
                    <Icon type="download" />申报办理
                </Button>
-                <Modal title={props.title}
-                       visible={visible}
-                       confirmLoading={loading}
-                       onCancel={()=>this.toggleVisible(false)}
-                       width={900}
-                       style={{ top: 50 ,maxWidth:'80%'}}
-                       footer={
-                           <Row>
-                               <Col span={12}></Col>
-                               <Col span={12}>
-                                   <Button
-                                       type="primary"
-                                           //onClick={this.handleSubmit}
-                                       disabled
-                                       onClick={()=>{
-                                           const ref = Modal.warning({
-                                               content: '研发中...',
-                                               okText: '关闭',
-                                               onOk:()=>{
-                                                   ref.destroy();
+                <Modal
+                    maskClosable={false}
+                    destroyOnClose={true}
+                    title={props.title}
+                    visible={visible}
+                    confirmLoading={loading}
+                    onCancel={()=>this.toggleVisible(false)}
+                    width={900}
+                    style={{ top: 50 ,maxWidth:'80%'}}
+                    footer={
+                       <Row>
+                           <Col span={12}></Col>
+                           <Col span={12}>
+                               <Button
+                                   type="primary"
+                                       //onClick={this.handleSubmit}
+                                   disabled
+                                   onClick={()=>{
+                                       const ref = Modal.warning({
+                                           content: '研发中...',
+                                           okText: '关闭',
+                                           onOk:()=>{
+                                               ref.destroy();
 
-                                               }
-                                           });
-                                       }}>
-                                       批量提交
-                                   </Button>
-                                   <Button
-                                       type="primary"
-                                       disabled
-                                       //onClick={(e)=>this.handleRevoke}
-                                       onClick={()=>{
-                                           const ref = Modal.warning({
-                                               content: '研发中...',
-                                               okText: '关闭',
-                                               onOk:()=>{
-                                                   ref.destroy();
-                                               }
-                                           });
-                                       }}>
-                                        批量撤回
-                                   </Button>
-                                   <Button onClick={()=>this.toggleVisible(false)}>取消</Button>
-                               </Col>
-                           </Row>
-                       }
+                                           }
+                                       });
+                                   }}>
+                                   批量提交
+                               </Button>
+                               <Button
+                                   type="primary"
+                                   disabled
+                                   //onClick={(e)=>this.handleRevoke}
+                                   onClick={()=>{
+                                       const ref = Modal.warning({
+                                           content: '研发中...',
+                                           okText: '关闭',
+                                           onOk:()=>{
+                                               ref.destroy();
+                                           }
+                                       });
+                                   }}>
+                                    批量撤回
+                               </Button>
+                               <Button onClick={()=>this.toggleVisible(false)}>取消</Button>
+                           </Col>
+                       </Row>
+                   }
                 >
                     <div className="steps-main">
                         <Steps current={current} size="small">

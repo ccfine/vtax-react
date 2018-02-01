@@ -15,25 +15,27 @@ class NumericInput extends React.Component {
     onChange = (e) => {
         const { value } = e.target;
         /**
-         * 2位小数
+         * 2位小数 不能输入负数
          * */
-        let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]{0,2})?$/;
+        let reg = /^(0|[1-9][0-9]*)(\.[0-9]{0,2})?$/;
+        //let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]{0,2})?$/;
         if(this.props.valueType === 'int'){
-            reg = /^-?(0|[1-9][0-9]*)?$/;
+            reg = /^(0|[1-9][0-9]*)?$/;
+            //reg = /^-?(0|[1-9][0-9]*)?$/;
         }
-        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+        if(value === '-'){
+            this.props.onChange('');
+        }
+        if ((!isNaN(value) && reg.test(value)) || value === '') {
+            let l = value.toString().split(".")[0],
+                r = value.toString().split(".")[1];
             this.props.onChange(value);
-        }
-    }
-    // '.' at the end or only '-' in the input box.
-    onBlur = () => {
-        const { value, onBlur, onChange } = this.props;
-        if(value && typeof value !== 'undefined' && value.charAt){
-            if (value.charAt(value.length - 1) === '.' || value === '-') {
-                onChange({ value: value.slice(0, -1) });
+            if(typeof r === 'undefined'){
+                if(l.length>20){
+                    this.props.onChange(value.substr(0,value.length-1));
+                }
             }
         }
-        onBlur && onBlur();
     }
     render() {
         const props = {...this.props};
@@ -42,8 +44,7 @@ class NumericInput extends React.Component {
             <Input
                 {...props}
                 onChange={this.onChange}
-                onBlur={this.onBlur}
-                maxLength="25"
+                maxLength="23"
             />
         );
     }

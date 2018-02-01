@@ -150,6 +150,7 @@ class PopInvoiceInformationModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 style={{ top: 50 ,maxWidth:'80%'}}

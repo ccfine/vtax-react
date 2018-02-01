@@ -76,6 +76,7 @@ class PopModal extends React.Component{
             width={320}
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
             maskClosable={false}
+            destroyOnClose={true}
           >
           <Form>
               <Row>

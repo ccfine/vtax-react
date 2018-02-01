@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col} from 'antd';
-import {getFields,fMoney,regRules} from '../../../../../../utils'
+import {getFields,regRules} from '../../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -129,6 +129,7 @@ class PopModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 visible={props.visible}
@@ -270,7 +271,7 @@ class PopModal extends Component{
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:fMoney(defaultData.registeredCapitalAmount),
+                                        initialValue:defaultData.registeredCapitalAmount,
                                         rules:[
                                             {
                                                 required:true,
@@ -332,7 +333,7 @@ class PopModal extends Component{
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue: fMoney(defaultData.collectionCapitalAmount),
+                                        initialValue: defaultData.collectionCapitalAmount,
                                         rules:[
                                             {
                                                 required:true,

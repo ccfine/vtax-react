@@ -84,6 +84,7 @@ class PopModal extends Component {
                 onOk={() => { this.handleOk() }}
                 confirmLoading={this.state.loading}
                 maskClosable={false}
+                destroyOnClose={true}
             >
                 <Form>
                     <Row>
