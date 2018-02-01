@@ -59,7 +59,6 @@ export default class SourceModal extends React.Component{
     }
     render(){
         return (<Modal
-            maskClosable={false}
             destroyOnClose={true}
             title="土地价款来源"
             visible={this.props.visible}
