@@ -36,7 +36,7 @@ const getColumns =(context, length)=>[
                 <span style={pointerStyle} onClick={()=>{
                     context.setState({visible:true,source:record,readOnly:true,action:"modify"});}}>查看</span>
                  <Popconfirm placement="bottom" title={`是否确认删除？`} onConfirm={()=>{
-                        context.props.deleteSource(record)}} okText="删除" cancelText="不删">
+                        context.props.deleteSource(record)}} okText="确认" cancelText="取消">
                     <span style={pointerStyle}>删除</span>
                     </Popconfirm>
             </div>);

@@ -57,9 +57,9 @@ class LandPriceModal extends React.Component{
         return stageSource;
     }
     handleOk(){
-        
         if(this.props.readOnly){
             this.props.hideModal();
+            this.props.form.resetFields();
             return;
         }
         this.props.form.validateFields((err, values) => {
@@ -76,6 +76,8 @@ class LandPriceModal extends React.Component{
                 notOffsetLandPrice:oldPriceInfo.notOffsetLandPrice,
                 setUp:oldPriceInfo.setUp
               };
+              priceInfo.landPrice = priceInfo.landPrice && priceInfo.landPrice.toString().replace(/,/g,'');
+              
               requests.push(request.put("/landPriceInfo/update", priceInfo));
               
               // 修改土地来源
@@ -119,6 +121,8 @@ class LandPriceModal extends React.Component{
                   }
                   success && message.success('操作成功！', 4);
                   success && this.props.hideModal();
+                  success && this.props.onSuccess && this.props.onSuccess();
+                  success && this.props.form.resetFields();
                   this.setState({loading:false});
               }).catch(err => {
                 message.error(err.message)
@@ -134,7 +138,6 @@ class LandPriceModal extends React.Component{
             request.get(`/landPriceInfo/find/${props.id}`).then(({data}) => {
                 if(data.code===200){
                     this.setState({record:data.data,loading:false})
-                    //this.props.form.setFieldsValue(data.data);
                 }});
 
             // 加载table数据
@@ -164,7 +167,10 @@ class LandPriceModal extends React.Component{
             onOk={()=>{
                 this.state.loading || this.handleOk();
             }}
-            onCancel={this.props.hideModal}
+            onCancel={()=>{
+                this.props.hideModal();
+                this.props.form.resetFields();
+            }}
             style={{maxWidth:'90%'}}
             width={920}
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}

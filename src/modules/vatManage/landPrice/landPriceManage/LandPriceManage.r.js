@@ -71,10 +71,14 @@ export default class LandPriceManage extends Component{
         visible:false, // 控制Modal是否显示
         opid:"", // 当前操作的记录
         readOnly:false,
-        updateKey:Date.now()
+        updateKey:Date.now(),
+        tableUpdateKey:Date.now(),
     }
     hideModal(){
         this.setState({visible:false});
+    }
+    updateTable=()=>{
+        this.setState({tableUpdateKey:Date.now()})
     }
     render(){
         return(
@@ -86,7 +90,8 @@ export default class LandPriceManage extends Component{
                     tableOption={{
                         pageSize:10,
                         columns:getColumns(this),
-                        url:'/landPriceInfo/list'
+                        url:'/landPriceInfo/list',
+                        key:this.state.tableUpdateKey
                     }}
                 >
                 </SearchTable>
@@ -95,6 +100,7 @@ export default class LandPriceManage extends Component{
                 readOnly={this.state.readOnly}
                 hideModal={()=>{this.hideModal()}}
                 id={this.state.opid}
+                onSuccess = {this.updateTable}
                 updateKey={this.state.updateKey}/>
             </div>
         )
