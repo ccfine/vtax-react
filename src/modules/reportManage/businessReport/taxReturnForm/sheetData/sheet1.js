@@ -21,6 +21,12 @@ const generateData = (preFix,length,rowNumber,first)=>{
 }
 export default [
     [
+        {value:'增值税纳税申报表附列资料（一）',readOnly:true,colSpan:19}
+    ],
+    [
+        {value:'（本期销售情况明细）',readOnly:true,colSpan:19}
+    ],
+    [
         {readOnly: true, value: '项目及栏次',rowSpan:3,colSpan:5},
         {value: '开具增值税专用发票', readOnly: true, colSpan:2},
         {value: '开具其他发票', readOnly: true,colSpan:2},
