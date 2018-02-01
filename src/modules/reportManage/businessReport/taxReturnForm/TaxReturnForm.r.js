@@ -11,15 +11,10 @@ import sheet_7 from './sheetData/sheet7'
 import sheet_8 from './sheetData/sheet8'
 import sheet_9 from './sheetData/sheet9'
 import sheet_10 from './sheetData/sheet10'
-import Sheet from './Sheet.r'
+import SheetWithSearchFields from './SheetWithSearchFields.r'
 const TabPane = Tabs.TabPane;
 
 const sheetData = [
-    {
-        tab:'附表一',
-        grid:sheet_1,
-        url:'s'
-    },
     {
         tab:'附表一',
         grid:sheet_1,
@@ -71,7 +66,7 @@ class TaxReturnForm extends Component{
                     sheetData.map((item,i)=>(
                         <TabPane tab={item.tab} key={i}>
                             {
-                                parseInt(activeKey,0) === i ? <Sheet grid={item.grid} url={item.url} /> : ''
+                                parseInt(activeKey,0) === i ? <SheetWithSearchFields {...item} /> : ''
                             }
 
                         </TabPane>

@@ -39,7 +39,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
         },
         {
             label:'查询期间',
-            fieldName:'receiveMonth',
+            fieldName:'authMonth',
             type:'monthPicker',
             span:6,
             formItemStyle:{
@@ -70,17 +70,24 @@ const getColumns = getFieldDecorator => [
     {
         title:'项目名称',
         dataIndex:'projectName',
+        render:text=>(
+            <span dangerouslySetInnerHTML={{
+                __html:text
+            }}>
+
+            </span>
+        )
     },
     {
         title:'一般货物及劳务和应税服务',
-        dataIndex:'deductAmount',
+        dataIndex:'generalAmount',
         render:(text,record)=>{
             return <EditableCell fieldName={record.id} getFieldDecorator={getFieldDecorator} editAble={record.editAble} />
         }
     },
     {
         title:'即征即退货物及劳务和应税服务',
-        dataIndex:'currentIncomeAmount',
+        dataIndex:'drawbackPolicyAmount',
         render:text=>fMoney(text),
         className:'table-money'
     }
@@ -104,7 +111,7 @@ class TaxCalculation extends Component{
         },
 
         //tableUrl:'/account/prepaytax/list',
-        tableUrl:'list',
+        tableUrl:'/account/taxCalculation/list',
         /**
          *修改状态和时间
          * */
@@ -241,7 +248,7 @@ class TaxCalculation extends Component{
                             })
                         }
                     },
-                    pageSize:100,
+                    pagination:false,
                     columns:getColumns(getFieldDecorator),
                     url:tableUrl,
                     extra:<div>
