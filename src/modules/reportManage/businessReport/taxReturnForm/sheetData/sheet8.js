@@ -1,53 +1,52 @@
-import { generateRows } from './sheetUtils'
-
+import {generateRows,generateRow} from './sheetUtils'
 export default [
     [
-        { value: '项目', readOnly: true },
-        { value: '栏次', readOnly: true },
-        { value: '金额', readOnly: true },
-        { value: '税额', readOnly: true },
+        {value:'增值税减免税申报明细表',readOnly:true,colSpan:7}
     ],
     [
-        { value: '一、按税率或征收率归集（不包括购建不动产、通行费）的进项', readOnly: true, colSpan: 4 }
+        {value:'一、减税项目',readOnly:true,colSpan:7}
     ],
-    ...generateRows([
-        '17%税率的进项',
-        '其中：有形动产租赁的进项',
-        '13%税率的进项',
-        '11%税率的进项',
-        '其中：运输服务的进项',
-        '电信服务的进项',
-        '建筑安装服务的进项',
-        '不动产租赁服务的进项',
-        '受让土地使用权的进项',
-        '6%税率的进项',
-        '其中：电信服务的进项',
-        '金融保险服务的进项',
-        '生活服务的进项',
-        '取得无形资产的进项',
-        '5%征收率的进项',
-        '其中：不动产租赁服务的进项',
-        '3%征收率的进项',
-        '其中：货物及加工、修理修配劳务的进项',
-        '运输服务的进项',
-        '电信服务的进项',
-        '建筑安装服务的进项',
-        '金融保险服务的进项',
-        '有形动产租赁服务的进项',
-        '生活服务的进项',
-        '取得无形资产的进项',
-        '减按1.5%征收率的进项'], 2, 'B', 1),
     [
-        { value: '二、按抵扣项目归集的进项', readOnly: true, colSpan: 4 }
+        {value:'减税性质代码及名称',readOnly:true,rowSpan:2},
+        {value:'栏次',readOnly:true,rowSpan:2},
+        {value:'期初余额',readOnly:true},
+        {value:'本期发生额',readOnly:true},
+        {value:'本期应抵减税额',readOnly:true},
+        {value:'本期实际抵减税额',readOnly:true},
+        {value:'期末余额',readOnly:true}
     ],
-    ...generateRows([
-        '用于购建不动产并一次性抵扣的进项',
-        '通行费的进项',
-        '后面没字母了怎么办？？？？？？？？？？？？？'], 2, 'A', 27),
     [
-        { value: '合计', readOnly: true },
-        { key: 'A1' },
-        { key: 'A2' },
-        { key: 'A3' },
+        {value:'1',readOnly:true},
+        {value:'2',readOnly:true},
+        {value:'3=1+2',readOnly:true},
+        {value:'4≤3',readOnly:true},
+        {value:'5=3-4',readOnly:true}
     ],
+    [
+        ...generateRow('A',['合计',1],5)
+    ],
+    ...generateRows([[],[],[],[],[],[]],7,'B'),
+    [
+        {value:'二、免税项目',readOnly:true,colSpan:7}
+    ],
+    [
+        {value:'免税性质代码及名称',readOnly:true,rowSpan:2},
+        {value:'栏次',readOnly:true,rowSpan:2},
+        {value:'免征增值税项目销售额',readOnly:true},
+        {value:'免税销售额扣除项目本期实际扣除金额',readOnly:true},
+        {value:'扣除后免税销售额',readOnly:true},
+        {value:'免税销售额对应的进项税额',readOnly:true},
+        {value:'免税额',readOnly:true}
+    ],
+    [
+        {value:'1',readOnly:true},
+        {value:'2',readOnly:true},
+        {value:'3=1-2',readOnly:true},
+        {value:'4',readOnly:true},
+        {value:'5',readOnly:true}
+    ],
+    [
+        ...generateRow('A',['合计',1],5)
+    ],
+    ...generateRows([[],[],[],[],[],[]],7,'B')
 ];
