@@ -148,7 +148,7 @@ export default class ApplyDeclarationPopModal extends Component{
 
     render(){
         const props = this.props;
-        const {visible,loading,current} = this.state;
+        const {data,visible,loading,current} = this.state;
         return(
             <span style={props.style}>
                <Button size={props.size} disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
@@ -214,7 +214,7 @@ export default class ApplyDeclarationPopModal extends Component{
                         </Steps>
                         <div className="steps-content">
                             {
-                                this.getContent(this.state.current,routes)
+                                data && this.getContent(this.state.current,routes)
                             }
                         </div>
                       </div>
