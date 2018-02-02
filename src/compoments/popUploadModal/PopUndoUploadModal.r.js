@@ -131,7 +131,7 @@ class PopUndoUploadModal extends Component{
         return(
             <span style={props.style}>
                 <Button size='small' onClick={()=>this.toggleVisible(true)}>
-                  <Icon type="file-add" />
+                    <Icon type="rollback" />
                     {props.title}
                 </Button>
                 <Modal title={props.title} visible={visible} confirmLoading={loading} onOk={this.handleSubmit} onCancel={()=>this.toggleVisible(false)} maskClosable={false} destroyOnClose={true}>

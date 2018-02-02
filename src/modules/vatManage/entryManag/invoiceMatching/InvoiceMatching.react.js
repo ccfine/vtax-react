@@ -304,7 +304,7 @@ class InvoiceMatching extends Component {
                                 ])
                             }
 
-                            <Col span={16} style={{textAlign:'right'}}>
+                            <Col span={18} style={{textAlign:'right'}}>
                                 <Form.Item>
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                 <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>

@@ -21,6 +21,7 @@ class VTaxSider extends Component {
         super(props);
         this.state = {
             selectedPath:props.history.location.pathname,
+            openKeys: [],
         };
     }
 
@@ -79,11 +80,38 @@ class VTaxSider extends Component {
     }
 
     componentWillReceiveProps(nextProps){
+        let path =nextProps.history.location.pathname;
         this.setState({
-            selectedPath:nextProps.history.location.pathname
+            selectedPath:path
         })
-    }
+        
+        let pathArr = path.split('/');
+        let start = path.startsWith('/')?1:0;
 
+        /* 展开项设置 */
+        if(pathArr.length>1+start){
+            this.setState({
+                openKeys: [`/${pathArr[start]}/${pathArr[start+1]}`],
+              });
+        }
+
+        /* 选中项设置 */
+        if(pathArr.length>2+start){
+            this.setState({
+                selectedPath: `/${pathArr[start]}/${pathArr[start+1]}/${pathArr[start+2]}`,
+              });
+        }
+    }
+    onOpenChange = (openKeys) => {
+        const latestOpenKey = openKeys.find(path => this.state.openKeys.indexOf(path) === -1);
+        if (this.props.menusData.findIndex(ele=>ele.path === latestOpenKey) === -1) {
+          this.setState({ openKeys });
+        } else {
+          this.setState({
+            openKeys: latestOpenKey ? [latestOpenKey] : [],
+          });
+        }
+      }
     render() {
 
         return (
@@ -105,6 +133,8 @@ class VTaxSider extends Component {
                     mode="inline"
                     defaultOpenKeys={['sub1']}
                     selectedKeys={[this.state.selectedPath]}
+                    onOpenChange={this.onOpenChange}
+                    openKeys={this.state.openKeys}
                     style={{ margin: '16px 0', width: '100%' }}
                 >
                     {this.getNavMenuItems(this.props.menusData)}
