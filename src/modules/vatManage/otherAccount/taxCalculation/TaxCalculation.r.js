@@ -4,11 +4,11 @@
 import React,{Component} from 'react'
 import {Button,Icon,message,Form} from 'antd'
 import {SearchTable} from '../../../../compoments'
-import {fMoney,request,getUrlParam} from '../../../../utils'
+import {request,getUrlParam} from '../../../../utils'
 import EditableCell from './EditableCell.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
+import {fMoney} from '../../../../utils'
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -82,20 +82,28 @@ const getColumns = getFieldDecorator => [
         title:'一般货物及劳务和应税服务',
         dataIndex:'generalAmount',
         render:(text,record)=>{
-            return <EditableCell fieldName={record.id} getFieldDecorator={getFieldDecorator} editAble={record.editAble} />
-        }
+            return record.generalAmountEdit ?
+                <EditableCell fieldName={`generalAmount_${record.id}`} renderValue={text} getFieldDecorator={getFieldDecorator}/> : fMoney(text)
+        },
+        className:'table-money'
     },
     {
         title:'即征即退货物及劳务和应税服务',
         dataIndex:'drawbackPolicyAmount',
-        render:text=>fMoney(text),
+        render:(text,record)=>{
+            return record.drawbackPolicyAmountEdit ?
+                <EditableCell
+                    fieldName={`drawbackPolicyAmount_${record.id}`}
+                    renderValue={text} getFieldDecorator={getFieldDecorator} editAble={record.drawbackPolicyAmountEdit} />
+                : fMoney(text)
+        },
         className:'table-money'
     }
 ];
 const transformDataStatus = status =>{
     status = parseInt(status,0)
     if(status===1){
-        return '保存';
+        return '暂存';
     }
     if(status===2){
         return '提交'
@@ -109,14 +117,14 @@ class TaxCalculation extends Component{
         searchFieldsValues:{
 
         },
-
         //tableUrl:'/account/prepaytax/list',
         tableUrl:'/account/taxCalculation/list',
         /**
          *修改状态和时间
          * */
         dataStatus:'',
-        submitDate:''
+        submitDate:'',
+
     }
     refreshTable = ()=>{
         this.setState({
@@ -129,19 +137,25 @@ class TaxCalculation extends Component{
         })
     }
     recount = ()=>{
-        this.setState({
-            tableUrl:'/account/prepaytax/reset',
-            tableKey:Date.now()
-        },()=>{
-            this.setState({
-                tableUrl:'/account/prepaytax/list'
-            })
+        this.toggleSearchTableLoading(true)
+        request.get('/account/taxCalculation/reset',{
+            params:this.state.searchFieldsValues
         })
+            .then(({data})=>{
+                this.toggleSearchTableLoading(false)
+                if(data.code===200){
+                    this.setState({
+                        tableKey:Date.now()
+                    })
+                }else{
+                    message.error(`重算失败:${data.msg}`)
+                }
+            })
+
     }
     handleClickActions = action => ()=>{
         let actionText,
             actionUrl;
-
         if(action ==='recount'){
             this.recount()
             return false;
@@ -149,19 +163,35 @@ class TaxCalculation extends Component{
         switch (action){
             case 'submit':
                 actionText='提交';
-                actionUrl='/account/prepaytax/submit';
+                actionUrl='/account/taxCalculation/submit';
+                this.handleSubmit(actionUrl,actionText);
                 break;
             case 'restore':
                 actionText='撤回';
-                actionUrl='/account/prepaytax/restore';
-                break;
-            case 'recount':
-                actionText='重算';
-                actionUrl='/account/salehouse/restore';
+                actionUrl='/account/taxCalculation/revoke';
+                this.handleRestore(actionUrl,actionText);
                 break;
             default:
                 break;
         }
+
+    }
+    handleSubmit = (actionUrl,actionText)=>{
+        this.toggleSearchTableLoading(true)
+        request.post(actionUrl,this.state.searchFieldsValues)
+            .then(({data})=>{
+                this.toggleSearchTableLoading(false)
+                if(data.code===200){
+                    message.success(`${actionText}成功！`);
+                    this.refreshTable();
+                }else{
+                    message.error(`${actionText}失败:${data.msg}`)
+                }
+            }).catch(err=>{
+            this.toggleSearchTableLoading(false)
+        })
+    }
+    handleRestore = (actionUrl,actionText)=>{
         this.toggleSearchTableLoading(true)
         request.post(actionUrl,this.state.searchFieldsValues)
             .then(({data})=>{
@@ -178,10 +208,23 @@ class TaxCalculation extends Component{
     }
     save = e =>{
         e && e.preventDefault()
+        this.toggleSearchTableLoading(true)
         this.props.form.validateFields((err, values) => {
-            console.log(values)
             if(!err){
-                this.refreshTable()
+                //this.refreshTable()
+                request.post('/account/taxCalculation/save',values)
+                    .then(({data})=>{
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            message.success(`保存成功！`);
+                            this.props.form.resetFields();
+                            this.refreshTable();
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    this.toggleSearchTableLoading(false)
+                })
             }
         })
     }
@@ -191,9 +234,24 @@ class TaxCalculation extends Component{
             this.refreshTable()
         }
     }
+    fetchResultStatus = ()=>{
+        request.get('/account/taxCalculation/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
         const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
-        const {mainId,receiveMonth} = this.state.searchFieldsValues;
+        const {mainId,authMonth} = this.state.searchFieldsValues;
         const {getFieldDecorator} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -217,12 +275,12 @@ class TaxCalculation extends Component{
                             this.setState({
                                 searchFieldsValues:{
                                     mainId:undefined,
-                                    receiveMonth:undefined
+                                    authMonth:undefined
                                 }
                             })
-                        }else if(values.mainId || values.receiveMonth){
-                            if(values.receiveMonth){
-                                values.receiveMonth = values.receiveMonth.format('YYYY-MM')
+                        }else if(values.mainId || values.authMonth){
+                            if(values.authMonth){
+                                values.authMonth = values.authMonth.format('YYYY-MM')
                             }
                             this.setState(prevState=>({
                                 searchFieldsValues:{
@@ -241,12 +299,7 @@ class TaxCalculation extends Component{
                         onDoubleClick:()=>{console.log(record)}
                     }),
                     onDataChange:data=>{
-                        if(data && data.length !==0){
-                            this.setState({
-                                submitDate:data[0].lastModifiedDate,
-                                dataStatus:data[0].status
-                            })
-                        }
+                        this.fetchResultStatus()
                     },
                     pagination:false,
                     columns:getColumns(getFieldDecorator),
@@ -262,13 +315,17 @@ class TaxCalculation extends Component{
                                 }
                             </div>
                         }
-                        <Button size="small" style={{marginRight:5}} onClick={this.save}><Icon type="save" />保存</Button>
-                        <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && receiveMonth)} size='small' style={{marginRight:5}}>
+                        <Button
+                            size="small"
+                            style={{marginRight:5}}
+                            disabled={parseInt(dataStatus,0)!==1}
+                            onClick={this.save}><Icon type="save" />保存</Button>
+                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth)}><Icon type="file-add" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth)}><Icon type="rollback" />撤回提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && authMonth && parseInt(dataStatus,0) ===1)}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && authMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
                     </div>
                 }}
             >
