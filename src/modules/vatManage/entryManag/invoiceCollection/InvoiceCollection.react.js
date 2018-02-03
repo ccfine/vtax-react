@@ -246,9 +246,9 @@ class InvoiceCollection extends Component {
                                     }
                                 ])
                             }
-                            <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            <Col span={6} style={{textAlign:'right'}}>
+                                <Button size='small' style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button size='small' style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>

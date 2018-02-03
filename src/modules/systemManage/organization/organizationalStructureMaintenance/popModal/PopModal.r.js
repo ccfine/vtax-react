@@ -67,7 +67,7 @@ class PopModal extends Component{
 
                 if(type==='edit'){
                     const data = {
-                        id:this.state.initData.id,
+                        ...this.state.initData,
                         ...values
                     }
                     this.updateRecord(data)
@@ -149,7 +149,7 @@ class PopModal extends Component{
                             {
                                 getFields(props.form,[
                                     {
-                                        label:'编码',
+                                        label:'上级机构代码',
                                         fieldName:'code',
                                         type:'input',
                                         span:'12',
@@ -159,7 +159,7 @@ class PopModal extends Component{
                                                 regRules.input_length_25,
                                                 {
                                                     required:true,
-                                                    message:'请输入编码'
+                                                    message:'请输入上级机构代码'
                                                 }
                                             ]
                                         },
@@ -167,7 +167,7 @@ class PopModal extends Component{
                                             disabled: type==='edit'
                                         }
                                     }, {
-                                        label:'名称',
+                                        label:'上级机构名称',
                                         fieldName:'name',
                                         type:'input',
                                         span:'12',
@@ -177,53 +177,99 @@ class PopModal extends Component{
                                                 regRules.input_length_25,
                                                 {
                                                     required:true,
-                                                    message:'请输入名称'
+                                                    message:'请输入上级机构名称'
                                                 }
                                             ]
                                         },
+                                        componentProps:{
+                                            disabled: type==='edit'
+                                        }
                                     }, {
-                                        label:'类型',
+                                        label:'机构代码',
                                         fieldName:'type',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
                                             initialValue:initData['type'],
-                                        }
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入机构代码'
+                                                }
+                                            ]
+                                        },
                                     }, {
-                                        label:'排序',
+                                        label:'机构名称',
                                         fieldName:'sortBy',
-                                        type:'numeric',
+                                        type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
                                             initialValue:initData['sortBy'],
                                             rules:[
                                                 {
                                                     required:true,
-                                                    message:'请输入排序'
+                                                    message:'请输入机构名称'
+                                                }
+                                            ]
+                                        },
+                                    }, {
+                                        label:'机构简称',
+                                        fieldName:'sortBy',
+                                        type:'input',
+                                        span:'12',
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData['sortBy'],
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入机构简称'
+                                                }
+                                            ]
+                                        },
+                                    }, {
+                                        label: '经营地址',
+                                        fieldName: 'sortBy',
+                                        type: 'input',
+                                        span: '12',
+                                        fieldDecoratorOptions: {
+                                            initialValue: initData['sortBy'],
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: '请输入经营地址'
+                                                }
+                                            ]
+                                        },
+                                    }, {
+                                        label: '机构所在地',
+                                        fieldName: 'sortBy',
+                                        type: 'input',
+                                        span: '12',
+                                        fieldDecoratorOptions: {
+                                            initialValue: initData['sortBy'],
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: '请输入机构所在地'
+                                                }
+                                            ]
+                                        },
+                                    }, {
+                                        label: '本级序号',
+                                        fieldName: 'sortBy',
+                                        type: 'numeric',
+                                        span: '12',
+                                        fieldDecoratorOptions: {
+                                            initialValue: initData['sortBy'],
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: '请输入本级序号'
                                                 }
                                             ]
                                         },
                                         componentProps:{
                                             valueType:'int'
-                                        },
-                                    }, {
-                                        label:'描述',
-                                        fieldName:'description',
-                                        type:'textArea',
-                                        span:'24',
-                                        formItemStyle:{
-                                            labelCol:{
-                                                span:3
-                                            },
-                                            wrapperCol:{
-                                                span:21
-                                            },
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue:initData['description'],
-                                            rules:[
-                                                regRules.textarea_length_100,
-                                            ]
                                         },
                                     }
                                 ])

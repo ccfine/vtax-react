@@ -113,6 +113,10 @@ export default {
         max:100,
         message:'不能超过100个字符'
     },
+    textArea_length_225:{
+        max:255,
+        message:'不能超过255个字符'
+    },
     textarea_length_2000:{
         max:2000,
         message:'不能超过2000个字符'

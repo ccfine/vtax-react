@@ -93,6 +93,9 @@ const getFields = (form,fieldsData=[]) =>{
             case 'industry':
                 CusComponent = CusFormItem.Industry;
                 break;
+            case 'taxableProject':
+                CusComponent = CusFormItem.TaxableProject;
+                break;
             default:
                 CusComponent = Input
         }
@@ -132,6 +135,20 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
+        }else if(type==='taxableProject'){
+            // 给这个税收分类编码特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent fieldName={item['fieldName']} setFieldsValue={setFieldsValue} {...item['componentProps']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+
         }else if(type==='roomCodeSelect'){
             // 给这个房间编码选择特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
             return (

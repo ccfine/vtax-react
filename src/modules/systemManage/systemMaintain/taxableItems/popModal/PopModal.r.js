@@ -13,16 +13,16 @@ class PopModal extends Component{
         visible:true
     }
     state={
-        initData:{
-
-        },
+        initData:{},
+        commonlyTaxRateList:[],
+        simpleTaxRateList:[],
         loaded:false
     }
 
     toggleLoaded = loaded => this.setState({loaded})
     fetchReportById = (id)=>{
         this.toggleLoaded(false)
-        request.get(`/sys/dict/find/${id}`)
+        request.get(`/taxable/project/find/${id}`)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -31,6 +31,92 @@ class PopModal extends Component{
                     })
                 }
             })
+    }
+    updateRecord = data =>{
+        request.put('/taxable/project/update',data)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    const props = this.props;
+                    message.success('更新成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
+                }else{
+                    message.error(`更新失败:${data.msg}`)
+                }
+            })
+    }
+
+    createRecord = data =>{
+        request.post('/taxable/project/add',data)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    const props = this.props;
+                    message.success('新增成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
+                }else{
+                    message.error(`新增失败:${data.msg}`)
+                }
+            })
+    }
+    //设置select值名不同
+    setFormat=data=>{
+        return data.map(item=>{
+            return{
+                ...item,
+                value:item.id,
+                text:item.name
+            }
+        })
+    }
+    fetchTypeList=()=>{
+        request.get('/sys/taxrate/list/1').then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    commonlyTaxRateList:this.setFormat(data.data),
+                });
+            }
+        });
+        request.get('/sys/taxrate/list/2').then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    simpleTaxRateList:this.setFormat(data.data),
+                });
+            }
+        });
+    }
+    handleSubmit = e => {
+        e && e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                const type = this.props.modalConfig.type;
+                this.toggleLoaded(false)
+
+                if(values.commonlyTaxRate){
+                    values.commonlyTaxRateId = values.commonlyTaxRate;
+                    values.commonlyTaxRate= undefined;
+                }
+                if(values.simpleTaxRate){
+                    values.simpleTaxRateId = values.simpleTaxRate;
+                    values.simpleTaxRate= undefined;
+                }
+                if(type==='edit'){
+                    const data = {
+                        id:this.state.initData.id,
+                        ...values
+                    }
+                    this.updateRecord(data)
+                }else if(type==='add'){
+                    this.createRecord(values)
+                }
+            }
+        });
+
+    }
+    componentDidMount(){
+        this.fetchTypeList()
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -57,56 +143,6 @@ class PopModal extends Component{
     mounted=true
     componentWillUnmount(){
         this.mounted=null
-    }
-    handleSubmit = e => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                const type = this.props.modalConfig.type;
-                this.toggleLoaded(false)
-
-                if(type==='edit'){
-                    const data = {
-                        id:this.state.initData.id,
-                        ...values
-                    }
-                    this.updateRecord(data)
-                }else if(type==='add'){
-                    this.createRecord(values)
-                }
-            }
-        });
-
-    }
-
-    updateRecord = data =>{
-        request.put('/sys/dict/update',data)
-            .then(({data})=>{
-                this.toggleLoaded(true)
-                if(data.code===200){
-                    const props = this.props;
-                    message.success('更新成功!');
-                    props.toggleModalVisible(false);
-                    props.refreshTable()
-                }else{
-                    message.error(`更新失败:${data.msg}`)
-                }
-            })
-    }
-
-    createRecord = data =>{
-        request.post('/sys/dict/add',data)
-            .then(({data})=>{
-                this.toggleLoaded(true)
-                if(data.code===200){
-                    const props = this.props;
-                    message.success('新增成功!');
-                    props.toggleModalVisible(false);
-                    props.refreshTable()
-                }else{
-                    message.error(`新增失败:${data.msg}`)
-                }
-            })
     }
     render(){
         const props = this.props;
@@ -149,17 +185,17 @@ class PopModal extends Component{
                             {
                                 getFields(props.form,[
                                     {
-                                        label:'编码',
-                                        fieldName:'code',
+                                        label:'应税项目编号',
+                                        fieldName:'num',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['code'],
+                                            initialValue:initData['num'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {
                                                     required:true,
-                                                    message:'请输入编码'
+                                                    message:'请输入应税项目编号'
                                                 }
                                             ]
                                         },
@@ -167,7 +203,7 @@ class PopModal extends Component{
                                             disabled: type==='edit'
                                         }
                                     }, {
-                                        label:'名称',
+                                        label:'应税项目名称',
                                         fieldName:'name',
                                         type:'input',
                                         span:'12',
@@ -177,37 +213,42 @@ class PopModal extends Component{
                                                 regRules.input_length_25,
                                                 {
                                                     required:true,
-                                                    message:'请输入名称'
+                                                    message:'请输入应税项目名称'
                                                 }
                                             ]
                                         },
                                     }, {
-                                        label:'类型',
-                                        fieldName:'type',
-                                        type:'input',
+                                        label:'一般计税税率',
+                                        fieldName:'commonlyTaxRate',
+                                        type:'select',
                                         span:'12',
+                                        options:this.state.commonlyTaxRateList,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['type'],
-                                        }
-                                    }, {
-                                        label:'排序',
-                                        fieldName:'sortBy',
-                                        type:'numeric',
-                                        span:'12',
-                                        fieldDecoratorOptions:{
-                                            initialValue:initData['sortBy'],
+                                            initialValue:initData['commonlyTaxRateId'],
                                             rules:[
                                                 {
                                                     required:true,
-                                                    message:'请输入排序'
+                                                    message:'请输入一般计税税率'
                                                 }
                                             ]
                                         },
-                                        componentProps:{
-                                            valueType:'int'
+                                    }, {
+                                        label:'简易计税税率',
+                                        fieldName:'simpleTaxRate',
+                                        type:'select',
+                                        span:'12',
+                                        options:this.state.simpleTaxRateList,
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData['simpleTaxRateId'],
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入简易计税税率'
+                                                }
+                                            ]
                                         },
                                     }, {
-                                        label:'描述',
+                                        label:'填报说明',
                                         fieldName:'description',
                                         type:'textArea',
                                         span:'24',
@@ -222,7 +263,7 @@ class PopModal extends Component{
                                         fieldDecoratorOptions:{
                                             initialValue:initData['description'],
                                             rules:[
-                                                regRules.textarea_length_100,
+                                                regRules.textArea_length_225,
                                             ]
                                         },
                                     }

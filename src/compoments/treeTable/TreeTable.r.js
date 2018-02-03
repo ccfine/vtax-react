@@ -94,8 +94,9 @@ class TreeTable extends Component{
                     }
                 }),()=>{
                     this.setState({
-                        tableUpDateKey:Date.now()
+                        tableUpDateKey:Date.now(),
                     })
+
                 });
 
                 // 把查询条件返回回去
@@ -169,8 +170,14 @@ class TreeTable extends Component{
                                     {...treeCardOption.cardProps}
                                 >
                                     <TreeList
-                                        {...treeOption}
+                                        url={treeOption.url}
+                                        showLine={treeOption.showLine}
                                         updateKey={tableUpDateKey}
+                                        id={filters.id || 0}
+                                        treeOption={{
+                                            onSuccess:treeOption.onSuccess || undefined,
+                                        }}
+
                                     />
                                 </Card>
                             </Col>
