@@ -479,7 +479,7 @@ export default class extends React.Component {
     }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
-        const buttonDisabled = !(dataSource && dataSource.length > 0);
+        const buttonDisabled = !this.props.filter;
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
