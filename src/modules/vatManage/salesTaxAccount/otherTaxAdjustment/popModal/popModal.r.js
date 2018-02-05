@@ -212,7 +212,6 @@ class PopModal extends Component{
                                 onChange:data=>{
                                     data.id = data.key;
                                     data.name = data.label;
-                                    console.log('data',data)
                                     this.selectTax(data);
                                 }
                             }
