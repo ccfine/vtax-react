@@ -9,6 +9,7 @@ import DataDictionaryMaintain from './dataDictionaryMaintain'
 import TaxReturnsCustom from './taxReturnsCustom'
 import OtherReportsAreCustom from './otherReportsAreCustom'
 import TaxClassificationCode from './taxClassificationCode'
+import TaxableItems from './taxableItems'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATHS = '/web/systemManage/systemMaintain'
@@ -45,6 +46,15 @@ const SystemMaintain_Routes = [
         path:`${PATHS}/taxClassificationCode`,
         component:wrapPage('税收分类编码',TaxClassificationCode),
         name:'税收分类编码',
+        icon:{
+            url:`${ICON_URL_PATH}taxClassificationCode.svg`,
+            backgroundColor:'#6CCCCA'
+        },
+        exact:true,
+    },{
+        path:`${PATHS}/taxableItems`,
+        component:wrapPage('应税项目',TaxableItems),
+        name:'应税项目',
         icon:{
             url:`${ICON_URL_PATH}taxClassificationCode.svg`,
             backgroundColor:'#6CCCCA'

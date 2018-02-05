@@ -14,7 +14,7 @@ const buttonStyle={
 }
 const searchFields = [
     {
-        label:'名称',
+        label:'组织机构名称',
         fieldName:'name',
         type:'input',
         span:6,
@@ -23,29 +23,48 @@ const searchFields = [
 
 const columns =[
     {
-        title: '编码',
+        title: '机构代码',
         dataIndex: 'code',
     },{
-        title: '名称',
+        title: '机构名称',
         dataIndex: 'name',
     },{
-        title: '类型',
+        title: '机构简称',
         dataIndex: 'type',
     },{
-        title: '排序',
+        title: '机构所在地',
         dataIndex: 'sortBy',
     },{
-        title: '描述',
+        title: '经营地址',
         dataIndex: 'description',
+    },{
+        title: '本级序号',
+        dataIndex: 'description1',
+    }, {
+        title: '状态',
+        dataIndex: 'description2',
+        render: text => {
+            //1一般计税方法，2简易计税方法 ,
+            text = parseInt(text, 0);
+            if (text === 1) {
+                return <span>启用</span>
+            }
+            if (text === 2) {
+                return <span style={{color:'red'}}>禁用</span>
+            }
+            return text;
+        }
     }
 ];
-class DataDictionaryMaintain extends Component {
+
+class OrganizationalStructureMaintenance extends Component {
     state = {
         filters:{},
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         updateTable:Date.now(),
+
         selectedRowKeys:undefined,
         selectedRows:[],
         visible:false, // 控制Modal是否显示
@@ -107,6 +126,9 @@ class DataDictionaryMaintain extends Component {
             },
         });
     }
+    disabledData=()=>{
+
+    }
     render() {
         const {updateTable,searchTableLoading,visible,modalConfig,selectedRowKeys,filters} = this.state;
         return (
@@ -140,11 +162,15 @@ class DataDictionaryMaintain extends Component {
                             <Icon type="delete" />
                             删除
                         </Button>
+                        <Button size="small" style={buttonStyle} disabled={!selectedRowKeys} type='danger' onClick={this.disabledData}>
+                            <Icon type="delete" />
+                            禁用/启用
+                        </Button>
                     </div>
                 }}
                 treeCardOption={{
                     cardProps:{
-                        title:'字典信息树',
+                        title:'应税项目树',
                     }
                 }}
                 treeOption={{
@@ -185,4 +211,4 @@ class DataDictionaryMaintain extends Component {
         )
     }
 }
-export default Form.create()(DataDictionaryMaintain)
+export default Form.create()(OrganizationalStructureMaintenance)

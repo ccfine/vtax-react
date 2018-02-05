@@ -23,6 +23,7 @@ import {PopUploadModal,PopUndoUploadModal} from './popUploadModal'
 import ButtonModalWithForm from './buttonModalWithForm'
 import ButtonWithFileUploadModal from './buttonWithFileUploadModal'
 import {FetchTable,CardSearch} from './fetchTable'
+import TreeTable from './treeTable'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -43,4 +44,5 @@ export {
     ButtonWithFileUploadModal,
     FetchTable,
     CardSearch,
+    TreeTable,
 }
