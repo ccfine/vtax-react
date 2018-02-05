@@ -105,30 +105,41 @@ const searchFields =(disabled)=> [
 const getColumns = context=> [
     {
         title: '纳税主体',
-        dataIndex: 'taxMethod',
+        dataIndex: 'mainName',
     }, {
         title: '减税性质代码',
-        dataIndex: 'name',
+        dataIndex: 'reduceNum',
     },{
         title: '减税性质名称',
-        dataIndex: 'invoiceTypeSNumber',
+        dataIndex: 'reduceName',
     },{
         title: '凭证号',
-        dataIndex: 'invoiceTypeSSale',
+        dataIndex: 'voucherNum',
     },{
         title: '日期 ',
-        dataIndex: 'invoiceTypeSTaxAmount',
+        dataIndex: 'monthDate',
     },{
         title: '金额',
-        dataIndex: 'invoiceTypeCNumber',
+        dataIndex: 'amount',
         render:text=>fMoney(text),
     },{
         title: '减免税金额',
-        dataIndex: 'invoiceTypeCSale',
+        dataIndex: 'reduceTaxAmount',
         render:text=>fMoney(text),
     },{
         title: '进项税额是否认证抵扣',
-        dataIndex: 'invoiceTypeCTaxAmount',
+        dataIndex: 'incomeTaxAuth',
+        render:text=>{
+            //0 否，1 是 ,
+            text = parseInt(text,0);
+            if(text===0){
+                return '否'
+            }
+            if(text ===1){
+                return '是'
+            }
+            return text;
+        }
     }
 ];
 class TaxExemptionDetails extends Component{
@@ -137,6 +148,7 @@ class TaxExemptionDetails extends Component{
         searchFieldsValues:{
 
         },
+        statusParam:{},
         selectedRowKeys:[],
         dataSource:[],
         searchTableLoading:false,
@@ -205,6 +217,15 @@ class TaxExemptionDetails extends Component{
                 this.toggleSearchTableLoading(false)
             })
     }
+    updateStatus=(values)=>{
+        request.get('/account/other/reduceTaxDetail/main',{params:values}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    statusParam: data.data
+                })
+            }
+        })
+    }
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -212,16 +233,18 @@ class TaxExemptionDetails extends Component{
         }
     }
     render(){
-        const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,dataSource} = this.state;
+        const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.searchFieldsValues;
+        const disabled = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource.length > 0));
+        const rollbackDisabled = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource.length > 0));
         const {search} = this.props.location;
-        let disabled = !!search;
+        let searchDisabled= !!search;
         return(
             <SearchTable
                 spinning={searchTableLoading}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(searchDisabled),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -248,6 +271,7 @@ class TaxExemptionDetails extends Component{
                         }
                     }
                 }}
+                backCondition={this.updateStatus}
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
@@ -260,22 +284,23 @@ class TaxExemptionDetails extends Component{
                     url:'/account/other/reduceTaxDetail/list',
                     extra: <div>
                         {
-                            dataSource.length > 0 && <div style={{marginRight:30,display:'inline-block'}}>
-                                            <span style={{marginRight:20}}>状态：<label style={{color:parseInt(dataSource[0].status, 0) === 1 ? 'red' : 'green'}}>{parseInt(dataSource[0].status, 0) === 1 ? '保存' : '提交'}</label></span>
-                                            <span>提交时间：{dataSource[0].lastModifiedDate}</span>
-                                        </div>
+                            JSON.stringify(statusParam) !== "{}" &&
+                            <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                <span>提交时间：{statusParam.lastModifiedDate}</span>
+                            </div>
                         }
                         <FileImportModal
                             url="/account/other/reduceTaxDetail/upload"
                             fields={fieldList}
-                            disabled={!dataSource.length>0}
+                            disabled={disabled}
                             onSuccess={this.refreshTable}
                             style={{marginRight:5}}
                         />
                         <FileExport
                             url='/account/other/reduceTaxDetail/detail/download'
                             title="下载导入模板"
-                            disabled={!dataSource.length>0}
+                            disabled={disabled}
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button
@@ -290,7 +315,7 @@ class TaxExemptionDetails extends Component{
                             url='/account/other/reduceTaxDetail/export'
                             title='导出'
                             setButtonStyle={{marginRight:5}}
-                            disabled={!dataSource.length>0}
+                            disabled={disabled}
                             params={{
                                 ...searchFieldsValues
                             }}
@@ -298,7 +323,7 @@ class TaxExemptionDetails extends Component{
                         <Button
                             size='small'
                             style={{marginRight:5}}
-                            disabled={!((mainId && authMonth) && (dataSource.length>0 && parseInt(dataSource[0].status, 0) === 1))}
+                            disabled={disabled}
                             onClick={()=>this.handleClick('提交')}>
                             <Icon type="check" />
                             提交
@@ -306,7 +331,7 @@ class TaxExemptionDetails extends Component{
                         <Button
                             size='small'
                             style={{marginRight:5}}
-                            disabled={!((mainId && authMonth) && (dataSource.length>0 && parseInt(dataSource[0].status, 0) === 2))}
+                            disabled={rollbackDisabled}
                             onClick={()=>this.handleClick('撤回')}>
                             <Icon type="rollback" />
                             撤回提交
@@ -319,7 +344,7 @@ class TaxExemptionDetails extends Component{
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
                                     金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                     税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                    减免税金额：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                    减免税金额：<span className="amount-code">{fMoney(data.pageReduceTaxAmount)}</span>
                                 </div>
                             </div>
                         )

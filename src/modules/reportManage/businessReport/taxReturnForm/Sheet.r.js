@@ -5,18 +5,23 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import DataSheet from 'react-datasheet';
 import {Spin,message} from 'antd'
-import {request} from '../../../../utils'
+import {request,fMoney} from '../../../../utils'
 export default class Sheet extends Component{
     static propTypes={
         grid:PropTypes.array,
         url:PropTypes.string,
         updateKey:PropTypes.any,
         overflow:PropTypes.string,
-        composeGrid:PropTypes.func
+        composeGrid:PropTypes.func,
+        scroll:PropTypes.object
     }
     static defaultProps = {
         grid:[],
         overflow:'wrap',
+        scroll:{
+            x:undefined,
+            y:undefined
+        },
         composeGrid:(prevGrid,asyncData)=>{
             /**
              * prevGrid:原数据
@@ -42,7 +47,10 @@ export default class Sheet extends Component{
                 return item.map( deepItem =>{
                     for(let key in sheetData){
                         if(deepItem.key === key){
-                            return sheetData[key];
+                            return {
+                                ...sheetData[key],
+                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]) : sheetData[key]['value']
+                            };
                         }
                     }
                     return deepItem;
@@ -91,17 +99,27 @@ export default class Sheet extends Component{
         this.mounted=null;
     }
     render(){
-        const { loading, grid, overflow } = this.state;
+        const { loading, grid,  } = this.state;
+        const {scroll,overflow} = this.props;
+        const xBool = !!scroll.x,
+            yBool = !!scroll.y;
         return(
-            <div style={{backgroundColor:'#fff',padding:10}}>
-                <Spin spinning={loading}>
-                    <DataSheet
-                        overflow={overflow}
-                        data={grid}
-                        valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}
-                        onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
-                    />
-                </Spin>
+            <div style={{backgroundColor:'#fff',padding:10,overflow:'hidden'}}>
+                <div style={{overflowX:xBool ? 'scroll':'visible',overflowY:yBool ? 'scroll':'visible'}}>
+                    <Spin spinning={loading}>
+                        <div style={{
+                            width:xBool ? scroll.x : 'auto',
+                            height:yBool ? scroll.y : 'auto',
+                        }}>
+                            <DataSheet
+                                overflow={overflow}
+                                data={grid}
+                                valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}
+                                onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
+                            />
+                        </div>
+                    </Spin>
+                </div>
             </div>
         )
     }

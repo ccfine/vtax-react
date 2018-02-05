@@ -85,7 +85,7 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { grid, url , searchFields, form, composeGrid} = this.props;
+        const { grid, url , searchFields, form, composeGrid,scroll} = this.props;
         const { params,updateKey } = this.state;
         return(
             <div>
@@ -112,7 +112,7 @@ class SheetWithSearchFields extends Component{
 
                     </Form>
                 </div>
-                <Sheet grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey}/>
+                <Sheet scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey}/>
             </div>
         )
     }

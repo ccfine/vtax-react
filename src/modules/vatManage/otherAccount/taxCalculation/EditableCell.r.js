@@ -2,45 +2,18 @@
  * Created by liurunbin on 2018/1/24.
  */
 import React from 'react'
-import {Input, Icon} from 'antd';
+import {CusFormItem} from '../../../../compoments'
 export default class EditableCell extends React.Component {
-    state = {
-        editable: false,
-    }
-    handleChange = (e) => {
-    }
-    check = () => {
-        //this.setState({ editable: false });
-
-    }
-    edit = () => {
-        this.setState({ editable: true });
-    }
     render() {
-        const { value } = this.state;
-        const {editAble,getFieldDecorator,fieldName} = this.props;
+        const {getFieldDecorator,fieldName,renderValue} = this.props;
         return (
-            <div className="editable-cell">
+            <div className="editable-cell-input-wrapper">
                 {
-                    editAble ?
-                        <div className="editable-cell-input-wrapper">
-                            {
-                                getFieldDecorator(`${fieldName}`)(
-                                    <Input
-                                        onChange={this.handleChange}
-                                    />
-                                )
-                            }
-                        </div>
-                        :
-                        <div className="editable-cell-text-wrapper">
-                            {value || ' '}
-                            <Icon
-                                type="edit"
-                                className="editable-cell-icon"
-                                onClick={this.edit}
-                            />
-                        </div>
+                    getFieldDecorator(`${fieldName}`,{
+                        initialValue:parseFloat(renderValue)
+                    })(
+                        <CusFormItem.NumericInput style={{textAlign:'right',backgroundColor: '#E2F6FF'}} />
+                    )
                 }
             </div>
         );

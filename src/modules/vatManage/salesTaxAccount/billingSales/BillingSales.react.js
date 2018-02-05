@@ -11,7 +11,7 @@ import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 
-const columns = [
+const columns = context => [
     {
         title: '项目',
         dataIndex: 'taxMethod',
@@ -26,11 +26,11 @@ const columns = [
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     <a onClick={()=>{
-                        this.setState({
+                        context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
                         },()=>{
-                            this.toggleModalVisible(true)
+                            context.toggleModalVisible(true)
                         })
                     }}>{text}</a>
                 )
@@ -52,11 +52,11 @@ const columns = [
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     <a onClick={()=>{
-                        this.setState({
+                        context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
                         },()=>{
-                            this.toggleModalVisible(true)
+                            context.toggleModalVisible(true)
                         })
                     }}>{text}</a>
                 )
@@ -73,7 +73,7 @@ const columns = [
     }
 ];
 
-const notColumns=[
+const notColumns = context =>[
     {
         title: '项目',
         dataIndex: 'taxMethod',
@@ -108,11 +108,11 @@ const notColumns=[
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     <a onClick={()=>{
-                        this.setState({
+                        context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
                         },()=>{
-                            this.toggleModalVisible(true)
+                            context.toggleModalVisible(true)
                         })
                     }}>{text}</a>
                 )
@@ -134,11 +134,11 @@ const notColumns=[
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     <a onClick={()=>{
-                        this.setState({
+                        context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
                         },()=>{
-                            this.toggleModalVisible(true)
+                            context.toggleModalVisible(true)
                         })
                     }}>{text}</a>
                 )
@@ -297,7 +297,7 @@ class BillingSales extends Component {
                                             disabled:disabled3
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                            initialValue: (disabled3 && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -315,7 +315,7 @@ class BillingSales extends Component {
                                             disabled:disabled3
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled3 && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -399,7 +399,7 @@ class BillingSales extends Component {
                                     rowKey:record=>record.sysTaxRateId,
                                     pagination:false,
                                     size:'small',
-                                    columns:columns,
+                                    columns:columns(this),
                                     onDataChange:(dataSource1)=>{
                                         this.setState({
                                             dataSource1
@@ -428,7 +428,7 @@ class BillingSales extends Component {
                                     rowKey:record=>record.sysTaxRateId,
                                     pagination:false,
                                     size:'small',
-                                    columns:notColumns,
+                                    columns:notColumns(this),
                                     onDataChange:(dataSource2)=>{
                                         this.setState({
                                             dataSource2
