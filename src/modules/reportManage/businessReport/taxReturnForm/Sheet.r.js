@@ -49,7 +49,7 @@ export default class Sheet extends Component{
                         if(deepItem.key === key){
                             return {
                                 ...sheetData[key],
-                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]) : sheetData[key]['value']
+                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value']
                             };
                         }
                     }

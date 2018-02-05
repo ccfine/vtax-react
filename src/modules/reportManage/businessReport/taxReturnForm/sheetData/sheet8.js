@@ -1,3 +1,4 @@
+import {fMoney} from '../../../../../utils'
 import {generateRows,alphabet} from './sheetUtils'
 export const sheet_8 = [
     [
@@ -80,7 +81,10 @@ function dataReander(prevGrid,asyncData){
         return item.map( deepItem =>{
             for(let key in sheetData){
                 if(deepItem.key === key){
-                    return sheetData[key];
+                    return {
+                        ...sheetData[key],
+                        value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value']
+                    };
                 }
             }
             return deepItem;
