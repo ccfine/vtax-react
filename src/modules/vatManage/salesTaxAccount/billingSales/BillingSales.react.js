@@ -178,77 +178,53 @@ class BillingSales extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const data = {
+                const value = {
                     ...values,
                     authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
                 let url= null;
                 switch (type){
-                    case '保存':
-                        url = '/account/output/billingSale/save';
-                        this.requestPost(url,type,data);
-                        break;
                     case '提交':
                         url = '/account/output/billingSale/submit';
-                        this.requestPost(url,type,data);
+                        this.requestPost(url,type,value);
                         break;
                     case '撤回':
                         url = '/account/output/billingSale/revoke';
-                        this.requestPost(url,type,data);
+                        this.requestPost(url,type,value);
                         break;
                     case '重算':
                         url = '/account/output/billingSale/reset';
-                        this.fetch(url,data);
+                        this.requestPost(url,type,value);
                         break;
                     default:
                         this.setState({
-                            filters:data
+                            filters:value
                         },()=>{
-                            this.setState({
-                                tableUpDateKey:Date.now()
-                            })
+                            this.updateStatus(value);
                         });
-                        this.updateStatus(data);
-
                 }
+
+
+
             }
         });
     }
-    requestPost=(url,type,data={})=>{
-        request.post(url,data)
+    requestPost=(url,type,value={})=>{
+        request.post(url,value)
             .then(({data})=>{
                 if(data.code===200){
-                    const props = this.props;
                     message.success(`${type}成功!`);
-                    props.refreshTable();
-                    this.props.form.resetFields()
+                    this.updateStatus(value);
+                    //this.props.form.resetFields()
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
     }
-    fetch=(url,params = {})=>{
-        request.get(url,{
-            params:params
-        })
-            .then(({data}) => {
-                if(data.code===200){
-                    message.success('重算成功!');
-                    this.setState({
-                        resetDataSource:data.data.page.records,
-                        footerDate:data.data,
-                        isShowResetDataSource:true
-                    })
-                    this.props.form.resetFields()
-                }else{
-                    message.error(`重算失败:${data.msg}`)
-                }
-            });
-    }
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.handleSubmit()
+            this.handleSubmit();
         }
     }
     toggleModalVisible=visible=>{
@@ -262,20 +238,21 @@ class BillingSales extends Component {
         })
     }
     updateStatus=(values)=>{
-        request.get('/account/landPrice/deductedDetails/listMain',{params:values}).then(({data}) => {
+        request.get('/account/output/billingSale/main',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data
+                    statusParam: data.data,
+                    tableUpDateKey:Date.now()
                 })
             }
         })
     }
     render(){
         const {tableUpDateKey,filters,dataSource1,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
-        const disabled = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource1.length > 0));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource1.length > 0));
+        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
-        let disabled3 = !!search;
+        let disabled = !!search;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -294,10 +271,10 @@ class BillingSales extends Component {
                                         type:'taxMain',
                                         span:6,
                                         componentProps:{
-                                            disabled:disabled3
+                                            disabled:disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled3 && getUrlParam('mainId')) || undefined,
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -312,10 +289,10 @@ class BillingSales extends Component {
                                         span:6,
                                         componentProps:{
                                             format:'YYYY-MM',
-                                            disabled:disabled3
+                                            disabled:disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled3 && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -359,7 +336,7 @@ class BillingSales extends Component {
                           <Button
                               size='small'
                               style={{marginRight:5}}
-                              disabled={disabled}
+                              disabled={disabled1}
                               onClick={(e)=>this.handleSubmit(e,'重算')}>
                               <Icon type="retweet" />
                               重算
@@ -367,15 +344,7 @@ class BillingSales extends Component {
                           <Button
                               size='small'
                               style={{marginRight: 5}}
-                              disabled={disabled}
-                              onClick={(e)=>this.handleSubmit(e,'保存')}>
-                              <Icon type="save"/>
-                              保存
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled}
+                              disabled={disabled1}
                               onClick={(e) => this.handleSubmit(e,'提交')}>
                               <Icon type="check"/>
                               提交

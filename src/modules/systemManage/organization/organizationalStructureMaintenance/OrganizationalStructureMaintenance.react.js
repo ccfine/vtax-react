@@ -24,35 +24,46 @@ const searchFields = [
 const columns =[
     {
         title: '机构代码',
-        dataIndex: 'code',
+        dataIndex: 'orgCode',
     },{
         title: '机构名称',
-        dataIndex: 'name',
+        dataIndex: 'orgName',
     },{
         title: '机构简称',
-        dataIndex: 'type',
+        dataIndex: 'orgShortName',
     },{
         title: '机构所在地',
-        dataIndex: 'sortBy',
+        dataIndex: 'location',
     },{
         title: '经营地址',
-        dataIndex: 'description',
+        dataIndex: 'address',
     },{
         title: '本级序号',
         dataIndex: 'description1',
     }, {
         title: '状态',
-        dataIndex: 'description2',
+        dataIndex: 'isEnabled',
         render: text => {
-            //1一般计税方法，2简易计税方法 ,
-            text = parseInt(text, 0);
-            if (text === 1) {
-                return <span>启用</span>
+            //1:可用 2:禁用 3:删除,4:暂存 ,
+            //0:删除;1:保存;2:提交; ,
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t=<span style={{color:'#b7eb8f'}}>可用</span>;
+                    break;
+                case 2:
+                    t=<span style={{color: "red"}}>禁用</span>;
+                    break;
+                case 3:
+                    t=<span style={{color: "#f50"}}>删除</span>;
+                    break;
+                case 4:
+                    t=<span style={{color: "#91d5ff"}}>暂存</span>;
+                    break;
+                default:
+                //no default
             }
-            if (text === 2) {
-                return <span style={{color:'red'}}>禁用</span>
-            }
-            return text;
+            return t
         }
     }
 ];
@@ -67,6 +78,7 @@ class OrganizationalStructureMaintenance extends Component {
 
         selectedRowKeys:undefined,
         selectedRows:[],
+        selectedNodes:undefined,
         visible:false, // 控制Modal是否显示
         searchTableLoading:false,
         searchFieldsValues:{},
@@ -91,6 +103,11 @@ class OrganizationalStructureMaintenance extends Component {
         })
     }
     showModal=type=>{
+        if(type === 'add'){
+            if(typeof (this.state.selectedNodes) === 'undefined'){
+                return message.warning('请选择组织架构维护树');
+            }
+        }
         this.toggleModalVisible(true)
         this.setState({
             modalConfig:{
@@ -108,7 +125,7 @@ class OrganizationalStructureMaintenance extends Component {
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleSearchTableLoading(true)
-                request.delete(`/sys/dict/delete/${this.state.selectedRowKeys}`)
+                request.delete(`/org/delete/${this.state.selectedRowKeys}`)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
@@ -127,10 +144,21 @@ class OrganizationalStructureMaintenance extends Component {
         });
     }
     disabledData=()=>{
-
+        this.toggleSearchTableLoading(true)
+        request.put(`/org/enableOrDisable/${this.state.selectedRowKeys}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.toggleSearchTableLoading(false)
+                    message.success('启用/禁用成功!');
+                    this.toggleModalVisible(false);
+                    this.refreshTable()
+                }else{
+                    message.error(`启用/禁用失败:${data.msg}`)
+                }
+            })
     }
     render() {
-        const {updateTable,searchTableLoading,visible,modalConfig,selectedRowKeys,filters} = this.state;
+        const {updateTable,searchTableLoading,visible,modalConfig,selectedRowKeys,selectedNodes,filters} = this.state;
         return (
             <TreeTable
                 spinning={searchTableLoading}
@@ -170,15 +198,17 @@ class OrganizationalStructureMaintenance extends Component {
                 }}
                 treeCardOption={{
                     cardProps:{
-                        title:'应税项目树',
+                        title:'组织架构维护树',
                     }
                 }}
                 treeOption={{
                     key:updateTable,
                     showLine:false,
-                    url:"/sys/dict/tree",
+                    url:"/org/tree",
+                    //isLoadDate:false,
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
+                            selectedNodes,
                             filters:{
                                 id:selectedNodes.id
                             }
@@ -192,9 +222,9 @@ class OrganizationalStructureMaintenance extends Component {
                     pageSize:10,
                     columns:columns,
                     cardProps:{
-                        title:'下级列表信息'
+                        title:'组织架构维护列表信息'
                     },
-                    url:'/sys/dict/list',
+                    url:'/org/list',
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
                             selectedRowKeys:selectedRowKeys[0],
@@ -206,7 +236,7 @@ class OrganizationalStructureMaintenance extends Component {
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
+                <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} selectedNodes={selectedNodes} toggleModalVisible={this.toggleModalVisible} />
             </TreeTable>
         )
     }

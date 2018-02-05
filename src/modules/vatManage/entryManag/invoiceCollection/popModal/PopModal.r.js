@@ -771,7 +771,7 @@ class PopModal extends Component{
                                                   bordered:true,
                                                   size:'middle',
                                                   columns:this.columns,
-                                                  rowSelection:rowSelection,
+                                                  rowSelection: type !== 'view' && rowSelection,
                                                   footerDate:  footerDate,
                                                   renderFooter:data=>{
                                                       return(

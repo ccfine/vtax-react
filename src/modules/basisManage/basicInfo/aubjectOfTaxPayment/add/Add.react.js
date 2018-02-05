@@ -86,7 +86,7 @@ class Add extends Component {
 
     handleSubmit = (e) => {
         e && e && e.preventDefault();
-         this.props.form.validateFields((err, values) => {
+         this.props.form.validateFieldsAndScroll((err, values) => {
              console.log(err, values);
 
 
