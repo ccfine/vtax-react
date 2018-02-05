@@ -14,7 +14,7 @@ const buttonStyle={
 }
 const searchFields = [
     {
-        label:'名称',
+        label:'应税项目名称',
         fieldName:'name',
         type:'input',
         span:6,
@@ -23,29 +23,30 @@ const searchFields = [
 
 const columns =[
     {
-        title: '编码',
-        dataIndex: 'code',
+        title: '应税项目编号',
+        dataIndex: 'num',
     },{
-        title: '名称',
+        title: '应税项目名称',
         dataIndex: 'name',
     },{
-        title: '类型',
-        dataIndex: 'type',
+        title: '一般计税税率',
+        dataIndex: 'commonlyTaxRate',
     },{
-        title: '排序',
-        dataIndex: 'sortBy',
+        title: '简易计税税率',
+        dataIndex: 'simpleTaxRate',
     },{
-        title: '描述',
+        title: '填报说明',
         dataIndex: 'description',
     }
 ];
-class DataDictionaryMaintain extends Component {
+class TaxableItems extends Component {
     state = {
         filters:{},
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         updateTable:Date.now(),
+
         selectedRowKeys:undefined,
         selectedRows:[],
         visible:false, // 控制Modal是否显示
@@ -89,7 +90,7 @@ class DataDictionaryMaintain extends Component {
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleSearchTableLoading(true)
-                request.delete(`/sys/dict/delete/${this.state.selectedRowKeys}`)
+                request.delete(`/taxable/project/delete/${this.state.selectedRowKeys}`)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
@@ -144,13 +145,13 @@ class DataDictionaryMaintain extends Component {
                 }}
                 treeCardOption={{
                     cardProps:{
-                        title:'字典信息树',
+                        title:'应税项目树',
                     }
                 }}
                 treeOption={{
                     key:updateTable,
                     showLine:false,
-                    url:"/sys/dict/tree",
+                    url:"/taxable/project/tree",
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
                             filters:{
@@ -168,7 +169,7 @@ class DataDictionaryMaintain extends Component {
                     cardProps:{
                         title:'下级列表信息'
                     },
-                    url:'/sys/dict/list',
+                    url:'/taxable/project/list',
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
                             selectedRowKeys:selectedRowKeys[0],
@@ -185,4 +186,4 @@ class DataDictionaryMaintain extends Component {
         )
     }
 }
-export default Form.create()(DataDictionaryMaintain)
+export default Form.create()(TaxableItems)
