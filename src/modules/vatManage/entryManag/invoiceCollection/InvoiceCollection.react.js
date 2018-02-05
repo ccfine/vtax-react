@@ -187,8 +187,6 @@ class InvoiceCollection extends Component {
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
         const {search} = this.props.location;
-        console.log(search)
-        console.log()
         let disabled = !!(search && search.filters);
 
         const rowSelection = {
@@ -247,8 +245,10 @@ class InvoiceCollection extends Component {
                                 ])
                             }
                             <Col span={6} style={{textAlign:'right'}}>
-                                <Button size='small' style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button size='small' style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                <Form.Item>
+                                    <Button disabled={disabled} size='small' type="primary" htmlType="submit">查询</Button>
+                                    <Button disabled={disabled} size='small' style={{marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                </Form.Item>
                             </Col>
                         </Row>
                     </Form>

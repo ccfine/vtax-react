@@ -12,7 +12,7 @@ import sheet_4 from './sheetData/sheet4'
 import sheet_5 from './sheetData/sheet5'
 import sheet_6 from './sheetData/sheet6'
 import sheet_7 from './sheetData/sheet7'
-import sheet_8 from './sheetData/sheet8'
+import {sheet_8,composeGrid_8} from './sheetData/sheet8'
 import sheet_9 from './sheetData/sheet9'
 import SheetWithSearchFields from './SheetWithSearchFields.r'
 const TabPane = Tabs.TabPane;
@@ -26,7 +26,10 @@ const sheetData = [
     {
         tab:'附表一',
         grid:sheet_1,
-        url:'s'
+        url:'s',
+        scroll:{
+            x:'120%'
+        }
     },
     {
         tab:'附表二',
@@ -61,12 +64,16 @@ const sheetData = [
     {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/declaration/reduce/list',
+        composeGrid:composeGrid_8
     },
     {
         tab:'营改增税负分析测算明细表',
         grid:sheet_9,
-        url:'s'
+        url:'/tax/decConduct/camping/list',
+        scroll:{
+            x:'200%'
+        }
     }
 ]
 class TaxReturnForm extends Component{
