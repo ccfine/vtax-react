@@ -15,7 +15,7 @@ export const generateRow = (prefix ,titles, colLength,cellProps)=>{
     }
 
     for(let i=0;i<colLength;i++){
-        cols.push({key:`${prefix}${i+1}`,value:`${prefix}${i+1}`,readOnly:true,...cellProps})
+        cols.push({key:`${prefix}${i+1}`,value:`--`,readOnly:true,...cellProps})
     }
     return cols;
 }
