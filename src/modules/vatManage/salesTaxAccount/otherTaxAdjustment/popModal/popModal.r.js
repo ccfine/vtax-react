@@ -1,8 +1,7 @@
 import React,{Component} from 'react'
-import {Modal,Form,Button,message,Spin,Row,Icon} from 'antd'
+import {Modal,Form,Button,message,Spin,Row} from 'antd'
 import {getFields,request} from '../../../../../utils'
 import moment from 'moment';
-import SelectPopModal from './popModal'
 const formItemLayout = {
     labelCol: {
       xs: { span: 12 },
@@ -66,7 +65,7 @@ class PopModal extends Component{
     }
     selectTax = (item)=>{
         this.setState({record:{...this.state.record,taxableProjectId:item.id,taxableProjectName:item.name,businessType:undefined}});
-        this.props.form.setFieldsValue({taxableProjectName:item.name,businessType:undefined,taxRate:undefined})
+        this.props.form.setFieldsValue({taxableProject:{key:item.id,label:item.name},businessType:undefined,taxRate:undefined})
         this.fetchTypeList(item.id);
     }
     fetchTypeList=(id)=>{
@@ -92,6 +91,12 @@ class PopModal extends Component{
                     values.mainId = values.main.key;
                     values.mainName = values.main.label;
                     values.main = undefined;
+                }
+                // 处理应税项目
+                if(values.taxableProject){
+                    values.taxableProjectId = values.taxableProject.key;
+                    values.taxableProjectName = values.taxableProject.taxableProjectName;
+                    values.taxableProject = undefined;
                 }
 
                 let obj = Object.assign({},this.state.record,values);
@@ -157,7 +162,7 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.mainId?{key:record.mainId}:undefined,readonly || NotModifyWhenEdit,true,'请选择纳税主体'),
+                            ...setComItem(record.mainId?{key:record.mainId,label:record.mainName}:undefined,readonly || NotModifyWhenEdit,true,'请选择纳税主体'),
                             label:'纳税主体',
                             fieldName:'main',
                             type:'taxMain',
@@ -185,13 +190,30 @@ class PopModal extends Component{
                             options:[{text:'涉税调整',value:'1'},{text:'纳税检查调整',value:'2'}]
                         },
                         {
-                            ...setComItem(record.taxableProjectName,readonly,true,'请选择应税项目'),
                             label:'应税项目',
-                            fieldName:'taxableProjectName',
-                            type:'input',
+                            fieldName:'taxableProject',
+                            type:'taxableProject',
+                            span:12,
+                            formItemStyle:formItemLayout,
+                            fieldDecoratorOptions:{
+                                initialValue: (record && record.taxableProjectId) ? {
+                                    label:record.taxableProjectName || '',
+                                    key:record.taxableProjectId || ''
+                                } : undefined,
+                                rules:[
+                                    {
+                                        required:true,
+                                        message:'请选择应税项目'
+                                    }
+                                ]
+                            },
                             componentProps:{
                                 disabled:readonly,
-                                suffix:(<Icon type="search" style={{cursor:"pointer",padding:"10px",position:"absolute",right:"-11px",top:"-16px"}} onClick={()=>{this.setState({visible:true})}} />)
+                                onChange:data=>{
+                                    data.id = data.key;
+                                    data.name = data.label;
+                                    this.selectTax(data);
+                                }
                             }
                         }
                     ])
@@ -301,7 +323,6 @@ class PopModal extends Component{
                     </Row>
                 </Form>
                 </Spin>
-                <SelectPopModal visible={this.state.visible} hideModal={this.hideModal} select={this.selectTax}/>
             </Modal>
         );
     }

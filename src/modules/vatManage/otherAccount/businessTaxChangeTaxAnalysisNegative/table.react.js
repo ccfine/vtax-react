@@ -391,7 +391,8 @@ export default class extends React.Component {
         statusLoading:false,
         saveLoading: false,
         revokeLoading: false,
-        submitLoading: false
+        submitLoading: false,
+        resetLoading: false,
     }
     inputChange = (obj, index) => {
         let newDataSource = [...this.state.dataSource]
@@ -408,7 +409,8 @@ export default class extends React.Component {
         this.commonSubmit('/account/other/camping/save', params, 'save', '保存成功')
     }
     reCalculate = () => {
-        this.fetchTable('/account/other/camping/reset', this.props.filter);
+        let params = { ...this.props.filter };
+        this.commonSubmit('/account/other/camping/reset', params, 'reset', '重算成功');
     }
     submit = () => {
         let params = { ...this.props.filter };
@@ -416,7 +418,7 @@ export default class extends React.Component {
     }
     revoke = () => {
         let params = { ...this.props.filter };
-        this.commonSubmit('/account/other/camping/restore', params, 'revoke', '撤回提交成功');
+        this.commonSubmit('/account/other/camping/revoke', params, 'revoke', '撤回提交成功');
     }
     fetchTable = (url = '/account/other/camping/list', filter) => {
         this.setState({ loading: true });
@@ -479,7 +481,7 @@ export default class extends React.Component {
     }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
-        const buttonDisabled = !(dataSource && dataSource.length > 0);
+        const buttonDisabled = !this.props.filter;
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
