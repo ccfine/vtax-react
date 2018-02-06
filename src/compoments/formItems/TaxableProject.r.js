@@ -193,7 +193,7 @@ class TaxableProjectTreeForm extends Component{
                             cursor:'pointer',
                             right:3,
                             top:6,
-                            height:23,
+                            height:22,
                             width:23,
                             borderRadius:'3px',
                             textAlign:'center',
