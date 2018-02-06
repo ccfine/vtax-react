@@ -18,6 +18,7 @@ class TreeList extends Component {
     static defaultProps={
         updateKey:Date.now(),
         showLine:false,
+        isLoadDate:true,
     }
 
     state = {
@@ -116,6 +117,7 @@ class TreeList extends Component {
 
     render() {
         //expandedKeys,autoExpandParent,
+        const props = this.props;
         const {selectedKeys,treeData } = this.state;
         return (
             <Spin spinning={this.state.eidtLoading}>
@@ -126,8 +128,8 @@ class TreeList extends Component {
                         expandedKeys={expandedKeys}
                         autoExpandParent={autoExpandParent}*/
 
-                        showLine={this.props.showLine}
-                        loadData={this.onLoadData}
+                        showLine={props.showLine}
+                        loadData={props.isLoadDate && this.onLoadData}
                         onSelect={this.onSelect}
                         selectedKeys={selectedKeys}
                     >

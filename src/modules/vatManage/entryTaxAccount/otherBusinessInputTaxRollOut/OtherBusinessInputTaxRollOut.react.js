@@ -57,7 +57,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         statusLoading: false,
         status: undefined,
         filter: undefined,
-        buttonDisabled:true,
+        // buttonDisabled:true,
         submitLoading:false,
         revokeLoading:false,
     }
@@ -153,7 +153,8 @@ class OtherBusinessInputTaxRollOut extends Component {
             }
         ]
 
-        let {buttonDisabled,status} = this.state;
+        let {filter,status} = this.state,
+        buttonDisabled = !filter;
         return (
             <div>
             <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />

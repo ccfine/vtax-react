@@ -221,7 +221,7 @@ class TaxExemptionDetails extends Component{
         request.get('/account/other/reduceTaxDetail/main',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data
+                    statusParam: data.data,
                 })
             }
         })
@@ -233,18 +233,19 @@ class TaxExemptionDetails extends Component{
         }
     }
     render(){
-        const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,dataSource,statusParam} = this.state;
+        const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,statusParam,dataSource} = this.state;
+        console.log(statusParam)
         const {mainId,authMonth} = this.state.searchFieldsValues;
-        const disabled = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource.length > 0));
-        const rollbackDisabled = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource.length > 0));
+        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
-        let searchDisabled= !!search;
+        let disabled= !!search;
         return(
             <SearchTable
                 spinning={searchTableLoading}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(searchDisabled),
+                    fields:searchFields(disabled),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -293,14 +294,14 @@ class TaxExemptionDetails extends Component{
                         <FileImportModal
                             url="/account/other/reduceTaxDetail/upload"
                             fields={fieldList}
-                            disabled={disabled}
+                            disabled={disabled1}
                             onSuccess={this.refreshTable}
                             style={{marginRight:5}}
                         />
                         <FileExport
                             url='/account/other/reduceTaxDetail/detail/download'
                             title="下载导入模板"
-                            disabled={disabled}
+                            disabled={disabled1}
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button
@@ -315,7 +316,7 @@ class TaxExemptionDetails extends Component{
                             url='/account/other/reduceTaxDetail/export'
                             title='导出'
                             setButtonStyle={{marginRight:5}}
-                            disabled={disabled}
+                            disabled={!dataSource.length>0}
                             params={{
                                 ...searchFieldsValues
                             }}
@@ -323,7 +324,7 @@ class TaxExemptionDetails extends Component{
                         <Button
                             size='small'
                             style={{marginRight:5}}
-                            disabled={disabled}
+                            disabled={disabled1}
                             onClick={()=>this.handleClick('提交')}>
                             <Icon type="check" />
                             提交
@@ -331,7 +332,7 @@ class TaxExemptionDetails extends Component{
                         <Button
                             size='small'
                             style={{marginRight:5}}
-                            disabled={rollbackDisabled}
+                            disabled={disabled2}
                             onClick={()=>this.handleClick('撤回')}>
                             <Icon type="rollback" />
                             撤回提交

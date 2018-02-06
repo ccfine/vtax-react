@@ -26,25 +26,25 @@ const sheetData = [
     {
         tab:'附表一',
         grid:sheet_1,
-        url:'s',
+        url:'/tax/declaration/addendum/one/list',
         scroll:{
-            x:'120%'
+            x:'150%'
         }
     },
     {
         tab:'附表二',
         grid:sheet_2,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/declaration/addendum/two/list'
     },
     {
         tab:'附表三',
         grid:sheet_3,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/declaration/addendum/three/list'
     },
     {
         tab:'附表四',
         grid:sheet_4,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/declaration/addendum/four/list'
     },
     {
         tab:'附表五',
