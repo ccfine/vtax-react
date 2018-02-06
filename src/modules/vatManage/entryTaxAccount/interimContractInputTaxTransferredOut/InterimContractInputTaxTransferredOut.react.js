@@ -172,6 +172,7 @@ class InterimContractInputTaxTransferredOut extends Component {
         modalUpDateKey:Date.now(),
         visible:false,
         dataSource:[],
+        statusParam:{},
         selectedRowKeys:undefined,
         selectedRows:[],
     }
@@ -199,51 +200,58 @@ class InterimContractInputTaxTransferredOut extends Component {
             updateKey:Date.now()
         })
     }
-    requestPost=(url,type)=>{
+    requestPost=(url,type,value={})=>{
         this.setState({ loading:true })
-        request.post(url)
+        request.post(url,value)
             .then(({data})=>{
-                this.setState({ loading:false })
                 if(data.code===200){
+                    this.setState({ loading:false })
                     message.success(`${type}成功!`);
-                    this.refreshTable();
+                    this.updateStatus(value);
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
     }
+    updateStatus=(values)=>{
+        request.get('/account/income/taxContract/main',{params:values}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    statusParam: data.data,
+                    updateKey:Date.now()
+                })
+            }
+        })
+    }
     handleSubmit = (e,type) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const data = {
+                const value = {
                     ...values,
                     authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
                 let url= null;
                 switch (type){
                     case '提交':
-                        url = `/account/income/taxContract/adjustment/submit/${data.mainId}/${data.authMonth}`;
-                        this.requestPost(url,type);
+                        url = '/account/income/taxContract/adjustment/submit';
+                        this.requestPost(url,type,value);
                         break;
                     case '撤回':
-                        url = `/account/income/taxContract/adjustment/revoke/${data.mainId}/${data.authMonth}`;
-                        this.requestPost(url,type);
+                        url = '/account/income/taxContract/adjustment/revoke';
+                        this.requestPost(url,type,value);
                         break;
                     case '重算':
-                        url = `/account/income/taxContract/adjustment/reset/${data.mainId}/${data.authMonth}`;
-                        this.requestPost(url,type);
+                        url = '/account/income/taxContract/adjustment/reset';
+                        this.requestPost(url,type,value);
                         break;
                     default:
-
+                        this.setState({
+                            filters:value
+                        },()=>{
+                            this.updateStatus(value);
+                        });
                 }
-                this.setState({
-                    filters:data
-                },()=>{
-                    this.setState({
-                        updateKey:Date.now()
-                    })
-                });
             }
         });
     }
@@ -262,7 +270,9 @@ class InterimContractInputTaxTransferredOut extends Component {
         }
     }
     render(){
-        const {updateKey,filters,selectedRowKeys,selectedRows,modalUpDateKey,visible,dataSource} = this.state;
+        const {updateKey,filters,selectedRowKeys,selectedRows,modalUpDateKey,visible,dataSource,statusParam} = this.state;
+        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -344,6 +354,14 @@ class InterimContractInputTaxTransferredOut extends Component {
                 </Card>
                 <Card title="进项转出差异调整表" extra={
                     <div>
+                        {
+                            (JSON.stringify(statusParam) !== "{}" && dataSource.length > 0) &&
+                            <div style={{marginRight: 30, display: 'inline-block'}}>
+                                  <span style={{marginRight: 20}}>状态：<label
+                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                <span>提交时间：{statusParam.lastModifiedDate}</span>
+                            </div>
+                        }
                         <FileImportModal
                             url="/account/income/taxContract/adjustment/upload"
                             title="导入"
@@ -368,7 +386,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                             }}
                         />
                         <Button
-                            disabled={!(dataSource.length > 0 && parseInt(dataSource[0].status, 0)=== 1)}
+                            disabled={disabled1}
                             size='small'
                             onClick={(e)=>this.handleSubmit(e,'提交')}
                             style={{marginRight:5}}>
@@ -376,7 +394,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                             提交
                         </Button>
                         <Button
-                            disabled={!(dataSource.length > 0 && parseInt(dataSource[0].status, 0)=== 1)}
+                            disabled={disabled1}
                             size='small'
                             onClick={(e)=>this.handleSubmit(e,'重算')}
                             style={{marginRight:5}}>
@@ -401,7 +419,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                             差异调整凭证
                         </Button>*/}
                         <Button
-                            disabled={!(dataSource.length > 0 && parseInt(dataSource[0].status, 0)=== 2)}
+                            disabled={disabled2}
                             size='small'
                             onClick={(e)=>this.handleSubmit(e,'撤回')}
                             style={{marginRight:5}}>

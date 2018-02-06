@@ -44,7 +44,7 @@ class SelectSearch extends Component {
     }
 
     componentDidMount(){
-        request.get('/user_belong_organizations')
+        request.get('/org/user_belong_organizations')
             .then(({data})=>{
                 if(data.code ===200){
                     this.setState({ data: data.data });

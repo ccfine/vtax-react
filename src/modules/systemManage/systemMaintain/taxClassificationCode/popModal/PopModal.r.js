@@ -187,8 +187,8 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
+                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
                         </Col>
                     </Row>
                 }

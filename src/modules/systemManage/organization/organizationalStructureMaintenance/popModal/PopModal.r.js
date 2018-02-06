@@ -22,7 +22,7 @@ class PopModal extends Component{
     toggleLoaded = loaded => this.setState({loaded})
     fetchReportById = (id)=>{
         this.toggleLoaded(false)
-        request.get(`/sys/dict/find/${id}`)
+        request.get(`/org/find/${id}`)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -72,7 +72,12 @@ class PopModal extends Component{
                     }
                     this.updateRecord(data)
                 }else if(type==='add'){
-                    this.createRecord(values)
+                    const data = {
+                        ...values,
+                        orgParentId:this.props.selectedNodes && this.props.selectedNodes.id
+                    }
+                    console.log(data)
+                    this.createRecord(data)
                 }
             }
         });
@@ -80,7 +85,7 @@ class PopModal extends Component{
     }
 
     updateRecord = data =>{
-        request.put('/sys/dict/update',data)
+        request.put('/org/update',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -95,7 +100,7 @@ class PopModal extends Component{
     }
 
     createRecord = data =>{
-        request.post('/sys/dict/add',data)
+        request.post('/org/add',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -137,8 +142,8 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
+                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
                         </Col>
                     </Row>
                 }
@@ -150,11 +155,11 @@ class PopModal extends Component{
                                 getFields(props.form,[
                                     {
                                         label:'上级机构代码',
-                                        fieldName:'code',
+                                        fieldName:'orgParentCode',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['code'],
+                                            initialValue:(props.selectedNodes && props.selectedNodes.code) || initData['orgParentCode'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {
@@ -164,15 +169,15 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
-                                            disabled: type==='edit'
+                                            disabled: true
                                         }
                                     }, {
                                         label:'上级机构名称',
-                                        fieldName:'name',
+                                        fieldName:'orgParentName',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['name'],
+                                            initialValue:(props.selectedNodes && props.selectedNodes.name) || initData['orgParentName'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {
@@ -182,15 +187,15 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
-                                            disabled: type==='edit'
+                                            disabled: true
                                         }
                                     }, {
                                         label:'机构代码',
-                                        fieldName:'type',
+                                        fieldName:'orgCode',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['type'],
+                                            initialValue:initData['orgCode'],
                                             rules:[
                                                 {
                                                     required:true,
@@ -200,11 +205,11 @@ class PopModal extends Component{
                                         },
                                     }, {
                                         label:'机构名称',
-                                        fieldName:'sortBy',
+                                        fieldName:'orgName',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['sortBy'],
+                                            initialValue:initData['orgName'],
                                             rules:[
                                                 {
                                                     required:true,
@@ -214,53 +219,38 @@ class PopModal extends Component{
                                         },
                                     }, {
                                         label:'机构简称',
-                                        fieldName:'sortBy',
+                                        fieldName:'orgShortName',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['sortBy'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入机构简称'
-                                                }
-                                            ]
+                                            initialValue:initData['orgShortName'],
                                         },
                                     }, {
                                         label: '经营地址',
-                                        fieldName: 'sortBy',
+                                        fieldName: 'address',
                                         type: 'input',
                                         span: '12',
                                         fieldDecoratorOptions: {
-                                            initialValue: initData['sortBy'],
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: '请输入经营地址'
-                                                }
-                                            ]
+                                            initialValue: initData['address'],
                                         },
                                     }, {
                                         label: '机构所在地',
-                                        fieldName: 'sortBy',
+                                        fieldName: 'location',
                                         type: 'input',
                                         span: '12',
                                         fieldDecoratorOptions: {
-                                            initialValue: initData['sortBy'],
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: '请输入机构所在地'
-                                                }
-                                            ]
+                                            initialValue: initData['location'],
                                         },
                                     }, {
                                         label: '本级序号',
-                                        fieldName: 'sortBy',
+                                        fieldName: 'orgLevel',
                                         type: 'numeric',
                                         span: '12',
                                         fieldDecoratorOptions: {
-                                            initialValue: initData['sortBy'],
+                                            initialValue: type==='add' ?
+                                                ((parseInt(props.selectedNodes && props.selectedNodes.orgLevel, 0)+1) || (parseInt(initData['orgLevel'], 0)+1) )
+                                                :
+                                                ((props.selectedNodes && props.selectedNodes.orgLevel) || initData['orgLevel']),
                                             rules: [
                                                 {
                                                     required: true,
@@ -269,6 +259,7 @@ class PopModal extends Component{
                                             ]
                                         },
                                         componentProps:{
+                                            disabled: true,
                                             valueType:'int'
                                         },
                                     }

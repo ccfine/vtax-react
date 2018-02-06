@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,message,Popconfirm} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,message,Popconfirm,Icon} from 'antd'
 import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
 import {getFields,request,getUrlParam,fMoney} from '../../../../utils'
 import { withRouter } from 'react-router'
@@ -24,6 +24,8 @@ class InputTaxOnFixedAssets extends Component {
          * */
         tableUpDateKey:Date.now(),
         visible:false,
+        dataSource:[],
+        statusParam:{},
     }
 
     columns = [
@@ -67,30 +69,60 @@ class InputTaxOnFixedAssets extends Component {
                 this.setState({loading:false})
             })
     }
-
-    handleSubmit = e => {
+    requestPost=(url,type,value={})=>{
+        this.setState({ loading:true })
+        request.post(url,value)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({ loading:false })
+                    message.success(`${type}成功!`);
+                    this.updateStatus(value);
+                }else{
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
+    updateStatus=(values)=>{
+        request.get('/account/income/fixedAssets/main',{params:values}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    statusParam: data.data,
+                    tableUpDateKey:Date.now()
+                })
+            }
+        })
+    }
+    handleSubmit = (e,type) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const data = {
+                const value = {
                     ...values,
                     authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
-                this.setState({
-                    filters:data
-                },()=>{
-                    this.setState({
-                        tableUpDateKey:Date.now()
-                    })
-                });
+                let url= null;
+                switch (type){
+                    case '提交':
+                        url = '/account/income/fixedAssets/submit';
+                        this.requestPost(url,type,value);
+                        break;
+                    case '撤回':
+                        url = '/account/income/fixedAssets/revoke';
+                        this.requestPost(url,type,value);
+                        break;
+                    default:
+                        this.setState({
+                            filters:value
+                        },()=>{
+                            this.updateStatus(value);
+                        });
+                }
             }
         });
     }
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.refreshTable()
-        }else{
             this.refreshTable()
         }
 
@@ -106,7 +138,9 @@ class InputTaxOnFixedAssets extends Component {
         })
     }
     render(){
-        const {tableUpDateKey,filters} = this.state
+        const {tableUpDateKey,filters,dataSource,statusParam} = this.state
+        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -169,6 +203,14 @@ class InputTaxOnFixedAssets extends Component {
                     </Form>
                 </Card>
                 <Card extra={<div>
+                    {
+                        (JSON.stringify(statusParam) !== "{}" && dataSource.length > 0) &&
+                        <div style={{marginRight: 30, display: 'inline-block'}}>
+                                  <span style={{marginRight: 20}}>状态：<label
+                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                            <span>提交时间：{statusParam.lastModifiedDate}</span>
+                        </div>
+                    }
                     <PopUploadModal
                         url="/account/income/fixedAssets/upload"
                         title="导入"
@@ -182,6 +224,22 @@ class InputTaxOnFixedAssets extends Component {
                         setButtonStyle={{marginTop:10,marginRight:5}}
                         size='small'
                     />
+                    <Button
+                        disabled={disabled1}
+                        size='small'
+                        onClick={(e)=>this.handleSubmit(e,'提交')}
+                        style={{marginRight:5}}>
+                        <Icon type="check" />
+                        提交
+                    </Button>
+                    <Button
+                        disabled={disabled2}
+                        size='small'
+                        onClick={(e)=>this.handleSubmit(e,'撤回')}
+                        style={{marginRight:5}}>
+                        <Icon type="rollback" />
+                        撤回提交
+                    </Button>
                 </div>}
                       style={{marginTop:10}}>
 
@@ -193,6 +251,11 @@ class InputTaxOnFixedAssets extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
+                                    onDataChange:(dataSource)=>{
+                                        this.setState({
+                                            dataSource
+                                        })
+                                    },
                                 }} />
                 </Card>
             </Layout>

@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Select,Icon,Modal,Tree,Form,Button,Row} from 'antd'
+import {Select,Icon,Modal,Tree,Form,Button,Row,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request,getFields} from '../../utils'
 const TreeNode = Tree.TreeNode;
@@ -72,7 +72,6 @@ export default class TaxableProject extends Component{
 class TaxableProjectTreeForm extends Component{
 
     state = {
-        modalKey:Date.now()+'1',
         submitLoading:false,
         treeData:[],
         expandedKeys: [],
@@ -126,7 +125,9 @@ class TaxableProjectTreeForm extends Component{
     handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if (!err) {
+            if(typeof (values.commonlyTaxRate) === 'undefined'  || typeof (values.simpleTaxRate) === 'undefined' || typeof (values.description) === 'undefined'){
+                return message.warning('请选择应税项目！')
+            }else{
                 const {setFieldsValue,fieldName,onChange} = this.props;
                 const {initData} = this.state
                 let fieldData =  {
@@ -160,7 +161,7 @@ class TaxableProjectTreeForm extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        /*if(typeof (nextProps.conditionValue.industry) !== 'undefined' && typeof (nextProps.conditionValue.industry) !== "object"){
+        /*if(typeof (nextProps.conditionValue.taxableProject) !== 'undefined' && typeof (nextProps.conditionValue.taxableProject) !== "object"){
 
         }*/
     }
@@ -212,10 +213,12 @@ class TaxableProjectTreeForm extends Component{
                     onCancel={()=>toggleModalVisible(false)}
                     width={800}
                     bodyStyle={{height:"450px",overflow:"auto"}}
-                    footer={[
-                        <Button onClick={()=>toggleModalVisible(false)}>取消</Button>,
-                        <Button type="primary" onClick={this.handleSubmit}>确认</Button>,
-                    ]}
+                    footer={
+                        <div>
+                            <Button onClick={()=>toggleModalVisible(false)}>取消</Button>
+                            <Button type="primary" onClick={this.handleSubmit}>确认</Button>
+                        </div>
+                    }
                     style={{
                         maxWidth:'90%',
                         top:'40px',
@@ -248,6 +251,12 @@ class TaxableProjectTreeForm extends Component{
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue:initData.commonlyTaxRate ? (initData.commonlyTaxRate+'%') : undefined,
+                                            /*rules:[
+                                                {
+                                                    required:true,
+                                                    message:'选择税率（一般计税）'
+                                                }
+                                            ]*/
                                         }
                                     },{
                                         label:'征税率（简易计税）',
@@ -260,6 +269,12 @@ class TaxableProjectTreeForm extends Component{
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue:initData.simpleTaxRate ? (initData.simpleTaxRate+'%') : undefined,
+                                            /*rules:[
+                                                {
+                                                    required:true,
+                                                    message:'选择征税率（简易计税）'
+                                                }
+                                            ]*/
                                         }
                                     }, {
                                         label: '填报说明',
@@ -279,6 +294,12 @@ class TaxableProjectTreeForm extends Component{
                                         },
                                         fieldDecoratorOptions: {
                                             initialValue: initData.description,
+                                            /*rules:[
+                                                {
+                                                    required:true,
+                                                    message:'选择填报说明'
+                                                }
+                                            ]*/
                                         }
                                     }
                                 ])
