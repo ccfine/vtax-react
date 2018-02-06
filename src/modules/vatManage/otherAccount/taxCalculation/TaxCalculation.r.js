@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/24.
  */
 import React,{Component} from 'react'
-import {Button,Icon,message,Form} from 'antd'
+import {Button,Icon,message,Form,Modal} from 'antd'
 import {SearchTable} from '../../../../compoments'
 import {request,getUrlParam} from '../../../../utils'
 import EditableCell from './EditableCell.r'
@@ -137,21 +137,29 @@ class TaxCalculation extends Component{
         })
     }
     recount = ()=>{
-        this.toggleSearchTableLoading(true)
-        request.get('/account/taxCalculation/reset',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    this.setState({
-                        tableKey:Date.now()
+        Modal.confirm({
+            title: '友情提醒',
+            content: '确定要重算吗',
+            onOk : ()=> {
+                this.toggleSearchTableLoading(true)
+                request.get('/account/taxCalculation/reset',{
+                    params:this.state.searchFieldsValues
+                })
+                    .then(({data})=>{
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            this.setState({
+                                tableKey:Date.now()
+                            })
+                        }else{
+                            message.error(`重算失败:${data.msg}`)
+                        }
                     })
-                }else{
-                    message.error(`重算失败:${data.msg}`)
-                }
-            })
+            },
+            onCancel() {
 
+            },
+        })
     }
     handleClickActions = action => ()=>{
         let actionText,

@@ -231,25 +231,14 @@ class PrepayTax extends Component{
         })
     }
     recount = ()=>{
-        this.setState({
-            tableUrl:'/account/prepaytax/reset',
-            tableKey:Date.now()
-        },()=>{
-
-            //TODO 重算逻辑等待后端梳理
-            setTimeout(()=>{
-                this.setState({
-                    tableUrl:'/account/prepaytax/list'
-                })
-            },500)
-        })
+        this.refreshTable()
     }
     handleClickActions = action => ()=>{
         let actionText,
             actionUrl;
 
         if(action ==='recount'){
-            this.recount()
+            this.recount();
             return false;
         }
         switch (action){

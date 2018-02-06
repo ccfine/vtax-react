@@ -69,10 +69,16 @@ export default class TaxMain extends Component{
     }
     onSearch = (value) => {
         this.props.onSearch && this.props.onSearch(value)
-        fetchTaxMain(value, data => this.setState({ mainTaxItems:data }));
+        fetchTaxMain(value, data => {
+            this.mounted && this.setState({ mainTaxItems:data })
+        });
     }
     componentDidMount(){
         this.onSearch('');
+    }
+    mounted = true
+    componentWillUnmount(){
+        this.mounted=null;
     }
     render(){
         const {mainTaxItems}=this.state;

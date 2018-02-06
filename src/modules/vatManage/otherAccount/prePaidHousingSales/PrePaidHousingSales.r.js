@@ -287,7 +287,9 @@ class PrePaidHousingSales extends Component{
         selectedRowKeys:[],
         tableKey:Date.now(),
         searchTableLoading:false,
-        searchFieldsValues:{}
+        searchFieldsValues:{},
+
+        hasData:false
     }
     toggleSearchTableLoading = b =>{
         this.setState({
@@ -364,7 +366,7 @@ class PrePaidHousingSales extends Component{
         }
     }
     render(){
-        const {selectedRowKeys,searchTableLoading,tableKey,} = this.state;
+        const {selectedRowKeys,searchTableLoading,tableKey,hasData} = this.state;
         const {mainId,receiveMonth} = this.state.searchFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -406,6 +408,11 @@ class PrePaidHousingSales extends Component{
                     onRowSelect:(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
+                        })
+                    },
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            hasData:data.length !==0
                         })
                     },
                     extra:<div>
@@ -468,8 +475,8 @@ class PrePaidHousingSales extends Component{
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button size="small" style={{marginRight:5}} type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth)}><Icon type="file-add" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth)}><Icon type="rollback" />撤回提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && hasData)}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && hasData)}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(
