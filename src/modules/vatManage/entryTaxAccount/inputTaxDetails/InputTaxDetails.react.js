@@ -173,7 +173,9 @@ class InputTaxDetails extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card style={{marginTop:10}}>
+                <Card
+
+                    style={{marginTop:10}}>
 
                     <AsyncTable url="/account/income/taxDetail/list"
                                 updateKey={tableUpDateKey}
