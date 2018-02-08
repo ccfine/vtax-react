@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/18.
  */
 import React,{Component} from 'react'
-import {Button,Icon,message,Modal} from 'antd'
+import {Button,Icon,message} from 'antd'
 import {SearchTable,FileExport,ButtonWithFileUploadModal} from '../../../../compoments'
 import {fMoney,request,getUrlParam} from '../../../../utils'
 import { withRouter } from 'react-router'
@@ -211,10 +211,6 @@ class PrepayTax extends Component{
 
         },
 
-        resultFieldsValues:{
-
-        },
-
         tableUrl:'/account/prepaytax/list',
         /**
          *修改状态和时间
@@ -235,42 +231,7 @@ class PrepayTax extends Component{
         })
     }
     recount = ()=>{
-        Modal.confirm({
-            title: '友情提醒',
-            content: '确定要重算吗',
-            onOk : ()=> {
-                this.toggleSearchTableLoading(true)
-                request.put('/account/prepaytax/reset',this.state.resultFieldsValues)
-                    .then(({data})=>{
-                        this.toggleSearchTableLoading(false)
-                        if(data.code===200){
-                            message.success('重算成功!')
-                            this.refreshTable()
-                        }else{
-                            message.error(`重算失败:${data.msg}`)
-                        }
-                    })
-            },
-            onCancel() {
-
-            },
-        })
-
-    }
-    fetchResultStatus = ()=>{
-        request.get('/account/prepaytax/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
+        this.refreshTable()
     }
     handleClickActions = action => ()=>{
         let actionText,
@@ -289,11 +250,15 @@ class PrepayTax extends Component{
                 actionText='撤回';
                 actionUrl='/account/prepaytax/restore';
                 break;
+            case 'recount':
+                actionText='重算';
+                actionUrl='/account/salehouse/restore';
+                break;
             default:
                 break;
         }
         this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
+        request.post(actionUrl,this.state.searchFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -313,8 +278,8 @@ class PrepayTax extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultFieldsValues} = this.state;
-        const {mainId,receiveMonth} = resultFieldsValues;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData} = this.state;
+        const {mainId,receiveMonth} = searchFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -325,10 +290,10 @@ class PrepayTax extends Component{
                         className:''
                     },
                     onResetFields:()=>{
-                       /* this.setState({
+                        this.setState({
                             submitDate:'',
                             dataStatus:''
-                        })*/
+                        })
                     },
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
@@ -356,19 +321,16 @@ class PrepayTax extends Component{
                 tableOption={{
                     key:tableKey,
                     onSuccess:(params,data)=>{
-                        /*if(data && data.length !==0){
+                        if(data && data.length !==0){
                             this.setState({
                                 submitDate:data[0].lastModifiedDate,
                                 dataStatus:data[0].status
                             })
-                        }*/
+                        }
                         this.setState({
-                            resultFieldsValues:params,
+                            searchFieldsValues:params,
                             hasData:data.length !== 0
                         })
-                    },
-                    onDataChange:data=>{
-                        this.fetchResultStatus()
                     },
                     pageSize:100,
                     columns:columns,
@@ -394,12 +356,12 @@ class PrepayTax extends Component{
                                 searchFieldsValues
                             }
                         />
-                        <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && receiveMonth && parseInt(dataStatus,0) ===1)} size='small' style={{marginRight:5}}>
+                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && parseInt(dataStatus,0) ===1)}><Icon type="file-add" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth)}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth)}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(

@@ -7,6 +7,7 @@ import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import {Modal,Form,Row,message,Button,Icon} from 'antd'
 import {request,getFields} from '../../utils'
+import moment from 'moment'
 const confirm = Modal.confirm;
 const undoUploadArrList = [
     {
@@ -53,7 +54,7 @@ const undoUploadArrList = [
         },
     }
 ]
-class PopUndoUploadModal extends Component{
+class FileUndoImportModal extends Component{
     static propTypes={
         undoUpload:PropTypes.any,
         onSuccess:PropTypes.func
@@ -83,16 +84,15 @@ class PopUndoUploadModal extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.toggleLoading(true)
-                let url = '';
-                if(values.mainId){
-                    url = `${values.mainId}`;
+                for(let key in values){
+                    if(moment.isMoment(values[key])){
+                        //格式化一下时间 YYYY-MM类型
+                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM');
+                        }
+                    }
                 }
-                if(values.authMonth){
-                    url = `${values.authMonth && values.authMonth.format('YYYY-MM')}`;
-                }
-                if(values.mainId && values.authMonth ){
-                    url = `${values.mainId}/${values.authMonth && values.authMonth.format('YYYY-MM')}`;
-                }
+
                 confirm({
                     title: '友情提醒',
                     content: '该撤销后将不可恢复，是否撤销？',
@@ -101,7 +101,7 @@ class PopUndoUploadModal extends Component{
                     cancelText: '取消',
                     onOk: () => {
 
-                        request.post(`${this.props.url}/${url}`,
+                        request.post(this.props.url,values
                         )
                             .then(({data}) => {
                                 this.toggleLoading(false)
@@ -148,4 +148,4 @@ class PopUndoUploadModal extends Component{
     }
 }
 
-export default Form.create()(PopUndoUploadModal)
+export default Form.create()(FileUndoImportModal)

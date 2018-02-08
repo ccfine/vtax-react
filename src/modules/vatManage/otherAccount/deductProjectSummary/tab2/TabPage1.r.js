@@ -95,7 +95,6 @@ class tab1 extends Component{
         },
         searchTableLoading:false,
         statusParam:{},
-        dataSource:[],
     }
     refreshTable = ()=>{
         this.setState({
@@ -173,11 +172,11 @@ class tab1 extends Component{
         }
     }
     render(){
-        const {updateKey,searchTableLoading,statusParam,dataSource} = this.state;
+        const {updateKey,searchTableLoading,statusParam} = this.state;
         console.log(statusParam);
         const {mainId,month} = this.state.searchFieldsValues;
-        const disabled = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource.length > 0));
-        const disabled2 = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource.length > 0));
+        const disabled = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled3 = !!search;
         return(
@@ -272,11 +271,6 @@ class tab1 extends Component{
                                 </div>
                             )
                         },
-                        onDataChange:(dataSource)=>{
-                            this.setState({
-                                dataSource
-                            })
-                        }
                     }}
                 >
                 </SearchTable>

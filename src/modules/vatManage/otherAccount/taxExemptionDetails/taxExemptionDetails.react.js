@@ -309,7 +309,7 @@ class TaxExemptionDetails extends Component{
                             type='danger'
                             style={{marginRight:5}}
                             onClick={this.deleteData}
-                            disabled={selectedRowKeys.length === 0}>
+                            disabled={disabled1 && selectedRowKeys.length === 0}>
                             <Icon type="delete" />删除
                         </Button>
                         <FileExport

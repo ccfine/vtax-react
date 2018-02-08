@@ -174,6 +174,16 @@ class BillingSales extends Component {
         dataSource1:[],
         dataSource2:[],
     }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
     handleSubmit = (e,type) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -221,22 +231,6 @@ class BillingSales extends Component {
                 }
             })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.handleSubmit();
-        }
-    }
-    toggleModalVisible=visible=>{
-        this.setState({
-            visible
-        })
-    }
-    refreshTable = ()=>{
-        this.setState({
-            tableUpDateKey:Date.now()
-        })
-    }
     updateStatus=(values)=>{
         request.get('/account/output/billingSale/main',{params:values}).then(({data}) => {
             if (data.code === 200) {
@@ -246,6 +240,12 @@ class BillingSales extends Component {
                 })
             }
         })
+    }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit();
+        }
     }
     render(){
         const {tableUpDateKey,filters,dataSource1,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
@@ -316,7 +316,7 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-房地产"
                       extra={<div>
                           {
-                              (JSON.stringify(statusParam) !== "{}" && dataSource1.length > 0) &&
+                              JSON.stringify(statusParam) !== "{}" &&
                               <div style={{marginRight: 30, display: 'inline-block'}}>
                                   <span style={{marginRight: 20}}>状态：<label
                                       style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>

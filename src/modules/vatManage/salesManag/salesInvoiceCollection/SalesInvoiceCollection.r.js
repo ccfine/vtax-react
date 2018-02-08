@@ -2,36 +2,19 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Button,Icon,Modal,message} from 'antd'
+import {Button,Icon,Modal} from 'antd'
 import {SearchTable,FileExport} from '../../../../compoments'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam} from '../../../../utils'
+import {fMoney,getUrlParam} from '../../../../utils'
 import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
+
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
+
 const searchFields=(disabled)=> {
     return [
         {
@@ -41,54 +24,37 @@ const searchFields=(disabled)=> {
             componentProps:{
                 disabled,
             },
-            formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
             },
         },
         {
             label:'发票号码',
             type:'input',
             fieldName:'invoiceNum',
-            formItemStyle,
             fieldDecoratorOptions:{},
             componentProps:{}
         },
         {
             label:'税收分类编码',
             type:'input',
-            formItemStyle,
             fieldName:'taxClassificationCoding',
             fieldDecoratorOptions:{}
         },
         {
-            label:'开票月份',
-            type:'monthPicker',
-            formItemStyle,
+            label:'开票日期',
+            type:'rangePicker',
             fieldName:'billingDate',
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择开票月份'
-                    }
-                ]
+                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
             }
         },
         {
             label:'税率',
             type:'numeric',
-            formItemStyle,
             fieldName:'taxRate',
             componentProps:{
                 valueType:'int'
@@ -98,13 +64,11 @@ const searchFields=(disabled)=> {
         {
             label:'商品名称',
             type:'input',
-            formItemStyle,
             fieldName:'commodityName',
         },
         {
             label:'发票类型',
             fieldName:'invoiceType',
-            formItemStyle,
             type:'select',
             options:[
                 {
@@ -124,31 +88,26 @@ const getColumns = context =>[
         title:'操作',
         key:'actions',
         render:(text,record)=>(
-            <div style={{textAlign:'center'}}>
-                {
-                    parseInt(context.state.dataStatus,0) === 1 && (
-                        <span style={pointerStyle} onClick={()=>{
-                            const type = parseInt(record.sourceType,0);
-                            if(type!==1){
-                                Modal.warning({
-                                    title: '友情提示',
-                                    content: '只能修改手工新增的数据',
-                                });
-                                return false;
-                            }
+            <div>
+                <span style={pointerStyle} onClick={()=>{
+                    const type = parseInt(record.sourceType,0);
+                    if(type!==1){
+                        Modal.warning({
+                            title: '友情提示',
+                            content: '只能修改手工新增的数据',
+                        });
+                        return false;
+                    }
 
-                            context.setState({
-                                modalConfig:{
-                                    type:'edit',
-                                    id:record.id
-                                }
-                            },()=>{
-                                context.toggleModalVisible(true)
-                            })
-                        }}>编辑</span>
-                    )
-                }
-
+                    context.setState({
+                        modalConfig:{
+                            type:'edit',
+                            id:record.id
+                        }
+                    },()=>{
+                        context.toggleModalVisible(true)
+                    })
+                }}>编辑</span>
                 <span style={{
                     ...pointerStyle,
                     marginLeft:5
@@ -231,7 +190,7 @@ const getColumns = context =>[
         }
     }
 ];
-class SalesInvoiceCollection extends Component{
+class Test extends Component{
     state={
         visible:false,
         modalConfig:{
@@ -241,29 +200,7 @@ class SalesInvoiceCollection extends Component{
         searchFieldsValues:{
 
         },
-
-        /**
-         *修改状态和时间
-         * */
-        dataStatus:'',
-        submitDate:'',
-
         hasData:false
-    }
-    fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -287,20 +224,18 @@ class SalesInvoiceCollection extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.refreshTable()
+        }else{
+            this.refreshTable()
         }
     }
     render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues,hasData,submitDate,dataStatus} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
             <SearchTable
-                doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
-                    cardProps:{
-                        className:''
-                    },
+                    fields:searchFields(disabled)
                 }}
                 tableOption={{
                     key:tableKey,
@@ -311,21 +246,9 @@ class SalesInvoiceCollection extends Component{
                         this.setState({
                             searchFieldsValues:params,
                             hasData:data.length !==0
-                        },()=>{
-                            this.fetchResultStatus()
                         })
                     },
                     extra:<div>
-                        {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
-                        }
                         <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                             <Icon type="file-add" />
                             新增
@@ -347,8 +270,6 @@ class SalesInvoiceCollection extends Component{
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
-                        <SubmitOrRecall type={1} url="/output/invoice/collection/submit" onSuccess={this.refreshTable} />
-                        <SubmitOrRecall type={2} url="/output/invoice/collection/revoke" onSuccess={this.refreshTable} />
                     </div>,
                     scroll:{
                         x:'180%'
@@ -378,4 +299,4 @@ class SalesInvoiceCollection extends Component{
         )
     }
 }
-export default withRouter(SalesInvoiceCollection)
+export default withRouter(Test)
