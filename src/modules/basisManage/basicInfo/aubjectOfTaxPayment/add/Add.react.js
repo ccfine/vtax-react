@@ -30,9 +30,6 @@ class Add extends Component {
         gqgx:[],
         jbxx:{},
         szjd: null,
-
-        industry:{},
-
         status:1,
         id:null,
     }
@@ -55,12 +52,6 @@ class Add extends Component {
             gqgx
         })
     }
-    //给其它组件传数据
-    changeIndustry=industry=>{
-        this.mounted && this.setState({
-            industry
-        })
-    }
     setStatus = status=>{
         this.mounted && this.setState({
             status:status
@@ -77,160 +68,129 @@ class Add extends Component {
 
     checkeGqgxId = (data)=>{
         return data.map((item)=>{
-            if(item.id.indexOf('t')> -1){
-                return {
-                    remark:item.remark,
-                    rightsRatio:item.rightsRatio,
-                    stockRightRatio:item.stockRightRatio,
-                    stockholder:item.stockholder,
-                    stockholderType:item.stockholderType,
-                }
-            }else{
-                return {
-                    id:item.id,
-                    remark:item.remark,
-                    rightsRatio:item.rightsRatio,
-                    stockRightRatio:item.stockRightRatio,
-                    stockholder:item.stockholder,
-                    stockholderType:item.stockholderType,
-                }
+            return {
+                ...item,
+                id: (item.id.indexOf('t') > -1) ? null : item.id
             }
         })
     }
 
     checkeGdjcgId = (data)=> {
         return data.map((item) => {
-            if (item.id.indexOf('t') > -1) {
-                return {
-                    capitalRemark: item.capitalRemark,
-                    collectionCapitalAmount: parseFloat(`${item.collectionCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    collectionCapitalCurrency: item.collectionCapitalCurrency,
-                    propertyRemark: item.propertyRemark,
-                    realStockholder: item.realStockholder,
-                    registeredCapitalAmount: parseFloat(`${item.registeredCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    registeredCapitalCurrency: item.registeredCapitalCurrency,
-                    registeredStockholder: item.registeredStockholder,
-                    situation: item.situation,
-                    stockRight: item.stockRight,
-                    stockholderType: item.stockholderType,
-                    term: item.term,
-                }
-
-            } else {
-                return {
-                    id: item.id,
-                    capitalRemark: item.capitalRemark,
-                    collectionCapitalAmount: parseFloat(`${item.collectionCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    collectionCapitalCurrency: item.collectionCapitalCurrency,
-                    propertyRemark: item.propertyRemark,
-                    realStockholder: item.realStockholder,
-                    registeredCapitalAmount: parseFloat(`${item.registeredCapitalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    registeredCapitalCurrency: item.registeredCapitalCurrency,
-                    registeredStockholder: item.registeredStockholder,
-                    situation: item.situation,
-                    stockRight: item.stockRight,
-                    stockholderType: item.stockholderType,
-                    term: item.term,
-                }
+            return {
+                ...item,
+                id: (item.id.indexOf('t') > -1) ? null : item.id
             }
         })
     }
 
     handleSubmit = (e) => {
         e && e && e.preventDefault();
-         this.props.form.validateFields((err, values) => {
+         this.props.form.validateFieldsAndScroll((err, values) => {
+             console.log(err, values);
+
+
          if (!err) {
-               const type = this.props.modalConfig.type;
-               const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
-               const gqgx = this.checkeGqgxId(this.state.gqgx);
-               const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
-               const data = {
-                   ...values,
-                   jbxx:{
-                       ...values.jbxx,
-                       industry:this.state.industry.key,
-                       id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
-                       operatingProvince: values.jbxx.operatingProvince[0],
-                       operatingCity:values.jbxx.operatingProvince[1],
-                       operatingArea:values.jbxx.operatingProvince[2],
-                       nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
-                       nationalTaxCity:values.jbxx.nationalTaxProvince[1],
-                       nationalTaxArea:values.jbxx.nationalTaxProvince[2],
+             if(values.jbxx.industry.label && values.jbxx.industry.key){
+                 values.jbxx.industry = values.jbxx.industry.key
+             }
 
-                       localTaxProvince:values.jbxx.localTaxProvince[0],
-                       localTaxCity:values.jbxx.localTaxProvince[1],
-                       localTaxArea:values.jbxx.localTaxProvince[2],
-                       currencyAmount:values.jbxx.currencyAmount && parseFloat(`${values.jbxx.currencyAmount}`.replace(/\$\s?|(,*)/g, '')),
-                       receiptCurrencyAmount:values.jbxx.receiptCurrencyAmount && parseFloat(`${values.jbxx.receiptCurrencyAmount}`.replace(/\$\s?|(,*)/g, '')),
-                       registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
-                       openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
-                   },
-                   gdjcg:gdjcg ,
-                   gqgx:gqgx,
-                   szjd:szjd,
-               }
+             const type = this.props.modalConfig.type;
+             const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
+             const gqgx = this.checkeGqgxId(this.state.gqgx);
+             const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
+             const data = {
+                ...values,
+                jbxx:{
+                   ...values.jbxx,
+                   status:this.state.status,
+                   id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
+                   operatingProvince: values.jbxx.operatingProvince[0],
+                   operatingCity:values.jbxx.operatingProvince[1],
+                   operatingArea:values.jbxx.operatingProvince[2],
+                   nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
+                   nationalTaxCity:values.jbxx.nationalTaxProvince[1],
+                   nationalTaxArea:values.jbxx.nationalTaxProvince[2],
 
-               console.log(data);
+                   localTaxProvince:values.jbxx.localTaxProvince[0],
+                   localTaxCity:values.jbxx.localTaxProvince[1],
+                   localTaxArea:values.jbxx.localTaxProvince[2],
+                   registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
+                   openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
+                },
+                gdjcg:gdjcg ,
+                gqgx:gqgx,
+                szjd:szjd,
+             }
 
-               this.mounted && this.setState({
-                   submitLoading: true
-               })
-               if (type === 'add') {
-                   request.post('/taxsubject/save', data
-                   )
-                       .then(({data}) => {
-                           if (data.code === 200) {
-                               message.success('新增成功！', 4)
-                               this.setStatus(2);
-                               this.mounted && this.setState({
-                                   submitLoading: false,
-                                   id:data.data,
-                               })
-                           } else {
-                               message.error(data.msg, 4)
-                               this.mounted && this.setState({
-                                   submitLoading: false
-                               })
-                           }
-                       })
-                       .catch(err => {
-                           message.error(err.message)
+            //console.log(data);
+
+            this.mounted && this.setState({
+               submitLoading: true
+            })
+            if (type === 'add') {
+               request.post('/taxsubject/save', data
+               )
+                   .then(({data}) => {
+                       if (data.code === 200) {
+                           message.success('新增成功！', 4)
+                           //编辑成功，关闭当前窗口,刷新父级组件
+                           this.props.toggleModalVisible(false);
+                           this.props.updateTable();
+                           this.setStatus(2);
+                           this.mounted && this.setState({
+                               submitLoading: false,
+                               id:data.data,
+                           })
+                       } else {
+                           message.error(data.msg, 4)
                            this.mounted && this.setState({
                                submitLoading: false
                            })
-
+                       }
+                   })
+                   .catch(err => {
+                       message.error(err.message)
+                       this.mounted && this.setState({
+                           submitLoading: false
                        })
-               }
 
-               if (type === 'edit') {
+                   })
+            }
 
-                   request.put('/taxsubject/update', data
-                   )
-                       .then(({data}) => {
+            if (type === 'edit') {
 
-                           if (data.code === 200) {
-                               message.success('编辑成功！', 4);
-                               //编辑成功，关闭当前窗口,刷新父级组件
-                               this.props.toggleModalVisible(false);
-                               this.props.updateTable();
-                               this.mounted && this.setState({
-                                   submitLoading: false
-                               })
-                           } else {
-                               message.error(data.msg, 4);
-                               this.mounted && this.setState({
-                                   submitLoading: false
-                               })
-                           }
-                       })
-                       .catch(err => {
-                           message.error(err.message)
+               request.put('/taxsubject/update', data
+               )
+                   .then(({data}) => {
+
+                       if (data.code === 200) {
+                           message.success('编辑成功！', 4);
+                           //编辑成功，关闭当前窗口,刷新父级组件
+                           this.props.toggleModalVisible(false);
+                           this.props.updateTable();
                            this.mounted && this.setState({
                                submitLoading: false
                            })
+                       } else {
+                           message.error(data.msg, 4);
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       }
+                   })
+                   .catch(err => {
+                       message.error(err.message)
+                       this.mounted && this.setState({
+                           submitLoading: false
                        })
-               }
-           }
+                   })
+            }
+            }else{
+            if(err.jbxx){
+                this.setState({ activeKey:'1' });
+            }
+            }
         })
     }
     handleDelete=()=>{
@@ -263,7 +223,6 @@ class Add extends Component {
         request.put(`/taxsubject/update/${(this.props.selectedRowKeys && this.props.selectedRowKeys[0]) || this.state.id}/${status}`
         )
             .then(({data}) => {
-                    console.log(data)
                 if (data.code === 200) {
                     message.success(`${mes}成功！`, 4);
                     //编辑成功，关闭当前窗口,刷新父级组件
@@ -283,7 +242,6 @@ class Add extends Component {
                 })
             })
     }
-
     fetch = (id)=> {
         this.setState({
             submitLoading: true
@@ -307,17 +265,10 @@ class Add extends Component {
                 }
             });
     }
-
-    componentDidMount() {
-
-
-    }
-
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
     }
-
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
             /**
@@ -329,7 +280,7 @@ class Add extends Component {
                 gqgx:[],
                 jbxx:{},
                 szjd: null,
-                industry:{},
+                activeKey:'1',
             })
         }
 
@@ -337,7 +288,7 @@ class Add extends Component {
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            if(nextProps.selectedRowKeys.length>0){
+            if(nextProps.selectedRowKeys && nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
                 this.setStatus(parseInt(nextProps.selectedRows[0].status, 0));
             }
@@ -349,7 +300,7 @@ class Add extends Component {
     render() {
         const {modalConfig,visible,form,selectedRowKeys} = this.props;
 
-        const {jbxx,szjd,gdjcg,gqgx,industry,status} = this.state;
+        const {jbxx,szjd,gdjcg,gqgx,status} = this.state;
 
         let title='';
         const type = modalConfig.type;
@@ -371,6 +322,7 @@ class Add extends Component {
             <div>
                 <Modal
                     maskClosable={false}
+                    destroyOnClose={true}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
                     style={{ top: 40 }}
@@ -418,9 +370,7 @@ class Add extends Component {
                                         type={type}
                                         visible={visible}
                                         defaultData={jbxx}
-                                        industry={industry}
                                         selectedRowKeys={selectedRowKeys}
-                                        changeIndustry = {this.changeIndustry.bind(this)}
                                     />
                                 </TabPane>
                                 <TabPane tab="税种鉴定" key="2" forceRender={true}>
@@ -431,7 +381,7 @@ class Add extends Component {
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
-                                <TabPane tab="股东持股" key="3">
+                                <TabPane tab="股东及持股" key="3">
                                     <Shareholding
                                         type={type}
                                         defaultData={gdjcg}

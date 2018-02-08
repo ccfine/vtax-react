@@ -4,9 +4,11 @@
 import React, { Component } from 'react';
 import {SearchTable} from '../../../../compoments';
 import PopModal from "./popModal";
+import {fMoney} from '../../../../utils'
 const pointerStyle = {
     cursor:'pointer',
-    color:'#1890ff'
+    color:'#1890ff',
+    marginRight:'5px'
 }
 
 const searchFields = [
@@ -23,11 +25,14 @@ const getColumns =(context)=>[
         render:(text,record)=>(
             <div>
                 <span style={pointerStyle} onClick={()=>{
-                    context.setState({opid:record.id,visible:true});}}>编辑</span>
+                    context.setState({opid:record.id,readOnly:false,visible:true,updateKey:Date.now()});}}>编辑</span>
+                    <span style={pointerStyle} onClick={()=>{
+                    context.setState({opid:record.id,readOnly:true,visible:true,updateKey:Date.now()});}}>查看</span>
             </div>
-        )
-    },
-    {
+        ),
+        fixed:'left',
+        width:'75px'
+    },{
         title: '纳税主体',
         dataIndex: 'mainName',
     }, {
@@ -48,9 +53,13 @@ const getColumns =(context)=>[
     },{
         title: '可抵扣地价款',
         dataIndex: 'deductibleLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '实际已扣除土地价款',
         dataIndex: 'actualDeductibleLandPrice',
+        render:text=>fMoney(text),
+        className:'table-money'
     },{
         title: '已售建筑面积(m²)',
         dataIndex: 'saleArea',
@@ -60,13 +69,16 @@ const getColumns =(context)=>[
 export default class LandPriceManage extends Component{
     state={
         visible:false, // 控制Modal是否显示
-        opid:"" // 当前操作的记录
-    }
-    showModal(){
-        this.setState({visible:true});
+        opid:"", // 当前操作的记录
+        readOnly:false,
+        updateKey:Date.now(),
+        tableUpdateKey:Date.now(),
     }
     hideModal(){
         this.setState({visible:false});
+    }
+    updateTable=()=>{
+        this.setState({tableUpdateKey:Date.now()})
     }
     render(){
         return(
@@ -76,12 +88,20 @@ export default class LandPriceManage extends Component{
                         fields:searchFields
                     }}
                     tableOption={{
+                        pageSize:10,
                         columns:getColumns(this),
-                        url:'/landPriceInfo/list'
+                        url:'/landPriceInfo/list',
+                        key:this.state.tableUpdateKey
                     }}
                 >
                 </SearchTable>
-                <PopModal visible={this.state.visible} hideModal={()=>{this.hideModal()}} id={this.state.opid}/>
+                <PopModal 
+                visible={this.state.visible}
+                readOnly={this.state.readOnly}
+                hideModal={()=>{this.hideModal()}}
+                id={this.state.opid}
+                onSuccess = {this.updateTable}
+                updateKey={this.state.updateKey}/>
             </div>
         )
     }

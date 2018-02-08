@@ -3,11 +3,10 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import React from 'react'
 import {wrapPage} from '../../../compoments'
 import SalesInvoiceCollection from './salesInvoiceCollection'
 import SalesInvoiceMatching from './salesInvoiceMatching'
-const CampBeforeTheIncreaseInSales =()=><div>营改增前售房</div>
+import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/salesManag`;
 

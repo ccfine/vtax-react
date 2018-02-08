@@ -4,11 +4,8 @@
  * description  :
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,Checkbox} from 'antd';
-import {fMoney,regRules} from '../../../../../../utils'
-const FormItem = Form.Item;
-const Option = Select.Option;
-const { TextArea } = Input;
+import {Button,Modal,Form,Row,Col} from 'antd';
+import {getFields,regRules} from '../../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -17,22 +14,6 @@ class PopModal extends Component{
     }
     state={
         defaultData:{},
-    }
-
-    handleKeyUp=(name)=> {
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`).replace(/\$\s?|(,*)/g, '');
-        form.setFieldsValue({
-            [name]: value.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        });
-    }
-
-    handleBlur=(name)=>{
-        const form = this.props.form;
-        let value = form.getFieldValue(`${name}`);
-        form.setFieldsValue({
-            [name]: fMoney(value),
-        });
     }
 
     handleSubmit = (e) => {
@@ -120,17 +101,8 @@ class PopModal extends Component{
     render(){
         const props = this.props;
         const {defaultData} = this.state;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 },
-        };
-        const formItemLayout2 = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 18 },
-        };
         let title='';
-        let disibled = false;
+        let disabled = false;
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
@@ -141,14 +113,23 @@ class PopModal extends Component{
                 break;
             case 'view':
                 title = '查看';
-                disibled=true;
+                disabled=true;
                 break;
             default :
             //no default
         }
+        const formItemStyle={
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            }
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 visible={props.visible}
@@ -164,188 +145,247 @@ class PopModal extends Component{
                 title={title}>
                 <Form onSubmit={this.handleSubmit}>
                     <Row>
-                        <Col span={12}>
-                            <FormItem label='股东类型' {...formItemLayout}>
-                                {getFieldDecorator(`stockholderType`,{
-                                    initialValue:defaultData.stockholderType,
-                                    rules:[
+                        {
+                            getFields(this.props.form,[
+                                {
+                                    label:'股东类型',
+                                    fieldName:'stockholderType',
+                                    type:'select',
+                                    span:12,
+                                    formItemStyle,
+                                    options:[
                                         {
-                                            required:true,
-                                            message:'请选择股东类型'
-                                        }
-                                    ]
-                                })(
-                                    <Select
-                                        disabled={disibled}
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value={'1'}>我方股东</Option>
-                                        <Option value={'2'}>他方股东</Option>
-                                    </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='实际股东' {...formItemLayout}>
-                                {getFieldDecorator(`realStockholder`,{
-                                    initialValue:defaultData.realStockholder,
-                                    rules:[
+                                            text:'我方股东',
+                                            value:'1'
+                                        },
                                         {
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            text:'他方股东',
+                                            value:'2'
                                         }
-                                    ]
-                                })(
-                                    <Input disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label="是否代持股权"
-                            >
-                                {getFieldDecorator('stockRight', {
-                                    valuePropName: 'checked',
-                                    initialValue:defaultData.stockRight,
-                                })(
-                                    <Checkbox disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='登记股东' {...formItemLayout}>
-                                {getFieldDecorator(`registeredStockholder`,{
-                                    initialValue:defaultData.registeredStockholder,
-                                    rules:[
-                                        {
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                    ],
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.stockholderType,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请选择股东类型'
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'实际股东',
+                                    fieldName:'realStockholder',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.realStockholder,
+                                        rules:[
+                                            {
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'是否代持股权',
+                                    fieldName:'stockRight',
+                                    type:'checkbox',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.stockRight,
+                                    }
+                                },{
+                                    label:'登记股东',
+                                    fieldName:'registeredStockholder',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.registeredStockholder,
+                                        rules:[
+                                            {
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'注册资本出资期限',
+                                    fieldName:'term',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.term,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入注册资本出资期限'
+                                            },{
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'注册资本原币币种',
+                                    fieldName:'registeredCapitalCurrency',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.registeredCapitalCurrency,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入注册资本原币币种'
+                                            },{
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'注册资本原币金额(万元)',
+                                    fieldName:'registeredCapitalAmount',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.registeredCapitalAmount,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入注册资本原币金额'
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'注册资本备注',
+                                    fieldName:'remark',
+                                    type:'textArea',
+                                    span:24,
+                                    formItemStyle:{
+                                        labelCol:{
+                                            span:4
+                                        },
+                                        wrapperCol:{
+                                            span:20
                                         }
-                                    ]
-                                })(
-                                    <Input disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={8}>
-                            <FormItem label='注册资本出资期限' {...formItemLayout}>
-                                {getFieldDecorator(`term`,{
-                                    initialValue:defaultData.term,
-                                    rules:[
-                                        {
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.remark,
+                                        rules:[
+                                            {
+                                                max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'实收资本原币币种',
+                                    fieldName:'collectionCapitalCurrency',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.collectionCapitalCurrency,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入实收资本原币币种'
+                                            },{
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'实收资本原币金额(万元)',
+                                    fieldName:'collectionCapitalAmount',
+                                    type:'numeric',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue: defaultData.collectionCapitalAmount,
+                                        rules:[
+                                            {
+                                                required:true,
+                                                message:'请输入实收资本原币金额'
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'代持情况',
+                                    fieldName:'situation',
+                                    type:'input',
+                                    span:12,
+                                    formItemStyle,
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.situation,
+                                        rules:[
+                                            {
+                                                max:regRules.input_length_50.max, message: regRules.input_length_50.message
+                                            }
+                                        ]
+                                    }
+                                },{
+                                    label:'股东属性备注',
+                                    fieldName:'propertyRemark',
+                                    type:'textArea',
+                                    span:24,
+                                    formItemStyle:{
+                                        labelCol:{
+                                            span:4
+                                        },
+                                        wrapperCol:{
+                                            span:20
                                         }
-                                    ]
-                                })(
-                                    <Input disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={8}>
-                            <FormItem label='注册资本原币币种' {...formItemLayout}>
-                                {getFieldDecorator(`registeredCapitalCurrency`,{
-                                    initialValue:defaultData.registeredCapitalCurrency,
-                                    rules:[
-                                        {
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                        }
-                                    ]
-                                })(
-                                    <Input disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={8}>
-                            <FormItem label='注册资本原币金额(万元)' {...formItemLayout}>
-                                {getFieldDecorator(`registeredCapitalAmount`,{
-                                    initialValue:fMoney(defaultData.registeredCapitalAmount)
-                                })(
-                                    <Input disabled={disibled}
-                                           onKeyUp={(e)=>this.handleKeyUp('registeredCapitalAmount')}
-                                           onBlur={(e)=>this.handleBlur('registeredCapitalAmount')}
-                                           style={{width:'100%'}}  />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='注册资本备注' {...formItemLayout2}>
-                                {getFieldDecorator(`capitalRemark`,{
-                                    initialValue:defaultData.capitalRemark,
-                                    rules:[
-                                        {
-                                            max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
-                                        }
-                                    ]
-                                })(
-                                    <TextArea disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <FormItem label='实收资本' {...formItemLayout}>
-                                {getFieldDecorator(`collectionCapitalCurrency`,{
-                                    initialValue:defaultData.collectionCapitalCurrency,
-                                    rules:[
-                                        {
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                        }
-                                    ]
-                                })(
-                                    <Input disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem label='实收资本原币金额(万元)' {...formItemLayout}>
-                                {getFieldDecorator(`collectionCapitalAmount`,{
-                                    initialValue:fMoney(defaultData.collectionCapitalAmount)
-                                })(
-                                    <Input disabled={disibled}
-                                           onKeyUp={(e)=>this.handleKeyUp('collectionCapitalAmount')}
-                                           onBlur={(e)=>this.handleBlur('collectionCapitalAmount')}
-                                           style={{width:'100%'}}  />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='代持情况' {...formItemLayout2}>
-                                {getFieldDecorator(`situation`,{
-                                    initialValue:defaultData.situation,
-                                    rules:[
-                                        {
-                                            max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                        }
-                                    ]
-                                })(
-                                    <Input disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <FormItem label='股东属性备注' {...formItemLayout2}>
-                                {getFieldDecorator(`propertyRemark`,{
-                                    initialValue:defaultData.propertyRemark,
-                                    rules:[
-                                        {
-                                            max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
-                                        }
-                                    ]
-                                })(
-                                    <TextArea disabled={disibled} />
-                                )}
-                            </FormItem>
-                        </Col>
+                                    },
+                                    componentProps:{
+                                        disabled
+                                    },
+                                    fieldDecoratorOptions:{
+                                        initialValue:defaultData.propertyRemark,
+                                        rules:[
+                                            {
+                                                max:regRules.textarea_length_2000.max, message: regRules.textarea_length_2000.message
+                                            }
+                                        ]
+                                    }
+                                }
+                            ])
+                        }
+
                     </Row>
                 </Form>
             </Modal>

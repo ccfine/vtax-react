@@ -60,7 +60,7 @@ class PopModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                //console.log('Received values of form: ', values);
             }
         });
     }
@@ -143,6 +143,7 @@ class PopModal extends Component{
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 visible={props.visible}

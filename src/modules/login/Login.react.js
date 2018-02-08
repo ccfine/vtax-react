@@ -8,6 +8,7 @@ import React,{Component} from 'react'
 import { Layout,Form, Icon, Input, Button, Alert,Row,Col} from 'antd'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import {regRules} from '../../utils'
 import {login} from '../../redux/ducks/user'
 import logo from './images/logo.png'
 import loginIcon from './images/login.png'
@@ -104,14 +105,22 @@ class Login extends Component {
                                     <h2 className="welcome">喜盈佳纳税申报平台</h2>
                                     <FormItem>
                                         {getFieldDecorator('userName', {
-                                            rules: [{ required: true, message: '请输入用户名!' }],
+                                            rules: [{
+                                                    required: true,message: '请输入用户名!'
+                                                },{
+                                                    pattern:regRules.userName.pattern, message: regRules.userName.message,
+                                            }],
                                         })(
                                             <Input prefix={<Icon type="user" style={{ fontSize: 14 }} />} placeholder="用户名" />
                                         )}
                                     </FormItem>
                                     <FormItem>
                                         {getFieldDecorator('password', {
-                                            rules: [{ required: true, message: '请输入密码!' }],
+                                            rules: [{
+                                                    required: true, message: '请输入密码!'
+                                                },{
+                                                    pattern:regRules.password.pattern, message: regRules.password.message,
+                                            }],
                                         })(
                                             <Input prefix={<Icon type="lock" style={{ fontSize: 14 }} />} type="password" placeholder="密码" />
                                         )}

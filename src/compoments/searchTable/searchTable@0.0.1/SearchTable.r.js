@@ -3,14 +3,23 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Layout,Card,Row,Col,Form,Button} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Spin} from 'antd'
 import moment from 'moment'
 import {AsyncTable} from '../../index'
 import {getFields} from '../../../utils'
 class SearchTable extends Component{
     static propTypes = {
         searchOption:PropTypes.object,
-        tableOption:PropTypes.object
+        tableOption:PropTypes.object,
+        spinning:PropTypes.bool,
+        doNotFetchDidMount:PropTypes.bool,
+        backCondition:PropTypes.func,// 返回查询条件,
+        beforeSearch:PropTypes.func,
+    }
+    static defaultProps = {
+        spinning:false,
+        doNotFetchDidMount:false,
+        searchOption:{}
     }
     constructor(props){
         super(props)
@@ -19,24 +28,32 @@ class SearchTable extends Component{
              * params条件，给table用的
              * */
             filters:{
-                pageSize:20
             },
 
             /**
              * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
              * */
             tableUpDateKey:props.tableOption.key || Date.now(),
-
-            selectedRowKeys:null,
             visible:false,
             expand:true
         }
     }
     componentWillReceiveProps(nextProps){
         if(this.props.tableOption.key !== nextProps.tableOption.key){
-            this.setState({
-                tableUpDateKey:nextProps.tableOption.key
-            })
+            /*this.setState({
+                tableUpDateKey:nextProps.tableOption.key,
+            })*/
+            this.handleSubmit()
+        }
+
+        if(nextProps.searchOption){
+            for(let key in nextProps.searchOption.filters){
+                if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
+                    this.setState({
+                        filters:nextProps.searchOption.filters
+                    })
+                }
+            }
         }
     }
     handleSubmit = e => {
@@ -45,96 +62,116 @@ class SearchTable extends Component{
             if (!err) {
                 for(let key in values){
                     if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
-                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangPicker
+                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
                         values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
                         values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
                         values[key] = undefined;
                     }
+                    if(moment.isMoment(values[key])){
+                        //格式化一下时间 YYYY-MM类型
+                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM');
+                        }
+
+                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM-DD');
+                        }*/
+                    }
                 }
-                this.setState({
+
+                this.setState(prevState=>({
                     selectedRowKeys:null,
-                    filters:values
-                },()=>{
+                    filters:{
+                        ...prevState.filters,
+                        ...values
+                    }
+                }),()=>{
                     this.setState({
                         tableUpDateKey:Date.now()
                     })
                 });
+
+                // 把查询条件返回回去
+                this.props.backCondition && this.props.backCondition(values)
             }
         });
 
-    }
-    onChange=(selectedRowKeys, selectedRows) => {
-        this.setState({
-            selectedRowKeys
-        })
-    }
-    showModal=type=>{
-        this.toggleModalVisible(true)
-        this.setState({
-            modalConfig:{
-                type,
-                id:this.state.selectedRowKeys
-            }
-        })
     }
     updateTable=()=>{
         this.handleSubmit()
     }
     componentDidMount(){
-        this.updateTable()
+        !this.props.doNotFetchDidMount && this.updateTable()
+        this.props.searchOption && this.props.searchOption.filters && this.setState({
+            filters:this.props.searchOption.filters
+        })
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;
-        const {searchOption,tableOption,children} = this.props;
+        const {searchOption,tableOption,children,form,spinning,style} = this.props;
         return(
-            <Layout style={{background:'transparent'}} >
-                {
-                    searchOption && (
-                        <Card
+            <Layout style={{background:'transparent',...style}} >
+                <Spin spinning={spinning}>
+                    {
+                        searchOption && (
+                            <Card
                                 className="search-card"
-                              bodyStyle={{
-                                  padding:expand?'12px 16px':'0 16px'
-                              }}
-                              /*extra={
-                                  <Icon
-                                      style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
-                                      onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
-                                      type={`${expand?'up':'down'}-circle-o`} />
-                              }*/
-                              {...searchOption.cardProps}
-                        >
-                            <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
-                                <Row>
-                                    {
-                                        getFields(this.props.form,searchOption.fields)
-                                    }
+                                bodyStyle={{
+                                    padding:expand?'12px 16px':'0 16px'
+                                }}
+                                /*extra={
+                                 <Icon
+                                 style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
+                                 onClick={()=>{this.setState(prevState=>({expand:!prevState.expand}))}}
+                                 type={`${expand?'up':'down'}-circle-o`} />
+                                 }*/
+                                {...searchOption.cardProps}
+                            >
+                                <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                                    <Row>
+                                        {
+                                            getFields(form,searchOption.fields)
+                                        }
+                                        <Col style={{width:'100%',textAlign:'right'}}>
+                                            <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                            <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
+                                                form.resetFields()
+                                                searchOption.onResetFields && searchOption.onResetFields();
 
-                                    <Col span={8}>
-                                        <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                        <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </Card>
-                    )
-                }
-                <Card
-                      extra={tableOption.extra || null}
-                      style={{marginTop:10}}
-                      {...tableOption.cardProps}
-                >
-                    <AsyncTable url={tableOption.url}
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:true,
-                                    pageSize:tableOption.pageSize || 10,
-                                    size:'small',
-                                    columns:tableOption.columns,
-                                    scroll:tableOption.scroll || undefined
-                                }} />
-                </Card>
+                                                //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
+                                                searchOption.getFieldsValues && searchOption.getFieldsValues({})
+                                                searchOption.onFieldsChange && searchOption.onFieldsChange({})
+                                            }}>重置</Button>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            </Card>
+                        )
+                    }
+                    <Card
+                        extra={tableOption.extra || null}
+                        style={{marginTop:10}}
+                        {...tableOption.cardProps}
+                    >
+                        <AsyncTable url={tableOption.url}
+                                    updateKey={tableUpDateKey}
+                                    filters={filters}
+                                    tableProps={{
+                                        rowKey:record=>record.id,
+                                        pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
+                                        pageSize:tableOption.pageSize || 10,
+                                        size:'small',
+                                        onRow:tableOption.onRow || undefined,
+                                        rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
+                                        onRowSelect:tableOption.onRowSelect || undefined,
+                                        columns:tableOption.columns,
+                                        onSuccess:tableOption.onSuccess || undefined,
+                                        scroll:tableOption.scroll || undefined,
+                                        onDataChange:tableOption.onDataChange || undefined,
+                                        renderFooter:tableOption.renderFooter || undefined
+                                    }} />
+                    </Card>
+                </Spin>
                 {
                     children? children : null
                 }
@@ -146,5 +183,6 @@ export default Form.create({
     onValuesChange:(props,values)=>{
         //给外部一个获得搜索条件的回调
         props.searchOption.getFieldsValues && props.searchOption.getFieldsValues(values)
+        props.searchOption.onFieldsChange && props.searchOption.onFieldsChange(values)
     }
 })(SearchTable)

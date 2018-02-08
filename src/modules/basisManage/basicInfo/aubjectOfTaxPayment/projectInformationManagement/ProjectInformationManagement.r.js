@@ -26,6 +26,18 @@ const table_2_columns = [{
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
+    render:text=>{
+        //1一般计税方法，2简易计税方法 ,
+        text = parseInt(text,0);
+        if(text===1){
+            return '一般计税方法'
+        }else if(text ===2){
+            return '简易计税方法'
+        }else{
+            return ''
+        }
+
+    }
 }];
 export default class ProjectInformationManagement extends Component{
     state = {
@@ -94,7 +106,6 @@ export default class ProjectInformationManagement extends Component{
         this.fetchTable_2_Data(selectedRowKeys)
     }
     handleDownload=()=>{
-        debugger
         let url =`${window.baseURL}${this.props.url}`;
         let elemIF = document.createElement("iframe");
         elemIF.src = url;
@@ -114,6 +125,8 @@ export default class ProjectInformationManagement extends Component{
                     项目信息管理
                 </Button>
                 <Modal
+                    maskClosable={false}
+                    destroyOnClose={true}
                     title="项目管理"
                     visible={this.state.visible}
                     width={1000}

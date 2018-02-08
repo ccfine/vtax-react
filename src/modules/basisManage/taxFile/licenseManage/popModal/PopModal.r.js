@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Modal,Card} from 'antd';
+import {Modal,Tabs} from 'antd';
 import Tab1 from './tab_1';
 import Tab2 from './tab_2';
 import Tab3 from './tab_3';
@@ -13,6 +13,7 @@ import Tab7 from './tab_7';
 import Tab8 from './tab_8';
 import Tab9 from './tab_9';
 import Tab10 from './tab_10';
+const TabPane = Tabs.TabPane;
 const tabList = [{
     key: 'tab1',
     tab: '国有土地使用权出让合同'
@@ -45,18 +46,18 @@ const tabList = [{
     tab: '房屋所有权证',
 }];
 
-const getContent = (key,projectId) => {
+const getContent = (key,projectId,updateKey) => {
     const contentList = {
-        tab1: <Tab1 projectId={projectId} />,
-        tab2: <Tab2 projectId={projectId} />,
-        tab3: <Tab3 projectId={projectId} />,
-        tab4: <Tab4 projectId={projectId} />,
-        tab5: <Tab5 projectId={projectId} />,
-        tab6: <Tab6 projectId={projectId} />,
-        tab7: <Tab7 projectId={projectId} />,
-        tab8: <Tab8 projectId={projectId} />,
-        tab9: <Tab9 projectId={projectId} />,
-        tab10: <Tab10 projectId={projectId} />,
+        tab1: <Tab1 projectId={projectId} updateKey={updateKey}/>,
+        tab2: <Tab2 projectId={projectId} updateKey={updateKey}/>,
+        tab3: <Tab3 projectId={projectId} updateKey={updateKey}/>,
+        tab4: <Tab4 projectId={projectId} updateKey={updateKey} />,
+        tab5: <Tab5 projectId={projectId} updateKey={updateKey} />,
+        tab6: <Tab6 projectId={projectId} updateKey={updateKey} />,
+        tab7: <Tab7 projectId={projectId} updateKey={updateKey} />,
+        tab8: <Tab8 projectId={projectId}  updateKey={updateKey}/>,
+        tab9: <Tab9 projectId={projectId}  updateKey={updateKey}/>,
+        tab10: <Tab10 projectId={projectId} updateKey={updateKey} />,
     };
     return contentList[key]
 }
@@ -64,8 +65,7 @@ const getContent = (key,projectId) => {
 class PopModal extends Component{
     state = {
         key: 'tab1',
-        noTitleKey: 'article',
-        cardKey:Date.now()
+        updateKey:Date.now()
     }
     onTabChange = (key, type) => {
         this.setState({ [type]: key });
@@ -74,9 +74,7 @@ class PopModal extends Component{
         if(nextProps.visible && this.props.visible !== nextProps.visible){
             //传进来的是要求打开并且当前是关闭状态的时候，一打开就初始化
             this.setState({
-                key: 'tab1',
-                noTitleKey: 'article',
-                cardKey:Date.now()
+                updateKey:Date.now()
             })
         }
     }
@@ -86,26 +84,31 @@ class PopModal extends Component{
             <Modal
                 title="查看"
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 footer={false}
                 width={1920}
                 bodyStyle={{
                     padding:0,
-                    height:400,
-                    overflowY:'scroll'
+                    height:550,
+                    overflowY:'auto'
                 }}
                 style={{
-                    maxWidth:'90%',
+                    width:'90%',
+                    maxWidth:'900px'
                 }}
                 visible={props.visible}>
-                <Card
-                    style={{ width: '100%',border:'none' }}
-                    tabList={tabList}
-                    key={this.state.cardKey}
-                    onTabChange={(key) => { this.onTabChange(key, 'key'); }}
-                >
-                    {props.projectId && getContent(this.state.key,`${props.projectId}`)}
-                </Card>
+                <Tabs tabPosition={this.state.tabPosition} size="small">
+                    {
+                        tabList.map(ele=>(
+                            <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
+                            {
+                                getContent(ele.key, this.props.projectId, this.state.updateKey)
+                            }
+                            </TabPane>
+                        ))
+                    }
+                </Tabs>
             </Modal>
         )
     }

@@ -2,19 +2,16 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,Card,Icon,message,Spin} from 'antd';
-import {request,regRules,fMoney,requestDict} from '../../../../../utils'
-import {CusFormItem,SynchronizeTable} from '../../../../../compoments'
+import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
+import {request,regRules,fMoney,requestDict,getFields} from '../../../../../utils'
+import {SynchronizeTable} from '../../../../../compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
-const FormItem = Form.Item;
-const { MonthPicker } = DatePicker;
-const Option = Select.Option;
 const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
-
+const dateFormat = 'YYYY-MM-DD'
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
@@ -28,6 +25,11 @@ class PopModal extends Component{
 
         },
         detailsDate:[],
+        footerDate:{
+            pageAmount:0,
+            pageTaxAmount:0,
+            pageTotalAmount:0,
+        },
 
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
@@ -79,319 +81,8 @@ class PopModal extends Component{
         render:text=>fMoney(text),
     }];
 
-    getFields(start,end) {
-        const props = this.props;
-        const {getFieldDecorator} = this.props.form;
-        const {initData} = this.state;
-
-        let disabled =  props.modalConfig.type ==='view';
-
-        const dateFormat = 'YYYY-MM-DD'
-        let shouldShowDefaultData = false;
-        if(props.modalConfig.type==='edit' || props.modalConfig.type==='view'){
-            shouldShowDefaultData = true;
-        }
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 18 },
-        };
-        const formItemStyle = {
-            labelCol:{
-                span:2
-            },
-            wrapperCol:{
-                span:22
-            }
-        };
-
-        const children = [];
-        const max20={
-            max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-        }
-        const max50={
-            max:regRules.input_length_50.max, message: regRules.input_length_50.message,
-        }
-        const data = [
-            {
-                components:<CusFormItem.TaxMain
-                    fieldName="incomeInvoiceCollectionDO.mainId"
-                    initialValue={initData.mainId}
-                    formItemStyle={formItemLayout}
-                    form={this.props.form}
-
-                    fieldDecoratorOptions={{
-                        rules:[
-                            {
-                                required:true,
-                                message:'请选择纳税主体'
-                            }
-                        ]
-                    }}
-                    componentProps={{
-                        disabled:disabled
-                    }}
-                />
-            },{
-                label: '进项结构分类',
-                type: 'select',
-                fieldName: 'incomeInvoiceCollectionDO.incomeStructureType',
-                initialValue:initData.incomeStructureType,
-                items: this.state.incomeStructureTypeItem,
-                rules: [
-                    {
-                        required: true, message: '请选择进项结构分类',
-                    }
-                ],
-            }, {
-                label: '发票类型',
-                type: 'select',
-                fieldName: 'incomeInvoiceCollectionDO.invoiceType',
-                initialValue:initData.invoiceType,
-                items: this.state.invoiceTypeItem,
-                rules: [
-                    {
-                        required: true, message: '请选择发票类型',
-                    }
-                ],
-            }, {
-                label: '发票号码',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.invoiceNum',
-                initialValue:initData.invoiceNum,
-                rules: [
-                    {
-                        required: true, message: '请输入发票号码',
-                    },{
-                        ...max20
-                    }
-                ],
-            }, {
-                label: '发票代码',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.invoiceCode',
-                initialValue:initData.invoiceCode,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入发票号码'
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '开票日期',
-                type: 'rangePicker',
-                fieldName: 'incomeInvoiceCollectionDO.billingDate',
-                initialValue:(shouldShowDefaultData && initData.billingDate) ? moment(initData.billingDate, dateFormat) : undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择开票日期'
-                    }
-                ]
-            }, {
-                label: '认证月份',
-                type: 'monthPicker',
-                fieldName: 'incomeInvoiceCollectionDO.authMonth',
-                initialValue:(shouldShowDefaultData && initData.authMonth) ? moment(initData.authMonth, 'YYYY-MM') : undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择开票日期'
-                    }
-                ]
-            }, {
-                label: '认证时间',
-                type: 'rangePicker',
-                fieldName: 'incomeInvoiceCollectionDO.authDate',
-                initialValue:(shouldShowDefaultData && initData.authDate) ? moment(initData.authDate, dateFormat) : undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择认证时间'
-                    }
-                ]
-            }, {
-                label: '销货单位名称',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.sellerName',
-                initialValue: initData.sellerName,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入销货单位名称'
-                    },{
-                        ...max50
-                    }
-                ]
-            }, {
-                label: '纳税人识别号',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.sellerTaxNum',
-                initialValue:initData.sellerTaxNum,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入纳税人识别号'
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '地址',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.address',
-                initialValue:initData.address,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入地址'
-                    },{
-                        ...max50
-                    }
-                ]
-            }, {
-                label: '电话',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.phone',
-                initialValue:initData.phone,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入电话'
-                    },{
-                        pattern: regRules.number.pattern, message: regRules.number.message,
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '开户行',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.bank',
-                initialValue:initData.bank,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入开户行'
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '账号',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.account',
-                initialValue:initData.account,
-                rules:[
-                    {
-                        required:true,
-                        message:'请输入账号'
-                    },{
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '金额',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.amount',
-                initialValue:fMoney(initData.amount),
-                disabled:true,
-                rules:[
-                    {
-                        ...max20
-                    }
-                ]
-            }, {
-                label: '税额',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.taxAmount',
-                initialValue:fMoney(initData.taxAmount),
-                disabled:true,
-                rules: [
-                    {
-                        ...max20
-                    }
-                ],
-            }, {
-                label: '价税合计',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.totalAmount',
-                initialValue:fMoney(initData.totalAmount),
-                disabled:true,
-                rules: [
-                    {
-                        ...max20
-                    }
-                ],
-            }, {
-                label: '备注',
-                type: 'text',
-                fieldName: 'incomeInvoiceCollectionDO.remark',
-                initialValue:initData.remark,
-                span:24,
-                rules:[
-                    {
-                        max:regRules.textarea_length_100.max, message: regRules.textarea_length_100.message,
-                    }
-                ],
-            }
-        ];
-
-        for (let i = 0; i < data.length; i++) {
-            let inputComponent;
-
-            if(!data[i].components){
-                if (data[i].type === 'text') {
-                    inputComponent = <Input disabled={ data[i].disabled ? data[i].disabled : disabled} {...data[i].res} placeholder={`请输入${data[i].label}`}/>;
-                } else if (data[i].type === 'rangePicker') {
-                    inputComponent = <DatePicker disabled={disabled} placeholder={`请输入${data[i].label}`} format="YYYY-MM-DD" style={{width:'100%'}} />;
-                } else if (data[i].type === 'monthPicker') {
-                    inputComponent = <MonthPicker disabled={disabled} placeholder={`请输入${data[i].label}`} format="YYYY-MM" style={{width:'100%'}} />;
-                } else if (data[i].type === 'select') {
-                    inputComponent = (
-                        <Select disabled={disabled} placeholder="请选择">
-                            {
-                                data[i].items.map((item, i) => <Option key={i} value={`${item.id}`}>{item.name}</Option>)
-                            }
-                        </Select>
-                    )
-                }
-            }else{
-                inputComponent = data[i].components
-            }
-
-            if(!data[i].components) {
-                children.push(
-                    <Col span={data[i].span || 8} key={i}>
-                        <FormItem
-                            {...(data[i].span === 24 ? formItemStyle : formItemLayout)}
-                            label={data[i].label}
-                        >
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue,
-                                rules: data[i].rules,
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            }else{
-                children.push(
-                    <Col span={data[i].span || 8} key={i}>
-                        {inputComponent}
-                    </Col>
-                );
-            }
-
-
-        }
-        return children.slice(start, end || null);
-    }
-
     //计算金额的总和
-    cellAmountSum=(arr,totalAmount)=>{
+    cellAmountSum=arr=>{
         const form = this.props.form;
         const data = this.state.detailsDate;
         if(data.length >0 ) {
@@ -404,16 +95,27 @@ class PopModal extends Component{
                 form.setFieldsValue({
                     [`incomeInvoiceCollectionDO.${n}`]: fMoney(sum),
                 });
-                const v1 = parseFloat(form.getFieldValue(`incomeInvoiceCollectionDO.${arr[0]}`).replace(/\$\s?|(,*)/g, ''));
-                const v2 = parseFloat(form.getFieldValue(`incomeInvoiceCollectionDO.${arr[1]}`).replace(/\$\s?|(,*)/g, ''));
-                const count = v1+v2
-                form.setFieldsValue({
-                    [`incomeInvoiceCollectionDO.${totalAmount}`]: fMoney(count),
-                });
+                this.setState({
+                    footerDate:{
+                        pageAmount:form.getFieldValue('incomeInvoiceCollectionDO.amount'),
+                        pageTaxAmount:form.getFieldValue('incomeInvoiceCollectionDO.taxAmount'),
+                        pageTotalAmount:form.getFieldValue('incomeInvoiceCollectionDO.totalAmount'),
+                    },
+                })
             });
-
-
-
+        }else{
+            this.setState({
+                footerDate:{
+                    pageAmount:0,
+                    pageTaxAmount:0,
+                    pageTotalAmount:0,
+                },
+            })
+            form.setFieldsValue({
+                'incomeInvoiceCollectionDO.amount': fMoney(0),
+                'incomeInvoiceCollectionDO.taxAmount': fMoney(0),
+                'incomeInvoiceCollectionDO.totalAmount': fMoney(0),
+            });
         }
     }
 
@@ -421,7 +123,7 @@ class PopModal extends Component{
     getRegistrationType=()=>{
         requestDict('JXFPLX',result=>{
             this.setState({
-                invoiceTypeItem:result
+                invoiceTypeItem:this.setFormat(result)
             })
         })
     }
@@ -429,7 +131,7 @@ class PopModal extends Component{
     getIncomeStructureType=()=>{
         requestDict('JXJGFL',result=>{
             this.setState({
-                incomeStructureTypeItem:result
+                incomeStructureTypeItem:this.setFormat(result)
             })
         })
     }
@@ -437,7 +139,7 @@ class PopModal extends Component{
         this.setState({
             detailsDate
         },()=>{
-            this.cellAmountSum(['amount','taxAmount'],'totalAmount')
+            this.cellAmountSum(['amount','taxAmount','totalAmount'])
         })
     }
     toggleModalVisible=visible=>{
@@ -486,13 +188,14 @@ class PopModal extends Component{
                     },
                     list:this.checkeDetailsDateId(this.state.detailsDate)
                 }
-                this.mounted && this.setState({
+                this.setState({
                     submitLoading: true
                 })
                 if (type === 'add') {
                     request.post('/income/invoice/collection/save', data
                     )
                         .then(({data}) => {
+                            this.setState({ submitLoading: false })
                             if (data.code === 200) {
                                 message.success('新增成功！', 4)
                                 //新增成功，关闭当前窗口,刷新父级组件
@@ -500,16 +203,11 @@ class PopModal extends Component{
                                 this.props.updateTable();
                             } else {
                                 message.error(data.msg, 4)
-                                this.mounted && this.setState({
-                                    submitLoading: false
-                                })
                             }
                         })
                         .catch(err => {
                             message.error(err.message)
-                            this.mounted && this.setState({
-                                submitLoading: false
-                            })
+                            this.setState({ submitLoading: false })
 
                         })
                 }
@@ -519,6 +217,7 @@ class PopModal extends Component{
                     request.put('/income/invoice/collection/update', data
                     )
                         .then(({data}) => {
+                            this.setState({ submitLoading: false })
                             if (data.code === 200) {
                                 message.success('编辑成功！', 4);
                                 //编辑成功，关闭当前窗口,刷新父级组件
@@ -527,16 +226,11 @@ class PopModal extends Component{
 
                             } else {
                                 message.error(data.msg, 4);
-                                this.mounted && this.setState({
-                                    submitLoading: false
-                                })
                             }
                         })
                         .catch(err => {
                             message.error(err.message)
-                            this.mounted && this.setState({
-                                submitLoading: false
-                            })
+                            this.setState({ submitLoading: false })
                         })
                 }
             }
@@ -547,13 +241,12 @@ class PopModal extends Component{
         request.get(`/income/invoice/collection/get/${id}`,{
         })
             .then(({data}) => {
-                console.log(data)
                 if(data.code===200){
                     this.setState({
                         initData:{...data.data.incomeInvoiceCollectionDO},
                         detailsDate:[...data.data.list],
                     },()=>{
-                        this.cellAmountSum(['amount','taxAmount'],'totalAmount');
+                        this.cellAmountSum(['amount','taxAmount','totalAmount']);
                     })
                 }else{
                     message.error(data.msg, 4);
@@ -563,7 +256,7 @@ class PopModal extends Component{
 
     checkeDetailsDateId = (data)=>{
         return data.map((item)=>{
-            if(item.id.indexOf('t')> -1){
+            return data.map((item)=>{
                 return {
                     amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
                     goodsServicesName:item.goodsServicesName,
@@ -574,22 +267,19 @@ class PopModal extends Component{
                     taxRate:item.taxRate,
                     totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
                     unit:item.unit,
-                    unitPrice:parseFloat(`${item.unitPrice}`.replace(/\$\s?|(,*)/g, '')),
+                    unitPrice:parseFloat(`${item.unitPrice}`),
+                    id: (item.id.indexOf('t') > -1) ? null : item.id
                 }
-            }else{
-                return {
-                    id:item.id,
-                    amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
-                    goodsServicesName:item.goodsServicesName,
-                    parentId:item.parentId,
-                    qty:item.qty,
-                    specificationModel:item.specificationModel,
-                    taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    taxRate:item.taxRate,
-                    totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    unit:item.unit,
-                    unitPrice:parseFloat(`${item.unitPrice}`.replace(/\$\s?|(,*)/g, '')),
-                }
+            })
+        })
+    }
+    //设置select值名不同
+    setFormat=data=>{
+        return data.map(item=>{
+            return{
+                ...item,
+                value:item.id,
+                text:item.name
             }
         })
     }
@@ -598,6 +288,7 @@ class PopModal extends Component{
         this.getIncomeStructureType()
     }
     componentWillReceiveProps(nextProps){
+        //console.log(nextProps)
         if(!nextProps.visible){
             /**
              * 关闭的时候清空表单
@@ -622,9 +313,14 @@ class PopModal extends Component{
         this.mounted=null
     }
     render(){
-        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,detailsDate} = this.state;
+        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,detailsDate,initData,footerDate} = this.state;
         const props = this.props;
         let title='';
+        let disabled =  props.modalConfig.type ==='view';
+        let shouldShowDefaultData = false;
+        if(props.modalConfig.type==='edit' || props.modalConfig.type==='view'){
+            shouldShowDefaultData = true;
+        }
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
@@ -635,19 +331,38 @@ class PopModal extends Component{
                 break;
             case 'view':
                 title = '查看';
+                disabled=true;
                 break;
             default:
                 title = '添加';
                 break;
         }
+        const max20={
+            max:regRules.input_length_20.max, message: regRules.input_length_20.message,
+        }
+        const max50={
+            max:regRules.input_length_50.max, message: regRules.input_length_50.message,
+        }
         const rowSelection = {
             type:'radio',
+            width:50,
+            fixed:true,
+            scroll:{ x: 900 },
             selectedRowKeys,
             onChange: this.onChange
         };
+        const formItemStyle={
+            labelCol:{
+                span:8
+            },
+            wrapperCol:{
+                span:14
+            }
+        }
         return(
             <Modal
                 maskClosable={false}
+                destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
                 style={{ top: 50 }}
@@ -667,37 +382,352 @@ class PopModal extends Component{
                         <Card>
                             <Row>
                                 {
-                                    this.getFields(0,3)
-                                }
-                            </Row>
-                            <Row>
-                                {
-                                    this.getFields(3,8)
-                                }
-                            </Row>
-                            <Row>
-                                {
-                                    this.getFields(8,17)
-                                }
-                            </Row>
-                            <Row>
-                                {
-                                    this.getFields(17,18)
+                                    getFields(this.props.form,[
+                                        {
+                                            label: '纳税主体',
+                                            fieldName: 'incomeInvoiceCollectionDO.mainId',
+                                            type: 'taxMain',
+                                            span: 12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions: {
+                                                initialValue: initData.mainId,
+                                                rules: [
+                                                    {
+                                                        required: true, message: '请选择纳税主体',
+                                                    }
+                                                ],
+                                            }
+                                        },{
+                                            label:'进项结构分类',
+                                            fieldName:'incomeInvoiceCollectionDO.incomeStructureType',
+                                            type:'select',
+                                            span:12,
+                                            formItemStyle,
+                                            options:this.state.incomeStructureTypeItem,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.incomeStructureType,
+                                                rules: [
+                                                    {
+                                                        required: true, message: '请选择进项结构分类',
+                                                    }
+                                                ],
+                                            }
+                                        },{
+                                            label:'发票类型',
+                                            fieldName:'incomeInvoiceCollectionDO.invoiceType',
+                                            type:'select',
+                                            span:12,
+                                            formItemStyle,
+                                            options:this.state.invoiceTypeItem,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.invoiceType,
+                                                rules: [
+                                                    {
+                                                        required: true, message: '请选择发票类型',
+                                                    }
+                                                ],
+                                            }
+                                        },{
+                                            label:'发票号码',
+                                            fieldName:'incomeInvoiceCollectionDO.invoiceNum',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.invoiceNum,
+                                                rules: [
+                                                    {
+                                                        required: true, message: '请输入发票号码',
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ],
+                                            }
+                                        },{
+                                            label:'发票代码',
+                                            fieldName:'incomeInvoiceCollectionDO.invoiceCode',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.invoiceCode,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入发票号码'
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'开票日期',
+                                            fieldName:'incomeInvoiceCollectionDO.billingDate',
+                                            type:'datePicker',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:shouldShowDefaultData ? moment(initData.billingDate, dateFormat) : undefined,
+                                                rules:[
+                                                    {
+                                                        required: true,
+                                                        message: '请选择开票日期'
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'认证月份',
+                                            fieldName:'incomeInvoiceCollectionDO.authMonth',
+                                            type:'monthPicker',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:shouldShowDefaultData ? moment(initData.authMonth, dateFormat) : undefined,
+                                                rules:[
+                                                    {
+                                                        required: true,
+                                                        message: '请选择认证月份'
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'认证时间',
+                                            fieldName:'incomeInvoiceCollectionDO.authDate',
+                                            type:'datePicker',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:shouldShowDefaultData ? moment(initData.authDate, dateFormat) : undefined,
+                                                rules:[
+                                                    {
+                                                        required: true,
+                                                        message: '请选择认证时间'
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'销货单位名称',
+                                            fieldName:'incomeInvoiceCollectionDO.sellerName',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.sellerName,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入销货单位名称'
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'纳税人识别号',
+                                            fieldName:'incomeInvoiceCollectionDO.sellerTaxNum',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.sellerTaxNum,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入纳税人识别号'
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'地址',
+                                            fieldName:'incomeInvoiceCollectionDO.address',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.address,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入地址'
+                                                    },{
+                                                        ...max50
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'电话',
+                                            fieldName:'incomeInvoiceCollectionDO.phone',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.phone,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入电话'
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'开户行',
+                                            fieldName:'incomeInvoiceCollectionDO.bank',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.bank,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入开户行'
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'账号',
+                                            fieldName:'incomeInvoiceCollectionDO.account',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.account,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入账号'
+                                                    },{
+                                                        ...max20
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'金额',
+                                            fieldName:'incomeInvoiceCollectionDO.amount',
+                                            type:'numeric',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.amount,
+                                            }
+                                        },{
+                                            label:'税额',
+                                            fieldName:'incomeInvoiceCollectionDO.taxAmount',
+                                            type:'numeric',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps:{
+                                                disabled,
+                                                valueType:'int',
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.taxAmount,
+                                            }
+                                        },{
+                                            label:'价税合计',
+                                            fieldName:'incomeInvoiceCollectionDO.totalAmount',
+                                            type:'numeric',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.totalAmount,
+                                            }
+                                        },{
+                                            label:'备注',
+                                            fieldName:'incomeInvoiceCollectionDO.remark',
+                                            type:'textArea',
+                                            span:24,
+                                            formItemStyle:{
+                                                labelCol:{
+                                                    span:4
+                                                },
+                                                wrapperCol:{
+                                                    span:19
+                                                }
+                                            },
+                                            componentProps: {
+                                                disabled
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.remark,
+                                                rules:[
+                                                    {
+                                                        max:regRules.textarea_length_100.max, message: regRules.textarea_length_100.message,
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ])
                                 }
                             </Row>
                         </Card>
 
                         <Card
                             extra={type !== 'view' && <div>
-                                <Button onClick={()=>this.showModal('add')} style={buttonStyle}>
+                                <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                                     <Icon type="file-add" />
                                     新增明细
                                 </Button>
-                                <Button onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
                                     <Icon type="edit" />
                                     编辑
                                 </Button>
                                 <Button
+                                    size="small"
                                     onClick={()=>{
                                         confirm({
                                             title: '友情提醒',
@@ -733,32 +763,30 @@ class PopModal extends Component{
                             </div>}
                             style={{marginTop:10}}>
 
-                             <SynchronizeTable data={detailsDate}
-                                          updateKey={tableUpDateKey}
-                                          tableProps={{
-                                              rowKey:record=>record.id,
-                                              pagination:true,
-                                              bordered:true,
-                                              size:'middle',
-                                              columns:this.columns,
-                                              rowSelection:rowSelection,
-                                              footer:(currentPageData) => {
-                                                  return (
-                                                      <Row gutter={24}>
-                                                          <Col span={8}>
-                                                              金额合计：<span ref='amount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.amount')}</span>
-                                                          </Col>
-                                                          <Col span={8}>
-                                                              税额合计：<span ref='taxAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.taxAmount')}</span>
-                                                          </Col>
-                                                          <Col span={8}>
-                                                              价税合计：<span ref='totalAmount'>{props.form.getFieldValue('incomeInvoiceCollectionDO.totalAmount')}</span>
-                                                          </Col>
-                                                      </Row>
-                                                  )
-                                              }
-                                          }}
-                             />
+                            <SynchronizeTable data={detailsDate}
+                                              updateKey={tableUpDateKey}
+                                              tableProps={{
+                                                  rowKey:record=>record.id,
+                                                  pagination:true,
+                                                  bordered:true,
+                                                  size:'middle',
+                                                  columns:this.columns,
+                                                  rowSelection: type !== 'view' && rowSelection,
+                                                  footerDate:  footerDate,
+                                                  renderFooter:data=>{
+                                                      return(
+                                                          <div>
+                                                              <div style={{marginBottom:10}}>
+                                                                  <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                                                  金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                                  税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                                  价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                                              </div>
+                                                          </div>
+                                                      )
+                                                  },
+                                              }}
+                            />
 
                             <PopsModal
                                 visible={visible}

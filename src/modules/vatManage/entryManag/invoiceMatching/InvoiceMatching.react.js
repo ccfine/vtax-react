@@ -5,10 +5,11 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
-import {AsyncTable,CusFormItem,AutoFileUpload} from '../../../../compoments'
-import {request,fMoney} from '../../../../utils'
-import {FileExport} from '../../../../compoments'
+import {AsyncTable,AutoFileUpload,FileExport} from '../../../../compoments'
+import {request,fMoney,getFields,getUrlParam} from '../../../../utils'
 import PopDifferenceModal from './popModal'
+import { withRouter } from 'react-router'
+import moment from 'moment';
 const TabPane = Tabs.TabPane;
 const buttonStyle={
     marginRight:5
@@ -46,10 +47,8 @@ class InvoiceMatching extends Component {
         modalConfig:{
             type:''
         },
-        expand:true,
         activeKey:'tab1'
     }
-
     columns = [
         {
             title: '纳税主体',
@@ -62,13 +61,13 @@ class InvoiceMatching extends Component {
             dataIndex: 'invoiceNum',
         }, {
             title: '发票类型',
-            dataIndex: 'invoiceType',
+            dataIndex: 'invoiceTypeName',
         },{
             title: '开票日期',
             dataIndex: 'billingDate',
         },{
             title: '认证时间',
-            dataIndex: 'authDate',
+            dataIndex: this.state.activeKey !=='tab3' ? 'authMonth' : 'authDate',
         },{
             title: '销售单位名称',
             dataIndex: 'sellerName',
@@ -107,7 +106,7 @@ class InvoiceMatching extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.authMonth && values.authMonth.length!==0){
-                    values.authMonthStartStart = values.authMonth[0].format('YYYY-MM')
+                    values.authMonthStar = values.authMonth[0].format('YYYY-MM')
                     values.authMonthEnd= values.authMonth[1].format('YYYY-MM')
                     values.authMonth = undefined;
                 }
@@ -124,7 +123,12 @@ class InvoiceMatching extends Component {
 
     }
     componentDidMount(){
-        this.updateTable()
+        const {search} = this.props.location;
+        if(!!search){
+            this.updateTable()
+        } else {
+            this.updateTable()
+        }
     }
     componentWillReceiveProps(nextProps){
         if(this.props.taxSubjectId!==nextProps.taxSubjectId){
@@ -204,31 +208,38 @@ class InvoiceMatching extends Component {
             default :
             //no default
         }
-
+        const causeDifference = {
+            title: '差异原因',
+            dataIndex: 'causeDifference'
+        }
+        const {search} = this.props.location;
         return (
             <AsyncTable url={url}
                         updateKey={tableUpDateKey}
-                        filters={filters}
+                        filters={{
+                            ...filters,
+                            authMonth:(!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')),
+                        }}
                         tableProps={{
                             rowKey:record=>record.id,
                             pagination:true,
                             size:'small',
-                            columns:this.columns,
+                            columns: this.state.activeKey !=='tab1' ? this.columns.concat(causeDifference) : this.columns,
                             rowSelection:rowSelection,
                             renderFooter:data=>{
                                 return (
                                     <div>
                                         <div style={{marginBottom:10}}>
                                             <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                            本页金额：<span style={code}>{data.pageAmount}</span>
-                                            本页税额：<span style={code}>{data.pageTaxAmount}</span>
-                                            本页价税：<span style={code}>{data.pageTotalAmount}</span>
+                                            本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
+                                            本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+                                            本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
                                         </div>
                                         <div style={{marginBottom:10}}>
                                             <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                            总金额：<span style={code}>{data.allAmount}</span>
-                                            总税额：<span style={code}>{data.allTaxAmount}</span>
-                                            总价税：<span style={code}>{data.allTotalAmount}</span>
+                                            总金额：<span style={code}>{fMoney(data.allAmount)}</span>
+                                            总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
+                                            总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
                                         </div>
                                     </div>
                                 )
@@ -250,41 +261,54 @@ class InvoiceMatching extends Component {
     }
 
     render() {
-        const {expand,selectedRowKeys,selectedRows,visible} = this.state;
-        const formItemStyle={
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:18
-            }
-        }
-
+        const {selectedRowKeys,selectedRows,visible} = this.state;
         const tabList = [{
             key: 'tab1',
             tab: '完全匹配',
             content:this.tabInitDate('tab1')
         },{
             key: 'tab2',
-            tab: '无法匹',
+            tab: '无法匹配',
             content:this.tabInitDate('tab2')
         }, {
             key: 'tab3',
             tab: '发票信息不匹配',
             content:this.tabInitDate('tab3')
         }]
-
+        const {search} = this.props.location;
+        let disabled = !!search;
         return (
             <Layout style={{background:'transparent'}} >
-                <Card className="search-card">
-                    <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                <Card
+                    style={{
+                        borderTop:'none'
+                    }}
+                    className="search-card"
+                >
+                    <Form onSubmit={this.handleSubmit}>
                         <Row>
-                            <Col span={8}>
-                                <CusFormItem.TaxMain fieldName="mainId" formItemStyle={formItemStyle} form={this.props.form} componentProps={{size:"small"}} />
-                            </Col>
-                            <Col span={8}>
-                                <Button size="small" style={{marginTop:8,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button size="small" style={{marginTop:8,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            {
+                                getFields(this.props.form,[
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:6,
+                                        componentProps:{
+                                            disabled
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                        },
+                                    },
+                                ])
+                            }
+
+                            <Col span={18} style={{textAlign:'right'}}>
+                                <Form.Item>
+                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
+                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                </Form.Item>
                             </Col>
                         </Row>
                     </Form>
@@ -344,4 +368,4 @@ class InvoiceMatching extends Component {
         )
     }
 }
-export default Form.create()(InvoiceMatching)
+export default Form.create()(withRouter(InvoiceMatching))

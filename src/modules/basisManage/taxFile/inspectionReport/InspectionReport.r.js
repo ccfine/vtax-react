@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from '../../../../compoments'
+import {fMoney} from '../../../../utils'
 const searchFields = [
     {
         label:'纳税主体',
@@ -41,12 +42,18 @@ const columns = [{
 },{
     title: '补缴税款',
     dataIndex: 'taxPayment',
+    render:text=>fMoney(text),
+    className:'table-money'
 },{
     title: '滞纳金',
     dataIndex: 'lateFee',
+    render:text=>fMoney(text),
+    className:'table-money'
 },{
     title: '罚款',
     dataIndex: 'fine',
+    render:text=>fMoney(text),
+    className:'table-money'
 },{
     title: '是否有附件',
     dataIndex: 'isAttachment',
