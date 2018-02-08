@@ -262,7 +262,7 @@ class LandPriceModal extends React.Component{
                         label="调整后土地价款"
                         >
                         {getFieldDecorator('adjustLandPrice',{initialValue:fMoney(this.state.record.adjustLandPrice)})(
-                            <Input disabled={this.props.readOnly}  onClick={()=>{this.showModal()}}
+                            <NumericInput disabled={this.props.readOnly}  onClick={()=>{this.showModal()}}
                                 suffix={<Icon type="search" onClick={()=>{this.showModal()}} style={{cursor:"pointer",padding:"10px",position:"absolute",right:"-11px",top:"-16px"}} />}
                             />
                         )}

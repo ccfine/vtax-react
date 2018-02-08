@@ -27,7 +27,6 @@ const formatMoment = values=>{
 
 class ButtonModalWithForm extends Component{
     static propTypes={
-        onSuccess:PropTypes.func,
         buttonOptions:PropTypes.shape({
             text:PropTypes.string,
             icon:PropTypes.string,
@@ -39,6 +38,9 @@ class ButtonModalWithForm extends Component{
             onSuccess:PropTypes.func,
             onValuesChange:PropTypes.func,
         }).isRequired,
+        modalOptions:PropTypes.shape({
+            title:PropTypes.string
+        })
     }
     static defaultProps={
         buttonOptions:{
@@ -86,12 +88,7 @@ class ButtonModalWithForm extends Component{
                 for(let key in values){
                     formData.append(key, values[key])
                 }
-                request[type](url,formData,{
-                    header:{
-                        //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到
-                        "Content-Type":"application/x-www-form-urlencoded"
-                    }
-                })
+                request[type](url,values)
                     .then(({data})=>{
                         this.toggleLoading(false)
                         if(data.code===200){
