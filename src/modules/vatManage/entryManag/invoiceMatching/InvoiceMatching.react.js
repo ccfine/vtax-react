@@ -6,7 +6,6 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
 import {AsyncTable,AutoFileUpload,FileExport} from '../../../../compoments'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {request,fMoney,getFields,getUrlParam} from '../../../../utils'
 import PopDifferenceModal from './popModal'
 import { withRouter } from 'react-router'
@@ -27,16 +26,7 @@ const code = {
     marginRight:30,
     padding: '2px 4px'
 }
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
+
 class InvoiceMatching extends Component {
     state={
         /**
@@ -57,13 +47,7 @@ class InvoiceMatching extends Component {
         modalConfig:{
             type:''
         },
-        activeKey:'tab1',
-
-        /**
-         *修改状态和时间
-         * */
-        dataStatus:'',
-        submitDate:'',
+        activeKey:'tab1'
     }
     columns = [
         {
@@ -130,26 +114,26 @@ class InvoiceMatching extends Component {
                     selectedRowKeys:null,
                     filters:values
                 },()=>{
-                    this.refreshTable()
+                    this.setState({
+                        tableUpDateKey:Date.now()
+                    })
                 });
             }
         });
 
     }
-    fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.updateTable()
+        } else {
+            this.updateTable()
+        }
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
+            this.initData()
+        }
     }
     onChange=(selectedRowKeys, selectedRows) => {
         this.setState({
@@ -162,12 +146,8 @@ class InvoiceMatching extends Component {
             visible
         })
     }
-    refreshTable=()=>{
-        this.setState({
-            tableUpDateKey:Date.now()
-        },()=>{
-            this.fetchResultStatus()
-        })
+    updateTable=()=>{
+        this.handleSubmit()
     }
     showModal=type=>{
 
@@ -208,7 +188,7 @@ class InvoiceMatching extends Component {
 
     }
     tabInitDate = (activeKey)=>{
-        const {tableUpDateKey,filters,selectedRowKeys,submitDate,dataStatus} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys} = this.state;
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
@@ -273,25 +253,15 @@ class InvoiceMatching extends Component {
             .then(({data})=>{
                 if (data.code === 200) {
                     message.success('数据匹配成功!');
-                    this.refreshTable();
+                    this.updateTable();
                 } else {
                     message.error(data.msg)
                 }
             })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
-    componentWillReceiveProps(nextProps){
-        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
-            this.initData()
-        }
-    }
+
     render() {
-        const {selectedRowKeys,selectedRows,visible,dataStatus,submitDate} = this.state;
+        const {selectedRowKeys,selectedRows,visible} = this.state;
         const tabList = [{
             key: 'tab1',
             tab: '完全匹配',
@@ -329,30 +299,6 @@ class InvoiceMatching extends Component {
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择纳税主体'
-                                                }
-                                            ]
-                                        },
-                                    },{
-                                        label:'开票日期',
-                                        fieldName:'billingDate',
-                                        type:'monthPicker',
-                                        span:6,
-                                        componentProps:{
-                                            format:'YYYY-MM',
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择认证月份'
-                                                }
-                                            ]
                                         },
                                     },
                                 ])
@@ -369,17 +315,7 @@ class InvoiceMatching extends Component {
                 </Card>
                 <Card
                     extra={<div>
-                        {
-                            dataStatus && this.state.activeKey !=='tab3' && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
-                        }
-                        <AutoFileUpload url={`/income/invoice/marry/upload`} fetchTable_1_Data={this.refreshTable} />
+                        <AutoFileUpload url={`/income/invoice/marry/upload`} fetchTable_1_Data={this.updateTable} />
                         <FileExport
                             url='/income/invoice/marry/download'
                             title="下载导入模板"
@@ -390,12 +326,6 @@ class InvoiceMatching extends Component {
                             <Icon type="database" />
                             数据匹配
                         </Button>
-                        {
-                            this.state.activeKey !=='tab3' && <span>
-                                <SubmitOrRecall type={1} url="/income/invoice/marry/main/submit" onSuccess={this.refreshTable} />
-                                <SubmitOrRecall type={2} url="/income/invoice/marry/main/revoke" onSuccess={this.refreshTable} />
-                            </span>
-                        }
                     </div>}
                     style={{marginTop:10}}>
 
@@ -430,7 +360,7 @@ class InvoiceMatching extends Component {
                     url={this.state.activeKey ==='tab2' ? '/income/invoice/marry/unCompletely/update' : '/income/invoice/marry/unInvoice/update'}
                     visible={visible}
                     selectedRows={selectedRows}
-                    refreshTable={this.refreshTable}
+                    updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
 
