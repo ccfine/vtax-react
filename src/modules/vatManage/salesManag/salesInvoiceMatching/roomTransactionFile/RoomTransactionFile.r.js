@@ -7,6 +7,16 @@ import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
 import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
 const getColumns = context => [
     {
         title: '操作',
@@ -122,6 +132,17 @@ class RoomTransactionFile extends Component{
         tableUpDateKey:Date.now(),
 
         selectedRowKeys:null,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
+
+        searchFieldsValues:{
+
+        },
+        hasData:false
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -158,8 +179,6 @@ class RoomTransactionFile extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.handleSubmit()
-        }else{
-            this.handleSubmit()
         }
     }
     refreshTable = ()=>{
@@ -178,8 +197,23 @@ class RoomTransactionFile extends Component{
                 }
             })
     }
+    fetchResultStatus = ()=>{
+        request.get('/output/room/files/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {tableUpDateKey,filters} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus,hasData} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -189,7 +223,6 @@ class RoomTransactionFile extends Component{
                     style={{
                         borderTop:'none'
                     }}
-                    className="search-card"
                 >
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
@@ -205,6 +238,12 @@ class RoomTransactionFile extends Component{
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                     },
                                     {
@@ -258,15 +297,21 @@ class RoomTransactionFile extends Component{
                                         span:6
                                     },
                                     {
-                                        label:'交易日期',
+                                        label:'交易月份',
                                         fieldName:'transactionDate',
-                                        type:'rangePicker',
+                                        type:'monthPicker',
                                         span:6,
                                         componentProps:{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
+                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择交易月份'
+                                                }
+                                            ]
                                         }
                                     },
                                     {
@@ -297,6 +342,16 @@ class RoomTransactionFile extends Component{
                 </Card>
                 <Card style={{marginTop:10}} extra={
                     <div>
+                        {
+                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <FileImportModal
                             url="/output/room/files/upload"
                             onSuccess={()=>{
@@ -319,6 +374,14 @@ class RoomTransactionFile extends Component{
                                     pagination:true,
                                     pageSize:10,
                                     size:'small',
+                                    onSuccess:(params,data)=>{
+                                        this.setState({
+                                            hasData:data.length !==0,
+                                            searchFieldsValues:params,
+                                        },()=>{
+                                            this.fetchResultStatus()
+                                        })
+                                    },
                                     renderFooter:data=>{
                                         return(
                                             <div>

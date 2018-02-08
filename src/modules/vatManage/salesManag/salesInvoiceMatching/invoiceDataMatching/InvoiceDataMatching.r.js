@@ -5,8 +5,19 @@ import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
 import {request,fMoney,getUrlParam} from '../../../../../utils'
 import {SearchTable,FileExport} from '../../../../../compoments'
+import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
 const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
@@ -19,18 +30,30 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
             },
         },
         {
-            label:'开票时间',
+            label:'开票月份',
             fieldName:'billingDate',
-            type:'rangePicker',
+            type:'monthPicker',
             span:6,
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择开票月份'
+                    }
+                ]
             }
         },
         {
@@ -118,32 +141,34 @@ const getColumns = context => [
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:'60px',
-        render: (text, record) => (
-            <span style={{
-                color:'#f5222d',
-                cursor:'pointer'
-            }} onClick={()=>{
-                const modalRef = Modal.confirm({
-                    title: '友情提醒',
-                    content: '是否要解除匹配？',
-                    okText: '确定',
-                    okType: 'danger',
-                    cancelText: '取消',
-                    onOk:()=>{
-                        context.deleteRecord(record.id,()=>{
-                            modalRef && modalRef.destroy();
-                            context.refreshTable()
-                        })
-                    },
-                    onCancel() {
-                        modalRef.destroy()
-                    },
-                });
-            }}>
+        width:parseInt(context.state.dataStatus,0) === 1 ? '60px' : '40px',
+        render: (text, record) => {
+            return parseInt(context.state.dataStatus,0)===1 && (
+                    <span style={{
+                        color:'#f5222d',
+                        cursor:'pointer'
+                    }} onClick={()=>{
+                        const modalRef = Modal.confirm({
+                            title: '友情提醒',
+                            content: '是否要解除匹配？',
+                            okText: '确定',
+                            okType: 'danger',
+                            cancelText: '取消',
+                            onOk:()=>{
+                                context.deleteRecord(record.id,()=>{
+                                    modalRef && modalRef.destroy();
+                                    context.refreshTable()
+                                })
+                            },
+                            onCancel() {
+                                modalRef.destroy()
+                            },
+                        });
+                    }}>
                 解除匹配
             </span>
-        )
+                )
+        }
     },
     {
         title:'纳税人识别号',
@@ -280,12 +305,33 @@ class InvoiceDataMatching extends Component{
         searchFieldsValues:{
         },
         matching:false,
-        hasData:false
+        hasData:false,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
     }
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
         })
+    }
+    fetchResultStatus = ()=>{
+        request.get('/output/invoice/marry/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
     }
     deleteRecord = (id,cb) => {
         request.delete(`/output/invoice/marry/already/delete/${id}`)
@@ -323,16 +369,15 @@ class InvoiceDataMatching extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.refreshTable()
-        }else{
-            this.refreshTable()
         }
     }
     render(){
-        const {tableKey,searchFieldsValues,matching,hasData} = this.state;
+        const {tableKey,searchFieldsValues,matching,hasData,submitDate,dataStatus} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 style={{
                     marginTop:-16
                 }}
@@ -342,7 +387,8 @@ class InvoiceDataMatching extends Component{
                     cardProps:{
                         style:{
                             borderTop:0
-                        }
+                        },
+                        className:''
                     }
                 }}
                 tableOption={{
@@ -353,11 +399,22 @@ class InvoiceDataMatching extends Component{
                         this.setState({
                             searchFieldsValues:params,
                             hasData:data.length !== 0
+                        },()=>{
+                            this.fetchResultStatus()
                         })
                     },
                     url:'/output/invoice/marry/already/list',
                     extra:<div>
-                        <span style={{marginRight:5,color:'#f5222d'}}>红色表示纳税人识别号与证件号码不一致;蓝色表示购货单位名称与客户名称不一致;紫色表示发票计税合计与房间成交总价不一致。</span>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <Button
                             onClick={this.matchData}
                             size='small'
@@ -370,10 +427,15 @@ class InvoiceDataMatching extends Component{
                             title="导出匹配列表"
                             size="small"
                             disabled={!hasData}
+                            setButtonStyle={{
+                                marginRight:5
+                            }}
                             params={
                                 searchFieldsValues
                             }
                         />
+                        <SubmitOrRecall type={1} url="/output/invoice/marry/submit" onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} url="/output/invoice/marry/revoke" onSuccess={this.refreshTable} />
                     </div>,
                     renderFooter:data=>{
                         return(

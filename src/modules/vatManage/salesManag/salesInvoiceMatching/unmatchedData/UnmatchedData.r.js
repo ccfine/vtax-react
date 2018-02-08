@@ -2,12 +2,22 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney,getUrlParam} from '../../../../../utils'
+import {fMoney,getUrlParam,request} from '../../../../../utils'
 import {SearchTable,FileExport} from '../../../../../compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
+import {message} from 'antd';
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
 const searchFields=(disabled)=> {
     return [
         {
@@ -19,17 +29,29 @@ const searchFields=(disabled)=> {
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
             },
         },
         {
-            label: '开票时间',
-            type: 'rangePicker',
+            label: '开票月份',
+            type: 'monthPicker',
             fieldName: 'billingDate',
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择开票月份'
+                    }
+                ]
             }
         },
         {
@@ -203,12 +225,33 @@ class UnmatchedData extends Component{
 
         },
         selectedData:{},
-        hasData:false
+        hasData:false,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
+    }
+    fetchResultStatus = ()=>{
+        request.get('/output/invoice/collection/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
     }
     refreshTable = ()=>{
         this.setState({
@@ -219,16 +262,15 @@ class UnmatchedData extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.refreshTable()
-        }else{
-            this.refreshTable()
         }
     }
     render(){
-        const {visible,tableKey,searchFieldsValues,selectedData,hasData} = this.state;
+        const {visible,tableKey,searchFieldsValues,selectedData,hasData,submitDate,dataStatus} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 style={{
                     marginTop:-16
                 }}
@@ -242,7 +284,8 @@ class UnmatchedData extends Component{
                     cardProps:{
                         style:{
                             borderTop:0
-                        }
+                        },
+                        className:''
                     }
                 }}
                 tableOption={{
@@ -254,9 +297,21 @@ class UnmatchedData extends Component{
                         this.setState({
                             searchFieldsValues:params,
                             hasData:data.length !== 0
+                        },()=>{
+                            this.fetchResultStatus()
                         })
                     },
                     extra:<div>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <FileExport
                             url={`/output/invoice/marry/unmatched/export`}
                             title="导出未匹配发票"

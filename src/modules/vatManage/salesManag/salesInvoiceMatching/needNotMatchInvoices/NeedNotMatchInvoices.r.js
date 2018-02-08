@@ -8,6 +8,16 @@ import {Button,Icon,message,Modal} from 'antd'
 import ManualMatchRoomModal from './addDataModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
 const searchFields=(disabled)=> {
     return [
         {
@@ -19,17 +29,29 @@ const searchFields=(disabled)=> {
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
             },
         },
         {
-            label: '开票时间',
-            type: 'rangePicker',
+            label: '开票日期',
+            type: 'monthPicker',
             fieldName: 'billingDate',
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择开票月份'
+                    }
+                ]
             }
         },
         {
@@ -52,7 +74,7 @@ const searchFields=(disabled)=> {
         },
         {
             label: '税率',
-            type: 'input',
+            type: 'numeric',
             fieldName: 'taxRate',
             componentProps: {
                 valueType: 'int'
@@ -137,6 +159,12 @@ class NeedNotMatchInvoices extends Component{
         selectedRowKeys:[],
 
         searchTableLoading:false,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -184,12 +212,25 @@ class NeedNotMatchInvoices extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.refreshTable()
-        }else{
-            this.refreshTable()
         }
     }
+    fetchResultStatus = ()=>{
+        request.get('/output/invoice/collection/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {visible,tableKey,selectedRowKeys,searchTableLoading} = this.state;
+        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -197,6 +238,7 @@ class NeedNotMatchInvoices extends Component{
                 style={{
                     marginTop:-16
                 }}
+                doNotFetchDidMount={true}
                 spinning={searchTableLoading}
                 searchOption={{
                     fields:searchFields(disabled),
@@ -208,7 +250,8 @@ class NeedNotMatchInvoices extends Component{
                     cardProps:{
                         style:{
                             borderTop:0
-                        }
+                        },
+                        className:''
                     }
                 }}
                 tableOption={{
@@ -220,8 +263,26 @@ class NeedNotMatchInvoices extends Component{
                             selectedRowKeys
                         })
                     },
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
+                    },
                     url:'/output/invoice/marry/unwanted/list',
                     extra:<div>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus-circle" />添加</Button>
                         <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="minus-circle" />撤销</Button>
                     </div>,
