@@ -460,28 +460,32 @@ export default class extends React.Component {
         request.get(`/account/other/camping/main`, { params: filter }).then(({ data }) => {
             if (data.code === 200) {
                 let currentStatus = {},statusData=data.data;
-                currentStatus.status = statusData.status;
-                switch (statusData.status) {
-                    case 0:
-                        currentStatus.text = '暂存';
-                        break;
-                    case 1:
-                        currentStatus.text = '保存';
-                        break;
-                    case 2:
-                        currentStatus.text = '提交';
-                        currentStatus.date = moment(statusData.lastModifiedDate).format('YYYY-MM-DD HH:mm');
-                        break;
-                    default:
-                        currentStatus.text = '';
+                if(data.data){
+                    currentStatus.status = statusData.status;
+                    switch (statusData.status) {
+                        case 0:
+                            currentStatus.text = '暂存';
+                            break;
+                        case 1:
+                            currentStatus.text = '保存';
+                            break;
+                        case 2:
+                            currentStatus.text = '提交';
+                            currentStatus.date = moment(statusData.lastModifiedDate).format('YYYY-MM-DD HH:mm');
+                            break;
+                        default:
+                            currentStatus.text = '';
+                    }
+                    this.setState({ currentStatus,statusLoading:false});
+                }else{
+                    this.setState({ currentStatus:undefined,statusLoading:false});
                 }
-                this.setState({ currentStatus,statusLoading:false});
             }
         })
     }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
-        const buttonDisabled = !this.props.filter;
+        const buttonDisabled = !this.props.filter || !(dataSource && dataSource.length>0);
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
@@ -489,19 +493,19 @@ export default class extends React.Component {
                         <span style={{ marginRight: 20 }}>状态：<label style={{ color: 'red' }}>{currentStatus.text}</label></span>
                         <span>提交时间：{currentStatus.date}</span>
                     </div>)}
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.save} loading={this.state.saveLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (currentStatus && currentStatus.status === 2)} onClick={this.save} loading={this.state.saveLoading}>
                         <Icon type="hdd" />
                         保存
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.reCalculate} >
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled|| (currentStatus && currentStatus.status === 2)} onClick={this.reCalculate} >
                         <Icon type="retweet" />
                         重算
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled|| (currentStatus && currentStatus.status === 2)} onClick={this.submit} loading={this.state.submitLoading}>
                         <Icon type="check" />
                         提交
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled|| (currentStatus && currentStatus.status !== 2)} onClick={this.revoke} loading={this.state.revokeLoading}>
                         <Icon type="rollback" />
                         撤回提交
                     </Button>

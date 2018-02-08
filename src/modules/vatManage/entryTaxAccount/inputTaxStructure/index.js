@@ -3,4 +3,5 @@
  * createTime   : 2017/12/16 10:48
  * description  :
  */
-export {default} from './InputTaxStructure.react'
+import InputTaxStructure from './InputTaxStructure.react'
+export default InputTaxStructure

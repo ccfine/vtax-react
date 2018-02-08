@@ -134,6 +134,7 @@ class tab1 extends Component{
         },
         selectedRowKeys:undefined,
         selectedRows:[],
+        dataSource:[],
         searchTableLoading:false,
         statusParam:{},
     }
@@ -217,7 +218,7 @@ class tab1 extends Component{
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam} = this.state;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam,dataSource} = this.state;
         const {mainId,month} = this.state.searchFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -277,7 +278,7 @@ class tab1 extends Component{
                         url:'account/land/price/deducted/project/list',
                         extra: <div>
                             {
-                                JSON.stringify(statusParam) !== "{}" &&
+                                (JSON.stringify(statusParam) !== "{}" && dataSource.length>0) &&
                                 <div style={{marginRight:30,display:'inline-block'}}>
                                     <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
                                     <span>提交时间：{statusParam.lastModifiedDate}</span>
@@ -312,6 +313,11 @@ class tab1 extends Component{
                                 撤回提交
                             </Button>
                         </div>,
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
+                        }
                     }}
                 >
                 </SearchTable>

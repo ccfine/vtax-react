@@ -181,7 +181,10 @@ class OtherTaxAdjustment extends Component {
                         status.text = (<span style={{ color: 'green' }}>提交</span>)
                         status.submitDate = data.data.lastModifiedDate?moment(data.data.lastModifiedDate).format('YYYY-MM-DD HH:mm'):'';
                     }
+                    status.status = data.data.status;
                     this.setState({ statusLoading: false, status: status, filter: values });
+                }else{
+                    this.setState({ statusLoading: false, status: undefined});
                 }
             }
         })
@@ -221,8 +224,8 @@ class OtherTaxAdjustment extends Component {
     render() {
         const { search } = this.props.location;
         let disabled = !!search;
-        let {filters,status} = this.state,
-            buttonDisabled = !filters;
+        let {filters,status,buttonDisabled} = this.state;
+            buttonDisabled = buttonDisabled || !filters ;
         return (
             <div>
                 <SearchTable
@@ -250,11 +253,11 @@ class OtherTaxAdjustment extends Component {
                                         <span>提交时间：{status.submitDate}</span>
                                     </div>)
                                 }
-                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
+                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (status && status.status === 2)} onClick={this.submit} loading={this.state.submitLoading}>
                                     <Icon type="check" />
                                     提交
                                 </Button>
-                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
+                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (status && status.status !== 2)} onClick={this.revoke} loading={this.state.revokeLoading}>
                                     <Icon type="rollback" />
                                     撤回提交
                                 </Button>
@@ -262,7 +265,7 @@ class OtherTaxAdjustment extends Component {
                             </div>)
                         },
                         onDataChange:(data)=>{
-                            this.setState({buttonDisabled:false});
+                            this.setState({buttonDisabled:!(data && data.length>0)});
                         }
                     }}
                 >

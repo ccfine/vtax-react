@@ -4,15 +4,13 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,message} from 'antd'
+import {Layout,Card,Row,Col,Form,Button} from 'antd'
 import {AsyncTable} from '../../../../compoments'
-import {request,getFields,fMoney,getUrlParam} from '../../../../utils'
+import {getFields,fMoney,getUrlParam} from '../../../../utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const buttonStyle={
-    marginRight:5
-}
+
 const spanPaddingRight={
     paddingRight:30
 }
@@ -40,7 +38,6 @@ class InputTaxDetails extends Component {
         tableUpDateKey:Date.now(),
         visible:false,
         params:{},
-        statusParam:{},
     }
 
     columns = [
@@ -78,38 +75,21 @@ class InputTaxDetails extends Component {
         }
     ];
 
-    handleSubmit = (e,type) => {
+    handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                if(values.authMonth){
-                    values.authMonth = values.authMonth.format('YYYY-MM')
+                const data = {
+                    ...values,
+                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
                 }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/account/income/taxDetail/submit';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '撤回':
-                        url = '/account/income/taxDetail/revoke';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '重算':
-                        url = '/account/income/taxDetail/reset';
-                        this.requestPut(url,type,values);
-                        break;
-                    default:
-                        this.setState({
-                            filters:values,
-                        },()=>{
-                            this.setState({
-                                tableUpDateKey:Date.now()
-                            },()=>{
-                                this.updateStatus();
-                            })
-                        });
-                }
+                this.setState({
+                    filters:data
+                },()=>{
+                    this.setState({
+                        tableUpDateKey:Date.now()
+                    })
+                });
             }
         });
     }
@@ -123,63 +103,14 @@ class InputTaxDetails extends Component {
             tableUpDateKey:Date.now()
         })
     }
-    requestPut=(url,type,data={})=>{
-        request.put(url,data)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.updateStatus();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    requestPost=(url,type,data={})=>{
-        request.post(url,data)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.updateStatus();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    updateStatus=()=>{
-        request.get('/account/income/taxDetail/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                    tableUpDateKey:Date.now()
-                })
-            }
-        })
-    }
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
             this.handleSubmit()
         }
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-            this.setState({
-                filters:nextProps.filters,
-            },()=>{
-                this.setState({
-                    tableUpDateKey:nextProps.tableUpDateKey
-                },()=>{
-                    this.updateStatus();
-                })
-            });
-        }
-    }
     render(){
         const {tableUpDateKey,filters,visible,params} = this.state;
-        const {statusParam} = this.state;
-        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
-
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -242,23 +173,7 @@ class InputTaxDetails extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card
-                    extra={
-                        <div>
-                            {
-                                JSON.stringify(statusParam) !== "{}" &&
-                                <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
-                                    <span>提交时间：{statusParam.lastModifiedDate}</span>
-                                </div>
-                            }
-                            <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
-                            <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
-                            <Button size="small" style={buttonStyle} disabled={disabled2} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
-                        </div>
-                    }
-                    style={{marginTop:10}}>
+                <Card style={{marginTop:10}}>
 
                     <AsyncTable url="/account/income/taxDetail/list"
                                 updateKey={tableUpDateKey}
