@@ -149,7 +149,7 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.get('/account/land/price/deducted/main/reset',{
+        request.put('/account/land/price/deducted/main/reset',{
             params:this.state.searchFieldsValues
         })
             .then(({data}) => {
@@ -170,7 +170,7 @@ class tab1 extends Component{
                 url='/account/land/price/deducted/main/submit';
                 break;
             case '撤回':
-                url='/account/land/price/deducted/main/restore';
+                url='/account/land/price/deducted/main/revoke';
                 break;
             default:
                 break;
@@ -190,7 +190,7 @@ class tab1 extends Component{
         })
     }
     updateStatus=(values)=>{
-        request.get('/account/land/price/deducted/main/get',{params:values}).then(({data}) => {
+        request.get('/account/land/price/deducted/main/listMain',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data
