@@ -200,17 +200,6 @@ class InterimContractInputTaxTransferredOut extends Component {
             updateKey:Date.now()
         })
     }
-    requestPut=(url,type,value={})=>{
-        request.put(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.updateStatus(value);
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
     requestPost=(url,type,value={})=>{
         this.setState({ loading:true })
         request.post(url,value)
@@ -254,7 +243,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                         break;
                     case '重算':
                         url = '/account/income/taxContract/adjustment/reset';
-                        this.requestPut(url,type,value);
+                        this.requestPost(url,type,value);
                         break;
                     default:
                         this.setState({
@@ -366,7 +355,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                 <Card title="进项转出差异调整表" extra={
                     <div>
                         {
-                            JSON.stringify(statusParam) !== "{}" &&
+                            (JSON.stringify(statusParam) !== "{}" && dataSource.length > 0) &&
                             <div style={{marginRight: 30, display: 'inline-block'}}>
                                   <span style={{marginRight: 20}}>状态：<label
                                       style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>

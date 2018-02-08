@@ -14,8 +14,7 @@ export default class MonthRangePicker extends Component {
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
         fieldDecoratorOptions:PropTypes.object,
-        componentProps:PropTypes.object,
-        label:PropTypes.string.isRequired,
+        componentProps:PropTypes.object
     }
     static defaultProps={
         formItemStyle:{
@@ -27,7 +26,6 @@ export default class MonthRangePicker extends Component {
             }
         },
         fieldName:'authMonth',
-        label:'认证月份',
         fieldDecoratorOptions:{
 
         }
@@ -53,9 +51,9 @@ export default class MonthRangePicker extends Component {
     render() {
         const { mode } = this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps,label} = this.props;
+        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps} = this.props;
         return (
-            <FormItem label={label} {...formItemStyle}>
+            <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
                     ...fieldDecoratorOptions
                 })(

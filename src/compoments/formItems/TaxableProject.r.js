@@ -79,60 +79,9 @@ class TaxableProjectTreeForm extends Component{
         selectedKeys: [],
         initData:{},
     }
-    onLoadData = (treeNode) => {
-        return new Promise((resolve) => {
-            if (treeNode.props.children) {
-                resolve();
-                return;
-            }
-            request.get('/taxable/project/tree',{
-                params:{id:treeNode.props.dataRef.id}
-            }).then(({data}) => {
-                if(data.code===200) {
-                    //setTimeout(() => {
-                    treeNode.props.dataRef.children = data.data;
-                    this.setState({
-                        treeData: [...this.state.treeData],
-                    });
-                    resolve();
-                    // }, 1000);
-                }
-            });
-
-        });
-    }
-    renderTreeNodes = (data) => {
-        return data.map((item) => {
-            if (item.children && item.children.length>0) {
-                return (
-                    <TreeNode title={`[${item.num}]${item.name}`} key={item.id} dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
-                    </TreeNode>
-                );
-            }
-            return <TreeNode title={`[${item.num}]${item.name}`} key={item.id} {...item} dataRef={item}/>;
-        });
-    }
-
-    fetchTree = () => {
-        this.mounted && this.setState({ submitLoading: true });
-        request.get('/taxable/project/tree',{
-        }).then(({data}) => {
-            if(data.code===200) {
-                this.mounted && this.setState({
-                    treeData: [...data.data],
-                    submitLoading: false,
-                })
-            }
-        });
-    }
-    onSelect = (selectedKeys, info) => {
-        this.setState({
-            selectedKeys,
-            initData: info.node.props.dataRef
-        });
-    }
     onExpand = (expandedKeys) => {
+        //console.log('onExpand', expandedKeys);
+        //console.log('onExpand', arguments);
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
         this.setState({
@@ -140,24 +89,38 @@ class TaxableProjectTreeForm extends Component{
             autoExpandParent: false,
         });
     }
-    componentDidMount() {
-        this.fetchTree()
-    }
-    mounted = true;
-    componentWillUnmount(){
-        this.mounted = null;
+    onSelect = (selectedKeys, info) => {
+       this.setState({
+           selectedKeys,
+           initData: info.node.props.dataRef
+       })
     }
 
-    /*componentWillReceiveProps(nextProps){
-        if(typeof (nextProps.conditionValue.taxableProject) !== 'undefined' && typeof (nextProps.conditionValue.taxableProject) !== "object"){
-
-        }
+    renderTreeNodes = (data) => {
+        return data.map((item) => {
+            if (item.children && item.children.length>0) {
+                return (
+                    <TreeNode title={`[${item.num}]${item.name}`} key={item.id} dataRef={item} selectable={false}>
+                        {this.renderTreeNodes(item.children)}
+                    </TreeNode>
+                );
+            }
+            return <TreeNode title={`[${item.num}]${item.name}`} key={item.id} dataRef={item}/>;
+        });
     }
-    componentWillReceiveProps(nextProps){
-        if(this.props.updateKey!==nextProps.updateKey){
-            this.fetchTree()
-        }
-    }*/
+    //应税项目
+    getTaxableProject=()=>{
+        this.mounted && this.setState({ submitLoading: true });
+        request.get('/taxable/project/tree')
+            .then(({data})=>{
+                if(data.code===200) {
+                    this.mounted && this.setState({
+                        treeData: [...data.data],
+                        submitLoading: false,
+                    })
+                }
+            })
+    }
 
     handleSubmit = (e) => {
         e && e.preventDefault();
@@ -188,11 +151,22 @@ class TaxableProjectTreeForm extends Component{
             }
         });
     }
+    componentDidMount() {
+        this.getTaxableProject()
+    }
 
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    componentWillReceiveProps(nextProps){
+        /*if(typeof (nextProps.conditionValue.taxableProject) !== 'undefined' && typeof (nextProps.conditionValue.taxableProject) !== "object"){
+
+        }*/
+    }
     render(){
-        const {showLine,selectedKeys,initData,treeData} = this.state;
-        console.log(initData);
-
+        const {expandedKeys,autoExpandParent,selectedKeys,initData} = this.state;
         const {disabled,toggleModalVisible,visible} = this.props;
         const formItemStyle={
             labelCol:{
@@ -219,7 +193,7 @@ class TaxableProjectTreeForm extends Component{
                             cursor:'pointer',
                             right:3,
                             top:6,
-                            height:23,
+                            height:22,
                             width:23,
                             borderRadius:'3px',
                             textAlign:'center',
@@ -251,14 +225,16 @@ class TaxableProjectTreeForm extends Component{
                     }}
                     visible={visible}>
                     <div style={{height:250,overflow:'scroll'}}>
-                         <Tree
-                             showLine={showLine}
-                             loadData={this.onLoadData}
-                             onSelect={this.onSelect}
-                             selectedKeys={selectedKeys}
-                         >
-                        {this.renderTreeNodes(treeData)}
-                    </Tree>
+                        <Tree
+                            showLine
+                            onExpand={this.onExpand}
+                            expandedKeys={expandedKeys}
+                            autoExpandParent={autoExpandParent}
+                            onSelect={this.onSelect}
+                            selectedKeys={selectedKeys}
+                        >
+                                {this.renderTreeNodes(this.state.treeData)}
+                            </Tree>
                     </div>
                     <Form onSubmit={this.handleSubmit} >
                         <Row>

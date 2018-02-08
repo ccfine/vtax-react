@@ -167,6 +167,8 @@ class LandPriceDeductionDetails extends Component{
         selectedRows:[],
         searchTableLoading:false,
         statusParam:{},
+        dataSource:[],
+        tableUrl:'/account/landPrice/deductedDetails/list',
     }
     refreshTable = ()=>{
         this.setState({
@@ -178,62 +180,54 @@ class LandPriceDeductionDetails extends Component{
             searchTableLoading:b
         })
     }
-
+    recount = ()=>{
+        this.setState({
+            tableUrl:'/account/landPrice/deductedDetails/reset',
+            updateKey:Date.now()
+        },()=>{
+            this.setState({
+                tableUrl:'/account/landPrice/deductedDetails/list'
+            })
+        })
+    }
     handleClick=type=>{
         let url = '';
+        if(type ==='重算'){
+            this.recount()
+            return false;
+        }
         switch (type){
             case '提交':
                 url='/account/landPrice/deductedDetails/submit';
-                this.requestPost(url,type,this.state.searchFieldsValues);
                 break;
             case '撤回':
                 url='/account/landPrice/deductedDetails/revoke';
-                this.requestPost(url,type,this.state.searchFieldsValues);
                 break;
             case '重算':
                 url='/account/landPrice/deductedDetails/reset';
-                this.requestPut(url,type,this.state.searchFieldsValues);
                 break;
             default:
-                this.setState({
-                updateKey:Date.now()
-            },()=>{
-                this.updateStatus();
-            })
+                break;
         }
-    }
-
-    requestPut=(url,type,values={})=>{
         this.toggleSearchTableLoading(true)
-        request.put(url,values)
+        request.post(url,this.state.searchFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
                     message.success(`${type}成功!`);
-                    this.refreshTable()
+                    this.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
-            })
+            }).catch(err=>{
+            this.toggleSearchTableLoading(false)
+        })
     }
-    requestPost=(url,type,values={})=>{
-        this.toggleSearchTableLoading(true)
-        request.post(url,values)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable()
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    updateStatus=()=>{
-        request.get('/account/landPrice/deductedDetails/listMain',{params:this.state.searchFieldsValues}).then(({data}) => {
+    updateStatus=(values)=>{
+        request.get('/account/landPrice/deductedDetails/listMain',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data,
+                    statusParam: data.data
                 })
             }
         })
@@ -251,20 +245,15 @@ class LandPriceDeductionDetails extends Component{
             });
         }
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.updateKey !== this.props.updateKey){
-            this.setState({
-                filters:nextProps.filters,
-                updateKey:nextProps.updateKey
-            });
+    componentWillReceiveProps(props){
+        if(props.updateKey !== this.props.updateKey){
+            this.setState({updateKey:props.updateKey});
         }
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam} = this.state;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,tableUrl,statusParam,dataSource} = this.state;
         const {mainId,authMonth} = this.state.searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -317,10 +306,10 @@ class LandPriceDeductionDetails extends Component{
                         rowSelection:{
                             type:'radio',
                         },
-                        url:'/account/landPrice/deductedDetails/list',
+                        url:tableUrl,
                         extra: <div>
                             {
-                                JSON.stringify(statusParam) !== "{}" &&
+                                (JSON.stringify(statusParam) !== "{}" && dataSource.length>0) &&
                                 <div style={{marginRight:30,display:'inline-block'}}>
                                     <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
                                     <span>提交时间：{statusParam.lastModifiedDate}</span>
@@ -329,7 +318,7 @@ class LandPriceDeductionDetails extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled1}
+                                disabled={!((mainId && authMonth)&&(statusParam && parseInt(statusParam.status, 0) === 1))}
                                 onClick={()=>this.handleClick('重算')}>
                                 <Icon type="retweet" />
                                 重算
@@ -341,7 +330,7 @@ class LandPriceDeductionDetails extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled1}
+                                disabled={!((mainId && authMonth)&&(statusParam && parseInt(statusParam.status, 0) === 1))}
                                 onClick={()=>this.handleClick('提交')}>
                                 <Icon type="check" />
                                 提交
@@ -349,7 +338,7 @@ class LandPriceDeductionDetails extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled2}
+                                disabled={!((mainId && authMonth)&&(statusParam && parseInt(statusParam.status, 0) === 2))}
                                 onClick={()=>this.handleClick('撤回')}>
                                 <Icon type="rollback" />
                                 撤回提交
@@ -366,6 +355,11 @@ class LandPriceDeductionDetails extends Component{
                                     </div>
                                 </div>
                             )
+                        },
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
                         }
                     }}
                 >

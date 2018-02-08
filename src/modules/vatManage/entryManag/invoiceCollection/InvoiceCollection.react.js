@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
-import {AsyncTable,FileExport,FileImportModal,FileUndoImportModal} from '../../../../compoments'
+import {AsyncTable,FileExport,PopUploadModal,PopUndoUploadModal} from '../../../../compoments'
 import {request,requestDict,fMoney,getFields,getUrlParam} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -26,52 +26,7 @@ const code = {
     marginRight:30,
     padding: '2px 4px'
 }
-const fields = [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:15
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择纳税主体'
-                }
-            ]
-        },
-    }, {
-        label: '认证月份',
-        fieldName: 'authMonth',
-        type: 'monthPicker',
-        span: 24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:15
-            }
-        },
-        componentProps: {},
-        fieldDecoratorOptions: {
-            rules: [
-                {
-                    required: true,
-                    message: '请选择认证月份'
-                }
-            ]
-        },
-    }
-]
+
 class InvoiceCollection extends Component {
     state={
         /**
@@ -90,8 +45,7 @@ class InvoiceCollection extends Component {
         modalConfig:{
             type:''
         },
-        nssbData:[],
-        statusParam:{},
+        nssbData:[]
     }
 
     columns = [
@@ -149,40 +103,40 @@ class InvoiceCollection extends Component {
             render:text=>fMoney(text)
         }
     ];
-    handleSubmit = (e,type) => {
+    handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                if(values.authMonth){
-                    values.authMonth = values.authMonth.format('YYYY-MM')
+                if(values.authMonth && values.authMonth.length!==0){
+                    values.authMonthStart = values.authMonth[0].format('YYYY-MM')
+                    values.authMonthEnd= values.authMonth[1].format('YYYY-MM')
+                    values.authMonth = undefined;
                 }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/income/invoice/collection/main/submit';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '撤回':
-                        url = '/income/invoice/collection/revoke';
-                        this.requestPost(url,type,values);
-                        break;
-                    default:
-                        this.setState({
-                            selectedRowKeys:null,
-                            filters:values
-                        },()=>{
-                            this.setState({
-                                tableUpDateKey:Date.now()
-                            },()=>{
-                                this.updateStatus(values);
-                            })
-                        });
-
-                }
-
+                this.setState({
+                    selectedRowKeys:null,
+                    filters:values
+                },()=>{
+                    this.setState({
+                        tableUpDateKey:Date.now()
+                    })
+                });
             }
         });
 
+    }
+    componentDidMount(){
+        //获取纳税申报对应的数据字典
+        requestDict('NSSB',result=>{
+            this.setState({
+                nssbData:result
+            })
+        });
+        this.updateTable()
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
+            this.initData()
+        }
     }
     onChange=(selectedRowKeys, selectedRows) => {
         this.setState({
@@ -195,32 +149,30 @@ class InvoiceCollection extends Component {
             visible
         })
     }
-    refreshTable = ()=>{
-        this.setState({
-            tableUpDateKey:Date.now()
-        })
+    updateTable=()=>{
+        this.handleSubmit()
     }
     showModal=type=>{
-        if(type === 'edit'){
-            let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
-            if(sourceType === 2 ){
-                const ref = Modal.warning({
-                    title: '友情提醒',
-                    content: '该发票信息是外部导入，无法修改！',
-                    okText: '确定',
-                    onOk:()=>{
-                        ref.destroy();
-                    }
-                });
-            }else{
-                this.toggleModalVisible(true)
-                this.setState({
-                    modalConfig:{
-                        type,
-                        id:this.state.selectedRowKeys
-                    }
-                })
-            }
+       if(type === 'edit'){
+           let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
+           if(sourceType === 2 ){
+               const ref = Modal.warning({
+                   title: '友情提醒',
+                   content: '该发票信息是外部导入，无法修改！',
+                   okText: '确定',
+                   onOk:()=>{
+                       ref.destroy();
+                   }
+               });
+           }else{
+               this.toggleModalVisible(true)
+               this.setState({
+                   modalConfig:{
+                       type,
+                       id:this.state.selectedRowKeys
+                   }
+               })
+           }
         }else{
             this.toggleModalVisible(true)
             this.setState({
@@ -231,46 +183,9 @@ class InvoiceCollection extends Component {
             })
         }
     }
-    requestPost=(url,type,values={})=>{
-        request.post(url,values)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.updateStatus(values);
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    updateStatus=(values)=>{
-        request.get('/account/income/taxstructure/listMain',{params:values}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                    tableUpDateKey:Date.now()
-                })
-            }
-        })
-    }
-    componentDidMount(){
-        //获取纳税申报对应的数据字典
-        requestDict('NSSB',result=>{
-            this.setState({
-                nssbData:result
-            })
-        });
-        this.refreshTable()
-    }
-    componentWillReceiveProps(nextProps){
-        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
-            this.initData()
-        }
-    }
 
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,statusParam} = this.state;
-        const disabled1 = !(statusParam && parseInt(statusParam.status, 0) === 1);
-        const disabled2 = !(statusParam && parseInt(statusParam.status, 0) === 2);
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig} = this.state;
         const {search} = this.props.location;
         let disabled = !!(search && search.filters);
 
@@ -303,12 +218,6 @@ class InvoiceCollection extends Component {
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择纳税主体'
-                                                }
-                                            ]
                                         },
                                     },{
                                         label:'发票号码',
@@ -322,20 +231,14 @@ class InvoiceCollection extends Component {
                                     },{
                                         label:'认证月份',
                                         fieldName:'authMonth',
-                                        type:'monthPicker',
+                                        type:'monthRangePicker',
                                         span:6,
                                         componentProps:{
                                             format:"YYYY-MM",
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择认证月份'
-                                                }
-                                            ]
+                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
                                         },
 
                                     }
@@ -353,31 +256,23 @@ class InvoiceCollection extends Component {
 
                 <Card
                       extra={<div>
-                          {
-                              JSON.stringify(statusParam) !== "{}" &&
-                              <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
-                                  <span>提交时间：{statusParam.lastModifiedDate}</span>
-                              </div>
-                          }
                           <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />
                               新增
                           </Button>
-                          <FileImportModal
+                          <PopUploadModal
                               url="/income/invoice/collection/upload"
                               title="导入"
-                              fields={fields}
                               onSuccess={()=>{
-                                  this.refreshTable()
+                                  this.updateTable()
                               }}
-                              style={{marginRight:5}} />
-                          <FileUndoImportModal
+                              style={{marginRight:5}}
+                          />
+                          <PopUndoUploadModal
                               url="/income/invoice/collection/revocation"
                               title="撤销导入"
                               onSuccess={()=>{
-                                  this.refreshTable()
+                                  this.updateTable()
                               }}
                               style={{marginRight:5}} />
                           <FileExport
@@ -420,7 +315,7 @@ class InvoiceCollection extends Component {
                                                   .then(({data}) => {
                                                       if (data.code === 200) {
                                                           message.success('删除成功!');
-                                                          this.refreshTable();
+                                                          this.updateTable();
                                                       } else {
                                                           message.error(data.msg)
                                                       }
@@ -437,22 +332,6 @@ class InvoiceCollection extends Component {
                               type='danger'>
                               <Icon type="delete" />
                               删除
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled1}
-                              onClick={(e) => this.handleSubmit(e,'提交')}>
-                              <Icon type="check"/>
-                              提交
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled2}
-                              onClick={(e) => this.handleSubmit(e,'撤回')}>
-                              <Icon type="rollback"/>
-                              撤回提交
                           </Button>
                       </div>}
                       style={{marginTop:10}}>
@@ -492,7 +371,7 @@ class InvoiceCollection extends Component {
                     visible={visible}
                     modalConfig={modalConfig}
                     selectedRowKeys={selectedRowKeys}
-                    refreshTable={this.refreshTable}
+                    updateTable={this.updateTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>
