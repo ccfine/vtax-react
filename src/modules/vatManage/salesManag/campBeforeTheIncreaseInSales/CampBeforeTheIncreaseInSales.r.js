@@ -2,17 +2,35 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Button,Icon} from 'antd'
+import {Button,Icon,message} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import {fMoney,getUrlParam} from '../../../../utils'
+import {fMoney,getUrlParam,request} from '../../../../utils'
 import PopModal from './popModal'
+import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
-
+import moment from 'moment'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
-
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:14
+    }
+}
 const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
@@ -20,11 +38,38 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            formItemStyle,
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            },
+        },
+        {
+            label:'查询期间',
+            fieldName:'taxMonth',
+            type:'monthPicker',
+            span:6,
+            formItemStyle,
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择查询期间'
+                    }
+                ]
             },
         },
         {
@@ -32,6 +77,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'projectId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -45,6 +91,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'stagesId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -58,6 +105,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'buildingName',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'buildingName',
                 fieldValueName:'buildingName',
@@ -70,30 +118,35 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             label:'单元',
             fieldName:'element',
             type:'element',
+            formItemStyle,
             span:6
         },
         {
             label:'房号',
             fieldName:'roomNumber',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
             label:'房间编码',
             fieldName:'roomCode',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
             label:'客户名称',
             fieldName:'customerName',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
             label:'纳税识别号',
             fieldName:'taxIdentificationCode',
             type:'input',
+            formItemStyle,
             span:6
         }
     ]
@@ -102,8 +155,9 @@ const getColumns = context =>[
     {
         title:'操作',
         key:'actions',
-        render:(text,record)=>(
-            <div>
+        render:(text,record)=>{
+            return parseInt(context.state.dataStatus,0) === 1 ? (
+                <div>
                 <span style={pointerStyle} onClick={()=>{
                     context.setState({
                         modalConfig:{
@@ -114,23 +168,24 @@ const getColumns = context =>[
                         context.toggleModalVisible(true)
                     })
                 }}>修改</span>
-                <span style={{
-                    ...pointerStyle,
-                    marginLeft:5
-                }} onClick={()=>{
-                    context.setState({
-                        modalConfig:{
-                            type:'view',
-                            id:record.id
-                        }
-                    },()=>{
-                        context.toggleModalVisible(true)
-                    })
-                }}>
+                    <span style={{
+                        ...pointerStyle,
+                        marginLeft:5
+                    }} onClick={()=>{
+                        context.setState({
+                            modalConfig:{
+                                type:'view',
+                                id:record.id
+                            }
+                        },()=>{
+                            context.toggleModalVisible(true)
+                        })
+                    }}>
                     查看
                 </span>
-            </div>
-        ),
+                </div>
+            ) : ''
+        },
         fixed:'left',
         width:'70px',
         className:'text-center'
@@ -194,7 +249,13 @@ class CampBeforeTheIncreaseInSales extends Component{
         searchFieldsValues:{
 
         },
-        hasData:false
+        hasData:false,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -218,18 +279,38 @@ class CampBeforeTheIncreaseInSales extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.refreshTable()
-        }else{
-            this.refreshTable()
         }
     }
+    fetchResultStatus = ()=>{
+        request.get('/output/sellinghouse/listMain',{
+            params:{
+                ...this.state.searchFieldsValues,
+                authMonth:this.state.searchFieldsValues.taxMonth
+            }
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues,hasData} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues,hasData,dataStatus,submitDate} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields(disabled),
+                    cardProps:{
+                        className:''
+                    }
                 }}
                 tableOption={{
                     key:tableKey,
@@ -240,9 +321,21 @@ class CampBeforeTheIncreaseInSales extends Component{
                         this.setState({
                             searchFieldsValues:params,
                             hasData:data.length !== 0
+                        },()=>{
+                            this.state.hasData && this.fetchResultStatus()
                         })
                     },
                     extra:<div>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                             <Icon type="file-add" />
                             新增
@@ -252,6 +345,54 @@ class CampBeforeTheIncreaseInSales extends Component{
                             onSuccess={()=>{
                                 this.refreshTable()
                             }}
+                            fields={
+                                [
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:17
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
+                                        },
+                                    },
+                                    {
+                                        label:'查询期间',
+                                        fieldName:'authMonth',
+                                        type:'monthPicker',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:17
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择查询期间'
+                                                }
+                                            ]
+                                        }
+                                    },
+                                ]
+                            }
                             style={{marginRight:5}} />
                         <FileExport
                             url={`output/sellinghouse/export`}
@@ -263,6 +404,8 @@ class CampBeforeTheIncreaseInSales extends Component{
                             }
                             setButtonStyle={{marginRight:5}}
                         />
+                        <SubmitOrRecall type={1} url="/output/sellinghouse/submit" monthFieldName="authMonth" onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} url="/output/sellinghouse/revoke" monthFieldName="authMonth" onSuccess={this.refreshTable} />
                     </div>,
                     scroll:{
                         x:'140%'

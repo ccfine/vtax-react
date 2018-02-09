@@ -32,29 +32,29 @@ const EditableCell = ({ title, editable, value, form, column, type,rules,compone
             {
                 editable
                     ? getFields(form,[
-                    {
-                        label:title,
-                        fieldName:`${column}`,
-                        type:type,
-                        span:24,
-                        notLabel:true,
-                        formItemStyle:{
-                            labelCol:{
-                                span:24
+                        {
+                            label:title,
+                            fieldName:`${column}`,
+                            type:type,
+                            span:24,
+                            notLabel:true,
+                            formItemStyle:{
+                                labelCol:{
+                                    span:24
+                                },
+                                wrapperCol:{
+                                    span:24
+                                }
                             },
-                            wrapperCol:{
-                                span:24
+                            componentProps:{
+                                ...componentProps
+                            },
+                            fieldDecoratorOptions:{
+                                initialValue:value === '' ? value : fMoney(value),
+                                rules,
                             }
-                        },
-                        componentProps:{
-                            ...componentProps
-                        },
-                        fieldDecoratorOptions:{
-                            initialValue:value === '' ? value : fMoney(value),
-                            rules,
                         }
-                    }
-                ])
+                    ])
                     : title === '调整说明' ? value : fMoney(value)
             }
         </div>
@@ -64,9 +64,9 @@ const EditableCell = ({ title, editable, value, form, column, type,rules,compone
 
 class TableTaxStructure extends Component {
     state={
+        statusParam:{},
         dataSource:[],
         resetDataSource:[],
-        footerDate:{},
         isShowResetDataSource:false,
     }
     columns = [
@@ -105,16 +105,16 @@ class TableTaxStructure extends Component {
 
     renderColumns(title,text, record, column,type,rules=[],TextAreaAutoSize={}) {
         return  parseInt(record.status, 0) === 1 ? <EditableCell
-            editable={!record.summary}
-            title={title}
-            value={text}
-            form={this.props.form}
-            column={column}
-            type={type}
-            rules={rules}
-            componentProps={TextAreaAutoSize}
-            //onChange={value => this.handleChange(value, record.key, column)}
-        />
+                editable={!record.summary}
+                title={title}
+                value={text}
+                form={this.props.form}
+                column={column}
+                type={type}
+                rules={rules}
+                componentProps={TextAreaAutoSize}
+                //onChange={value => this.handleChange(value, record.key, column)}
+            />
             : text
     }
     handleSubmit = (e,type) => {
@@ -122,97 +122,117 @@ class TableTaxStructure extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 const props = this.props;
+
                 let url= null;
+                const newData = [...this.state.dataSource];
+                let arrList=[];
+                if(JSON.stringify(values) !== "{}" ){
+                    arrList = newData.map((item,i)=>{
+                        return {
+                            ...item,
+                            ...values.data[i],
+                        }
+                    });
+                }else{
+                    arrList = newData;
+                }
                 switch (type){
                     case '保存':
-                        const newData = [...this.state.dataSource];
-                        let arrList = newData.map((item,i)=>{
-                            return {
-                                ...item,
-                                ...values.data[i],
-                            }
-                        });
-                        //console.log(arrList);
                         url = '/account/income/taxstructure/save';
                         this.requestPost(url,type,{list:arrList});
                         break;
                     case '提交':
-                        url = `/account/income/taxstructure/submit/${props.filters.mainId}/${props.filters.authMonth}`;
-                        this.requestPost(url,type);
+                        request.post('/account/income/taxstructure/save',{list:arrList})
+                            .then(({data})=>{
+                                if(data.code===200){
+                                    url = '/account/income/taxstructure/submit';
+                                    this.requestPost(url,type,props.filters);
+                                }else{
+                                    message.error(`${type}失败:${data.msg}`)
+                                }
+                            })
                         break;
                     case '撤回':
-                        url = `/account/income/taxstructure/restore/${props.filters.mainId}/${props.filters.authMonth}`;
-                        this.requestPost(url,type);
+                        url = '/account/income/taxstructure/revoke';
+                        this.requestPost(url,type,props.filters);
                         break;
                     case '重算':
                         url = '/account/income/taxstructure/reset';
-                        this.fetch(url,props.filters);
+                        this.requestPut(url,type,props.filters);
                         break;
                     default:
                         this.setState({
                             filters:props.filters,
                         },()=>{
-                            this.props.refreshTable()
+                            this.updateStatus();
                         });
 
                 }
             }
         });
     }
-    requestPost=(url,type,data={})=>{
-        request.post(url,data)
+    requestPut=(url,type,data={})=>{
+        request.put(url,data)
             .then(({data})=>{
                 if(data.code===200){
-                    const props = this.props;
                     message.success(`${type}成功!`);
-                    props.refreshTable();
-                    this.props.form.resetFields()
+                    this.updateStatus();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
     }
-    fetch=(url,params = {})=>{
-        request.get(url,{
-            params:params
-        })
-            .then(({data}) => {
+    requestPost=(url,type,data={})=>{
+        request.post(url,data)
+            .then(({data})=>{
                 if(data.code===200){
-                    //message.success('重算成功!');
-                    this.setState({
-                        resetDataSource:data.data.page.records,
-                        footerDate:data.data,
-                        isShowResetDataSource:true
-                    })
-                    this.props.form.resetFields()
+                    message.success(`${type}成功!`);
+                    this.updateStatus();
                 }else{
-                    message.error(data.msg)
+                    message.error(`${type}失败:${data.msg}`)
                 }
-            });
+            })
+    }
+    updateStatus=()=>{
+        request.get('/account/income/taxstructure/listMain',{params:this.state.filters}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    statusParam: data.data,
+                    tableUpDateKey:Date.now()
+                })
+            }
+        })
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-            this.fetch("/account/income/taxstructure/list",nextProps.filters);
+            this.setState({
+                filters:nextProps.filters,
+                tableUpDateKey:nextProps.tableUpDateKey
+            },()=>{
+                this.updateStatus();
+            });
         }
     }
     render(){
         const props = this.props;
-        const {dataSource,resetDataSource,footerDate,isShowResetDataSource} = this.state;
+        const {statusParam} = this.state;
+        const disabled1 = !((props.filters.mainId && props.filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((props.filters.mainId && props.filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         return (
             <Card extra={
-                dataSource.length > 0 && <div>
+                <div>
                     {
-                        parseInt(dataSource[0].status, 0)=== 1 ?
-                            <div>
-                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
-                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
-                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
-                            </div>
-                            :
-                            <div>
-                                <Button size="small" style={buttonStyle} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
-                            </div>
+                        JSON.stringify(statusParam) !== "{}" &&
+                        <div style={{marginRight: 30, display: 'inline-block'}}>
+                                  <span style={{marginRight: 20}}>状态：<label
+                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
+                            <span>提交时间：{statusParam.lastModifiedDate}</span>
+                        </div>
                     }
+                    <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
+                    <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
+                    <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
+                    <Button size="small" style={buttonStyle} disabled={disabled2} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
                 </div>
             }
                   style={{marginTop:10}}>
@@ -225,8 +245,6 @@ class TableTaxStructure extends Component {
                                     pagination:false,
                                     size:'small',
                                     columns:this.columns,
-                                    dataSource: (isShowResetDataSource && resetDataSource) || undefined,
-                                    footerDate: (isShowResetDataSource && footerDate) || undefined,
                                     onDataChange:(dataSource)=>{
                                         this.setState({
                                             dataSource

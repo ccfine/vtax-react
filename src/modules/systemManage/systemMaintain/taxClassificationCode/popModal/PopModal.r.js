@@ -48,8 +48,6 @@ class PopModal extends Component{
                     values.taxableProjectName = data.label
                     values.taxableProjectId = data.key || this.state.initData['taxableProjectId'];
                 }
-                values['simpleTaxRateId'] = data.simpleTaxRateId || this.state.initData['simpleTaxRateId'];
-                values['commonlyTaxRateId'] = data.commonlyTaxRateId || this.state.initData['commonlyTaxRateId'];
                 if(type==='edit'){
                     if(this.props.selectedRowKeys){
                         values['id'] = this.props.selectedRowKeys;
@@ -293,21 +291,21 @@ class PopModal extends Component{
                                                     }
                                                 },()=>{
                                                     setFieldsValue({
-                                                        'commonlyTaxRate': data.commonlyTaxRate.toString(),
-                                                        'simpleTaxRate': data.simpleTaxRate.toString(),
+                                                        'commonlyTaxRateId': data.commonlyTaxRateId.toString(),
+                                                        'simpleTaxRateId': data.simpleTaxRateId.toString(),
                                                     })
                                                 })
                                             }
                                         }
                                     }, {
                                         label:'一般增值税税率',
-                                        fieldName:'commonlyTaxRate',
+                                        fieldName:'commonlyTaxRateId',
                                         type:'select',
                                         span:12,
                                         formItemStyle,
                                         options:this.state.commonlyTaxRate,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['commonlyTaxRate'],
+                                            initialValue:initData['commonlyTaxRateId'],
                                             rules:[
                                                 {
                                                     required:true,
@@ -315,27 +313,21 @@ class PopModal extends Component{
                                                 }
                                             ]
                                         },
-                                        componentProps:{
-                                            //disabled: !(getFieldValue('taxableProjectName') !== '' && initData['taxableProjectName']) ,
-                                        },
                                     }, {
                                         label:'简易增值税税率',
-                                        fieldName:'simpleTaxRate',
+                                        fieldName:'simpleTaxRateId',
                                         type:'select',
                                         span:12,
                                         formItemStyle,
                                         options:this.state.simpleTaxRate,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['simpleTaxRate'],
+                                            initialValue:initData['simpleTaxRateId'],
                                             rules:[
                                                 {
                                                     required:true,
                                                     message:'请选择简易增值税税率'
                                                 }
                                             ]
-                                        },
-                                        componentProps:{
-                                            //disabled: !(getFieldValue('taxableProjectName') !== '' && initData['taxableProjectName']) ,
                                         },
                                     }
                                 ])

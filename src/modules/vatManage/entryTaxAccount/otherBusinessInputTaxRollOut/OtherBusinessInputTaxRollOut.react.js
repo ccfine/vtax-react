@@ -57,7 +57,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         statusLoading: false,
         status: undefined,
         filter: undefined,
-        buttonDisabled:true,
+        // buttonDisabled:true,
         submitLoading:false,
         revokeLoading:false,
     }
@@ -75,11 +75,8 @@ class OtherBusinessInputTaxRollOut extends Component {
                     } else if (data.data.status === 2) {
                         status.text = (<span style={{ color: 'green' }}>提交</span>)
                     }
-                    status.status = data.data.status;
                     status.submitDate = data.data.lastModifiedDate?moment(data.data.lastModifiedDate).format('YYYY-MM-DD HH:mm'):'';
                     this.setState({ statusLoading: false, status: status, filter: values });
-                }else{
-                    this.setState({ statusLoading: false,status: undefined});
                 }
             }
         })
@@ -156,8 +153,8 @@ class OtherBusinessInputTaxRollOut extends Component {
             }
         ]
 
-        let {filter,status,buttonDisabled} = this.state;
-        buttonDisabled = !filter || buttonDisabled;
+        let {filter,status} = this.state,
+        buttonDisabled = !filter;
         return (
             <div>
             <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />
@@ -168,11 +165,11 @@ class OtherBusinessInputTaxRollOut extends Component {
                         <span>提交时间：{status.submitDate}</span>
                     </div>)
                 }
-                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (status && status.status === 2)} onClick={this.submit} loading={this.state.submitLoading}>
+                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
                     <Icon type="check" />
                     提交
                 </Button>
-                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (status && status.status !== 2)} onClick={this.revoke} loading={this.state.revokeLoading}>
+                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
                     <Icon type="rollback" />
                     撤回提交
                 </Button>

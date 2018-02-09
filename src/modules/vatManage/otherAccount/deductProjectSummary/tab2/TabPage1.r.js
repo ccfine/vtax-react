@@ -28,7 +28,7 @@ const searchFields =(disabled)=> [
         },
     },{
         label:'查询期间',
-        fieldName:'month',
+        fieldName:'authMonth',
         type:'monthPicker',
         span:6,
         componentProps:{
@@ -95,7 +95,6 @@ class tab1 extends Component{
         },
         searchTableLoading:false,
         statusParam:{},
-        dataSource:[],
     }
     refreshTable = ()=>{
         this.setState({
@@ -108,15 +107,12 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.get('/account/othertax/deducted/main/reset',{
-            params:this.state.searchFieldsValues
-        })
+        request.put('/account/othertax/deducted/main/reset',this.state.searchFieldsValues
+        )
             .then(({data}) => {
                 if(data.code===200){
                     message.success('重算成功!');
-                    setTimeout(()=>{
-                        this.refreshTable()
-                    },200)
+                    this.refreshTable();
                 }else{
                     message.error(`重算失败:${data.msg}`)
                 }
@@ -124,16 +120,12 @@ class tab1 extends Component{
     }
     handleClick=type=>{
         let url = '';
-        if(type ==='recount'){
-            this.recount()
-            return false;
-        }
         switch (type){
             case '提交':
                 url='/account/othertax/deducted/main/submit';
                 break;
             case '撤回':
-                url='/account/othertax/deducted/main/restore';
+                url='/account/othertax/deducted/main/revoke';
                 break;
             default:
                 break;
@@ -153,10 +145,10 @@ class tab1 extends Component{
         })
     }
     updateStatus=(values)=>{
-        request.get('/account/othertax/deducted/main/get',{params:values}).then(({data}) => {
+        request.get('/account/othertax/deducted/main/listMain',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data
+                    statusParam: data.data,
                 })
             }
         })
@@ -169,24 +161,25 @@ class tab1 extends Component{
     }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
-            this.setState({updateKey:props.updateKey});
+            this.setState({
+                updateKey:props.updateKey
+            });
         }
     }
     render(){
-        const {updateKey,searchTableLoading,statusParam,dataSource} = this.state;
-        console.log(statusParam);
-        const {mainId,month} = this.state.searchFieldsValues;
-        const disabled = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource.length > 0));
-        const disabled2 = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource.length > 0));
+        const {updateKey,searchTableLoading,statusParam} = this.state;
+        const {mainId,authMonth} = this.state.searchFieldsValues;
+        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
-        let disabled3 = !!search;
+        let disabled = !!search;
         return(
             <div style={{marginTop: '-16px'}}>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields(disabled3),
+                        fields:searchFields(disabled),
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -197,12 +190,12 @@ class tab1 extends Component{
                                 this.setState({
                                     searchFieldsValues:{
                                         mainId:undefined,
-                                        month:undefined
+                                        authMonth:undefined
                                     }
                                 })
-                            }else if(values.mainId || values.month){
-                                if(values.month){
-                                    values.month = values.month.format('YYYY-MM')
+                            }else if(values.mainId || values.authMonth){
+                                if(values.authMonth){
+                                    values.authMonth = values.authMonth.format('YYYY-MM')
                                 }
                                 this.setState(prevState=>({
                                     searchFieldsValues:{
@@ -228,14 +221,14 @@ class tab1 extends Component{
                             {
                                 JSON.stringify(statusParam) !== "{}" &&
                                 <div style={{marginRight:30,display:'inline-block'}}>
-                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
                                     <span>提交时间：{statusParam.lastModifiedDate}</span>
                                 </div>
                             }
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled}
+                                disabled={disabled1}
                                 onClick={this.handleReset}>
                                 <Icon type="retweet" />
                                 重算
@@ -243,7 +236,7 @@ class tab1 extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled}
+                                disabled={disabled1}
                                 onClick={()=>this.handleClick('提交')}>
                                 <Icon type="check" />
                                 提交
@@ -272,11 +265,6 @@ class tab1 extends Component{
                                 </div>
                             )
                         },
-                        onDataChange:(dataSource)=>{
-                            this.setState({
-                                dataSource
-                            })
-                        }
                     }}
                 >
                 </SearchTable>

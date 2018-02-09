@@ -49,7 +49,7 @@ class PopDifferenceModal extends Component{
                             this.props.form.resetFields();
                             //新增成功，关闭当前窗口,刷新父级组件
                             this.props.toggleModalVisible(false);
-                            this.props.updateTable();
+                            this.props.refreshTable();
                         } else {
                             message.error(data.msg, 4)
                             this.setState({
