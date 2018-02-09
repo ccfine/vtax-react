@@ -21,7 +21,7 @@ const sheetData = [
     {
         tab:'主表',
         grid:sheet_0,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/decConduct/main/list'
     },
     {
         tab:'附表一',
