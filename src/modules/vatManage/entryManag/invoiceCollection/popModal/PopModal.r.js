@@ -200,7 +200,7 @@ class PopModal extends Component{
                                 message.success('新增成功！', 4)
                                 //新增成功，关闭当前窗口,刷新父级组件
                                 this.props.toggleModalVisible(false);
-                                this.props.updateTable();
+                                this.props.refreshTable();
                             } else {
                                 message.error(data.msg, 4)
                             }
@@ -222,7 +222,7 @@ class PopModal extends Component{
                                 message.success('编辑成功！', 4);
                                 //编辑成功，关闭当前窗口,刷新父级组件
                                 this.props.toggleModalVisible(false);
-                                this.props.updateTable();
+                                this.props.refreshTable();
 
                             } else {
                                 message.error(data.msg, 4);
