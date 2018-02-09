@@ -117,10 +117,6 @@ class TaxCalculation extends Component{
         searchFieldsValues:{
 
         },
-
-        resultFieldsValues:{
-
-        },
         //tableUrl:'/account/prepaytax/list',
         tableUrl:'/account/taxCalculation/list',
         /**
@@ -147,7 +143,7 @@ class TaxCalculation extends Component{
             onOk : ()=> {
                 this.toggleSearchTableLoading(true)
                 request.get('/account/taxCalculation/reset',{
-                    params:this.state.resultFieldsValues
+                    params:this.state.searchFieldsValues
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -189,41 +185,23 @@ class TaxCalculation extends Component{
 
     }
     handleSubmit = (actionUrl,actionText)=>{
-
-        this.props.form.validateFields((err, values) => {
-            if(!err){
-                //this.refreshTable()
-                this.toggleSearchTableLoading(true)
-                request.post('/account/taxCalculation/save',values)
-                    .then(({data})=>{
-                        this.toggleSearchTableLoading(false)
-                        if(data.code===200){
-                            this.props.form.resetFields();
-                            request.post(actionUrl,this.state.resultFieldsValues)
-                                .then(({data})=>{
-                                    this.toggleSearchTableLoading(false)
-                                    if(data.code===200){
-                                        message.success(`${actionText}成功！`);
-                                        this.refreshTable();
-                                    }else{
-                                        message.error(`${actionText}失败:${data.msg}`)
-                                    }
-                                }).catch(err=>{
-                                this.toggleSearchTableLoading(false)
-                            })
-
-                        }else{
-                            message.error(`保存失败:${data.msg}`)
-                        }
-                    }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
-            }
+        this.toggleSearchTableLoading(true)
+        request.post(actionUrl,this.state.searchFieldsValues)
+            .then(({data})=>{
+                this.toggleSearchTableLoading(false)
+                if(data.code===200){
+                    message.success(`${actionText}成功！`);
+                    this.refreshTable();
+                }else{
+                    message.error(`${actionText}失败:${data.msg}`)
+                }
+            }).catch(err=>{
+            this.toggleSearchTableLoading(false)
         })
     }
     handleRestore = (actionUrl,actionText)=>{
         this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
+        request.post(actionUrl,this.state.searchFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -238,10 +216,10 @@ class TaxCalculation extends Component{
     }
     save = e =>{
         e && e.preventDefault()
+        this.toggleSearchTableLoading(true)
         this.props.form.validateFields((err, values) => {
             if(!err){
                 //this.refreshTable()
-                this.toggleSearchTableLoading(true)
                 request.post('/account/taxCalculation/save',values)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -281,7 +259,7 @@ class TaxCalculation extends Component{
     }
     render(){
         const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
-        const {mainId,authMonth} = this.state.resultFieldsValues;
+        const {mainId,authMonth} = this.state.searchFieldsValues;
         const {getFieldDecorator} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -295,10 +273,10 @@ class TaxCalculation extends Component{
                         className:''
                     },
                     onResetFields:()=>{
-                        /*this.setState({
+                        this.setState({
                             submitDate:'',
                             dataStatus:''
-                        })*/
+                        })
                     },
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
@@ -328,17 +306,6 @@ class TaxCalculation extends Component{
                     onRow:record=>({
                         onDoubleClick:()=>{console.log(record)}
                     }),
-                    onSuccess:(params,data)=>{
-                        /*if(data && data.length !==0){
-                         this.setState({
-                         submitDate:data[0].lastModifiedDate,
-                         dataStatus:data[0].status
-                         })
-                         }*/
-                        this.setState({
-                            resultFieldsValues:params
-                        })
-                    },
                     onDataChange:data=>{
                         this.fetchResultStatus()
                     },
@@ -361,7 +328,7 @@ class TaxCalculation extends Component{
                             style={{marginRight:5}}
                             disabled={parseInt(dataStatus,0)!==1}
                             onClick={this.save}><Icon type="save" />保存</Button>
-                        <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && authMonth && parseInt(dataStatus,0) ===1 )} size='small' style={{marginRight:5}}>
+                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>

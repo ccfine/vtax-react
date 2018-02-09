@@ -200,6 +200,17 @@ class InterimContractInputTaxTransferredOut extends Component {
             updateKey:Date.now()
         })
     }
+    requestPut=(url,type,value={})=>{
+        request.put(url,value)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success(`${type}成功!`);
+                    this.updateStatus(value);
+                }else{
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
     requestPost=(url,type,value={})=>{
         this.setState({ loading:true })
         request.post(url,value)
@@ -214,7 +225,7 @@ class InterimContractInputTaxTransferredOut extends Component {
             })
     }
     updateStatus=(values)=>{
-        request.get('/account/income/taxContract/main',{params:values}).then(({data}) => {
+        request.get('/account/income/taxContract/listMain',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
@@ -243,7 +254,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                         break;
                     case '重算':
                         url = '/account/income/taxContract/adjustment/reset';
-                        this.requestPost(url,type,value);
+                        this.requestPut(url,type,value);
                         break;
                     default:
                         this.setState({
@@ -355,10 +366,10 @@ class InterimContractInputTaxTransferredOut extends Component {
                 <Card title="进项转出差异调整表" extra={
                     <div>
                         {
-                            (JSON.stringify(statusParam) !== "{}" && dataSource.length > 0) &&
+                            JSON.stringify(statusParam) !== "{}" &&
                             <div style={{marginRight: 30, display: 'inline-block'}}>
                                   <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
                                 <span>提交时间：{statusParam.lastModifiedDate}</span>
                             </div>
                         }
@@ -386,22 +397,6 @@ class InterimContractInputTaxTransferredOut extends Component {
                             }}
                         />
                         <Button
-                            disabled={disabled1}
-                            size='small'
-                            onClick={(e)=>this.handleSubmit(e,'提交')}
-                            style={{marginRight:5}}>
-                            <Icon type="check" />
-                            提交
-                        </Button>
-                        <Button
-                            disabled={disabled1}
-                            size='small'
-                            onClick={(e)=>this.handleSubmit(e,'重算')}
-                            style={{marginRight:5}}>
-                            <Icon type="retweet" />
-                            重算
-                        </Button>
-                        <Button
                             disabled={!selectedRowKeys}
                             size='small'
                             style={{marginRight:5}}
@@ -418,6 +413,22 @@ class InterimContractInputTaxTransferredOut extends Component {
                             <Icon type="form" />
                             差异调整凭证
                         </Button>*/}
+                        <Button
+                            disabled={disabled1}
+                            size='small'
+                            onClick={(e)=>this.handleSubmit(e,'重算')}
+                            style={{marginRight:5}}>
+                            <Icon type="retweet" />
+                            重算
+                        </Button>
+                        <Button
+                            disabled={disabled1}
+                            size='small'
+                            onClick={(e)=>this.handleSubmit(e,'提交')}
+                            style={{marginRight:5}}>
+                            <Icon type="check" />
+                            提交
+                        </Button>
                         <Button
                             disabled={disabled2}
                             size='small'

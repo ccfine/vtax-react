@@ -32,7 +32,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             },
         },{
             label:'查询期间',
-            fieldName:'month',
+            fieldName:'authMonth',
             type:'monthPicker',
             span:6,
             componentProps:{
@@ -134,7 +134,6 @@ class tab1 extends Component{
         },
         selectedRowKeys:undefined,
         selectedRows:[],
-        dataSource:[],
         searchTableLoading:false,
         statusParam:{},
     }
@@ -149,15 +148,11 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.get('/account/land/price/deducted/main/reset',{
-            params:this.state.searchFieldsValues
-        })
+        request.put('/account/land/price/deducted/main/reset',this.state.searchFieldsValues)
             .then(({data}) => {
                 if(data.code===200){
                     message.success('重算成功!');
-                    setTimeout(()=>{
-                        this.refreshTable()
-                    },200)
+                    this.refreshTable();
                 }else{
                     message.error(`重算失败:${data.msg}`)
                 }
@@ -170,7 +165,7 @@ class tab1 extends Component{
                 url='/account/land/price/deducted/main/submit';
                 break;
             case '撤回':
-                url='/account/land/price/deducted/main/restore';
+                url='/account/land/price/deducted/main/revoke';
                 break;
             default:
                 break;
@@ -189,11 +184,14 @@ class tab1 extends Component{
             this.toggleSearchTableLoading(false)
         })
     }
-    updateStatus=(values)=>{
-        request.get('/account/land/price/deducted/main/get',{params:values}).then(({data}) => {
+    updateStatus=()=>{
+        request.get('/account/land/price/deducted/main/listMain',{params:{
+            mainId:this.state.searchFieldsValues.mainId,
+            authMonth:this.state.searchFieldsValues.authMonth,
+        }}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data
+                    statusParam: data.data,
                 })
             }
         })
@@ -204,7 +202,7 @@ class tab1 extends Component{
             this.setState({
                 searchFieldsValues:{
                     mainId:getUrlParam('mainId') || undefined,
-                    month:moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                    authMonth:moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
                 this.refreshTable()
@@ -213,13 +211,17 @@ class tab1 extends Component{
     }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
-            this.setState({updateKey:props.updateKey});
+            this.setState({
+                updateKey:props.updateKey
+            });
         }
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam,dataSource} = this.state;
-        const {mainId,month} = this.state.searchFieldsValues;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam} = this.state;
+        const {mainId,authMonth} = this.state.searchFieldsValues;
+        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -239,12 +241,12 @@ class tab1 extends Component{
                                 this.setState({
                                     searchFieldsValues:{
                                         mainId:(disabled && getUrlParam('mainId')) || undefined,
-                                        month:(disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')) || undefined,
+                                        authMonth:(disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')) || undefined,
                                     }
                                 })
-                            }else if(values.mainId || values.month){
-                                if(values.month){
-                                    values.month = values.month.format('YYYY-MM')
+                            }else if(values.mainId || values.authMonth){
+                                if(values.authMonth){
+                                    values.authMonth = values.authMonth.format('YYYY-MM')
                                 }
                                 this.setState(prevState=>({
                                     searchFieldsValues:{
@@ -278,16 +280,16 @@ class tab1 extends Component{
                         url:'account/land/price/deducted/project/list',
                         extra: <div>
                             {
-                                (JSON.stringify(statusParam) !== "{}" && dataSource.length>0) &&
+                                JSON.stringify(statusParam) !== "{}" &&
                                 <div style={{marginRight:30,display:'inline-block'}}>
-                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
                                     <span>提交时间：{statusParam.lastModifiedDate}</span>
                                 </div>
                             }
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={!((mainId && month)&&(statusParam && parseInt(statusParam.status, 0) === 1))}
+                                disabled={disabled1}
                                 onClick={this.handleReset}>
                                 <Icon type="retweet" />
                                 重算
@@ -299,7 +301,7 @@ class tab1 extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={!((mainId && month)&&(statusParam && parseInt(statusParam.status, 0) === 1))}
+                                disabled={disabled1}
                                 onClick={()=>this.handleClick('提交')}>
                                 <Icon type="check" />
                                 提交
@@ -307,17 +309,12 @@ class tab1 extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={!((mainId && month)&&(statusParam && parseInt(statusParam.status, 0) === 2))}
+                                disabled={disabled2}
                                 onClick={()=>this.handleClick('撤回')}>
                                 <Icon type="rollback" />
                                 撤回提交
                             </Button>
                         </div>,
-                        onDataChange:(dataSource)=>{
-                            this.setState({
-                                dataSource
-                            })
-                        }
                     }}
                 >
                 </SearchTable>

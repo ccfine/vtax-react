@@ -218,7 +218,7 @@ class TaxExemptionDetails extends Component{
             })
     }
     updateStatus=(values)=>{
-        request.get('/account/other/reduceTaxDetail/main',{params:values}).then(({data}) => {
+        request.get('/account/other/reduceTaxDetail/listMain',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
@@ -234,8 +234,7 @@ class TaxExemptionDetails extends Component{
     }
     render(){
         const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,statusParam,dataSource} = this.state;
-        console.log(statusParam)
-        const {mainId,authMonth} = this.state.searchFieldsValues;
+        const {mainId,authMonth} = searchFieldsValues;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -287,7 +286,7 @@ class TaxExemptionDetails extends Component{
                         {
                             JSON.stringify(statusParam) !== "{}" &&
                             <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
                                 <span>提交时间：{statusParam.lastModifiedDate}</span>
                             </div>
                         }
@@ -309,7 +308,7 @@ class TaxExemptionDetails extends Component{
                             type='danger'
                             style={{marginRight:5}}
                             onClick={this.deleteData}
-                            disabled={selectedRowKeys.length === 0}>
+                            disabled={disabled1 && selectedRowKeys.length === 0}>
                             <Icon type="delete" />删除
                         </Button>
                         <FileExport
