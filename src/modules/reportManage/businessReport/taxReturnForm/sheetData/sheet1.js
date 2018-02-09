@@ -7,8 +7,8 @@ const generateData = (preFix,length,rowNumber,first)=>{
     while (length >= i){
         arr.push({
             readOnly:true,
-            value:`${preFix}${i}`,
-            key:`${preFix}${i}`
+            key:`${preFix}${i}`,
+            value:`--`
         })
         i++;
     }
