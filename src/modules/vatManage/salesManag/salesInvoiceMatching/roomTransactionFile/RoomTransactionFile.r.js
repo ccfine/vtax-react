@@ -6,6 +6,7 @@ import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
 import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
+import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import moment from 'moment';
 const transformDataStatus = status =>{
     status = parseInt(status,0)
@@ -21,45 +22,47 @@ const getColumns = context => [
     {
         title: '操作',
         key: 'actions',
-        render: (text, record) => (
-            <span style={{
-                color:'#f5222d',
-                cursor:'pointer'
-            }} onClick={()=>{
-                if(parseInt(record.matchingStatus,0) ===1){
-                    const errorModalRef = Modal.warning({
+        render: (text, record) => {
+            return parseInt(context.state.dataStatus,0) === 1 ? (
+                <span style={{
+                    color:'#f5222d',
+                    cursor:'pointer'
+                }} onClick={()=>{
+                    if(parseInt(record.matchingStatus,0) ===1){
+                        const errorModalRef = Modal.warning({
+                            title: '友情提醒',
+                            content: '只能删除未匹配的数据!',
+                            okText: '确定',
+                            onOk:()=>{
+                                errorModalRef.destroy()
+                            },
+                            onCancel() {
+                                errorModalRef.destroy()
+                            },
+                        });
+                        return false;
+                    }
+                    const modalRef = Modal.confirm({
                         title: '友情提醒',
-                        content: '只能删除未匹配的数据!',
+                        content: '该删除后将不可恢复，是否删除？',
                         okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
                         onOk:()=>{
-                            errorModalRef.destroy()
+                            context.deleteRecord(record.id,()=>{
+                                modalRef && modalRef.destroy();
+                                context.refreshTable()
+                            })
                         },
                         onCancel() {
-                            errorModalRef.destroy()
+                            modalRef.destroy()
                         },
                     });
-                    return false;
-                }
-                const modalRef = Modal.confirm({
-                    title: '友情提醒',
-                    content: '该删除后将不可恢复，是否删除？',
-                    okText: '确定',
-                    okType: 'danger',
-                    cancelText: '取消',
-                    onOk:()=>{
-                        context.deleteRecord(record.id,()=>{
-                            modalRef && modalRef.destroy();
-                            context.refreshTable()
-                        })
-                    },
-                    onCancel() {
-                        modalRef.destroy()
-                    },
-                });
-            }}>
+                }}>
                 删除
             </span>
-        )
+            ) : ''
+        }
     },
     {
         title:'纳税主体',
@@ -354,6 +357,54 @@ class RoomTransactionFile extends Component{
                         }
                         <FileImportModal
                             url="/output/room/files/upload"
+                            fields={
+                                [
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:17
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
+                                        },
+                                    },
+                                    {
+                                        label:'交易月份',
+                                        fieldName:'transactionDate',
+                                        type:'monthPicker',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:17
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择交易月份'
+                                                }
+                                            ]
+                                        }
+                                    },
+                                ]
+                            }
                             onSuccess={()=>{
                                 this.refreshTable()
                             }}
@@ -364,6 +415,8 @@ class RoomTransactionFile extends Component{
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
+                        <SubmitOrRecall type={1} url="/output/room/files/submit" onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} url="/output/room/files/revoke" onSuccess={this.refreshTable} />
                     </div>
                 }>
                     <AsyncTable url={'/output/room/files/list'}
@@ -379,7 +432,7 @@ class RoomTransactionFile extends Component{
                                             hasData:data.length !==0,
                                             searchFieldsValues:params,
                                         },()=>{
-                                            this.fetchResultStatus()
+                                            this.state.hasData && this.fetchResultStatus()
                                         })
                                     },
                                     renderFooter:data=>{

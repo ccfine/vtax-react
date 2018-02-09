@@ -3,13 +3,31 @@
  * 确认结转收入
  */
 import React, { Component } from 'react'
-import {Button,Icon} from 'antd'
+import {Button,Icon,message} from 'antd'
 import {SearchTable,FileExport} from '../../../../../compoments'
-import {fMoney,getUrlParam} from '../../../../../utils'
+import {fMoney,getUrlParam,request} from '../../../../../utils'
 import ManualMatchRoomModal from './SummarySheetModal'
+import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:14
+    }
+}
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -17,11 +35,18 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            formItemStyle,
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
             },
         },
         {
@@ -29,6 +54,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             fieldName:'projectId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -42,6 +68,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             fieldName:'stagesId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -55,6 +82,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             fieldName:'month',
             type:'monthPicker',
             span:6,
+            formItemStyle,
             componentProps:{
                 format:'YYYY-MM',
                 disabled:disabled
@@ -185,7 +213,13 @@ class ConfirmCarryOver extends Component{
         searchFieldsValues:{
 
         },
-        hasData:false
+        hasData:false,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -209,8 +243,26 @@ class ConfirmCarryOver extends Component{
             })
         }
     }
+    fetchResultStatus = ()=>{
+        request.get('/account/output/notInvoiceSale/listMain',{
+            params:{
+                ...this.state.searchFieldsValues,
+                authMonth:this.state.searchFieldsValues.month
+            }
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount} = this.state;
+        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount,dataStatus,submitDate} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -236,19 +288,36 @@ class ConfirmCarryOver extends Component{
                         this.setState({
                             searchFieldsValues:params,
                             hasData:data.length !== 0
+                        },()=>{
+                            this.state.hasData && this.fetchResultStatus()
                         })
                     },
                     extra:<div>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />汇总表</Button>
                         <FileExport
                             url={`/account/output/notInvoiceSale/export`}
                             title="导出"
                             size="small"
                             disabled={!hasData}
+                            setButtonStyle={{
+                                marginRight:5
+                            }}
                             params={
                                 searchFieldsValues
                             }
                         />
+                        <SubmitOrRecall type={1} url="/account/output/notInvoiceSale/submit" onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} url="/account/output/notInvoiceSale/revoke" onSuccess={this.refreshTable} />
                     </div>,
                     renderFooter:data=>{
                         return(

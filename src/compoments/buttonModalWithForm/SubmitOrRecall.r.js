@@ -3,54 +3,53 @@
  */
 import React from 'react';
 import ButtonModalWithForm from './index'
-const fields = [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:20,
-        formItemStyle:{
-            labelCol:{
-                span:8
-            },
-            wrapperCol:{
-                span:16
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择纳税主体'
-                }
-            ]
-        }
-    },
-    {
-        label:'查询期间',
-        fieldName:'taxMonth',
-        type:'monthPicker',
-        span:20,
-        formItemStyle:{
-            labelCol:{
-                span:8
-            },
-            wrapperCol:{
-                span:16
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选查询期间'
-                }
-            ]
-        }
-    }
-]
-
 const SubmitOrRecall = props => {
+    const fields = [
+        {
+            label:'纳税主体',
+            fieldName:'mainId',
+            type:'taxMain',
+            span:20,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            fieldDecoratorOptions:{
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            }
+        },
+        {
+            label:'查询期间',
+            fieldName:props.monthFieldName || 'taxMonth',
+            type:'monthPicker',
+            span:20,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            fieldDecoratorOptions:{
+                rules:[
+                    {
+                        required:true,
+                        message:'请选查询期间'
+                    }
+                ]
+            }
+        }
+    ]
     const submitOptions = {
         formOptions:{
             type:props.method || 'post',
