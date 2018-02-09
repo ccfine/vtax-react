@@ -52,7 +52,7 @@ export default [
     ], 4, 'L', undefined),
     [
         { value: '税款缴纳', readOnly: true, rowSpan: 14 },
-        ...generateRow('X', ['期初未缴税额（多缴为负数）', 25], 4)
+        ...generateRow('Y', ['期初未缴税额（多缴为负数）', 25], 4)
     ],
     ...generateRows([
         ['实收出口开具专用缴款书退税额', 26],
@@ -68,5 +68,5 @@ export default [
         ['期初未缴查补税额', 36],
         ['本期入库查补税额', 37],
         ['期末未缴查补税额', '38=16+22+36-37']
-    ], 4, 'Y', undefined),
+    ], 4, 'Z', undefined),
 ];
