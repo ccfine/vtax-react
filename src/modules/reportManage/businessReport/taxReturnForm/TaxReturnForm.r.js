@@ -47,7 +47,7 @@ const sheetData = [
         url:'/tax/declaration/addendum/four/list'
     },
     {
-        tab:'附表五',
+        tab:'附表五-不做',
         grid:sheet_5,
         url:'/tax/decConduct/fixedAssets/list'
     },
@@ -59,7 +59,7 @@ const sheetData = [
     {
         tab:'进项结构明细',
         grid:sheet_7,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/declaration/tax/structure/list'
     },
     {
         tab:'增值税减免税申报明细表',
