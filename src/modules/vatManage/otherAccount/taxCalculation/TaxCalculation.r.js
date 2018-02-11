@@ -117,6 +117,9 @@ class TaxCalculation extends Component{
         searchFieldsValues:{
 
         },
+        resultFieldsValues:{
+
+        },
         //tableUrl:'/account/prepaytax/list',
         tableUrl:'/account/taxCalculation/list',
         /**
@@ -125,6 +128,7 @@ class TaxCalculation extends Component{
         dataStatus:'',
         submitDate:'',
 
+        hasData:false
     }
     refreshTable = ()=>{
         this.setState({
@@ -143,7 +147,7 @@ class TaxCalculation extends Component{
             onOk : ()=> {
                 this.toggleSearchTableLoading(true)
                 request.get('/account/taxCalculation/reset',{
-                    params:this.state.searchFieldsValues
+                    params:this.state.resultFieldsValues
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -186,7 +190,7 @@ class TaxCalculation extends Component{
     }
     handleSubmit = (actionUrl,actionText)=>{
         this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.searchFieldsValues)
+        request.post(actionUrl,this.state.resultFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -201,7 +205,7 @@ class TaxCalculation extends Component{
     }
     handleRestore = (actionUrl,actionText)=>{
         this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.searchFieldsValues)
+        request.post(actionUrl,this.state.resultFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -258,8 +262,8 @@ class TaxCalculation extends Component{
             })
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl} = this.state;
-        const {mainId,authMonth} = this.state.searchFieldsValues;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,resultFieldsValues,hasData} = this.state;
+        const {mainId,authMonth} = resultFieldsValues;
         const {getFieldDecorator} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -271,12 +275,6 @@ class TaxCalculation extends Component{
                     fields:searchFields(disabled),
                     cardProps:{
                         className:''
-                    },
-                    onResetFields:()=>{
-                        this.setState({
-                            submitDate:'',
-                            dataStatus:''
-                        })
                     },
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
@@ -306,8 +304,14 @@ class TaxCalculation extends Component{
                     onRow:record=>({
                         onDoubleClick:()=>{console.log(record)}
                     }),
-                    onDataChange:data=>{
-                        this.fetchResultStatus()
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0,
+                            resultFieldsValues:params,
+                        },()=>{
+                            this.state.hasData && this.fetchResultStatus()
+                        })
                     },
                     pagination:false,
                     columns:getColumns(getFieldDecorator),
@@ -332,8 +336,8 @@ class TaxCalculation extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && authMonth && parseInt(dataStatus,0) ===1)}><Icon type="file-add" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && authMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===1)}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
                     </div>
                 }}
             >

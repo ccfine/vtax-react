@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/18.
  */
 import React,{Component} from 'react'
-import {Button,Icon,message} from 'antd'
+import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable,FileExport,ButtonWithFileUploadModal} from '../../../../compoments'
 import {fMoney,request,getUrlParam} from '../../../../utils'
 import { withRouter } from 'react-router'
@@ -86,7 +86,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
         },
     ]
 }
-const columns = [
+const getColumns = ({state}) => [
 
     {
         title:'操作',
@@ -94,7 +94,7 @@ const columns = [
         render:(text,record)=>(
             <div>
                 {
-                    record.status === 2 && (
+                    parseInt(state.dataStatus,0) === 2 && (
                         <ButtonWithFileUploadModal
                             id={record.id}
                             style={{marginRight:5}} title='附件' />
@@ -166,9 +166,8 @@ const columns = [
     },
     {
         title:'预征率',
-        dataIndex:'currentIncomeAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
+        dataIndex:'rate',
+        render:text=>text ? `${text}%` : text
     },
     {
         title:'上期未退税（负数）',
@@ -211,6 +210,10 @@ class PrepayTax extends Component{
 
         },
 
+        resultFieldsValues:{
+
+        },
+
         tableUrl:'/account/prepaytax/list',
         /**
          *修改状态和时间
@@ -231,7 +234,23 @@ class PrepayTax extends Component{
         })
     }
     recount = ()=>{
-        this.refreshTable()
+        Modal.confirm({
+            title: '友情提醒',
+            content: '确定要重算吗',
+            onOk : ()=> {
+                this.toggleSearchTableLoading(true)
+                request.put('/account/prepaytax/reset',this.state.resultFieldsValues)
+                    .then(({data})=>{
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            message.success('重算成功!');
+                            this.refreshTable()
+                        }else{
+                            message.error(`重算失败:${data.msg}`)
+                        }
+                    })
+            }
+        })
     }
     handleClickActions = action => ()=>{
         let actionText,
@@ -250,15 +269,11 @@ class PrepayTax extends Component{
                 actionText='撤回';
                 actionUrl='/account/prepaytax/restore';
                 break;
-            case 'recount':
-                actionText='重算';
-                actionUrl='/account/salehouse/restore';
-                break;
             default:
                 break;
         }
         this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.searchFieldsValues)
+        request.post(actionUrl,this.state.resultFieldsValues)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -277,9 +292,27 @@ class PrepayTax extends Component{
             this.refreshTable()
         }
     }
+    fetchResultStatus = ()=>{
+        request.get('/account/prepaytax/listMain',{
+            params:{
+                ...this.state.searchFieldsValues,
+                authMonth:this.state.searchFieldsValues.month
+            }
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData} = this.state;
-        const {mainId,receiveMonth} = searchFieldsValues;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultFieldsValues} = this.state;
+        const {mainId,receiveMonth} = resultFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -289,12 +322,12 @@ class PrepayTax extends Component{
                     cardProps:{
                         className:''
                     },
-                    onResetFields:()=>{
+                    /*onResetFields:()=>{
                         this.setState({
                             submitDate:'',
                             dataStatus:''
                         })
-                    },
+                    },*/
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
                             this.setState({
@@ -321,19 +354,16 @@ class PrepayTax extends Component{
                 tableOption={{
                     key:tableKey,
                     onSuccess:(params,data)=>{
-                        if(data && data.length !==0){
-                            this.setState({
-                                submitDate:data[0].lastModifiedDate,
-                                dataStatus:data[0].status
-                            })
-                        }
                         this.setState({
                             searchFieldsValues:params,
-                            hasData:data.length !== 0
+                            hasData:data.length !== 0,
+                            resultFieldsValues:params,
+                        },()=>{
+                            this.fetchResultStatus()
                         })
                     },
                     pageSize:100,
-                    columns:columns,
+                    columns:getColumns(this),
                     url:tableUrl,
                     extra:<div>
                         {
@@ -360,8 +390,8 @@ class PrepayTax extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth)}><Icon type="file-add" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth)}><Icon type="rollback" />撤回提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(
