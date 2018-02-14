@@ -191,7 +191,8 @@ class OtherBusinessInputTaxRollOut extends Component {
                         this.setState({ updateKey: Date.now() })
                     }}
                 />
-            </div>)}>
+            </div>)}
+                style={{marginTop:10}} >
                 <FetchTable
                     doNotFetchDidMount={true}
                     url='/account/income/taxout/list'

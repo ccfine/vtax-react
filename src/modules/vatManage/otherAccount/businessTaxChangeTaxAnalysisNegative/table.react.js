@@ -410,7 +410,7 @@ export default class extends React.Component {
     }
     reCalculate = () => {
         let params = { ...this.props.filter };
-        this.commonSubmit('/account/other/camping/reset', params, 'reset', '重算成功');
+        this.commonSubmit('/account/other/camping/reset', params, 'reset', '重算成功','put');
     }
     submit = () => {
         let params = { ...this.props.filter };
@@ -437,9 +437,9 @@ export default class extends React.Component {
             this.setState({ loading: false });
         })
     }
-    commonSubmit = (url, params, action, messageInfo) => {
+    commonSubmit = (url, params, action, messageInfo,method='post') => {
         this.setState({ [`${action}Loading`]: true });
-        request.post(url, params)
+        request[method](url, params)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success(messageInfo, 4)
