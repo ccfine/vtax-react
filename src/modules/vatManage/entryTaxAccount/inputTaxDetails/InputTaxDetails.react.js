@@ -175,8 +175,7 @@ class InputTaxDetails extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,visible,params} = this.state;
-        const {statusParam} = this.state;
+        const {tableUpDateKey,filters,visible,params,statusParam} = this.state;
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
 

@@ -22,12 +22,12 @@ class TreeList extends Component {
     }
 
     state = {
-        expandedKeys: [],
-        autoExpandParent: true,
-        selectedKeys: [],
+        //expandedKeys: [],
+        //autoExpandParent: true,
+        //selectedKeys: [],
 
         treeData:[],
-        selectedNodes:undefined,
+        //selectedNodes:undefined,
         editClassKey:Date.now()+'1',
         eidtLoading:false,
     }
@@ -44,7 +44,7 @@ class TreeList extends Component {
                     //setTimeout(() => {
                         treeNode.props.dataRef.children = data.data;
                         this.setState({
-                            treeData: [...this.state.treeData],
+                            treeData: [...this.state.treeData]
                         });
                         resolve();
                    // }, 1000);
@@ -75,9 +75,9 @@ class TreeList extends Component {
             if(data.code===200) {
                 this.mounted && this.setState({
                     treeData: [...data.data],
-                    /*expandedKeys: [`${props.id}`],
-                    autoExpandParent: true,
-                    selectedKeys: [`${props.id}`],*/
+                    //expandedKeys: [`${data.data[0].id}`],
+                    //autoExpandParent: false,
+                    //selectedKeys: [`${props.id}`],
                     eidtLoading: false,
                 })
             }
@@ -86,24 +86,24 @@ class TreeList extends Component {
 
     onSelect = (selectedKeys, info) => {
         const selectedNodes = info.node.props.dataRef;
-        this.setState({
+        /*this.setState({
             selectedKeys,
-            selectedNodes:selectedNodes
-        });
+            selectedNodes:selectedNodes,
+        });*/
         /**
          * 成功之后回调，返回参数和数据
          * */
         this.props.treeOption.onSuccess && this.props.treeOption.onSuccess(selectedKeys,selectedNodes)
     }
-    onExpand = (expandedKeys) => {
-        console.log('onExpand', arguments);
+    /*onExpand = (expandedKeys) => {
+        //console.log('onExpand', arguments);
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
         this.setState({
             expandedKeys,
             autoExpandParent: false,
         });
-    }
+    }*/
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
@@ -116,22 +116,23 @@ class TreeList extends Component {
     }
 
     render() {
-        //expandedKeys,autoExpandParent,
         const props = this.props;
-        const {selectedKeys,treeData } = this.state;
+        const {treeData} = this.state;  //selectedKeys,expandedKeys,autoExpandParent
         return (
             <Spin spinning={this.state.eidtLoading}>
                 <div style={{overflow:'scroll',height: '600px'}}>
 
                     <Tree
+                        key={props.updateKey}
                         /*onExpand={this.onExpand}
                         expandedKeys={expandedKeys}
-                        autoExpandParent={autoExpandParent}*/
-
+                        autoExpandParent={autoExpandParent}
+                        selectedKeys={selectedKeys}
+                        */
                         showLine={props.showLine}
                         loadData={props.isLoadDate && this.onLoadData}
                         onSelect={this.onSelect}
-                        selectedKeys={selectedKeys}
+
                     >
                         {this.renderTreeNodes(treeData)}
                     </Tree>

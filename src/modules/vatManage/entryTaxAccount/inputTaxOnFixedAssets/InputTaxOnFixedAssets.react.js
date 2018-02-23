@@ -127,7 +127,7 @@ class InputTaxOnFixedAssets extends Component {
             })
     }
     updateStatus=(values)=>{
-        request.get('/account/income/fixedAssets/main',{params:values}).then(({data}) => {
+        request.get('/account/income/fixedAssets/listMain',{params:values}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
