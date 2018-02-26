@@ -108,7 +108,9 @@ const getColumns = context => [
     },
     {
         title:'房间面积',
-        dataIndex:'roomArea'
+        dataIndex:'roomArea',
+        render:text=>`${text}`,
+        className:'text-right'
     },
     {
         title:'匹配状态',

@@ -296,7 +296,7 @@ class BillingSales extends Component {
                                             rules:[
                                                 {
                                                     required:true,
-                                                    message:'请选择认证月份'
+                                                    message:'请选择查询期间'
                                                 }
                                             ]
                                         },

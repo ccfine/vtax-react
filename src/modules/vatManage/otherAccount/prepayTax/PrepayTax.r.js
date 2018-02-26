@@ -87,22 +87,6 @@ const searchFields =(disabled)=> (getFieldValue)=> {
     ]
 }
 const getColumns = ({state}) => [
-
-    {
-        title:'操作',
-        key:'actions',
-        render:(text,record)=>(
-            <div>
-                {
-                    parseInt(state.dataStatus,0) === 2 && (
-                        <ButtonWithFileUploadModal
-                            id={record.id}
-                            style={{marginRight:5}} title='附件' />
-                    )
-                }
-            </div>
-        )
-    },
     {
         title:'项目编号',
         dataIndex:'projectNum',
@@ -220,6 +204,8 @@ class PrepayTax extends Component{
          * */
         dataStatus:'',
         submitDate:'',
+        resultStatusId:'',
+
 
         hasData:false
     }
@@ -303,7 +289,8 @@ class PrepayTax extends Component{
                 if(data.code===200){
                     this.setState({
                         dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
+                        submitDate:data.data.lastModifiedDate,
+                        resultStatusId:data.data.id
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -311,7 +298,7 @@ class PrepayTax extends Component{
             })
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultFieldsValues} = this.state;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultStatusId,resultFieldsValues} = this.state;
         const {mainId,receiveMonth} = resultFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -376,6 +363,10 @@ class PrepayTax extends Component{
                                 }
                             </div>
                         }
+                        <ButtonWithFileUploadModal
+                            id={resultStatusId}
+                            disabled={parseInt(dataStatus,0) !== 2}
+                            style={{marginRight:5}} title='附件' />
                         <FileExport
                             url={`account/prepaytax/export`}
                             title="导出"
