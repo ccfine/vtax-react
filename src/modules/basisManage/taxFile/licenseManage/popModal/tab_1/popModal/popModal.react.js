@@ -181,7 +181,7 @@ class PopModal extends Component {
                                     label: '出让人',
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.parcelNum,
+                                        initialValue: record.transferor,
                                         rules: [
                                             {
                                                 required: true,

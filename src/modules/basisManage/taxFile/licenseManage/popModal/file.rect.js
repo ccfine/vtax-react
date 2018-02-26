@@ -103,13 +103,16 @@ class FileModal extends React.Component {
                     loading={loading}
                     itemLayout="horizontal"
                     dataSource={data}
-                    renderItem={item => (
-                        <List.Item actions={[
-                            readOnly || <Popconfirm title="确定要删除吗?" onConfirm={() => { this.deleteRecord(item) }} onCancel={() => { }} okText="确定" cancelText="取消">
-                                <a style={noneStyle}><Icon type="delete"/> 删除</a>
-                            </Popconfirm>,
+                    renderItem={item => {
+                        // 操作文件按钮
+                        const actions = [];
+                        actions.push(
                             <FileExport url={`/${this.props.url}/file/download/${item.id}`} size='small' title='下载' WrapComponent={MyA}/>
-                        ]}>
+                        );
+                        readOnly || actions.push(<Popconfirm title="确定要删除吗?" onConfirm={() => { this.deleteRecord(item) }} onCancel={() => { }} okText="确定" cancelText="取消">
+                                <a style={noneStyle}><Icon type="delete"/> 删除</a>
+                            </Popconfirm>);
+                        return <List.Item actions={actions}>
                             <div style={{ width: '100%', position: 'static' }}>
                                 <Row>
                                     <Col span={16}>
@@ -123,7 +126,7 @@ class FileModal extends React.Component {
                             </div>
 
                         </List.Item>
-                    )}
+                    }}
                 />
 
             </Modal>

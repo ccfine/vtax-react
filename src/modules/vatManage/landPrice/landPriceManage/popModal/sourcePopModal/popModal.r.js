@@ -2,7 +2,7 @@
 import React from "react";
 import {Modal} from "antd";
 import SourceTable from '../sourceTable';
-import {request} from '../../../../../../utils';
+import {request,accAdd} from '../../../../../../utils';
 export default class SourceModal extends React.Component{
     state={
         sourceTable:null,
@@ -41,7 +41,7 @@ export default class SourceModal extends React.Component{
         let allAmount=0;
         sourceTable.forEach(element => {
             if(element.action !== "delete"){
-                allAmount+=element.amount;
+                allAmount=accAdd(allAmount,element.amount);
             }
         });
         sourceTable.push({amount:allAmount,id:"-1"});

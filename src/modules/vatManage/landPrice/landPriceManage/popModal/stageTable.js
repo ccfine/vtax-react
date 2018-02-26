@@ -1,7 +1,7 @@
 import React from "react";
 import {Table,Card} from "antd";
 import StageModal from './stagePopModal';
-import {fMoney} from '../../../../../utils';
+import {fMoney,toPercent} from '../../../../../utils';
 
 const pointerStyle = {
     cursor:'pointer',
@@ -31,7 +31,7 @@ const getColumns =(context,length)=>[
             }
         },
         fixed:'left',
-        width:"75px"
+        width:context.props.readOnly?"50px":"75px"
     },
     {
         title: '项目分期编码',
@@ -57,6 +57,7 @@ const getColumns =(context,length)=>[
     },{
         title: '可分摊土地价款比例',
         dataIndex: 'apportionLandPriceProportion',
+        render:text=>toPercent(text),
     },{
         title: '分摊后土地价款',
         dataIndex: 'apportionLandPrice',
@@ -65,6 +66,7 @@ const getColumns =(context,length)=>[
     },{
         title: '可抵扣的土地价款比例',
         dataIndex: 'deductibleLandPriceProportion',
+        render:text=>toPercent(text),
     },{
         title: '可抵扣的土地价款比例设置',
         dataIndex: 'setUp',
