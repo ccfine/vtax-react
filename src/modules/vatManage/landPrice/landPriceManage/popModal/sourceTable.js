@@ -77,7 +77,7 @@ export default class StageTable extends React.Component{
     render(){
         const dataSource = this.props.dataSource && this.props.dataSource.filter((element)=>element.action!=="delete");
         return (
-            <Card title="" extra={<Button size='small' onClick={()=>{
+            <Card title="土地价款来源" extra={this.props.readOnly?<span></span>:<Button size='small' onClick={()=>{
                 this.setState({visible:true,action:"add",source:{}})}}><Icon type="plus" />新增</Button>} style={{ width: "100%" }}>
                 <Table 
                 columns={getColumns(this,dataSource?dataSource.length:0)} 

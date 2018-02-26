@@ -76,7 +76,7 @@ class PopModal extends Component{
                 if(values.projectStages)   
                 {
                     values.stagesId = values.projectStages.key;
-                    values.stagesItemName = values.projectStages.label;
+                    values.stagesName = values.projectStages.label;
                     values.projectStages=undefined;
                 }       
                 
@@ -162,7 +162,7 @@ class PopModal extends Component{
                         {
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -302,7 +302,8 @@ class PopModal extends Component{
                 </Form>
                 </Spin>
                 
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='project/finish/acceptance'/>
+                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='project/finish/acceptance'
+                 readOnly={this.props.action==="look"}/>
             
             </Modal>
         );

@@ -16,6 +16,11 @@ const getColumns =(context,length)=>[
         render:(text,record,index)=>{
             if(index === length-1){
                 return (<span>合计：</span>)
+            }else if(context.props.readOnly){
+                return (<div>
+                    <span style={pointerStyle} onClick={()=>{
+                        context.setState({visible:true,readOnly:true,stage:record});}}>查看</span>
+                </div>);
             }else{
             return (<div>
                 <span style={pointerStyle} onClick={()=>{

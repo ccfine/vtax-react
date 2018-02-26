@@ -302,6 +302,7 @@ class LandPriceModal extends React.Component{
                   dataSource={this.state.stageSource} 
                   loading={!this.state.stageLoaded} 
                   update={(item)=>this.updateStage(item)}
+                  readOnly = {this.props.readOnly}
                 >
                 </StageTable>
             </Spin>
@@ -312,6 +313,7 @@ class LandPriceModal extends React.Component{
         id={this.props.id} 
         hideModal={()=>{this.hideModal()}} 
         update={(table)=>this.updateSource(table)}
+        readOnly = {this.props.readOnly}
         updateKey = {this.props.updateKey}
         />  </div>
         );

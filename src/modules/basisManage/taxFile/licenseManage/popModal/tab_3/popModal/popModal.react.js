@@ -195,7 +195,7 @@ class PopModal extends Component{
                             type:'datePicker',
                         },
                         {
-                            ...setComItem(moment(record.projectType),readonly,true,'请选择批复日期'),
+                            ...setComItem(moment(record.approvalDate),readonly,true,'请选择批复日期'),
                             label:'批复日期',
                             fieldName:'approvalDate',
                             type:'datePicker',
@@ -225,7 +225,8 @@ class PopModal extends Component{
                 </Form>
                 </Spin>
                 
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='project/approval'/>
+                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='project/approval' 
+                readOnly={this.props.action==="look"}/>
             </Modal>
         );
     }

@@ -75,6 +75,7 @@ export default class SourceModal extends React.Component{
             maskClosable={false}
           >
           <SourceTable
+                    readOnly = {this.props.readOnly}
                     dataSource={this.state.sourceTable} 
                     loading={!this.state.loaded} 
                     updateSource={(source)=>{this.updateSource(source)}} 
