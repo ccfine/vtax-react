@@ -160,14 +160,8 @@ export default class TabPage extends Component{
                     rowSelection:{
                         selectedRowKeys:this.state.selectedRowKeys,
                         type:'radio',
-                        onSelect:((record, selected, selectedRows)=>{
-                            if(selected){
-                                this.setState({titleCertificateId:record.id})
-                                console.log(record.id)
-                            }
-                        }),
                         onChange:selectedRowKeys=>{
-                            this.setState({selectedRowKeys});
+                            this.setState({selectedRowKeys,titleCertificateId:(selectedRowKeys&&selectedRowKeys.length>0)?selectedRowKeys[0]:undefined});
                         }
                     }
                 }}

@@ -462,11 +462,8 @@ export default class extends React.Component {
                 let currentStatus = {},statusData=data.data;
                 currentStatus.status = statusData.status;
                 switch (statusData.status) {
-                    case 0:
-                        currentStatus.text = '暂存';
-                        break;
                     case 1:
-                        currentStatus.text = '保存';
+                        currentStatus.text = '暂存';
                         break;
                     case 2:
                         currentStatus.text = '提交';

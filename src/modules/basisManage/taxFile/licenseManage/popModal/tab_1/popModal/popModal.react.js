@@ -181,7 +181,7 @@ class PopModal extends Component {
                                     label: '出让人',
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.parcelNum,
+                                        initialValue: record.transferor,
                                         rules: [
                                             {
                                                 required: true,
@@ -414,7 +414,8 @@ class PopModal extends Component {
                         </Row>
                     </Form>
                 </Spin>
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='contract/land' />
+                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='contract/land' 
+                readOnly={this.props.action==="look"}/>
             </Modal>
         );
     }

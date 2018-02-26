@@ -31,19 +31,22 @@ const getColumns =(context, length)=>[
               }
             else {return (
             <div>
-                <span style={pointerStyle} onClick={()=>{
+                {context.props.readOnly ||<span style={pointerStyle} onClick={()=>{
                     context.setState({visible:true,source:record,readOnly:false,action:"modify"});}}>编辑</span>
+                }
                 <span style={pointerStyle} onClick={()=>{
                     context.setState({visible:true,source:record,readOnly:true,action:"modify"});}}>查看</span>
+                {context.props.readOnly ||
                  <Popconfirm placement="bottom" title={`是否确认删除？`} onConfirm={()=>{
                         context.props.deleteSource(record)}} okText="确认" cancelText="取消">
                     <span style={pointerStyle}>删除</span>
                     </Popconfirm>
+                }
             </div>);
         }
     },
         fixed:'left',
-        width:"100px"
+        width:context.props.readOnly ?'50px':'100px'
     },
     {
         title: '付款类型',
@@ -77,7 +80,7 @@ export default class StageTable extends React.Component{
     render(){
         const dataSource = this.props.dataSource && this.props.dataSource.filter((element)=>element.action!=="delete");
         return (
-            <Card title="" extra={<Button size='small' onClick={()=>{
+            <Card title="土地价款来源" extra={this.props.readOnly?<span></span>:<Button size='small' onClick={()=>{
                 this.setState({visible:true,action:"add",source:{}})}}><Icon type="plus" />新增</Button>} style={{ width: "100%" }}>
                 <Table 
                 columns={getColumns(this,dataSource?dataSource.length:0)} 

@@ -45,7 +45,7 @@ const getColumns = context=> [
         dataIndex: 'licenseNumber',
     },{
         title: '项目分期',
-        dataIndex: 'stagesItemName'
+        dataIndex: 'stagesName'
     }, {
         title: '工程名称',
         dataIndex: 'projectName',
