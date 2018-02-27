@@ -216,7 +216,7 @@ class PopInvoiceInformationModal extends Component{
                                 pagination:true,
                                 size:'small',
                                 columns:this.columns,
-                                scroll:{ x: '210%', y: 200 },
+                                scroll:{ x: '210%'},
                                 renderFooter:data=>{
                                     return (
                                         <div>

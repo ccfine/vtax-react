@@ -188,6 +188,11 @@ class PopModal extends Component{
                     },
                     list:this.checkeDetailsDateId(this.state.detailsDate)
                 }
+
+                console.log(data);
+                debugger
+
+
                 this.setState({
                     submitLoading: true
                 })
@@ -256,21 +261,19 @@ class PopModal extends Component{
 
     checkeDetailsDateId = (data)=>{
         return data.map((item)=>{
-            return data.map((item)=>{
-                return {
-                    amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
-                    goodsServicesName:item.goodsServicesName,
-                    parentId:item.parentId,
-                    qty:item.qty,
-                    specificationModel:item.specificationModel,
-                    taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    taxRate:item.taxRate,
-                    totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    unit:item.unit,
-                    unitPrice:parseFloat(`${item.unitPrice}`),
-                    id: (item.id.indexOf('t') > -1) ? null : item.id
-                }
-            })
+            return {
+                amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
+                goodsServicesName:item.goodsServicesName,
+                parentId:item.parentId,
+                qty:item.qty,
+                specificationModel:item.specificationModel,
+                taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
+                taxRate:item.taxRate,
+                totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
+                unit:item.unit,
+                unitPrice:parseFloat(`${item.unitPrice}`),
+                id: (item.id.indexOf('t') > -1) ? null : item.id
+            }
         })
     }
     //设置select值名不同
@@ -629,22 +632,22 @@ class PopModal extends Component{
                                                     }
                                                 ]
                                             }
-                                        },{
-                                            label:'账号',
-                                            fieldName:'incomeInvoiceCollectionDO.account',
-                                            type:'input',
-                                            span:12,
+                                        }, {
+                                            label: '账号',
+                                            fieldName: 'incomeInvoiceCollectionDO.account',
+                                            type: 'input',
+                                            span: 12,
                                             formItemStyle,
                                             componentProps: {
                                                 disabled
                                             },
-                                            fieldDecoratorOptions:{
-                                                initialValue:initData.account,
-                                                rules:[
+                                            fieldDecoratorOptions: {
+                                                initialValue: initData.account,
+                                                rules: [
                                                     {
-                                                        required:true,
-                                                        message:'请输入账号'
-                                                    },{
+                                                        required: true,
+                                                        message: '请输入账号'
+                                                    }, {
                                                         ...max20
                                                     }
                                                 ]
@@ -656,10 +659,17 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled,
+                                                placeholder:'金额数据来源于发票明细',
+                                                disabled:true,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.amount,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'金额数据来源于发票明细'
+                                                    }
+                                                ]
                                             }
                                         },{
                                             label:'税额',
@@ -668,11 +678,18 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps:{
-                                                disabled,
+                                                placeholder:'税额数据来源于发票明细',
+                                                disabled:true,
                                                 valueType:'int',
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.taxAmount,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'税额数据来源于发票明细'
+                                                    }
+                                                ]
                                             }
                                         },{
                                             label:'价税合计',
@@ -681,10 +698,17 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled,
+                                                placeholder:'价税合计数据来源于发票明细',
+                                                disabled:true,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.totalAmount,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'价税合计数据来源于发票明细'
+                                                    }
+                                                ]
                                             }
                                         },{
                                             label:'备注',
@@ -717,6 +741,7 @@ class PopModal extends Component{
                         </Card>
 
                         <Card
+                            title="发票明细"
                             extra={type !== 'view' && <div>
                                 <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                                     <Icon type="file-add" />
@@ -763,29 +788,30 @@ class PopModal extends Component{
                             </div>}
                             style={{marginTop:10}}>
 
-                            <SynchronizeTable data={detailsDate}
-                                              updateKey={tableUpDateKey}
-                                              tableProps={{
-                                                  rowKey:record=>record.id,
-                                                  pagination:true,
-                                                  bordered:true,
-                                                  size:'middle',
-                                                  columns:this.columns,
-                                                  rowSelection: type !== 'view' && rowSelection,
-                                                  footerDate:  footerDate,
-                                                  renderFooter:data=>{
-                                                      return(
-                                                          <div>
-                                                              <div style={{marginBottom:10}}>
-                                                                  <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                                                  金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                                  税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                                                  价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                                              </div>
-                                                          </div>
-                                                      )
-                                                  },
-                                              }}
+                            <SynchronizeTable
+                                data={detailsDate}
+                                updateKey={tableUpDateKey}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:true,
+                                    bordered:true,
+                                    size:'middle',
+                                    columns:this.columns,
+                                    rowSelection: type !== 'view' && rowSelection,
+                                    footerDate:  footerDate,
+                                    renderFooter:data=>{
+                                      return(
+                                          <div>
+                                              <div style={{marginBottom:10}}>
+                                                  <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                                  金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                  税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                  价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                              </div>
+                                          </div>
+                                      )
+                                    },
+                                }}
                             />
 
                             <PopsModal
