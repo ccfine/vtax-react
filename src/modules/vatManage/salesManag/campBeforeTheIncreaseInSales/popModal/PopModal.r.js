@@ -78,13 +78,17 @@ class PopModal extends Component{
             if (!err) {
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
+                console.log(values.roomCode)
+                debugger
 
+                let tempData = values.roomCode;
                 if(values.roomCode.label && values.roomCode.key){
-                    values.roomCode = values.roomCode.key
-                }else{
-                    let tempData = values.roomCode;
+                    values.roomCode = tempData.key
+                }
+                if(tempData.orgId){
                     values.roomCode = tempData.roomCode;
                     values.orgId = tempData.orgId;
+                    values.transactionDate = tempData.transactionDate;
                 }
 
                 if(type==='edit'){

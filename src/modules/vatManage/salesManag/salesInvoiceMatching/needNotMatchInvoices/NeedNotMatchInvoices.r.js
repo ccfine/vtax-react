@@ -18,6 +18,24 @@ const transformDataStatus = status =>{
     }
     return status
 }
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:6
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:18
+        }
+    }
+}
 const searchFields=(disabled)=> {
     return [
         {
@@ -27,6 +45,7 @@ const searchFields=(disabled)=> {
             componentProps:{
                 disabled,
             },
+            formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
                 rules:[
@@ -44,6 +63,7 @@ const searchFields=(disabled)=> {
             componentProps:{
                 disabled,
             },
+            formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
@@ -58,24 +78,28 @@ const searchFields=(disabled)=> {
             label: '货物名称',
             type: 'input',
             fieldName: 'commodityName',
+            formItemStyle,
             fieldDecoratorOptions: {}
         },
         {
             label: '购货单位名称',
             type: 'input',
             fieldName: 'purchaseName',
+            formItemStyle,
             fieldDecoratorOptions: {}
         },
         {
             label: '发票号码',
             type: 'input',
             fieldName: 'invoiceNum',
+            formItemStyle,
             fieldDecoratorOptions: {}
         },
         {
             label: '税率',
             type: 'numeric',
             fieldName: 'taxRate',
+            formItemStyle,
             componentProps: {
                 valueType: 'int'
             }

@@ -18,6 +18,24 @@ const transformDataStatus = status =>{
     }
     return status
 }
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:6
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:18
+        }
+    }
+}
 const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
@@ -28,6 +46,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             componentProps:{
                 disabled,
             },
+            formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
                 rules:[
@@ -46,6 +65,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             componentProps:{
                 disabled,
             },
+            formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
                 rules:[
@@ -61,6 +81,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'projectId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -74,6 +95,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'stagesId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -86,36 +108,42 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             label:'楼栋名称',
             fieldName:'buildingName',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle
         },
         {
             label:'单元',
             fieldName:'element',
             type:'element',
-            span:6
+            span:6,
+            formItemStyle
         },
         {
             label:'房号',
             fieldName:'roomNumber',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle
         },
         {
             label:'客户名称',
             fieldName:'customerName',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
-            label:'纳税识别号',
+            label:'纳税人识别号',
             fieldName:'taxIdentificationCode',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
             label:'发票号码',
             fieldName:'invoiceNum',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
@@ -123,6 +151,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             fieldName:'matchingWay',
             type:'select',
             span:6,
+            formItemStyle,
             options:[
                 {
                     text:'手动匹配',

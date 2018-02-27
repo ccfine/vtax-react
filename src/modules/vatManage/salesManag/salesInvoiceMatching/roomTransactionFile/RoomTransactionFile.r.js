@@ -18,6 +18,24 @@ const transformDataStatus = status =>{
     }
     return status
 }
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:6
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:18
+        }
+    }
+}
 const getColumns = context => [
     {
         title: '操作',
@@ -241,6 +259,7 @@ class RoomTransactionFile extends Component{
                                         componentProps:{
                                             disabled,
                                         },
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
@@ -256,6 +275,7 @@ class RoomTransactionFile extends Component{
                                         fieldName:'projectId',
                                         type:'asyncSelect',
                                         span:6,
+                                        formItemStyle,
                                         componentProps:{
                                             fieldTextName:'itemName',
                                             fieldValueName:'id',
@@ -269,6 +289,7 @@ class RoomTransactionFile extends Component{
                                         fieldName:'stagesId',
                                         type:'asyncSelect',
                                         span:6,
+                                        formItemStyle,
                                         componentProps:{
                                             fieldTextName:'itemName',
                                             fieldValueName:'id',
@@ -281,30 +302,35 @@ class RoomTransactionFile extends Component{
                                         label:'房号',
                                         fieldName:'roomNumber',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'客户名称',
                                         fieldName:'customerName',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'发票代码',
                                         fieldName:'invoiceCode',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'交易月份',
                                         fieldName:'transactionDate',
                                         type:'monthPicker',
+                                        formItemStyle,
                                         span:6,
                                         componentProps:{
                                             disabled,
@@ -323,6 +349,7 @@ class RoomTransactionFile extends Component{
                                         label:'匹配状态',
                                         fieldName:'matchingStatus',
                                         type:'select',
+                                        formItemStyle,
                                         span:6,
                                         options:[
                                             {
