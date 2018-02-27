@@ -54,7 +54,7 @@ export default class TaxableProject extends Component{
                     this.toggleModalVisible(true)
                 }
             }}>
-                <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} />
+                <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} placeholder='请选择应税项目' />
                 <TaxableProjectTreeForm
                     visible={visible}
                     disabled={disabled}

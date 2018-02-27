@@ -102,7 +102,6 @@ class BasicInfo extends Component {
                 span:14
             }
         }
-
         return (
             <div className="basicInfo" style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
 
@@ -376,7 +375,7 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:[defaultData.operatingProvince,defaultData.operatingCity,defaultData.operatingArea],
+                                        initialValue:(defaultData.operatingProvince && [defaultData.operatingProvince,defaultData.operatingCity,defaultData.operatingArea]) || [],
                                     }
                                 },{
                                     label:'生产经营详细地址',
@@ -666,7 +665,7 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:[defaultData.nationalTaxProvince,defaultData.nationalTaxCity,defaultData.nationalTaxArea],
+                                        initialValue:(defaultData.nationalTaxProvince && [defaultData.nationalTaxProvince,defaultData.nationalTaxCity,defaultData.nationalTaxArea]) || [],
                                     }
                                 },{
                                     label:'主管国税机关详细地址',
@@ -715,7 +714,7 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:[defaultData.localTaxProvince,defaultData.localTaxCity,defaultData.localTaxArea],
+                                        initialValue:(defaultData.localTaxProvince && [defaultData.localTaxProvince,defaultData.localTaxCity,defaultData.localTaxArea]) || [],
                                     }
                                 },{
                                     label:'主管地税机关详细地址',
