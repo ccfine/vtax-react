@@ -88,7 +88,7 @@ class PopModal extends React.Component{
                         {getFieldDecorator('priceClass',{
                             initialValue:record.priceClass,
                             rules: [
-                                { required: true, message: '必录' },
+                                { required: true, message: '请选择付款类型' },
                             ]    
                         })(
                             <Select disabled={this.props.readOnly}>
@@ -110,7 +110,7 @@ class PopModal extends React.Component{
                         {getFieldDecorator('amount',{
                             initialValue:record.amount,
                             rules: [
-                                { required: true, message: '必录' },
+                                { required: true, message: '请输入金额' },
                             ] 
                         })(
                             <NumericInput disabled={this.props.readOnly}/>
