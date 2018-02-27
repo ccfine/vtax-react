@@ -326,40 +326,40 @@ class ConfirmCarryOver extends Component{
                                     <div>
                                         <div style={{width:100,display:'inline-block',textAlign: 'right',paddingRight:20}}>本页合计：</div>
                                         <div style={{display:'inline-block'}}>
-                                            上期-增值税开票金额：<span className="amount-code">{fMoney(data.pageSumTotalAmount)}</span>
                                             上期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageSumTotalPrice)}</span>
+                                            上期-增值税开票金额：<span className="amount-code">{fMoney(data.pageSumTotalAmount)}</span>
                                             上期末合计金额-未开具发票销售额：<span className="amount-code">{fMoney(data.pageSumNoInvoiceSales)}</span>
                                         </div>
                                     </div>
                                     <p style={{paddingLeft:100,marginTop:5,marginBottom:0}}>
+                                        本期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                         本期-增值税开票金额：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                         本期-未开具发票销售额 ：<span className="amount-code">{fMoney(data.pageNoInvoiceSales)}</span>
-                                        本期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                     </p>
                                     <p style={{paddingLeft:100,marginTop:5}}>
-                                        本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.pageEndNoInvoiceSales)}</span>
-                                        本期末合计-增值税开票金额 ：<span className="amount-code">{fMoney(data.pageEndTotalAmount)}</span>
                                         本期末合计-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.pageEndTotalPrice)}</span>
+                                        本期末合计-增值税开票金额 ：<span className="amount-code">{fMoney(data.pageEndTotalAmount)}</span>
+                                        本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.pageEndNoInvoiceSales)}</span>
                                     </p>
                                 </div>
                                 <div style={{marginBottom:10}}>
                                     <div>
                                         <div style={{width:100,display:'inline-block',textAlign: 'right',paddingRight:20}}>总计：</div>
                                         <div style={{display:'inline-block'}}>
-                                            上期-增值税开票金额：<span className="amount-code">{fMoney(data.allSumTotalAmount)}</span>
                                             上期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allSumTotalPrice)}</span>
+                                            上期-增值税开票金额：<span className="amount-code">{fMoney(data.allSumTotalAmount)}</span>
                                             上期末合计金额-未开具发票销售额：<span className="amount-code">{fMoney(data.allSumNoInvoiceSales)}</span>
                                         </div>
                                     </div>
                                     <p style={{paddingLeft:100,marginTop:5,marginBottom:0}}>
+                                        本期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                         本期-增值税开票金额：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
                                         本期-未开具发票销售额 ：<span className="amount-code">{fMoney(data.allNoInvoiceSales)}</span>
-                                        本期-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                     </p>
                                     <p style={{paddingLeft:100,marginTop:5}}>
-                                        本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.allEndNoInvoiceSales)}</span>
-                                        本期末合计-增值税开票金额 ：<span className="amount-code">{fMoney(data.allEndTotalAmount)}</span>
                                         本期末合计-增值税收入确认金额合计：<span className="amount-code">{fMoney(data.allEndTotalPrice)}</span>
+                                        本期末合计-增值税开票金额 ：<span className="amount-code">{fMoney(data.allEndTotalAmount)}</span>
+                                        本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.allEndNoInvoiceSales)}</span>
                                     </p>
                                 </div>
                             </div>
