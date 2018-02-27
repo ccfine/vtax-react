@@ -76,7 +76,6 @@ class PopModal extends Component{
                         ...values,
                         orgParentId:this.props.selectedNodes && this.props.selectedNodes.id
                     }
-                    console.log(data)
                     this.createRecord(data)
                 }
             }
@@ -92,7 +91,7 @@ class PopModal extends Component{
                     const props = this.props;
                     message.success('更新成功!');
                     props.toggleModalVisible(false);
-                    props.refreshTable()
+                    props.refreshAll()
                 }else{
                     message.error(`更新失败:${data.msg}`)
                 }
@@ -107,7 +106,7 @@ class PopModal extends Component{
                     const props = this.props;
                     message.success('新增成功!');
                     props.toggleModalVisible(false);
-                    props.refreshTable()
+                    props.refreshAll()
                 }else{
                     message.error(`新增失败:${data.msg}`)
                 }

@@ -14,6 +14,7 @@ class TreeList extends Component {
         updateKey:PropTypes.number,
         url:PropTypes.string.isRequired,
         onSuccess:PropTypes.func,
+        onSuccessRefresh:PropTypes.func,
     }
     static defaultProps={
         updateKey:Date.now(),
@@ -22,9 +23,9 @@ class TreeList extends Component {
     }
 
     state = {
-        //expandedKeys: [],
-        //autoExpandParent: true,
-        //selectedKeys: [],
+        /*expandedKeys: [],
+        autoExpandParent: true,
+        selectedKeys: [],*/
 
         treeData:[],
         //selectedNodes:undefined,
@@ -68,7 +69,7 @@ class TreeList extends Component {
     }
 
     fetchTree = (props) => {
-        //console.log([`${props.id}`]);
+        console.log(props && props.id && [`${props.id}`])
         this.mounted && this.setState({ eidtLoading: true });
         request.get(this.props.url,{
         }).then(({data}) => {
@@ -77,7 +78,7 @@ class TreeList extends Component {
                     treeData: [...data.data],
                     //expandedKeys: [`${data.data[0].id}`],
                     //autoExpandParent: false,
-                    //selectedKeys: [`${props.id}`],
+                    //selectedKeys: props && props.id && [`${props.id}`],
                     eidtLoading: false,
                 })
             }
@@ -93,7 +94,7 @@ class TreeList extends Component {
         /**
          * 成功之后回调，返回参数和数据
          * */
-        this.props.treeOption.onSuccess && this.props.treeOption.onSuccess(selectedKeys,selectedNodes)
+        this.props.treeOption.onSuccess && this.props.treeOption.onSuccess(selectedKeys,selectedNodes);
     }
     /*onExpand = (expandedKeys) => {
         //console.log('onExpand', arguments);
@@ -104,6 +105,11 @@ class TreeList extends Component {
             autoExpandParent: false,
         });
     }*/
+
+    componentDidMount(){
+        this.fetchTree()
+    }
+
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
@@ -117,7 +123,7 @@ class TreeList extends Component {
 
     render() {
         const props = this.props;
-        const {treeData} = this.state;  //selectedKeys,expandedKeys,autoExpandParent
+        const {treeData} = this.state;  //,selectedKeys,expandedKeys,autoExpandParent
         return (
             <Spin spinning={this.state.eidtLoading}>
                 <div style={{overflow:'scroll',height: '600px'}}>
@@ -132,7 +138,6 @@ class TreeList extends Component {
                         showLine={props.showLine}
                         loadData={props.isLoadDate && this.onLoadData}
                         onSelect={this.onSelect}
-
                     >
                         {this.renderTreeNodes(treeData)}
                     </Tree>

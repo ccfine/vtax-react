@@ -319,12 +319,12 @@ class BillingSales extends Component {
                               JSON.stringify(statusParam) !== "{}" &&
                               <div style={{marginRight: 30, display: 'inline-block'}}>
                                   <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
                                   <span>提交时间：{statusParam.lastModifiedDate}</span>
                               </div>
                           }
                           <FileExport
-                              url='/account/output/billingSale/export'
+                              url={`/account/output/billingSale/export`}
                               title='导出'
                               setButtonStyle={{marginRight:5}}
                               disabled={!dataSource1.length>0}
@@ -378,7 +378,7 @@ class BillingSales extends Component {
                 </Card>
                 <Card title="开票销售统计表-非地产" extra={<div>
                     <FileExport
-                        url='/account/output/billingSale/export'
+                        url={`/account/output/billingSale/export`}
                         title='导出'
                         setButtonStyle={{marginRight:5}}
                         disabled={!dataSource2.length>0}
