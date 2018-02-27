@@ -154,7 +154,7 @@ class PopInvoiceInformationModal extends Component{
                                 getFields(this.props.form,[
                                     {
                                         label:'发票号码',
-                                        fieldName:'invoiceCode',
+                                        fieldName:'invoiceNum',
                                         type:'input',
                                         span:6,
                                         componentProps:{

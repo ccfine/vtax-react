@@ -322,7 +322,7 @@ class LandPriceDeductionDetails extends Component{
                             {
                                 JSON.stringify(statusParam) !== "{}" &&
                                 <div style={{marginRight:30,display:'inline-block'}}>
-                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
+                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
                                     <span>提交时间：{statusParam.lastModifiedDate}</span>
                                 </div>
                             }
