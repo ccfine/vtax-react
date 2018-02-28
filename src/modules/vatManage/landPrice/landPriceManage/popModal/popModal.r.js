@@ -263,13 +263,11 @@ class LandPriceModal extends React.Component {
                                 {...formItemLayout}
                                 label="调整后土地价款"
                             >
-                                <div>
-                                    <Icon type="search" onClick={() => { this.showModal() }} style={{ cursor: "pointer", padding: "5px 10px", position: "absolute", right: "-1px", top: "6px", textAlign: 'right', width: '100%', zIndex: 1 }} />
+                                <div style={{position:'relative'}}>
+                                    <Icon type="search" onClick={() => { this.showModal() }} style={{ cursor: "pointer", padding: "5px 10px", position: "absolute", right: "-1px", top: "6px", textAlign: 'right', width: '100%', zIndex: 1,display:'inline-block' }} />
                                     {
                                         getFieldDecorator('adjustLandPrice', { initialValue: this.state.record.adjustLandPrice })(
-                                            <Input disabled={this.props.readOnly}
-
-                                            />
+                                            <Input disabled={this.props.readOnly} />
                                         )}
                                 </div>
                             </FormItem>
