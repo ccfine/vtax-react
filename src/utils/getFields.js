@@ -188,6 +188,18 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
+        }else if(type==='rangePicker'){
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || [`请输入开始时间`,`请输入结束时间`] } style={{width:'100%'}} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
         }else{
             return (
                 <Col key={i} span={item['span'] || 8}>

@@ -57,7 +57,7 @@ export default class RoomCodeSelect extends Component{
             selectDisabled = !!customizedValues['mainId'];
         }
         return(
-            <div onClick={()=>{
+            <div style={{position:'relative'}} onClick={()=>{
                 if(selectDisabled){
                     this.toggleModalVisible(true)
                 }
@@ -212,7 +212,7 @@ class RoomCodeSelectPage extends Component{
                             position:'absolute',
                             cursor:'pointer',
                             right:3,
-                            top:6,
+                            top:5,
                             height:23,
                             width:23,
                             borderRadius:'3px',
