@@ -5,12 +5,11 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
-import {fMoney,request,getUrlParam} from '../../../../../utils'
+import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../../utils'
 import {SearchTable} from '../../../../../compoments'
 import PageTwo from './TabPage2.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -40,7 +39,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -129,17 +128,20 @@ const columns= [
 class tab1 extends Component{
     state={
         updateKey:Date.now(),
-        searchFieldsValues:{
-
-        },
+        filters:{},
         selectedRowKeys:undefined,
         selectedRows:[],
         searchTableLoading:false,
+        /**
+         *修改状态和时间
+         * */
         statusParam:{},
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
+        },()=>{
+            this.updateStatus()
         })
     }
     toggleSearchTableLoading = b =>{
@@ -148,7 +150,7 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.put('/account/land/price/deducted/main/reset',this.state.searchFieldsValues)
+        request.put('/account/land/price/deducted/main/reset',this.state.filters)
             .then(({data}) => {
                 if(data.code===200){
                     message.success('重算成功!');
@@ -158,7 +160,7 @@ class tab1 extends Component{
                 }
             });
     }
-    handleClick=type=>{
+    handleClickActions=type=>{
         let url = '';
         switch (type){
             case '提交':
@@ -171,7 +173,7 @@ class tab1 extends Component{
                 break;
         }
         this.toggleSearchTableLoading(true)
-        request.post(url,this.state.searchFieldsValues)
+        request.post(url,this.state.filters)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -185,10 +187,8 @@ class tab1 extends Component{
         })
     }
     updateStatus=()=>{
-        request.get('/account/land/price/deducted/main/listMain',{params:{
-            mainId:this.state.searchFieldsValues.mainId,
-            authMonth:this.state.searchFieldsValues.authMonth,
-        }}).then(({data}) => {
+        request.get('/account/land/price/deducted/main/listMain',{params:this.state.filters})
+            .then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
@@ -200,9 +200,9 @@ class tab1 extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.setState({
-                searchFieldsValues:{
+                filters:{
                     mainId:getUrlParam('mainId') || undefined,
-                    authMonth:moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
                 this.refreshTable()
@@ -218,8 +218,8 @@ class tab1 extends Component{
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,searchFieldsValues,statusParam} = this.state;
-        const {mainId,authMonth} = this.state.searchFieldsValues;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,statusParam} = this.state;
+        const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -239,9 +239,9 @@ class tab1 extends Component{
                         onFieldsChange:values=>{
                             if(JSON.stringify(values) === "{}"){
                                 this.setState({
-                                    searchFieldsValues:{
+                                    filters:{
                                         mainId:(disabled && getUrlParam('mainId')) || undefined,
-                                        authMonth:(disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM').format('YYYY-MM')) || undefined,
+                                        authMonth:(disabled && moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM')) || undefined,
                                     }
                                 })
                             }else if(values.mainId || values.authMonth){
@@ -249,8 +249,8 @@ class tab1 extends Component{
                                     values.authMonth = values.authMonth.format('YYYY-MM')
                                 }
                                 this.setState(prevState=>({
-                                    searchFieldsValues:{
-                                        ...prevState.searchFieldsValues,
+                                    filters:{
+                                        ...prevState.filters,
                                         ...values
                                     }
                                 }))
@@ -280,11 +280,7 @@ class tab1 extends Component{
                         url:'account/land/price/deducted/project/list',
                         extra: <div>
                             {
-                                JSON.stringify(statusParam) !== "{}" &&
-                                <div style={{marginRight:30,display:'inline-block'}}>
-                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
-                                    <span>提交时间：{statusParam.lastModifiedDate}</span>
-                                </div>
+                                listMainResultStatus(statusParam)
                             }
                             <Button
                                 size='small'
@@ -302,7 +298,7 @@ class tab1 extends Component{
                                 size='small'
                                 style={{marginRight:5}}
                                 disabled={disabled1}
-                                onClick={()=>this.handleClick('提交')}>
+                                onClick={()=>this.handleClickActions('提交')}>
                                 <Icon type="check" />
                                 提交
                             </Button>
@@ -310,7 +306,7 @@ class tab1 extends Component{
                                 size='small'
                                 style={{marginRight:5}}
                                 disabled={disabled2}
-                                onClick={()=>this.handleClick('撤回')}>
+                                onClick={()=>this.handleClickActions('撤回')}>
                                 <Icon type="rollback" />
                                 撤回提交
                             </Button>
@@ -319,7 +315,7 @@ class tab1 extends Component{
                 >
                 </SearchTable>
 
-                <PageTwo id={selectedRowKeys} selectedRows={selectedRows} filters={searchFieldsValues} updateKey={updateKey}/>
+                <PageTwo id={selectedRowKeys} selectedRows={selectedRows} filters={filters} updateKey={updateKey}/>
             </div>
         )
     }

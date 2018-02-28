@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,message} from 'antd'
 import {AsyncTable} from '../../../../compoments'
-import {request,getFields,fMoney,getUrlParam} from '../../../../utils'
+import {request,getFields,fMoney,getUrlParam,listMainResultStatus} from '../../../../utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -103,11 +103,7 @@ class InputTaxDetails extends Component {
                         this.setState({
                             filters:values,
                         },()=>{
-                            this.setState({
-                                tableUpDateKey:Date.now()
-                            },()=>{
-                                this.updateStatus();
-                            })
+                            this.refreshTable();
                         });
                 }
             }
@@ -121,6 +117,8 @@ class InputTaxDetails extends Component {
     refreshTable = ()=>{
         this.setState({
             tableUpDateKey:Date.now()
+        },()=>{
+            this.updateStatus();
         })
     }
     requestPut=(url,type,data={})=>{
@@ -128,7 +126,7 @@ class InputTaxDetails extends Component {
             .then(({data})=>{
                 if(data.code===200){
                     message.success(`${type}成功!`);
-                    this.updateStatus();
+                    this.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
@@ -139,7 +137,7 @@ class InputTaxDetails extends Component {
             .then(({data})=>{
                 if(data.code===200){
                     message.success(`${type}成功!`);
-                    this.updateStatus();
+                    this.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
@@ -150,7 +148,6 @@ class InputTaxDetails extends Component {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
-                    tableUpDateKey:Date.now()
                 })
             }
         })
@@ -159,19 +156,6 @@ class InputTaxDetails extends Component {
         const {search} = this.props.location;
         if(!!search){
             this.handleSubmit()
-        }
-    }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-            this.setState({
-                filters:nextProps.filters,
-            },()=>{
-                this.setState({
-                    tableUpDateKey:nextProps.tableUpDateKey
-                },()=>{
-                    this.updateStatus();
-                })
-            });
         }
     }
     render(){
@@ -220,7 +204,7 @@ class InputTaxDetails extends Component {
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonth'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -245,12 +229,7 @@ class InputTaxDetails extends Component {
                     extra={
                         <div>
                             {
-                                JSON.stringify(statusParam) !== "{}" &&
-                                <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
-                                    <span>提交时间：{statusParam.lastModifiedDate}</span>
-                                </div>
+                                listMainResultStatus(statusParam)
                             }
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>

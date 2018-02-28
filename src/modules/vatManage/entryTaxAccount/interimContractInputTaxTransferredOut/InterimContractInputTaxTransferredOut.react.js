@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Popconfirm,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
-import {getFields,fMoney,request,getUrlParam} from '../../../../utils'
+import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'
@@ -23,6 +23,14 @@ const code = {
     border:'1px solid #eee',
     marginRight:30,
     padding: '2px 4px'
+}
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
 }
 const fields = [
     {
@@ -164,7 +172,10 @@ class InterimContractInputTaxTransferredOut extends Component {
         filters:{
             pageSize:20
         },
-
+        /**
+         *修改状态和时间
+         * */
+        statusParam:{},
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
@@ -172,7 +183,6 @@ class InterimContractInputTaxTransferredOut extends Component {
         modalUpDateKey:Date.now(),
         visible:false,
         dataSource:[],
-        statusParam:{},
         selectedRowKeys:undefined,
         selectedRows:[],
     }
@@ -198,6 +208,8 @@ class InterimContractInputTaxTransferredOut extends Component {
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
+        },()=>{
+            this.updateStatus()
         })
     }
     requestPut=(url,type,value={})=>{
@@ -205,7 +217,7 @@ class InterimContractInputTaxTransferredOut extends Component {
             .then(({data})=>{
                 if(data.code===200){
                     message.success(`${type}成功!`);
-                    this.updateStatus(value);
+                    this.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
@@ -218,18 +230,17 @@ class InterimContractInputTaxTransferredOut extends Component {
                 if(data.code===200){
                     this.setState({ loading:false })
                     message.success(`${type}成功!`);
-                    this.updateStatus(value);
+                    this.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
     }
-    updateStatus=(values)=>{
-        request.get('/account/income/taxContract/listMain',{params:values}).then(({data}) => {
+    updateStatus=()=>{
+        request.get('/account/income/taxContract/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
-                    updateKey:Date.now()
                 })
             }
         })
@@ -238,29 +249,28 @@ class InterimContractInputTaxTransferredOut extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const value = {
-                    ...values,
-                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
+                if(values.authMonth){
+                    values.authMonth = values.authMonth.format('YYYY-MM')
                 }
                 let url= null;
                 switch (type){
                     case '提交':
                         url = '/account/income/taxContract/adjustment/submit';
-                        this.requestPost(url,type,value);
+                        this.requestPost(url,type,values);
                         break;
                     case '撤回':
                         url = '/account/income/taxContract/adjustment/revoke';
-                        this.requestPost(url,type,value);
+                        this.requestPost(url,type,values);
                         break;
                     case '重算':
                         url = '/account/income/taxContract/adjustment/reset';
-                        this.requestPut(url,type,value);
+                        this.requestPut(url,type,values);
                         break;
                     default:
                         this.setState({
-                            filters:value
+                            filters:values
                         },()=>{
-                            this.updateStatus(value);
+                            this.refreshTable();
                         });
                 }
             }
@@ -302,7 +312,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'纳税主体',
                                         fieldName:'mainId',
                                         type:'taxMain',
-                                        span:6,
+                                        formItemStyle,
                                         componentProps:{
                                             disabled,
                                         },
@@ -319,12 +329,12 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'认证月份',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
-                                        span:6,
+                                        formItemStyle,
                                         componentProps:{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonth'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -336,7 +346,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'合同编号',
                                         fieldName:'contractNum',
                                         type:'input',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                         },
                                         fieldDecoratorOptions:{
@@ -345,7 +355,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                         label:'结算单/产值单',
                                         fieldName:'bill',
                                         type:'input',
-                                        span:6,
+                                        formItemStyle,
                                         componentProps:{
                                         },
                                         fieldDecoratorOptions:{
@@ -354,7 +364,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                                 ])
                             }
 
-                            <Col span={24}  style={{textAlign:'right'}}>
+                            <Col span={16}  style={{textAlign:'right'}}>
                                 <Form.Item>
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                 <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
@@ -366,12 +376,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                 <Card title="进项转出差异调整表" extra={
                     <div>
                         {
-                            JSON.stringify(statusParam) !== "{}" &&
-                            <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
-                                <span>提交时间：{statusParam.lastModifiedDate}</span>
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
                         <FileImportModal
                             url="/account/income/taxContract/adjustment/upload"

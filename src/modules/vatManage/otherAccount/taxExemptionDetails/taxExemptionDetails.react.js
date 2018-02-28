@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {fMoney,request,getUrlParam} from '../../../../utils'
+import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
 import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -84,7 +84,7 @@ const searchFields =(disabled)=> [
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -145,7 +145,7 @@ const getColumns = context=> [
 class TaxExemptionDetails extends Component{
     state={
         tableKey:Date.now(),
-        searchFieldsValues:{
+        filters:{
 
         },
         statusParam:{},
@@ -156,6 +156,8 @@ class TaxExemptionDetails extends Component{
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
+        },()=>{
+            this.updateStatus()
         })
     }
     toggleSearchTableLoading = b =>{
@@ -192,7 +194,7 @@ class TaxExemptionDetails extends Component{
 
     }
 
-    handleClick=type=>{
+    handleClickActions=type=>{
         let url = '';
         switch (type){
             case '提交':
@@ -204,7 +206,7 @@ class TaxExemptionDetails extends Component{
             default:
         }
         this.toggleSearchTableLoading(true)
-        request.post(url,this.state.searchFieldsValues)
+        request.post(url,this.state.filters)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -217,8 +219,8 @@ class TaxExemptionDetails extends Component{
                 this.toggleSearchTableLoading(false)
             })
     }
-    updateStatus=(values)=>{
-        request.get('/account/other/reduceTaxDetail/listMain',{params:values}).then(({data}) => {
+    updateStatus=()=>{
+        request.get('/account/other/reduceTaxDetail/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
@@ -233,8 +235,8 @@ class TaxExemptionDetails extends Component{
         }
     }
     render(){
-        const {tableKey,searchTableLoading,selectedRowKeys,searchFieldsValues,statusParam,dataSource} = this.state;
-        const {mainId,authMonth} = searchFieldsValues;
+        const {tableKey,searchTableLoading,selectedRowKeys,filters,statusParam,dataSource} = this.state;
+        const {mainId,authMonth} = filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -253,7 +255,7 @@ class TaxExemptionDetails extends Component{
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
                             this.setState({
-                                searchFieldsValues:{
+                                filters:{
                                     mainId:undefined,
                                     authMonth:undefined
                                 }
@@ -263,8 +265,8 @@ class TaxExemptionDetails extends Component{
                                 values.authMonth = values.authMonth.format('YYYY-MM')
                             }
                             this.setState(prevState=>({
-                                searchFieldsValues:{
-                                    ...prevState.searchFieldsValues,
+                                filters:{
+                                    ...prevState.filters,
                                     ...values
                                 }
                             }))
@@ -284,11 +286,7 @@ class TaxExemptionDetails extends Component{
                     url:'/account/other/reduceTaxDetail/list',
                     extra: <div>
                         {
-                            JSON.stringify(statusParam) !== "{}" &&
-                            <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
-                                <span>提交时间：{statusParam.lastModifiedDate}</span>
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
                         <FileImportModal
                             url="/account/other/reduceTaxDetail/upload"
@@ -317,14 +315,14 @@ class TaxExemptionDetails extends Component{
                             setButtonStyle={{marginRight:5}}
                             disabled={!dataSource.length>0}
                             params={{
-                                ...searchFieldsValues
+                                ...filters
                             }}
                         />
                         <Button
                             size='small'
                             style={{marginRight:5}}
                             disabled={disabled1}
-                            onClick={()=>this.handleClick('提交')}>
+                            onClick={()=>this.handleClickActions('提交')}>
                             <Icon type="check" />
                             提交
                         </Button>
@@ -332,7 +330,7 @@ class TaxExemptionDetails extends Component{
                             size='small'
                             style={{marginRight:5}}
                             disabled={disabled2}
-                            onClick={()=>this.handleClick('撤回')}>
+                            onClick={()=>this.handleClickActions('撤回')}>
                             <Icon type="rollback" />
                             撤回提交
                         </Button>

@@ -18,6 +18,15 @@ const formItemStyle={
         span:14
     }
 }
+const code = {
+    margin:' 0 1px',
+    background: '#f2f4f5',
+    borderRadius: '3px',
+    fontSize: '.9em',
+    border:'1px solid #eee',
+    marginRight:30,
+    padding: '2px 4px'
+}
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -49,7 +58,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
                 format:'YYYY-MM',
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -299,7 +308,7 @@ class AdvanceCarryOver extends Component{
                             <div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                    预结转收入金额：<span className="amount-code">{data.pageAmount}</span>
+                                    预结转收入金额：<span style={code}>{fMoney(data.pageAmount)}</span>
                                 </div>
                             </div>
                         )

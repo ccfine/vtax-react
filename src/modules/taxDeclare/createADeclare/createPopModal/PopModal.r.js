@@ -123,12 +123,14 @@ class PopModal extends Component{
                 const data = this.state.selectedRows.map(item=>{
                     return {
                         ...item,
+                        mainName:item.name,
                         mainId:item.id,
                         taxType:1,
                         id:null,
                         ...values,
                     }
                 })
+
                 const type = this.props.modalConfig.type;
                 this.toggleLoading(true)
                 if(type === 'add') {

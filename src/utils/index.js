@@ -3,6 +3,7 @@
  * createTime   : 2017/12/5 18:09
  * description  :
  */
+import React from 'react';
 import request from './request'
 import composeMenus from './composeMenus'
 import regRules from './regRules'
@@ -185,6 +186,28 @@ const fromPercent = val=>{
     return valNum/100;
 }
 
+// 提交、撤回相关 状态显示
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
+const listMainResultStatus = (statusParam) =>{
+    return (statusParam && statusParam.status) && <div style={{marginRight: 30, display: 'inline-block'}}>
+                                <span style={{marginRight: 20}}>状态：<label style={{color: 'red'}}>{
+                                    transformDataStatus(statusParam.status)
+                                }</label></span>
+        {
+            statusParam.lastModifiedDate && <span>提交时间：{statusParam.lastModifiedDate}</span>
+        }
+    </div>
+}
+
 export {
     regRules,
     request,
@@ -199,5 +222,6 @@ export {
     getFields,
     htmlDecode,
     toPercent,
-    fromPercent
+    fromPercent,
+    listMainResultStatus
 }
