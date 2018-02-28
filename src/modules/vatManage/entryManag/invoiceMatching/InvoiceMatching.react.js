@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
 import {AsyncTable,AutoFileUpload,FileExport} from '../../../../compoments'
 import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getFields,getUrlParam} from '../../../../utils'
+import {request,fMoney,getFields,getUrlParam,listMainResultStatus} from '../../../../utils'
 import PopDifferenceModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -27,16 +27,6 @@ const code = {
     marginRight:30,
     padding: '2px 4px'
 }
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 class InvoiceMatching extends Component {
     state={
         /**
@@ -47,8 +37,7 @@ class InvoiceMatching extends Component {
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
-        submitDate:'',
+        statusParam:{},
 
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
@@ -160,12 +149,10 @@ class InvoiceMatching extends Component {
         this.setState({
             tableUpDateKey:Date.now()
         },()=>{
-            if(this.state.filters)
             this.updateStatus(this.state.filters);
         })
     }
     showModal=type=>{
-
         if(type === 'edit'){
             let sourceType = parseInt(this.state.selectedRows[0].sourceType,0);
             if(sourceType === 2 ){
@@ -285,8 +272,7 @@ class InvoiceMatching extends Component {
             if (data.code === 200) {
                 if(data.code===200){
                     this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
+                        statusParam: data.data,
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -296,7 +282,7 @@ class InvoiceMatching extends Component {
     }
 
     render() {
-        const {selectedRowKeys,selectedRows,visible,dataStatus,submitDate} = this.state;
+        const {selectedRowKeys,selectedRows,visible,statusParam} = this.state;
         const tabList = [{
             key: 'tab1',
             tab: '完全匹配',
@@ -350,7 +336,7 @@ class InvoiceMatching extends Component {
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -373,14 +359,7 @@ class InvoiceMatching extends Component {
                 <Card
                     extra={<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
                         <AutoFileUpload url={`/income/invoice/marry/upload`} fetchTable_1_Data={this.refreshTable} />
                         <FileExport

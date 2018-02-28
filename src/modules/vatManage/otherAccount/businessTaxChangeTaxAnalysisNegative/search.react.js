@@ -48,7 +48,7 @@ let Search = (props) => {
                                 disabled:props.disabled
                             },
                             fieldDecoratorOptions: {
-                                initialValue: (props.disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                initialValue: (props.disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                                 rules: [{
                                     required: true,
                                     message: '请选择查询月份'

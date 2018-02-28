@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
 import {AsyncTable,FileExport,FileImportModal,FileUndoImportModal} from '../../../../compoments'
 import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,requestDict,fMoney,getFields,getUrlParam} from '../../../../utils'
+import {request,requestDict,fMoney,getFields,getUrlParam,listMainResultStatus} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 import PopModal from './popModal'
@@ -26,16 +26,6 @@ const code = {
     border:'1px solid #eee',
     marginRight:30,
     padding: '2px 4px'
-}
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
 }
 const fields = [
     {
@@ -93,9 +83,7 @@ class InvoiceCollection extends Component {
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
-        submitDate:'',
-
+        statusParam:{},
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
@@ -108,7 +96,6 @@ class InvoiceCollection extends Component {
             type:''
         },
         nssbData:[],
-        statusParam:{},
     }
 
     columns = [
@@ -198,7 +185,7 @@ class InvoiceCollection extends Component {
         this.setState({
             tableUpDateKey:Date.now()
         },()=>{
-            this.updateStatus(this.state.filters);
+            this.updateStatus();
         })
     }
     showModal=type=>{
@@ -232,28 +219,14 @@ class InvoiceCollection extends Component {
             })
         }
     }
-    requestPost=(url,type,values={})=>{
-        request.post(url,values)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.updateStatus(values);
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    updateStatus=(values)=>{
-        request.get('/income/invoice/collection/listMain',{params:values}).then(({data}) => {
-            if (data.code === 200) {
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
+    updateStatus=()=>{
+        request.get('/income/invoice/collection/listMain',{params:this.state.filters}).then(({data}) => {
+            if(data.code===200){
+                this.setState({
+                    statusParam: data.data,
+                })
+            }else{
+                message.error(`列表主信息查询失败:${data.msg}`)
             }
         })
     }
@@ -272,7 +245,7 @@ class InvoiceCollection extends Component {
     }
 
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,dataStatus,submitDate} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!(search && search.filters);
 
@@ -331,7 +304,7 @@ class InvoiceCollection extends Component {
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -356,14 +329,7 @@ class InvoiceCollection extends Component {
                 <Card
                       extra={<div>
                           {
-                              dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                  {
-                                      submitDate && <span>提交时间：{submitDate}</span>
-                                  }
-                              </div>
+                              listMainResultStatus(statusParam)
                           }
                           <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />

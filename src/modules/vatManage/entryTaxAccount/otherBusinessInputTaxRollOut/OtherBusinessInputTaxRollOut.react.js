@@ -139,7 +139,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                     disabled,
                 },
                 fieldDecoratorOptions: {
-                    initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
+                    initialValue: (disabled && (!!search && moment(getUrlParam('authMonth'), 'YYYY-MM'))) || undefined,
                     rules: [{
                         required: true,
                         message: `请选择${title}月份`

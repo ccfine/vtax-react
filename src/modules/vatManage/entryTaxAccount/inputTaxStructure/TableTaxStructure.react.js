@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Card,Form,Button,Icon,message} from 'antd'
 import {AsyncTable} from '../../../../compoments'
-import {getFields,htmlDecode,regRules,request,fMoney} from '../../../../utils'
+import {getFields,htmlDecode,regRules,request,fMoney,listMainResultStatus} from '../../../../utils'
 const spanPaddingRight={
     paddingRight:30
 }
@@ -64,7 +64,6 @@ const EditableCell = ({ title, editable, value, form, column, type,rules,compone
 
 class TableTaxStructure extends Component {
     state={
-        statusParam:{},
         dataSource:[],
         resetDataSource:[],
         isShowResetDataSource:false,
@@ -142,6 +141,7 @@ class TableTaxStructure extends Component {
                         this.requestPost(url,type,{list:arrList});
                         break;
                     case '提交':
+                        this.props.toggleSearchTableLoading(true)
                         request.post('/account/income/taxstructure/save',{list:arrList})
                             .then(({data})=>{
                                 if(data.code===200){
@@ -149,7 +149,10 @@ class TableTaxStructure extends Component {
                                     this.requestPost(url,type,props.filters);
                                 }else{
                                     message.error(`${type}失败:${data.msg}`)
+                                    this.props.toggleSearchTableLoading(false)
                                 }
+                            }).catch(err=> {
+                                this.props.toggleSearchTableLoading(false)
                             })
                         break;
                     case '撤回':
@@ -164,7 +167,7 @@ class TableTaxStructure extends Component {
                         this.setState({
                             filters:props.filters,
                         },()=>{
-                            this.updateStatus();
+                            this.props.refreshTable();
                         });
 
                 }
@@ -172,62 +175,46 @@ class TableTaxStructure extends Component {
         });
     }
     requestPut=(url,type,data={})=>{
+        this.props.toggleSearchTableLoading(true);
         request.put(url,data)
             .then(({data})=>{
+                this.props.toggleSearchTableLoading(false)
                 if(data.code===200){
                     message.success(`${type}成功!`);
-                    this.updateStatus();
+                    this.props.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
+            }).catch(err=> {
+                this.props.toggleSearchTableLoading(false)
             })
     }
     requestPost=(url,type,data={})=>{
+        this.props.toggleSearchTableLoading(true);
         request.post(url,data)
             .then(({data})=>{
+                this.props.toggleSearchTableLoading(false)
                 if(data.code===200){
                     message.success(`${type}成功!`);
-                    this.updateStatus();
+                    this.props.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
+            }).catch(err=> {
+                this.props.toggleSearchTableLoading(false)
             })
     }
-    updateStatus=()=>{
-        request.get('/account/income/taxstructure/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                    tableUpDateKey:Date.now()
-                })
-            }
-        })
-    }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.tableUpDateKey !== this.props.tableUpDateKey){
-            this.setState({
-                filters:nextProps.filters,
-                tableUpDateKey:nextProps.tableUpDateKey
-            },()=>{
-                this.updateStatus();
-            });
-        }
-    }
+
     render(){
         const props = this.props;
-        const {statusParam} = this.state;
+        const {statusParam} = this.props;
         const disabled1 = !((props.filters.mainId && props.filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((props.filters.mainId && props.filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         return (
             <Card extra={
                 <div>
                     {
-                        JSON.stringify(statusParam) !== "{}" &&
-                        <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '暂存' : '提交'}</label></span>
-                            <span>提交时间：{statusParam.lastModifiedDate}</span>
-                        </div>
+                        listMainResultStatus(statusParam)
                     }
                     <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
                     <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
