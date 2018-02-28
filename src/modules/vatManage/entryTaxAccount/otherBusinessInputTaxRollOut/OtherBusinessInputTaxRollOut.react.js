@@ -2,9 +2,9 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import { Icon, message,Button,Card,Spin } from 'antd'
+import { Icon, message,Button,Card } from 'antd'
 import { FileImportModal, FileExport,CardSearch,FetchTable } from '../../../../compoments'
-import { request, fMoney, getUrlParam } from '../../../../utils'
+import { request, fMoney, getUrlParam, listMainResultStatus } from '../../../../utils'
 import moment from 'moment'
 import { withRouter } from 'react-router'
 const buttonStyle = {
@@ -54,7 +54,6 @@ class OtherBusinessInputTaxRollOut extends Component {
         opid: "", // 当前操作的记录
         readOnly: false,
         updateKey: Date.now(),
-        statusLoading: false,
         status: undefined,
         filter: undefined,
         // buttonDisabled:true,
@@ -65,18 +64,14 @@ class OtherBusinessInputTaxRollOut extends Component {
         this.setState({ visible: false });
     }
     updateStatus = (values = this.state.filter) => {
-        this.setState({ statusLoading: true,filter:values});
+        this.setState({ filter:values});
         request.get('/account/income/taxout/listMain', { params: values }).then(({ data }) => {
             if (data.code === 200) {
                 let status = {};
                 if (data.data) {
-                    if (data.data.status === 1) {
-                        status.text = '暂存'
-                    } else if (data.data.status === 2) {
-                        status.text = (<span style={{ color: 'green' }}>提交</span>)
-                    }
-                    status.submitDate = data.data.lastModifiedDate?moment(data.data.lastModifiedDate).format('YYYY-MM-DD HH:mm'):'';
-                    this.setState({ statusLoading: false, status: status, filter: values });
+                    status.status = data.data.status;
+                    status.lastModifiedDate = data.data.lastModifiedDate;
+                    this.setState({ status: status, filter: values });
                 }
             }
         })
@@ -160,10 +155,7 @@ class OtherBusinessInputTaxRollOut extends Component {
             <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />
             <Card title='其他业务进项税额转出台账' extra={(<div>
                 {
-                    status && (this.state.statusLoading?<Spin size="small" />:<div style={{ marginRight: 30, display: 'inline-block' }}>
-                        <span style={{ marginRight: 20 }}>状态：<label style={{ color: 'red' }}>{status.text}</label></span>
-                        <span>提交时间：{status.submitDate}</span>
-                    </div>)
+                  listMainResultStatus(status)
                 }
                 <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
                     <Icon type="check" />
