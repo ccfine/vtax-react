@@ -47,7 +47,7 @@ export default class TaxClassCodingSelect extends Component{
                     this.toggleModalVisible(true)
                 }
             }}>
-            <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} />
+            <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} placeholder='请选择税收分类' />
                 <TaxClassSelectPage
                     visible={visible}
                     disabled={disabled}

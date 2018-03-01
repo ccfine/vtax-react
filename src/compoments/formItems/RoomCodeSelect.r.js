@@ -6,6 +6,7 @@ import {Select,Icon,Modal} from 'antd'
 import {SearchTable} from '../../compoments'
 import {fMoney} from '../../utils'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 export default class RoomCodeSelect extends Component{
     static propTypes={
         formItemStyle:PropTypes.object,
@@ -56,7 +57,7 @@ export default class RoomCodeSelect extends Component{
             selectDisabled = !!customizedValues['mainId'];
         }
         return(
-            <div onClick={()=>{
+            <div style={{position:'relative'}} onClick={()=>{
                 if(selectDisabled){
                     this.toggleModalVisible(true)
                 }
@@ -118,6 +119,10 @@ const searchFields = context => (getFieldValue) =>{
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('stagesId') || false,
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,
+                transformData:data=>{
+                    //数组去重
+                    return _.uniqBy(data, 'buildingName');
+                }
             }
         },
     ]
@@ -186,7 +191,8 @@ const getColumns = context => [
 ]
 class RoomCodeSelectPage extends Component{
     render(){
-        const {disabled,toggleModalVisible,visible,mainId} = this.props;
+        const {props} = this;
+        const {disabled,toggleModalVisible,visible,mainId} = props;
         const filters = {
             mainId
         }
@@ -206,7 +212,7 @@ class RoomCodeSelectPage extends Component{
                             position:'absolute',
                             cursor:'pointer',
                             right:3,
-                            top:6,
+                            top:5,
                             height:23,
                             width:23,
                             borderRadius:'3px',
@@ -255,6 +261,27 @@ class RoomCodeSelectPage extends Component{
                         tableOption={{
                             columns:getColumns(this),
                             pageSize:20,
+                            onRow:record=>({
+                                onDoubleClick:()=>{
+                                    const {setFieldsValue,fieldName} = this.props;
+                                    let fieldData =  {
+                                        ...record,
+                                        key:record.roomCode,
+                                        label:record.roomCode
+                                    }
+                                    setFieldsValue({
+                                        [fieldName]:fieldData
+                                    })
+                                    props.shouldChangeFields.forEach(item=>{
+                                        setFieldsValue({
+                                            [item]:record[item]
+                                        })
+                                    })
+
+                                    props.onChange && props.onChange(fieldData)
+                                    props.toggleModalVisible(false)
+                                }
+                            }),
                             url:'/output/room/files/list',
                             cardProps:{
                                 title:''

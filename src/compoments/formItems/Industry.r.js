@@ -51,7 +51,7 @@ export default class Industry extends Component{
                     this.toggleModalVisible(true)
                 }
             }}>
-            <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} />
+            <Select dropdownStyle={{display:'none'}} labelInValue {...this.props} disabled={disabled} placeholder='选择所属行业' />
                 <IndustryTree
                     visible={visible}
                     disabled={disabled}

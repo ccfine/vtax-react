@@ -19,12 +19,6 @@ const searchFields = (getFieldValue,setFieldsValue)=> {
             componentProps:{
             },
             fieldDecoratorOptions: {
-                rules: [
-                    {
-                        required: true,
-                        message: '请选择纳税主体'
-                    }
-                ]
             },
         },
     ]
@@ -32,12 +26,12 @@ const searchFields = (getFieldValue,setFieldsValue)=> {
 const getColumns = context=> [
     {
         title: '纳税主体',
-        dataIndex: 'mainName',
+        dataIndex: 'name',
     }, {
         title: '税（费）种',
         dataIndex: 'taxType',
         render:text=>{
-            //1增值税、2企业所得税
+            /*//1增值税、2企业所得税
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
@@ -50,7 +44,8 @@ const getColumns = context=> [
                     t='增值税';
                     break;
             }
-            return t
+            return t*/
+            return '增值税'
         }
     }
 ];
@@ -124,15 +119,18 @@ class PopModal extends Component{
                     values.subordinatePeriodEnd= values.subordinatePeriod[1].format('YYYY-MM-DD')
                     values.subordinatePeriod = undefined;
                 }
-                values.month = values.month && values.month.format('YYYY-MM-DD');
+                values.declarationDate = values.declarationDate && values.declarationDate.format('YYYY-MM-DD');
                 const data = this.state.selectedRows.map(item=>{
                     return {
                         ...item,
-                        id:null,
+                        mainName:item.name,
+                        mainId:item.id,
                         taxType:1,
+                        id:null,
                         ...values,
                     }
                 })
+
                 const type = this.props.modalConfig.type;
                 this.toggleLoading(true)
                 if(type === 'add') {
@@ -249,7 +247,6 @@ class PopModal extends Component{
                 {
                     type !== 'view' && <SearchTable
                         spinning={searchTableLoading}
-                        doNotFetchDidMount={true}
                         searchOption={{
                             fields:searchFields,
                             cardProps:{
@@ -273,7 +270,7 @@ class PopModal extends Component{
                                     selectedRows,
                                 })
                             },
-                            url: '/tax/declaration/list',
+                            url: '/tax/declaration/add/list',
                         }}
                     >
                     </SearchTable>
@@ -400,7 +397,7 @@ class PopModal extends Component{
                                         }
                                     },{
                                         label:'申报日期',
-                                        fieldName:'month',
+                                        fieldName:'declarationDate',
                                         type:'datePicker',
                                         span:12,
                                         formItemStyle,

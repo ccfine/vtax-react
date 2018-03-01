@@ -20,7 +20,7 @@ const code = {
     marginRight:30,
     padding: '2px 4px'
 }
-
+// style={{width:'160px',overflow:'hidden',margin:'0 auto'}}
 const EditableCell = ({record, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
     return (
         <div>
@@ -31,15 +31,15 @@ const EditableCell = ({record, form, column, type,options,componentProps,fieldDe
                         fieldName:`${column}`,
                         type:type,
                         span:24,
-                        notLabel:true,
+                        notLabel:true,/*
                         formItemStyle:{
                             labelCol:{
-                                span:24
+                                span:0
                             },
                             wrapperCol:{
                                 span:24
                             }
-                        },
+                        },*/
                         options:options,
                         componentProps:{
                             ...componentProps,
@@ -98,14 +98,14 @@ class PopModal extends Component{
             title: '建筑面积数据来源',
             dataIndex: 'sourceType',
             render: (text, record) =>this.renderColumns(text, record, `data[${record.key}].sourceType`,'select',options),
-            width:120,
+            width:160,
         },{
             title: '建筑面积(m²)',
-            width:60,
+            width:80,
             dataIndex: 'buildingArea',
         },{
             title: '税务分摊比例',
-            width:60,
+            width:80,
             dataIndex: 'taxScale',
         }
     ];
@@ -233,7 +233,7 @@ class PopModal extends Component{
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
-                style={{ top: 50 ,maxWidth:'80%'}}
+                style={{ top: 50 }}//,maxWidth:'80%'
                 visible={props.visible}
                 footer={
                     <Row>

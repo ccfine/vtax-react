@@ -2,10 +2,10 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import { Button, Popconfirm, message, Icon,Spin } from 'antd'
+import { Button, Popconfirm, message, Icon } from 'antd'
 import { SearchTable } from '../../../../compoments'
 import PopModal from './popModal'
-import { request, fMoney, getUrlParam } from '../../../../utils'
+import { request, fMoney, getUrlParam, listMainResultStatus } from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 
@@ -43,7 +43,7 @@ const searchFields = (disabled) => {
                 disabled
             },
             fieldDecoratorOptions: {
-                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                 rules: [
                     {
                         required: true,
@@ -144,11 +144,10 @@ class OtherTaxAdjustment extends Component {
         opid: "", // 当前操作的记录
         action: 'add',
         updateKey: Date.now(),
-        filters:undefined,
-        status:undefined,
-        statusLoading:false,
-        submitLoading:false,
-        revokeLoading:false,
+        filters: undefined,
+        status: undefined,
+        submitLoading: false,
+        revokeLoading: false,
     }
     hideModal() {
         this.setState({ visible: false });
@@ -170,21 +169,14 @@ class OtherTaxAdjustment extends Component {
             })
     }
     updateStatus = (values = this.state.filter) => {
-        this.setState({ statusLoading: true,filter:values});
+        this.setState({ filter: values });
         request.get('/account/output/othertax/main/listMain', { params: values }).then(({ data }) => {
             if (data.code === 200) {
                 let status = {};
                 if (data.data) {
-                    if (data.data.status === 1) {
-                        status.text = '暂存'
-                    } else if (data.data.status === 2) {
-                        status.text = (<span style={{ color: 'green' }}>提交</span>)
-                        status.submitDate = data.data.lastModifiedDate?moment(data.data.lastModifiedDate).format('YYYY-MM-DD HH:mm'):'';
-                    }
                     status.status = data.data.status;
-                    this.setState({ statusLoading: false, status: status, filter: values });
-                }else{
-                    this.setState({ statusLoading: false, status: undefined});
+                    status.lastModifiedDate = data.data.lastModifiedDate;
+                    this.setState({ status: status, filter: values });
                 }
             }
         })
@@ -195,7 +187,7 @@ class OtherTaxAdjustment extends Component {
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success(messageInfo, 4)
-                    this.setState({ [`${action}Loading`]: false});
+                    this.setState({ [`${action}Loading`]: false });
                     this.updateStatus(params);
                 } else {
                     message.error(data.msg, 4)
@@ -206,7 +198,7 @@ class OtherTaxAdjustment extends Component {
                 message.error(err.message)
                 this.setState({ [`${action}Loading`]: false });
             })
-    } 
+    }
     submit = () => {
         let params = { ...this.state.filter };
         this.commonSubmit('/account/output/othertax/main/submit', params, 'submit', '提交成功');
@@ -224,8 +216,8 @@ class OtherTaxAdjustment extends Component {
     render() {
         const { search } = this.props.location;
         let disabled = !!search;
-        let {filters,status,buttonDisabled} = this.state;
-            buttonDisabled = buttonDisabled || !filters ;
+        let { filters, status } = this.state,
+            buttonDisabled = !filters;
         return (
             <div>
                 <SearchTable
@@ -233,9 +225,9 @@ class OtherTaxAdjustment extends Component {
                     searchOption={{
                         fields: searchFields(disabled)
                     }}
-                    backCondition = {(values)=>{ 
-                        let params = {mainId:values.mainId,taxMonth:values.adjustDate};
-                        this.setState({filters:params})
+                    backCondition={(values) => {
+                        let params = { mainId: values.mainId, taxMonth: values.adjustDate };
+                        this.setState({ filters: params })
                         this.updateStatus(params)
                     }}
                     tableOption={{
@@ -245,27 +237,24 @@ class OtherTaxAdjustment extends Component {
                         key: this.state.updateKey,
                         url: '/account/output/othertax/list',
                         cardProps: {
-                            title:'其他涉税调整台账',
+                            title: '其他涉税调整台账',
                             extra: (<div>
                                 {
-                                    status && (this.state.statusLoading?<Spin size="small" />:<div style={{ marginRight: 30, display: 'inline-block' }}>
-                                        <span style={{ marginRight: 20 }}>状态：<label style={{ color: 'red' }}>{status.text}</label></span>
-                                        <span>提交时间：{status.submitDate}</span>
-                                    </div>)
+                                    listMainResultStatus(status)
                                 }
-                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (status && status.status === 2)} onClick={this.submit} loading={this.state.submitLoading}>
+                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
                                     <Icon type="check" />
                                     提交
                                 </Button>
-                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (status && status.status !== 2)} onClick={this.revoke} loading={this.state.revokeLoading}>
+                                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
                                     <Icon type="rollback" />
                                     撤回提交
                                 </Button>
                                 <Button size='small' style={buttonStyle} onClick={() => { this.setState({ visible: true, action: 'add', opid: undefined }) }}><Icon type="plus" />新增</Button>
                             </div>)
                         },
-                        onDataChange:(data)=>{
-                            this.setState({buttonDisabled:!(data && data.length>0)});
+                        onDataChange: (data) => {
+                            this.setState({ buttonDisabled: false });
                         }
                     }}
                 >

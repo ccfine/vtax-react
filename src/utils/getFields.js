@@ -122,20 +122,7 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else if(type==='taxClassCodingSelect' || type==='industry'){
-            // 给这个税收分类编码特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
-            return (
-                <Col key={i} span={item['span'] || 8}>
-                    <FormItem label={item['label']} {...formItemStyle}>
-                        {getFieldDecorator(item['fieldName'],{
-                            ...item['fieldDecoratorOptions']
-                        })(
-                            <CusComponent fieldName={item['fieldName']} setFieldsValue={setFieldsValue} {...item['componentProps']} />
-                        )}
-                    </FormItem>
-                </Col>
-            )
-        }else if(type==='taxableProject'){
+        }else if(type==='taxableProject' || type==='taxClassCodingSelect' || type==='industry'){
             // 给这个税收分类编码特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
             return (
                 <Col key={i} span={item['span'] || 8}>
@@ -196,7 +183,19 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} options={item['options']} />
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请选择${item['label']}` } options={item['options']} />
+                        )}
+                    </FormItem>
+                </Col>
+            )
+        }else if(type==='rangePicker'){
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || [`请输入开始时间`,`请输入结束时间`] } style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>
@@ -208,7 +207,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} style={{width:'100%'}} />
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

@@ -22,7 +22,9 @@ export default class AsyncSelect extends Component{
         decoratorOptions:PropTypes.object,
 
         //外部条件，用来提供给外部控制该组件是否要异步获取信息的条件，可选
-        fetchAble:PropTypes.any
+        fetchAble:PropTypes.any,
+
+        transformData:PropTypes.func
     }
     static defaultProps={
         formItemStyle:{
@@ -42,7 +44,9 @@ export default class AsyncSelect extends Component{
         decoratorOptions:{
 
         },
-        fetchAble:true
+        fetchAble:true,
+
+        transformData:data=>data
     }
 
     constructor(props){
@@ -83,7 +87,7 @@ export default class AsyncSelect extends Component{
                     this.toggleLoaded(true)
                     const result = data.data.records || data.data;
                     this.setState({
-                        dataSource:result
+                        dataSource:this.props.transformData(result)
                     })
                 }
             });

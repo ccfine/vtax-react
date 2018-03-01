@@ -21,7 +21,7 @@ export default [
         { value: '3≤1+2+4', readOnly: true},
         { value: '4', readOnly: true},
         { value: '5≤1+4', readOnly: true},
-        { values:'6=1+2-3+4-5',readOnly:true}
+        { value:'6=1+2-3+4-5',readOnly:true}
     ],
     ...generateRows([
         []

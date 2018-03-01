@@ -46,6 +46,7 @@ class TreeTable extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
+
         if(this.props.tableOption.key !== nextProps.tableOption.key){
             /*this.setState({
                 tableUpDateKey:nextProps.tableOption.key,
@@ -85,7 +86,6 @@ class TreeTable extends Component{
                         }*/
                     }
                 }
-
                 this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
@@ -96,11 +96,10 @@ class TreeTable extends Component{
                     this.setState({
                         tableUpDateKey:Date.now(),
                     })
-
                 });
 
                 // 把查询条件返回回去
-                this.props.backCondition && this.props.backCondition(values)
+                //this.props.backCondition && this.props.backCondition(values)
             }
         });
 
@@ -135,16 +134,25 @@ class TreeTable extends Component{
                                  }*/
                                 {...searchOption.cardProps}
                             >
-                                <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                                <Form style={{display:expand?'block':'none'}}>
                                     <Row>
                                         {
                                             getFields(form,searchOption.fields)
                                         }
                                         <Col style={{width:'100%',textAlign:'right'}}>
-                                            <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                            {/* onSubmit={this.handleSubmit} htmlType="submit" */}
+                                            <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary"
+                                                    onClick={()=>{
+                                                        this.handleSubmit()
+                                                        this.props.refreshTree();
+                                                    }}
+                                            >查询</Button>
                                             <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
                                                 form.resetFields()
-                                                this.setState({ filters : {} })
+                                                this.setState({
+                                                    filters : { }
+                                                })
+                                                //this.props.refreshTree();
                                                 searchOption.onResetFields && searchOption.onResetFields();
 
                                                 //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
@@ -173,7 +181,7 @@ class TreeTable extends Component{
                                     <TreeList
                                         url={treeOption.url}
                                         showLine={treeOption.showLine}
-                                        updateKey={tableUpDateKey}
+                                        updateKey={treeOption.key}
                                         id={filters.id || 0}
                                         treeOption={{
                                             isLoadDate:treeOption.isLoadDate || true,

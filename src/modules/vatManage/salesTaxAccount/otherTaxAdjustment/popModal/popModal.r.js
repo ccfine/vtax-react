@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
-import {getFields,request} from '../../../../../utils'
+import {getFields,request,accMul} from '../../../../../utils'
 import moment from 'moment';
 const formItemLayout = {
     labelCol: {
@@ -74,6 +74,10 @@ class PopModal extends Component{
                 this.setState({typelist:data.data});
             }
         });
+    }
+    autoCalTax = (amount,tax)=>{
+        // 计算公式：销售额（不含税）*税率 
+        this.props.form.setFieldsValue({taxAmountWithTax:accMul(amount,tax)/100});
     }
     handleOk(){
         if((this.props.action!=='modify' && this.props.action!=='add') || this.state.formLoading){
@@ -234,7 +238,9 @@ class PopModal extends Component{
                                         if(obj)
                                         {
                                             this.props.form.setFieldsValue({taxRate:obj.taxRate});
-                                            this.setState({record:{businessType:value, taxRateName:obj.name, ...record}})
+                                            this.setState({record:{...record, businessType:value, taxRateName:obj.name,taxRate:obj.taxRate}})
+                                             // 计算公式：销售额（不含税）*税率
+                                             this.autoCalTax(record.amountWithoutTax,obj.taxRate);
                                         }                                        
                                     }
                                 }
@@ -254,7 +260,15 @@ class PopModal extends Component{
                             ...setComItem(record.amountWithoutTax,readonly,true,'请输入销售额（不含税）'),
                             label:'销售额（不含税）',
                             fieldName:'amountWithoutTax',
-                            type:'numeric'
+                            type:'numeric',
+                            componentProps:{
+                                disabled:readonly,
+                                onChange:(value)=>{
+                                    this.setState({record:{...record, amountWithoutTax:value}});
+                                    // 计算公式：销售额（不含税）*税率 
+                                    this.autoCalTax(value,record.taxRate);                                      
+                                }
+                            }
                         },
                         {
                             ...setComItem(record.taxAmountWithTax,readonly,true,'请输入销项（应纳）税额'),

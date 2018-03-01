@@ -3,11 +3,19 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
-import {fMoney,request,getUrlParam} from '../../../../../utils'
+import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../../utils'
 import {SearchTable} from '../../../../../compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
+const code = {
+    margin:' 0 1px',
+    background: '#f2f4f5',
+    borderRadius: '3px',
+    fontSize: '.9em',
+    border:'1px solid #eee',
+    marginRight:30,
+    padding: '2px 4px'
+}
 const searchFields =(disabled)=> [
     {
         label:'纳税主体',
@@ -28,7 +36,7 @@ const searchFields =(disabled)=> [
         },
     },{
         label:'查询期间',
-        fieldName:'month',
+        fieldName:'authMonth',
         type:'monthPicker',
         span:6,
         componentProps:{
@@ -36,7 +44,7 @@ const searchFields =(disabled)=> [
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -90,16 +98,18 @@ const columns = [{
 class tab1 extends Component{
     state={
         updateKey:Date.now(),
-        searchFieldsValues:{
-
-        },
+        filters:{},
         searchTableLoading:false,
+        /**
+         *修改状态和时间
+         * */
         statusParam:{},
-        dataSource:[],
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
+        },()=>{
+            this.updateStatus()
         })
     }
     toggleSearchTableLoading = b =>{
@@ -108,15 +118,12 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.get('/account/othertax/deducted/main/reset',{
-            params:this.state.searchFieldsValues
-        })
+        request.put('/account/othertax/deducted/main/reset',this.state.filters
+        )
             .then(({data}) => {
                 if(data.code===200){
                     message.success('重算成功!');
-                    setTimeout(()=>{
-                        this.refreshTable()
-                    },200)
+                    this.refreshTable();
                 }else{
                     message.error(`重算失败:${data.msg}`)
                 }
@@ -124,22 +131,18 @@ class tab1 extends Component{
     }
     handleClick=type=>{
         let url = '';
-        if(type ==='recount'){
-            this.recount()
-            return false;
-        }
         switch (type){
             case '提交':
                 url='/account/othertax/deducted/main/submit';
                 break;
             case '撤回':
-                url='/account/othertax/deducted/main/restore';
+                url='/account/othertax/deducted/main/revoke';
                 break;
             default:
                 break;
         }
         this.toggleSearchTableLoading(true)
-        request.post(url,this.state.searchFieldsValues)
+        request.post(url,this.state.filters)
             .then(({data})=>{
                 this.toggleSearchTableLoading(false)
                 if(data.code===200){
@@ -152,11 +155,11 @@ class tab1 extends Component{
             this.toggleSearchTableLoading(false)
         })
     }
-    updateStatus=(values)=>{
-        request.get('/account/othertax/deducted/main/get',{params:values}).then(({data}) => {
+    updateStatus=()=>{
+        request.get('/account/othertax/deducted/main/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data
+                    statusParam: data.data,
                 })
             }
         })
@@ -169,24 +172,25 @@ class tab1 extends Component{
     }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
-            this.setState({updateKey:props.updateKey});
+            this.setState({
+                updateKey:props.updateKey
+            });
         }
     }
     render(){
-        const {updateKey,searchTableLoading,statusParam,dataSource} = this.state;
-        console.log(statusParam);
-        const {mainId,month} = this.state.searchFieldsValues;
-        const disabled = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 1) && (dataSource.length > 0));
-        const disabled2 = !((mainId && month) && (statusParam && parseInt(statusParam.status, 0) === 2) && (dataSource.length > 0));
+        const {updateKey,searchTableLoading,statusParam} = this.state;
+        const {mainId,authMonth} = this.state.filters;
+        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
-        let disabled3 = !!search;
+        let disabled = !!search;
         return(
             <div style={{marginTop: '-16px'}}>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields(disabled3),
+                        fields:searchFields(disabled),
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -195,18 +199,18 @@ class tab1 extends Component{
                         onFieldsChange:values=>{
                             if(JSON.stringify(values) === "{}"){
                                 this.setState({
-                                    searchFieldsValues:{
+                                    filters:{
                                         mainId:undefined,
-                                        month:undefined
+                                        authMonth:undefined
                                     }
                                 })
-                            }else if(values.mainId || values.month){
-                                if(values.month){
-                                    values.month = values.month.format('YYYY-MM')
+                            }else if(values.mainId || values.authMonth){
+                                if(values.authMonth){
+                                    values.authMonth = values.authMonth.format('YYYY-MM')
                                 }
                                 this.setState(prevState=>({
-                                    searchFieldsValues:{
-                                        ...prevState.searchFieldsValues,
+                                    filters:{
+                                        ...prevState.filters,
                                         ...values
                                     }
                                 }))
@@ -226,16 +230,12 @@ class tab1 extends Component{
                         url:'/account/othertax/deducted/list',
                         extra: <div>
                             {
-                                JSON.stringify(statusParam) !== "{}" &&
-                                <div style={{marginRight:30,display:'inline-block'}}>
-                                    <span style={{marginRight:20}}>状态：<label style={{color:parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
-                                    <span>提交时间：{statusParam.lastModifiedDate}</span>
-                                </div>
+                                listMainResultStatus(statusParam)
                             }
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled}
+                                disabled={disabled1}
                                 onClick={this.handleReset}>
                                 <Icon type="retweet" />
                                 重算
@@ -243,7 +243,7 @@ class tab1 extends Component{
                             <Button
                                 size='small'
                                 style={{marginRight:5}}
-                                disabled={disabled}
+                                disabled={disabled1}
                                 onClick={()=>this.handleClick('提交')}>
                                 <Icon type="check" />
                                 提交
@@ -262,21 +262,27 @@ class tab1 extends Component{
                                 <div>
                                     <div style={{marginBottom:10}}>
                                         <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                        期初余额：<span className="amount-code">{data.pageAmount}</span>
-                                        本期发生额：<span className="amount-code">{data.pageTaxAmount}</span>
-                                        本期应扣除金额：<span className="amount-code">{data.pageTotalAmount}</span>
-                                        本期实际扣除金额：<span className="amount-code">{data.pageTotalPrice}</span>
-                                        期末余额：<span className="amount-code">{data.pageTotalPrice}</span>
-                                        销项税额：<span className="amount-code">{data.pageTotalPrice}</span>
+                                        期初余额：<span style={code}>{fMoney(data.pageInitialBalance)}</span>
+                                        本期发生额：<span style={code}>{fMoney(data.pageCurrentAmount)}</span>
+                                        本期应扣除金额：<span style={code}>{fMoney(data.pageCurrentDeductAmount)}</span>
+                                        本期实际扣除金额：<span style={code}>{fMoney(data.pageActualDeductAmount)}</span>
+                                        期末余额：<span style={code}>{fMoney(data.pageEndingBalance)}</span>
+                                        销项税额：<span style={code}>{fMoney(data.pageOutputTax)}</span>
+                                        价税合计：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
+                                    </div>
+                                    <div style={{marginBottom:10}}>
+                                        <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                        期初余额：<span style={code}>{fMoney(data.totalInitialBalance)}</span>
+                                        本期发生额：<span style={code}>{fMoney(data.totalCurrentAmount)}</span>
+                                        本期应扣除金额：<span style={code}>{fMoney(data.totalCurrentDeductAmount)}</span>
+                                        本期实际扣除金额：<span style={code}>{fMoney(data.totalActualDeductAmount)}</span>
+                                        期末余额：<span style={code}>{fMoney(data.totalEndingBalance)}</span>
+                                        销项税额：<span style={code}>{fMoney(data.totalOutputTax)}</span>
+                                        价税合计：<span style={code}>{fMoney(data.totalTotalAmount)}</span>
                                     </div>
                                 </div>
                             )
                         },
-                        onDataChange:(dataSource)=>{
-                            this.setState({
-                                dataSource
-                            })
-                        }
                     }}
                 >
                 </SearchTable>

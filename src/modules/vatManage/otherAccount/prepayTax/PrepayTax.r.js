@@ -54,7 +54,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -86,23 +86,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
         },
     ]
 }
-const columns = [
-
-    {
-        title:'操作',
-        key:'actions',
-        render:(text,record)=>(
-            <div>
-                {
-                    record.status === 2 && (
-                        <ButtonWithFileUploadModal
-                            id={record.id}
-                            style={{marginRight:5}} title='附件' />
-                    )
-                }
-            </div>
-        )
-    },
+const getColumns = ({state}) => [
     {
         title:'项目编号',
         dataIndex:'projectNum',
@@ -166,9 +150,8 @@ const columns = [
     },
     {
         title:'预征率',
-        dataIndex:'currentIncomeAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
+        dataIndex:'rate',
+        render:text=>text ? `${text}%` : text
     },
     {
         title:'上期未退税（负数）',
@@ -221,6 +204,8 @@ class PrepayTax extends Component{
          * */
         dataStatus:'',
         submitDate:'',
+        resultStatusId:'',
+
 
         hasData:false
     }
@@ -244,33 +229,14 @@ class PrepayTax extends Component{
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
-                            message.success('重算成功!')
+                            message.success('重算成功!');
                             this.refreshTable()
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
                     })
-            },
-            onCancel() {
-
-            },
+            }
         })
-
-    }
-    fetchResultStatus = ()=>{
-        request.get('/account/prepaytax/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
     }
     handleClickActions = action => ()=>{
         let actionText,
@@ -312,8 +278,27 @@ class PrepayTax extends Component{
             this.refreshTable()
         }
     }
+    fetchResultStatus = ()=>{
+        request.get('/account/prepaytax/listMain',{
+            params:{
+                ...this.state.searchFieldsValues,
+                authMonth:this.state.searchFieldsValues.month
+            }
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate,
+                        resultStatusId:data.data.id
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultFieldsValues} = this.state;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultStatusId,resultFieldsValues} = this.state;
         const {mainId,receiveMonth} = resultFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -324,12 +309,12 @@ class PrepayTax extends Component{
                     cardProps:{
                         className:''
                     },
-                    onResetFields:()=>{
-                       /* this.setState({
+                    /*onResetFields:()=>{
+                        this.setState({
                             submitDate:'',
                             dataStatus:''
-                        })*/
-                    },
+                        })
+                    },*/
                     onFieldsChange:values=>{
                         if(JSON.stringify(values) === "{}"){
                             this.setState({
@@ -356,22 +341,16 @@ class PrepayTax extends Component{
                 tableOption={{
                     key:tableKey,
                     onSuccess:(params,data)=>{
-                        /*if(data && data.length !==0){
-                            this.setState({
-                                submitDate:data[0].lastModifiedDate,
-                                dataStatus:data[0].status
-                            })
-                        }*/
                         this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0,
                             resultFieldsValues:params,
-                            hasData:data.length !== 0
+                        },()=>{
+                            this.fetchResultStatus()
                         })
                     },
-                    onDataChange:data=>{
-                        this.fetchResultStatus()
-                    },
                     pageSize:100,
-                    columns:columns,
+                    columns:getColumns(this),
                     url:tableUrl,
                     extra:<div>
                         {
@@ -384,6 +363,10 @@ class PrepayTax extends Component{
                                 }
                             </div>
                         }
+                        <ButtonWithFileUploadModal
+                            id={resultStatusId}
+                            disabled={parseInt(dataStatus,0) !== 2}
+                            style={{marginRight:5}} title='附件' />
                         <FileExport
                             url={`account/prepaytax/export`}
                             title="导出"
@@ -394,12 +377,12 @@ class PrepayTax extends Component{
                                 searchFieldsValues
                             }
                         />
-                        <Button onClick={this.handleClickActions('recount')} disabled={!(mainId && receiveMonth && parseInt(dataStatus,0) ===1)} size='small' style={{marginRight:5}}>
+                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && parseInt(dataStatus,0) ===1)}><Icon type="file-add" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="file-add" />提交</Button>
+                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(

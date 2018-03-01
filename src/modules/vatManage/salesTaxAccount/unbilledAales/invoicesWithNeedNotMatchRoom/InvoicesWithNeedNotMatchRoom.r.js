@@ -153,14 +153,12 @@ class InvoicesWithNeedNotMatchRoom extends Component{
                                     本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                     本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
                                     本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                 </div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
                                     总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
                                     总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
                                     总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                    全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                 </div>
                             </div>
                         )

@@ -75,8 +75,8 @@ class OrganizationalStructureMaintenance extends Component {
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         updateTable:Date.now(),
-
-        selectedRowKeys:undefined,
+        updateTree:Date.now(),
+        id:undefined,
         selectedRows:[],
         selectedNodes:undefined,
         visible:false, // 控制Modal是否显示
@@ -97,9 +97,20 @@ class OrganizationalStructureMaintenance extends Component {
             visible
         })
     }
+    refreshTree = ()=>{
+        this.setState({
+            updateTree:Date.now(),
+        })
+    }
     refreshTable = ()=>{
         this.setState({
-            updateTable:Date.now()
+            updateTable:Date.now(),
+        })
+    }
+    refreshAll = ()=>{
+        this.setState({
+            updateTree:Date.now(),
+            updateTable:Date.now(),
         })
     }
     showModal=type=>{
@@ -112,7 +123,7 @@ class OrganizationalStructureMaintenance extends Component {
         this.setState({
             modalConfig:{
                 type,
-                id:this.state.selectedRowKeys
+                id:this.state.id
             }
         })
     }
@@ -125,12 +136,12 @@ class OrganizationalStructureMaintenance extends Component {
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleSearchTableLoading(true)
-                request.delete(`/org/delete/${this.state.selectedRowKeys}`)
+                request.delete(`/org/delete/${this.state.id}`)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
                             message.success('删除成功！');
-                            this.refreshTable();
+                            this.refreshAll();
                         }else{
                             message.error(`删除失败:${data.msg}`)
                         }
@@ -145,7 +156,7 @@ class OrganizationalStructureMaintenance extends Component {
     }
     disabledData=()=>{
         this.toggleSearchTableLoading(true)
-        request.put(`/org/enableOrDisable/${this.state.selectedRowKeys}`)
+        request.put(`/org/enableOrDisable/${this.state.id}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.toggleSearchTableLoading(false)
@@ -158,10 +169,11 @@ class OrganizationalStructureMaintenance extends Component {
             })
     }
     render() {
-        const {updateTable,searchTableLoading,visible,modalConfig,selectedRowKeys,selectedNodes,filters} = this.state;
+        const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,selectedNodes,filters} = this.state;
         return (
             <TreeTable
                 spinning={searchTableLoading}
+                refreshTree={this.refreshTree}
                 searchOption={{
                     fields:searchFields,
                     filters:filters,
@@ -178,19 +190,19 @@ class OrganizationalStructureMaintenance extends Component {
                 }}
                 cardTableOption={{
                     extra:<div>
-                        <Button size="small" style={buttonStyle} onClick={()=>this.showModal('add')} >
+                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('add')} >
                             <Icon type="file-add" />
                             新增
                         </Button>
-                        <Button size="small" disabled={!selectedRowKeys} style={buttonStyle} onClick={()=>this.showModal('edit')}>
+                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('edit')}>
                             <Icon type="edit" />
                             编辑
                         </Button>
-                        <Button size="small" style={buttonStyle} disabled={!selectedRowKeys} type='danger' onClick={this.deleteData}>
+                        <Button size="small" style={buttonStyle} disabled={!id} type='danger' onClick={this.deleteData}>
                             <Icon type="delete" />
                             删除
                         </Button>
-                        <Button size="small" style={buttonStyle} disabled={!selectedRowKeys} type='danger' onClick={this.disabledData}>
+                        <Button size="small" style={buttonStyle} disabled={!id} type='danger' onClick={this.disabledData}>
                             <Icon type="delete" />
                             禁用/启用
                         </Button>
@@ -202,13 +214,14 @@ class OrganizationalStructureMaintenance extends Component {
                     }
                 }}
                 treeOption={{
-                    key:updateTable,
+                    key:updateTree,
                     showLine:false,
                     url:"/org/tree",
                     //isLoadDate:false,
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
                             selectedNodes,
+                            id:selectedKeys[0],
                             filters:{
                                 id:selectedNodes.id
                             }
@@ -227,7 +240,7 @@ class OrganizationalStructureMaintenance extends Component {
                     url:'/org/list',
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
-                            selectedRowKeys:selectedRowKeys[0],
+                            id:selectedRowKeys[0],
                             selectedRows,
                         })
                     },
@@ -236,7 +249,7 @@ class OrganizationalStructureMaintenance extends Component {
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} selectedNodes={selectedNodes} toggleModalVisible={this.toggleModalVisible} />
+                <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} selectedNodes={selectedNodes} toggleModalVisible={this.toggleModalVisible} />
             </TreeTable>
         )
     }

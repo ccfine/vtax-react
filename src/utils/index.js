@@ -3,6 +3,7 @@
  * createTime   : 2017/12/5 18:09
  * description  :
  */
+import React from 'react';
 import request from './request'
 import composeMenus from './composeMenus'
 import regRules from './regRules'
@@ -170,6 +171,43 @@ const htmlDecode = html =>{
     }
 };
 
+//将0.5转换成50%
+const toPercent = val=>{
+    let valNum = Number(val);
+    if(Number.isNaN(valNum) || valNum === 0)return val;
+    return `${valNum*100}%`;
+}
+
+//将50%转换成0.5
+const fromPercent = val=>{
+    let valTrim = val.replace?val.replace('%',''):val;
+    let valNum = Number(valTrim);
+    if(Number.isNaN(valNum))return val;
+    return valNum/100;
+}
+
+// 提交、撤回相关 状态显示
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
+const listMainResultStatus = (statusParam) =>{
+    return (statusParam && statusParam.status) && <div style={{marginRight: 30, display: 'inline-block'}}>
+                                <span style={{marginRight: 20}}>状态：<label style={{color: 'red'}}>{
+                                    transformDataStatus(statusParam.status)
+                                }</label></span>
+        {
+            statusParam.lastModifiedDate && <span>提交时间：{statusParam.lastModifiedDate}</span>
+        }
+    </div>
+}
+
 export {
     regRules,
     request,
@@ -183,4 +221,7 @@ export {
     accAdd,
     getFields,
     htmlDecode,
+    toPercent,
+    fromPercent,
+    listMainResultStatus
 }

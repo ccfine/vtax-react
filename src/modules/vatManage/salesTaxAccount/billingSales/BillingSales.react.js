@@ -6,11 +6,10 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Icon} from 'antd'
 import {AsyncTable,FileExport} from '../../../../compoments'
-import {getFields,fMoney,request,getUrlParam} from '../../../../utils'
+import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
 const columns = context => [
     {
         title: '项目',
@@ -174,59 +173,6 @@ class BillingSales extends Component {
         dataSource1:[],
         dataSource2:[],
     }
-    handleSubmit = (e,type) => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                const value = {
-                    ...values,
-                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
-                }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/account/output/billingSale/submit';
-                        this.requestPost(url,type,value);
-                        break;
-                    case '撤回':
-                        url = '/account/output/billingSale/revoke';
-                        this.requestPost(url,type,value);
-                        break;
-                    case '重算':
-                        url = '/account/output/billingSale/reset';
-                        this.requestPost(url,type,value);
-                        break;
-                    default:
-                        this.setState({
-                            filters:value
-                        },()=>{
-                            this.updateStatus(value);
-                        });
-                }
-
-
-
-            }
-        });
-    }
-    requestPost=(url,type,value={})=>{
-        request.post(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.updateStatus(value);
-                    //this.props.form.resetFields()
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.handleSubmit();
-        }
-    }
     toggleModalVisible=visible=>{
         this.setState({
             visible
@@ -235,17 +181,81 @@ class BillingSales extends Component {
     refreshTable = ()=>{
         this.setState({
             tableUpDateKey:Date.now()
+        },()=>{
+            this.updateStatus()
         })
     }
-    updateStatus=(values)=>{
-        request.get('/account/output/billingSale/main',{params:values}).then(({data}) => {
+    handleSubmit = (e,type) => {
+        e && e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                if(values.authMonth){
+                    values.authMonth = values.authMonth.format('YYYY-MM')
+                }
+                let url= null;
+                switch (type){
+                    case '提交':
+                        url = '/account/output/billingSale/submit';
+                        this.requestPost(url,type,values);
+                        break;
+                    case '撤回':
+                        url = '/account/output/billingSale/revoke';
+                        this.requestPost(url,type,values);
+                        break;
+                    case '重算':
+                        url = '/account/output/billingSale/reset';
+                        this.requestPut(url,type,values);
+                        break;
+                    default:
+                        this.setState({
+                            filters:values
+                        },()=>{
+                            this.refreshTable();
+                        });
+                }
+
+
+
+            }
+        });
+    }
+    requestPut=(url,type,value={})=>{
+        request.put(url,value)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success(`${type}成功!`);
+                    this.refreshTable();
+                }else{
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
+    requestPost=(url,type,value={})=>{
+        request.post(url,value)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success(`${type}成功!`);
+                    this.refreshTable();
+                    //this.props.form.resetFields()
+                }else{
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
+    updateStatus=()=>{
+        request.get('/account/output/billingSale/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    statusParam: data.data,
-                    tableUpDateKey:Date.now()
+                    statusParam: data.data
                 })
             }
         })
+    }
+    componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.handleSubmit();
+        }
     }
     render(){
         const {tableUpDateKey,filters,dataSource1,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
@@ -292,11 +302,11 @@ class BillingSales extends Component {
                                             disabled:disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonthStart'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
-                                                    message:'请选择认证月份'
+                                                    message:'请选择查询期间'
                                                 }
                                             ]
                                         },
@@ -316,15 +326,10 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-房地产"
                       extra={<div>
                           {
-                              (JSON.stringify(statusParam) !== "{}" && dataSource1.length > 0) &&
-                              <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
-                                  <span>提交时间：{statusParam.lastModifiedDate}</span>
-                              </div>
+                              listMainResultStatus(statusParam)
                           }
                           <FileExport
-                              url='/account/output/billingSale/export'
+                              url={`/account/output/billingSale/export`}
                               title='导出'
                               setButtonStyle={{marginRight:5}}
                               disabled={!dataSource1.length>0}
@@ -378,7 +383,7 @@ class BillingSales extends Component {
                 </Card>
                 <Card title="开票销售统计表-非地产" extra={<div>
                     <FileExport
-                        url='/account/output/billingSale/export'
+                        url={`/account/output/billingSale/export`}
                         title='导出'
                         setButtonStyle={{marginRight:5}}
                         disabled={!dataSource2.length>0}

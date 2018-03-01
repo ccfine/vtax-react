@@ -6,50 +6,81 @@ import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
 import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
+import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import moment from 'moment';
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:6
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:18
+        }
+    }
+}
 const getColumns = context => [
     {
         title: '操作',
         key: 'actions',
-        render: (text, record) => (
-            <span style={{
-                color:'#f5222d',
-                cursor:'pointer'
-            }} onClick={()=>{
-                if(parseInt(record.matchingStatus,0) ===1){
-                    const errorModalRef = Modal.warning({
+        render: (text, record) => {
+            return parseInt(context.state.dataStatus,0) === 1 ? (
+                <span style={{
+                    color:'#f5222d',
+                    cursor:'pointer'
+                }} onClick={()=>{
+                    if(parseInt(record.matchingStatus,0) ===1){
+                        const errorModalRef = Modal.warning({
+                            title: '友情提醒',
+                            content: '只能删除未匹配的数据!',
+                            okText: '确定',
+                            onOk:()=>{
+                                errorModalRef.destroy()
+                            },
+                            onCancel() {
+                                errorModalRef.destroy()
+                            },
+                        });
+                        return false;
+                    }
+                    const modalRef = Modal.confirm({
                         title: '友情提醒',
-                        content: '只能删除未匹配的数据!',
+                        content: '该删除后将不可恢复，是否删除？',
                         okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
                         onOk:()=>{
-                            errorModalRef.destroy()
+                            context.deleteRecord(record.id,()=>{
+                                modalRef && modalRef.destroy();
+                                context.refreshTable()
+                            })
                         },
                         onCancel() {
-                            errorModalRef.destroy()
+                            modalRef.destroy()
                         },
                     });
-                    return false;
-                }
-                const modalRef = Modal.confirm({
-                    title: '友情提醒',
-                    content: '该删除后将不可恢复，是否删除？',
-                    okText: '确定',
-                    okType: 'danger',
-                    cancelText: '取消',
-                    onOk:()=>{
-                        context.deleteRecord(record.id,()=>{
-                            modalRef && modalRef.destroy();
-                            context.refreshTable()
-                        })
-                    },
-                    onCancel() {
-                        modalRef.destroy()
-                    },
-                });
-            }}>
+                }}>
                 删除
             </span>
-        )
+            ) : ''
+        }
     },
     {
         title:'纳税主体',
@@ -95,7 +126,9 @@ const getColumns = context => [
     },
     {
         title:'房间面积',
-        dataIndex:'roomArea'
+        dataIndex:'roomArea',
+        render:text=>`${text}`,
+        className:'text-right'
     },
     {
         title:'匹配状态',
@@ -122,6 +155,17 @@ class RoomTransactionFile extends Component{
         tableUpDateKey:Date.now(),
 
         selectedRowKeys:null,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
+
+        searchFieldsValues:{
+
+        },
+        hasData:false
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -158,8 +202,6 @@ class RoomTransactionFile extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.handleSubmit()
-        }else{
-            this.handleSubmit()
         }
     }
     refreshTable = ()=>{
@@ -178,8 +220,23 @@ class RoomTransactionFile extends Component{
                 }
             })
     }
+    fetchResultStatus = ()=>{
+        request.get('/output/room/files/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+    }
     render(){
-        const {tableUpDateKey,filters} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus,hasData} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -189,7 +246,6 @@ class RoomTransactionFile extends Component{
                     style={{
                         borderTop:'none'
                     }}
-                    className="search-card"
                 >
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
@@ -203,8 +259,15 @@ class RoomTransactionFile extends Component{
                                         componentProps:{
                                             disabled,
                                         },
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
                                         },
                                     },
                                     {
@@ -212,6 +275,7 @@ class RoomTransactionFile extends Component{
                                         fieldName:'projectId',
                                         type:'asyncSelect',
                                         span:6,
+                                        formItemStyle,
                                         componentProps:{
                                             fieldTextName:'itemName',
                                             fieldValueName:'id',
@@ -225,6 +289,7 @@ class RoomTransactionFile extends Component{
                                         fieldName:'stagesId',
                                         type:'asyncSelect',
                                         span:6,
+                                        formItemStyle,
                                         componentProps:{
                                             fieldTextName:'itemName',
                                             fieldValueName:'id',
@@ -237,42 +302,54 @@ class RoomTransactionFile extends Component{
                                         label:'房号',
                                         fieldName:'roomNumber',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'客户名称',
                                         fieldName:'customerName',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
                                         label:'发票代码',
                                         fieldName:'invoiceCode',
                                         type:'input',
+                                        formItemStyle,
                                         span:6
                                     },
                                     {
-                                        label:'交易日期',
+                                        label:'交易月份',
                                         fieldName:'transactionDate',
-                                        type:'rangePicker',
+                                        type:'monthPicker',
+                                        formItemStyle,
                                         span:6,
                                         componentProps:{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM')]) || undefined,
+                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择交易月份'
+                                                }
+                                            ]
                                         }
                                     },
                                     {
                                         label:'匹配状态',
                                         fieldName:'matchingStatus',
                                         type:'select',
+                                        formItemStyle,
                                         span:6,
                                         options:[
                                             {
@@ -297,8 +374,66 @@ class RoomTransactionFile extends Component{
                 </Card>
                 <Card style={{marginTop:10}} extra={
                     <div>
+                        {
+                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <FileImportModal
                             url="/output/room/files/upload"
+                            fields={
+                                [
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:17
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
+                                        },
+                                    },
+                                    {
+                                        label:'交易月份',
+                                        fieldName:'transactionDate',
+                                        type:'monthPicker',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:17
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择交易月份'
+                                                }
+                                            ]
+                                        }
+                                    },
+                                ]
+                            }
                             onSuccess={()=>{
                                 this.refreshTable()
                             }}
@@ -309,6 +444,8 @@ class RoomTransactionFile extends Component{
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
+                        <SubmitOrRecall type={1} url="/output/room/files/submit" onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} url="/output/room/files/revoke" onSuccess={this.refreshTable} />
                     </div>
                 }>
                     <AsyncTable url={'/output/room/files/list'}
@@ -319,6 +456,14 @@ class RoomTransactionFile extends Component{
                                     pagination:true,
                                     pageSize:10,
                                     size:'small',
+                                    onSuccess:(params,data)=>{
+                                        this.setState({
+                                            hasData:data.length !==0,
+                                            searchFieldsValues:params,
+                                        },()=>{
+                                            this.state.hasData && this.fetchResultStatus()
+                                        })
+                                    },
                                     renderFooter:data=>{
                                         return(
                                             <div>

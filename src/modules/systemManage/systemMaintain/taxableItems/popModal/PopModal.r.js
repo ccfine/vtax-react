@@ -40,7 +40,7 @@ class PopModal extends Component{
                     const props = this.props;
                     message.success('更新成功!');
                     props.toggleModalVisible(false);
-                    props.refreshTable()
+                    props.refreshAll()
                 }else{
                     message.error(`更新失败:${data.msg}`)
                 }
@@ -55,7 +55,7 @@ class PopModal extends Component{
                     const props = this.props;
                     message.success('新增成功!');
                     props.toggleModalVisible(false);
-                    props.refreshTable()
+                    props.refreshAll()
                 }else{
                     message.error(`新增失败:${data.msg}`)
                 }
@@ -109,7 +109,11 @@ class PopModal extends Component{
                     }
                     this.updateRecord(data)
                 }else if(type==='add'){
-                    this.createRecord(values)
+                    const data = {
+                        parentId:this.props.modalConfig.id,
+                        ...values
+                    }
+                    this.createRecord(data)
                 }
             }
         });

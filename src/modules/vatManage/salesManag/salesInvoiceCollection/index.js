@@ -1,2 +1,1 @@
-import SalesInvoiceCollection from './SalesInvoiceCollection.r'
-export default SalesInvoiceCollection
+export {default} from './SalesInvoiceCollection.r'

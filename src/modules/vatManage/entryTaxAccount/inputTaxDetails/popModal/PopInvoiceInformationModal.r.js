@@ -57,7 +57,7 @@ class PopInvoiceInformationModal extends Component{
             width:180,
         }, {
             title: '发票类型',
-            dataIndex: 'invoiceType',
+            dataIndex: 'invoiceTypeName',
             width:180,
         },{
             title: '发票代码',
@@ -178,7 +178,7 @@ class PopInvoiceInformationModal extends Component{
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                         }
                                     },
@@ -216,7 +216,7 @@ class PopInvoiceInformationModal extends Component{
                                 pagination:true,
                                 size:'small',
                                 columns:this.columns,
-                                scroll:{ x: '210%', y: 200 },
+                                scroll:{ x: '210%'},
                                 renderFooter:data=>{
                                     return (
                                         <div>

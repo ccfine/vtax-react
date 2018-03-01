@@ -78,7 +78,11 @@ export default class ApplyDeclarationPopModal extends Component{
         this.setState({
             current
         },()=>{
-            this.fetchDeclarationById(current)
+            this.fetchDeclarationById({
+                decConduct:current,
+                mainId:this.props.selectedRows[0].mainId,
+                authMonth:this.props.selectedRows[0].partTerm,
+            })
         });
     }
     getContent = (current,routes) => {
@@ -111,16 +115,14 @@ export default class ApplyDeclarationPopModal extends Component{
                 renderItem={item => (
                     <List.Item>
                         <Card>
-                            <Link style={{color: 'rgba(0, 0, 0, 0.65)'}} to={{
+                            <Link target="_target" style={{color: 'rgba(0, 0, 0, 0.65)'}} to={{
                                 pathname:item.path,  //`${item.path}?mainId=${this.props.selectedRows[0].id}`,
                                 search:`?${parseJsonToParams({mainId:this.props.selectedRows[0].mainId,
-                                    authMonthStart:this.props.selectedRows[0].subordinatePeriodStart,
-                                    authMonthEnd:this.props.selectedRows[0].subordinatePeriodEnd})}`, //getQueryString('mainId') || undefined
+                                    authMonth:this.props.selectedRows[0].partTerm})}`, //getQueryString('mainId') || undefined
                                 state:{  //在跳转标签的时候值就不存在了
                                     filters:{
                                         mainId:this.props.selectedRows[0].mainId,
-                                        authMonthStart:this.props.selectedRows[0].subordinatePeriodStart,
-                                        authMonthEnd:this.props.selectedRows[0].subordinatePeriodEnd,
+                                        authMonth:this.props.selectedRows[0].partTerm,
                                     }  //const {state} = this.props.location;  state && state.filters.mainId || undefined,
                                 }
                             }}>{item.name} 【{parseInt(item.status,0) === 1 ? <span style={{color:'red'}}>未提交</span> : <span style={{color:'#333'}}>已提交</span> }】</Link>
@@ -131,18 +133,24 @@ export default class ApplyDeclarationPopModal extends Component{
             />
         )
     }
-    fetchDeclarationById =(decConduct)=>{
-        request.get(`/tax/decConduct/list?decConduct=${decConduct}`)
-            .then(({data})=>{
+    fetchDeclarationById =(data)=>{
+        request.get('/tax/decConduct/list',{
+            params:data
+        }).then(({data})=>{
                 this.setState({
                     data:data.data,
                 })
             })
     }
-    componentDidMount(){
-        this.fetchDeclarationById(this.state.current)
-    }
     componentWillReceiveProps(nextProps) {
+        if(nextProps.selectedRows.length > 0){
+            this.fetchDeclarationById({
+                decConduct:this.state.current,
+                mainId:nextProps.selectedRows[0].mainId,
+                authMonth:nextProps.selectedRows[0].partTerm,
+            })
+        }
+
 
     }
 

@@ -7,8 +7,8 @@ const generateData = (preFix,length,rowNumber,first)=>{
     while (length >= i){
         arr.push({
             readOnly:true,
-            value:`--`,
-            key:`${preFix}${i}`
+            key:`${preFix}${i}`,
+            value:`--`
         })
         i++;
     }
@@ -124,5 +124,5 @@ export default [
         ...generateData('U',14,18,{readOnly: true,value: '货物及加工修理修配劳务',colSpan:3}),
     ],
 
-    generateData('W',14,19,{readOnly: true,value: '服务、不动产和无形资产',colSpan:3}),
+    generateData('V',14,19,{readOnly: true,value: '服务、不动产和无形资产',colSpan:3}),
 ]

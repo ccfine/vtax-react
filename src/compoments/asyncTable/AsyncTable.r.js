@@ -24,13 +24,18 @@ export default class AsyncTable extends Component{
         }
     }
     static propTypes={
-        tableProps:PropTypes.object.isRequired,
+        tableProps:PropTypes.shape({
+            clearSelectedRowAfterFetch:PropTypes.bool
+        }),
         updateKey:PropTypes.number,
         url:PropTypes.string.isRequired,
         filters:PropTypes.object
         //columns:PropTypes.array.isRequired
     }
     static defaultProps={
+        tableProps:{
+            clearSelectedRowAfterFetch:true
+        },
         updateKey:Date.now(),
     }
     componentWillReceiveProps(nextProps){
@@ -88,7 +93,7 @@ export default class AsyncTable extends Component{
                 });
 
                 /**假如设置了单选或多选，重新异步请求数据的时候选中项也要清空，也要主动触发一下selectedRowKeys的onChange*/
-                props.tableProps.onRowSelect && props.tableProps.onRowSelect([],[])
+                props.tableProps.clearSelectedRowAfterFetch && props.tableProps.onRowSelect && props.tableProps.onRowSelect([],[])
             }else{
                 message.error(data.msg)
                 this.mounted && this.setState({

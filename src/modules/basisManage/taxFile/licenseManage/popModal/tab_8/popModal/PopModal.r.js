@@ -74,9 +74,11 @@ class PopModal extends Component{
                 // 提交数据    
                 if(values.projectStages){
                     values.stagesId = values.projectStages.key;
-                    values.stagesItemName = values.projectStages.label;
+                    values.stagesName = values.projectStages.label;
                     values.projectStages=undefined;
-                }            
+                }
+                
+                console.log('values',values);
                 
                 // 处理日期
                 values.issueDate = values.issueDate.format('YYYY-MM-DD');
@@ -168,7 +170,7 @@ class PopModal extends Component{
                         getFields(form,[{
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',
@@ -273,7 +275,12 @@ class PopModal extends Component{
                     </Row>
                 </Form>
                 </Spin>
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='card/house/sales'/>
+                <FileModal 
+                    id={this.props.id || record.id} 
+                    visible={this.state.visible} 
+                    hideModal={this.hideFileModal} 
+                    url='card/house/sales'
+                    readOnly={this.props.action==="look"}/>
             </Modal>
         );
     }

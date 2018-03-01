@@ -5,11 +5,57 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Popconfirm,Icon} from 'antd'
-import {AsyncTable,FileExport,PopUploadModal} from '../../../../compoments'
-import {getFields,request,getUrlParam,fMoney} from '../../../../utils'
+import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
+import {getFields,request,getUrlParam,fMoney,listMainResultStatus} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:15
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:15
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: '请选择认证月份'
+                }
+            ]
+        },
+    }
+]
 class InputTaxOnFixedAssets extends Component {
     state={
         /**
@@ -18,14 +64,15 @@ class InputTaxOnFixedAssets extends Component {
         filters:{
             pageSize:20
         },
-
+        /**
+         *修改状态和时间
+         * */
+        statusParam:{},
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey:Date.now(),
         visible:false,
-        dataSource:[],
-        statusParam:{},
     }
 
     columns = [
@@ -76,18 +123,17 @@ class InputTaxOnFixedAssets extends Component {
                 if(data.code===200){
                     this.setState({ loading:false })
                     message.success(`${type}成功!`);
-                    this.updateStatus(value);
+                    this.refreshTable();
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
     }
-    updateStatus=(values)=>{
-        request.get('/account/income/fixedAssets/main',{params:values}).then(({data}) => {
+    updateStatus=()=>{
+        request.get('/account/income/fixedAssets/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     statusParam: data.data,
-                    tableUpDateKey:Date.now()
                 })
             }
         })
@@ -96,25 +142,24 @@ class InputTaxOnFixedAssets extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const value = {
-                    ...values,
-                    authMonth: values.authMonth && values.authMonth.format('YYYY-MM')
+                if(values.authMonth){
+                    values.authMonth = values.authMonth.format('YYYY-MM')
                 }
                 let url= null;
                 switch (type){
                     case '提交':
                         url = '/account/income/fixedAssets/submit';
-                        this.requestPost(url,type,value);
+                        this.requestPost(url,type,values);
                         break;
                     case '撤回':
                         url = '/account/income/fixedAssets/revoke';
-                        this.requestPost(url,type,value);
+                        this.requestPost(url,type,values);
                         break;
                     default:
                         this.setState({
-                            filters:value
+                            filters:values
                         },()=>{
-                            this.updateStatus(value);
+                            this.refreshTable()
                         });
                 }
             }
@@ -135,10 +180,12 @@ class InputTaxOnFixedAssets extends Component {
     refreshTable = ()=>{
         this.setState({
             tableUpDateKey:Date.now()
+        },()=>{
+            this.updateStatus();
         })
     }
     render(){
-        const {tableUpDateKey,filters,dataSource,statusParam} = this.state
+        const {tableUpDateKey,filters,statusParam} = this.state
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -181,7 +228,7 @@ class InputTaxOnFixedAssets extends Component {
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonthStart'), 'YYYY-MM'))) || undefined,
+                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonth'), 'YYYY-MM'))) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -204,16 +251,12 @@ class InputTaxOnFixedAssets extends Component {
                 </Card>
                 <Card extra={<div>
                     {
-                        (JSON.stringify(statusParam) !== "{}" && dataSource.length > 0) &&
-                        <div style={{marginRight: 30, display: 'inline-block'}}>
-                                  <span style={{marginRight: 20}}>状态：<label
-                                      style={{color: parseInt(statusParam.status, 0) === 1 ? 'red' : 'green'}}>{parseInt(statusParam.status, 0) === 1 ? '保存' : '提交'}</label></span>
-                            <span>提交时间：{statusParam.lastModifiedDate}</span>
-                        </div>
+                        listMainResultStatus(statusParam)
                     }
-                    <PopUploadModal
+                    <FileImportModal
                         url="/account/income/fixedAssets/upload"
                         title="导入"
+                        fields={fields}
                         onSuccess={()=>{
                             this.refreshTable()
                         }}
@@ -251,11 +294,6 @@ class InputTaxOnFixedAssets extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
-                                    onDataChange:(dataSource)=>{
-                                        this.setState({
-                                            dataSource
-                                        })
-                                    },
                                 }} />
                 </Card>
             </Layout>

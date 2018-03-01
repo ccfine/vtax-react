@@ -6,8 +6,27 @@ import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from '../../../../../compoments'
 import {fMoney,request,getUrlParam} from '../../../../../utils'
+import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
+import moment from 'moment';
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
 
+        span:14
+    }
+}
+const code = {
+    margin:' 0 1px',
+    background: '#f2f4f5',
+    borderRadius: '3px',
+    fontSize: '.9em',
+    border:'1px solid #eee',
+    marginRight:30,
+    padding: '2px 4px'
+}
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -18,8 +37,34 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             componentProps:{
                 disabled,
             },
+            formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            },
+        },
+        {
+            label:'查询期间',
+            fieldName:'authMonth',
+            type:'monthPicker',
+            span:6,
+            formItemStyle,
+            componentProps:{
+                format:'YYYY-MM',
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择查询期间'
+                    }
+                ]
             },
         },
         {
@@ -27,6 +72,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             fieldName:'projectId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -40,6 +86,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             fieldName:'stagesId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -52,12 +99,14 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'楼栋',
             fieldName:'buildingName',
             type:'input',
+            formItemStyle,
             span:6
         },
         {
             label:'房号',
             fieldName:'roomNumber',
             type:'input',
+            formItemStyle,
             span:6
         }
     ]
@@ -103,6 +152,16 @@ const parseJsonToParams = data=>{
     }
     return str;
 }
+const transformDataStatus = status =>{
+    status = parseInt(status,0)
+    if(status===1){
+        return '暂存';
+    }
+    if(status===2){
+        return '提交'
+    }
+    return status
+}
 class AdvanceCarryOver extends Component{
     state={
         tableKey:Date.now(),
@@ -112,6 +171,14 @@ class AdvanceCarryOver extends Component{
         selectedRowKeys:[],
 
         searchTableLoading:false,
+
+        /**
+         *修改状态和时间
+         * */
+        dataStatus:'',
+        submitDate:'',
+
+        hasData:false
     }
     refreshTable = ()=>{
         this.setState({
@@ -122,6 +189,21 @@ class AdvanceCarryOver extends Component{
         this.setState({
             searchTableLoading:b
         })
+    }
+    fetchResultStatus = ()=>{
+        request.get('/account/output/notInvoiceAdvance/listMain',{
+            params:this.state.searchFieldsValues
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        dataStatus:data.data.status,
+                        submitDate:data.data.lastModifiedDate
+                    })
+                }else{
+                    message.error(`列表主信息查询失败:${data.msg}`)
+                }
+            })
     }
     deleteData = () =>{
         const modalRef = Modal.confirm({
@@ -154,12 +236,10 @@ class AdvanceCarryOver extends Component{
         const {search} = this.props.location;
         if(!!search){
             this.refreshTable()
-        }else{
-            this.refreshTable()
         }
     }
     render(){
-        const {tableKey,selectedRowKeys,searchTableLoading,searchFieldsValues} = this.state;
+        const {tableKey,selectedRowKeys,searchTableLoading,searchFieldsValues,dataStatus,submitDate} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -167,6 +247,7 @@ class AdvanceCarryOver extends Component{
                 style={{
                     marginTop:-16
                 }}
+                doNotFetchDidMount={true}
                 spinning={searchTableLoading}
                 searchOption={{
                     fields:searchFields(disabled),
@@ -178,20 +259,39 @@ class AdvanceCarryOver extends Component{
                     cardProps:{
                         style:{
                             borderTop:0
-                        }
+                        },
+                        className:''
                     }
                 }}
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
                     columns:columns,
-                    onRowSelect:(selectedRowKeys)=>{
+                    onRowSelect:parseInt(dataStatus,0) === 1 ? (selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
+                        })
+                    } : undefined,
+                    onSuccess:(params,data)=>{
+                        this.setState({
+                            searchFieldsValues:params,
+                            hasData:data.length !== 0
+                        },()=>{
+                            this.state.hasData && this.fetchResultStatus()
                         })
                     },
                     url:'/account/output/notInvoiceAdvance/list',
                     extra:<div>
+                        {
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                    transformDataStatus(dataStatus)
+                                }</label></span>
+                                {
+                                    submitDate && <span>提交时间：{submitDate}</span>
+                                }
+                            </div>
+                        }
                         <FileImportModal url="/account/output/notInvoiceAdvance/upload" onSuccess={this.refreshTable} style={{marginRight:5}} />
                         <FileExport
                             url={`account/output/notInvoiceSale/download?${parseJsonToParams(searchFieldsValues)}`}
@@ -199,14 +299,16 @@ class AdvanceCarryOver extends Component{
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
-                        <Button size="small" type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
+                        <Button size="small" type='danger' style={{marginRight:5}} onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
+                        <SubmitOrRecall type={1} url="/account/output/notInvoiceAdvance/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} url="/account/output/notInvoiceAdvance/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
                     </div>,
                     renderFooter:data=>{
                         return(
                             <div>
                                 <div style={{marginBottom:10}}>
                                     <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                    预结转收入金额：<span className="amount-code">{data.pageAmount}</span>
+                                    预结转收入金额：<span style={code}>{fMoney(data.pageAmount)}</span>
                                 </div>
                             </div>
                         )

@@ -18,10 +18,12 @@ const transformData = data =>{
 }
 class ButtonWithFileUploadModal extends Component{
     static propTypes={
-        id:PropTypes.any.isRequired
+        id:PropTypes.any.isRequired,
+        disabled:PropTypes.bool
     }
     static defaultProps={
-        title:'导入'
+        title:'导入',
+        disabled:false
     }
     state={
         visible:false,
@@ -66,16 +68,16 @@ class ButtonWithFileUploadModal extends Component{
         })
     }
     deleteRecord=id=>{
-        /*request.delete(`/${this.props.deleteOptions.url}/${id}`).then(({data}) => {
+        return request.delete(`sys/file/delete/${id}`).then(({data}) => {
             if (data.code === 200) {
-                this.updateFileList(this.props.fetchOptions.url);
+                this.fetchFileList();
             } else {
                 message.error(`文件删除失败:${data.msg}`, 4);
             }
         })
             .catch(err => {
-                this.toggleLoaded(true)
-            })*/
+
+            })
     }
     render(){
         const props = this.props;
@@ -88,17 +90,18 @@ class ButtonWithFileUploadModal extends Component{
             onPreview:(file)=>{
                 this.handleDownload(file.uid)
             },
-            /*onRemove: (file) => {
+            onRemove: (file) => {
 
-                this.setState(({ fileList }) => {
+                /*this.setState(({ fileList }) => {
                     const index = fileList.indexOf(file);
                     const newFileList = fileList.slice();
                     newFileList.splice(index, 1);
                     return {
                         fileList: newFileList,
                     };
-                });
-            },*/
+                });*/
+                return this.deleteRecord(file.uid)
+            },
             beforeUpload: (file) => {
                 const formData = new FormData();
                 formData.append('files',file)
@@ -120,7 +123,7 @@ class ButtonWithFileUploadModal extends Component{
 
         return(
             <span style={props.style}>
-                    <Button size='small' onClick={()=>this.toggleVisible(true)}>
+                    <Button size='small' onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
                    <Icon type="file" />{props.title}
                </Button>
                 <Modal title='附件' visible={visible} maskClosable={false} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>

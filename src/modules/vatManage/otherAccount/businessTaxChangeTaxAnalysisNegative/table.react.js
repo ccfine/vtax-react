@@ -1,8 +1,7 @@
 import React from 'react'
-import { Table, Card, Button, Icon, message ,Spin} from 'antd'
-import { request,fMoney } from '../../../../utils'
+import { Table, Card, Button, Icon, message} from 'antd'
+import { request, fMoney, listMainResultStatus } from '../../../../utils'
 import { CusFormItem } from '../../../../compoments'
-import moment from 'moment'
 const NumericItem = CusFormItem.NumericInput
 const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
     title: '项目及栏次',
@@ -388,7 +387,6 @@ export default class extends React.Component {
         tax1Count: 0,
         tax2Count: 0,
         currentStatus: undefined,
-        statusLoading:false,
         saveLoading: false,
         revokeLoading: false,
         submitLoading: false,
@@ -410,7 +408,7 @@ export default class extends React.Component {
     }
     reCalculate = () => {
         let params = { ...this.props.filter };
-        this.commonSubmit('/account/other/camping/reset', params, 'reset', '重算成功');
+        this.commonSubmit('/account/other/camping/reset', params, 'reset', '重算成功','put');
     }
     submit = () => {
         let params = { ...this.props.filter };
@@ -437,9 +435,9 @@ export default class extends React.Component {
             this.setState({ loading: false });
         })
     }
-    commonSubmit = (url, params, action, messageInfo) => {
+    commonSubmit = (url, params, action, messageInfo,method='post') => {
         this.setState({ [`${action}Loading`]: true });
-        request.post(url, params)
+        request[method](url, params)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success(messageInfo, 4)
@@ -456,56 +454,38 @@ export default class extends React.Component {
             })
     }
     updateStatus = (filter) => {
-        this.setState({ currentStatus: undefined,statusLoading:true });
+        this.setState({ currentStatus: undefined});
         request.get(`/account/other/camping/main`, { params: filter }).then(({ data }) => {
             if (data.code === 200) {
                 let currentStatus = {},statusData=data.data;
-                if(data.data){
-                    currentStatus.status = statusData.status;
-                    switch (statusData.status) {
-                        case 0:
-                            currentStatus.text = '暂存';
-                            break;
-                        case 1:
-                            currentStatus.text = '保存';
-                            break;
-                        case 2:
-                            currentStatus.text = '提交';
-                            currentStatus.date = moment(statusData.lastModifiedDate).format('YYYY-MM-DD HH:mm');
-                            break;
-                        default:
-                            currentStatus.text = '';
-                    }
-                    this.setState({ currentStatus,statusLoading:false});
-                }else{
-                    this.setState({ currentStatus:undefined,statusLoading:false});
-                }
+                currentStatus.status = statusData.status;
+                currentStatus.lastModifiedDate = statusData.lastModifiedDate;
+                this.setState({ currentStatus});
             }
         })
     }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
-        const buttonDisabled = !this.props.filter || !(dataSource && dataSource.length>0);
+        const buttonDisabled = !this.props.filter;
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
-                    { currentStatus && (this.state.statusLoading?<Spin size="small" />:<div style={{ marginRight: 30, display: 'inline-block' }}>
-                        <span style={{ marginRight: 20 }}>状态：<label style={{ color: 'red' }}>{currentStatus.text}</label></span>
-                        <span>提交时间：{currentStatus.date}</span>
-                    </div>)}
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || (currentStatus && currentStatus.status === 2)} onClick={this.save} loading={this.state.saveLoading}>
+                    { 
+                        listMainResultStatus(currentStatus)
+                    }
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.save} loading={this.state.saveLoading}>
                         <Icon type="hdd" />
                         保存
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled|| (currentStatus && currentStatus.status === 2)} onClick={this.reCalculate} >
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.reCalculate} >
                         <Icon type="retweet" />
                         重算
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled|| (currentStatus && currentStatus.status === 2)} onClick={this.submit} loading={this.state.submitLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
                         <Icon type="check" />
                         提交
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled|| (currentStatus && currentStatus.status !== 2)} onClick={this.revoke} loading={this.state.revokeLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
                         <Icon type="rollback" />
                         撤回提交
                     </Button>
