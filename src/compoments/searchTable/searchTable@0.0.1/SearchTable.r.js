@@ -78,7 +78,6 @@ class SearchTable extends Component{
                         }*/
                     }
                 }
-
                 this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
@@ -136,6 +135,7 @@ class SearchTable extends Component{
                                             <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
                                             <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
                                                 form.resetFields()
+                                                //this.setState({filters:{}})
                                                 searchOption.onResetFields && searchOption.onResetFields();
 
                                                 //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
