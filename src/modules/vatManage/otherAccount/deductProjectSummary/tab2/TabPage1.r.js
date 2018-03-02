@@ -7,15 +7,6 @@ import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../../ut
 import {SearchTable} from '../../../../../compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
 const searchFields =(disabled)=> [
     {
         label:'纳税主体',
@@ -100,6 +91,7 @@ class tab1 extends Component{
         updateKey:Date.now(),
         filters:{},
         searchTableLoading:false,
+        dataSource:[],
         /**
          *修改状态和时间
          * */
@@ -178,7 +170,7 @@ class tab1 extends Component{
         }
     }
     render(){
-        const {updateKey,searchTableLoading,statusParam} = this.state;
+        const {updateKey,searchTableLoading,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
@@ -230,7 +222,7 @@ class tab1 extends Component{
                         url:'/account/othertax/deducted/list',
                         extra: <div>
                             {
-                                listMainResultStatus(statusParam)
+                                dataSource.length>0 && listMainResultStatus(statusParam)
                             }
                             <Button
                                 size='small'
@@ -259,29 +251,34 @@ class tab1 extends Component{
                         </div>,
                         renderFooter:data=>{
                             return(
-                                <div>
-                                    <div style={{marginBottom:10}}>
-                                        <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                        期初余额：<span style={code}>{fMoney(data.pageInitialBalance)}</span>
-                                        本期发生额：<span style={code}>{fMoney(data.pageCurrentAmount)}</span>
-                                        本期应扣除金额：<span style={code}>{fMoney(data.pageCurrentDeductAmount)}</span>
-                                        本期实际扣除金额：<span style={code}>{fMoney(data.pageActualDeductAmount)}</span>
-                                        期末余额：<span style={code}>{fMoney(data.pageEndingBalance)}</span>
-                                        销项税额：<span style={code}>{fMoney(data.pageOutputTax)}</span>
-                                        价税合计：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
+                                <div className="footer-total">
+                                    <div>
+                                        <label>本页合计：</label>
+                                        期初余额：<span className="amount-code">{fMoney(data.pageInitialBalance)}</span>
+                                        本期发生额：<span className="amount-code">{fMoney(data.pageCurrentAmount)}</span>
+                                        本期应扣除金额：<span className="amount-code">{fMoney(data.pageCurrentDeductAmount)}</span>
+                                        本期实际扣除金额：<span className="amount-code">{fMoney(data.pageActualDeductAmount)}</span>
+                                        期末余额：<span className="amount-code">{fMoney(data.pageEndingBalance)}</span>
+                                        销项税额：<span className="amount-code">{fMoney(data.pageOutputTax)}</span>
+                                        价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                     </div>
-                                    <div style={{marginBottom:10}}>
-                                        <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
-                                        期初余额：<span style={code}>{fMoney(data.totalInitialBalance)}</span>
-                                        本期发生额：<span style={code}>{fMoney(data.totalCurrentAmount)}</span>
-                                        本期应扣除金额：<span style={code}>{fMoney(data.totalCurrentDeductAmount)}</span>
-                                        本期实际扣除金额：<span style={code}>{fMoney(data.totalActualDeductAmount)}</span>
-                                        期末余额：<span style={code}>{fMoney(data.totalEndingBalance)}</span>
-                                        销项税额：<span style={code}>{fMoney(data.totalOutputTax)}</span>
-                                        价税合计：<span style={code}>{fMoney(data.totalTotalAmount)}</span>
+                                    <div>
+                                        <label>总计：</label>
+                                        期初余额：<span className="amount-code">{fMoney(data.totalInitialBalance)}</span>
+                                        本期发生额：<span className="amount-code">{fMoney(data.totalCurrentAmount)}</span>
+                                        本期应扣除金额：<span className="amount-code">{fMoney(data.totalCurrentDeductAmount)}</span>
+                                        本期实际扣除金额：<span className="amount-code">{fMoney(data.totalActualDeductAmount)}</span>
+                                        期末余额：<span className="amount-code">{fMoney(data.totalEndingBalance)}</span>
+                                        销项税额：<span className="amount-code">{fMoney(data.totalOutputTax)}</span>
+                                        价税合计：<span className="amount-code">{fMoney(data.totalTotalAmount)}</span>
                                     </div>
                                 </div>
                             )
+                        },
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
                         },
                     }}
                 >

@@ -17,7 +17,7 @@ const searchFields = (disabled) => {
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && [moment(getUrlParam('authMonthStart'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
+                initialValue: (disabled && [moment(getUrlParam('authMonth'), 'YYYY-MM-DD'), moment(getUrlParam('authMonthEnd'), 'YYYY-MM-DD')]) || undefined,
             }
         },
         {
@@ -138,7 +138,12 @@ class InvoicesWithNeedNotMatchRoom extends Component{
                     marginTop:-16
                 }}
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields(disabled),
+                    cardProps:{
+                        style:{
+                            borderTop:0
+                        },
+                    }
                 }}
                 tableOption={{
                     key:this.state.tableKey,
@@ -147,15 +152,15 @@ class InvoicesWithNeedNotMatchRoom extends Component{
                     url:'/output/invoice/marry/unwanted/list',
                     renderFooter:data=>{
                         return(
-                            <div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                            <div className="footer-total">
+                                <div>
+                                    <label>本页合计：</label>
                                     本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                     本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
                                     本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                 </div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                <div>
+                                    <label>总计：</label>
                                     总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
                                     总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
                                     总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>

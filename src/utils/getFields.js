@@ -45,9 +45,6 @@ const getFields = (form,fieldsData=[]) =>{
             case 'rangePicker' :
                 CusComponent = RangePicker;
                 break;
-            case 'controlledRangePicker' :
-                CusComponent = CusFormItem.ControlledRangePicker;
-                break;
             case 'monthRangePicker' :
                 CusComponent = CusFormItem.MonthRangePicker;
                 break;
@@ -100,7 +97,7 @@ const getFields = (form,fieldsData=[]) =>{
                 CusComponent = Input
         }
 
-        if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect' || type==='controlledRangePicker' || type==='monthRangePicker'){
+        if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect' || type==='monthRangePicker'){
             return <Col key={i} span={item['span'] || 8}>
                 <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} decoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
             </Col>

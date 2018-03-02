@@ -18,15 +18,6 @@ const formItemStyle={
         span:14
     }
 }
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -55,6 +46,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             span:6,
             formItemStyle,
             componentProps:{
+                disabled,
                 format:'YYYY-MM',
             },
             fieldDecoratorOptions:{
@@ -171,7 +163,7 @@ class AdvanceCarryOver extends Component{
         selectedRowKeys:[],
 
         searchTableLoading:false,
-
+        doNotFetchDidMount:true,
         /**
          *修改状态和时间
          * */
@@ -235,11 +227,20 @@ class AdvanceCarryOver extends Component{
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.refreshTable()
+            this.setState({
+                doNotFetchDidMount:false
+            },()=>{
+                this.refreshTable()
+            })
+
+        }else{
+            this.setState({
+                doNotFetchDidMount:true
+            })
         }
     }
     render(){
-        const {tableKey,selectedRowKeys,searchTableLoading,searchFieldsValues,dataStatus,submitDate} = this.state;
+        const {tableKey,selectedRowKeys,searchTableLoading,searchFieldsValues,doNotFetchDidMount,dataStatus,submitDate} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -247,7 +248,7 @@ class AdvanceCarryOver extends Component{
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={doNotFetchDidMount}
                 spinning={searchTableLoading}
                 searchOption={{
                     fields:searchFields(disabled),
@@ -305,10 +306,10 @@ class AdvanceCarryOver extends Component{
                     </div>,
                     renderFooter:data=>{
                         return(
-                            <div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
-                                    预结转收入金额：<span style={code}>{fMoney(data.pageAmount)}</span>
+                            <div className="footer-total">
+                                <div>
+                                    <label>本页合计：</label>
+                                    预结转收入金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                 </div>
                             </div>
                         )

@@ -136,6 +136,7 @@ class tab1 extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        dataSource:[],
     }
     refreshTable = ()=>{
         this.setState({
@@ -218,7 +219,7 @@ class tab1 extends Component{
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,statusParam} = this.state;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
@@ -280,7 +281,7 @@ class tab1 extends Component{
                         url:'account/land/price/deducted/project/list',
                         extra: <div>
                             {
-                                listMainResultStatus(statusParam)
+                                dataSource.length>0 && listMainResultStatus(statusParam)
                             }
                             <Button
                                 size='small'
@@ -311,6 +312,11 @@ class tab1 extends Component{
                                 撤回提交
                             </Button>
                         </div>,
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
+                        },
                     }}
                 >
                 </SearchTable>

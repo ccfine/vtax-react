@@ -170,7 +170,7 @@ class BillingSales extends Component {
         sysTaxRateId:undefined,
         invoiceType:undefined,
         statusParam:{},
-        dataSource1:[],
+        dataSource:[],
         dataSource2:[],
     }
     toggleModalVisible=visible=>{
@@ -258,7 +258,7 @@ class BillingSales extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,dataSource1,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
+        const {tableUpDateKey,filters,dataSource,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -326,13 +326,13 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-房地产"
                       extra={<div>
                           {
-                              listMainResultStatus(statusParam)
+                              dataSource.length>0 && listMainResultStatus(statusParam)
                           }
                           <FileExport
                               url={`/account/output/billingSale/export`}
                               title='导出'
                               setButtonStyle={{marginRight:5}}
-                              disabled={!dataSource1.length>0}
+                              disabled={!dataSource.length>0}
                               params={{
                                   isEstate:1,
                                   ...filters
@@ -374,9 +374,9 @@ class BillingSales extends Component {
                                     pagination:false,
                                     size:'small',
                                     columns:columns(this),
-                                    onDataChange:(dataSource1)=>{
+                                    onDataChange:(dataSource)=>{
                                         this.setState({
-                                            dataSource1
+                                            dataSource
                                         })
                                     }
                                 }} />

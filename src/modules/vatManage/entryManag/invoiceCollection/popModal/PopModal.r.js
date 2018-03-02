@@ -148,7 +148,6 @@ class PopModal extends Component{
         })
     }
     onChange=(selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys,selectedRows)
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 
@@ -188,10 +187,6 @@ class PopModal extends Component{
                     },
                     list:this.checkeDetailsDateId(this.state.detailsDate)
                 }
-
-                console.log(data);
-                debugger
-
 
                 this.setState({
                     submitLoading: true
@@ -801,9 +796,9 @@ class PopModal extends Component{
                                     footerDate:  footerDate,
                                     renderFooter:data=>{
                                       return(
-                                          <div>
-                                              <div style={{marginBottom:10}}>
-                                                  <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                          <div className="footer-total">
+                                              <div>
+                                                  <label>本页合计：</label>
                                                   金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                                   税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
                                                   价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>

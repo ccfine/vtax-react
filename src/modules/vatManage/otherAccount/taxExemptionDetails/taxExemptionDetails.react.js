@@ -123,6 +123,10 @@ const getColumns = context=> [
         dataIndex: 'amount',
         render:text=>fMoney(text),
     },{
+        title: '税额',
+        dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
+    },{
         title: '减免税金额',
         dataIndex: 'reduceTaxAmount',
         render:text=>fMoney(text),
@@ -286,7 +290,7 @@ class TaxExemptionDetails extends Component{
                     url:'/account/other/reduceTaxDetail/list',
                     extra: <div>
                         {
-                            listMainResultStatus(statusParam)
+                            dataSource.length>0 && listMainResultStatus(statusParam)
                         }
                         <FileImportModal
                             url="/account/other/reduceTaxDetail/upload"
@@ -298,7 +302,6 @@ class TaxExemptionDetails extends Component{
                         <FileExport
                             url='/account/other/reduceTaxDetail/detail/download'
                             title="下载导入模板"
-                            disabled={disabled1}
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button
@@ -306,7 +309,7 @@ class TaxExemptionDetails extends Component{
                             type='danger'
                             style={{marginRight:5}}
                             onClick={this.deleteData}
-                            disabled={disabled1 && selectedRowKeys.length === 0}>
+                            disabled={selectedRowKeys.length === 0}>
                             <Icon type="delete" />删除
                         </Button>
                         <FileExport
@@ -337,9 +340,9 @@ class TaxExemptionDetails extends Component{
                     </div>,
                     renderFooter:data=>{
                         return(
-                            <div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                            <div className="footer-total">
+                                <div>
+                                    <label>本页合计：</label>
                                     金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                     税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
                                     减免税金额：<span className="amount-code">{fMoney(data.pageReduceTaxAmount)}</span>

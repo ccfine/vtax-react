@@ -470,8 +470,8 @@ export default class extends React.Component {
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
-                    { 
-                        listMainResultStatus(currentStatus)
+                    {
+                        dataSource.length>0 && listMainResultStatus(currentStatus)
                     }
                     <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.save} loading={this.state.saveLoading}>
                         <Icon type="hdd" />
