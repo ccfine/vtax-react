@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Select,Icon,Modal} from 'antd'
+import {Select,Modal} from 'antd'
 import {SearchTable} from '../../compoments'
 import {fMoney} from '../../utils'
 import PropTypes from 'prop-types'
@@ -192,7 +192,7 @@ const getColumns = context => [
 class RoomCodeSelectPage extends Component{
     render(){
         const {props} = this;
-        const {disabled,toggleModalVisible,visible,mainId} = props;
+        const {toggleModalVisible,visible,mainId} = props;
         const filters = {
             mainId
         }
@@ -200,32 +200,6 @@ class RoomCodeSelectPage extends Component{
         <span onClick={e=>{
             e && e.stopPropagation() && e.preventDefault()
         }}>
-            {
-                !disabled && (
-                    <span
-                        onClick={e=>{
-                            e && e.stopPropagation() && e.preventDefault()
-                            toggleModalVisible(true)
-                        }}
-                        style={{
-                            display:'inline-block',
-                            position:'absolute',
-                            cursor:'pointer',
-                            right:3,
-                            top:5,
-                            height:23,
-                            width:23,
-                            borderRadius:'3px',
-                            textAlign:'center',
-                            lineHeight:'23px',
-                            backgroundColor:'#fff'
-                        }}>
-                <Icon type="search" />
-
-            </span>
-                )
-            }
-
             <Modal
                 title="选择房间编码"
                 maskClosable={false}
