@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Select,Icon,Modal,Tree,message} from 'antd'
+import {Icon,Select,Modal,Tree,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from '../../utils'
 const TreeNode = Tree.TreeNode;
@@ -168,37 +168,11 @@ class IndustryTree extends Component{
     }
     render(){
         const {expandedKeys,autoExpandParent,selectedKeys} = this.state;
-        const {disabled,toggleModalVisible,visible} = this.props;
+        const {toggleModalVisible,visible} = this.props;
         return(
         <span onClick={e=>{
             e && e.stopPropagation() && e.preventDefault()
         }}>
-            {
-                !disabled && (
-                    <span
-                        onClick={e=>{
-                            e && e.stopPropagation() && e.preventDefault()
-                            toggleModalVisible(true)
-                        }}
-                        style={{
-                            display:'inline-block',
-                            position:'absolute',
-                            cursor:'pointer',
-                            right:3,
-                            top:6,
-                            height:23,
-                            width:23,
-                            borderRadius:'3px',
-                            textAlign:'center',
-                            lineHeight:'23px',
-                            backgroundColor:'#fff'
-                        }}>
-                <Icon type="search" />
-
-            </span>
-                )
-            }
-
             <Modal
                 title="选择所属行业"
                 maskClosable={false}

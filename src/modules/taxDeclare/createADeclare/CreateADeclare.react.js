@@ -15,12 +15,12 @@ const searchFields = [
         label:'纳税主体',
         type:'taxMain',
         fieldName:'mainId',
-        span:6,
+        span:8,
     },{
         label:'办理进度',
         type:'select',
         fieldName:'status',
-        span:6,
+        span:8,
         options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             {
                 text:'申报办理',
@@ -46,12 +46,12 @@ const searchFields = [
         label:'所属期起止',
         type:'rangePicker',
         fieldName:'subordinatePeriod',
-        span:6,
+        span:8,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
-        span:6,
+        span:8,
         options:[
             {
                 text:'增值税',
@@ -86,6 +86,10 @@ const getColumns =(context)=>[
                 case 5:
                     t='归档';
                     break;
+                case -1:
+                    t='流程终止';
+                    break;
+
                 default:
                 //no default
             }
@@ -136,19 +140,18 @@ const getColumns =(context)=>[
         dataIndex: 'isProcess',
     },{
         title: '申报人',
-        dataIndex: 'lastModifiedBy',
+        dataIndex: 'declareBy',
     },{
         title: '申报日期',
         dataIndex: 'declarationDate',
     }
 ];
-
 export default class CreateADeclare extends Component{
     state={
         visible:false, // 控制Modal是否显示
         updateKey:Date.now(),
 
-        searchFieldsValues:{},
+        filters:{},
         dataSource:[],
         selectedRowKeys:undefined,
         selectedRows:[],
@@ -189,19 +192,15 @@ export default class CreateADeclare extends Component{
                 }
             })
     }
-    componentWillReceiveProps(nextProps){
-
-    }
     render(){
-        const {updateKey,selectedRowKeys,selectedRows,searchFieldsValues,visible,dataSource,modalConfig} = this.state;
+        const {updateKey,selectedRowKeys,selectedRows,filters,visible,dataSource,modalConfig} = this.state;
         return(
-            <div>
                 <SearchTable
                     searchOption={{
                         fields:searchFields,
                         getFieldsValues:values=>{
                             this.setState({
-                                searchFieldsValues:values
+                                filters:values
                             })
                         },
                         cardProps:{
@@ -217,6 +216,7 @@ export default class CreateADeclare extends Component{
                         cardProps:{
                             title:'列表信息'
                         },
+                        url:'/tax/declaration/list',
                         onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({
                                 selectedRowKeys:selectedRowKeys[0],
@@ -226,7 +226,6 @@ export default class CreateADeclare extends Component{
                         rowSelection:{
                             type:'radio',
                         },
-                        url:'/tax/declaration/list',
                         extra: <div>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                                 <Icon type="file-add" />
@@ -261,12 +260,12 @@ export default class CreateADeclare extends Component{
                                 disabled={!selectedRowKeys}
                             />
                             <FileExport
-                                url='/account/income/taxContract/adjustment/export'
+                                url='/tax/declaration/export'
                                 title='导出'
                                 setButtonStyle={{marginRight:5}}
                                 disabled={!dataSource.length>0}
                                 params={{
-                                    ...searchFieldsValues
+                                    ...filters
                                 }}
                             />
                         </div>,
@@ -277,17 +276,18 @@ export default class CreateADeclare extends Component{
                         }
                     }}
                 >
+
+                    <PopModal
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        selectedRowKeys={selectedRowKeys}
+                        selectedRows={selectedRows}
+                        refreshTable={this.refreshTable}
+                        toggleModalVisible={this.toggleModalVisible}
+                    />
                 </SearchTable>
 
-                <PopModal
-                    visible={visible}
-                    modalConfig={modalConfig}
-                    selectedRowKeys={selectedRowKeys}
-                    selectedRows={selectedRows}
-                    refreshTable={this.refreshTable}
-                    toggleModalVisible={this.toggleModalVisible}
-                />
-            </div>
+
         )
     }
 }

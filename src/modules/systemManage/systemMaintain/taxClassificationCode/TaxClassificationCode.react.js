@@ -18,7 +18,7 @@ const searchFields = [
         label:'税收分类编码',
         fieldName:'num',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -27,7 +27,7 @@ const searchFields = [
         label:'商品名称',
         fieldName:'commodityName',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -36,7 +36,7 @@ const searchFields = [
         label:'税率',
         fieldName:'taxRate',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -96,7 +96,7 @@ export default class TaxClassificationCode extends Component{
     deleteData = () => {
         confirm({
             title: '友情提醒',
-            content: '该删除后将不可恢复，是否删除？',
+            content: '删除后将不可恢复，是否删除？',
             okText: '确定',
             okType: 'danger',
             cancelText: '取消',
