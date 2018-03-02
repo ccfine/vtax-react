@@ -114,7 +114,7 @@ export default class ApplyDeclarationPopModal extends Component{
                 renderItem={item => (
                     <List.Item>
                         <Card>
-                            <Link target="_target" style={{color: 'rgba(0, 0, 0, 0.65)'}} to={{
+                            <Link target="_blank" style={{color: 'rgba(0, 0, 0, 0.65)'}} to={{
                                 pathname:item.path,  //`${item.path}?mainId=${this.props.selectedRows[0].id}`,
                                 search:`?${parseJsonToParams({mainId:this.props.selectedRows[0].mainId,
                                     authMonth:this.props.selectedRows[0].partTerm,
