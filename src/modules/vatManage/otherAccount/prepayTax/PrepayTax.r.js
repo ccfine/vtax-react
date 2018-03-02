@@ -386,16 +386,16 @@ class PrepayTax extends Component{
                     </div>,
                     renderFooter:data=>{
                         return(
-                            <div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>合计：</span>
+                            <div className="footer-total">
+                                <div>
+                                    <label>合计：</label>
                                     实际销售额（不含税）：<span className="amount-code">{fMoney(data.actualAmountWithoutTax)}</span>
                                     实际预征税额：<span className="amount-code">{fMoney(data.actualPreTaxAmount)}</span>
                                     调整销售额（不含税）：<span className="amount-code">{fMoney(data.adjustSales)}</span>
                                     销售额（含税）：<span className="amount-code">{fMoney(data.amountWithTax)}</span>
                                 </div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>合计：</span>
+                                <div>
+                                    <label>合计：</label>
                                     销售额（不含税）：<span className="amount-code">{fMoney(data.amountWithoutTax)}</span>
                                     扣除金额 ：<span className="amount-code">{fMoney(data.deductAmount)}</span>
                                     预征税额 ：<span className="amount-code">{fMoney(data.preTaxAmount)}</span>

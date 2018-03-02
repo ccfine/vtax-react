@@ -5,20 +5,8 @@ import React,{Component} from 'react'
 import {Card,Form,Button,Icon,message} from 'antd'
 import {AsyncTable} from '../../../../compoments'
 import {getFields,htmlDecode,regRules,request,fMoney,listMainResultStatus} from '../../../../utils'
-const spanPaddingRight={
-    paddingRight:30
-}
 const buttonStyle={
     marginRight:5
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
 }
 const max50={
     max:regRules.input_length_50.max, message: regRules.input_length_50.message,
@@ -206,6 +194,7 @@ class TableTaxStructure extends Component {
     }
 
     render(){
+        const {dataSource} = this.state;
         const props = this.props;
         const {statusParam} = this.props;
         const disabled1 = !((props.filters.mainId && props.filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
@@ -214,7 +203,7 @@ class TableTaxStructure extends Component {
             <Card extra={
                 <div>
                     {
-                        listMainResultStatus(statusParam)
+                        dataSource.length>0 && listMainResultStatus(statusParam)
                     }
                     <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'保存')}><Icon type="save" />保存</Button>
                     <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
@@ -239,13 +228,13 @@ class TableTaxStructure extends Component {
                                     },
                                     renderFooter:data=>{
                                         return (
-                                            <div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                    金额：<span style={code}>{fMoney(data.totalAdjustAmount)}</span>
-                                                    税额：<span style={code}>{fMoney(data.totalAdjustTaxAmount)}</span>
-                                                    调整金额：<span style={code}>{fMoney(data.totalAmount)}</span>
-                                                    调整税额：<span style={code}>{fMoney(data.totalTaxAmount)}</span>
+                                            <div className="footer-total">
+                                                <div>
+                                                    <label>合计：</label>
+                                                    金额：<span className="amount-code">{fMoney(data.totalAdjustAmount)}</span>
+                                                    税额：<span className="amount-code">{fMoney(data.totalAdjustTaxAmount)}</span>
+                                                    调整金额：<span className="amount-code">{fMoney(data.totalAmount)}</span>
+                                                    调整税额：<span className="amount-code">{fMoney(data.totalTaxAmount)}</span>
                                                 </div>
                                             </div>
                                         )

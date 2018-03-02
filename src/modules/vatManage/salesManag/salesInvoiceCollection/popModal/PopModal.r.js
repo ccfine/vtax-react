@@ -86,7 +86,6 @@ class PopModal extends Component{
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(values)
             if (!err) {
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)

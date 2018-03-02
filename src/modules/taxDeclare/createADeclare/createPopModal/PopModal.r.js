@@ -5,6 +5,7 @@
  */
 import React,{Component} from 'react';
 import moment from 'moment';
+import {connect} from 'react-redux'
 import {Button,Modal,Form,Row,Col,Card,message} from 'antd';
 import {SearchTable} from '../../../../compoments'
 import {request,requestDict,getFields} from '../../../../utils'
@@ -27,9 +28,11 @@ const getColumns = context=> [
     {
         title: '纳税主体',
         dataIndex: 'name',
+        width: '80%',
     }, {
         title: '税（费）种',
         dataIndex: 'taxType',
+        width: '20%',
         render:text=>{
             /*//1增值税、2企业所得税
             let t = '';
@@ -46,7 +49,7 @@ const getColumns = context=> [
             }
             return t*/
             return '增值税'
-        }
+        },
     }
 ];
 
@@ -62,7 +65,7 @@ class PopModal extends Component{
         taxModality:[],
         isProcess:[],
         initData:{},
-        searchFieldsValues:{},
+        filters:{},
         selectedRowKeys:undefined,
         selectedRows:[],
         searchTableLoading:false,
@@ -113,13 +116,16 @@ class PopModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-
+                if(this.state.selectedRows.length<1){
+                    return message.error('请选择要添加申报的纳税主体！')
+                }
                 if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
                     values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
                     values.subordinatePeriodEnd= values.subordinatePeriod[1].format('YYYY-MM-DD')
                     values.subordinatePeriod = undefined;
                 }
-                values.declarationDate = values.declarationDate && values.declarationDate.format('YYYY-MM-DD');
+                values.declarationDate = values.declarationDate && values.declarationDate.format('YYYY-MM-DD');  //YYYY-MM-DD HH:mm
+
                 const data = this.state.selectedRows.map(item=>{
                     return {
                         ...item,
@@ -167,7 +173,6 @@ class PopModal extends Component{
     fetchDeclarationById = id=>{
         request.get(`/tax/declaration/find/${id}`)
             .then(({data})=>{
-            console.log(data)
                 this.setState({
                     initData:data.data,
                 })
@@ -222,7 +227,7 @@ class PopModal extends Component{
             default :
             //no default
         }
-        const dateFormat = 'YYYY-MM-DD'
+        const dateFormat = 'YYYY-MM-DD';
         let shouldShowDefaultData = false;
         if(type==='edit' || type==='view'){
             shouldShowDefaultData = true;
@@ -238,7 +243,9 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" onClick={this.handleSubmit}>确定</Button>
+                            {
+                                type !== 'view' && <Button type="primary" onClick={this.handleSubmit}>确定</Button>
+                            }
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                         </Col>
                     </Row>
@@ -256,7 +263,7 @@ class PopModal extends Component{
                             },
                             onFieldsChange:values=>{
                                 this.setState({
-                                    searchFieldsValues:values
+                                    filters:values
                                 })
                             }
                         }}
@@ -264,6 +271,7 @@ class PopModal extends Component{
                             key:tableKey,
                             pageSize:10,
                             columns:getColumns(this),
+                            scroll:{ y: 240 },
                             onRowSelect:(selectedRowKeys,selectedRows)=>{
                                 this.setState({
                                     selectedRowKeys:selectedRowKeys[0],
@@ -326,7 +334,7 @@ class PopModal extends Component{
                                             ],
                                         }
                                     },{
-                                        label:'申报起止',
+                                        label:'所属期起止',
                                         fieldName:'subordinatePeriod',
                                         type:'rangePicker',
                                         span:12,
@@ -337,11 +345,11 @@ class PopModal extends Component{
                                             //format:"YYYY-MM-DD HH:mm",
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:shouldShowDefaultData ?[moment(initData.subordinatePeriodStart, dateFormat), moment(initData.subordinatePeriodEnd, dateFormat)] :[null,null],
+                                            initialValue:shouldShowDefaultData ? [moment(initData.subordinatePeriodStart, dateFormat), moment(initData.subordinatePeriodEnd, dateFormat)] : [],
                                             rules: [
                                                 {
                                                     required:true,
-                                                    message:'请选择申报起止'
+                                                    message:'请选择所属期起止'
                                                 }
                                             ],
                                         }
@@ -385,7 +393,7 @@ class PopModal extends Component{
                                         }
                                     },{
                                         label:'申报人',
-                                        fieldName:'lastModifiedBy',
+                                        fieldName:'declareBy',
                                         type:'input',
                                         span:12,
                                         formItemStyle,
@@ -393,7 +401,7 @@ class PopModal extends Component{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['lastModifiedBy'],
+                                            initialValue:initData['declareBy'] || this.props.userName,
                                         }
                                     },{
                                         label:'申报日期',
@@ -403,9 +411,11 @@ class PopModal extends Component{
                                         formItemStyle,
                                         componentProps:{
                                             disabled,
+                                            //showTime:{ format: 'HH:mm' },
+                                            //format:"YYYY-MM-DD HH:mm",
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:shouldShowDefaultData ? moment(initData['month'], dateFormat) : undefined,
+                                            initialValue:shouldShowDefaultData ? moment(initData['month'], dateFormat) : moment(moment(), dateFormat),
                                         }
                                     },
                                 ])
@@ -417,5 +427,8 @@ class PopModal extends Component{
         )
     }
 }
-
-export default Form.create()(PopModal)
+export default Form.create()(connect(state=>{
+    return {
+        userName:state.user.getIn(['personal','username'])
+    }
+})(PopModal))

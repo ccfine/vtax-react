@@ -537,16 +537,16 @@ class PrePaidHousingSales extends Component{
                     </div>,
                     renderFooter:data=>{
                         return(
-                            <div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                            <div className="footer-total">
+                                <div>
+                                    <label>本页合计：</label>
                                     累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
                                     当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
                                     累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
                                     预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
                                 </div>
-                                <div style={{marginBottom:10}}>
-                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                <div>
+                                    <label>总计：</label>
                                     累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
                                     当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
                                     累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>

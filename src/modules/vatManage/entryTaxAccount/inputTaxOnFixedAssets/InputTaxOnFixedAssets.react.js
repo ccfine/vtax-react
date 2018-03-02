@@ -68,6 +68,7 @@ class InputTaxOnFixedAssets extends Component {
          *修改状态和时间
          * */
         statusParam:{},
+        dataSource:[],
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
@@ -185,7 +186,7 @@ class InputTaxOnFixedAssets extends Component {
         })
     }
     render(){
-        const {tableUpDateKey,filters,statusParam} = this.state
+        const {tableUpDateKey,filters,statusParam,dataSource} = this.state
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -251,7 +252,7 @@ class InputTaxOnFixedAssets extends Component {
                 </Card>
                 <Card extra={<div>
                     {
-                        listMainResultStatus(statusParam)
+                        dataSource.length>0 && listMainResultStatus(statusParam)
                     }
                     <FileImportModal
                         url="/account/income/fixedAssets/upload"
@@ -294,6 +295,11 @@ class InputTaxOnFixedAssets extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
+                                    onDataChange:(dataSource)=>{
+                                        this.setState({
+                                            dataSource
+                                        })
+                                    },
                                 }} />
                 </Card>
             </Layout>

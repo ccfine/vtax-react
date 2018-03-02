@@ -168,6 +168,7 @@ class LandPriceDeductionDetails extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        dataSource:[],
     }
     refreshTable = ()=>{
         this.setState({
@@ -264,7 +265,7 @@ class LandPriceDeductionDetails extends Component{
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,statusParam} = this.state;
+        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
@@ -323,7 +324,7 @@ class LandPriceDeductionDetails extends Component{
                         url:'/account/landPrice/deductedDetails/list',
                         extra: <div>
                             {
-                                listMainResultStatus(statusParam)
+                                dataSource.length>0 && listMainResultStatus(statusParam)
                             }
                             <Button
                                 size='small'
@@ -356,16 +357,21 @@ class LandPriceDeductionDetails extends Component{
                         </div>,
                         renderFooter:data=>{
                             return(
-                                <div>
-                                    <div style={{marginBottom:10}}>
-                                        <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                <div className="footer-total">
+                                    <div>
+                                        <label>本页合计：</label>
                                         金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                         税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
                                         减免税金额：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                     </div>
                                 </div>
                             )
-                        }
+                        },
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
+                        },
                     }}
                 >
                 </SearchTable>

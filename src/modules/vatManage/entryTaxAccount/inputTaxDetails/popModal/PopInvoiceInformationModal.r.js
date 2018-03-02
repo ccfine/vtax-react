@@ -7,19 +7,6 @@ import React,{Component} from 'react'
 import {Card,Row,Col,Form,Button,Modal } from 'antd'
 import {AsyncTable} from '../../../../../compoments'
 import {getFields,fMoney} from '../../../../../utils'
-const spanPaddingRight={
-    paddingRight:30
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
-
 class PopInvoiceInformationModal extends Component{
     static defaultProps={
         visible:true,
@@ -219,20 +206,20 @@ class PopInvoiceInformationModal extends Component{
                                 scroll:{ x: '210%'},
                                 renderFooter:data=>{
                                     return (
-                                        <div>
-                                            <div style={{marginBottom:10}}>
-                                                <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                                本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
-                                                本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
-                                                本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
-                                                本页总价：<span style={code}>{fMoney(data.pageTotalPrice)}</span>
+                                        <div className="footer-total">
+                                            <div>
+                                                <label>本页合计：</label>
+                                                本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                                本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                             </div>
-                                            <div style={{marginBottom:10}}>
-                                                <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                                总金额：<span style={code}>{fMoney(data.allAmount)}</span>
-                                                总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
-                                                总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
-                                                全部总价：<span style={code}>{fMoney(data.allTotalPrice)}</span>
+                                            <div>
+                                                <label>总计：</label>
+                                                总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                                总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                                总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                                全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                             </div>
                                         </div>
                                     )

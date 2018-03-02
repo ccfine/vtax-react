@@ -59,10 +59,10 @@ class PopModal extends Component{
         let v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
         let v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
         if(typeof (v1) === 'undefined'){
-            v1 = 0
+            v1 = ''
         }
         if(typeof (v2) === 'undefined'){
-            v2 = 0
+            v2 = ''
         }
         const sum = v1+v2
         form.setFieldsValue({
@@ -71,14 +71,13 @@ class PopModal extends Component{
     }
     handleTaxAmount=(amount,taxRate,taxAmount)=>{
         const form = this.props.form;
-        console.log(form.getFieldValue(`${taxRate}`))
         let v1 = form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, '');
         let v2 = (form.getFieldValue(`${taxRate}`)) /100;
         if(typeof (v1) === 'undefined'){
-            v1 = 0
+            v1 = ''
         }
         if(typeof (v2) === 'undefined' || isNaN(v2)){
-            v2 = 0
+            v2 = ''
         }
         const count = v1*v2;
         form.setFieldsValue({
@@ -90,10 +89,10 @@ class PopModal extends Component{
         let v1 = form.getFieldValue(`${qty}`);
         let v2 = form.getFieldValue(`${unitPrice}`);
         if(typeof (v1) === 'undefined'){
-            v1 = 0
+            v1 = ''
         }
         if(typeof (v2) === 'undefined'){
-            v2 = 0
+            v2 = ''
         }
         const count = accMul(v1,v2);
         form.setFieldsValue({

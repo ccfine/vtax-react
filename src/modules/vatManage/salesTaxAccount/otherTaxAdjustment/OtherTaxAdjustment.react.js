@@ -148,6 +148,7 @@ class OtherTaxAdjustment extends Component {
         status: undefined,
         submitLoading: false,
         revokeLoading: false,
+        dataSource:[],
     }
     hideModal() {
         this.setState({ visible: false });
@@ -216,7 +217,7 @@ class OtherTaxAdjustment extends Component {
     render() {
         const { search } = this.props.location;
         let disabled = !!search;
-        let { filters, status } = this.state,
+        let { filters, status,dataSource } = this.state,
             buttonDisabled = !filters;
         return (
             <div>
@@ -240,7 +241,7 @@ class OtherTaxAdjustment extends Component {
                             title: '其他涉税调整台账',
                             extra: (<div>
                                 {
-                                    listMainResultStatus(status)
+                                    dataSource.length>0 && listMainResultStatus(status)
                                 }
                                 <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
                                     <Icon type="check" />
@@ -254,7 +255,10 @@ class OtherTaxAdjustment extends Component {
                             </div>)
                         },
                         onDataChange: (data) => {
-                            this.setState({ buttonDisabled: false });
+                            this.setState({
+                                buttonDisabled: false,
+                                dataSource:data
+                            });
                         }
                     }}
                 >

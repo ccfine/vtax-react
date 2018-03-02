@@ -466,13 +466,13 @@ class RoomTransactionFile extends Component{
                                     },
                                     renderFooter:data=>{
                                         return(
-                                            <div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>本页合计：</span>
+                                            <div className="footer-total">
+                                                <div>
+                                                    <label>本页合计：</label>
                                                     本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
                                                 </div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',paddingRight:30}}>总计：</span>
+                                                <div>
+                                                    <label>总计：</label>
                                                     全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
                                                 </div>
                                             </div>

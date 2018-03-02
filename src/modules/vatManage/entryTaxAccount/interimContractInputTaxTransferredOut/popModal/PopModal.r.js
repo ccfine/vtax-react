@@ -8,18 +8,6 @@ import {Card,Form,Button,Row,Col,Modal,message} from 'antd'
 import {AsyncTable} from '../../../../../compoments'
 import {getFields,htmlDecode,request,accDiv} from '../../../../../utils'
 import {List} from 'immutable'
-const spanPaddingRight={
-    paddingRight:30
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
 // style={{width:'160px',overflow:'hidden',margin:'0 auto'}}
 const EditableCell = ({record, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
     return (
@@ -269,10 +257,10 @@ class PopModal extends Component{
                                         },
                                         renderFooter:data=>{
                                             return (
-                                                <div>
-                                                    <div style={{marginBottom:10}}>
-                                                        <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                        建筑面积(m²)：<span style={code}>{data.allBuildingArea}</span>
+                                                <div className="footer-total">
+                                                    <div>
+                                                        <label>合计：</label>
+                                                        建筑面积(m²)：<span className="amount-code">{data.allBuildingArea}</span>
                                                     </div>
                                                 </div>
                                             )

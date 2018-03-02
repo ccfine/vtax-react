@@ -13,18 +13,6 @@ import moment from 'moment';
 const buttonStyle={
     marginRight:5
 }
-const spanPaddingRight={
-    paddingRight:30
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
 class InputTaxDetails extends Component {
     state={
         /**
@@ -41,6 +29,7 @@ class InputTaxDetails extends Component {
         visible:false,
         params:{},
         statusParam:{},
+        dataSource:[],
     }
 
     columns = [
@@ -159,7 +148,7 @@ class InputTaxDetails extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,visible,params,statusParam} = this.state;
+        const {tableUpDateKey,filters,visible,params,dataSource,statusParam} = this.state;
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
 
@@ -229,7 +218,7 @@ class InputTaxDetails extends Component {
                     extra={
                         <div>
                             {
-                                listMainResultStatus(statusParam)
+                                dataSource.length>0 && listMainResultStatus(statusParam)
                             }
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
@@ -248,14 +237,19 @@ class InputTaxDetails extends Component {
                                     columns:this.columns,
                                     renderFooter:data=>{
                                         return (
-                                            <div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                    金额：<span style={code}>{fMoney(data.pageAmount)}</span>
-                                                    税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+                                            <div className="footer-total">
+                                                <div>
+                                                    <label>合计：</label>
+                                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
                                                 </div>
                                             </div>
                                         )
+                                    },
+                                    onDataChange:(dataSource)=>{
+                                        this.setState({
+                                            dataSource
+                                        })
                                     },
                                 }} />
                 </Card>

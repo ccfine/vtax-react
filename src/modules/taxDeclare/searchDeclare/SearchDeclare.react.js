@@ -10,12 +10,12 @@ const searchFields = [
         label:'纳税主体',
         type:'taxMain',
         fieldName:'mainId',
-        span:6,
+        span:8,
     },{
         label:'办理进度',
         type:'select',
         fieldName:'status',
-        span:6,
+        span:8,
         options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             {
                 text:'申报办理',
@@ -41,12 +41,12 @@ const searchFields = [
         label:'所属期起止',
         type:'rangePicker',
         fieldName:'subordinatePeriod',
-        span:6,
+        span:8,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
-        span:6,
+        span:8,
         options:[
             {
                 text:'增值税',
@@ -62,6 +62,34 @@ const getColumns =(context)=>[
     {
         title: '申报状态',
         dataIndex: 'status',
+        render:text=>{
+            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠; ,
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t='申报办理';
+                    break;
+                case 2:
+                    t='申报审核';
+                    break;
+                case 3:
+                    t='申报审批';
+                    break;
+                case 4:
+                    t='申报完成';
+                    break;
+                case 5:
+                    t='归档';
+                    break;
+                case -1:
+                    t='流程终止';
+                    break;
+
+                default:
+                //no default
+            }
+            return t
+        }
     }, {
         title: '上一步完成时间',
         dataIndex: 'lastModifiedDate',
@@ -102,7 +130,7 @@ const getColumns =(context)=>[
         dataIndex: 'isProcess',
     },{
         title: '申报人',
-        dataIndex: 'lastModifiedBy',
+        dataIndex: 'declareBy',
     },{
         title: '申报日期',
         dataIndex: 'month',
@@ -115,28 +143,26 @@ export default class SearchDeclare extends Component{
     }
     render(){
         return(
-            <div>
-                <SearchTable
-                    searchOption={{
-                        fields:searchFields,
-                        cardProps:{
-                            style:{
-                                borderTop:0
-                            }
+            <SearchTable
+                searchOption={{
+                    fields:searchFields,
+                    cardProps:{
+                        style:{
+                            borderTop:0
                         }
-                    }}
-                    tableOption={{
-                        key:this.state.updateKey,
-                        pageSize:10,
-                        columns:getColumns(this),
-                        cardProps:{
-                            title:'列表信息'
-                        },
-                        url:'/tax/declaration/list',
-                    }}
-                >
-                </SearchTable>
-            </div>
+                    }
+                }}
+                tableOption={{
+                    key:this.state.updateKey,
+                    pageSize:10,
+                    columns:getColumns(this),
+                    cardProps:{
+                        title:'列表信息'
+                    },
+                    url:'/tax/declaration/list',
+                }}
+            >
+            </SearchTable>
         )
     }
 }

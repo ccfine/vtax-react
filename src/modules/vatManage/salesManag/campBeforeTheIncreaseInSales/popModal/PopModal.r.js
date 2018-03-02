@@ -78,8 +78,6 @@ class PopModal extends Component{
             if (!err) {
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
-                console.log(values.roomCode)
-                debugger
 
                 let tempData = values.roomCode;
                 if(values.roomCode.label && values.roomCode.key){

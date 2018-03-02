@@ -68,7 +68,6 @@ class DeclareFile extends Component {
 
     }
     onChange=(selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys,selectedRows)
         this.setState({
             selectedRowKeys
         })

@@ -11,19 +11,6 @@ import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'
 import PopModal from './popModal'
-
-const spanPaddingRight={
-    paddingRight:30
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
 const formItemStyle={
     labelCol:{
         span:8
@@ -376,7 +363,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                 <Card title="进项转出差异调整表" extra={
                     <div>
                         {
-                            listMainResultStatus(statusParam)
+                            dataSource.length>0 && listMainResultStatus(statusParam)
                         }
                         <FileImportModal
                             url="/account/income/taxContract/adjustment/upload"
@@ -472,12 +459,12 @@ class InterimContractInputTaxTransferredOut extends Component {
                                     },
                                     renderFooter:data=>{
                                         return (
-                                            <div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>合计：</span>
-                                                    金额：<span style={code}>{fMoney(data.pageAmount)}</span>
-                                                    税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
-                                                    价税合计：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
+                                            <div className="footer-total">
+                                                <div>
+                                                    <label>合计：</label>
+                                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                    价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                                 </div>
                                             </div>
                                         )

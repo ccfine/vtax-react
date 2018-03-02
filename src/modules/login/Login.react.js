@@ -31,12 +31,9 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e && e.preventDefault();
-
-        const {form,login} = this.props;
-
+        const {login} = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values,form,login);
                 this.toggleLoading(true)
                 login({
                     userName:values.userName,

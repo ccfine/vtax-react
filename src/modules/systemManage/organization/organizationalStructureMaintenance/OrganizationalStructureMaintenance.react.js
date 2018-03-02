@@ -17,7 +17,7 @@ const searchFields = [
         label:'组织机构名称',
         fieldName:'name',
         type:'input',
-        span:6,
+        span:8,
     }
 ]
 
