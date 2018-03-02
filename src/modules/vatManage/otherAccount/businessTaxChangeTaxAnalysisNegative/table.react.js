@@ -383,7 +383,7 @@ const reConstructData = (data) => {
 export default class extends React.Component {
     state = {
         loading: false,
-        dataSource: undefined,
+        dataSource: [],
         tax1Count: 0,
         tax2Count: 0,
         currentStatus: undefined,
