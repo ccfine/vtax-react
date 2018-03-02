@@ -76,7 +76,7 @@ const getColumns = context=> [
         dataIndex: 'boardingTime',
     },{
         title: '项目分期',
-        dataIndex: 'stagesItemName',
+        dataIndex: 'stagesName',
     },{
         title: '清算分期',
         dataIndex: 'liquidationStage',
