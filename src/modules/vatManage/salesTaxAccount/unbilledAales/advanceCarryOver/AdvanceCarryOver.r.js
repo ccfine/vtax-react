@@ -137,13 +137,6 @@ const columns = [
         className:'table-money'
     }
 ];
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        str += `${key}=${data[key]}&`
-    }
-    return str;
-}
 const transformDataStatus = status =>{
     status = parseInt(status,0)
     if(status===1){
@@ -240,7 +233,7 @@ class AdvanceCarryOver extends Component{
         }
     }
     render(){
-        const {tableKey,selectedRowKeys,searchTableLoading,searchFieldsValues,doNotFetchDidMount,dataStatus,submitDate} = this.state;
+        const {tableKey,selectedRowKeys,searchTableLoading,doNotFetchDidMount,dataStatus,submitDate} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -295,7 +288,7 @@ class AdvanceCarryOver extends Component{
                         }
                         <FileImportModal url="/account/output/notInvoiceAdvance/upload" onSuccess={this.refreshTable} style={{marginRight:5}} />
                         <FileExport
-                            url={`/account/output/notInvoiceAdvance/download${parseJsonToParams(searchFieldsValues)}`}
+                            url={`/account/output/notInvoiceAdvance/download`}
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}
