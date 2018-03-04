@@ -340,6 +340,12 @@ class CampBeforeTheIncreaseInSales extends Component{
                             <Icon type="file-add" />
                             新增
                         </Button>
+                        <FileExport
+                            url='/output/sellinghouse/download'
+                            title="下载导入模板"
+                            size="small"
+                            setButtonStyle={{marginRight:5}}
+                        />
                         <FileImportModal
                             url="output/sellinghouse/upload"
                             onSuccess={()=>{
