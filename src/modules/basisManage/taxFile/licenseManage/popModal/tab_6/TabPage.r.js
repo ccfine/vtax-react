@@ -63,7 +63,7 @@ const getColumns = context=> [
         dataIndex: 'downArea',
     },{
         title: '项目分期',
-        dataIndex: 'stagesItemName',
+        dataIndex: 'stagesName',
     },{
         title: '取证日期',
         dataIndex: 'evidenceDate',

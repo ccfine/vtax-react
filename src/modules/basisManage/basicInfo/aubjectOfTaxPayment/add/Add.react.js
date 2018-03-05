@@ -87,9 +87,6 @@ class Add extends Component {
     handleSubmit = (e) => {
         e && e && e.preventDefault();
          this.props.form.validateFieldsAndScroll((err, values) => {
-             console.log(err, values);
-
-
          if (!err) {
              if(values.jbxx.industry.label && values.jbxx.industry.key){
                  values.jbxx.industry = values.jbxx.industry.key

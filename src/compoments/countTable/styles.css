@@ -8,6 +8,18 @@
     padding:0;
     border:0;
 }
+.footer-total{
+    padding-top:10px;
+}
+.footer-total>div{
+    padding-bottom:10px;
+}
+.footer-total div label{
+    width:100px;
+    display:inline-block;
+    text-align: right;
+    padding-right: 30px;
+}
 
 .ant-table-wrapper.js-combin-footer-table .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body{
     -ms-overflow-style: none;

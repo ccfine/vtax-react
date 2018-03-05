@@ -87,7 +87,6 @@ class Shareholding extends Component {
         })
     }
     onChange=(selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys,selectedRows)
         this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 

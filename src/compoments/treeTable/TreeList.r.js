@@ -69,7 +69,6 @@ class TreeList extends Component {
     }
 
     fetchTree = (props) => {
-        console.log(props && props.id && [`${props.id}`])
         this.mounted && this.setState({ eidtLoading: true });
         request.get(this.props.url,{
         }).then(({data}) => {

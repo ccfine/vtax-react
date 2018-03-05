@@ -15,18 +15,6 @@ const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
-const spanPaddingRight={
-    paddingRight:30
-}
-const code = {
-    margin:' 0 1px',
-    background: '#f2f4f5',
-    borderRadius: '3px',
-    fontSize: '.9em',
-    border:'1px solid #eee',
-    marginRight:30,
-    padding: '2px 4px'
-}
 const fields = [
     {
         label:'纳税主体',
@@ -88,7 +76,7 @@ class InvoiceCollection extends Component {
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey:Date.now(),
-
+        dataSource:[],
         selectedRowKeys:null,
         selectedRows:null,
         visible:false,
@@ -245,7 +233,7 @@ class InvoiceCollection extends Component {
     }
 
     render() {
-        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,statusParam} = this.state;
+        const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,dataSource,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!(search && search.filters);
 
@@ -329,7 +317,7 @@ class InvoiceCollection extends Component {
                 <Card
                       extra={<div>
                           {
-                              listMainResultStatus(statusParam)
+                              dataSource.length>0 &&listMainResultStatus(statusParam)
                           }
                           <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="file-add" />
@@ -425,22 +413,27 @@ class InvoiceCollection extends Component {
                                     scroll:{ x: '150%' },
                                     renderFooter:data=>{
                                         return (
-                                            <div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>本页合计：</span>
-                                                    本页金额：<span style={code}>{fMoney(data.pageAmount)}</span>
-                                                    本页税额：<span style={code}>{fMoney(data.pageTaxAmount)}</span>
+                                            <div className="footer-total">
+                                                <div>
+                                                    <label>本页合计：</label>
+                                                    本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                    本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
 
-                                                    本页价税：<span style={code}>{fMoney(data.pageTotalAmount)}</span>
+                                                    本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                                 </div>
-                                                <div style={{marginBottom:10}}>
-                                                    <span style={{width:100, display:'inline-block',textAlign: 'right',...spanPaddingRight}}>总计：</span>
-                                                    总金额：<span style={code}>{fMoney(data.allAmount)}</span>
-                                                    总税额：<span style={code}>{fMoney(data.allTaxAmount)}</span>
-                                                    总价税：<span style={code}>{fMoney(data.allTotalAmount)}</span>
+                                                <div>
+                                                    <label>总计：</label>
+                                                    总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                                    总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                                    总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
                                                 </div>
                                             </div>
                                         )
+                                    },
+                                    onDataChange:(dataSource)=>{
+                                        this.setState({
+                                            dataSource
+                                        })
                                     },
                                 }} />
                 </Card>

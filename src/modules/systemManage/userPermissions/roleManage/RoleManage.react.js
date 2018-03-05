@@ -110,7 +110,7 @@ class RoleManage extends Component{
                 const pagination = {...this.state.pagination};
                 pagination.total = data.data.page.total;
                 pagination.pageSize = data.data.page.size;
-                console.log([{...data.data}])
+
                 const list = data.data;
                this.setState({
                     dataSource:data.data.page.records,

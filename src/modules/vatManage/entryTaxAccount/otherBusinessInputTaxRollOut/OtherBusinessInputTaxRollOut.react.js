@@ -59,6 +59,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         // buttonDisabled:true,
         submitLoading:false,
         revokeLoading:false,
+        dataSource:[],
     }
     hideModal() {
         this.setState({ visible: false });
@@ -108,6 +109,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         this.updateStatus(values);
     }
     render() {
+        const {dataSource} = this.state;
         const { search } = this.props.location;
         let disabled = !!search;
         const getFields = (title, span, formItemStyle, record = {}) => [
@@ -149,19 +151,20 @@ class OtherBusinessInputTaxRollOut extends Component {
         ]
 
         let {filter,status} = this.state,
-        buttonDisabled = !filter;
+        buttonDisabled = !filter,
+        isSubmit =(status && status.status === 2);
         return (
             <div>
             <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />
             <Card title='其他业务进项税额转出台账' extra={(<div>
                 {
-                  listMainResultStatus(status)
+                    dataSource.length>0 && listMainResultStatus(status)
                 }
-                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
+                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || isSubmit} onClick={this.submit} loading={this.state.submitLoading}>
                     <Icon type="check" />
                     提交
                 </Button>
-                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
+                <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || !isSubmit} onClick={this.revoke} loading={this.state.revokeLoading}>
                     <Icon type="rollback" />
                     撤回提交
                 </Button>
@@ -195,7 +198,10 @@ class OtherBusinessInputTaxRollOut extends Component {
                         rowKey: 'id',
                         onDataChange:(data)=>{
                             let hasData =data && data.length>0;
-                            this.setState({buttonDisabled:!hasData})  
+                            this.setState({
+                                buttonDisabled:!hasData,
+                                dataSource:data,
+                            })
                         },
                         renderCount:(data)=>{
                             if(data.page && data.page.records && data.page.records.length>0){

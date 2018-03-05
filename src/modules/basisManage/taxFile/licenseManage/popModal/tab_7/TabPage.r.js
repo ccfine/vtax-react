@@ -66,7 +66,7 @@ const getColumns = context=> [
         dataIndex: 'contractPrice',
     },{
         title: '项目分期',
-        dataIndex: 'stagesItemName',
+        dataIndex: 'stagesName',
     },{
         title: '设计单位',
         dataIndex: 'designOrg',

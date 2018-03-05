@@ -236,7 +236,10 @@ class ConfirmCarryOver extends Component{
         if(!!search){
             this.setState({
                 doNotFetchDidMount:false
+            },()=>{
+                this.refreshTable()
             })
+
         }else{
             this.setState({
                 doNotFetchDidMount:true
@@ -321,8 +324,8 @@ class ConfirmCarryOver extends Component{
                     </div>,
                     renderFooter:data=>{
                         return(
-                            <div>
-                                <div style={{marginBottom:10}}>
+                            <div className="footer-total">
+                                <div>
                                     <div>
                                         <div style={{width:100,display:'inline-block',textAlign: 'right',paddingRight:20}}>本页合计：</div>
                                         <div style={{display:'inline-block'}}>
@@ -342,7 +345,7 @@ class ConfirmCarryOver extends Component{
                                         本期末合计-未开具发票销售额 ：<span className="amount-code">{fMoney(data.pageEndNoInvoiceSales)}</span>
                                     </p>
                                 </div>
-                                <div style={{marginBottom:10}}>
+                                <div>
                                     <div>
                                         <div style={{width:100,display:'inline-block',textAlign: 'right',paddingRight:20}}>总计：</div>
                                         <div style={{display:'inline-block'}}>

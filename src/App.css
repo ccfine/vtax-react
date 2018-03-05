@@ -161,7 +161,8 @@ form .ant-pagination .ant-select{
   font-size: .9em;
   border:1px solid #eee;
   margin-right:30px;
-  padding: 2px 4px
+  padding: 2px 4px;
+  line-height: 20px;
 }
 
 

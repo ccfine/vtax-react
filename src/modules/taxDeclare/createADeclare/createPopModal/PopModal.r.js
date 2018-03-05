@@ -116,13 +116,16 @@ class PopModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-
+                if(this.state.selectedRows.length<1){
+                    return message.error('请选择要添加申报的纳税主体！')
+                }
                 if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
                     values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
                     values.subordinatePeriodEnd= values.subordinatePeriod[1].format('YYYY-MM-DD')
                     values.subordinatePeriod = undefined;
                 }
                 values.declarationDate = values.declarationDate && values.declarationDate.format('YYYY-MM-DD');  //YYYY-MM-DD HH:mm
+
                 const data = this.state.selectedRows.map(item=>{
                     return {
                         ...item,
@@ -170,7 +173,6 @@ class PopModal extends Component{
     fetchDeclarationById = id=>{
         request.get(`/tax/declaration/find/${id}`)
             .then(({data})=>{
-            console.log(data)
                 this.setState({
                     initData:data.data,
                 })
@@ -332,7 +334,7 @@ class PopModal extends Component{
                                             ],
                                         }
                                     },{
-                                        label:'申报起止',
+                                        label:'所属期起止',
                                         fieldName:'subordinatePeriod',
                                         type:'rangePicker',
                                         span:12,
@@ -343,11 +345,11 @@ class PopModal extends Component{
                                             //format:"YYYY-MM-DD HH:mm",
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:shouldShowDefaultData ?[moment(initData.subordinatePeriodStart, dateFormat), moment(initData.subordinatePeriodEnd, dateFormat)] :[null,null],
+                                            initialValue:shouldShowDefaultData ? [moment(initData.subordinatePeriodStart, dateFormat), moment(initData.subordinatePeriodEnd, dateFormat)] : [],
                                             rules: [
                                                 {
                                                     required:true,
-                                                    message:'请选择申报起止'
+                                                    message:'请选择所属期起止'
                                                 }
                                             ],
                                         }

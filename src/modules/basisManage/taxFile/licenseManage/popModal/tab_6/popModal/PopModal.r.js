@@ -75,7 +75,7 @@ class PopModal extends Component{
                 // 提交数据 
                 if(values.projectStages){          
                     values.stagesId = values.projectStages.key;
-                    values.stagesItemName = values.projectStages.label;
+                    values.stagesName = values.projectStages.label;
                     values.projectStages=undefined;
                 }               
                 // 处理日期
@@ -202,7 +202,7 @@ class PopModal extends Component{
                         {
                             label:'项目分期',
                             fieldName:'projectStages',
-                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesItemName}:undefined,readonly,true,'请选择项目分期'),
+                            ...setComItem(record.stagesId?{key:record.stagesId,label:record.stagesName}:undefined,readonly,true,'请选择项目分期'),
                             type:'asyncSelect',
                             componentProps:{
                                 fieldTextName:'itemName',

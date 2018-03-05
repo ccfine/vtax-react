@@ -78,8 +78,6 @@ class PopModal extends Component{
                     values.projectStages=undefined;
                 }
                 
-                console.log('values',values);
-                
                 // 处理日期
                 values.issueDate = values.issueDate.format('YYYY-MM-DD');
 
