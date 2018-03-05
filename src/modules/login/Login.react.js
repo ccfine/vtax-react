@@ -88,65 +88,67 @@ class Login extends Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div id="login-container">
-                <div style={{margin:'auto'}}>
-                    <Layout className='loginWrap'>
-                        <header className='loginHeader'>
-                            <img src={logo} alt="logo" style={{float:'left',width:120,marginRight:15}}/> 纳税申报平台
-                        </header>
-                        <Row style={{margin:'139px 0 203px 0'}}>
-                            <Col span={12}>
-                                <img src={loginIcon} alt="login"/>
-                            </Col>
-                            <Col span={12}>
-                                <Form onSubmit={this.handleSubmit}  className="loginForm">
-                                    <h2 className="welcome">喜盈佳纳税申报平台</h2>
-                                    <FormItem>
-                                        {getFieldDecorator('userName', {
-                                            rules: [{
-                                                    required: true,message: '请输入用户名!'
-                                                },{
-                                                    pattern:regRules.userName.pattern, message: regRules.userName.message,
-                                            }],
-                                        })(
-                                            <Input prefix={<Icon type="user" style={{ fontSize: 14 }} />} placeholder="用户名" />
-                                        )}
-                                    </FormItem>
-                                    <FormItem>
-                                        {getFieldDecorator('password', {
-                                            rules: [{
-                                                    required: true, message: '请输入密码!'
-                                                },{
-                                                    pattern:regRules.password.pattern, message: regRules.password.message,
-                                            }],
-                                        })(
-                                            <Input prefix={<Icon type="lock" style={{ fontSize: 14 }} />} type="password" placeholder="密码" />
-                                        )}
-                                    </FormItem>
-                                    <FormItem>
-                                        {/*{getFieldDecorator('remember', {
-                                            valuePropName: 'checked',
-                                            initialValue: true,
-                                        })(
-                                            <Checkbox>记住密码</Checkbox>
-                                        )}*/}
-                                        <Button type="primary" htmlType="submit" className="loginFormButton">
-                                            登录
-                                        </Button>
-                                    </FormItem>
-                                    <FormItem>
-                                        {
-                                            this.state.error.visible ? <Alert key='errorMsg' message={this.state.error.msg} type="error" /> : null
-                                        }
-                                    </FormItem>
-                                    <p className="loginFormFooter">如需帮助，请拨打4000 888 600</p>
-                                </Form>
-                            </Col>
-                        </Row>
-                        <footer className="loginFooter">
-                            ©Copyright 喜盈佳企业云服务有限公司 粤ICP备16030834号 粤公网安备 44030502000290号
-                        </footer>
-                    </Layout>
-                </div>
+                <header className='login-header'>
+                    <div className="login-header-content">
+                        <img src={logo} alt="logo" style={{float:'left',width:120,marginRight:15}}/>
+                        <span>纳税申报平台</span>
+                    </div>
+                </header>
+                <Layout className='login-content'>
+
+                    <Row>
+                        <Col span={12}>
+                            <img src={loginIcon} alt="login"/>
+                        </Col>
+                        <Col span={12}>
+                            <Form onSubmit={this.handleSubmit}  className="loginForm">
+                                <h2 className="welcome">喜盈佳纳税申报平台</h2>
+                                <FormItem>
+                                    {getFieldDecorator('userName', {
+                                        rules: [{
+                                            required: true,message: '请输入用户名!'
+                                        },{
+                                            pattern:regRules.userName.pattern, message: regRules.userName.message,
+                                        }],
+                                    })(
+                                        <Input prefix={<Icon type="user" style={{ fontSize: 14 }} />} placeholder="用户名" />
+                                    )}
+                                </FormItem>
+                                <FormItem>
+                                    {getFieldDecorator('password', {
+                                        rules: [{
+                                            required: true, message: '请输入密码!'
+                                        },{
+                                            pattern:regRules.password.pattern, message: regRules.password.message,
+                                        }],
+                                    })(
+                                        <Input prefix={<Icon type="lock" style={{ fontSize: 14 }} />} type="password" placeholder="密码" />
+                                    )}
+                                </FormItem>
+                                <FormItem>
+                                    {/*{getFieldDecorator('remember', {
+                                     valuePropName: 'checked',
+                                     initialValue: true,
+                                     })(
+                                     <Checkbox>记住密码</Checkbox>
+                                     )}*/}
+                                    <Button type="primary" htmlType="submit" className="loginFormButton">
+                                        登录
+                                    </Button>
+                                </FormItem>
+                                <FormItem>
+                                    {
+                                        this.state.error.visible ? <Alert key='errorMsg' message={this.state.error.msg} type="error" /> : null
+                                    }
+                                </FormItem>
+                                <p className="loginFormFooter">如需帮助，请拨打4000 888 600</p>
+                            </Form>
+                        </Col>
+                    </Row>
+                </Layout>
+                <footer className="login-footer">
+                    ©Copyright 喜盈佳企业云服务有限公司 粤ICP备16030834号 粤公网安备 44030502000290号
+                </footer>
             </div>
         )
     }
