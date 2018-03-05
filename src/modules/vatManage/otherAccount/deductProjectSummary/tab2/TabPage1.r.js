@@ -159,7 +159,14 @@ class tab1 extends Component{
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.refreshTable();
+            this.setState({
+                filters:{
+                    mainId:getUrlParam('mainId') || undefined,
+                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
         }
     }
     componentWillReceiveProps(props){
