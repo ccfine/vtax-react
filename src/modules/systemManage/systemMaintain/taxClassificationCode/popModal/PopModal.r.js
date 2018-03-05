@@ -282,9 +282,8 @@ class PopModal extends Component{
                                                         break
                                                     }
                                                 }
-
                                                 isCommonlyTaxRate && this.setState(prevState=>{
-                                                    prevState.commonlyTaxRate[prevState.hashData.length+1]={
+                                                    prevState.commonlyTaxRate[prevState.hashData.length]={
                                                         value: data.commonlyTaxRateId.toString(),
                                                         text: data.commonlyTaxRate.toString()
                                                     }
@@ -292,34 +291,34 @@ class PopModal extends Component{
                                                         commonlyTaxRate:prevState.commonlyTaxRate,
                                                         simpleTaxRate : this.state.simpleTaxRate,
                                                     }
+                                                },()=>{
+                                                    setFieldsValue({
+                                                        'commonlyTaxRateId': data.commonlyTaxRateId.toString(),
+                                                    })
                                                 })
-                                                setFieldsValue({
-                                                    'commonlyTaxRateId': data.commonlyTaxRateId.toString(),
-                                                })
-
 
                                                 let isSimpleTaxRate = true;
-                                                const simple = this.state.simpleTaxRate;
-                                                for(let i=0; i<simple.length; i++){
-                                                    if(simple[i].value === data.simpleTaxRateId.toString()){
-                                                        isSimpleTaxRate = false;
-                                                        break
-                                                    }
-                                                }
-                                                isSimpleTaxRate && this.setState(prevState=>{
-                                                                prevState.simpleTaxRate[prevState.hashData.length+1]={
-                                                                    value:data.simpleTaxRateId.toString(),
-                                                                    text:data.simpleTaxRate.toString()
-                                                                }
-                                                                return{
-                                                                    commonlyTaxRate:prevState.commonlyTaxRate,
-                                                                    simpleTaxRate : this.state.simpleTaxRate,
-                                                                }
-                                                            })
-
-                                                setFieldsValue({
-                                                    'simpleTaxRateId': data.simpleTaxRateId.toString(),
-                                                })
+                                                 const simple = this.state.simpleTaxRate;
+                                                 for(let i=0; i<simple.length; i++){
+                                                     if(simple[i].value === data.simpleTaxRateId.toString()){
+                                                         isSimpleTaxRate = false;
+                                                         break
+                                                     }
+                                                 }
+                                                 isSimpleTaxRate && this.setState(prevState=>{
+                                                     prevState.simpleTaxRate[prevState.hashData.length]={
+                                                         value:data.simpleTaxRateId.toString(),
+                                                         text:data.simpleTaxRate.toString()
+                                                     }
+                                                     return{
+                                                         commonlyTaxRate:prevState.commonlyTaxRate,
+                                                         simpleTaxRate : this.state.simpleTaxRate,
+                                                     }
+                                                 },()=>{
+                                                     setFieldsValue({
+                                                         'simpleTaxRateId': data.simpleTaxRateId.toString(),
+                                                     })
+                                                 })
                                             }
                                         }
                                     }, {

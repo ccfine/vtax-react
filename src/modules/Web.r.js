@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {RouteWithSubRoutes} from '../compoments'
-import {composeMenus,request} from '../utils'
+import {composeMenus} from '../utils'
 import Header from './header'
 import Sider from './sider'
 import BreadCrumb from './breadcrumb/Breadcrumb'
@@ -54,15 +54,14 @@ class Web extends Component {
         this.checkLoggedIn(this.props)
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         request.get('/login_org_user_permissions')
             .then(({data})=>{
                 if(data.code ===200){
                     //console.log(data);
                 }
             })
-
-    }
+    }*/
 
     mounted = true;
     componentWillUnmount(){

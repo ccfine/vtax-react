@@ -109,7 +109,7 @@ const getColumns =(context)=>[
         title: '税（费）种',
         dataIndex: 'taxType',
         render:text=>{
-            //1增值税、2企业所得税
+            //1:增值税;2:企业所得税;
             text = parseInt(text,0);
             if(text===1){
                 return '增值税'
