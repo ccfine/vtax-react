@@ -115,19 +115,14 @@ const getColumns =(context)=>[
         dataIndex: 'taxType',
         render:text=>{
             //1:增值税;2:企业所得税;
-            let t = '';
-            switch (parseInt(text,0)){
-                case 1:
-                    t='增值税';
-                    break;
-                case 2:
-                    t='企业所得税';
-                    break;
-                default:
-                    t='增值税';
-                    break;
+            text = parseInt(text,0);
+            if(text===1){
+                return '增值税'
             }
-            return t
+            if(text===2){
+                return '企业所得税'
+            }
+            return text;
         }
     },{
         title: '所属期起',
