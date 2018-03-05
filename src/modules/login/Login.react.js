@@ -95,7 +95,6 @@ class Login extends Component {
                     </div>
                 </header>
                 <Layout className='login-content'>
-
                     <Row>
                         <Col span={12}>
                             <img src={loginIcon} alt="login"/>
