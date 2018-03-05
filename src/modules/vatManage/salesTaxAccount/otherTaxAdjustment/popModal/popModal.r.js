@@ -77,7 +77,7 @@ class PopModal extends Component{
     }
     autoCalTax = (amount,tax)=>{
         // 计算公式：销售额（不含税）*税率 
-        this.props.form.setFieldsValue({taxAmountWithTax:accMul(amount,tax)/100});
+        amount && tax && this.props.form.setFieldsValue({taxAmountWithTax:accMul(amount,tax)/100});
     }
     handleOk(){
         if((this.props.action!=='modify' && this.props.action!=='add') || this.state.formLoading){
