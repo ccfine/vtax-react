@@ -466,26 +466,27 @@ export default class extends React.Component {
     }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
-        const buttonDisabled = !this.props.filter;
+        const buttonDisabled = !this.props.filter,
+                isSubmit =(currentStatus && currentStatus.status === 2);
         return (
             <Card title="营改增税负分析测算台账" extra={
                 <div>
                     {
                         dataSource.length>0 && listMainResultStatus(currentStatus)
                     }
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.save} loading={this.state.saveLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || isSubmit} onClick={this.save} loading={this.state.saveLoading}>
                         <Icon type="hdd" />
                         保存
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.reCalculate} >
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || isSubmit} onClick={this.reCalculate} >
                         <Icon type="retweet" />
                         重算
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.submit} loading={this.state.submitLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || isSubmit} onClick={this.submit} loading={this.state.submitLoading}>
                         <Icon type="check" />
                         提交
                     </Button>
-                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled} onClick={this.revoke} loading={this.state.revokeLoading}>
+                    <Button size='small' style={{ marginRight: 5 }} disabled={buttonDisabled || !isSubmit} onClick={this.revoke} loading={this.state.revokeLoading}>
                         <Icon type="rollback" />
                         撤回提交
                     </Button>
