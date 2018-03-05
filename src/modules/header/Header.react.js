@@ -78,10 +78,11 @@ class WimsHeader extends Component {
                             </Menu.Item>
                             <SubMenu
                                 title={
-                                    <span>
-                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
+                                    <div className="avatarImg">
+                                        <Avatar style={{ backgroundColor: '#87d068', verticalAlign:'middle',marginRight:'10px'  }} icon="user" />
+                                        {/*<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />*/}
                                         { this.props.userName }
-                                    </span>}>
+                                    </div>}>
                                 <Menu.Item key="admin">
                                     <span>
                                         <Icon type="user" />
