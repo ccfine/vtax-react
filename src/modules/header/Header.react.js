@@ -60,6 +60,9 @@ class WimsHeader extends Component {
                     type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                     onClick={this.toggle}
                 />
+                <div style={{display: 'inline-block'}}>
+                    <h1>碧桂园增值税管理系统</h1>
+                </div>
                 <div style={{float:'right'}}>
                     <div style={{float:'right'}}>
                         <Menu
