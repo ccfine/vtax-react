@@ -124,7 +124,7 @@ class VTaxSider extends Component {
                 <div className="logo">
                     <Link to="/">
                         <img src={logo} alt="logo" />
-                        <h1>喜盈佳纳税申报平台</h1>
+                        {/*<h1>喜盈佳纳税申报平台</h1>*/}
                     </Link>
                 </div>
                 <Menu
