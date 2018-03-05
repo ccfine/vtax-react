@@ -9,8 +9,8 @@ import React, { Component } from 'react'
 import { Layout, Card, Col, Row,Icon,Menu, Dropdown } from 'antd'
 import {Carousel} from '../../compoments'
 
-import banner1 from './images/banner1.jpg'
-import banner2 from './images/banner2.jpg'
+import banner1 from './images/banner1.png'
+import banner2 from './images/banner2.png'
 
 const Pie = createG2(chart => {
     chart.coord('theta');
@@ -2998,7 +2998,7 @@ class Home extends Component {
                                     plotCfg={this.state.plotCfg}
                                     ref="myChart"
                                 />
-                                {/*<button onClick={this.changeHandler}>change</button>*/}
+                                <button onClick={this.changeHandler}>change</button>
                             </Card>
                         </Col>
                     </Row>
