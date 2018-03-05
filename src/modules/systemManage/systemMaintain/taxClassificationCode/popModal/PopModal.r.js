@@ -15,7 +15,6 @@ class PopModal extends Component{
     state={
 
         initData:{},
-        hashData:[],
         simpleTaxRate:[],
         commonlyTaxRate:[],
         businessType:[],
@@ -88,6 +87,35 @@ class PopModal extends Component{
             })
     }
 
+    //根据应税项目查询一般计税方法税率列表
+    getCommonlyTaxRate=(data)=>{
+        console.log(data)
+        request.get(`/sys/taxrate/list/commonlyTaxRate/by/${data.key}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        commonlyTaxRate:this.setFormat(data.data),
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
+    }
+
+    //根据应税项目查询简易计税方法税率列表
+    getSimpleTaxRate=(data)=>{
+        request.get(`/sys/taxrate/list/simpleTaxRate/by/${data.key}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        simpleTaxRate:this.setFormat(data.data),
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
+    }
+
     //设置select值名不同
     setFormat=data=>{
         return data.map(item=>{
@@ -105,17 +133,6 @@ class PopModal extends Component{
                 businessType :this.setFormat(result)
             })
         });
-        //一般增值税税率 简易增值税税率
-        request.get('sys/taxrate/list/zero')
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        hashData :this.setFormat(data.data),
-                        simpleTaxRate:this.setFormat(data.data),
-                        commonlyTaxRate:this.setFormat(data.data),
-                    })
-                }
-            })
     }
     mounted=true
     componentWillUnmount(){
@@ -146,7 +163,6 @@ class PopModal extends Component{
     }
     render(){
         const props = this.props;
-        const {setFieldsValue} = props.form
         const {initData,loaded} = this.state;
         let title='';
         let disabled = false;
@@ -270,55 +286,11 @@ class PopModal extends Component{
                                                 }
                                             ]
                                         },
-                                        componentProps:{
+                                        componentProps: {
                                             disabled,
-                                            onChange:data=>{
-
-                                                let isCommonlyTaxRate = true;
-                                                const commonly = this.state.commonlyTaxRate;
-                                                for(let i=0; i<commonly.length; i++){
-                                                    if(commonly[i].value === data.commonlyTaxRateId.toString()){
-                                                        isCommonlyTaxRate = false;
-                                                        break
-                                                    }
-                                                }
-                                                isCommonlyTaxRate && this.setState(prevState=>{
-                                                    prevState.commonlyTaxRate[prevState.hashData.length]={
-                                                        value: data.commonlyTaxRateId.toString(),
-                                                        text: data.commonlyTaxRate.toString()
-                                                    }
-                                                    return{
-                                                        commonlyTaxRate:prevState.commonlyTaxRate,
-                                                        simpleTaxRate : this.state.simpleTaxRate,
-                                                    }
-                                                },()=>{
-                                                    setFieldsValue({
-                                                        'commonlyTaxRateId': data.commonlyTaxRateId.toString(),
-                                                    })
-                                                })
-
-                                                let isSimpleTaxRate = true;
-                                                 const simple = this.state.simpleTaxRate;
-                                                 for(let i=0; i<simple.length; i++){
-                                                     if(simple[i].value === data.simpleTaxRateId.toString()){
-                                                         isSimpleTaxRate = false;
-                                                         break
-                                                     }
-                                                 }
-                                                 isSimpleTaxRate && this.setState(prevState=>{
-                                                     prevState.simpleTaxRate[prevState.hashData.length]={
-                                                         value:data.simpleTaxRateId.toString(),
-                                                         text:data.simpleTaxRate.toString()
-                                                     }
-                                                     return{
-                                                         commonlyTaxRate:prevState.commonlyTaxRate,
-                                                         simpleTaxRate : this.state.simpleTaxRate,
-                                                     }
-                                                 },()=>{
-                                                     setFieldsValue({
-                                                         'simpleTaxRateId': data.simpleTaxRateId.toString(),
-                                                     })
-                                                 })
+                                            onChange: data => {
+                                                this.getCommonlyTaxRate(data)
+                                                this.getSimpleTaxRate(data)
                                             }
                                         }
                                     }, {
