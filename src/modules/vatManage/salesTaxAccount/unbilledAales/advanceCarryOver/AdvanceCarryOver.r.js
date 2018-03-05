@@ -286,7 +286,35 @@ class AdvanceCarryOver extends Component{
                                 }
                             </div>
                         }
-                        <FileImportModal url="/account/output/notInvoiceAdvance/upload" onSuccess={this.refreshTable} style={{marginRight:5}} />
+                        <FileImportModal
+                            url={`/account/output/notInvoiceAdvance/upload`}
+                            fields={
+                                [
+                                    {
+                                        label:'纳税主体',
+                                        fieldName:'mainId',
+                                        type:'taxMain',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:14
+                                            }
+                                        },
+                                        fieldDecoratorOptions:{
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择纳税主体'
+                                                }
+                                            ]
+                                        },
+                                    }
+                                ]
+                            }
+                            onSuccess={this.refreshTable} style={{marginRight:5}} />
                         <FileExport
                             url={`/account/output/notInvoiceAdvance/download`}
                             title="下载导入模板"
