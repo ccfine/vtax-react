@@ -90,8 +90,8 @@ class Login extends Component {
             <div id="login-container">
                 <header className='login-header'>
                     <div className="login-header-content">
-                        <img src={logo} alt="logo" style={{float:'left',width:120,marginRight:15}}/>
-                        <span>纳税申报平台</span>
+                        <img src={logo} alt="logo" style={{float:'left',marginRight:15}}/>
+                        <span>碧桂园增值税管理系统</span>
                     </div>
                 </header>
                 <Layout className='login-content'>
@@ -101,7 +101,7 @@ class Login extends Component {
                         </Col>
                         <Col span={12}>
                             <Form onSubmit={this.handleSubmit}  className="loginForm">
-                                <h2 className="welcome">喜盈佳纳税申报平台</h2>
+                                <h2 className="welcome">碧桂园增值税管理系统</h2>
                                 <FormItem>
                                     {getFieldDecorator('userName', {
                                         rules: [{

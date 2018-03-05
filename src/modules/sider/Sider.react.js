@@ -80,11 +80,10 @@ class VTaxSider extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        let path =nextProps.history.location.pathname;
+        let path = nextProps.history.location.pathname;
         this.setState({
             selectedPath:path
         })
-        
         let pathArr = path.split('/');
         let start = path.startsWith('/')?1:0;
 
@@ -92,7 +91,7 @@ class VTaxSider extends Component {
         if(pathArr.length>1+start){
             this.setState({
                 openKeys: [`/${pathArr[start]}/${pathArr[start+1]}`],
-              });
+            });
         }
 
         /* 选中项设置 */
@@ -124,7 +123,7 @@ class VTaxSider extends Component {
                 <div className="logo">
                     <Link to="/">
                         <img src={logo} alt="logo" />
-                        {/*<h1>喜盈佳纳税申报平台</h1>*/}
+                        {/*<h1>碧桂园增值税管理系统</h1>*/}
                     </Link>
                 </div>
                 <Menu
