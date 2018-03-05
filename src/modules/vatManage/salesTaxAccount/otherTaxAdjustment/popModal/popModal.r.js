@@ -69,7 +69,7 @@ class PopModal extends Component{
         this.fetchTypeList(item.id);
     }
     fetchTypeList=(id)=>{
-        request.get(`/sys/taxrate/list/${id}`).then(({data}) => {
+        request.get(`/sys/taxrate/list/by/taxable/${id}`).then(({data}) => {
             if (data.code === 200) {
                 this.setState({typelist:data.data});
             }
@@ -77,7 +77,8 @@ class PopModal extends Component{
     }
     autoCalTax = (amount,tax)=>{
         // 计算公式：销售额（不含税）*税率 
-        amount && tax && this.props.form.setFieldsValue({taxAmountWithTax:accMul(amount,tax)/100});
+        (amount === undefined ||amount === null || tax === undefined || tax === null) 
+        || this.props.form.setFieldsValue({taxAmountWithTax:accMul(amount,tax)/100});
     }
     handleOk(){
         if((this.props.action!=='modify' && this.props.action!=='add') || this.state.formLoading){
