@@ -311,6 +311,29 @@ class AdvanceCarryOver extends Component{
                                                 }
                                             ]
                                         },
+                                    },
+                                    {
+                                        label: `月份`,
+                                        fieldName: 'authMonth',
+                                        type: 'monthPicker',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:14
+                                            }
+                                        },
+                                        componentProps: {
+                                            format: 'YYYY-MM'
+                                        },
+                                        fieldDecoratorOptions: {
+                                            rules: [{
+                                                required: true,
+                                                message: `请选择月份`
+                                            }]
+                                        }
                                     }
                                 ]
                             }
