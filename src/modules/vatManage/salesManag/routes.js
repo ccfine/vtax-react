@@ -7,6 +7,10 @@ import {wrapPage} from '../../../compoments'
 import SalesInvoiceCollection from './salesInvoiceCollection'
 import SalesInvoiceMatching from './salesInvoiceMatching'
 import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
+import BillingSales from '../salesTaxAccount/billingSales'
+import UnbilledAales from '../salesTaxAccount/unbilledAales'
+import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
+
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/salesManag`;
 
@@ -36,6 +40,33 @@ const SalesManag_Routes = [
         icon:{
             url:`${ICON_URL_PATH}campBeforeTheIncreaseInSales.svg`,
             backgroundColor:'#FFBE06'
+        },
+        exact:true,
+    },{
+        path:`${PATH}/billingSales`,
+        component:wrapPage('开票销售台账',BillingSales),
+        name:'开票销售台账',
+        icon:{
+            url:`${ICON_URL_PATH}billingSales.svg`,
+            backgroundColor:'#7ED530'
+        },
+        exact:true,
+    },{
+        path:`${PATH}/unbilledAales`,
+        component:wrapPage('未开票销售台账',UnbilledAales),
+        name:'未开票销售台账',
+        icon:{
+            url:`${ICON_URL_PATH}unbilledAales.svg`,
+            backgroundColor:'#F5A544'
+        },
+        exact:true,
+    },{
+        path:`${PATH}/otherTaxAdjustment`,
+        component:wrapPage('其他涉税调整台账',OtherTaxAdjustment),
+        name:'其他涉税调整台账',
+        icon:{
+            url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
+            backgroundColor:'#57C8F2'
         },
         exact:true,
     },{
