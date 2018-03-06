@@ -4,7 +4,8 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Form, Row, Col, Button} from 'antd'
-import {getFields} from '../../../../utils'
+import {getFields,getUrlParam} from '../../../../utils'
+import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
 class SheetWithSearchFields extends Component{
@@ -20,7 +21,11 @@ class SheetWithSearchFields extends Component{
                 label:'纳税主体',
                 fieldName:'mainId',
                 type:'taxMain',
+                componentProps:{
+                    disabled: !!getUrlParam('mainId'),
+                },
                 fieldDecoratorOptions:{
+                    initialValue: getUrlParam('mainId') || undefined,
                     rules:[
                         {
                             required:true,
@@ -33,7 +38,12 @@ class SheetWithSearchFields extends Component{
                 label:'月份',
                 fieldName:'taxMonth',
                 type:'monthPicker',
+                componentProps:{
+                    disabled: !!getUrlParam('authMonth')
+                },
                 fieldDecoratorOptions:{
+                    initialValue: (!!getUrlParam('authMonth') && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                    //initialValue: moment(getUrlParam('authMonth'), 'YYYY-MM') || undefined,
                     rules:[
                         {
                             required:true,
@@ -49,6 +59,19 @@ class SheetWithSearchFields extends Component{
         updateKey:Date.now()
     }
     componentDidMount(){
+        const {search} = this.props.location;
+        if(!!search){
+            this.setState({
+                params:{
+                    mainId:getUrlParam('mainId') || undefined,
+                    taxMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.setState({
+                    updateKey:Date.now()
+                })
+            });
+        }
     }
     toggleLoading = loading =>{
         this.setState({
@@ -85,6 +108,7 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
+        console.log(this.props.location.search);
         const { grid, url , searchFields, form, composeGrid,scroll} = this.props;
         const { params,updateKey } = this.state;
         return(
@@ -117,4 +141,4 @@ class SheetWithSearchFields extends Component{
         )
     }
 }
-export default Form.create()(SheetWithSearchFields)
+export default Form.create()(withRouter(SheetWithSearchFields))
