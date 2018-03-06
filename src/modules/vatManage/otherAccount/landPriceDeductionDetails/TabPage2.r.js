@@ -161,7 +161,7 @@ export default class TabPage extends Component{
                     size='small'
                 />
                 <FileExport
-                    url='/account/income/taxContract/adjustment/export'
+                    url='/carryover/incomeDetails/export'
                     title='导出'
                     setButtonStyle={{marginRight:5}}
                     disabled={!dataSource.length>0}
@@ -190,7 +190,6 @@ export default class TabPage extends Component{
                                         selectedRowKeys:selectedRowKeys
                                     })
                                 },
-                                scroll:{x:'150%'},
                                 onDataChange:(dataSource)=>{
                                     this.setState({
                                         dataSource

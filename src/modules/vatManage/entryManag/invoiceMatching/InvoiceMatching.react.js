@@ -114,7 +114,14 @@ class InvoiceMatching extends Component {
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.refreshTable()
+            this.setState({
+                filters:{
+                    mainId:getUrlParam('mainId') || undefined,
+                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
         }
     }
     componentWillReceiveProps(nextProps){
@@ -137,7 +144,7 @@ class InvoiceMatching extends Component {
         this.setState({
             tableUpDateKey:Date.now()
         },()=>{
-            this.updateStatus(this.state.filters);
+            this.updateStatus();
         })
     }
     showModal=type=>{
@@ -176,7 +183,7 @@ class InvoiceMatching extends Component {
             activeKey
         },()=>{
             if(JSON.stringify(this.state.filters) !== "{}"){
-                this.updateStatus(this.state.filters);
+                this.updateStatus();
             }
         });
 
@@ -255,14 +262,14 @@ class InvoiceMatching extends Component {
                 }
             })
     }
-    updateStatus=(values)=>{
+    updateStatus=()=>{
         let url='';
         if(this.state.activeKey ==='tab3'){
             url='/income/invoice/collection/listMain'
         }else {
             url='/income/invoice/marry/listMain'
         }
-        request.get(url,{params:values}).then(({data}) => {
+        request.get(url,{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
                 if(data.code===200){
                     this.setState({

@@ -139,7 +139,11 @@ class PopModal extends Component{
         this.setState({
             detailsDate
         },()=>{
-            this.cellAmountSum(['amount','taxAmount','totalAmount'])
+            this.setState({
+                tableUpDateKey:Date.now(),
+            },()=>{
+                this.cellAmountSum(['amount','taxAmount','totalAmount'])
+            })
         })
     }
     toggleModalVisible=visible=>{
@@ -246,6 +250,7 @@ class PopModal extends Component{
                         initData:{...data.data.incomeInvoiceCollectionDO},
                         detailsDate:[...data.data.list],
                     },()=>{
+                        console.log(this.state.detailsDate)
                         this.cellAmountSum(['amount','taxAmount','totalAmount']);
                     })
                 }else{

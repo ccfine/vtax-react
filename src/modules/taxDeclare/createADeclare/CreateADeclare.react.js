@@ -9,8 +9,7 @@ import {request} from '../../../utils'
 import {SearchTable,FileExport} from '../../../compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
-
-const searchFields = [
+const searchFields =(context) => [
     {
         label:'纳税主体',
         type:'taxMain',
@@ -63,6 +62,7 @@ const searchFields = [
         ],
     }
 ]
+
 const getColumns =(context)=>[
     {
         title: '申报状态',
@@ -192,7 +192,7 @@ export default class CreateADeclare extends Component{
         return(
                 <SearchTable
                     searchOption={{
-                        fields:searchFields,
+                        fields:searchFields(this),
                         getFieldsValues:values=>{
                             this.setState({
                                 filters:values
@@ -216,6 +216,12 @@ export default class CreateADeclare extends Component{
                             this.setState({
                                 selectedRowKeys:selectedRowKeys[0],
                                 selectedRows,
+                            })
+                        },
+                        onSuccess:()=>{
+                            this.setState({
+                                selectedRowKeys:undefined,
+                                selectedRows:[],
                             })
                         },
                         rowSelection:{
