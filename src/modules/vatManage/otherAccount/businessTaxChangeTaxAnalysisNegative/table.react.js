@@ -427,12 +427,12 @@ export default class extends React.Component {
                 this.updateStatus(filter)
             }else {
                 message.error(data.msg, 4)
-                this.setState({ loading: false });
+                this.setState({ loading: false,dataSource:[],currentStatus: undefined });
             }
         })
         .catch(err => {
             message.error(err.message)
-            this.setState({ loading: false });
+            this.setState({ loading: false,dataSource:[],currentStatus: undefined});
         })
     }
     commonSubmit = (url, params, action, messageInfo,method='post') => {
@@ -455,7 +455,7 @@ export default class extends React.Component {
     }
     updateStatus = (filter) => {
         this.setState({ currentStatus: undefined});
-        request.get(`/account/other/camping/main`, { params: filter }).then(({ data }) => {
+        request.get(`/account/other/camping/listMain`, { params: filter }).then(({ data }) => {
             if (data.code === 200) {
                 let currentStatus = {},statusData=data.data;
                 currentStatus.status = statusData.status;
@@ -466,7 +466,7 @@ export default class extends React.Component {
     }
     render() {
         let { dataSource, tax1Count, tax2Count, currentStatus } = this.state;
-        const buttonDisabled = !this.props.filter,
+        const buttonDisabled = !this.props.filter || !(dataSource && dataSource.length && dataSource.length>0),
                 isSubmit =(currentStatus && currentStatus.status === 2);
         return (
             <Card title="营改增税负分析测算台账" extra={

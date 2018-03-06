@@ -151,7 +151,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         ]
 
         let {filter,status} = this.state,
-        buttonDisabled = !filter,
+        buttonDisabled = !filter || !(dataSource && dataSource.length && dataSource.length>0),
         isSubmit =(status && status.status === 2);
         return (
             <div>
