@@ -90,7 +90,8 @@ class PopModal extends Component{
                 }
 
                 if(type==='edit'){
-                    values.id=this.state.initData['id']
+                    values.id=this.state.initData['id'];
+                    values.transactionDate = this.state.initData.transactionDate;
                     this.updateRecord(values)
                 }else if(type==='add'){
                     this.createRecord(values)

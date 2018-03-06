@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Select,Icon,Modal} from 'antd'
+import {Select,Modal} from 'antd'
 import {SearchTable} from '../../compoments'
 import PropTypes from 'prop-types'
 export default class TaxClassCodingSelect extends Component{
@@ -173,37 +173,11 @@ const getColumns = context => [
 ]
 class TaxClassSelectPage extends Component{
     render(){
-        const {disabled,toggleModalVisible,visible} = this.props;
+        const {toggleModalVisible,visible} = this.props;
         return(
         <span onClick={e=>{
             e && e.stopPropagation() && e.preventDefault()
         }}>
-            {
-                !disabled && (
-                    <span
-                        onClick={e=>{
-                            e && e.stopPropagation() && e.preventDefault()
-                            toggleModalVisible(true)
-                        }}
-                        style={{
-                            display:'inline-block',
-                            position:'absolute',
-                            cursor:'pointer',
-                            right:3,
-                            top:6,
-                            height:23,
-                            width:23,
-                            borderRadius:'3px',
-                            textAlign:'center',
-                            lineHeight:'23px',
-                            backgroundColor:'#fff'
-                        }}>
-                <Icon type="search" />
-
-            </span>
-                )
-            }
-
             <Modal
                 title="选择税收分类"
                 maskClosable={false}
