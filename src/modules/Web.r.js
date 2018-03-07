@@ -54,15 +54,6 @@ class Web extends Component {
         this.checkLoggedIn(this.props)
     }
 
-    /*componentDidMount() {
-        request.get('/login_org_user_permissions')
-            .then(({data})=>{
-                if(data.code ===200){
-                    //console.log(data);
-                }
-            })
-    }*/
-
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
@@ -70,12 +61,6 @@ class Web extends Component {
 
     componentWillReceiveProps(nextProps){
         this.checkLoggedIn(nextProps);
-
-        //判断权限
-        if(nextProps.orgId !== this.props.orgId){
-            this.props.history.replace('/web')
-        }
-
     }
 
     renderNormal() {

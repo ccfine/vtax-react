@@ -29,7 +29,7 @@ class WimsHeader extends Component {
             this.props.changeCollapsed(this.state.collapsed);
         });
     }
-    handlerClick = ({item, key, keyPath})=>{
+    handlerClick = ({ key })=>{
         if(key==='exit') {
             confirm({
                 title: '系统提示',
@@ -46,12 +46,6 @@ class WimsHeader extends Component {
             this.props.history.push(`/web/${key}`)
         }
     }
-    componentDidMount(){
-
-    }
-    componentWillUnmount(){
-    }
-
     render() {
         return (
             <Header className="vtax-header-trigger" style={{ background: '#fff', padding: 0 }}>
@@ -81,7 +75,7 @@ class WimsHeader extends Component {
                                     <div className="avatarImg">
                                         <Avatar style={{ backgroundColor: '#87d068', verticalAlign:'middle',marginRight:'10px'  }} icon="user" />
                                         {/*<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />*/}
-                                        { this.props.userName }
+                                        { this.props.userName || '' }
                                     </div>}>
                                 <Menu.Item key="admin">
                                     <span>
