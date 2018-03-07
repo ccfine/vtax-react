@@ -355,6 +355,10 @@ class AdvanceCarryOver extends Component{
                                     <label>本页合计：</label>
                                     预结转收入金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                 </div>
+                                <div>
+                                    <label>总计：</label>
+                                    预结转收入金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                </div>
                             </div>
                         )
                     }
