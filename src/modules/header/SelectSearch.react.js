@@ -14,6 +14,7 @@ const FormItem = Form.Item;
 class SelectSearch extends Component {
     state = {
         data:[],
+        orgId:undefined,
         coreCompanyLoaded:true
     }
 
@@ -47,7 +48,13 @@ class SelectSearch extends Component {
         request.get('/org/user_belong_organizations')
             .then(({data})=>{
                 if(data.code ===200){
-                    this.setState({ data: data.data });
+                    this.setState({
+                        data: data.data
+                    },()=>{
+                        this.setState({
+                            orgId:this.props.orgId
+                        })
+                    });
                 }
             })
     }
@@ -55,10 +62,6 @@ class SelectSearch extends Component {
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
-    }
-
-    componentWillReceiveProps(nextProps){
-
     }
 
     render() {
@@ -81,7 +84,7 @@ class SelectSearch extends Component {
                 >
                     <Spin size='small' spinning={!this.state.coreCompanyLoaded}>
                         {getFieldDecorator('select', {
-                            initialValue: this.props.orgId,
+                            initialValue: this.state.orgId,
                         })(
                             <Select
                                 showSearch
