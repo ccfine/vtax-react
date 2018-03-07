@@ -126,8 +126,11 @@ const getColumns = context => [
     },
     {
         title:'房间面积',
-        dataIndex:'roomArea',
-        render:text=>`${text}`,
+        /**
+         * roomArea 是普通数值型
+         * roomArea2 是字符串四位小数型
+         * */
+        dataIndex:'roomArea2',
         className:'text-right'
     },
     {
