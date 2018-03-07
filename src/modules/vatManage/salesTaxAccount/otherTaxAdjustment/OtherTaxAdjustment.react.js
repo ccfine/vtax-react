@@ -218,7 +218,7 @@ class OtherTaxAdjustment extends Component {
         const { search } = this.props.location;
         let disabled = !!search;
         let { filters, status,dataSource } = this.state,
-            buttonDisabled = !filters,
+            buttonDisabled = !filters || !(dataSource && dataSource.length && dataSource.length>0),
             isSubmit =(status && status.status === 2);
         return (
             <div>
