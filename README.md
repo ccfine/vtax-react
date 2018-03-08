@@ -1,5 +1,6 @@
 ## Commitizen
 > 使用目的:统一commit格式，增加可阅读性，自动生成版本的 changelog
+
 ```sh
 $ npm install -g commitizen
 ```
