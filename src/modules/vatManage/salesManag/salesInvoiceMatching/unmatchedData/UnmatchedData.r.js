@@ -107,12 +107,12 @@ const searchFields=(disabled)=> {
     ]
 }
 const getColumns = context =>[
-    {
+     {
         title: '操作',
         key: 'actions',
         fixed:true,
         width:'60px',
-        render: (text, record) => (
+        render: (text, record) => parseInt(context.state.dataStatus,0) === 1 ? (
             <span style={{
                 color:'#1890ff',
                 cursor:'pointer'
@@ -124,7 +124,7 @@ const getColumns = context =>[
             }}>
                 手工匹配
             </span>
-        )
+        ) : ' '
     },
     {
         title:'纳税人识别号',
@@ -327,7 +327,7 @@ class UnmatchedData extends Component{
                     },
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>

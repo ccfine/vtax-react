@@ -311,6 +311,29 @@ class AdvanceCarryOver extends Component{
                                                 }
                                             ]
                                         },
+                                    },
+                                    {
+                                        label: `月份`,
+                                        fieldName: 'authMonth',
+                                        type: 'monthPicker',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:6
+                                            },
+                                            wrapperCol:{
+                                                span:14
+                                            }
+                                        },
+                                        componentProps: {
+                                            format: 'YYYY-MM'
+                                        },
+                                        fieldDecoratorOptions: {
+                                            rules: [{
+                                                required: true,
+                                                message: `请选择月份`
+                                            }]
+                                        }
                                     }
                                 ]
                             }
@@ -331,6 +354,10 @@ class AdvanceCarryOver extends Component{
                                 <div>
                                     <label>本页合计：</label>
                                     预结转收入金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                </div>
+                                <div>
+                                    <label>总计：</label>
+                                    预结转收入金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
                                 </div>
                             </div>
                         )

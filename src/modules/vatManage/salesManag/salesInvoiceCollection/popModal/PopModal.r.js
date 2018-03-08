@@ -618,7 +618,7 @@ class PopModal extends Component{
                                         type:'numeric',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['amount'] ? `${fMoney(initData['amount'])}` : undefined,
+                                            initialValue:initData['amount'] ? ( disabled ? `${fMoney(initData['amount'])}` : initData['amount'] ) : undefined,
                                             rules:[
                                                 regRules.input_length_20,
                                                 {

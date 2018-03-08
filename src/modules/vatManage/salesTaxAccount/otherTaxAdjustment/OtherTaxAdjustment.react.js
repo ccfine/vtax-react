@@ -169,15 +169,15 @@ class OtherTaxAdjustment extends Component {
                 message.error(err.message);
             })
     }
-    updateStatus = (values = this.state.filter) => {
-        this.setState({ filter: values });
+    updateStatus = (values = this.state.filters) => {
+        this.setState({ filters: values });
         request.get('/account/output/othertax/main/listMain', { params: values }).then(({ data }) => {
             if (data.code === 200) {
                 let status = {};
                 if (data.data) {
                     status.status = data.data.status;
                     status.lastModifiedDate = data.data.lastModifiedDate;
-                    this.setState({ status: status, filter: values });
+                    this.setState({ status: status, filters: values });
                 }
             }
         })
@@ -201,11 +201,11 @@ class OtherTaxAdjustment extends Component {
             })
     }
     submit = () => {
-        let params = { ...this.state.filter };
+        let params = { ...this.state.filters };
         this.commonSubmit('/account/output/othertax/main/submit', params, 'submit', '提交成功');
     }
     revoke = () => {
-        let params = { ...this.state.filter };
+        let params = { ...this.state.filters };
         this.commonSubmit('/account/output/othertax/main/restore', params, 'revoke', '撤回提交成功');
     }
     componentDidMount() {
@@ -218,7 +218,7 @@ class OtherTaxAdjustment extends Component {
         const { search } = this.props.location;
         let disabled = !!search;
         let { filters, status,dataSource } = this.state,
-            buttonDisabled = !filters,
+            buttonDisabled = !filters || !(dataSource && dataSource.length && dataSource.length>0),
             isSubmit =(status && status.status === 2);
         return (
             <div>

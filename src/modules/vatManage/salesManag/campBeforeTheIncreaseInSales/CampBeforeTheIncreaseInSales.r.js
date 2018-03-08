@@ -156,7 +156,7 @@ const getColumns = context =>[
         title:'操作',
         key:'actions',
         render:(text,record)=>{
-            return parseInt(context.state.dataStatus,0) === 1 ? (
+            return (
                 <div>
                 <span style={pointerStyle} onClick={()=>{
                     context.setState({
@@ -168,23 +168,29 @@ const getColumns = context =>[
                         context.toggleModalVisible(true)
                     })
                 }}>修改</span>
-                    <span style={{
-                        ...pointerStyle,
-                        marginLeft:5
-                    }} onClick={()=>{
-                        context.setState({
-                            modalConfig:{
-                                type:'view',
-                                id:record.id
-                            }
-                        },()=>{
-                            context.toggleModalVisible(true)
-                        })
-                    }}>
-                    查看
-                </span>
+                    {
+                        parseInt(context.state.dataStatus,0) === 1 && (
+                            <span style={{
+                                ...pointerStyle,
+                                marginLeft:5
+                            }} onClick={()=>{
+                                context.setState({
+                                    modalConfig:{
+                                        type:'view',
+                                        id:record.id
+                                    }
+                                },()=>{
+                                    context.toggleModalVisible(true)
+                                })
+                            }}>
+                            查看
+                        </span>
+                        )
+                    }
+
                 </div>
-            ) : ''
+            )
+
         },
         fixed:'left',
         width:'70px',
@@ -327,7 +333,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                     },
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
