@@ -66,7 +66,9 @@ class OtherBusinessInputTaxRollOut extends Component {
     }
     updateStatus = (values = this.state.filter) => {
         this.setState({ filter:values});
-        request.get('/account/income/taxout/listMain', { params: values }).then(({ data }) => {
+        let params = {...values};
+        params.authMonth = moment(params.authMonth).format('YYYY-MM');
+        request.get('/account/income/taxout/listMain', { params: params }).then(({ data }) => {
             if (data.code === 200) {
                 let status = {};
                 if (data.data) {
@@ -84,7 +86,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                 if (data.code === 200) {
                     message.success(messageInfo, 4)
                     this.setState({ [`${action}Loading`]: false});
-                    this.updateStatus(params);
+                    this.updateStatus();
                 } else {
                     message.error(data.msg, 4)
                     this.setState({ [`${action}Loading`]: false });
@@ -97,14 +99,15 @@ class OtherBusinessInputTaxRollOut extends Component {
     } 
     submit = () => {
         let params = { ...this.state.filter };
+        params.authMonth = moment(params.authMonth).format('YYYY-MM');
         this.commonSubmit('/account/income/taxout/submit', params, 'submit', '提交成功');
     }
     revoke = () => {
         let params = { ...this.state.filter };
+        params.authMonth = moment(params.authMonth).format('YYYY-MM');
         this.commonSubmit('/account/income/taxout/revoke', params, 'revoke', '撤回提交成功');
     }
     filterChange = (values) => {
-        values.authMonth = moment(values.authMonth).format('YYYY-MM');
         this.setState({ updateKey: Date.now(), filters: values });
         this.updateStatus(values);
     }
@@ -153,9 +156,13 @@ class OtherBusinessInputTaxRollOut extends Component {
         let {filter,status} = this.state,
         buttonDisabled = !filter || !(dataSource && dataSource.length && dataSource.length>0),
         isSubmit =(status && status.status === 2);
+
+        // 查询参数
+        let params = {...filter};
+        params.authMonth = moment(params.authMonth).format('YYYY-MM');
         return (
             <div>
-            <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} buttonSpan={8} filterChange={this.filterChange} />
+            <CardSearch doNotSubmitDidMount={!search} feilds={getFields('查询', 8)} feildvalue={filter} buttonSpan={8} filterChange={this.filterChange} />
             <Card title='其他业务进项税额转出台账' extra={(<div>
                 {
                     dataSource.length>0 && listMainResultStatus(status)
@@ -209,7 +216,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                             }
                         }
                     }}
-                    filters={this.state.filters} />
+                    filters={params} />
             </Card>
         </div>
         )

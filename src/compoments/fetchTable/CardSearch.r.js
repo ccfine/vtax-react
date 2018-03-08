@@ -6,12 +6,14 @@ const FormItem = Form.Item
 class Search extends React.Component{
     static propTypes={
         buttonSpan:PropTypes.number,
-        feilds:PropTypes.array,
+        feilds:PropTypes.array.isRequired,
         filterChange:PropTypes.func,
         doNotSubmitDidMount:PropTypes.bool,
+        feildvalue:PropTypes.object
     }
     static defaultProps={
-        doNotSubmitDidMount:true
+        doNotSubmitDidMount:true,
+        buttonSpan:6
     }
     componentDidMount(){
         if(!this.props.doNotSubmitDidMount){
@@ -40,7 +42,7 @@ class Search extends React.Component{
                         {
                             getFields(props.form, props.feilds)
                         }
-                        <Col span={props.buttonSpan?props.buttonSpan:6} style={{textAlign:'right'}}>
+                        <Col span={props.buttonSpan} style={{textAlign:'right'}}>
                             <FormItem>
                                 <Button size='small' type='primary' htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                                 <Button size='small' onClick={this.reset}>重置</Button>
@@ -53,5 +55,14 @@ class Search extends React.Component{
     }
 }
 
-export default Form.create()(Search);
+export default Form.create({
+    mapPropsToFields:props=>{
+        let result = {};
+        props.feildvalue && props.feilds.reduce((result, feild)=>{
+            result[feild.fieldName] = Form.createFormField({value:props.feildvalue[feild.fieldName]});
+            return result;
+        },result);
+        return result;
+    }
+})(Search);
 
