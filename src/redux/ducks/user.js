@@ -76,7 +76,7 @@ export default handleActions({
 export const login = dispatch => async ({userName,password,success,fail})=>{
     try {
 
-        await request.post('/oauth/login',{
+        await request.post('/login',{
             userName,
             password
         }).then(res=>{

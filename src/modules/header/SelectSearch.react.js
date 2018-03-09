@@ -41,7 +41,7 @@ class SelectSearch extends Component {
 
     renderSwitchGroupSearch=(orgId)=>{
         const { saveToken } = this.props;
-        request.get(`/oauth/switch_group/${orgId}`)
+        request.get(`/switch_group/${orgId}`)
             .then(({data})=>{
                 if(data.code ===200){
                     saveToken(data.data.token)

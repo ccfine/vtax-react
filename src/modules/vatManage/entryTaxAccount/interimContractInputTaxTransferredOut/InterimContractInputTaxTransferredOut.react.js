@@ -443,14 +443,20 @@ class InterimContractInputTaxTransferredOut extends Component {
                                     size:'small',
                                     columns:getColumns(this),
                                     scroll:{x:'160%'},
+                                    rowSelection:{
+                                        type:'radio',
+                                    },
                                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                                         this.setState({
                                             selectedRowKeys:selectedRowKeys[0],
                                             selectedRows,
                                         })
                                     },
-                                    rowSelection:{
-                                        type:'radio',
+                                    onSuccess:()=>{
+                                        this.setState({
+                                            selectedRowKeys:undefined,
+                                            selectedRows:[],
+                                        })
                                     },
                                     onDataChange:(dataSource)=>{
                                         this.setState({

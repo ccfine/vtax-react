@@ -151,7 +151,7 @@ export default class TabPage extends Component{
                                 pagination:false,
                                 size:'small',
                                 columns:getColumns(this),
-                                scroll:{x:'150%'},
+                                scroll:{x:'120%'},
                             }} />
             </Card>
         )
