@@ -141,8 +141,6 @@ class tab1 extends Component{
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
-        },()=>{
-            this.updateStatus()
         })
     }
     toggleSearchTableLoading = b =>{

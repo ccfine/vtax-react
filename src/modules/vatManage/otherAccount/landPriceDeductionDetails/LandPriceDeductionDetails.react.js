@@ -355,18 +355,6 @@ class LandPriceDeductionDetails extends Component{
                                 撤回提交
                             </Button>
                         </div>,
-                        renderFooter:data=>{
-                            return(
-                                <div className="footer-total">
-                                    <div>
-                                        <label>本页合计：</label>
-                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        减免税金额：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                </div>
-                            )
-                        },
                         onDataChange:(dataSource)=>{
                             this.setState({
                                 dataSource

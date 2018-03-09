@@ -105,12 +105,17 @@ class TaxableProjectTreeForm extends Component{
         return data.map((item) => {
             if (item.children && item.children.length>0) {
                 return (
-                    <TreeNode title={`[${item.num}]${item.name}`} key={item.id} dataRef={item}>
+                    item.num ? <TreeNode title={`[${item.num}]${item.name}`} key={item.id} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
-                );
+                        :
+                        <TreeNode title={item.name} key={item.id} dataRef={item}>
+                            {this.renderTreeNodes(item.children)}
+                        </TreeNode>
+                )
             }
-            return <TreeNode title={`[${item.num}]${item.name}`} key={item.id} {...item} dataRef={item}/>;
+            return item.num ? <TreeNode title={`[${item.num}]${item.name}`} key={item.id} {...item} dataRef={item}/>  :
+                <TreeNode title={item.name} key={item.id} {...item} dataRef={item}/>;
         });
     }
 
