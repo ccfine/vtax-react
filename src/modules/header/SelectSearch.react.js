@@ -6,6 +6,7 @@
 import React,{Component} from 'react'
 import { Form,Select,Spin } from 'antd'
 import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom';
 import {request} from '../../utils'
 import {saveOrgId,saveToken} from '../../redux/ducks/user'
 
@@ -29,14 +30,18 @@ class SelectSearch extends Component {
             this.mounted && this.setState(prevState=>({
                coreCompanyLoaded:true
            }),()=>{
-               this.props.changeRefresh(Date.now());
+                //判断权限
+                if(saveOrgId !== this.props.orgId){
+                    this.props.changeRefresh(Date.now());
+                    this.props.history.replace('/web');
+                }
            })
         });
     }
 
     renderSwitchGroupSearch=(orgId)=>{
         const { saveToken } = this.props;
-        request.get(`/switch_group/${orgId}`)
+        request.get(`/oauth/switch_group/${orgId}`)
             .then(({data})=>{
                 if(data.code ===200){
                     saveToken(data.data.token)
@@ -107,9 +112,9 @@ class SelectSearch extends Component {
 
 const FormSelectSearch =  Form.create()(SelectSearch)
 
-export default connect(state=>({
+export default withRouter(connect(state=>({
     orgId:state.user.get('orgId')
 }),dispatch=>({
     saveOrgId:saveOrgId(dispatch),
     saveToken:saveToken(dispatch),
-}))(FormSelectSearch)
+}))(FormSelectSearch))
