@@ -42,6 +42,19 @@ const getColumns =(context,length)=>[
     },{
         title: '计税方法',
         dataIndex: 'taxMethod',
+        render:text=>{
+            /* 1：简易计税，2：一般计税 */
+            switch(text){
+                case 1:
+                case '1':
+                    return '简易计税';
+                case 2:
+                case '2':
+                    return '一般计税';
+                default:
+                    return '';
+            }
+        }
     },{
         title: '施工证面积（㎡）',
         dataIndex: 'upArea',
