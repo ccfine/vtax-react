@@ -1,5 +1,10 @@
-<a name="0.1.7"></a>
-## 0.1.7 (2018-03-09)
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/Slebee/vtax/compare/0.1.1...0.1.2) (2018-03-09)
+
+
+
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/Slebee/vtax/compare/6419cdb...0.1.1) (2018-03-09)
 
 
 ### Bug Fixes
