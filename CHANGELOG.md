@@ -1,5 +1,10 @@
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/Slebee/vtax/compare/0.1.1...0.1.2) (2018-03-09)
+
+
+
 <a name="0.1.1"></a>
-## 0.1.1 (2018-03-08)
+## [0.1.1](https://github.com/Slebee/vtax/compare/6419cdb...0.1.1) (2018-03-09)
 
 
 ### Bug Fixes
@@ -10,7 +15,9 @@
 
 ### Features
 
+* **all:** 日志生成功能 ([5183ca9](https://github.com/Slebee/vtax/commit/5183ca9))
 * **location:** test ([6419cdb](https://github.com/Slebee/vtax/commit/6419cdb))
+* **日志:** 日志更新功能 ([e1d4591](https://github.com/Slebee/vtax/commit/e1d4591))
 
 
 
