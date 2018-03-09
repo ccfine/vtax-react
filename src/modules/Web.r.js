@@ -63,17 +63,16 @@ class Web extends Component {
         this.checkLoggedIn(nextProps);
     }
 
-    renderNormal() {
-
+    render() {
         const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
         //const pathname = this.props.history.location.pathname;
         return (
-            <Layout>
-                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes}  />
+            <Layout key={this.state.refresh}>
+                <Sider  collapsed={this.state.collapsed} menusData={routes}  />
                 <Layout>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     <BreadCrumb location={this.props.location} routes={routes} />
-                    <Content key={this.state.refresh+1} style={{ margin: '12px 12px 0', height: '100%'}}>
+                    <Content style={{ margin: '12px 12px 0', height: '100%'}}>
                         <div style={{ minHeight: 'calc(100vh - 260px)' }}>
 
                             <Switch>
@@ -94,16 +93,6 @@ class Web extends Component {
                     </Footer>
                 </Layout>
             </Layout>
-        )
-    }
-
-    render() {
-        return (
-            <div>
-                {
-                    this.renderNormal()
-                }
-            </div>
         )
     }
 }
