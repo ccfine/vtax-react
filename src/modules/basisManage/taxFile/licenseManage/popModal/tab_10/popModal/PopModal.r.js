@@ -297,7 +297,11 @@ class PopModal extends Component{
                     </Row>
                 </Form>
                 </Spin>
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='card/house/ownership' 
+                <FileModal 
+                    id={this.props.id || record.id} 
+                    visible={this.state.visible} 
+                    hideModal={this.hideFileModal} 
+                    url='card/house/ownership' 
                     readOnly={this.props.action==="look"}/>
             </Modal>
         );
