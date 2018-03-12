@@ -18,12 +18,16 @@ const transformData = data =>{
 }
 class ButtonWithFileUploadModal extends Component{
     static propTypes={
-        id:PropTypes.any.isRequired,
-        disabled:PropTypes.bool
+        id:PropTypes.string,
+        disabled:PropTypes.bool,
+        size:PropTypes.string,
+        uploadUrl:PropTypes.string
     }
     static defaultProps={
         title:'导入',
-        disabled:false
+        disabled:false,
+        size:'small',
+        uploadUrl:'/account/prepaytax/upload/'
     }
     state={
         visible:false,
@@ -105,7 +109,7 @@ class ButtonWithFileUploadModal extends Component{
             beforeUpload: (file) => {
                 const formData = new FormData();
                 formData.append('files',file)
-                request.post(`/account/prepaytax/upload/${this.props.id}`,formData)
+                request.post(`${props.uploadUrl}`,formData)
                     .then(({data})=>{
                         this.toggleLoaded(true)
                         if(data.code===200){
@@ -123,7 +127,7 @@ class ButtonWithFileUploadModal extends Component{
 
         return(
             <span style={props.style}>
-                    <Button size='small' onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
+                    <Button size={props.size} onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
                    <Icon type="file" />{props.title}
                </Button>
                 <Modal title='附件' visible={visible} maskClosable={false} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>

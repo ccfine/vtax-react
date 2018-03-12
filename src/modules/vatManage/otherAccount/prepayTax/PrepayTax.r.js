@@ -366,6 +366,7 @@ class PrepayTax extends Component{
                         <ButtonWithFileUploadModal
                             id={resultStatusId}
                             disabled={parseInt(dataStatus,0) !== 2}
+                            uploadUrl={`/account/prepaytax/upload/${resultStatusId}`}
                             style={{marginRight:5}} title='附件' />
                         <FileExport
                             url={`account/prepaytax/export`}
