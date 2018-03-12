@@ -184,14 +184,19 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <ButtonWithFileUploadModal
-                                title="附件"
-                                style={{
-                                    marginRight:10
-                                }}
-                                size='default'
-                                id={props.modalConfig.id}
-                            />
+                            {
+                                type !== 'add' && (
+                                    <ButtonWithFileUploadModal
+                                        title="附件"
+                                        style={{
+                                            marginRight:10
+                                        }}
+                                        size='default'
+                                        id={props.modalConfig.id}
+                                        uploadUrl={`/sys/recordInfo/upload/${props.modalConfig.id}`}
+                                    />
+                                )
+                            }
                             {
                                 type !== 'view' && (
                                     <Button type="primary" onClick={this.handleSubmit}>确定</Button>
@@ -292,7 +297,7 @@ class PopModal extends Component{
                                         },
                                     },
                                     {
-                                        label:'涉及税费种',
+                                        label:'涉及税费种类',
                                         fieldName:'taxFeeCategory',
                                         type:'select',
                                         span:12,
@@ -305,7 +310,7 @@ class PopModal extends Component{
                                             rules:[
                                                 {
                                                     required:true,
-                                                    message:'请选择涉及税费种'
+                                                    message:'请选择涉及税费种类'
                                                 }
                                             ]
                                         },
