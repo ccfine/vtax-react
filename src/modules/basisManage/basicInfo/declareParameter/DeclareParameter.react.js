@@ -53,6 +53,17 @@ const getColumns = (context) => [
                     context.toggleModalVisible(true)
                 })
             }}>编辑</a>
+            <a style={{marginRight:"5px"}} onClick={()=>{
+                context.setState({
+                    modalConfig:{
+                        type:'view',
+                        id:record.id,
+                    },
+                    initData:{...record},
+                },()=>{
+                    context.toggleModalVisible(true)
+                })
+            }}>查看</a>
         </div>,
         fixed:'left',
         width:'70px',

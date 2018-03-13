@@ -11,10 +11,10 @@ import moment from 'moment';
 const columns = [
     {
         title: '编码',
-        dataIndex: 'mainCode',
+        dataIndex: 'code',
     },{
         title: '纳税主体',
-        dataIndex: 'mainName',
+        dataIndex: 'name',
     }
 ];
 
@@ -94,16 +94,23 @@ class PopModal extends Component{
             if (!err) {
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
-                if(values.subordinatePeriods && values.subordinatePeriods.length!==0){
-                    values.subordinatePeriodsStart = values.subordinatePeriods[0].format('YYYY-MM-DD')
-                    values.subordinatePeriodsEnd = values.subordinatePeriods[1].format('YYYY-MM-DD')
-                    values.subordinatePeriods = undefined;
+                if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
+                    values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
+                    values.subordinatePeriodEnd = values.subordinatePeriod[1].format('YYYY-MM-DD')
+                    values.subordinatePeriod = undefined;
                 }
                 if(values.declarationPeriod && values.declarationPeriod.length!==0){
                     values.declarationPeriodStart = values.declarationPeriod[0].format('YYYY-MM-DD')
                     values.declarationPeriodEnd = values.declarationPeriod[1].format('YYYY-MM-DD')
                     values.declarationPeriod = undefined;
                 }
+                if(values.period){
+                    values.subordinatePeriodYear = values.period.format('YYYY')
+                    //values.subordinatePeriodYearTxt = values.period.format('YYYY')
+                    values.subordinatePeriodStage = values.period.format('MM')
+                    values.period = undefined;
+                }
+
                 if(type==='edit'){
                     const data = {
                         ...this.props.initData,
@@ -115,6 +122,7 @@ class PopModal extends Component{
                         ...values,
                         mainIds:this.state.selectedRowKeys
                     }
+                    console.log(data)
                     this.createRecord(data)
                 }
             }
@@ -199,6 +207,10 @@ class PopModal extends Component{
                 disabled=true;
                 title = '编辑';
                 break;
+            case 'view':
+                title = '查看';
+                disabled=true;
+                break;
             default :
             //no default
         }
@@ -218,10 +230,13 @@ class PopModal extends Component{
                         <Col span={12}>
                             <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
-                            <Button type='danger' onClick={this.deleteRecord}>
-                                <Icon type="delete" />
-                                删除
-                            </Button>
+                            {
+                                type === 'edit' && <Button type='danger' onClick={this.deleteRecord}>
+                                    <Icon type="delete" />
+                                    删除
+                                </Button>
+                            }
+
                         </Col>
                     </Row>
                 }
@@ -296,12 +311,12 @@ class PopModal extends Component{
                                         }
                                     }, {
                                         label: '所属期',
-                                        fieldName: 'subordinatePeriod',
+                                        fieldName: 'period',
                                         type: 'monthPicker',
                                         span: '12',
                                         options: cycle,
                                         fieldDecoratorOptions:{
-                                            initialValue: initData &&  moment(`${initData.subordinatePeriodYearTxt}-${initData.subordinatePeriodStage}`, 'YYYY-MM'),
+                                            initialValue: initData && moment(`${initData.subordinatePeriodYear}-${initData.subordinatePeriodStage}`, 'YYYY-MM'),
                                             rules: [
                                                 {
                                                     required: true,
@@ -311,7 +326,7 @@ class PopModal extends Component{
                                         },
                                         componentProps: {
                                             format: 'YYYY-MM',
-                                            //disabled:false,
+                                            disabled:type === 'view',
                                             onChange:(date,dateString)=>{
                                                 //console.log(date,dateString)
                                                 if(dateString !== ''){
@@ -320,11 +335,11 @@ class PopModal extends Component{
                                                     let endDate = d.endOf('month').format('YYYY-MM-DD');
                                                     //console.log(startDate, endDate)
                                                     setFieldsValue({
-                                                        'subordinatePeriods':[moment(startDate, 'YYYY-MM-DD'), moment(endDate, 'YYYY-MM-DD')] || []
+                                                        'subordinatePeriod':[moment(startDate, 'YYYY-MM-DD'), moment(endDate, 'YYYY-MM-DD')] || []
                                                     })
                                                 }else{
                                                     setFieldsValue({
-                                                        'subordinatePeriods': []
+                                                        'subordinatePeriod': []
                                                     })
                                                 }
 
@@ -332,7 +347,7 @@ class PopModal extends Component{
                                         }
                                     },{
                                         label:'所属期起止',
-                                        fieldName:'subordinatePeriods',
+                                        fieldName:'subordinatePeriod',
                                         type:'rangePicker',
                                         span:'12',
                                         fieldDecoratorOptions:{
@@ -340,7 +355,7 @@ class PopModal extends Component{
                                             rules: [
                                                 {
                                                     required: true,
-                                                    message: '请选择所属期获得所属期起止'
+                                                    message: '请选择所属期起止'
                                                 }
                                             ]
                                         },
@@ -364,19 +379,22 @@ class PopModal extends Component{
                         </Row>
                     </Form>
                     <Card title="纳税主体" style={{marginTop:10}}>
-                        <AsyncTable url="/sys/declarationParam/list"
+                        <AsyncTable url="/taxsubject/listByName"
                                     updateKey={tableKey}
+                                    filters={{
+                                        name: initData && initData.mainCode
+                                    }}
                                     tableProps={{
                                         rowKey:record=>record.id,
                                         pagination:true,
                                         size:'small',
                                         columns:columns,
-                                        onRowSelect:(selectedRowKeys,selectedRows)=>{
+                                        onRowSelect:type === 'add' ? (selectedRowKeys,selectedRows)=>{
                                             this.setState({
                                                 selectedRowKeys,
                                                 selectedRows,
                                             })
-                                        },
+                                        } : undefined,
                                     }} />
                     </Card>
 

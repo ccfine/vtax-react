@@ -59,7 +59,7 @@ class InvoiceMatching extends Component {
             title: '开票日期',
             dataIndex: 'billingDate',
         },{
-            title: '认证月份',
+            title: '认证时间',
             dataIndex: this.state.activeKey !=='tab3' ? 'authMonth' : 'authDate',
         },{
             title: '销售单位名称',
@@ -329,7 +329,7 @@ class InvoiceMatching extends Component {
                                             ]
                                         },
                                     },{
-                                        label:'认证月份',
+                                        label:'认证时间',
                                         type:'monthPicker',
                                         span:6,
                                         fieldName:'authMonth',
@@ -341,7 +341,7 @@ class InvoiceMatching extends Component {
                                             rules:[
                                                 {
                                                     required:true,
-                                                    message:'请选择认证月份'
+                                                    message:'请选择认证时间'
                                                 }
                                             ]
                                         }
