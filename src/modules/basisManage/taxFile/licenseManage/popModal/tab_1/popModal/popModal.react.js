@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Modal, Form, Input, Col, Button, message, Spin, Row } from 'antd'
 import { getFields, request } from '../../../../../../../utils'
+import { ButtonWithFileUploadModal } from '../../../../../../../compoments'
 import moment from 'moment';
-import FileModal from '../../file.rect'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -21,8 +21,7 @@ class PopModal extends Component {
         loading: false,
         formLoading: false,
         record: {},
-        submited: false,
-        visible: false
+        submited: false
     }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
@@ -44,9 +43,6 @@ class PopModal extends Component {
         // 回归初始状态
         this.props.form.resetFields();
         this.setState({ record: {}, submited: false });
-    }
-    hideFileModal = () => {
-        this.setState({ visible: false })
     }
     handleOk() {
         if ((this.props.action !== 'modify' && this.props.action !== 'add') || this.state.formLoading) {
@@ -116,9 +112,17 @@ class PopModal extends Component {
                 bodyStyle={{ maxHeight: "500px", overflow: "auto" }}
                 onCancel={() => { this.hideModal() }}
                 footer={[
-                    (record.id && <Button key="info" icon="search" onClick={() => {
-                        this.setState({ visible: true })
-                    }}>附件信息</Button>),
+                    record && record.id
+                        && <ButtonWithFileUploadModal
+                            title="附件信息"
+                            style={{
+                                marginRight:10
+                            }}
+                            readOnly = {readonly}
+                            size='default'
+                            id={record.id}
+                            uploadUrl={`/contract/land/file/upload/${record.id}`}
+                        />,
                     <Button key="back" onClick={() => { this.hideModal() }}>取消</Button>,
                     <Button key="submit" type="primary" loading={this.state.loading} onClick={() => { this.handleOk() }}>
                         确认
@@ -414,8 +418,6 @@ class PopModal extends Component {
                         </Row>
                     </Form>
                 </Spin>
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='contract/land' 
-                readOnly={this.props.action==="look"}/>
             </Modal>
         );
     }

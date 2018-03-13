@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Form, Button, message, Spin, Row, Divider } from 'antd'
 import { getFields, request } from '../../../../../utils'
+import {ButtonWithFileUploadModal} from '../../../../../compoments'
 import moment from 'moment'
 const confirm = Modal.confirm;
 const formItemLayout = {
@@ -135,10 +136,31 @@ class PopModal extends Component {
             title = "修改"
         }
         let buttons = [];
-        buttons.push(<Button key="submit" type="primary" loading={this.state.loading} onClick={() => { this.handleOk() }}>保存</Button>)
+        record && record.id
+        && buttons.push(<ButtonWithFileUploadModal
+            title="附件信息"
+            style={{
+                marginRight:10
+            }}
+            readOnly = {readonly}
+            size='default'
+            id={record.id}
+            deleteUrl={`/report/delete/file/${record.id}`}
+            uploadUrl={`/report/upload/${record.id}`}
+        />)
+        buttons.push(<Button 
+            key="submit" 
+            type="primary" 
+            loading={this.state.loading} 
+            onClick={() => { this.handleOk() }}>保存</Button>)
         this.props.action === "modify" 
-        && buttons.push(<Button type="danger" key="delete" onClick={this.showConfirm}>删除</Button>)
-        buttons.push(<Button key="back" onClick={this.hideSelfModal}>取消</Button>)
+        && buttons.push(<Button 
+            type="danger" 
+            key="delete" 
+            onClick={this.showConfirm}>删除</Button>)
+        buttons.push(<Button 
+            key="back" 
+            onClick={this.hideSelfModal}>取消</Button>)
         return (
             <Modal
                 title={title}

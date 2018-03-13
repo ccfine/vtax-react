@@ -38,7 +38,7 @@ const getColumns = context => ([
         width: '70px',
         dataIndex: 'action'
     }, {
-        title: '编码',
+        title: '纳税主体编码',
         dataIndex: 'mainCode',
     }, {
         title: '纳税主体',
@@ -48,7 +48,7 @@ const getColumns = context => ([
         dataIndex: 'checkSets',
     }, {
         title: '检查类型',
-        dataIndex: 'checkType',
+        dataIndex: 'checkTypeName',
     }, {
         title: '检查期间',
         dataIndex: 'checkStart',
@@ -77,8 +77,8 @@ const getColumns = context => ([
         className: 'table-money'
     }, {
         title: '是否有附件',
-        dataIndex: 'isAttachment',
-        render: text => parseInt(text, 0) === 1 ? '是' : '否'
+        dataIndex: 'attachment',
+        render: text => text ? '是' : '否'
     }])
 
 export default class InspectionReport extends Component {
