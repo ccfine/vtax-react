@@ -131,7 +131,6 @@ class ButtonWithFileUploadModal extends Component{
             },
             fileList
         };
-        console.log(readOnly)
         return(
             <span style={props.style}>
                     <Button size={props.size} onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
