@@ -83,8 +83,8 @@ class PopModal extends Component{
                     }
                     if(moment.isMoment(values[key])){
                         //格式化一下时间 YYYY-MM类型
-                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM');
+                        if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                            values[key] = values[key].format('YYYY-MM-DD');
                         }
 
                         /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
@@ -191,6 +191,7 @@ class PopModal extends Component{
                                         style={{
                                             marginRight:10
                                         }}
+                                        readOnly={type==='view'}
                                         size='default'
                                         id={props.modalConfig.id}
                                         uploadUrl={`/sys/recordInfo/upload/${props.modalConfig.id}`}
@@ -324,6 +325,32 @@ class PopModal extends Component{
                                                 value:'2'
                                             }
                                         ]
+                                    },
+                                    {
+                                        label:'备案资料名称',
+                                        fieldName:'recordName',
+                                        type:'input',
+                                        span:24,
+                                        formItemStyle:{
+                                            labelCol:{
+                                                span:5
+                                            },
+                                            wrapperCol:{
+                                                span:19
+                                            }
+                                        },
+                                        componentProps:{
+                                            disabled
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData['recordName'] ? `${initData['recordName']}` : '',
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入备案资料名称'
+                                                }
+                                            ]
+                                        },
                                     },
                                     {
                                         label:'备案资料主要内容',
