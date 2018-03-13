@@ -334,6 +334,9 @@ class PrePaidHousingSales extends Component{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
                             message.success('删除成功！');
+                            this.setState({
+                                selectedRowKeys:[]
+                            })
                             this.refreshTable();
                         }else{
                             message.error(`删除失败:${data.msg}`)

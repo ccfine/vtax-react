@@ -18,12 +18,20 @@ const transformData = data =>{
 }
 class ButtonWithFileUploadModal extends Component{
     static propTypes={
-        id:PropTypes.any.isRequired,
-        disabled:PropTypes.bool
+        id:PropTypes.string,
+        disabled:PropTypes.bool,
+        size:PropTypes.string,
+        uploadUrl:PropTypes.string,
+        deleteUrl:PropTypes.string,
+        readOnly:PropTypes.bool,
     }
     static defaultProps={
         title:'导入',
-        disabled:false
+        disabled:false,
+        size:'small',
+        uploadUrl:'/account/prepaytax/upload/',
+        deleteUrl:'/sys/file/delete',
+        readOnly:false
     }
     state={
         visible:false,
@@ -68,7 +76,10 @@ class ButtonWithFileUploadModal extends Component{
         })
     }
     deleteRecord=id=>{
-        return request.delete(`sys/file/delete/${id}`).then(({data}) => {
+        /*
+        * 地址/文件uid
+        * */
+        return request.delete(`${this.props.deleteUrl}/${id}`).then(({data}) => {
             if (data.code === 200) {
                 this.fetchFileList();
             } else {
@@ -81,6 +92,7 @@ class ButtonWithFileUploadModal extends Component{
     }
     render(){
         const props = this.props;
+        const { readOnly } = props;
         const {visible,loaded,fileList} = this.state;
         const uploadProps = {
             action: '//jsonplaceholder.typicode.com/posts/',
@@ -100,12 +112,16 @@ class ButtonWithFileUploadModal extends Component{
                         fileList: newFileList,
                     };
                 });*/
-                return this.deleteRecord(file.uid)
+                if( readOnly ){
+                    return false;
+                }else{
+                    return this.deleteRecord(file.uid)
+                }
             },
             beforeUpload: (file) => {
                 const formData = new FormData();
                 formData.append('files',file)
-                request.post(`/account/prepaytax/upload/${this.props.id}`,formData)
+                request.post(`${props.uploadUrl}`,formData)
                     .then(({data})=>{
                         this.toggleLoaded(true)
                         if(data.code===200){
@@ -120,18 +136,21 @@ class ButtonWithFileUploadModal extends Component{
             },
             fileList
         };
-
         return(
             <span style={props.style}>
-                    <Button size='small' onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
+                    <Button size={props.size} onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
                    <Icon type="file" />{props.title}
                </Button>
                 <Modal title='附件' visible={visible} maskClosable={false} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>
                     <Spin spinning={!loaded}>
                     <Upload {...uploadProps}>
-                        <Button size='small'>
-                          <Icon type="upload" /> 上传
-                        </Button>
+                        {
+                            !readOnly && (
+                                <Button size='small'>
+                                    <Icon type="upload" /> 上传
+                                </Button>
+                            )
+                        }
                       </Upload>
                     </Spin>
                 </Modal>

@@ -77,7 +77,7 @@ class PopModal extends Component {
         const { record = {}, form } = this.props;
         return (
             <Modal
-                title='分期 - 土地出让合同 - 修改'
+                title='修改'
                 visible={this.props.visible}
                 width='400px'
                 onCancel={() => { this.hideModal() }}
