@@ -24,7 +24,7 @@ const columns = context => [
                 title: '数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
-                    <a onClick={()=>{
+                    parseInt(text, 0) === 0 ? text  : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
@@ -50,7 +50,7 @@ const columns = context => [
                 title: '数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
-                    <a onClick={()=>{
+                    parseInt(text, 0) === 0 ? text : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
@@ -106,7 +106,7 @@ const notColumns = context =>[
                 title: '数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
-                    <a onClick={()=>{
+                    parseInt(text, 0) === 0 ? text : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
@@ -132,7 +132,7 @@ const notColumns = context =>[
                 title: '数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
-                    <a onClick={()=>{
+                    parseInt(text, 0) === 0 ? text : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
@@ -213,12 +213,10 @@ class BillingSales extends Component {
                             this.refreshTable();
                         });
                 }
-
-
-
             }
         });
     }
+
     requestPut=(url,type,value={})=>{
         request.put(url,value)
             .then(({data})=>{

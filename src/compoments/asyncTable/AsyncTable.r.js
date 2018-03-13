@@ -64,6 +64,7 @@ export default class AsyncTable extends Component{
         request.get(props.url,{
             params:composeParams
         }).then(({data}) => {
+
             if(data.code===200){
                 const pagination = { ...this.state.pagination };
                 pagination.total = typeof data.data.total !== 'undefined' ? data.data.total : data.data.page.total;
@@ -96,8 +97,11 @@ export default class AsyncTable extends Component{
                 props.tableProps.clearSelectedRowAfterFetch && props.tableProps.onRowSelect && props.tableProps.onRowSelect([],[])
             }else{
                 message.error(data.msg)
+                /** 给外部一个回调方法，可以得到每次变更后的data*/
+                props.tableProps.onDataChange && props.tableProps.onDataChange([])
                 this.mounted && this.setState({
-                    loaded: true
+                    loaded: true,
+                    dataSource:[],
                 });
             }
 

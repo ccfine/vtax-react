@@ -340,8 +340,8 @@ class Add extends Component {
                                 (type ==='edit') && parseInt(status,0) === 1 &&
                                 <Col span={12}>
                                     <Button type="primary" onClick={this.handleSubmit}>保存</Button>
-                                    <Button type="primary" onClick={this.handleDelete}>删除</Button>
                                     <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                                    <Button type="danger" onClick={this.handleDelete}>删除</Button>
                                 </Col>
                             }
                            {
