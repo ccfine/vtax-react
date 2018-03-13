@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
 import {getFields,request} from '../../../../../../../utils'
-import FileModal from '../../file.rect'
+import { ButtonWithFileUploadModal } from '../../../../../../../compoments'
 const formItemLayout = {
     labelCol: {
       xs: { span: 12 },
@@ -34,8 +34,7 @@ class PopModal extends Component{
         loading:false,
         formLoading:false,
         record:{},
-        submited:false,
-        visible:false
+        submited:false
     }
     componentWillReceiveProps(props){
         if(props.visible && this.props.visible!==props.visible ){
@@ -51,9 +50,6 @@ class PopModal extends Component{
                 this.props.form.resetFields();
             }
         }
-    }
-    hideFileModal=()=>{
-        this.setState({visible:false});
     }
     hideModal(){
         this.props.hideModal();
@@ -124,9 +120,17 @@ class PopModal extends Component{
             bodyStyle={{maxHeight:"500px",overflow:"auto"}}
             onCancel={()=>{this.hideModal()}}
             footer={[
-            (record.id && <Button key="info" icon="search" onClick={()=>{
-                this.setState({visible:true});
-            }}>附件信息</Button>),
+                record && record.id
+                && <ButtonWithFileUploadModal
+                    title="附件信息"
+                    style={{
+                        marginRight:10
+                    }}
+                    readOnly = {readonly}
+                    size='default'
+                    id={record.id}
+                    uploadUrl={`/card/house/ownership/detail/file/upload/${record.id}`}
+                />,
                 <Button key="back" onClick={()=>{this.hideModal()}}>取消</Button>,
                 <Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
                   确认
@@ -192,8 +196,6 @@ class PopModal extends Component{
                     </Row>
                 </Form>
                 </Spin>
-                <FileModal id={this.props.id || record.id} visible={this.state.visible} hideModal={this.hideFileModal} url='card/house/ownership/detail' 
-                            readOnly={this.props.action==="look"}/>
             </Modal>
         );
     }
