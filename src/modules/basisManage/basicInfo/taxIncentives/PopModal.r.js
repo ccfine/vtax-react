@@ -190,6 +190,7 @@ class PopModal extends Component{
                                         style={{
                                             marginRight:10
                                         }}
+                                        readOnly={type==='view'}
                                         size='default'
                                         id={props.modalConfig.id}
                                         uploadUrl={`/tax/preferences/file/upload/${props.modalConfig.id}`}
