@@ -2,7 +2,13 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
+import {Button,Icon} from 'antd'
 import {SearchTable} from '../../../../compoments'
+import PopModal from './popModal'
+
+const buttonStyle={
+    marginRight:5
+}
 const searchFields = [
     {
         label:'纳税主体',
@@ -31,8 +37,27 @@ const searchFields = [
         fieldDecoratorOptions:{}
     },
 ]
-const columns = [
+const getColumns = (context) => [
     {
+        title:'操作',
+        key:'actions',
+        render:(text,record)=> <div>
+            <a style={{marginRight:"5px"}} onClick={()=>{
+                context.setState({
+                    modalConfig:{
+                        type:'edit',
+                        id:record.id,
+                    },
+                    initData:{...record},
+                },()=>{
+                    context.toggleModalVisible(true)
+                })
+            }}>编辑</a>
+        </div>,
+        fixed:'left',
+        width:'70px',
+        className:'text-center'
+    },{
         title: '编码',
         dataIndex: 'mainCode',
     },{
@@ -74,17 +99,74 @@ const columns = [
 ];
 
 export default class DeclareParameter extends Component{
+    state = {
+        filters:{},
+        /**
+         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
+         * */
+        tableUpDateKey:Date.now(),
+        id:undefined,
+        initData:undefined,
+        visible:false, // 控制Modal是否显示
+        searchTableLoading:false,
+        searchFieldsValues:{},
+        modalConfig:{
+            type:''
+        },
+
+    }
+    toggleSearchTableLoading = b =>{
+        this.setState({
+            searchTableLoading:b
+        })
+    }
+    toggleModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
+    showModal=type=>{
+        this.toggleModalVisible(true)
+        this.setState({
+            modalConfig:{
+                type,
+                id:this.state.id,
+            },
+            initData: type === 'add' ? undefined : this.state.initData,
+        })
+    }
+    refreshTable = ()=>{
+        this.setState({
+            tableUpDateKey:Date.now()
+        })
+    }
+
     render(){
+        const {tableUpDateKey,searchTableLoading,modalConfig,visible,initData} = this.state;
         return(
             <SearchTable
+                spinning={searchTableLoading}
                 searchOption={{
-                    fields:searchFields
+                    fields:searchFields,
+                    getFieldsValues:values=>{
+                        this.setState({
+                            searchFieldsValues:values
+                        })
+                    },
                 }}
                 tableOption={{
-                    columns,
-                    url:'/sys/declarationParam/list'
+                    key:tableUpDateKey,
+                    columns:getColumns(this),
+                    url:'/sys/declarationParam/list',
+                    extra:<div>
+                        <Button size="small" style={buttonStyle} onClick={()=>this.showModal('add')} >
+                            <Icon type="file-add" />
+                            新增
+                        </Button>
+                    </div>
                 }}
             >
+                <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} initData={initData} />
             </SearchTable>
         )
     }
