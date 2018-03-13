@@ -112,7 +112,8 @@ class PopModal extends Component{
                 this.setState(prevState=>({
                     $$dataSource:prevState.$$dataSource.set(record.key, {
                         ...record,
-                        buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea
+                        buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea,
+                        sourceType:value,
                     })
                 }),()=>{
                     //计算总和
@@ -126,14 +127,14 @@ class PopModal extends Component{
                             $$dataSource:prevState.$$dataSource.map(item=>{
                                 if(record.stagesId !== item.stagesId){
                                     const thisTaxScale2 = accDiv(item.buildingArea,sum);
-                                    const taxSale2 = parseFloat(thisTaxScale2.toString().substring(0,4));
+                                    const taxSale2 = parseFloat(thisTaxScale2.toString()).toFixed(4);
                                     return{
                                         ...item,
                                         taxScale:taxSale2
                                     }
                                 }else{
                                     const thisTaxScale = accDiv(data.data.buildingArea,sum);
-                                    const taxSale = parseFloat(thisTaxScale.toString().substring(0,4));
+                                    const taxSale = parseFloat(thisTaxScale.toString()).toFixed(4);
                                     return {
                                         ...item,
                                         buildingArea: data.data.buildingArea === '' ? 0 : data.data.buildingArea,
@@ -173,7 +174,8 @@ class PopModal extends Component{
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-
+            console.log(this.state.$$dataSource.toArray(), values)
+            debugger
             if (!err) {
                 request.post('/account/income/taxContract/proportion/determine',{list:this.state.$$dataSource.toArray()})
                     .then(({data})=>{

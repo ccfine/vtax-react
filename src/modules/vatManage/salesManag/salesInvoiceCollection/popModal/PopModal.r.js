@@ -294,8 +294,8 @@ class PopModal extends Component{
                                             },
                                             onChange:data=>{
                                                 let type = parseInt(getFieldValue('taxMethod'),0);
-                                                let rateValue = '';
-
+                                                let rateValue = '',
+                                                    amount = parseInt(getFieldValue('amount'),0)
                                                 if(!!type){
                                                     if(type===1){
                                                         rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
@@ -307,7 +307,13 @@ class PopModal extends Component{
                                                         taxRate:rateValue
                                                     })
                                                 }
-
+                                                if(rateValue && amount){
+                                                    let taxAmount = amount * parseFloat(rateValue) / 100;
+                                                    setFieldsValue({
+                                                        taxAmount:fMoney(taxAmount),
+                                                        totalAmount:fMoney( amount + taxAmount )
+                                                    })
+                                                }
                                             }
                                         }
                                     },
@@ -618,7 +624,7 @@ class PopModal extends Component{
                                         type:'numeric',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['amount'] ? ( disabled ? `${fMoney(initData['amount'])}` : initData['amount'] ) : undefined,
+                                            initialValue:initData['amount'] ? ( disabled ? `${fMoney(initData['amount'])}` : `${initData['amount']}` ) : undefined,
                                             rules:[
                                                 regRules.input_length_20,
                                                 {

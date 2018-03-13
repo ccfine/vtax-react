@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Form, Input, Row, Col, Radio } from 'antd';
 import {CusFormItem} from "../../../../../../compoments";
-import {toPercent} from '../../../../../../utils';
+import {toPercent,accDiv,accSub} from '../../../../../../utils';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const {NumericInput} = CusFormItem;
@@ -102,8 +102,30 @@ class PopModal extends React.Component{
                       {...formItemLayout}
                       label="调整后可售面积（㎡）"
                       >
-                      {getFieldDecorator('ableSaleArea',{initialValue:this.state.stage.ableSaleArea})(
-                         <NumericInput disabled={this.props.readOnly}/>
+                      {getFieldDecorator('ableSaleArea',{
+                          initialValue:this.state.stage.ableSaleArea,
+                        })(
+                         <NumericInput disabled={this.props.readOnly}
+                            onChange={(val)=>{
+                                /* 单方土地成本 = 可抵扣土地价款-已实际抵扣土地价款）/（调整后可售面积（㎡）-已售建筑面积（㎡） */
+
+                                /* 从表单中获取计算所需要的值 */
+                                let values = this.props.form.getFieldsValue(['deductibleLandPrice','actualDeductibleLandPrice','saleArea']);
+
+                                /* 转换成Number */
+                                values['deductibleLandPrice'] = +values['deductibleLandPrice'];
+                                values['actualDeductibleLandPrice'] = +values['actualDeductibleLandPrice'];
+                                values['saleArea'] = +values['saleArea'];
+
+                                /* 计算 */
+                                let a1 = accSub(values['deductibleLandPrice'],values['actualDeductibleLandPrice']),
+                                    a2 = accSub(val,values['saleArea']);
+                                let singleLandCost = (a2===0 || isNaN(a1) || isNaN(a2))?'':accDiv(a1,a2).toFixed(2);
+
+                                /* 设置 单方土地成本*/
+                                this.props.form.setFieldsValue({'singleLandCost':singleLandCost})
+                            }}            
+                        />
                       )}
                   </FormItem>
                 </Col>

@@ -9,6 +9,7 @@ import PopModal from './popModal'
 import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment'
+import _ from 'lodash'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -112,6 +113,10 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('stagesId') || false,
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,
+                transformData:data=>{
+                    //数组去重
+                    return _.uniqBy(data, 'buildingName');
+                }
             }
         },
         {
@@ -158,35 +163,35 @@ const getColumns = context =>[
         render:(text,record)=>{
             return (
                 <div>
-                <span style={pointerStyle} onClick={()=>{
-                    context.setState({
-                        modalConfig:{
-                            type:'edit',
-                            id:record.id
-                        }
-                    },()=>{
-                        context.toggleModalVisible(true)
-                    })
-                }}>修改</span>
                     {
                         parseInt(context.state.dataStatus,0) === 1 && (
-                            <span style={{
-                                ...pointerStyle,
-                                marginLeft:5
-                            }} onClick={()=>{
+                            <span style={pointerStyle} onClick={()=>{
                                 context.setState({
                                     modalConfig:{
-                                        type:'view',
+                                        type:'edit',
                                         id:record.id
                                     }
                                 },()=>{
                                     context.toggleModalVisible(true)
                                 })
-                            }}>
-                            查看
-                        </span>
+                            }}>修改</span>
                         )
                     }
+                    <span style={{
+                        ...pointerStyle,
+                        marginLeft:5
+                    }} onClick={()=>{
+                        context.setState({
+                            modalConfig:{
+                                type:'view',
+                                id:record.id
+                            }
+                        },()=>{
+                            context.toggleModalVisible(true)
+                        })
+                    }}>
+                            查看
+                        </span>
 
                 </div>
             )

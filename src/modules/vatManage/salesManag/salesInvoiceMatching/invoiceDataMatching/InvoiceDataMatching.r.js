@@ -24,7 +24,7 @@ const formItemStyle = {
             span:10,
         },
         xl:{
-            span:6
+            span:8
         }
     },
     wrapperCol:{
@@ -32,7 +32,7 @@ const formItemStyle = {
             span:14
         },
         xl:{
-            span:18
+            span:16
         }
     }
 }

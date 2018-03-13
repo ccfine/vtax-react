@@ -1,5 +1,6 @@
 ## Commitizen
 > 使用目的:统一commit格式，增加可阅读性，自动生成版本的 changelog
+
 ```sh
 $ npm install -g commitizen
 ```
@@ -24,19 +25,29 @@ $ commitizen init cz-conventional-changelog --save --save-exact
 
 **scope name 说明**
 
-如果是某个模块的修改则输入该模块具体名称，通用组件的修改则输入 ```通用组件-ComonentName``` 的形式；
+- 如果是某个模块的修改则输入该模块具体名称，通用组件的修改则输入 ```通用组件-ComonentName``` 的形式；
 
 
 **short description**
 
-此次变更的简单标题，尽量简短描述
+- 此次变更的简单标题，尽量简短描述
 
 
 **longer description**
 
-此次变更的详细描述，可以具体描述
+- 此次变更的详细描述，可以具体描述
 
 
 **affect any open issues**
 
-变更影响到某个已知的问题的话请选上
+- 变更影响到某个已知的问题的话请选上,按照提示填写对应禅道编号的bug
+
+## workflow
+1. Make changes
+2. Commit those changes
+3. Make sure Travis turns green
+4. Bump version in package.json
+5. conventionalChangelog
+6. Commit package.json and CHANGELOG.md files
+7. Tag
+8. Push
