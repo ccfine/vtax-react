@@ -22,6 +22,7 @@ class ButtonWithFileUploadModal extends Component{
         disabled:PropTypes.bool,
         size:PropTypes.string,
         uploadUrl:PropTypes.string,
+        deleteUrl:PropTypes.string,
         readOnly:PropTypes.bool,
     }
     static defaultProps={
@@ -29,6 +30,7 @@ class ButtonWithFileUploadModal extends Component{
         disabled:false,
         size:'small',
         uploadUrl:'/account/prepaytax/upload/',
+        deleteUrl:'/sys/file/delete',
         readOnly:false
     }
     state={
@@ -74,7 +76,10 @@ class ButtonWithFileUploadModal extends Component{
         })
     }
     deleteRecord=id=>{
-        return request.delete(`sys/file/delete/${id}`).then(({data}) => {
+        /*
+        * 地址/文件uid
+        * */
+        return request.delete(`${this.props.deleteUrl}/${id}`).then(({data}) => {
             if (data.code === 200) {
                 this.fetchFileList();
             } else {
