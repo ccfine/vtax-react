@@ -158,35 +158,35 @@ const getColumns = context =>[
         render:(text,record)=>{
             return (
                 <div>
-                <span style={pointerStyle} onClick={()=>{
-                    context.setState({
-                        modalConfig:{
-                            type:'edit',
-                            id:record.id
-                        }
-                    },()=>{
-                        context.toggleModalVisible(true)
-                    })
-                }}>修改</span>
                     {
                         parseInt(context.state.dataStatus,0) === 1 && (
-                            <span style={{
-                                ...pointerStyle,
-                                marginLeft:5
-                            }} onClick={()=>{
+                            <span style={pointerStyle} onClick={()=>{
                                 context.setState({
                                     modalConfig:{
-                                        type:'view',
+                                        type:'edit',
                                         id:record.id
                                     }
                                 },()=>{
                                     context.toggleModalVisible(true)
                                 })
-                            }}>
-                            查看
-                        </span>
+                            }}>修改</span>
                         )
                     }
+                    <span style={{
+                        ...pointerStyle,
+                        marginLeft:5
+                    }} onClick={()=>{
+                        context.setState({
+                            modalConfig:{
+                                type:'view',
+                                id:record.id
+                            }
+                        },()=>{
+                            context.toggleModalVisible(true)
+                        })
+                    }}>
+                            查看
+                        </span>
 
                 </div>
             )

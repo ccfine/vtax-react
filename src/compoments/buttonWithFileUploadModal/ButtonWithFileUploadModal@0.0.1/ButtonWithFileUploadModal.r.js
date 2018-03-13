@@ -21,13 +21,15 @@ class ButtonWithFileUploadModal extends Component{
         id:PropTypes.string,
         disabled:PropTypes.bool,
         size:PropTypes.string,
-        uploadUrl:PropTypes.string
+        uploadUrl:PropTypes.string,
+        readOnly:PropTypes.bool,
     }
     static defaultProps={
         title:'导入',
         disabled:false,
         size:'small',
-        uploadUrl:'/account/prepaytax/upload/'
+        uploadUrl:'/account/prepaytax/upload/',
+        readOnly:false
     }
     state={
         visible:false,
@@ -85,6 +87,7 @@ class ButtonWithFileUploadModal extends Component{
     }
     render(){
         const props = this.props;
+        const { readOnly } = props;
         const {visible,loaded,fileList} = this.state;
         const uploadProps = {
             action: '//jsonplaceholder.typicode.com/posts/',
@@ -104,7 +107,11 @@ class ButtonWithFileUploadModal extends Component{
                         fileList: newFileList,
                     };
                 });*/
-                return this.deleteRecord(file.uid)
+                if( readOnly ){
+                    return false;
+                }else{
+                    return this.deleteRecord(file.uid)
+                }
             },
             beforeUpload: (file) => {
                 const formData = new FormData();
@@ -124,7 +131,7 @@ class ButtonWithFileUploadModal extends Component{
             },
             fileList
         };
-
+        console.log(readOnly)
         return(
             <span style={props.style}>
                     <Button size={props.size} onClick={()=>this.toggleVisible(true)} disabled={props.disabled}>
@@ -133,9 +140,13 @@ class ButtonWithFileUploadModal extends Component{
                 <Modal title='附件' visible={visible} maskClosable={false} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>
                     <Spin spinning={!loaded}>
                     <Upload {...uploadProps}>
-                        <Button size='small'>
-                          <Icon type="upload" /> 上传
-                        </Button>
+                        {
+                            !readOnly && (
+                                <Button size='small'>
+                                    <Icon type="upload" /> 上传
+                                </Button>
+                            )
+                        }
                       </Upload>
                     </Spin>
                 </Modal>
