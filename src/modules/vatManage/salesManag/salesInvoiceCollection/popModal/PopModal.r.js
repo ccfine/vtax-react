@@ -295,7 +295,6 @@ class PopModal extends Component{
                                             onChange:data=>{
                                                 let type = parseInt(getFieldValue('taxMethod'),0);
                                                 let rateValue = '';
-
                                                 if(!!type){
                                                     if(type===1){
                                                         rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
@@ -618,7 +617,7 @@ class PopModal extends Component{
                                         type:'numeric',
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['amount'] ? ( disabled ? `${fMoney(initData['amount'])}` : initData['amount'] ) : undefined,
+                                            initialValue:initData['amount'] ? ( disabled ? `${fMoney(initData['amount'])}` : `${initData['amount']}` ) : undefined,
                                             rules:[
                                                 regRules.input_length_20,
                                                 {
