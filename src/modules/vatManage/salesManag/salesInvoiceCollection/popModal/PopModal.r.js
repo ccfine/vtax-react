@@ -294,7 +294,8 @@ class PopModal extends Component{
                                             },
                                             onChange:data=>{
                                                 let type = parseInt(getFieldValue('taxMethod'),0);
-                                                let rateValue = '';
+                                                let rateValue = '',
+                                                    amount = parseInt(getFieldValue('amount'),0)
                                                 if(!!type){
                                                     if(type===1){
                                                         rateValue=getFieldValue('taxClassificationCoding').commonlyTaxRate
@@ -306,7 +307,13 @@ class PopModal extends Component{
                                                         taxRate:rateValue
                                                     })
                                                 }
-
+                                                if(rateValue && amount){
+                                                    let taxAmount = amount * parseFloat(rateValue) / 100;
+                                                    setFieldsValue({
+                                                        taxAmount:fMoney(taxAmount),
+                                                        totalAmount:fMoney( amount + taxAmount )
+                                                    })
+                                                }
                                             }
                                         }
                                     },
