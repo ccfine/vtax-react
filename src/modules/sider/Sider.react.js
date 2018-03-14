@@ -88,10 +88,14 @@ class VTaxSider extends Component {
         let start = path.startsWith('/')?1:0;
 
         /* 展开项设置 */
-        /* 如果Sider处于收起的状态，不用打开 */
-        if(!this.props.collapsed && pathArr.length>1+start){
+        /* 如果Sider处于收起的状态，不用打开 ，并手动关上*/
+        if(!nextProps.collapsed && pathArr.length>1+start){
             this.setState({
                 openKeys: [`/${pathArr[start]}/${pathArr[start+1]}`],
+            });
+        }else{
+            this.setState({
+                openKeys: [],
             });
         }
 
