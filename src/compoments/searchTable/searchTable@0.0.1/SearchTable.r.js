@@ -67,6 +67,16 @@ class SearchTable extends Component{
                         values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
                         values[key] = undefined;
                     }
+
+                    /**
+                     * 判断如果是时间控件 rangePicker 只是值为空的时候需要把双值设为undefined，因为下一次的filter
+                     * 会与上一次的filter合并，这一次的rangePicker值为空的时候就会导致合并后留下上次选择过的值，导致条件出错
+                     * */
+                    if(Array.isArray( values[key] ) && values[key].length === 0){
+                        values[`${key}Start`] = undefined;
+                        values[`${key}End`] = undefined;
+                    }
+
                     if(moment.isMoment(values[key])){
                         //格式化一下时间 YYYY-MM类型
                         if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
@@ -81,6 +91,7 @@ class SearchTable extends Component{
                 this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
+                        //合并上次filters的原因是组件会接收外部的额外filter条件，如果不合并就会忽略到外部的条件
                         ...prevState.filters,
                         ...values
                     }
