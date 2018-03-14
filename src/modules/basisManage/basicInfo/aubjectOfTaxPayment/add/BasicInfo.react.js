@@ -752,14 +752,20 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.localTaxPhone,
                                     }
-                                },{
+                                }
+                            ])
+                        }
+
+                        {
+                            this.props.type !== 'add' && getFields(this.props.form,[
+                                {
                                     label:'更新人',
                                     fieldName:'jbxx.lastModifiedBy',
                                     type:'input',
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
-                                        disabled
+                                        disabled:true
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.lastModifiedBy,
@@ -771,7 +777,7 @@ class BasicInfo extends Component {
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
-                                        disabled
+                                        disabled:true
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.lastModifiedDate,
@@ -793,10 +799,10 @@ class BasicInfo extends Component {
                                         value: '2',
                                     }],
                                     componentProps:{
-                                        disabled
+                                        disabled:true
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:defaultData.status,
+                                        initialValue:`${defaultData.status}`,
                                     }
                                 }
                             ])
