@@ -3,7 +3,7 @@
  * 确认结转收入
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable,FileExport} from '../../../../../compoments'
 import {fMoney,getUrlParam,request} from '../../../../../utils'
 import ManualMatchRoomModal from './SummarySheetModal'
@@ -210,7 +210,11 @@ class ConfirmCarryOver extends Component{
         tableKey:Date.now(),
         visible:false,
         doNotFetchDidMount:true,
+        searchTableLoading:false,
         searchFieldsValues:{
+
+        },
+        resultFieldsValues:{
 
         },
         hasData:false,
@@ -220,6 +224,11 @@ class ConfirmCarryOver extends Component{
          * */
         dataStatus:'',
         submitDate:'',
+    }
+    toggleSearchTableLoading = searchTableLoading =>{
+        this.setState({
+            searchTableLoading
+        })
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -264,8 +273,33 @@ class ConfirmCarryOver extends Component{
                 }
             })
     }
+    recount = ()=>{
+        const { mainId,month:authMonth }  = this.state.resultFieldsValues;
+        Modal.confirm({
+            title: '友情提醒',
+            content: '确定要重算吗',
+            onOk : ()=> {
+                this.toggleSearchTableLoading(true)
+                request.get('/account/output/notInvoiceSale/reset',{
+                    params:{
+                        mainId,
+                        authMonth
+                    }
+                })
+                    .then(({data})=>{
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            message.success('重算成功!');
+                            this.refreshTable()
+                        }else{
+                            message.error(`重算失败:${data.msg}`)
+                        }
+                    })
+            }
+        })
+    }
     render(){
-        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount,dataStatus,submitDate} = this.state;
+        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount,dataStatus,submitDate,searchTableLoading} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -282,6 +316,7 @@ class ConfirmCarryOver extends Component{
                         }
                     }
                 }}
+                spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
@@ -290,7 +325,8 @@ class ConfirmCarryOver extends Component{
                     onSuccess:(params,data)=>{
                         this.setState({
                             searchFieldsValues:params,
-                            hasData:data.length !== 0
+                            hasData:data.length !== 0,
+                            resultFieldsValues:params,
                         },()=>{
                             this.state.hasData && this.fetchResultStatus()
                         })
@@ -319,6 +355,10 @@ class ConfirmCarryOver extends Component{
                                 searchFieldsValues
                             }
                         />
+                        <Button onClick={this.recount} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
+                            <Icon type="retweet" />
+                            重算
+                        </Button>
                         <SubmitOrRecall type={1} url="/account/output/notInvoiceSale/submit" onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} url="/account/output/notInvoiceSale/revoke" onSuccess={this.refreshTable} />
                     </div>,
