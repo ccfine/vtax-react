@@ -143,6 +143,7 @@ class PopModal extends Component {
             style={{
                 marginRight:10
             }}
+            key="fileInfo" 
             readOnly = {readonly}
             size='default'
             id={record.id}
@@ -168,7 +169,7 @@ class PopModal extends Component {
 
         this.props.action === "look" 
             && buttons.push(<Button 
-            key="back" 
+            key="close" 
             onClick={this.hideSelfModal}>关闭</Button>)
         return (
             <Modal

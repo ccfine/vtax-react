@@ -138,6 +138,7 @@ class PopModal extends Component {
             readOnly = {readonly}
             size='default'
             id={record.id}
+            key="fileInfo" 
             uploadUrl={`/other/file/file/upload/${record.id}`}
         />)
 
@@ -159,7 +160,7 @@ class PopModal extends Component {
 
         this.props.action === "look" 
             && buttons.push(<Button 
-            key="back" 
+            key="close" 
             onClick={this.hideSelfModal}>关闭</Button>)
 
         return (
