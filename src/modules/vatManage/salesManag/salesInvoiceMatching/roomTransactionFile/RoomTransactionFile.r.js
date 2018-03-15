@@ -240,7 +240,7 @@ class RoomTransactionFile extends Component{
             })
     }
     render(){
-        const {tableUpDateKey,filters,submitDate,dataStatus,hasData} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -273,6 +273,25 @@ class RoomTransactionFile extends Component{
                                                 }
                                             ]
                                         },
+                                    },
+                                    {
+                                        label:'交易月份',
+                                        fieldName:'transactionDate',
+                                        type:'monthPicker',
+                                        formItemStyle,
+                                        span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择交易月份'
+                                                }
+                                            ]
+                                        }
                                     },
                                     {
                                         label:'项目名称',
@@ -329,25 +348,6 @@ class RoomTransactionFile extends Component{
                                         type:'input',
                                         formItemStyle,
                                         span:6
-                                    },
-                                    {
-                                        label:'交易月份',
-                                        fieldName:'transactionDate',
-                                        type:'monthPicker',
-                                        formItemStyle,
-                                        span:6,
-                                        componentProps:{
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择交易月份'
-                                                }
-                                            ]
-                                        }
                                     },
                                     {
                                         label:'匹配状态',
