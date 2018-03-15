@@ -3,6 +3,7 @@ import React from "react";
 import {Modal} from "antd";
 import SourceTable from '../sourceTable';
 import {request,accAdd} from '../../../../../../utils';
+import _ from 'lodash'
 export default class SourceModal extends React.Component{
     state={
         sourceTable:null,
@@ -10,7 +11,9 @@ export default class SourceModal extends React.Component{
     }
     updateSource(source){
         let sourceTable = this.state.sourceTable;
-        let index = sourceTable.findIndex(item=>(item.id === source.id));
+        let index = _.findIndex(sourceTable,(item=>(
+            item.id === source.id
+        )));
         sourceTable[index] = source;
         sourceTable.pop();
         sourceTable = this.countAmount(sourceTable);
@@ -28,7 +31,7 @@ export default class SourceModal extends React.Component{
         let sourceTable = this.state.sourceTable;
         // 最后一条为统计信息
         sourceTable.pop();
-        let index = sourceTable.findIndex(item=>(item.id === source.id));
+        let index = _.findIndex((sourceTable)=>item=>(item.id === source.id));
         if(sourceTable[index].action === "add"){
             sourceTable.splice(index,1);
         }else{

@@ -254,7 +254,7 @@ class NeedNotMatchInvoices extends Component{
             })
     }
     render(){
-        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus,hasData} = this.state;
+        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(

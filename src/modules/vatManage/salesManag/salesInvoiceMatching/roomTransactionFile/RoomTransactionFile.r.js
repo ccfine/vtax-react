@@ -240,7 +240,7 @@ class RoomTransactionFile extends Component{
             })
     }
     render(){
-        const {tableUpDateKey,filters,submitDate,dataStatus,hasData} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;

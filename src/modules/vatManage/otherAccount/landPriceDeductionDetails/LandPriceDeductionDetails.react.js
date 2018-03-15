@@ -30,6 +30,24 @@ const searchFields =(disabled)=> (getFieldValue)=> {
                     }
                 ]
             }
+        },{
+            label:'查询期间',
+            fieldName:'authMonth',
+            type:'monthPicker',
+            span:6,
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选查询期间'
+                    }
+                ]
+            },
         }, {
             label:'项目名称',
             fieldName:'projectId',
@@ -54,24 +72,6 @@ const searchFields =(disabled)=> (getFieldValue)=> {
                 fetchAble:getFieldValue('projectId') || false,
                 url:`/project/stages/${getFieldValue('projectId') || ''}`,
             }
-        },{
-            label:'查询期间',
-            fieldName:'authMonth',
-            type:'monthPicker',
-            span:6,
-            componentProps:{
-                format:'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选查询期间'
-                    }
-                ]
-            },
         }
     ]
 }

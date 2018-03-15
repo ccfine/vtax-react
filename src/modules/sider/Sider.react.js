@@ -8,6 +8,7 @@ import { Layout, Menu,Icon} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
 import logo from './images/logo.png'
+import _ from 'lodash'
 import './styles.less'
 
 const { Sider } = Layout;
@@ -85,7 +86,7 @@ class VTaxSider extends Component {
             selectedPath:path
         })
         let pathArr = path.split('/');
-        let start = path.startsWith('/')?1:0;
+        let start = _.startsWith(path,'/')?1:0;
 
         /* 展开项设置 */
         /* 如果Sider处于收起的状态，不用打开 ，并手动关上*/
@@ -107,13 +108,13 @@ class VTaxSider extends Component {
         }
     }
     onOpenChange = (openKeys) => {
-        const latestOpenKey = openKeys.find(path => this.state.openKeys.indexOf(path) === -1);
-        if (this.props.menusData.findIndex(ele=>ele.path === latestOpenKey) === -1) {
-          this.setState({ openKeys });
+        const latestOpenKey = _.find(openKeys,(path)=>this.state.openKeys.indexOf(path) === -1);
+        if(_.findIndex(this.props.menusData,(ele)=>ele.path === latestOpenKey) === -1){
+            this.setState({ openKeys });
         } else {
-          this.setState({
-            openKeys: latestOpenKey ? [latestOpenKey] : [],
-          });
+            this.setState({
+                openKeys: latestOpenKey ? [latestOpenKey] : [],
+            });
         }
       }
     render() {
