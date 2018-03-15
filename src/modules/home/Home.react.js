@@ -7,10 +7,12 @@ import createG2 from 'g2-react'
 import { Stat  } from 'g2'
 import React, { Component } from 'react'
 import { Layout, Card, Col, Row,Icon,Menu, Dropdown } from 'antd'
-import {Carousel} from '../../compoments'
+import ImageGallery from 'react-image-gallery';
 
 import banner1 from './images/banner1.jpg'
 import banner2 from './images/banner2.jpg'
+
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const Pie = createG2(chart => {
     chart.coord('theta');
@@ -2924,7 +2926,22 @@ class Home extends Component {
         );
         return (
             <Layout style={{background:'transparent'}} >
-                <Carousel banner={this.state.banner} />
+                <ImageGallery
+                    infinite={true}
+                    autoPlay={true}
+                    showBullets={true}
+                    slideInterval={3000}
+                    slideDuration={500}
+                    lazyLoad={false}
+                    showNav={false}
+                    thumbnailPosition='bottom'
+                    showFullscreenButton={false}
+                    useBrowserFullscreen={false}
+                    showPlayButton={false}
+                    useTranslate3D={false}
+                    showThumbnails={false}
+                    items={this.state.banner}
+                />
 
                 <div style={{ padding: '24px'}}>
                     <Row gutter={16} style={{marginBottom:20}}>

@@ -274,15 +274,6 @@ class InvoiceCollection extends Component {
                                             ]
                                         },
                                     },{
-                                        label:'发票号码',
-                                        fieldName:'invoiceNum',
-                                        type:'input',
-                                        span:6,
-                                        componentProps:{
-                                        },
-                                        fieldDecoratorOptions:{
-                                        },
-                                    },{
                                         label:'认证月份',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
@@ -300,7 +291,15 @@ class InvoiceCollection extends Component {
                                                 }
                                             ]
                                         },
-
+                                    },{
+                                        label:'发票号码',
+                                        fieldName:'invoiceNum',
+                                        type:'input',
+                                        span:6,
+                                        componentProps:{
+                                        },
+                                        fieldDecoratorOptions:{
+                                        },
                                     }
                                 ])
                             }
