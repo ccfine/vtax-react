@@ -47,6 +47,33 @@ const searchFields =(disabled)=> (getFieldValue)=> {
             },
         },
         {
+            label:'查询期间',
+            fieldName:'receiveMonth',
+            type:'monthPicker',
+            span:6,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择过滤期间'
+                    }
+                ]
+            },
+        },
+        {
             label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
@@ -87,33 +114,6 @@ const searchFields =(disabled)=> (getFieldValue)=> {
                 fetchAble:getFieldValue('projectId') || false,
                 url:`/project/stages/${getFieldValue('projectId') || ''}`,
             }
-        },
-        {
-            label:'查询期间',
-            fieldName:'receiveMonth',
-            type:'monthPicker',
-            span:6,
-            formItemStyle:{
-                labelCol:{
-                    span:8
-                },
-                wrapperCol:{
-                    span:16
-                }
-            },
-            componentProps:{
-                format:'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择过滤期间'
-                    }
-                ]
-            },
         },
         {
             label:'楼栋名称',
