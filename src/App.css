@@ -176,6 +176,9 @@ table.data-grid{
 }
 
 /* 为了兼容ie下 select 错位的问题 */
-*.ant-calendar-picker{
-  display:list-item;
+*.ant-form-explain, .ant-form-extra{
+  margin-top: -6.5px;
+}
+*.ant-calendar-picker-input{
+  display:inline;
 }

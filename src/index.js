@@ -1,12 +1,3 @@
-/**
- * babel polyfill
- * */
-import "core-js/fn/array/find-index"
-import "core-js/fn/array/find"
-import "core-js/fn/string/starts-with"
-import "core-js/fn/number/is-nan"
-import "core-js/fn/number/parse-float"
-
 import React from 'react'
 import {render} from 'react-dom'
 import registerServiceWorker from './registerServiceWorker'
