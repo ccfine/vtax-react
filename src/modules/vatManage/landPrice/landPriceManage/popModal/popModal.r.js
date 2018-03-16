@@ -52,8 +52,8 @@ class LandPriceModal extends React.Component {
         let numFeild;
         stageSource.forEach(element => {
             countFeild.forEach(feild => {
-                numFeild = Number.parseFloat(element[feild]);
-                stage[feild] += (Number.isNaN(numFeild) ? 0 : numFeild);
+                numFeild = parseFloat(element[feild]);
+                stage[feild] += (isNaN(numFeild) ? 0 : numFeild);
             })
         });
         stageSource.push(stage);
