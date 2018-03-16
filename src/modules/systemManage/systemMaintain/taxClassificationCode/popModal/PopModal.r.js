@@ -30,6 +30,9 @@ class PopModal extends Component{
                 if(data.code===200){
                     this.setState({
                         initData:data.data
+                    },()=>{
+                        this.getCommonlyTaxRate(data.data.taxableProjectId)
+                        this.getSimpleTaxRate(data.data.taxableProjectId)
                     })
                 }
             })
@@ -89,8 +92,7 @@ class PopModal extends Component{
 
     //根据应税项目查询一般计税方法税率列表
     getCommonlyTaxRate=(data)=>{
-        console.log(data)
-        request.get(`/sys/taxrate/list/commonlyTaxRate/by/${data.key}`)
+        request.get(`/sys/taxrate/list/commonlyTaxRate/by/${data}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
@@ -104,7 +106,7 @@ class PopModal extends Component{
 
     //根据应税项目查询简易计税方法税率列表
     getSimpleTaxRate=(data)=>{
-        request.get(`/sys/taxrate/list/simpleTaxRate/by/${data.key}`)
+        request.get(`/sys/taxrate/list/simpleTaxRate/by/${data}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
@@ -163,6 +165,7 @@ class PopModal extends Component{
     }
     render(){
         const props = this.props;
+        const {setFieldsValue} = props.form
         const {initData,loaded} = this.state;
         let title='';
         let disabled = false;
@@ -289,8 +292,12 @@ class PopModal extends Component{
                                         componentProps: {
                                             disabled,
                                             onChange: data => {
-                                                this.getCommonlyTaxRate(data)
-                                                this.getSimpleTaxRate(data)
+                                                this.getCommonlyTaxRate(data.key)
+                                                this.getSimpleTaxRate(data.key)
+                                                setFieldsValue({
+                                                    commonlyTaxRateId: data.commonlyTaxRateId,
+                                                    simpleTaxRateId: data.simpleTaxRateId,
+                                                });
                                             }
                                         }
                                     }, {
