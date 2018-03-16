@@ -36,7 +36,7 @@ class LandPriceModal extends React.Component {
         item.action = "modify";
         // 更新项目分期信息
         let stageSource = this.state.stageSource;
-        let index = _.findIndex((stageSource)=>ele => item.id === ele.id);
+        let index = _.findIndex(stageSource,ele => item.id === ele.id);
         stageSource[index] = item;
         stageSource.pop();
         stageSource = this.countStage(stageSource);

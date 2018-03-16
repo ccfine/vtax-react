@@ -23,7 +23,7 @@ export const generateRow = (prefix ,titles, colLength,cellProps)=>{
 
 // arr:['XXX',['XXX','xxX']] colLength:2 startAlphabet:'B' startIndex:1(在标题后面增加索引)
 export const generateRows = (arr,colLength,startAlphabet='A',startIndex=0,cellProps)=>{
-    let alphabetStartIndex = _.findIndex((alphabet)=>ele=>ele === startAlphabet);
+    let alphabetStartIndex = _.findIndex(alphabet,ele=>ele === startAlphabet);
     let rows = [];
     let addIndex = startIndex;
     arr.forEach(titles => {
