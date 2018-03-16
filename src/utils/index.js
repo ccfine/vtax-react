@@ -174,7 +174,7 @@ const htmlDecode = html =>{
 //将0.5转换成50%
 const toPercent = val=>{
     let valNum = Number(val);
-    if(Number.isNaN(valNum) || valNum === 0)return val;
+    if(isNaN(valNum) || valNum === 0)return val;
     return `${valNum*100}%`;
 }
 
@@ -182,7 +182,7 @@ const toPercent = val=>{
 const fromPercent = val=>{
     let valTrim = val.replace?val.replace('%',''):val;
     let valNum = Number(valTrim);
-    if(Number.isNaN(valNum))return val;
+    if(isNaN(valNum))return val;
     return valNum/100;
 }
 
