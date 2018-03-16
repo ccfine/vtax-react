@@ -85,6 +85,14 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('mainId') || false,
                 url:`/project/list/${getFieldValue('mainId')}`,
+                selectOptions:{
+                    showSearch:true,
+                    optionFilterProp:"children"
+                },
+                customValues:{
+                    mainId:getFieldValue('mainId')
+                },
+                searchType:'itemName'
             }
         },
         {
