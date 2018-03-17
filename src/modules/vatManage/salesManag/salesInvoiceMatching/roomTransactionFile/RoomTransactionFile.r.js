@@ -208,10 +208,10 @@ class RoomTransactionFile extends Component{
         }
     }
     refreshTable = ()=>{
-        /*this.setState({
+        this.setState({
             tableUpDateKey:Date.now()
-        })*/
-        this.handleSubmit()
+        })
+        //this.handleSubmit()
     }
     deleteRecord = (id,cb) => {
         request.delete(`/output/room/files/delete/${id}`)
