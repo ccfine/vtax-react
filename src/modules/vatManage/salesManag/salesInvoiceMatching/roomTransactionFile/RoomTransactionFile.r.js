@@ -465,7 +465,7 @@ class RoomTransactionFile extends Component{
                                             hasData:data.length !==0,
                                             searchFieldsValues:params,
                                         },()=>{
-                                            this.state.hasData && this.fetchResultStatus()
+                                            this.fetchResultStatus()
                                         })
                                     },
                                     renderFooter:data=>{

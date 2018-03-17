@@ -341,7 +341,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                             searchFieldsValues:params,
                             hasData:data.length !== 0
                         },()=>{
-                            this.state.hasData && this.fetchResultStatus()
+                            this.fetchResultStatus()
                         })
                     },
                     extra:<div>
