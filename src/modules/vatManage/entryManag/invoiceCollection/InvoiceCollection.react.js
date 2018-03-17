@@ -417,7 +417,6 @@ class InvoiceCollection extends Component {
                                                     <label>本页合计：</label>
                                                     本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
                                                     本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-
                                                     本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
                                                 </div>
                                                 <div>
