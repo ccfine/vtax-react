@@ -228,7 +228,9 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
+                            {
+                                type !== 'view' && <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
+                            }
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                             {
                                 type === 'edit' && <Button type='danger' onClick={this.deleteRecord}>

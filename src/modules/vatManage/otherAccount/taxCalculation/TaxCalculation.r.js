@@ -310,7 +310,7 @@ class TaxCalculation extends Component{
                             hasData:data.length !== 0,
                             resultFieldsValues:params,
                         },()=>{
-                            this.state.hasData && this.fetchResultStatus()
+                            this.fetchResultStatus()
                         })
                     },
                     pagination:false,

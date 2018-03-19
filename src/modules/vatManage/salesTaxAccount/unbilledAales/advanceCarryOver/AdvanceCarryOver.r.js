@@ -271,7 +271,7 @@ class AdvanceCarryOver extends Component{
                             searchFieldsValues:params,
                             hasData:data.length !== 0
                         },()=>{
-                            this.state.hasData && this.fetchResultStatus()
+                            this.fetchResultStatus()
                         })
                     },
                     url:'/account/output/notInvoiceAdvance/list',

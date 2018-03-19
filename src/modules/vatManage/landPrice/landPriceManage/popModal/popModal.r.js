@@ -4,6 +4,9 @@ import { CusFormItem } from "../../../../../compoments";
 import StageTable from './stageTable';
 import SourceModal from "./sourcePopModal";
 import { request } from '../../../../../utils'
+import _ from 'lodash'
+
+
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const { NumericInput } = CusFormItem;
@@ -33,7 +36,7 @@ class LandPriceModal extends React.Component {
         item.action = "modify";
         // 更新项目分期信息
         let stageSource = this.state.stageSource;
-        let index = stageSource.findIndex(ele => item.id === ele.id);
+        let index = _.findIndex(stageSource,ele => item.id === ele.id);
         stageSource[index] = item;
         stageSource.pop();
         stageSource = this.countStage(stageSource);
@@ -49,8 +52,8 @@ class LandPriceModal extends React.Component {
         let numFeild;
         stageSource.forEach(element => {
             countFeild.forEach(feild => {
-                numFeild = Number.parseFloat(element[feild]);
-                stage[feild] += (Number.isNaN(numFeild) ? 0 : numFeild);
+                numFeild = parseFloat(element[feild]);
+                stage[feild] += (isNaN(numFeild) ? 0 : numFeild);
             })
         });
         stageSource.push(stage);

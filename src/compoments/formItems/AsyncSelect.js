@@ -5,6 +5,7 @@ import React,{Component} from 'react'
 import {Form,Select,Spin} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from '../../utils'
+import {debounce} from 'lodash'
 const FormItem = Form.Item;
 const Option = Select.Option
 export default class AsyncSelect extends Component{
@@ -56,6 +57,7 @@ export default class AsyncSelect extends Component{
             ],
             loaded:props.doNotFetchDidMount
         }
+        this.onSearch = debounce(this.onSearch,300)
     }
     componentWillReceiveProps(nextProps){
         if(this.props.url !== nextProps.url){
@@ -96,6 +98,39 @@ export default class AsyncSelect extends Component{
     componentWillUnmount(){
         this.mounted=null;
     }
+    onSearch = (value) => {
+        const { selectOptions:{ showSearch }, customValues, searchType } = this.props;
+        if(showSearch){
+
+            if(searchType==='itemName'){
+                //项目名称
+                request.get(`/project/listByName`,{
+                    params:{
+                        mainId:customValues.mainId,
+                        itemName:value,
+                        size:100
+                    }
+                })
+                    .then(({data}) => {
+                        if(data.code===200 ){
+
+                            const result = data.data.records;
+                            const newData = [];
+                            result.forEach((r) => {
+                                newData.push({
+                                    value: `${r.id}`,
+                                    text: r.itemName,
+                                });
+                            });
+                            this.setState({
+                                dataSource:result
+                            })
+                        }
+                    });
+            }
+
+        }
+    }
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
@@ -109,6 +144,7 @@ export default class AsyncSelect extends Component{
                     })(
                         <Select
                             style={{ width: '100%' }}
+                            onSearch={this.onSearch}
                             {...selectOptions}
                         >
                             {

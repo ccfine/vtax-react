@@ -1,3 +1,35 @@
+<a name="0.1.5"></a>
+## [0.1.5](https://github.com/Slebee/vtax/compare/0.1.4...0.1.5) (2018-03-19)
+
+
+### Bug Fixes
+
+* **all:** 修复IE11下select在弹出错误提示时候出现的错位问题 ([7bba0db](https://github.com/Slebee/vtax/commit/7bba0db))
+* **All:** 修正IE下 Select 组件导致整行错位问题 ([bb4ed17](https://github.com/Slebee/vtax/commit/bb4ed17))
+* **component/SearchTable:** 修复SearchTable的RangePicker值清空后搜索还在的问题 ([343eff9](https://github.com/Slebee/vtax/commit/343eff9))
+* **lcx module:** isNaN parseFloat ([ad16bfb](https://github.com/Slebee/vtax/commit/ad16bfb))
+* **修改ie浏览器js的不兼容:** 修改ie浏览器js的不兼容 ([bc6531f](https://github.com/Slebee/vtax/commit/bc6531f))
+* **土地价款:** 项目分期中计税方法 ([7d7ba54](https://github.com/Slebee/vtax/commit/7d7ba54))
+* **土地价款和纳税申报表:** findIndex调用方式更改 ([3846899](https://github.com/Slebee/vtax/commit/3846899))
+* **房间交易档案:** 修复点击查询导致内存溢出问题 ([cf6d633](https://github.com/Slebee/vtax/commit/cf6d633))
+* **房间交易档案:** 将刷新方法改为submit ([7f20ead](https://github.com/Slebee/vtax/commit/7f20ead)), closes [#6413](http://120.76.154.196/zentao/bug-view-6413.html)
+* **税收分类编码:** 编辑后保存有问题 是简易增值税税率 ([3760183](https://github.com/Slebee/vtax/commit/3760183))
+* **稽查报告:** modal变大 影响起始时间在ie的显示 ([1cfb364](https://github.com/Slebee/vtax/commit/1cfb364))
+* **稽查报告，其他档案:** Modal按钮名字修改 ([88e1910](https://github.com/Slebee/vtax/commit/88e1910))
+* **稽查报告，其他档案，sider:** 稽查报告，其他档案：key值问题报warning，sider：collapse关闭时openkeys引起问题 ([4c076cf](https://github.com/Slebee/vtax/commit/4c076cf))
+* **稽查报告，其他档案，sider:** 稽查报告，其他档案：key值问题报warning，sider：collapse关闭时openkeys引起问题 ([63408ca](https://github.com/Slebee/vtax/commit/63408ca))
+* **纳税主体:** 新增的时候修改（更新人，更新时间，更新状态）在编辑和查看状态在显示并禁用，添加时不展示 ([39384c1](https://github.com/Slebee/vtax/commit/39384c1)), closes [#5122](http://120.76.154.196/zentao/bug-view-5122.html)
+* **销项管理:** 列表主状态从有数据才显示改为总是显示 ([c3a8bb4](https://github.com/Slebee/vtax/commit/c3a8bb4)), closes [#6412](http://120.76.154.196/zentao/bug-view-6412.html)
+
+
+### Features
+
+* **component/AsyncSelect:** 提供异步select对项目名称的时候进行模糊查询的能力 ([8c6803a](https://github.com/Slebee/vtax/commit/8c6803a))
+* **component/RoomCodeSelect:** 给项目名称加入模糊搜索设置 ([b550880](https://github.com/Slebee/vtax/commit/b550880))
+* **确认结转收入:** 增加重算功能 ([a23710a](https://github.com/Slebee/vtax/commit/a23710a)), closes [#6395](http://120.76.154.196/zentao/bug-view-6395.html)
+
+
+
 <a name="0.1.4"></a>
 ## [0.1.4](https://github.com/Slebee/vtax/compare/0.1.3...0.1.4) (2018-03-13)
 

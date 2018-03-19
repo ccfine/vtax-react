@@ -136,19 +136,23 @@ class PopModal extends Component {
             title = "修改"
         }
         let buttons = [];
+
         record && record.id
         && buttons.push(<ButtonWithFileUploadModal
             title="附件信息"
             style={{
                 marginRight:10
             }}
+            key="fileInfo" 
             readOnly = {readonly}
             size='default'
             id={record.id}
             deleteUrl={`/report/delete/file/${record.id}`}
             uploadUrl={`/report/upload/${record.id}`}
         />)
-        buttons.push(<Button 
+
+        this.props.action !== "look" 
+        && buttons.push(<Button 
             key="submit" 
             type="primary" 
             loading={this.state.loading} 
@@ -158,14 +162,20 @@ class PopModal extends Component {
             type="danger" 
             key="delete" 
             onClick={this.showConfirm}>删除</Button>)
-        buttons.push(<Button 
+        this.props.action !== "look" 
+            && buttons.push(<Button 
             key="back" 
             onClick={this.hideSelfModal}>取消</Button>)
+
+        this.props.action === "look" 
+            && buttons.push(<Button 
+            key="close" 
+            onClick={this.hideSelfModal}>关闭</Button>)
         return (
             <Modal
                 title={title}
                 visible={this.props.visible}
-                width='750px'
+                width='900px'
                 bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
                 onCancel={this.hideSelfModal}
                 footer={buttons}

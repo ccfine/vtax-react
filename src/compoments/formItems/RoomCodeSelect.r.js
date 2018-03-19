@@ -93,6 +93,14 @@ const searchFields = context => (getFieldValue) =>{
                 doNotFetchDidMount:false,
                 fetchAble:!context.props.disabled,
                 url:`/project/list/${context.props.customizedValues['mainId']}`,
+                selectOptions:{
+                    showSearch:true,
+                    optionFilterProp:"children"
+                },
+                customValues:{
+                    mainId:context.props.customizedValues['mainId']
+                },
+                searchType:'itemName'
             }
         },
         {

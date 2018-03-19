@@ -53,21 +53,6 @@ const searchFields=(disabled)=> {
             },
         },
         {
-            label:'发票号码',
-            type:'input',
-            fieldName:'invoiceNum',
-            formItemStyle,
-            fieldDecoratorOptions:{},
-            componentProps:{}
-        },
-        {
-            label:'税收分类编码',
-            type:'input',
-            formItemStyle,
-            fieldName:'taxClassificationCoding',
-            fieldDecoratorOptions:{}
-        },
-        {
             label:'开票月份',
             type:'monthPicker',
             formItemStyle,
@@ -84,6 +69,21 @@ const searchFields=(disabled)=> {
                     }
                 ]
             }
+        },
+        {
+            label:'发票号码',
+            type:'input',
+            fieldName:'invoiceNum',
+            formItemStyle,
+            fieldDecoratorOptions:{},
+            componentProps:{}
+        },
+        {
+            label:'税收分类编码',
+            type:'input',
+            formItemStyle,
+            fieldName:'taxClassificationCoding',
+            fieldDecoratorOptions:{}
         },
         {
             label:'税率',
@@ -317,7 +317,7 @@ class SalesInvoiceCollection extends Component{
                     },
                     extra:<div>
                         {
-                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>

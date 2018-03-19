@@ -85,6 +85,14 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('mainId') || false,
                 url:`/project/list/${getFieldValue('mainId')}`,
+                selectOptions:{
+                    showSearch:true,
+                    optionFilterProp:"children"
+                },
+                customValues:{
+                    mainId:getFieldValue('mainId')
+                },
+                searchType:'itemName'
             }
         },
         {
@@ -333,12 +341,12 @@ class CampBeforeTheIncreaseInSales extends Component{
                             searchFieldsValues:params,
                             hasData:data.length !== 0
                         },()=>{
-                            this.state.hasData && this.fetchResultStatus()
+                            this.fetchResultStatus()
                         })
                     },
                     extra:<div>
                         {
-                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>

@@ -211,6 +211,7 @@ class RoomTransactionFile extends Component{
         this.setState({
             tableUpDateKey:Date.now()
         })
+        //this.handleSubmit()
     }
     deleteRecord = (id,cb) => {
         request.delete(`/output/room/files/delete/${id}`)
@@ -239,7 +240,7 @@ class RoomTransactionFile extends Component{
             })
     }
     render(){
-        const {tableUpDateKey,filters,submitDate,dataStatus,hasData} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -272,6 +273,25 @@ class RoomTransactionFile extends Component{
                                                 }
                                             ]
                                         },
+                                    },
+                                    {
+                                        label:'交易月份',
+                                        fieldName:'transactionDate',
+                                        type:'monthPicker',
+                                        formItemStyle,
+                                        span:6,
+                                        componentProps:{
+                                            disabled,
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择交易月份'
+                                                }
+                                            ]
+                                        }
                                     },
                                     {
                                         label:'项目名称',
@@ -330,25 +350,6 @@ class RoomTransactionFile extends Component{
                                         span:6
                                     },
                                     {
-                                        label:'交易月份',
-                                        fieldName:'transactionDate',
-                                        type:'monthPicker',
-                                        formItemStyle,
-                                        span:6,
-                                        componentProps:{
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择交易月份'
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    {
                                         label:'匹配状态',
                                         fieldName:'matchingStatus',
                                         type:'select',
@@ -378,7 +379,7 @@ class RoomTransactionFile extends Component{
                 <Card style={{marginTop:10}} extra={
                     <div>
                         {
-                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
@@ -464,7 +465,7 @@ class RoomTransactionFile extends Component{
                                             hasData:data.length !==0,
                                             searchFieldsValues:params,
                                         },()=>{
-                                            this.state.hasData && this.fetchResultStatus()
+                                            this.fetchResultStatus()
                                         })
                                     },
                                     renderFooter:data=>{

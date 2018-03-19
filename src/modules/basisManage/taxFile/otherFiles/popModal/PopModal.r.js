@@ -128,6 +128,7 @@ class PopModal extends Component {
             title = "修改"
         }
         let buttons = [];
+
         record && record.id
         && buttons.push(<ButtonWithFileUploadModal
             title="附件信息"
@@ -137,9 +138,12 @@ class PopModal extends Component {
             readOnly = {readonly}
             size='default'
             id={record.id}
+            key="fileInfo" 
             uploadUrl={`/other/file/file/upload/${record.id}`}
         />)
-        buttons.push(<Button 
+
+        this.props.action !== "look" 
+        && buttons.push(<Button 
             key="submit" 
             type="primary" 
             loading={this.state.loading} 
@@ -149,9 +153,16 @@ class PopModal extends Component {
             type="danger" 
             key="delete" 
             onClick={this.showConfirm}>删除</Button>)
-        buttons.push(<Button 
+        this.props.action !== "look" 
+            && buttons.push(<Button 
             key="back" 
             onClick={this.hideSelfModal}>取消</Button>)
+
+        this.props.action === "look" 
+            && buttons.push(<Button 
+            key="close" 
+            onClick={this.hideSelfModal}>关闭</Button>)
+
         return (
             <Modal
                 title={title}

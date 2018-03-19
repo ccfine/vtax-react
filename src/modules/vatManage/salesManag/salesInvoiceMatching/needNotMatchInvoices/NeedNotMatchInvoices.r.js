@@ -254,7 +254,7 @@ class NeedNotMatchInvoices extends Component{
             })
     }
     render(){
-        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus,hasData} = this.state;
+        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -298,7 +298,7 @@ class NeedNotMatchInvoices extends Component{
                     url:'/output/invoice/marry/unwanted/list',
                     extra:<div>
                         {
-                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
