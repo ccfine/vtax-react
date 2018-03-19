@@ -327,7 +327,7 @@ class UnmatchedData extends Component{
                     },
                     extra:<div>
                         {
-                            dataStatus && hasData && <div style={{marginRight:30,display:'inline-block'}}>
+                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
                                 <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
