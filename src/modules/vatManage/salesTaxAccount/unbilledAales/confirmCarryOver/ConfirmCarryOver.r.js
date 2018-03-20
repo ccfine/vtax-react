@@ -196,13 +196,13 @@ const columns = [
                 render:text=>fMoney(text),
                 className:'table-money'
             },
-            {
-                title:'未开具发票销售额',
-                dataIndex:'totalNoInvoiceSales',
-                render:text=>fMoney(text),
-                className:'table-money'
-            }
         ]
+    },
+    {
+        title:'未开具发票销售额',
+        dataIndex:'totalNoInvoiceSales',
+        render:text=>fMoney(text),
+        className:'table-money'
     }
 ];
 class ConfirmCarryOver extends Component{
