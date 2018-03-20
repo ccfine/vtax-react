@@ -178,16 +178,24 @@ table.data-grid{
 
 /* 为了兼容ie下 select 错位的问题 */
 
-*.ant-form-explain, .ant-form-extra{
-  margin-top: -6.5px;
+.ant-form-explain, .ant-form-extra{
+  *margin-top: -6.5px;
+  margin-top: -6.5px\9;
 }
-*.ant-calendar-picker-input{
-  display:inline;
+.ant-calendar-picker-input{
+  *display:inline;
+  display:inline\9;
+
+  *padding:4px 0;
+  padding:4px 0\9;
 }
-*.ant-form-item-control.has-error{
-  padding-bottom:12px;
+.ant-form-item-control.has-error{
+  *padding-bottom:12px;
+  padding-bottom:12px\9;
 }
-*.ant-form-item-control.has-error .ant-form-explain{
-  position:absolute;
-  bottom:0
+.ant-form-item-control.has-error .ant-form-explain{
+  *position:absolute;
+  *bottom:0;
+  position:absolute\9;
+  bottom:0\9;
 }
