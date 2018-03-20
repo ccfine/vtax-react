@@ -106,7 +106,9 @@ const getColumns =(context,length)=>[
     },{
         title: '单方土地成本',
         dataIndex: 'singleLandCost',
-        render:text=>fMoney(text),
+        render:text=>{
+            return (text==='' || text ===undefined)?'':fMoney(text)
+        },
         className:'table-money'
     }
 ];
