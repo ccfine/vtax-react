@@ -339,7 +339,7 @@ class AdvanceCarryOver extends Component{
                             }
                             onSuccess={this.refreshTable} style={{marginRight:5}} />
                         <FileExport
-                            url={`/account/output/notInvoiceAdvance/download`}
+                            url={`account/output/notInvoiceAdvance/download`}
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}

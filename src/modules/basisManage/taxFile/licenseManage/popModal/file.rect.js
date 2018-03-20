@@ -115,7 +115,7 @@ class FileModal extends React.Component {
                         // 操作文件按钮
                         const actions = [];
                         actions.push(
-                            <FileExport url={`/${this.props.url}/file/download/${item.id}`} size='small' title='下载' WrapComponent={MyA} />
+                            <FileExport url={`${this.props.url}/file/download/${item.id}`} size='small' title='下载' WrapComponent={MyA} />
                         );
                         readOnly || actions.push(<Popconfirm title="确定要删除吗?" onConfirm={() => { this.deleteRecord(item) }} onCancel={() => { }} okText="确定" cancelText="取消">
                             <a style={noneStyle}><Icon type="delete" /> 删除</a>

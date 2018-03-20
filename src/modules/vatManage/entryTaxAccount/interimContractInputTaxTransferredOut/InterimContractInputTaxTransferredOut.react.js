@@ -374,13 +374,13 @@ class InterimContractInputTaxTransferredOut extends Component {
                             }}
                             style={{marginRight:5}} />
                         <FileExport
-                            url='/account/income/taxContract/adjustment/download'
+                            url='account/income/taxContract/adjustment/download'
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
                         <FileExport
-                            url='/account/income/taxContract/adjustment/export'
+                            url='account/income/taxContract/adjustment/export'
                             title='导出'
                             setButtonStyle={{marginRight:5}}
                             disabled={!dataSource.length>0}

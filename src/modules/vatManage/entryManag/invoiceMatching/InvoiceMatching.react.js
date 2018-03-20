@@ -364,7 +364,7 @@ class InvoiceMatching extends Component {
                         }
                         <AutoFileUpload url={`/income/invoice/marry/upload`} fetchTable_1_Data={this.refreshTable} />
                         <FileExport
-                            url='/income/invoice/marry/download'
+                            url='income/invoice/marry/download'
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}

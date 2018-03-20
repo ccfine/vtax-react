@@ -338,7 +338,7 @@ class InvoiceCollection extends Component {
                               }}
                               style={{marginRight:5}} />
                           <FileExport
-                              url={`/income/invoice/collection/download`}
+                              url={`income/invoice/collection/download`}
                               title="下载导入模板"
                               size="small"
                               setButtonStyle={{marginRight:5}}

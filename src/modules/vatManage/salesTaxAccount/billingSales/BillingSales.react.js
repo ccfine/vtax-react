@@ -327,7 +327,7 @@ class BillingSales extends Component {
                               dataSource.length>0 && listMainResultStatus(statusParam)
                           }
                           <FileExport
-                              url={`/account/output/billingSale/export`}
+                              url={`account/output/billingSale/export`}
                               title='导出'
                               setButtonStyle={{marginRight:5}}
                               disabled={!dataSource.length>0}
@@ -381,7 +381,7 @@ class BillingSales extends Component {
                 </Card>
                 <Card title="开票销售统计表-非地产" extra={<div>
                     <FileExport
-                        url={`/account/output/billingSale/export`}
+                        url={`account/output/billingSale/export`}
                         title='导出'
                         setButtonStyle={{marginRight:5}}
                         disabled={!dataSource2.length>0}
