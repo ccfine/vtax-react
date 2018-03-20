@@ -52,10 +52,12 @@ const getColumns = context => ([
     }, {
         title: '检查期间',
         dataIndex: 'checkStart',
+        className:'text-center',
         render: (text, record) => <span>{record.checkStart} ~ {record.checkEnd}</span>
     }, {
         title: '检查实施时间',
         dataIndex: 'checkImplementStart',
+        className:'text-center',
         render: (text, record) => <span>{record.checkImplementStart} ~ {record.checkImplementEnd}</span>
     }, {
         title: '文档编号',
@@ -78,6 +80,7 @@ const getColumns = context => ([
     }, {
         title: '是否有附件',
         dataIndex: 'attachment',
+        className:'text-center',
         render: text => text ? '是' : '否'
     }])
 
@@ -96,7 +99,7 @@ export default class InspectionReport extends Component {
     }
     render() {
         let { updateKey } = this.state; 
-        return (<div>
+        return (
             <SearchTable
                 searchOption={{
                     fields: searchFields
@@ -110,18 +113,19 @@ export default class InspectionReport extends Component {
                     </div>,
                     cardProps: {
                         title: '稽查报告'
+                    },
+                    scroll:{
+                        x:'130%'
                     }
                 }}
             >
-            </SearchTable>
-            
-            <PopModal
+                <PopModal
                     visible={this.state.visible}
                     action={this.state.action}
                     hideModal={() => { this.hideModal() }}
                     id={this.state.opid}
                     update={this.update} />
-        </div>
+            </SearchTable>
         )
     }
 }
