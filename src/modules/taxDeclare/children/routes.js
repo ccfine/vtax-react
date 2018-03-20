@@ -3,9 +3,15 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from '../../../compoments'
-import CreateADeclare from '../../taxDeclare/createADeclare'
+import LoadAble from 'react-loadable'
+import {wrapPage,LoadingPage} from '../../../compoments'
+/*import CreateADeclare from '../../taxDeclare/createADeclare'*/
 import SearchDeclare from '../../taxDeclare/searchDeclare'
+
+const AsyncCreateADeclare = LoadAble({
+    loader: () => import('../../taxDeclare/createADeclare'),
+    loading: LoadingPage,
+});
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/taxDeclare`
@@ -13,7 +19,7 @@ const PATH = `/web/taxDeclare`
 const Children_Routes = [
     {
         path:`${PATH}/createADeclare`,
-        component:wrapPage('创建申报',CreateADeclare),
+        component:wrapPage('创建申报',AsyncCreateADeclare),
         name:'创建申报',
         icon:{
             url:`${ICON_URL_PATH}createAMatter.svg`,

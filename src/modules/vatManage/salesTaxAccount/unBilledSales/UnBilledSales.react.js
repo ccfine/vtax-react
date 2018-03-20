@@ -8,7 +8,7 @@ import AdvanceCarryOver from './advanceCarryOver'
 import InvoicesWithNeedNotMatchRoom from './invoicesWithNeedNotMatchRoom'
 const TabPane = Tabs.TabPane;
 
-export default class UnbilledAales extends Component{
+export default class UnBilledSales extends Component{
     state = {
         activeKey:'1'
     }

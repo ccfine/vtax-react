@@ -4,10 +4,11 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import LoadAble from 'react-loadable'
+import {wrapPage,LoadingPage} from '../../../compoments'
 import RoomTransactionFile from './roomTransactionFile'
 import PrePaidSalesQuery from './prePaidHousingSales'
-import TaxReturnForm from './taxReturnForm'
+/*import TaxReturnForm from './taxReturnForm'*/
 const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
 const VATPrepaymentForm =()=><div>增值税预缴表</div>
 const RoomFileSummaryQuery =()=><div>房间档案汇总查询</div>
@@ -19,6 +20,11 @@ const TaxFileQuery =()=><div>税务档案查询</div>
 const DeclareParametersQuery =()=><div>申报参数查询</div>
 const InvoiceQuery =()=><div>发票查询</div>
 const DeclareQuery =()=><div>申报查询</div>
+
+const AsyncTaxReturnForm = LoadAble({
+    loader: () => import('./taxReturnForm'),
+    loading: LoadingPage,
+});
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -143,7 +149,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/taxReturn`,
-        component:wrapPage('纳税申报表',TaxReturnForm),
+        component:wrapPage('纳税申报表',AsyncTaxReturnForm),
         name:'纳税申报表',
         icon:{
             url:`${ICON_URL_PATH}declareQuery.svg`,

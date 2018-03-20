@@ -92,6 +92,7 @@ const columns= [
     },{
         title: '税率（征收率）',
         dataIndex: 'taxRate',
+        render:text=>`${text}%`,
     },{
         title: '土地出让合同编号',
         dataIndex: 'contractNum',

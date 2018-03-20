@@ -139,7 +139,7 @@ class VTaxSider extends Component {
                     selectedKeys={[this.state.selectedPath]}
                     onOpenChange={this.onOpenChange}
                     openKeys={this.state.openKeys}
-                    style={{ margin: '16px 0', width: '100%' }}
+                    style={{ marginTop: '16px', width: '100%' }}
                 >
                     {this.getNavMenuItems(this.props.menusData)}
                 </Menu>
