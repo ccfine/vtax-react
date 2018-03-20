@@ -337,7 +337,7 @@ class UnmatchedData extends Component{
                             </div>
                         }
                         <FileExport
-                            url={`/output/invoice/marry/unmatched/export`}
+                            url={`output/invoice/marry/unmatched/export`}
                             title="导出未匹配发票"
                             size="small"
                             setButtonStyle={{marginRight:5}}

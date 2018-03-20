@@ -360,7 +360,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                             新增
                         </Button>
                         <FileExport
-                            url='/output/sellinghouse/download'
+                            url='output/sellinghouse/download'
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}

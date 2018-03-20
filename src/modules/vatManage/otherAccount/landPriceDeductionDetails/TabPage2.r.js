@@ -155,13 +155,13 @@ export default class TabPage extends Component{
                     }}
                     style={{marginRight:5}} />
                 <FileExport
-                    url='/carryover/incomeDetails/download'
+                    url='carryover/incomeDetails/download'
                     title="下载导入模板"
                     setButtonStyle={{marginTop:10,marginRight:5}}
                     size='small'
                 />
                 <FileExport
-                    url='/carryover/incomeDetails/export'
+                    url='carryover/incomeDetails/export'
                     title='导出'
                     setButtonStyle={{marginRight:5}}
                     disabled={!dataSource.length>0}
