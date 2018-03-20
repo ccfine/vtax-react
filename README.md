@@ -1,3 +1,17 @@
+# 纳税申报平台 ![version.svg](https://img.shields.io/badge/version-v0.1.5-519dd9.svg)
+
+主要使用：
+
+- [react](https://github.com/facebook/react) --- UI层构建基础
+- [redux](https://github.com/reactjs/redux) --- 数据层
+- [react-router](https://github.com/ReactTraining/react-router) --- 页面路由
+- [ant design](https://ant.design) --- 组件库
+- less、sass
+
+## 导航
+
+
+
 ## Commitizen
 > 使用目的:统一commit格式，增加可阅读性，自动生成版本的 changelog
 
