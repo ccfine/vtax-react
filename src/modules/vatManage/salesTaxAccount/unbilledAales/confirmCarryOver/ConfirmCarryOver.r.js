@@ -157,6 +157,29 @@ const columns = [
         children:[
             {
                 title:'增值税收入确认金额合计',
+                dataIndex:'totalPrice',
+                render:text=>fMoney(text),
+                className:'table-money'
+            },
+            {
+                title:'增值税开票金额',
+                dataIndex:'totalAmount',
+                render:text=>fMoney(text),
+                className:'table-money'
+            },
+            {
+                title:'未开具发票销售额',
+                dataIndex:'noInvoiceSales',
+                render:text=>fMoney(text),
+                className:'table-money'
+            },
+        ]
+    },
+    {
+        title:'本期末合计金额',
+        children:[
+            {
+                title:'增值税收入确认金额合计',
                 dataIndex:'endTotalPrice',
                 render:text=>fMoney(text),
                 className:'table-money'
@@ -176,33 +199,10 @@ const columns = [
         ]
     },
     {
-        title:'本期末合计金额',
-        children:[
-            {
-                title:'增值税收入确认金额合计',
-                dataIndex:'totalPrice',
-                render:text=>fMoney(text),
-                className:'table-money'
-            },
-            {
-                title:'增值税开票金额',
-                dataIndex:'totalAmount',
-                render:text=>fMoney(text),
-                className:'table-money'
-            },
-            {
-                title:'未开具发票销售额',
-                dataIndex:'noInvoiceSales',
-                render:text=>fMoney(text),
-                className:'table-money'
-            },
-            {
-                title:'未开具发票销售额',
-                dataIndex:'totalNoInvoiceSales',
-                render:text=>fMoney(text),
-                className:'table-money'
-            }
-        ]
+        title:'未开具发票销售额',
+        dataIndex:'totalNoInvoiceSales',
+        render:text=>fMoney(text),
+        className:'table-money'
     }
 ];
 class ConfirmCarryOver extends Component{
