@@ -10,7 +10,48 @@
 
 ## 导航
 
+- [Commitizen](#Commitizen)
+- [模块](#模块)
 
+## 模块
+> 基于 ```modules``` 目录下
+- 基础管理--``basisManage``
+    - 基础信息--``basicInfo``
+        - 纳税主体--``aubjectOfTaxPayment``
+        - 税收优惠--``taxIncentives``
+        - 申报参数--``declareParameter``
+    - 税务档案--``taxFile``
+        - 申报档案--``declareFile``
+        - 稽查报告--``inspectionReport``
+        - 备案资料--``filingMaterial``
+        - 证照管理--``licenseManage``
+        - 其他档案--``otherFiles``
+- 增值税管理--``vatManage``
+    - 销项管理--``salesManag``
+        - 销项发票采集--``salesInvoiceCollection``
+        - 销项发票匹配--``salesInvoiceMatching``
+        - 营改增前售房--``campBeforeTheIncreaseInSales``
+    - 销项管理(台帐)--``salesTaxAccount``
+        - 开票销售台帐--``billingSales``
+        - 未开票销售台帐--``unBilledSales``
+        - 其他涉税调整台账--``otherTaxAdjustment``
+    - 进项管理--``entryManag``
+    - 土地价款--``landPrice``
+    - 其他台帐--``otherAccount``
+- 纳税申报
+    - 创建申报
+    - 查询申报
+- 报表管理
+    - 业务报表
+    - 管理分析报表
+- 系统管理
+    - 组织架构
+    - 用户权限
+    - 系统维护
+    - 接口管理
+    - 流程管理
+    - 系统监控
+        
 
 ## Commitizen
 > 使用目的:统一commit格式，增加可阅读性，自动生成版本的 changelog
