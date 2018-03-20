@@ -3,17 +3,17 @@
 主要使用：
 
 - [react](https://github.com/facebook/react) --- UI层构建基础
-- [redux](https://github.com/reactjs/redux) --- 数据层
-- [react-router](https://github.com/ReactTraining/react-router) --- 页面路由
+- [redux](https://github.com/reactjs/redux) --- 数据状态管理
+- [react-router](https://github.com/ReactTraining/react-router) --- 路由
 - [ant design](https://ant.design) --- 组件库
 - less、sass
 
 ## 导航
 
 - [Commitizen](#Commitizen)
-- [模块](#模块)
+- [模块目录](#模块目录)
 
-## 模块
+## 模块目录
 > 基于 ```modules``` 目录下
 - 基础管理--``basisManage``
     - 基础信息--``basicInfo``
@@ -38,6 +38,8 @@
     - 进项管理--``entryManag``
     - 土地价款--``landPrice``
     - 其他台帐--``otherAccount``
+        - 售房预缴台账--``prePaidHousingSales``
+        - 预缴税款台账--``prepayTax``
 - 纳税申报
     - 创建申报
     - 查询申报
