@@ -181,7 +181,7 @@ class PopInvoiceInformationModal extends Component{
                 </Card>
                 {/*extra={<div>
                 <FileExport
-                    url='/income/invoice/marry/download'
+                    url='income/invoice/marry/download'
                     title="导出"
                     size="small"
                     setButtonStyle={{marginRight:5}}

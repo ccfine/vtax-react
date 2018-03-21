@@ -131,7 +131,7 @@ export default class TabPage extends Component{
                         }}
                         style={{marginRight:5}} />
                     <FileExport
-                        url='/account/income/taxContract/detail/download'
+                        url='account/income/taxContract/detail/download'
                         title="下载导入模板"
                         size="small"
                         setButtonStyle={{marginRight:5}}

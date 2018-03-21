@@ -175,7 +175,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                     <Icon type="rollback" />
                     撤回提交
                 </Button>
-                <FileExport url={`/account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle} />
+                <FileExport url={`account/income/taxout/download`} title='下载模板' size='small' setButtonStyle={buttonStyle} />
                 <FileImportModal
                     style={buttonStyle}
                     url="/account/income/taxout/upload"

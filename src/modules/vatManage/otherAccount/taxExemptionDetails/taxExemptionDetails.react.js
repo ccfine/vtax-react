@@ -235,7 +235,14 @@ class TaxExemptionDetails extends Component{
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.refreshTable()
+            this.setState({
+                filters:{
+                    mainId:getUrlParam('mainId') || undefined,
+                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
         }
     }
     render(){
@@ -300,7 +307,7 @@ class TaxExemptionDetails extends Component{
                             style={{marginRight:5}}
                         />
                         <FileExport
-                            url='/account/other/reduceTaxDetail/detail/download'
+                            url='account/other/reduceTaxDetail/detail/download'
                             title="下载导入模板"
                             setButtonStyle={{marginRight:5}}
                         />
@@ -313,7 +320,7 @@ class TaxExemptionDetails extends Component{
                             <Icon type="delete" />删除
                         </Button>
                         <FileExport
-                            url='/account/other/reduceTaxDetail/export'
+                            url='account/other/reduceTaxDetail/export'
                             title='导出'
                             setButtonStyle={{marginRight:5}}
                             disabled={!dataSource.length>0}

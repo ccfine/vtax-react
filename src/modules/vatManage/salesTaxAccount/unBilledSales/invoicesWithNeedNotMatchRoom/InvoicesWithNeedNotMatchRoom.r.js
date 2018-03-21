@@ -96,7 +96,7 @@ const columns = [
     {
         title:'税率',
         dataIndex:'taxRate',
-        render:text=>text? `${text}%` : ''
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'税额',

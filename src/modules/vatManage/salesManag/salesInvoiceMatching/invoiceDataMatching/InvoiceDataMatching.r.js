@@ -261,7 +261,8 @@ const getColumns = context => [
     },
     {
         title:'税率',
-        dataIndex:'taxRate'
+        dataIndex:'taxRate',
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'税额',
@@ -452,7 +453,7 @@ class InvoiceDataMatching extends Component{
                             数据匹配
                         </Button>
                         <FileExport
-                            url={`/output/invoice/marry/already/export`}
+                            url={`output/invoice/marry/already/export`}
                             title="导出匹配列表"
                             size="small"
                             disabled={!hasData}

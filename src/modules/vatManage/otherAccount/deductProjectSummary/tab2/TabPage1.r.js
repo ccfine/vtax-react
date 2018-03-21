@@ -54,9 +54,21 @@ const columns = [{
 },{
     title: '计税方法',
     dataIndex: 'taxMethod',
+    render:text=>{
+        //1一般计税方法，2简易计税方法 ,
+        text = parseInt(text,0);
+        if(text===1){
+            return '一般计税方法'
+        }
+        if(text ===2){
+            return '简易计税方法'
+        }
+        return text;
+    }
 },{
     title: '税率',
     dataIndex: 'taxRate',
+    render:text=>text? `${text}%`: text,
 },{
     title: '价税合计 ',
     dataIndex: 'totalAmount',

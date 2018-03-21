@@ -270,7 +270,7 @@ class InputTaxOnFixedAssets extends Component {
                         }}
                         style={{marginRight:5}} />
                     <FileExport
-                        url='/account/income/fixedAssets/download'
+                        url='account/income/fixedAssets/download'
                         title="下载导入模板"
                         setButtonStyle={{marginTop:10,marginRight:5}}
                         size='small'

@@ -128,7 +128,7 @@ const columns = [
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
-        render:text=>text ? `${text}%` : ''
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'预结转收入金额',
@@ -339,7 +339,7 @@ class AdvanceCarryOver extends Component{
                             }
                             onSuccess={this.refreshTable} style={{marginRight:5}} />
                         <FileExport
-                            url={`/account/output/notInvoiceAdvance/download`}
+                            url={`account/output/notInvoiceAdvance/download`}
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}

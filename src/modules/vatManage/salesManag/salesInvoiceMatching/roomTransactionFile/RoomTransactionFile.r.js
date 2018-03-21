@@ -443,7 +443,7 @@ class RoomTransactionFile extends Component{
                             }}
                             style={{marginRight:5}} />
                         <FileExport
-                            url='/output/room/files/download'
+                            url='output/room/files/download'
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight:5}}

@@ -126,6 +126,7 @@ const columns = [
             {
                 title:'税率',
                 dataIndex:'taxRate',
+                render:text=>text? `${text}%`: text,
             },
         ]
     },
@@ -344,7 +345,7 @@ class ConfirmCarryOver extends Component{
                         }
                         <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />汇总表</Button>
                         <FileExport
-                            url={`/account/output/notInvoiceSale/export`}
+                            url={`account/output/notInvoiceSale/export`}
                             title="导出"
                             size="small"
                             disabled={!hasData}

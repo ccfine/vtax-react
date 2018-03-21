@@ -160,7 +160,7 @@ class PopInvoiceInformationModal extends Component{
                 </Card>
                 <Card extra={<div>
                     <FileExport
-                        url='/account/output/billingSale/detail/export'
+                        url='account/output/billingSale/detail/export'
                         title='导出'
                         setButtonStyle={{marginRight:5}}
                         disabled={!dataSource.length>0}

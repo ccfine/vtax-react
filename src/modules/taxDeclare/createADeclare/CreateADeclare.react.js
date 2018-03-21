@@ -254,14 +254,14 @@ export default class CreateADeclare extends Component{
                                 流程终止
                             </Button>
                             <FileExport
-                                url='/account/income/taxContract/adjustment/download'
+                                url='account/income/taxContract/adjustment/download'
                                 title="下载附件"
                                 size="small"
                                 setButtonStyle={{marginRight:5}}
                                 disabled={!selectedRowKeys}
                             />
                             <FileExport
-                                url='/tax/declaration/export'
+                                url='tax/declaration/export'
                                 title='导出'
                                 setButtonStyle={{marginRight:5}}
                                 disabled={!dataSource.length>0}

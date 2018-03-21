@@ -3,13 +3,19 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from '../../../compoments'
+import LoadAble from 'react-loadable'
+import {wrapPage,LoadingPage} from '../../../compoments'
 import SalesInvoiceCollection from './salesInvoiceCollection'
 import SalesInvoiceMatching from './salesInvoiceMatching'
 import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
 import BillingSales from '../salesTaxAccount/billingSales'
-import UnbilledAales from '../salesTaxAccount/unbilledAales'
+/*import UnBilledSales from '../salesTaxAccount/unBilledSales'*/
 import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
+
+const AsyncUnBilledSales = LoadAble({
+    loader: () => import('../salesTaxAccount/unBilledSales'),
+    loading: LoadingPage,
+});
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/salesManag`;
@@ -52,8 +58,8 @@ const SalesManag_Routes = [
         },
         exact:true,
     },{
-        path:`${PATH}/unbilledAales`,
-        component:wrapPage('未开票销售台账',UnbilledAales),
+        path:`${PATH}/unBilledSales`,
+        component:wrapPage('未开票销售台账',AsyncUnBilledSales),
         name:'未开票销售台账',
         icon:{
             url:`${ICON_URL_PATH}unbilledAales.svg`,

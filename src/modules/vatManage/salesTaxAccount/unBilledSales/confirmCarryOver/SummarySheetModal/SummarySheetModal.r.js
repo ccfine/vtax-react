@@ -25,7 +25,7 @@ const columns = [
     {
         title:'税率',
         dataIndex:'taxRate',
-        render:text=>`${text}%`
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'本期应申报的未开票发票销售额',

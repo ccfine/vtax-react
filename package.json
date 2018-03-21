@@ -1,6 +1,6 @@
 {
   "name": "vtax",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.8.0",
@@ -44,7 +44,8 @@
     "cz-conventional-changelog": "^2.1.0",
     "lodash": "^4.17.5",
     "react-app-rewired": "^1.3.8",
-    "react-datasheet": "^1.3.0"
+    "react-datasheet": "^1.3.0",
+    "react-loadable": "^5.3.1"
   },
   "config": {
     "commitizen": {
