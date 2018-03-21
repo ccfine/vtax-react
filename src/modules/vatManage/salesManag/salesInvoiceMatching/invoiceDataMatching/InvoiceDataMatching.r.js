@@ -261,7 +261,8 @@ const getColumns = context => [
     },
     {
         title:'税率',
-        dataIndex:'taxRate'
+        dataIndex:'taxRate',
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'税额',

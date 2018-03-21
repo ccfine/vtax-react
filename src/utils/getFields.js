@@ -199,7 +199,7 @@ const getFields = (form,fieldsData=[]) =>{
             )
         }else{
             return (
-                <Col key={i} span={item['span'] || 8}>
+                <Col key={i} span={item['span'] || 8} className={type==='textArea' ? 'fix-ie10-formItem-textArea' : ''}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']

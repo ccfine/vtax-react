@@ -128,7 +128,7 @@ const columns = [
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
-        render:text=>text ? `${text}%` : ''
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'预结转收入金额',

@@ -70,7 +70,7 @@ class PopModal extends Component{
     },{
         title: '税率',
         dataIndex: 'taxRate',
-        render:text=>`${text}%`,
+        render:text=>text? `${text}%`: text,
     },{
         title: '税额',
         dataIndex: 'taxAmount',
