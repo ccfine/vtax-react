@@ -206,7 +206,6 @@ const columns = [
     {
         title:'项目',
         dataIndex:'projectName',
-        width:'120px'
     },
     {
         title:'分期',
