@@ -26,10 +26,10 @@ const getColumns = context => ([
         title: '操作',
         render(text, record, index) {
             return (<span>
-                <a style={{ marginRight: "5px" }} onClick={() => {
+                <a style={{margin:"0 5px" }} onClick={() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
                 }}>修改</a>
-                <a style={{ marginRight: "5px" }} onClick={() => {
+                <a style={{marginRight:5}} onClick={() => {
                     context.setState({ visible: true, action: 'look', opid: record.id });
                 }}>查看</a>
             </span>)

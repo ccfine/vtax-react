@@ -176,7 +176,7 @@ class LandPriceModal extends React.Component {
             }}
             style={{ maxWidth: '90%' }}
             width={920}
-            bodyStyle={{ maxHeight: "500px", overflow: "auto" }}
+            bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
             maskClosable={false}
             destroyOnClose={true}
         >

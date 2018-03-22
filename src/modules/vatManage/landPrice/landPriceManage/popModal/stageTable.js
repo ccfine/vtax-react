@@ -3,12 +3,6 @@ import {Table,Card} from "antd";
 import StageModal from './stagePopModal';
 import {fMoney,toPercent} from '../../../../../utils';
 
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff',
-    marginRight:"5px"
-}
-
 const getColumns =(context,length)=>[
     {
         title:'操作',
@@ -18,15 +12,15 @@ const getColumns =(context,length)=>[
                 return (<span>合计：</span>)
             }else if(context.props.readOnly){
                 return (<div>
-                    <span style={pointerStyle} onClick={()=>{
-                        context.setState({visible:true,readOnly:true,stage:record});}}>查看</span>
+                    <a style={{margin:'0 5px'}} onClick={()=>{
+                        context.setState({visible:true,readOnly:true,stage:record});}}>查看</a>
                 </div>);
             }else{
             return (<div>
-                <span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,readOnly:false,stage:record});}}>编辑</span>
-                <span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,readOnly:true,stage:record});}}>查看</span>
+                <a style={{margin:'0 5px'}} onClick={()=>{
+                    context.setState({visible:true,readOnly:true,stage:record});}}>查看</a>
+                <a style={{marginRight:5}} onClick={()=>{
+                    context.setState({visible:true,readOnly:false,stage:record});}}>编辑</a>
             </div>);
             }
         },

@@ -6,11 +6,6 @@ import { SearchTable } from '../../../../compoments';
 import PopModal from "./popModal";
 import { fMoney } from '../../../../utils'
 import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-const pointerStyle = {
-    cursor: 'pointer',
-    color: '#1890ff',
-    marginRight: '5px'
-}
 
 const searchFields = [
     {
@@ -25,12 +20,12 @@ const getColumns = (context) => [
         key: 'actions',
         render: (text, record) => (
             <div>
-                <span style={pointerStyle} onClick={() => {
+                <a style={{margin:'0 5px'}} onClick={() => {
                     context.setState({ opid: record.id, readOnly: false, visible: true, updateKey: Date.now() });
-                }}>编辑</span>
-                <span style={pointerStyle} onClick={() => {
+                }}>编辑</a>
+                <a style={{marginRight:5}} onClick={() => {
                     context.setState({ opid: record.id, readOnly: true, visible: true, updateKey: Date.now() });
-                }}>查看</span>
+                }}>查看</a>
             </div>
         ),
         fixed: 'left',

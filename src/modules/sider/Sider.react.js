@@ -102,9 +102,16 @@ class VTaxSider extends Component {
 
         /* 选中项设置 */
         if(pathArr.length>2+start){
-            this.setState({
-                selectedPath: `/${pathArr[start]}/${pathArr[start+1]}/${pathArr[start+2]}`,
-            });
+            /**纳税申报是一级所以做一下特殊处理*如下**/
+            if(path.indexOf('web/taxDeclare')>=0){
+                this.setState({
+                    selectedPath: `/${pathArr[start]}/${pathArr[start+1]}`,
+                });
+            }else{
+                this.setState({
+                    selectedPath: `/${pathArr[start]}/${pathArr[start+1]}/${pathArr[start+2]}`,
+                });
+            }
         }
     }
     onOpenChange = (openKeys) => {

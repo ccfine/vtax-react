@@ -90,7 +90,7 @@ class PopModal extends Component{
                 width={1920}
                 bodyStyle={{
                     padding:0,
-                    height:550,
+                    height:450,
                     overflowY:'auto'
                 }}
                 style={{
