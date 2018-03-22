@@ -3,12 +3,6 @@ import {Table,Card,Popconfirm,Icon,Button} from "antd";
 import PopModal from "./sourcePopModal/popModal";
 import {fMoney} from '../../../../../utils';
 
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff',
-    marginRight:'5px'
-}
-
 const renderContent =function(length){ return ((value, row, index) => {
     const obj = {
       children: value,
@@ -31,22 +25,22 @@ const getColumns =(context, length)=>[
               }
             else {return (
             <div>
-                {context.props.readOnly ||<span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,source:record,readOnly:false,action:"modify"});}}>编辑</span>
+                {context.props.readOnly ||<a style={{margin:'0 5px'}} onClick={()=>{
+                    context.setState({visible:true,source:record,readOnly:false,action:"modify"});}}>编辑</a>
                 }
-                <span style={pointerStyle} onClick={()=>{
-                    context.setState({visible:true,source:record,readOnly:true,action:"modify"});}}>查看</span>
+                <a style={{margin:context.props.readOnly?'0 5px':'0 5px 0 0'}} onClick={()=>{
+                    context.setState({visible:true,source:record,readOnly:true,action:"modify"});}}>查看</a>
                 {context.props.readOnly ||
                  <Popconfirm placement="bottom" title={`是否确认删除？`} onConfirm={()=>{
                         context.props.deleteSource(record)}} okText="确认" cancelText="取消">
-                    <span style={pointerStyle}>删除</span>
+                    <a style={{marginRight:5}}>删除</a>
                     </Popconfirm>
                 }
             </div>);
         }
     },
         fixed:'left',
-        width:context.props.readOnly ?'50px':'100px'
+        width:context.props.readOnly ?'45px':'100px'
     },
     {
         title: '付款类型',

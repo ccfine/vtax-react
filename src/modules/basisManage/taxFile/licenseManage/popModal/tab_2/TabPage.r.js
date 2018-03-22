@@ -10,14 +10,14 @@ const getColumns = context=>[
         render(text, record, index){
             return(
                 <span>
-                <a style={{marginRight:"5px"}} onClick={()=>{
+                <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',oprecord:record});
                 }}>修改</a>
                 </span>
             );
         },
         fixed:'left',
-        width:'50px',
+        width:'45px',
         dataIndex:'action'
     },
     {
