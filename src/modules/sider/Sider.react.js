@@ -102,8 +102,8 @@ class VTaxSider extends Component {
 
         /* 选中项设置 */
         if(pathArr.length>2+start){
-            /**纳税申报是一级所以做一下特殊处理*/
-            if(path.indexOf('taxDeclare')>=0){
+            /**纳税申报是一级所以做一下特殊处理*如下**/
+            if(path.indexOf('web/taxDeclare')>=0){
                 this.setState({
                     selectedPath: `/${pathArr[start]}/${pathArr[start+1]}`,
                 });
