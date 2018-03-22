@@ -183,9 +183,24 @@ table.data-grid{
 .ant-form-item-label, .ant-form-item-control{
   height: 48px;
 }
+.fix-ie10-formItem-fileUpload .ant-form-item-label, .fix-ie10-formItem-fileUpload .ant-form-item-control {
+  min-height: 48px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
 .fix-ie10-formItem-textArea .ant-form-item-label, .fix-ie10-formItem-textArea .ant-form-item-control{
-  height: auto;
+  /*height: auto;*/
+  margin-top: 6px;
+  margin-bottom: 12px;
 }
 .fix-ie10-formItem-textArea .has-error .ant-form-explain{
   margin-top: 0.5px;
+}
+
+
+/* 为了设置radioGroup 垂直显示的css radioStyle */
+.radioStyle{
+  display: block;
+  height: 30px;
+  line-height: 30px;
 }

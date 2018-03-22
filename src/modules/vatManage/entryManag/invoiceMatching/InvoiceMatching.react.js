@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
-import {AsyncTable,AutoFileUpload,FileExport} from '../../../../compoments'
+import {AsyncTable,FileImportModal,FileExport} from '../../../../compoments'
 import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {request,fMoney,getFields,getUrlParam,listMainResultStatus} from '../../../../utils'
 import PopDifferenceModal from './popModal'
@@ -15,6 +15,52 @@ const TabPane = Tabs.TabPane;
 const buttonStyle={
     marginRight:5
 }
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:15
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:15
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: '请选择认证月份'
+                }
+            ]
+        },
+    }
+]
 class InvoiceMatching extends Component {
     state={
         /**
@@ -30,7 +76,10 @@ class InvoiceMatching extends Component {
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
-        tableUpDateKey:Date.now(),
+        tabsUpdateKey:Date.now(),
+        tab1UpdateKey:Date.now(),
+        tab2UpdateKey:Date.now(),
+        tab3UpdateKey:Date.now(),
         dataSource:[],
         selectedRowKeys:null,
         selectedRows:null,
@@ -105,7 +154,7 @@ class InvoiceMatching extends Component {
                     selectedRowKeys:null,
                     filters:values
                 },()=>{
-                    this.refreshTable()
+                    this.onTabChange(this.state.activeKey)
                 });
             }
         });
@@ -120,7 +169,7 @@ class InvoiceMatching extends Component {
                     authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
-                this.refreshTable()
+                this.onTabChange(this.state.activeKey)
             });
         }
     }
@@ -142,7 +191,7 @@ class InvoiceMatching extends Component {
     }
     refreshTable = ()=>{
         this.setState({
-            tableUpDateKey:Date.now()
+            [`${this.state.activeKey}UpdateKey`]:Date.now()
         },()=>{
             this.updateStatus();
         })
@@ -180,16 +229,16 @@ class InvoiceMatching extends Component {
     }
     onTabChange = (activeKey) => {
         this.setState({
-            activeKey
+            activeKey,
         },()=>{
             if(JSON.stringify(this.state.filters) !== "{}"){
-                this.updateStatus();
+                this.refreshTable(activeKey)
             }
         });
 
     }
-    tabInitDate = (activeKey)=>{
-        const {tableUpDateKey,filters,selectedRowKeys} = this.state;
+    tabInitDate = (activeKey,tableUpDateKey)=>{
+        const {filters,selectedRowKeys} = this.state;
         const rowSelection = {
             type:'radio',
             selectedRowKeys,
@@ -255,8 +304,7 @@ class InvoiceMatching extends Component {
         request.put('/income/invoice/marry/marry')
             .then(({data})=>{
                 if (data.code === 200) {
-                    message.success('数据匹配成功!');
-                    this.refreshTable();
+                    message.success('数据匹配成功请查询!');
                 } else {
                     message.error(data.msg)
                 }
@@ -283,19 +331,19 @@ class InvoiceMatching extends Component {
     }
 
     render() {
-        const {selectedRowKeys,selectedRows,visible,dataSource,statusParam} = this.state;
+        const {tab1UpdateKey,tab2UpdateKey,tab3UpdateKey,selectedRowKeys,selectedRows,visible,dataSource,statusParam} = this.state;
         const tabList = [{
             key: 'tab1',
             tab: '完全匹配',
-            content:this.tabInitDate('tab1')
+            content:this.tabInitDate('tab1', tab1UpdateKey)
         },{
             key: 'tab2',
             tab: '无法匹配',
-            content:this.tabInitDate('tab2')
+            content:this.tabInitDate('tab2', tab2UpdateKey)
         }, {
             key: 'tab3',
             tab: '发票信息不匹配',
-            content:this.tabInitDate('tab3')
+            content:this.tabInitDate('tab3', tab3UpdateKey)
         }]
         const {search} = this.props.location;
         let disabled = !!search;
@@ -351,7 +399,21 @@ class InvoiceMatching extends Component {
                             <Col span={12} style={{textAlign:'right'}}>
                                 <Form.Item>
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                <Button
+                                    style={{marginLeft:10}}
+                                    size='small'
+                                    onClick={()=>{
+                                        this.props.form.resetFields()
+                                        this.setState({
+                                            filters:{},
+                                            activeKey:'tab1',
+                                            dataSource:[],
+                                            tabsUpdateKey:Date.now(),
+                                        })
+                                    }}
+                                >
+                                    重置
+                                </Button>
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -362,7 +424,11 @@ class InvoiceMatching extends Component {
                         {
                             dataSource.length>0 && listMainResultStatus(statusParam)
                         }
-                        <AutoFileUpload url={`/income/invoice/marry/upload`} fetchTable_1_Data={this.refreshTable} />
+                        <FileImportModal
+                            url="/income/invoice/marry/upload"
+                            title="导入"
+                            fields={fields}
+                            style={{marginRight:5}} />
                         <FileExport
                             url='income/invoice/marry/download'
                             title="下载导入模板"
@@ -386,6 +452,7 @@ class InvoiceMatching extends Component {
                     <div className="card-container">
 
                         <Tabs type="card"
+                              key={this.state.tabsUpdateKey}
                               activeKey={this.state.activeKey}
                               onChange={(key) => { this.onTabChange(key, 'tab1'); }}
                               tabBarExtraContent={
@@ -398,7 +465,7 @@ class InvoiceMatching extends Component {
                             {
                                 tabList.map(item=>{
                                     return (
-                                        <TabPane tab={item.tab} key={item.key} forceRender={true}>
+                                        <TabPane tab={item.tab} key={item.key}>
                                             {item.content}
                                         </TabPane>
                                     )
