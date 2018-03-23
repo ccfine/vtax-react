@@ -129,7 +129,8 @@ class PopModal extends Component{
             title={title}
             visible={this.props.visible}
             width='850px'
-            bodyStyle={{maxHeight:"500px",overflow:"auto"}}
+            style={{top:'5%'}}
+            bodyStyle={{maxHeight:450,overflow:"auto"}}
             onCancel={()=>{this.hideModal()}}
             footer={[
                 record && record.id
