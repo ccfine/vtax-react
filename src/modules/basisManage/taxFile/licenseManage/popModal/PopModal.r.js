@@ -90,12 +90,13 @@ class PopModal extends Component{
                 width={1920}
                 bodyStyle={{
                     padding:0,
-                    height:450,
+                    height:500,
                     overflowY:'auto'
                 }}
                 style={{
                     width:'90%',
-                    maxWidth:'900px'
+                    maxWidth:'900px',
+                    top:'5%'
                 }}
                 visible={props.visible}>
                 <Tabs tabPosition={this.state.tabPosition} size="small">

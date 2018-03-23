@@ -174,9 +174,9 @@ class LandPriceModal extends React.Component {
                 this.props.hideModal();
                 this.props.form.resetFields();
             }}
-            style={{ maxWidth: '90%' }}
+            style={{ maxWidth: '90%' ,top:'5%'}}
             width={920}
-            bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
+            bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
             maskClosable={false}
             destroyOnClose={true}
         >
