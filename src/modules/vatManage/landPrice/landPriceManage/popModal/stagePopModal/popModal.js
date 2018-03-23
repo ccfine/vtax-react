@@ -156,6 +156,7 @@ class PopModal extends React.Component{
             <Row>
                 <Col span={12}>
                 <FormItem
+                    className='fix-ie10-formItem-textArea'
                       labelCol= {{
                        xs: { span: 12 },
                        sm: { span: 10 },
