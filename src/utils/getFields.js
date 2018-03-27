@@ -200,7 +200,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || [`请输入开始时间`,`请输入结束时间`] } style={{width:'100%'}} />
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || [`开始时间`,`结束时间`] } style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>
