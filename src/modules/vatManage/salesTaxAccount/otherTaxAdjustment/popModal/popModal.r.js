@@ -78,8 +78,12 @@ class PopModal extends Component{
     }
     autoCalTax = (amount,tax)=>{
         // 计算公式：销售额（不含税）*税率 
-        (amount === undefined ||amount === null || tax === undefined || tax === null) 
-        || this.props.form.setFieldsValue({taxAmountWithTax:accMul(amount,tax)/100});
+        if(!(amount === undefined ||amount === null || tax === undefined || tax === null)){
+            let res = Number(accMul(amount,tax)/100);
+            if(!isNaN(res)){
+                this.props.form.setFieldsValue({taxAmountWithTax:res.toFixed(2)});
+            }
+        }
     }
     handleOk(){
         if((this.props.action!=='modify' && this.props.action!=='add') || this.state.formLoading){
@@ -266,6 +270,7 @@ class PopModal extends Component{
                             type:'numeric',
                             componentProps:{
                                 disabled:readonly,
+                                allowNegative:true,
                                 onChange:(value)=>{
                                     this.setState({record:{...record, amountWithoutTax:value}});
                                     // 计算公式：销售额（不含税）*税率 
@@ -277,7 +282,11 @@ class PopModal extends Component{
                             ...setComItem(record.taxAmountWithTax,readonly,true,'请输入销项（应纳）税额'),
                             label:'销项（应纳）税额',
                             fieldName:'taxAmountWithTax',
-                            type:'numeric'
+                            type:'numeric',
+                            componentProps:{
+                                disabled:readonly,
+                                allowNegative:true
+                            }
                         }
                     ])
                         }
@@ -300,6 +309,10 @@ class PopModal extends Component{
                             label:'服务、不动产和无形资产扣除项目本期实际扣除金额（含税）',
                             fieldName:'deductionAmount',
                             type:'numeric',
+                            componentProps:{
+                                disabled:readonly,
+                                allowNegative:true,
+                            }
                         }
                     ])
                         }
