@@ -10,6 +10,7 @@ const Option = Select.Option
 let timeout;
 let currentValue;
 function fetchTaxMain(value, callback) {
+
     if (timeout) {
         clearTimeout(timeout);
         timeout = null;
@@ -69,12 +70,16 @@ export default class TaxMain extends Component{
     }
     onSearch = (value) => {
         this.props.onSearch && this.props.onSearch(value)
-        fetchTaxMain(value, data => {
-            this.mounted && this.setState({ mainTaxItems:data })
-        });
+        if(value){
+            fetchTaxMain(value, data => {
+                this.mounted && this.setState({ mainTaxItems:data })
+            });
+        }
     }
     componentDidMount(){
-        this.onSearch('');
+        fetchTaxMain('',data => {
+            this.mounted && this.setState({ mainTaxItems:data })
+        });
     }
     mounted = true
     componentWillUnmount(){
