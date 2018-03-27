@@ -1,3 +1,13 @@
+<a name="0.1.8"></a>
+## [0.1.8](https://github.com/Slebee/vtax/compare/0.1.7...0.1.8) (2018-03-27)
+
+
+### Bug Fixes
+
+* **房间交易档案:** 修正没有选择纳税主体和交易月份仍然查询主状态的bug ([c2e5b11](https://github.com/Slebee/vtax/commit/c2e5b11)), closes [#6646](http://120.76.154.196/zentao/bug-view-6646.html)
+
+
+
 <a name="0.1.7"></a>
 ## [0.1.7](https://github.com/Slebee/vtax/compare/0.1.6...0.1.7) (2018-03-22)
 

@@ -1,6 +1,6 @@
 {
   "name": "vtax",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.8.0",
