@@ -174,8 +174,7 @@ class PopModal extends Component{
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(this.state.$$dataSource.toArray(), values)
-            debugger
+            //console.log(this.state.$$dataSource.toArray(), values)
             if (!err) {
                 request.post('/account/income/taxContract/proportion/determine',{list:this.state.$$dataSource.toArray()})
                     .then(({data})=>{

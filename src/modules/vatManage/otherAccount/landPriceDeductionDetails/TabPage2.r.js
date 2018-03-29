@@ -132,14 +132,12 @@ export default class TabPage extends Component{
             },
         });
     }
-    componentWillReceiveProps(props){
-
-        if(props.selectedRows.length >0 ){
-            if(props.updateKey !== this.props.updateKey || props.id!==this.props.id){
-                this.setState({updateKey:Date.now()});
-            }
+    componentDidMount(){
+        if(this.props.selectedRows.length >0 ) {
+            this.setState({
+                updateKey: Date.now()
+            });
         }
-
     }
     render(){
         const {selectedRowKeys,updateKey,dataSource} = this.state;
@@ -182,7 +180,7 @@ export default class TabPage extends Component{
                             }}
                             tableProps={{
                                 rowKey:record=>record.id,
-                                pagination:false,
+                                pagination:true,
                                 size:'small',
                                 columns:getColumns(this),
                                 onRowSelect:(selectedRowKeys)=>{

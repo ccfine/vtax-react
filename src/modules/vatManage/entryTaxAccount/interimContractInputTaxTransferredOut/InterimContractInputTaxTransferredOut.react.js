@@ -4,21 +4,14 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Popconfirm,message} from 'antd'
-import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
-import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {Form,Button,Icon,Popconfirm,message} from 'antd'
+import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
+import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'
 import PopModal from './popModal'
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
+
 const fields = [
     {
         label:'纳税主体',
@@ -65,7 +58,64 @@ const fields = [
         },
     }
 ]
-
+const searchFields =(disabled)=> {
+    return [
+        {
+            label:'纳税主体',
+            fieldName:'mainId',
+            type:'taxMain',
+            span:8,
+            componentProps:{
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            }
+        },{
+            label:'认证月份',
+            fieldName:'authMonth',
+            type:'monthPicker',
+            span:8,
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择认证月份'
+                    }
+                ]
+            },
+        }, {
+            label:'合同编号',
+            fieldName:'contractNum',
+            type:'input',
+            span:8,
+            componentProps:{
+            },
+            fieldDecoratorOptions:{
+            },
+        }, {
+            label:'结算单/产值单',
+            fieldName:'bill',
+            type:'input',
+            span:8,
+            componentProps:{
+            },
+            fieldDecoratorOptions:{
+            },
+        }
+    ]
+}
 const getColumns =context =>[
     {
         title:'操作',
@@ -152,26 +202,94 @@ const getColumns =context =>[
     }
 ];
 class InterimContractInputTaxTransferredOut extends Component {
-    state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{
-            pageSize:20
-        },
+    state = {
+        updateKey: Date.now(),
+        pageTwoKey: Date.now(),
+        modalUpDateKey: Date.now(),
+        visible: false,
+        filters: {},
+        selectedRowKeys: undefined,
+        selectedRows: [],
+        searchTableLoading: false,
         /**
          *修改状态和时间
          * */
-        statusParam:{},
-        /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
-         * */
-        updateKey:Date.now(),
-        modalUpDateKey:Date.now(),
-        visible:false,
-        dataSource:[],
-        selectedRowKeys:undefined,
-        selectedRows:[],
+        statusParam: {},
+        dataSource: [],
+    }
+    refreshTable = () => {
+        this.setState({
+            updateKey: Date.now(),
+        }, () => {
+            this.updateStatus()
+        })
+    }
+    toggleSearchTableLoading = b => {
+        this.setState({
+            searchTableLoading: b
+        })
+    }
+    handleClickActions = type => {
+        let url = '';
+        switch (type) {
+            case '提交':
+                url = '/account/income/taxContract/adjustment/submit';
+                this.requestPost(url, type, this.state.filters);
+                break;
+            case '撤回':
+                url = '/account/income/taxContract/adjustment/revoke';
+                this.requestPost(url, type, this.state.filters);
+                break;
+            case '重算':
+                url = '/account/income/taxContract/adjustment/reset';
+                this.requestPut(url, type, this.state.filters);
+                break;
+            default:
+                this.setState({
+                    updateKey: Date.now(),
+                    pageTwoKey: Date.now(),
+                },()=> {
+                    debugger
+                    console.log(this.state.pageTwoKey)
+                    this.updateStatus()
+                })
+        }
+    }
+
+    requestPut = (url, type, values = {}) => {
+        this.toggleSearchTableLoading(true)
+        request.put(url, values)
+            .then(({data}) => {
+                this.toggleSearchTableLoading(false)
+                if (data.code === 200) {
+                    message.success(`${type}成功!`);
+                    this.refreshTable()
+                } else {
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
+    requestPost = (url, type, values = {}) => {
+        this.toggleSearchTableLoading(true)
+        request.post(url, values)
+            .then(({data}) => {
+                this.toggleSearchTableLoading(false)
+                if (data.code === 200) {
+                    message.success(`${type}成功!`);
+                    this.refreshTable()
+                } else {
+                    message.error(`${type}失败:${data.msg}`)
+                }
+            })
+    }
+    updateStatus=()=>{
+        request.get('/account/income/taxContract/listMain',{params:this.state.filters}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    statusParam: data.data,
+                })
+            }
+        })
     }
     deleteRecord(record){
         request.delete(`/account/income/taxContract/adjustment/delete/${record.id}`).then(({data}) => {
@@ -192,198 +310,117 @@ class InterimContractInputTaxTransferredOut extends Component {
             visible
         })
     }
-    refreshTable = ()=>{
-        this.setState({
-            updateKey:Date.now()
-        },()=>{
-            this.updateStatus()
-        })
-    }
-    requestPut=(url,type,value={})=>{
-        request.put(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    requestPost=(url,type,value={})=>{
-        this.setState({ loading:true })
-        request.post(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({ loading:false })
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
-    updateStatus=()=>{
-        request.get('/account/income/taxContract/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                })
-            }
-        })
-    }
-    handleSubmit = (e,type) => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                if(values.authMonth){
-                    values.authMonth = values.authMonth.format('YYYY-MM')
-                }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/account/income/taxContract/adjustment/submit';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '撤回':
-                        url = '/account/income/taxContract/adjustment/revoke';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '重算':
-                        url = '/account/income/taxContract/adjustment/reset';
-                        this.requestPut(url,type,values);
-                        break;
-                    default:
-                        this.setState({
-                            filters:values
-                        },()=>{
-                            this.refreshTable();
-                        });
-                }
-            }
-        });
-    }
-    componentDidMount(){
+    componentDidMount() {
         const {search} = this.props.location;
-        if(!!search){
+        if (!!search) {
             this.setState({
-                updateKey:Date.now()
-            })
+                filters: {
+                    mainId: getUrlParam('mainId') || undefined,
+                    authMonth: moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            }, () => {
+                this.refreshTable()
+            });
         }
+    }
 
-    }
-    componentWillReceiveProps(props){
-        if(props.updateKey !== this.props.updateKey){
-            this.setState({updateKey:props.updateKey});
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateKey !== this.props.updateKey) {
+            this.setState({
+                filters: nextProps.filters,
+                updateKey: nextProps.updateKey
+            });
         }
     }
-    render(){
-        const {updateKey,filters,selectedRowKeys,selectedRows,modalUpDateKey,visible,dataSource,statusParam} = this.state;
-        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
+
+    render() {
+        const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam} = this.state;
+        const {mainId, authMonth} = this.state.filters;
+        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
-        return(
-            <Layout style={{background:'transparent'}} >
-                <Card
-                    style={{
-                        borderTop:'none'
-                    }}
-                    className="search-card"
-                >
-                    <Form onSubmit={this.handleSubmit}>
-                        <Row>
-                            {
-                                getFields(this.props.form,[
-                                    {
-                                        label:'纳税主体',
-                                        fieldName:'mainId',
-                                        type:'taxMain',
-                                        formItemStyle,
-                                        componentProps:{
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择纳税主体'
-                                                }
-                                            ]
-                                        },
-                                    },{
-                                        label:'认证月份',
-                                        fieldName:'authMonth',
-                                        type:'monthPicker',
-                                        formItemStyle,
-                                        componentProps:{
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonth'), 'YYYY-MM'))) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择认证月份'
-                                                }
-                                            ]
-                                        },
-                                    },{
-                                        label:'合同编号',
-                                        fieldName:'contractNum',
-                                        type:'input',
-                                        span:8,
-                                        componentProps:{
-                                        },
-                                        fieldDecoratorOptions:{
-                                        },
-                                    },{
-                                        label:'结算单/产值单',
-                                        fieldName:'bill',
-                                        type:'input',
-                                        formItemStyle,
-                                        componentProps:{
-                                        },
-                                        fieldDecoratorOptions:{
-                                        },
-                                    },
-                                ])
+        return (
+            <SearchTable
+                spinning={searchTableLoading}
+                doNotFetchDidMount={true}
+                searchOption={{
+                    fields: searchFields(disabled),
+                    cardProps: {
+                        style: {
+                            borderTop: 0
+                        }
+                    },
+                    onFieldsChange: values => {
+                        if (JSON.stringify(values) === "{}") {
+                            this.setState({
+                                filters: {
+                                    mainId: (disabled && getUrlParam('mainId')) || undefined,
+                                    authMonth: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM')) || undefined,
+                                }
+                            })
+                        } else if (values.mainId || values.authMonth) {
+                            if (values.authMonth) {
+                                values.authMonth = values.authMonth.format('YYYY-MM')
                             }
-
-                            <Col span={16}  style={{textAlign:'right'}}>
-                                <Form.Item>
-                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Card>
-                <Card title="进项转出差异调整表" extra={
-                    <div>
+                            this.setState(prevState => ({
+                                filters: {
+                                    ...prevState.filters,
+                                    ...values
+                                }
+                            }))
+                        }
+                    }
+                }}
+                backCondition={this.updateStatus}
+                tableOption={{
+                    key: updateKey,
+                    pageSize: 10,
+                    columns: getColumns(this),
+                    cardProps: {
+                        title: '进项转出差异调整表'
+                    },
+                    rowSelection: {
+                        type: 'radio',
+                    },
+                    onRowSelect:(selectedRowKeys,selectedRows)=>{
+                        this.setState({
+                            selectedRowKeys:selectedRowKeys[0],
+                            selectedRows,
+                            pageTwoKey:Date.now(),
+                        })
+                    },
+                    onSuccess:()=>{
+                        this.setState({
+                            selectedRowKeys:undefined,
+                            selectedRows:[],
+                            pageTwoKey:Date.now(),
+                        })
+                    },
+                    url: '/account/income/taxContract/adjustment/list',
+                    extra: <div>
                         {
-                            dataSource.length>0 && listMainResultStatus(statusParam)
+                            dataSource.length > 0 && listMainResultStatus(statusParam)
                         }
                         <FileImportModal
                             url="/account/income/taxContract/adjustment/upload"
                             title="导入"
                             fields={fields}
-                            onSuccess={()=>{
+                            onSuccess={() => {
                                 this.refreshTable()
                             }}
-                            style={{marginRight:5}} />
+                            style={{marginRight: 5}}/>
                         <FileExport
                             url='account/income/taxContract/adjustment/download'
                             title="下载导入模板"
                             size="small"
-                            setButtonStyle={{marginRight:5}}
+                            setButtonStyle={{marginRight: 5}}
                         />
                         <FileExport
                             url='account/income/taxContract/adjustment/export'
                             title='导出'
-                            setButtonStyle={{marginRight:5}}
-                            disabled={!dataSource.length>0}
+                            setButtonStyle={{marginRight: 5}}
+                            disabled={!dataSource.length > 0}
                             params={{
                                 ...filters
                             }}
@@ -391,94 +428,66 @@ class InterimContractInputTaxTransferredOut extends Component {
                         <Button
                             disabled={!selectedRowKeys}
                             size='small'
-                            style={{marginRight:5}}
-                                onClick={()=>{
+                            style={{marginRight: 5}}
+                            onClick={() => {
                                 this.toggleModalVisible(true)
                                 this.setState({
-                                    modalUpDateKey:Date.now()
+                                    modalUpDateKey: Date.now()
                                 })
                             }}>
-                            <Icon type="edit" />
+                            <Icon type="edit"/>
                             设置税务分摊比例
                         </Button>
                         {/*<Button size='small' style={{marginRight:5}}>
-                            <Icon type="form" />
-                            差异调整凭证
-                        </Button>*/}
+                         <Icon type="form" />
+                         差异调整凭证
+                         </Button>*/}
                         <Button
                             disabled={disabled1}
                             size='small'
-                            onClick={(e)=>this.handleSubmit(e,'重算')}
-                            style={{marginRight:5}}>
-                            <Icon type="retweet" />
+                            onClick={() => this.handleClickActions('重算')}
+                            style={{marginRight: 5}}>
+                            <Icon type="retweet"/>
                             重算
                         </Button>
                         <Button
                             disabled={disabled1}
                             size='small'
-                            onClick={(e)=>this.handleSubmit(e,'提交')}
-                            style={{marginRight:5}}>
-                            <Icon type="check" />
+                            onClick={() => this.handleClickActions('提交')}
+                            style={{marginRight: 5}}>
+                            <Icon type="check"/>
                             提交
                         </Button>
                         <Button
                             disabled={disabled2}
                             size='small'
-                            onClick={(e)=>this.handleSubmit(e,'撤回')}
-                            style={{marginRight:5}}>
-                            <Icon type="rollback" />
+                            onClick={() => this.handleClickActions('撤回')}
+                            style={{marginRight: 5}}>
+                            <Icon type="rollback"/>
                             撤回提交
                         </Button>
-                    </div>
+                    </div>,
+                    onDataChange: (dataSource) => {
+                        this.setState({
+                            dataSource
+                        })
+                    },
+                    renderFooter:data=>{
+                        return (
+                            <div className="footer-total">
+                                <div>
+                                    <label>合计：</label>
+                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                    价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                </div>
+                            </div>
+                        )
+                    }
+                }}
+            >
 
-                }
-                      style={{marginTop:10}}
-                >
-                    <AsyncTable url="/account/income/taxContract/adjustment/list"
-                                updateKey={updateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:false,
-                                    size:'small',
-                                    columns:getColumns(this),
-                                    scroll:{x:'160%'},
-                                    rowSelection:{
-                                        type:'radio',
-                                    },
-                                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                                        this.setState({
-                                            selectedRowKeys:selectedRowKeys[0],
-                                            selectedRows,
-                                        })
-                                    },
-                                    onSuccess:()=>{
-                                        this.setState({
-                                            selectedRowKeys:undefined,
-                                            selectedRows:[],
-                                        })
-                                    },
-                                    onDataChange:(dataSource)=>{
-                                        this.setState({
-                                            dataSource
-                                        })
-                                    },
-                                    renderFooter:data=>{
-                                        return (
-                                            <div className="footer-total">
-                                                <div>
-                                                    <label>合计：</label>
-                                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                                    价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-                                }} />
-                </Card>
-
-                <PageTwo id={selectedRowKeys} selectedRows={selectedRows} filters={filters} updateKey={updateKey}/>
+                <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters}/>
 
                 <PopModal
                     title="税务分摊比例列表设置"
@@ -490,7 +499,8 @@ class InterimContractInputTaxTransferredOut extends Component {
                     refreshTable={this.refreshTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
-            </Layout>
+            </SearchTable>
+
         )
     }
 }
