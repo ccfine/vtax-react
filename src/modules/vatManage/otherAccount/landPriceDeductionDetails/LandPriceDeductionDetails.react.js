@@ -160,8 +160,8 @@ const columns= [
 class LandPriceDeductionDetails extends Component{
     state={
         updateKey:Date.now(),
+        pageTwoKey:Date.now(),
         filters:{},
-        selectedRowKeys:undefined,
         selectedRows:[],
         searchTableLoading:false,
         /**
@@ -172,7 +172,7 @@ class LandPriceDeductionDetails extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            updateKey:Date.now()
+            updateKey:Date.now(),
         },()=>{
             this.updateStatus()
         })
@@ -200,10 +200,11 @@ class LandPriceDeductionDetails extends Component{
                 break;
             default:
                 this.setState({
-                updateKey:Date.now()
-            },()=>{
-                this.updateStatus();
-            })
+                    updateKey:Date.now(),
+                    pageTwoKey:Date.now(),
+                },()=>{
+                    this.updateStatus()
+                })
         }
     }
 
@@ -265,14 +266,13 @@ class LandPriceDeductionDetails extends Component{
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,dataSource,statusParam} = this.state;
+        const {updateKey,pageTwoKey,searchTableLoading,selectedRows,filters,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
-            <div>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={true}
@@ -314,8 +314,14 @@ class LandPriceDeductionDetails extends Component{
                         },
                         onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({
-                                selectedRowKeys:selectedRowKeys[0],
                                 selectedRows,
+                                pageTwoKey:Date.now(),
+                            })
+                        },
+                        onSuccess:()=>{
+                            this.setState({
+                                selectedRows:[],
+                                pageTwoKey:Date.now(),
                             })
                         },
                         rowSelection:{
@@ -362,10 +368,10 @@ class LandPriceDeductionDetails extends Component{
                         },
                     }}
                 >
+
+                    <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} />
                 </SearchTable>
 
-                <PageTwo id={selectedRowKeys} selectedRows={selectedRows} filters={filters} updateKey={updateKey}/>
-            </div>
         )
     }
 }

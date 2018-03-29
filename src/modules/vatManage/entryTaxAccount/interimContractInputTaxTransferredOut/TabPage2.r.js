@@ -1,5 +1,5 @@
 /**
- * Created by liurunbin on 2018/1/2.
+ * Created by liuliyuan on 2018/1/2.
  */
 import React, { Component } from 'react'
 import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
@@ -101,25 +101,17 @@ const getColumns=(context)=>[
 
 export default class TabPage extends Component{
     state={
-        visible:false,
         updateKey:Date.now()
     }
-    hideModal(){
-        this.setState({visible:false});
-    }
-    update(){
-        this.setState({updateKey:Date.now()})
-    }
-    componentWillReceiveProps(props){
-
-        if(props.selectedRows.length >0 ){
-            if(props.updateKey !== this.props.updateKey || props.id!==this.props.id){
-                this.setState({updateKey:Date.now()});
-            }
+    componentDidMount(){
+        if(this.props.selectedRows.length >0 ) {
+            this.setState({
+                updateKey:Date.now()
+            });
         }
-
     }
     render(){
+        const {updateKey} = this.state;
         const props = this.props;
         return(
             <Card title="分期信息明细表" extra={
@@ -143,7 +135,7 @@ export default class TabPage extends Component{
                   style={{marginTop:10}}
             >
                 <AsyncTable url="/account/income/taxContract/detail/list"
-                            updateKey={this.state.updateKey}
+                            updateKey={updateKey}
                             filters={{
                                 contractNum: props.selectedRows.length >0 && props.selectedRows[0].contractNum,
                                 authMonth: props.filters.authMonth,
