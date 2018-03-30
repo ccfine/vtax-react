@@ -99,7 +99,7 @@ class PopDifferenceModal extends Component{
                 <Spin spinning={loading}>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
-                            <Col span={24}>
+                            <Col span={24} className='fix-ie10-formItem-textArea'>
                                 <FormItem label='差异原因' {...formItemLayout}>
                                     {getFieldDecorator(`causeDifference`,{
                                         initialValue:props.selectedRows && props.selectedRows[0].causeDifference,

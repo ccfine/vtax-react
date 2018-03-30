@@ -15,13 +15,13 @@ class NumericInput extends React.Component {
     }
     static defaultProps={
         valueType:'float',
-        allowNegative:false
-    }
-    onBlur=(e)=>{
-        const { value } = e.target;
-        // 当只有符号时数据不合法（加判断的原因：只有这种情况时允许存在，但作为最终结果不是合法的）
-        if(value === '-'){
-            this.props.onChange("");
+        allowNegative:false,
+        onBlur:(e)=>{
+            const { value } = e.target;
+            // 当只有符号时数据不合法（加判断的原因：只有这种情况时允许存在，但作为最终结果不是合法的）
+            if(value === '-'){
+                this.props.onChange("");
+            }
         }
     }
     onChange = (e) => {
@@ -61,7 +61,6 @@ class NumericInput extends React.Component {
             <Input
                 {...props}
                 onChange={this.onChange}
-                onBlur={this.onBlur}
                 maxLength="24"
             />
         );

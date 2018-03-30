@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col} from 'antd';
-import {regRules,fMoney,accMul,getFields} from '../../../../../../utils'
+import {regRules,fMoney,getFields} from '../../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -53,58 +53,7 @@ class PopModal extends Component{
         })
         this.props.setDetailsDate(data)
     }
-    //计算金额的总和
-    handleCellAmountSum=(amount,taxAmount,totalAmount)=>{
-        const form = this.props.form;
-        let v1 = parseFloat(form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, ''));
-        let v2 = parseFloat(form.getFieldValue(`${taxAmount}`).replace(/\$\s?|(,*)/g, ''));
-        if(typeof (v1) === 'undefined'){
-            v1 = ''
-        }
-        if(typeof (v2) === 'undefined'){
-            v2 = ''
-        }
-        const sum = v1+v2
-        form.setFieldsValue({
-            [totalAmount]: fMoney(sum),
-        });
-    }
-    handleTaxAmount=(amount,taxRate,taxAmount)=>{
-        const form = this.props.form;
-        let v1 = form.getFieldValue(`${amount}`).replace(/\$\s?|(,*)/g, '');
-        let v2 = (form.getFieldValue(`${taxRate}`)) /100;
-        if(typeof (v1) === 'undefined'){
-            v1 = ''
-        }
-        if(typeof (v2) === 'undefined' || isNaN(v2)){
-            v2 = ''
-        }
-        const count = v1*v2;
-        form.setFieldsValue({
-            [taxAmount]: fMoney(count),
-        });
-    }
-    handleAmout=(qty,unitPrice,amount)=>{
-        const form = this.props.form;
-        let v1 = form.getFieldValue(`${qty}`);
-        let v2 = form.getFieldValue(`${unitPrice}`);
-        if(typeof (v1) === 'undefined'){
-            v1 = ''
-        }
-        if(typeof (v2) === 'undefined'){
-            v2 = ''
-        }
-        const count = accMul(v1,v2);
-        form.setFieldsValue({
-            [unitPrice]:v2,
-            [amount]: fMoney(count),
-        });
-    }
-    handleCalcAmoutTaxAmount=(qty,unitPrice,amount,taxRate,taxAmount,totalAmount)=>{
-        this.handleAmout(qty,unitPrice,amount);
-        this.handleTaxAmount(amount,taxRate,taxAmount);
-        this.handleCellAmountSum(amount,taxAmount,totalAmount);
-    }
+
     handleSubmit = (e,isContinue) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -132,8 +81,8 @@ class PopModal extends Component{
 
             }
         });
-
     }
+
     componentWillReceiveProps(nextProps) {
         if (!nextProps.visible) {
             /**
@@ -161,6 +110,7 @@ class PopModal extends Component{
     render(){
         const {initData} = this.state;
         const props = this.props;
+    const {getFieldValue,setFieldsValue} = props.form;
         let title='';
         const type = props.modalConfig.type;
         switch (type){
@@ -273,7 +223,13 @@ class PopModal extends Component{
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
-                                        onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
+                                        onChange:(value)=>{
+                                            let unitPrice = isNaN(parseInt(getFieldValue('unitPrice'), 0)) ? 0 : parseFloat(parseInt(getFieldValue('unitPrice'), 0)) ;
+                                            const amount = unitPrice * value;
+                                            setFieldsValue({
+                                                amount:fMoney(amount),
+                                            })
+                                        },
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:initData.qty,
@@ -292,7 +248,13 @@ class PopModal extends Component{
                                     span:12,
                                     formItemStyle,
                                     componentProps:{
-                                        onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
+                                        onChange:(value)=>{
+                                            let qty = isNaN(parseInt(getFieldValue('qty'), 0)) ? 0 : parseFloat(parseInt(getFieldValue('qty'), 0)) ;
+                                            const amount = qty * value;
+                                            setFieldsValue({
+                                                amount:fMoney(amount),
+                                            })
+                                        },
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:initData.unitPrice,
@@ -323,7 +285,17 @@ class PopModal extends Component{
                                     formItemStyle,
                                     componentProps:{
                                         valueType:'int',
-                                        onBlur:()=>this.handleCalcAmoutTaxAmount('qty','unitPrice','amount','taxRate','taxAmount','totalAmount'),
+                                        onChange:(value)=>{
+                                            let amount  = parseFloat(getFieldValue('amount').replace(/\$\s?|(,*)/g, ''), 0);
+                                            let format_amount = isNaN(amount) ? 0 : amount;
+                                            const taxAmount = format_amount * value / 100;
+                                            const totalAmount = format_amount + taxAmount;
+
+                                            setFieldsValue({
+                                                taxAmount:fMoney(taxAmount),
+                                                totalAmount:fMoney(totalAmount)
+                                            })
+                                        },
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:initData.taxRate,
