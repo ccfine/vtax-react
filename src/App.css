@@ -189,7 +189,7 @@ table.data-grid{
   margin-bottom: 12px;
 }
 .fix-ie10-formItem-textArea .ant-form-item-label, .fix-ie10-formItem-textArea .ant-form-item-control{
-  /*height: auto;*/
+  height: auto;
   margin-top: 6px;
   margin-bottom: 12px;
 }
