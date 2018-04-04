@@ -68,7 +68,7 @@ class Web extends Component {
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout key={this.state.refresh}>
-                <Sider  collapsed={this.state.collapsed} menusData={routes}  />
+                <Sider collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
                 <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden' }}>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     <BreadCrumb location={this.props.location} routes={routes} />

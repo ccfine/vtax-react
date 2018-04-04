@@ -35,6 +35,7 @@ class ButtonModalWithForm extends Component{
             type: PropTypes.oneOf(['post','put']).isRequired,
             url: PropTypes.string.isRequired,
             fields:PropTypes.array.isRequired,
+            disabled:PropTypes.bool,
             onSuccess:PropTypes.func,
             onValuesChange:PropTypes.func,
         }).isRequired,
@@ -112,7 +113,7 @@ class ButtonModalWithForm extends Component{
         const {visible,loading} = this.state;
         return(
             <span style={props.style}>
-               <Button size='small' onClick={()=>{
+               <Button size='small' disabled={formOptions.disabled} onClick={()=>{
                    this.toggleVisible(true);
                    buttonOptions.onClick && buttonOptions.onClick()
                }}>

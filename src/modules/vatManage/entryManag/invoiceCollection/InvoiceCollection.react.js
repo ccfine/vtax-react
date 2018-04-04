@@ -158,12 +158,6 @@ class InvoiceCollection extends Component {
         });
 
     }
-    onChange=(selectedRowKeys, selectedRows) => {
-        this.setState({
-            selectedRowKeys,
-            selectedRows
-        })
-    }
     toggleModalVisible=visible=>{
         this.setState({
             visible
@@ -234,16 +228,13 @@ class InvoiceCollection extends Component {
 
     render() {
         const {tableUpDateKey,filters,selectedRowKeys,visible,modalConfig,dataSource,statusParam} = this.state;
+        const {mainId, authMonth} = this.state.filters;
+        const disabled1 = !!((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!(search && search.filters);
 
-        const rowSelection = {
-            type:'radio',
-            width:70,
-            fixed:true,
-            selectedRowKeys,
-            onChange: this.onChange
-        };
+        console.log(disabled2, disabled1)
         return (
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -318,7 +309,7 @@ class InvoiceCollection extends Component {
                           {
                               dataSource.length>0 &&listMainResultStatus(statusParam)
                           }
-                          <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
+                          <Button size="small" onClick={()=>this.showModal('add')} disabled={disabled2} style={buttonStyle}>
                               <Icon type="file-add" />
                               新增
                           </Button>
@@ -326,6 +317,7 @@ class InvoiceCollection extends Component {
                               url="/income/invoice/collection/upload"
                               title="导入"
                               fields={fields}
+                              disabled={disabled2}
                               onSuccess={()=>{
                                   this.refreshTable()
                               }}
@@ -333,6 +325,7 @@ class InvoiceCollection extends Component {
                           <FileUndoImportModal
                               url="/income/invoice/collection/revocation"
                               title="撤销导入"
+                              disabled={disabled2}
                               onSuccess={()=>{
                                   this.refreshTable()
                               }}
@@ -340,6 +333,7 @@ class InvoiceCollection extends Component {
                           <FileExport
                               url={`income/invoice/collection/download`}
                               title="下载导入模板"
+                              disabled={disabled2}
                               size="small"
                               setButtonStyle={{marginRight:5}}
                           />
@@ -395,8 +389,8 @@ class InvoiceCollection extends Component {
                               <Icon type="delete" />
                               删除
                           </Button>
-                          <SubmitOrRecall type={1} url="/income/invoice/collection/submit" onSuccess={this.refreshTable} />
-                          <SubmitOrRecall type={2} url="/income/invoice/collection/revoke" onSuccess={this.refreshTable} />
+                          <SubmitOrRecall type={1} disabled={disabled2} url="/income/invoice/collection/submit" onSuccess={this.refreshTable} />
+                          <SubmitOrRecall type={2} disabled={disabled1} url="/income/invoice/collection/revoke" onSuccess={this.refreshTable} />
                       </div>}
                       style={{marginTop:10}}>
 
@@ -408,7 +402,15 @@ class InvoiceCollection extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
-                                    rowSelection:rowSelection,
+                                    rowSelection:parseInt(statusParam.status, 0) === 1 ? {
+                                        type: 'radio',
+                                    } : undefined,
+                                    onRowSelect:parseInt(statusParam.status, 0) === 1 ? (selectedRowKeys,selectedRows)=>{
+                                        this.setState({
+                                            selectedRowKeys,
+                                            selectedRows
+                                        })
+                                    } : undefined,
                                     scroll:{ x: '150%' },
                                     renderFooter:data=>{
                                         return (

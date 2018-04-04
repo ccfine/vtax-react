@@ -51,6 +51,7 @@ class Message extends Component{
         messages:[],
         total:0,
         messagesLoading: false,
+        visible: false,
     }
 
     fetchMessage = (activeKey=1) => {
@@ -70,38 +71,48 @@ class Message extends Component{
     }
     handleClick = (item) =>{
 
-
+    }
+    handleVisibleChange = (visible) => {
+        this.setState({ visible });
     }
     render(){
-        const {messages,total} = this.state;
+        const {visible,messages,total} = this.state;
         return(
-            <Popover
-                trigger="click"
-                content={
-                <div>
-                    {
-                        total === 0 ? (
-                            <div style={{color:"#e9e9e9",padding:'20px 0',textAlign:'center'}}>
-                                <Icon style={{
-                                    fontSize:72,
-                                }} type="bell" />
-                                <p style={{marginTop:10}}>已读完所有消息</p>
-                            </div>
-                        ) : (
-                            messages.map((item,i)=><MessageItem onClick={()=>this.handleClick(item)} key={i} {...item} />)
-                        )
-                    }
-                    {
-                        total > 5 && <div style={{textAlign:'center',marginLeft:-10,marginRight:-10,padding:'10px 0 5px 0',borderTop:'1px solid #e9e9e9'}}>
-                            <Link to='/dashboard/messageList'>查看全部消息</Link>
-                        </div>
-                    }
 
-                </div>
-            } title="消息">
-                <Badge count={total} >
-                    <Icon type='bell' />消息
-                </Badge>
+            <Popover
+                placement="bottomRight"
+                trigger="click"
+                arrowPointAtCenter
+                visible={visible}
+                popupAlign={{ offset: [20, -16] }}
+                onVisibleChange={this.handleVisibleChange}
+                content={
+                    <div>
+                        {
+                            total === 0 ? (
+                                <div style={{color:"#e9e9e9",padding:'20px 0',textAlign:'center'}}>
+                                    <Icon style={{
+                                        fontSize:72,
+                                    }} type="bell" />
+                                    <p style={{marginTop:10}}>已读完所有消息</p>
+                                </div>
+                            ) : (
+                                messages.map((item,i)=><MessageItem onClick={()=>this.handleClick(item)} key={i} {...item} />)
+                            )
+                        }
+                        {
+                            total > 5 && <div style={{textAlign:'center',marginLeft:-10,marginRight:-10,padding:'10px 0 5px 0',borderTop:'1px solid #e8e8e8'}}>
+                                <Link to='/dashboard/messageList'>查看全部消息</Link>
+                            </div>
+                        }
+
+                    </div>
+                } title="消息">
+                    <span className="action">
+                        <Badge count={total} >
+                            <Icon type='bell' style={{fontSize:16,padding:4}} />{/*消息*/}
+                        </Badge>
+                    </span>
             </Popover>
         )
     }
@@ -113,13 +124,13 @@ export default withRouter(Message);
 const MessageItem = props =>{
     return(
 
-        <div className="messages" style={{padding:'0 10px',maxWidth:300,marginBottom:10}}>
-            <h3 className="title " style={{fontSize:14}} >
+        <div className="messages">
+            <h3 className="title" >
                 <a onClick={props.onClick} style={{color:'#108ee9'}}>
                     <span >{props.title}</span>
                 </a>
             </h3>
-            <div className="messages-content" style={{marginBottom:5}}>
+            <div className="messages-content">
                 {
                     props.content.length > 40 ? props.content.substring(0,40)+'...' : props.content
                 }

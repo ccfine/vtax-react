@@ -31,13 +31,13 @@ export default class FileUpload extends Component{
             beforeUpload: file => {
                 //TODO:文件大小限制
                 /*if(fileSize){
-                    const isLtSize = file.size / 1024 / 1024 < fileSize;
-                    if (!isLtSize) {
-                        message.error(`文件大小不能超过${fileSize}mb`);
-                        setFieldsValue(undefined)
-                    }
-                }
-*/
+                 const isLtSize = file.size / 1024 / 1024 < fileSize;
+                 if (!isLtSize) {
+                 message.error(`文件大小不能超过${fileSize}mb`);
+                 setFieldsValue(undefined)
+                 }
+                 }
+                 */
                 return false;
             },
         };

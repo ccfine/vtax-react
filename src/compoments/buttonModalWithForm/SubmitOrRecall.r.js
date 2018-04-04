@@ -55,6 +55,7 @@ const SubmitOrRecall = props => {
             type:props.method || 'post',
             url:props.url,
             fields,
+            disabled:props.disabled,
             onSuccess:props.onSuccess,
         },
         buttonOptions:{
@@ -70,6 +71,7 @@ const SubmitOrRecall = props => {
             type:props.method || 'post',
             url:props.url,
             fields,
+            disabled:props.disabled,
             onSuccess:props.onSuccess,
         },
         buttonOptions:{

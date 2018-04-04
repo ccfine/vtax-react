@@ -1,18 +1,17 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/7 15:17
- * description  :
+ * description  : TODO: 实现三级导航全部在左侧
  */
 import React, { Component } from 'react';
 import { Layout, Menu,Icon} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
-import logo from './images/logo.png'
-import './styles.less'
+import logo from '../images/logo.png'
+import '../styles.less'
 
 const { Sider } = Layout;
-const { SubMenu } = Menu;
-
+const SubMenu = Menu.SubMenu;
 class VTaxSider extends Component {
 
     //自行包装sider时要加入，为了让layout正确识别
@@ -41,7 +40,7 @@ class VTaxSider extends Component {
                 return null;
             }
 
-            if (item.permissions && item.children && item.children.some(child => child.name)) {
+            if (item.children && item.children.some(child => child.name)) {
                 return (
                     <SubMenu
                         title={
@@ -54,27 +53,46 @@ class VTaxSider extends Component {
                         }
                         key={item.key || item.path}
                     >
-                        {this.getNavMenuItems(item.children)}
+                        {
+                            item.children.map((child)=>{
+
+                                if(child.children){
+                                    return (
+                                        <SubMenu key={child.key || child.path} title={child.name}>
+                                            {this.getNavMenuItems(child.children)}
+                                        </SubMenu>
+                                    )
+                                }else{
+                                    return !child.to && this.getMenuItem(child)
+
+                                }
+
+
+                            })
+                        }
+
                     </SubMenu>
                 );
             }
-
-            const icon = item.icon && <Icon type={item.icon} />;
-            return (
-                <Menu.Item key={item.key || item.path}>
-                    <Link
-                        to={item.path}
-                        target={item.target}
-                        replace={item.path === this.props.location.pathname}
-                    >
-                        {icon}<span>{item.name}</span>
-                    </Link>
-                </Menu.Item>
-            );
-
-
+            return this.getMenuItem(item)
         });
     }
+
+    getMenuItem=(item)=>{
+        const icon = item.icon && <Icon type={item.icon} />;
+        return (
+            <Menu.Item key={item.key || item.path}>
+                <Link
+                    to={item.path}
+                    target={item.target}
+                    replace={item.path === this.props.location.pathname}
+                >
+                    {icon}<span>{item.name}</span>
+                </Link>
+            </Menu.Item>
+        )
+    }
+
     onOpenChange = (openKeys) => {
         const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
         if (openKeys.indexOf(latestOpenKey) === -1) {
@@ -97,7 +115,6 @@ class VTaxSider extends Component {
             openKeys = [`/${path.split(/\//)[1]}`],
             url_two = path.split(/\//)[2],
             url_three = path.split(/\//)[3];
-
         if(url_two){
             openKeys=[`${openKeys}/${url_two}`]
         }
@@ -106,9 +123,10 @@ class VTaxSider extends Component {
         }
         this.setState({
             openKeys,
-            selectedPath: path.indexOf('web/taxDeclare') === -1 ? openKeys[1] : openKeys[0]
+            selectedPath:path,
         });
     }
+
     render() {
 
         return (
@@ -133,7 +151,9 @@ class VTaxSider extends Component {
                     openKeys={this.state.openKeys}
                     style={{ marginTop: '16px', width: '100%' }}
                 >
-                    {this.getNavMenuItems(this.props.menusData)}
+                    {
+                        this.getNavMenuItems(this.props.menusData)
+                    }
                 </Menu>
             </Sider>
         )

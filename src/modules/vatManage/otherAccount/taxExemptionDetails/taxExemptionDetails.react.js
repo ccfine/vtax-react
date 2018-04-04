@@ -289,11 +289,11 @@ class TaxExemptionDetails extends Component{
                     key:tableKey,
                     pageSize:10,
                     columns:getColumns(this),
-                    onRowSelect:(selectedRowKeys)=>{
+                    onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    } : undefined,
                     url:'/account/other/reduceTaxDetail/list',
                     extra: <div>
                         {
@@ -323,7 +323,7 @@ class TaxExemptionDetails extends Component{
                             url='account/other/reduceTaxDetail/export'
                             title='导出'
                             setButtonStyle={{marginRight:5}}
-                            disabled={!dataSource.length>0}
+                            disabled={!dataSource.length>0 || disabled1}
                             params={{
                                 ...filters
                             }}

@@ -312,20 +312,20 @@ class LandPriceDeductionDetails extends Component{
                         cardProps:{
                             title:'项目分期信息'
                         },
-                        onRowSelect:(selectedRowKeys,selectedRows)=>{
+                        rowSelection:parseInt(statusParam.status, 0)  === 1 ?  {
+                            type:'radio',
+                        } : undefined,
+                        onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
                             this.setState({
                                 selectedRows,
                                 pageTwoKey:Date.now(),
                             })
-                        },
+                        } : undefined,
                         onSuccess:()=>{
                             this.setState({
                                 selectedRows:[],
                                 pageTwoKey:Date.now(),
                             })
-                        },
-                        rowSelection:{
-                            type:'radio',
                         },
                         url:'/account/landPrice/deductedDetails/list',
                         extra: <div>
