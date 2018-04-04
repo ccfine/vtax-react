@@ -80,7 +80,7 @@ class InputTaxOnFixedAssets extends Component {
         {
             title:'操作',
             key:'actions',
-            render:(text,record)=>(
+            render:(text,record)=> (this.state.statusParam && parseInt(this.state.statusParam.status, 0)) !== 2 && (
                 <div>
                     <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
                         <a style={{marginRight:"5px"}}>删除</a>
@@ -194,8 +194,8 @@ class InputTaxOnFixedAssets extends Component {
     }
     render(){
         const {tableUpDateKey,filters,statusParam,dataSource} = this.state
-        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
+        const disabled1 = !!((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
+        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -265,6 +265,7 @@ class InputTaxOnFixedAssets extends Component {
                         url="/account/income/fixedAssets/upload"
                         title="导入"
                         fields={fields}
+                        disabled={disabled2}
                         onSuccess={()=>{
                             this.refreshTable()
                         }}
@@ -274,9 +275,10 @@ class InputTaxOnFixedAssets extends Component {
                         title="下载导入模板"
                         setButtonStyle={{marginTop:10,marginRight:5}}
                         size='small'
+                        disabled={disabled2}
                     />
                     <Button
-                        disabled={disabled1}
+                        disabled={disabled2}
                         size='small'
                         onClick={(e)=>this.handleSubmit(e,'提交')}
                         style={{marginRight:5}}>
@@ -284,7 +286,7 @@ class InputTaxOnFixedAssets extends Component {
                         提交
                     </Button>
                     <Button
-                        disabled={disabled2}
+                        disabled={disabled1}
                         size='small'
                         onClick={(e)=>this.handleSubmit(e,'撤回')}
                         style={{marginRight:5}}>

@@ -25,13 +25,13 @@ const getColumns = context=> [
         render(text, record, index){
             return(
                 <span>
-                <a style={{marginRight:"5px"}} onClick={()=>{
+                <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
                 }}>修改</a>
                 <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
-                    <a style={{marginRight:"5px"}}>删除</a>
+                    <a>删除</a>
                 </Popconfirm>
-                <a onClick={()=>{
+                <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'look',opid:record.id});
                 }}>查看</a>
                 </span>

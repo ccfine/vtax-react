@@ -154,6 +154,7 @@ class PopModal extends Component{
             footer={[
                 record && record.id
                 && <ButtonWithFileUploadModal
+                    key="fileInfo" 
                     title="附件信息"
                     style={{
                         marginRight:10

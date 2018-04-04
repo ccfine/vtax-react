@@ -59,7 +59,7 @@ const getColumns = (context) => [{
     render(text, record, index) {
         return (
             <span>
-                <a style={{ marginRight: "5px" }} onClick={() => {
+                <a style={{ margin: "0 5px" }} onClick={() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
                 }}>修改</a>
                 <Popconfirm title="确定要删除吗?" onConfirm={() => { context.deleteRecord(record) }} onCancel={() => { }} okText="确认" cancelText="取消">
@@ -69,7 +69,7 @@ const getColumns = (context) => [{
         );
     },
     fixed: 'left',
-    width: '70px',
+    width: '75px',
     dataIndex: 'action'
 }, {
     title: '纳税主体',

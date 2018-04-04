@@ -1,20 +1,33 @@
-<a name="0.1.6"></a>
-## [0.1.6](https://github.com/Slebee/vtax/compare/0.1.5...0.1.6) (2018-03-21)
+<a name="0.1.8"></a>
+## [0.1.8](https://github.com/Slebee/vtax/compare/0.1.7...0.1.8) (2018-03-27)
 
 
 ### Bug Fixes
 
+* **房间交易档案:** 修正没有选择纳税主体和交易月份仍然查询主状态的bug ([c2e5b11](https://github.com/Slebee/vtax/commit/c2e5b11)), closes [#6646](http://120.76.154.196/zentao/bug-view-6646.html)
+
+
+
+<a name="0.1.7"></a>
+## [0.1.7](https://github.com/Slebee/vtax/compare/0.1.6...0.1.7) (2018-03-22)
+
+
+### Bug Fixes
+
+* **右侧导航:** 纳税申报一级menu不能正常被选中 ([87366c9](https://github.com/Slebee/vtax/commit/87366c9))
 * **售房预缴台账:** 修复大屏下选择框旁多出一些空白的bug ([6d05ead](https://github.com/Slebee/vtax/commit/6d05ead))
-* **土地价款:** 单方土地成本合计错误显示 ([5fa8e78](https://github.com/Slebee/vtax/commit/5fa8e78))
 * **土地价款:** 单方土地成本合计错误显示 ([10a66a8](https://github.com/Slebee/vtax/commit/10a66a8))
-* **土地价款:** 金额类型显示 ([0d2397b](https://github.com/Slebee/vtax/commit/0d2397b))
+* **土地价款:** 单方土地成本合计错误显示 ([5fa8e78](https://github.com/Slebee/vtax/commit/5fa8e78))
 * **土地价款:** 金额类型显示 ([186a74d](https://github.com/Slebee/vtax/commit/186a74d))
+* **土地价款:** 金额类型显示 ([0d2397b](https://github.com/Slebee/vtax/commit/0d2397b))
 * **确认结转收入:** 本期末合计金额与本期发生额字段对调 ([6addad5](https://github.com/Slebee/vtax/commit/6addad5))
 * **确认结转收入:** 本期末合计金额与本期发生额字段对调 ([dd8c437](https://github.com/Slebee/vtax/commit/dd8c437))
-* **稽查报告:** 修复页面底部多出大片空白问题,window下突然出现滚动条导致fiexd定位的操作项错位问题 ([3524568](https://github.com/Slebee/vtax/commit/3524568)), closes [#6492](http://120.76.154.196/zentao/bug-view-6492.html)
 * **稽查报告:** 修复页面底部多出大片空白问题,window下突然出现滚动条导致fiexd定位的操作项错位问题 ([165eb04](https://github.com/Slebee/vtax/commit/165eb04)), closes [#6492](http://120.76.154.196/zentao/bug-view-6492.html)
+* **稽查报告:** 修复页面底部多出大片空白问题,window下突然出现滚动条导致fiexd定位的操作项错位问题 ([3524568](https://github.com/Slebee/vtax/commit/3524568)), closes [#6492](http://120.76.154.196/zentao/bug-view-6492.html)
 * **纳税申报:** 1，ie浏览器select换行的bug   2，所有的税额加%  3，修改了Web.r.js 文件 添加了只有在ie下才执行<Layout style={{ msFlex:'1 ([019a7c7](https://github.com/Slebee/vtax/commit/019a7c7))
 * **纳税申报:** ie10 浏览器的各种bug ([9b78251](https://github.com/Slebee/vtax/commit/9b78251))
+* **纳税申报:** 导航未被选中 ([3387fba](https://github.com/Slebee/vtax/commit/3387fba))
+* **纳税申报:** 进项管理 ([db4c551](https://github.com/Slebee/vtax/commit/db4c551))
 
 
 

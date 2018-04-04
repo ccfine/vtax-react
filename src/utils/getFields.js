@@ -2,12 +2,13 @@
  * Created by liurunbin on 2017/12/28.
  */
 import React from 'react';
-import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader } from 'antd'
+import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader,Radio } from 'antd'
 import {CusFormItem} from '../compoments'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const Option = Select.Option;
 const CheckboxGroup = Checkbox.Group;
+const RadioGroup = Radio.Group;
 const { RangePicker,MonthPicker } = DatePicker;
 const normFile = (e) => {
     console.log('Upload event:', e);
@@ -84,6 +85,12 @@ const getFields = (form,fieldsData=[]) =>{
             case 'checkboxGroup':
                 CusComponent = CheckboxGroup;
                 break;
+            case 'radio':
+                CusComponent = Radio;
+                break;
+            case 'radioGroup':
+                CusComponent = RadioGroup;
+                break;
             case 'cascader':
                 CusComponent = Cascader;
                 break;
@@ -148,7 +155,7 @@ const getFields = (form,fieldsData=[]) =>{
             )
         }else if(type==='fileUpload'){
             return(
-                <Col key={i} span={item['span'] || 8}>
+                <Col key={i} span={item['span'] || 8} className={type==='fileUpload' ? 'fix-ie10-formItem-fileUpload' : ''}>
                     <FormItem label={item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
                             valuePropName: 'fileList',
@@ -160,12 +167,12 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else if(type==='checkbox'){
+        }else if(type==='checkbox' || type==='radio'){
             return(
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
-                            valuePropName: 'checked',
+                            valuePropName: type,
                             ...item['fieldDecoratorOptions']
                         })(
                             <CusComponent {...item['componentProps']} />
@@ -173,12 +180,13 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
-        }else if(type==='checkboxGroup' || type==='cascader'){
+        }else if(type==='checkboxGroup' || type==='cascader' || type==='radioGroup'){
+            //TODO: 如果要显示垂直的 RadioGroup className="radioStyle" 否则不传
             return(
-                <Col key={i} span={item['span'] || 8}>
+                <Col key={i} span={item['span'] || 8} className={(type==='checkboxGroup' || type==='radioGroup') ? 'fix-ie10-formItem-textArea' : ''}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
-                            ...item['fieldDecoratorOptions']
+                            ...item['fieldDecoratorOptions'],
                         })(
                             <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请选择${item['label']}` } options={item['options']} />
                         )}
@@ -192,7 +200,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || [`请输入开始时间`,`请输入结束时间`] } style={{width:'100%'}} />
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || [`开始时间`,`结束时间`] } style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

@@ -330,7 +330,7 @@ class BillingSales extends Component {
                               url={`account/output/billingSale/export`}
                               title='导出'
                               setButtonStyle={{marginRight:5}}
-                              disabled={!dataSource.length>0}
+                              disabled={disabled1 || !dataSource.length>0}
                               params={{
                                   isEstate:1,
                                   ...filters
@@ -384,7 +384,7 @@ class BillingSales extends Component {
                         url={`account/output/billingSale/export`}
                         title='导出'
                         setButtonStyle={{marginRight:5}}
-                        disabled={!dataSource2.length>0}
+                        disabled={disabled1 || !dataSource2.length>0}
                         params={{
                             isEstate:0,
                             ...filters

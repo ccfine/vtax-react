@@ -157,14 +157,12 @@ class LandPriceModal extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
-            labelCol: {
-                xs: { span: 12 },
-                sm: { span: 9 },
-            },
-            wrapperCol: {
-                xs: { span: 12 },
-                sm: { span: 15 },
-            },
+            labelCol: { span: 10 },
+            wrapperCol: { span: 14 },
+        };
+        const formItemLayout2 = {
+            labelCol: { span: 5 },
+            wrapperCol: { span: 19 },
         };
         return (<div><Modal
             title="修改"
@@ -176,9 +174,9 @@ class LandPriceModal extends React.Component {
                 this.props.hideModal();
                 this.props.form.resetFields();
             }}
-            style={{ maxWidth: '90%' }}
+            style={{ maxWidth: '90%' ,top:'5%'}}
             width={920}
-            bodyStyle={{ maxHeight: "500px", overflow: "auto" }}
+            bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
             maskClosable={false}
             destroyOnClose={true}
         >
@@ -290,15 +288,15 @@ class LandPriceModal extends React.Component {
                     </Row>
 
                     <Row>
-                        <Col span={12}>
+                        <Col span={24} className="fix-ie10-formItem-textArea">
                             <FormItem
-                                {...formItemLayout}
+                                {...formItemLayout2}
                                 label="可分摊土地价款比例设置"
                             >
                                 {getFieldDecorator('setUp', { initialValue: this.state.record.setUp })(
                                     <RadioGroup disabled={this.props.readOnly}>
-                                        <Radio value={1}>按调整后施工证面积（㎡）/调整后建筑面积（㎡）计算</Radio>
-                                        <Radio value={2}>按调整后施工证面积（㎡）/调整后施工证面积（㎡）合计</Radio>
+                                        <Radio className='radioStyle' value={1}>按调整后施工证面积（㎡）/调整后建筑面积（㎡）计算</Radio>
+                                        <Radio className='radioStyle' value={2}>按调整后施工证面积（㎡）/调整后施工证面积（㎡）合计</Radio>
                                     </RadioGroup>
                                 )}
                             </FormItem>

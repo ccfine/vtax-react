@@ -156,6 +156,7 @@ class PopModal extends React.Component{
             <Row>
                 <Col span={12}>
                 <FormItem
+                    className='fix-ie10-formItem-textArea'
                       labelCol= {{
                        xs: { span: 12 },
                        sm: { span: 10 },
@@ -257,9 +258,9 @@ class PopModal extends React.Component{
             onOk={(e)=>{
                 this.handOK(e);
             }}
-            style={{maxWidth:'90%'}}
+            style={{maxWidth:'90%',top:'5%'}}
             width={820}
-            bodyStyle={{maxHeight:"500px",overflow:"auto"}}
+            bodyStyle={{maxHeight:"450px",overflow:"auto"}}
             maskClosable={false}
             destroyOnClose={true}
           >

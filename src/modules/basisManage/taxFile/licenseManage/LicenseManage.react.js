@@ -7,7 +7,8 @@ import {SearchTable} from '../../../../compoments'
 import PopModal from './popModal'
 const pointerStyle = {
     cursor:'pointer',
-    color:'#1890ff'
+    color:'#1890ff',
+    margin:'0px 5px'
 }
 
 const searchFields = [
@@ -29,7 +30,9 @@ const getColumns = context =>[
                     context.toggleModalVisible(true)
                 })
             }}>查看</span>
-        )
+        ),
+        fixed:'left',
+        width:'100px',
     },
     {
         title: '纳税主体',

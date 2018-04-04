@@ -39,14 +39,12 @@ export default class TabPage extends Component{
     update(){
         this.setState({updateKey:Date.now()})
     }
-    componentWillReceiveProps(props){
-
-        if(props.selectedRows.length >0 ){
-            if(props.updateKey !== this.props.updateKey || props.id!==this.props.id){
-                this.setState({updateKey:Date.now()});
-            }
+    componentDidMount(){
+        if(this.props.selectedRows.length >0 ) {
+            this.setState({
+                updateKey: Date.now()
+            });
         }
-
     }
     render(){
         const props = this.props;

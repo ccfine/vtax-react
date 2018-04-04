@@ -129,8 +129,8 @@ const columns= [
 class tab1 extends Component{
     state={
         updateKey:Date.now(),
+        pageTwoKey:Date.now(),
         filters:{},
-        selectedRowKeys:undefined,
         selectedRows:[],
         searchTableLoading:false,
         /**
@@ -179,6 +179,10 @@ class tab1 extends Component{
                 if(data.code===200){
                     message.success(`${type}成功!`);
                     this.refreshTable();
+                    this.setState({
+                        pageTwoKey:Date.now(),
+                    })
+
                 }else{
                     message.error(`${type}失败:${data.msg}`)
                 }
@@ -218,7 +222,7 @@ class tab1 extends Component{
     }
 
     render(){
-        const {updateKey,searchTableLoading,selectedRowKeys,selectedRows,filters,dataSource,statusParam} = this.state;
+        const {updateKey,pageTwoKey,searchTableLoading,selectedRows,filters,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
@@ -267,16 +271,19 @@ class tab1 extends Component{
                         cardProps:{
                             title:'项目信息'
                         },
-                        onRowSelect:(selectedRowKeys,selectedRows)=>{
+                        rowSelection:parseInt(statusParam.status, 0)  === 1 ? {type:'radio',} : undefined,
+                        onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
                             this.setState({
-                                selectedRowKeys:selectedRowKeys[0],
                                 selectedRows,
+                                pageTwoKey:Date.now(),
+                            })
+                        } : undefined,
+                        onSuccess:()=>{
+                            this.setState({
+                                selectedRows:[],
+                                pageTwoKey:Date.now(),
                             })
                         },
-                        rowSelection:{
-                            type:'radio',
-                        },
-
                         url:'account/land/price/deducted/project/list',
                         extra: <div>
                             {
@@ -320,7 +327,7 @@ class tab1 extends Component{
                 >
                 </SearchTable>
 
-                <PageTwo id={selectedRowKeys} selectedRows={selectedRows} filters={filters} updateKey={updateKey}/>
+                <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} />
             </div>
         )
     }
