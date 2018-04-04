@@ -4,16 +4,14 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal} from 'antd'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin} from 'antd'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
-
 import './header.less'
 
 const { Header} = Layout;
-const SubMenu = Menu.SubMenu;
 const confirm = Modal.confirm;
 
 class WimsHeader extends Component {
@@ -29,8 +27,8 @@ class WimsHeader extends Component {
             this.props.changeCollapsed(this.state.collapsed);
         });
     }
-    handlerClick = ({ key })=>{
-        if(key==='exit') {
+    handleMenuCollapse = ({ key })=>{
+        if(key==='logout') {
             confirm({
                 title: '系统提示',
                 content: '确定要退出吗',
@@ -47,96 +45,49 @@ class WimsHeader extends Component {
         }
     }
     render() {
+
+        const menu = (
+            <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
+                <Menu.Item key='admin' disabled>
+                    <Icon type="user" />个人中心
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="logout">
+                    <Icon type="logout" />退出登录
+                </Menu.Item>
+            </Menu>
+        );
+
         return (
-            <Header className="vtax-header-trigger" style={{ background: '#fff', padding: 0 }}>
+            <Header className="header">
                 <Icon
-                    className="trigger"
+                    className='trigger'
                     type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                     onClick={this.toggle}
                 />
                 <div style={{display: 'inline-block'}}>
                     <h1>碧桂园增值税管理系统</h1>
                 </div>
-                <div style={{float:'right'}}>
-                    <div style={{float:'right'}}>
-                        <Menu
-                            theme="light"
-                            mode="horizontal"
-                            onClick={this.handlerClick}
-                            defaultSelectedKeys={['bus']}
-                            style={{ lineHeight: '64px' }}
-                            className="vtax-menu-root vtax-menu-right"
-                        >
-                            <Menu.Item key="message">
-                                <Message />
-                            </Menu.Item>
-                            <SubMenu
-                                title={
-                                    <div className="avatarImg">
-                                        <Avatar style={{ backgroundColor: '#87d068', verticalAlign:'middle',marginRight:'10px'  }} icon="user" />
-                                        {/*<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />*/}
-                                        { this.props.userName || '' }
-                                    </div>}>
-                                <Menu.Item key="admin">
-                                    <span>
-                                        <Icon type="user" />
-                                        个人资料
-                                    </span>
-                                </Menu.Item>
-                                <Menu.Item key="exit" >
-                                    <Icon type="poweroff" />退出
-                                </Menu.Item>
-                            </SubMenu>
-                        </Menu>
-                    </div>
-                    <div className="set-search-width">
+                <div className='right'>
+
+                    <div style={{float: 'left',width: '328px',padding:'0 12px'}}>
                         <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />
                     </div>
+
+                    <Message />
+
+                    {this.props.userName ? (
+                        <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                          <span className='action account'>
+                            <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                              {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
+                              <span className='name'>{this.props.userName}</span>
+                          </span>
+                        </Dropdown>
+                    ) : (
+                        <Spin size="small" style={{ marginLeft: 8 }} />
+                    )}
                 </div>
-
-
-                {/*<Row>
-                    <Col span={8}>
-                        <Icon
-                            className="trigger"
-                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.toggle}
-                        />
-                    </Col>
-                    <Col span={8}>
-                        <SelectSearch />
-                    </Col>
-                    <Col span={8} style={{justifyContent:'flex-end'}}>
-                        <Menu
-                            theme="light"
-                            mode="horizontal"
-                            onClick={this.handlerClick}
-                            defaultSelectedKeys={['bus']}
-                            style={{ lineHeight: '64px' }}
-                            className="vtax-menu-root vtax-menu-right"
-                        >
-                            <Menu.Item key="message">
-                                <Message />
-                            </Menu.Item>
-                            <SubMenu
-                                title={
-                                    <span>
-                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
-                                        { this.props.realName }
-                                    </span>}>
-                                <Menu.Item key="admin">
-                                    <span>
-                                        <Icon type="user" />
-                                        个人资料
-                                    </span>
-                                </Menu.Item>
-                                <Menu.Item key="exit" >
-                                    <Icon type="poweroff" />退出
-                                </Menu.Item>
-                            </SubMenu>
-                        </Menu>
-                    </Col>
-                </Row>*/}
             </Header>
         )
     }

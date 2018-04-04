@@ -57,7 +57,8 @@ const undoUploadArrList = [
 class FileUndoImportModal extends Component{
     static propTypes={
         undoUpload:PropTypes.any,
-        onSuccess:PropTypes.func
+        onSuccess:PropTypes.func,
+        disabled:PropTypes.bool,
     }
     static defaultProps = {
         undoUpload:undoUploadArrList,
@@ -130,7 +131,7 @@ class FileUndoImportModal extends Component{
         const {visible,loading} = this.state;
         return(
             <span style={props.style}>
-                <Button size='small' onClick={()=>this.toggleVisible(true)}>
+                <Button size='small' disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
                     <Icon type="rollback" />
                     {props.title}
                 </Button>

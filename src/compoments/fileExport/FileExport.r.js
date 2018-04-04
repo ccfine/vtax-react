@@ -22,7 +22,8 @@ class FileExport extends Component{
         url:PropTypes.string.isRequired,
         title:PropTypes.string.isRequired,
         params:PropTypes.object,
-        WrapComponent:PropTypes.any
+        WrapComponent:PropTypes.any,
+        disabled:PropTypes.bool,
     }
 
     static defaultProps={

@@ -6,6 +6,7 @@
 import React,{Component} from 'react'
 import {Form,Button,Icon,Popconfirm,message} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
+import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
@@ -119,15 +120,13 @@ const searchFields =(disabled)=> {
 const getColumns =context =>[
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
-                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
-                        <a alt="删除" style={{marginRight:"5px"}}>删除</a>
-                    </Popconfirm>
-                </span>
-            );
-        },
+        render:(text,record,index)=> (context.state.statusParam && parseInt(context.state.statusParam.status, 0)) === 1 && (
+            <span>
+                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
+                    <a alt="删除" style={{marginRight:"5px"}}>删除</a>
+                </Popconfirm>
+            </span>
+        ),
         fixed:'left',
         width:'50px',
         dataIndex:'action'
@@ -229,58 +228,18 @@ class InterimContractInputTaxTransferredOut extends Component {
             searchTableLoading: b
         })
     }
-    handleClickActions = type => {
-        let url = '';
-        switch (type) {
-            case '提交':
-                url = '/account/income/taxContract/adjustment/submit';
-                this.requestPost(url, type, this.state.filters);
-                break;
-            case '撤回':
-                url = '/account/income/taxContract/adjustment/revoke';
-                this.requestPost(url, type, this.state.filters);
-                break;
-            case '重算':
-                url = '/account/income/taxContract/adjustment/reset';
-                this.requestPut(url, type, this.state.filters);
-                break;
-            default:
-                this.setState({
-                    updateKey: Date.now(),
-                    pageTwoKey: Date.now(),
-                },()=> {
-                    debugger
-                    console.log(this.state.pageTwoKey)
-                    this.updateStatus()
-                })
-        }
-    }
-
-    requestPut = (url, type, values = {}) => {
-        this.toggleSearchTableLoading(true)
-        request.put(url, values)
+    handleReset=()=>{
+        request.put('/account/income/taxContract/adjustment/reset',this.state.filters
+        )
             .then(({data}) => {
                 this.toggleSearchTableLoading(false)
-                if (data.code === 200) {
-                    message.success(`${type}成功!`);
-                    this.refreshTable()
-                } else {
-                    message.error(`${type}失败:${data.msg}`)
+                if(data.code===200){
+                    message.success('重算成功!');
+                    this.refreshTable();
+                }else{
+                    message.error(`重算失败:${data.msg}`)
                 }
-            })
-    }
-    requestPost = (url, type, values = {}) => {
-        this.toggleSearchTableLoading(true)
-        request.post(url, values)
-            .then(({data}) => {
-                this.toggleSearchTableLoading(false)
-                if (data.code === 200) {
-                    message.success(`${type}成功!`);
-                    this.refreshTable()
-                } else {
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
+            });
     }
     updateStatus=()=>{
         request.get('/account/income/taxContract/listMain',{params:this.state.filters}).then(({data}) => {
@@ -336,8 +295,9 @@ class InterimContractInputTaxTransferredOut extends Component {
     render() {
         const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam} = this.state;
         const {mainId, authMonth} = this.state.filters;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
+        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const reset_disabled = !((mainId && authMonth) || (statusParam && parseInt(statusParam.status, 0) === 1));
+        const revoke_disabled = statusParam && parseInt(statusParam.status, 0) === 1;
         const {search} = this.props.location;
         let disabled = !!search;
         return (
@@ -380,16 +340,16 @@ class InterimContractInputTaxTransferredOut extends Component {
                     cardProps: {
                         title: '进项转出差异调整表'
                     },
-                    rowSelection: {
+                    rowSelection:parseInt(statusParam.status, 0)  === 1 ? {
                         type: 'radio',
-                    },
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
+                    } : undefined,
+                    onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
                         this.setState({
                             selectedRowKeys:selectedRowKeys[0],
                             selectedRows,
                             pageTwoKey:Date.now(),
                         })
-                    },
+                    } : undefined,
                     onSuccess:()=>{
                         this.setState({
                             selectedRowKeys:undefined,
@@ -406,6 +366,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                             url="/account/income/taxContract/adjustment/upload"
                             title="导入"
                             fields={fields}
+                            disabled={disabled2}
                             onSuccess={() => {
                                 this.refreshTable()
                             }}
@@ -415,12 +376,13 @@ class InterimContractInputTaxTransferredOut extends Component {
                             title="下载导入模板"
                             size="small"
                             setButtonStyle={{marginRight: 5}}
+                            disabled={disabled2}
                         />
                         <FileExport
                             url='account/income/taxContract/adjustment/export'
                             title='导出'
                             setButtonStyle={{marginRight: 5}}
-                            disabled={!dataSource.length > 0}
+                            disabled={disabled2}
                             params={{
                                 ...filters
                             }}
@@ -443,29 +405,15 @@ class InterimContractInputTaxTransferredOut extends Component {
                          差异调整凭证
                          </Button>*/}
                         <Button
-                            disabled={disabled1}
                             size='small'
-                            onClick={() => this.handleClickActions('重算')}
-                            style={{marginRight: 5}}>
-                            <Icon type="retweet"/>
+                            style={{marginRight:5}}
+                            disabled={reset_disabled || disabled2}
+                            onClick={this.handleReset}>
+                            <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button
-                            disabled={disabled1}
-                            size='small'
-                            onClick={() => this.handleClickActions('提交')}
-                            style={{marginRight: 5}}>
-                            <Icon type="check"/>
-                            提交
-                        </Button>
-                        <Button
-                            disabled={disabled2}
-                            size='small'
-                            onClick={() => this.handleClickActions('撤回')}
-                            style={{marginRight: 5}}>
-                            <Icon type="rollback"/>
-                            撤回提交
-                        </Button>
+                        <SubmitOrRecall type={1} disabled={disabled2} url="/account/income/taxContract/adjustment/submit" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} disabled={revoke_disabled}url="/account/income/taxContract/adjustment/revoke" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
                     </div>,
                     onDataChange: (dataSource) => {
                         this.setState({

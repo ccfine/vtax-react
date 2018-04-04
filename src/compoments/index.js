@@ -17,7 +17,6 @@ import {AutoFileUpload,ManualFileUpload} from './fileUpload'
 import FileExport from './fileExport'
 import SearchTable from './searchTable'
 import {FileImportModal,FileUndoImportModal} from './fileImportModal'
-import CountTable from './countTable'
 import ButtonModalWithForm from './buttonModalWithForm'
 import ButtonWithFileUploadModal from './buttonWithFileUploadModal'
 import {FetchTable,CardSearch} from './fetchTable'
@@ -37,7 +36,6 @@ export {
     SearchTable,
     FileImportModal,
     FileUndoImportModal,
-    CountTable,
     ButtonModalWithForm,
     ButtonWithFileUploadModal,
     FetchTable,
