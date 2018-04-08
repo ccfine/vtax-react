@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Card,Button,Icon,Modal} from 'antd'
+import {Card,Button,Icon,Modal} from 'antd'
 import {SynchronizeTable} from '../../../../../compoments'
 import PopModal from './equityRelationPopModal'
 const confirm = Modal.confirm;
@@ -92,7 +92,6 @@ class EquityRelation extends Component {
             getCheckboxProps:this.getCheckboxProps
         };
         return (
-            <Layout style={{background:'transparent'}} >
                 <div style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
                     <Card title="查询结果"
                           extra={
@@ -167,18 +166,18 @@ class EquityRelation extends Component {
                                               rowSelection:rowSelection
                                           }} />
                     </Card>
+
+                    <PopModal
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        selectedRowKeys={selectedRowKeys}
+                        selectedRows={selectedRows}
+                        initData={defaultData}
+                        toggleModalVisible={this.toggleModalVisible}
+                        setGqgxDate={this.props.setGqgxDate.bind(this)}
+                        setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
+                    />
                 </div>
-                <PopModal
-                    visible={visible}
-                    modalConfig={modalConfig}
-                    selectedRowKeys={selectedRowKeys}
-                    selectedRows={selectedRows}
-                    initData={defaultData}
-                    toggleModalVisible={this.toggleModalVisible}
-                    setGqgxDate={this.props.setGqgxDate.bind(this)}
-                    setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
-                />
-            </Layout>
         )
     }
 }
