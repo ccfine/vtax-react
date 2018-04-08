@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-04 11:39:17
+ * @Last Modified time: 2018-04-08 10:18:52
  */
 import React, { Component } from "react";
 import { Icon, message, Button, Card } from "antd";
@@ -214,12 +214,6 @@ class OtherBusinessInputTaxRollOut extends Component {
           extra={
             <div>
               {dataSource.length > 0 && listMainResultStatus(status)}
-              <FileExport
-                url={`account/income/taxout/download`}
-                title="下载模板"
-                size="small"
-                setButtonStyle={buttonStyle}
-              />
               <FileImportModal
                 style={buttonStyle}
                 url="/account/income/taxout/upload"
@@ -232,9 +226,17 @@ class OtherBusinessInputTaxRollOut extends Component {
                     span: 11
                   }
                 })}
+                disabled={isSubmit}
                 onSuccess={() => {
                   this.setState({ updateKey: Date.now() });
                 }}
+              />
+              <FileExport
+                url={`account/income/taxout/download`}
+                title="下载模板"
+                size="small"
+                setButtonStyle={buttonStyle}
+                disabled={isSubmit}
               />
               <Button
                 size="small"
