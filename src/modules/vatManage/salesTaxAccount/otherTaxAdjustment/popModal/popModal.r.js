@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
 import {getFields,request,accMul} from '../../../../../utils'
 import moment from 'moment'
-import _ from 'lodash'
+import find from 'lodash/find'
 const formItemLayout = {
     labelCol: {
       xs: { span: 12 },
@@ -241,7 +241,7 @@ class PopModal extends Component{
                                 componentProps:{
                                     disabled:readonly,
                                     onChange:(value)=>{
-                                        let obj = _.find(this.state.typelist,ele=>ele.id === value);
+                                        let obj = find(this.state.typelist,ele=>ele.id === value);
                                         if(obj)
                                         {
                                             this.props.form.setFieldsValue({taxRate:obj.taxRate});

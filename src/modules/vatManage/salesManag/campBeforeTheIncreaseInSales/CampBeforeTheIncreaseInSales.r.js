@@ -9,7 +9,7 @@ import PopModal from './popModal'
 import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment'
-import _ from 'lodash'
+import uniqBy from 'lodash/uniqBy'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -123,7 +123,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,
                 transformData:data=>{
                     //数组去重
-                    return _.uniqBy(data, 'buildingName');
+                    return uniqBy(data, 'buildingName');
                 }
             }
         },

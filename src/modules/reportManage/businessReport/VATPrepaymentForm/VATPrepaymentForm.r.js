@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import Datasheet from 'react-datasheet';
-import _ from 'lodash';
+// import _ from 'lodash';
 import 'react-datasheet/lib/react-datasheet.css';
 class RoomTransactionFile extends Component{
     constructor (props) {
