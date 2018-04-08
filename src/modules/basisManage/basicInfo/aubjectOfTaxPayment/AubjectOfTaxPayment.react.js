@@ -4,14 +4,25 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,Modal} from 'antd'
-import {AsyncTable} from '../../../../compoments'
-import {getFields} from '../../../../utils'
+import {Form,Button,Icon,Modal} from 'antd'
+import {SearchTable} from '../../../../compoments'
 import ProjectInformationManagement from './projectInformationManagement'
 import AddEditModal from './add'
 
 const buttonStyle={
     marginRight:5
+}
+const searchFields = ()=> {
+    return [
+        {
+            label:'纳税主体',
+            fieldName:'id',
+            type:'taxMain',
+            span:8,
+            fieldDecoratorOptions:{
+            },
+        },
+    ]
 }
 const columns = [{
     title: '编码',
@@ -82,7 +93,7 @@ class AubjectOfTaxPayment extends Component {
          * */
         tableUpDateKey:Date.now(),
         selectedRowKeys:null,
-        selectedRows:null,
+        selectedRows:[],
         visible:false,
         modalConfig:{
             type:''
@@ -94,7 +105,7 @@ class AubjectOfTaxPayment extends Component {
             if (!err) {
                 this.setState({
                     selectedRowKeys:null,
-                    selectedRows:null,
+                    selectedRows:[],
                     filters:values
                 },()=>{
                     this.setState({
@@ -103,18 +114,8 @@ class AubjectOfTaxPayment extends Component {
                 });
             }
         });
-
-    }
-    onChange=(selectedRowKeys, selectedRows) => {
-        this.setSelectedRowKeysAndselectedRows(selectedRowKeys,selectedRows);
     }
 
-    setSelectedRowKeysAndselectedRows=(selectedRowKeys, selectedRows)=>{
-        this.setState({
-            selectedRowKeys,
-            selectedRows
-        })
-    }
     toggleModalVisible=visible=>{
         this.setState({
             visible
@@ -129,8 +130,8 @@ class AubjectOfTaxPayment extends Component {
             }
         })
         /*if(type === 'add') {
-            this.setSelectedRowKeysAndselectedRows(null, {});
-        }*/
+         this.setSelectedRowKeysAndselectedRows(null, {});
+         }*/
 
     }
     updateTable=()=>{
@@ -140,60 +141,55 @@ class AubjectOfTaxPayment extends Component {
         this.updateTable()
     }
     render() {
-        const {tableUpDateKey,filters, selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
-        const rowSelection = {
-            type:'radio',
-            selectedRowKeys,
-            onChange: this.onChange
-        };
+        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
+        const disabled = selectedRows && selectedRows.length > 0;
         return (
-            <Layout style={{background:'transparent'}} >
-                <Card
-                    style={{
-                        borderTop:'none'
-                    }}
-                    className="search-card"
-                >
-                    <Form onSubmit={this.handleSubmit}>
-                        <Row>
-                            {
-                                getFields(this.props.form,[
-                                    {
-                                        label:'纳税主体',
-                                        fieldName:'id',
-                                        type:'taxMain',
-                                        span:8,
-                                        fieldDecoratorOptions:{
-                                        },
-                                    },
-                                ])
-                            }
-
-                            <Col span={16} style={{textAlign:'right'}}>
-                                <Form.Item>
-                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Card>
-                <Card
-                    extra={<div>
+            <SearchTable
+                searchOption={{
+                    fields:searchFields,
+                    cardProps:{
+                        className:''
+                    }
+                }}
+                doNotFetchDidMount={true}
+                tableOption={{
+                    key: tableUpDateKey,
+                    pageSize:100,
+                    columns:columns,
+                    cardProps: {
+                        title: '进项转出差异调整表'
+                    },
+                    rowSelection:{
+                        type: 'radio',
+                    } ,
+                    onRowSelect:(selectedRowKeys,selectedRows)=>{
+                        this.setState({
+                            selectedRowKeys:selectedRowKeys,
+                            selectedRows,
+                        })
+                    },
+                    onSuccess:()=>{
+                        this.setState({
+                            selectedRowKeys:undefined,
+                            selectedRows:[],
+                        })
+                    },
+                    url:'/taxsubject/list',
+                    extra:<div>
                         <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
                             <Icon type="plus-circle" />
                             新增
                         </Button>
-                        <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
+                        <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(disabled && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
                             <Icon type="edit" />
                             编辑
                         </Button>
-                        <Button size="small" onClick={()=>this.showModal('view')} disabled={!(selectedRows && parseInt(selectedRows[0].status,0) !== 1) && !(selectedRows && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
+                        <Button size="small" onClick={()=>this.showModal('view')} disabled={!(disabled && parseInt(selectedRows[0].status,0) < 3)} style={buttonStyle}>
                             <Icon type="search" />
                             查看
                         </Button>
                         <Button size="small"
-                                disabled={!selectedRowKeys}
+                                disabled={!disabled}
                                 style={buttonStyle}
                                 onClick={()=>{
                                     const ref = Modal.warning({
@@ -208,20 +204,10 @@ class AubjectOfTaxPayment extends Component {
                             <Icon type="search" />
                             查看历史版本
                         </Button>
-                        <ProjectInformationManagement disabled={!selectedRowKeys} taxSubjectId={selectedRowKeys} />
-                    </div>}
-                    style={{marginTop:10}}>
-                    <AsyncTable url="/taxsubject/list"
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>`${record.id}`,
-                                    pagination:true,
-                                    size:'small',
-                                    columns:columns,
-                                    rowSelection:rowSelection
-                                }} />
-                </Card>
+                        <ProjectInformationManagement disabled={!disabled} taxSubjectId={selectedRowKeys} />
+                    </div>,
+                }}
+            >
 
                 <AddEditModal
                     visible={visible}
@@ -232,7 +218,7 @@ class AubjectOfTaxPayment extends Component {
                     updateTable={this.updateTable.bind(this)}
                     setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
                 />
-            </Layout>
+            </SearchTable>
         )
     }
 }

@@ -69,11 +69,11 @@ class Web extends Component {
         return (
             <Layout key={this.state.refresh}>
                 <Sider collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
-                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden' }}>
+                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     <BreadCrumb location={this.props.location} routes={routes} />
                     <Content style={{ margin: '12px 12px 0', height: '100%'}}>
-                        <div style={{ minHeight: 'calc(100vh - 260px)' }}>
+                        {/*<div style={{ minHeight: 'calc(100vh - 260px)' }}>*/}
 
                             <Switch>
                                 {
@@ -84,7 +84,7 @@ class Web extends Component {
                                 <Route path="*" component={()=><div>no match</div>} />
                             </Switch>
 
-                        </div>
+                        {/*</div>*/}
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
                         {

@@ -233,8 +233,6 @@ class InvoiceCollection extends Component {
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!(search && search.filters);
-
-        console.log(disabled2, disabled1)
         return (
             <Layout style={{background:'transparent'}} >
                 <Card

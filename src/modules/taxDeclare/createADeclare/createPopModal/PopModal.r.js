@@ -28,11 +28,11 @@ const getColumns = context=> [
     {
         title: '纳税主体',
         dataIndex: 'name',
-        width: '80%',
+        width: '500px',
     }, {
         title: '税（费）种',
         dataIndex: 'taxType',
-        width: '20%',
+        width: '260px',
         render:text=>{
             /*//1增值税、2企业所得税
             let t = '';

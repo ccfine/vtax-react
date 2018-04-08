@@ -92,22 +92,29 @@ class VTaxSider extends Component {
             selectedPath: e.key,
         });
     }
-    componentDidMount(){
-        let path = this.props.history.location.pathname,
+
+    componentWillReceiveProps(nextProps){
+        let path = nextProps.history.location.pathname,
             openKeys = [`/${path.split(/\//)[1]}`],
             url_two = path.split(/\//)[2],
             url_three = path.split(/\//)[3];
 
-        if(url_two){
-            openKeys=[`${openKeys}/${url_two}`]
+        if(nextProps.collapsed){
+            this.setState({
+                openKeys:[]
+            });
+        }else{
+            if(url_two){
+                openKeys=[`${openKeys}/${url_two}`]
+            }
+            if(url_three){
+                openKeys =[...openKeys,`${openKeys}/${url_three}`]
+            }
+            this.setState({
+                openKeys,
+                selectedPath: path.indexOf('web/taxDeclare') === -1 ? openKeys[1] : openKeys[0]
+            });
         }
-        if(url_three){
-            openKeys =[...openKeys,`${openKeys}/${url_three}`]
-        }
-        this.setState({
-            openKeys,
-            selectedPath: path.indexOf('web/taxDeclare') === -1 ? openKeys[1] : openKeys[0]
-        });
     }
     render() {
 
