@@ -229,7 +229,7 @@ export default class CreateADeclare extends Component{
                         },
                         extra: <div>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="file-add" />
+                                <Icon type="plus" />
                                 创建申报
                             </Button>
                             <Button size='small' style={{marginRight:5}} disabled={!selectedRowKeys} >

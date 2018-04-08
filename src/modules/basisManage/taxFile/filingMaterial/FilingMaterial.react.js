@@ -120,7 +120,7 @@ export default class FilingMaterial extends Component{
                     extra:(
                         <div>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="file-add" />
+                                <Icon type="plus" />
                                 新增
                             </Button>
                         </div>

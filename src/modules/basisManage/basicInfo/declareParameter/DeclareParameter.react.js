@@ -171,7 +171,7 @@ export default class DeclareParameter extends Component{
                     url:'/sys/declarationParam/list',
                     extra:<div>
                         <Button size="small" style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="file-add" />
+                            <Icon type="plus" />
                             新增
                         </Button>
                     </div>

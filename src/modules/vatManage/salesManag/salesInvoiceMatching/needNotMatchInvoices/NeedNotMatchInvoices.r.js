@@ -307,8 +307,8 @@ class NeedNotMatchInvoices extends Component{
                                 }
                             </div>
                         }
-                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus-circle" />添加</Button>
-                        <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="minus-circle" />撤销</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus" />添加</Button>
+                        <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>
                     </div>,
                     renderFooter:data=>{
                         return(
