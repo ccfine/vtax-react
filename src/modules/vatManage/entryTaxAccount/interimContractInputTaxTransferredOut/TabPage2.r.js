@@ -73,7 +73,6 @@ const getColumns=(context)=>[
             {
                 title: '分摊比例',
                 dataIndex: 'proScale',
-                render:text=>text? `${text}%`: text,
             },{
                 title: '转出',
                 dataIndex: 'proOutAmount',
@@ -86,7 +85,6 @@ const getColumns=(context)=>[
             {
                 title: '分摊比例',
                 dataIndex: 'taxScale',
-                render:text=>text? `${text}%`: text,
             },{
                 title: '转出',
                 dataIndex: 'taxOutAmount',
