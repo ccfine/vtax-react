@@ -1,11 +1,14 @@
-/**
- * Created by liurunbin on 2018/1/2.
+/*
+ * @Author: liuchunxiu 
+ * @Date: 2018-04-04 17:52:39 
+ * @Last Modified by:   liuchunxiu 
+ * @Last Modified time: 2018-04-04 17:52:39 
  */
 import React, { Component } from 'react';
 import { SearchTable } from '../../../../compoments';
 import PopModal from "./popModal";
 import { fMoney } from '../../../../utils'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+// import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
 
 const searchFields = [
     {
@@ -92,10 +95,10 @@ export default class LandPriceManage extends Component {
                         key: this.state.tableUpdateKey,
                         cardProps: {
                             title: '土地价款管理',
-                            extra: (<div>
-                                <SubmitOrRecall monthFieldName='authMonth' type={1} url="/landPriceInfo/submit" onSuccess={this.updateTable} />
-                                <SubmitOrRecall monthFieldName='authMonth' type={2} url="/landPriceInfo/revoke" onSuccess={this.updateTable} />
-                            </div>)
+                            // extra: (<div>
+                            //     <SubmitOrRecall monthFieldName='authMonth' type={1} url="/landPriceInfo/submit" onSuccess={this.updateTable} />
+                            //     <SubmitOrRecall monthFieldName='authMonth' type={2} url="/landPriceInfo/revoke" onSuccess={this.updateTable} />
+                            // </div>)
                         }
                     }}
                 >
