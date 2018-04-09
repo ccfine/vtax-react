@@ -742,7 +742,7 @@ class PopModal extends Component{
                             title="发票明细"
                             extra={type !== 'view' && <div>
                                 <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                                    <Icon type="file-add" />
+                                    <Icon type="plus" />
                                     新增明细
                                 </Button>
                                 <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>

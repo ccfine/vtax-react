@@ -308,7 +308,7 @@ class InvoiceCollection extends Component {
                               dataSource.length>0 &&listMainResultStatus(statusParam)
                           }
                           <Button size="small" onClick={()=>this.showModal('add')} disabled={disabled2} style={buttonStyle}>
-                              <Icon type="file-add" />
+                              <Icon type="plus" />
                               新增
                           </Button>
                           <FileImportModal

@@ -177,7 +177,7 @@ class AubjectOfTaxPayment extends Component {
                     url:'/taxsubject/list',
                     extra:<div>
                         <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                            <Icon type="plus-circle" />
+                            <Icon type="plus" />
                             新增
                         </Button>
                         <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(disabled && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>

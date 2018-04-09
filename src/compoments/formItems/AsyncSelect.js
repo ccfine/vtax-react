@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import {Form,Select,Spin} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from '../../utils'
-import {debounce} from 'lodash'
+import debounce from 'lodash/debounce'
 const FormItem = Form.Item;
 const Option = Select.Option
 export default class AsyncSelect extends Component{

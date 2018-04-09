@@ -148,7 +148,7 @@ export default class TaxClassificationCode extends Component{
                     },
                     extra:<div>
                         <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                            <Icon type="file-add" />
+                            <Icon type="plus" />
                             新增
                         </Button>
                         <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>

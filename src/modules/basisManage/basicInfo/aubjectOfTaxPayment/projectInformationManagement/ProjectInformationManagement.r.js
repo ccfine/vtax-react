@@ -121,7 +121,7 @@ export default class ProjectInformationManagement extends Component{
         return(
             <div style={{display:'inline-block',...this.props.style}}>
                 <Button size='small' disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
-                    <Icon type="plus-circle" />
+                    <Icon type="file-add" />
                     项目信息管理
                 </Button>
                 <Modal
