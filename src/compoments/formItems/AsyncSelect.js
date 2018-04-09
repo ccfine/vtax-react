@@ -36,7 +36,7 @@ export default class AsyncSelect extends Component{
                 span:18
             }
         },
-        initialValue:'',
+        initialValue:undefined,
         label:'field',
         selectOptions:{
 
@@ -140,6 +140,7 @@ export default class AsyncSelect extends Component{
                         <Select
                             style={{ width: '100%' }}
                             onSearch={this.onSearch}
+                            placeholder={`请选择${label}`}
                             {...selectOptions}
                         >
                             {

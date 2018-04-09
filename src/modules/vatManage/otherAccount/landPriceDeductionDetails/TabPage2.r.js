@@ -142,12 +142,19 @@ export default class TabPage extends Component{
     render(){
         const {selectedRowKeys,updateKey,dataSource} = this.state;
         const props = this.props;
+        let disabled1 = false;
+        if(props.disabled){
+            disabled1 = !disabled1
+        }else{
+            disabled1 = !dataSource.length>0
+        }
         return(
             <Card title="结转收入明细" extra={<div>
                 <FileImportModal
                     url='/carryover/incomeDetails/upload'
                     title="导入"
                     fields={fields}
+                    disabled={props.disabled}
                     onSuccess={()=>{
                         this.refreshTable()
                     }}
@@ -157,12 +164,13 @@ export default class TabPage extends Component{
                     title="下载导入模板"
                     setButtonStyle={{marginTop:10,marginRight:5}}
                     size='small'
+                    disabled={props.disabled}
                 />
                 <FileExport
                     url='carryover/incomeDetails/export'
                     title='导出'
                     setButtonStyle={{marginRight:5}}
-                    disabled={!dataSource.length>0}
+                    disabled={disabled1}
                     params={{
                         stagesId: props.selectedRows.length >0 && props.selectedRows[0].stagesId,
                         authMonth: props.filters.authMonth,
@@ -183,11 +191,11 @@ export default class TabPage extends Component{
                                 pagination:true,
                                 size:'small',
                                 columns:getColumns(this),
-                                onRowSelect:(selectedRowKeys)=>{
+                                onRowSelect:!props.disabled ? (selectedRowKeys)=>{
                                     this.setState({
                                         selectedRowKeys:selectedRowKeys
                                     })
-                                },
+                                } : undefined,
                                 onDataChange:(dataSource)=>{
                                     this.setState({
                                         dataSource

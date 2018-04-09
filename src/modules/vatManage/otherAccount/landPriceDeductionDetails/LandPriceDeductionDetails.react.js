@@ -312,15 +312,15 @@ class LandPriceDeductionDetails extends Component{
                         cardProps:{
                             title:'项目分期信息'
                         },
-                        rowSelection:parseInt(statusParam.status, 0)  === 1 ?  {
+                        rowSelection:{
                             type:'radio',
-                        } : undefined,
-                        onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
+                        },
+                        onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({
                                 selectedRows,
                                 pageTwoKey:Date.now(),
                             })
-                        } : undefined,
+                        },
                         onSuccess:()=>{
                             this.setState({
                                 selectedRows:[],
@@ -369,7 +369,7 @@ class LandPriceDeductionDetails extends Component{
                     }}
                 >
 
-                    <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} />
+                    <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} disabled={disabled1} />
                 </SearchTable>
 
         )
