@@ -1,5 +1,5 @@
 /**
- * Created by liurunbin on 2017/12/21.
+ * Created by liuliyuan on 2017/12/21.
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
@@ -349,8 +349,6 @@ class PopModal extends Component{
         const rowSelection = {
             type:'radio',
             width:50,
-            fixed:true,
-            scroll:{ x: 900 },
             selectedRowKeys,
             onChange: this.onChange
         };
@@ -795,18 +793,22 @@ class PopModal extends Component{
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     bordered:true,
-                                    size:'middle',
+                                    size:'small',
                                     columns:this.columns,
                                     rowSelection: type !== 'view' && rowSelection,
                                     footerDate:  footerDate,
                                     renderFooter:data=>{
                                       return(
                                           <div className="footer-total">
-                                              <div>
-                                                  <label>本页合计：</label>
-                                                  金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                  税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                                  价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                              <div className="footer-total-meta">
+                                                  <div className="footer-total-meta-title">
+                                                      <label>本页合计：</label>
+                                                  </div>
+                                                  <div className="footer-total-meta-detail">
+                                                      金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                      税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                      价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                                  </div>
                                               </div>
                                           </div>
                                       )

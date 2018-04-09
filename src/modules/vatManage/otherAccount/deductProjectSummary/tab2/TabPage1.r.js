@@ -271,25 +271,33 @@ class tab1 extends Component{
                         renderFooter:data=>{
                             return(
                                 <div className="footer-total">
-                                    <div>
-                                        <label>本页合计：</label>
-                                        期初余额：<span className="amount-code">{fMoney(data.pageInitialBalance)}</span>
-                                        本期发生额：<span className="amount-code">{fMoney(data.pageCurrentAmount)}</span>
-                                        本期应扣除金额：<span className="amount-code">{fMoney(data.pageCurrentDeductAmount)}</span>
-                                        本期实际扣除金额：<span className="amount-code">{fMoney(data.pageActualDeductAmount)}</span>
-                                        期末余额：<span className="amount-code">{fMoney(data.pageEndingBalance)}</span>
-                                        销项税额：<span className="amount-code">{fMoney(data.pageOutputTax)}</span>
-                                        价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                    <div>
-                                        <label>总计：</label>
-                                        期初余额：<span className="amount-code">{fMoney(data.totalInitialBalance)}</span>
-                                        本期发生额：<span className="amount-code">{fMoney(data.totalCurrentAmount)}</span>
-                                        本期应扣除金额：<span className="amount-code">{fMoney(data.totalCurrentDeductAmount)}</span>
-                                        本期实际扣除金额：<span className="amount-code">{fMoney(data.totalActualDeductAmount)}</span>
-                                        期末余额：<span className="amount-code">{fMoney(data.totalEndingBalance)}</span>
-                                        销项税额：<span className="amount-code">{fMoney(data.totalOutputTax)}</span>
-                                        价税合计：<span className="amount-code">{fMoney(data.totalTotalAmount)}</span>
+                                    <div className="footer-total-meta">
+                                        <div className="footer-total-meta-title">
+                                            <label>本页合计：</label>
+                                        </div>
+                                        <div className="footer-total-meta-detail">
+                                            期初余额：<span className="amount-code">{fMoney(data.pageInitialBalance)}</span>
+                                            本期发生额：<span className="amount-code">{fMoney(data.pageCurrentAmount)}</span>
+                                            本期应扣除金额：<span className="amount-code">{fMoney(data.pageCurrentDeductAmount)}</span>
+                                            本期实际扣除金额：<span className="amount-code">{fMoney(data.pageActualDeductAmount)}</span>
+                                            <br/>
+                                            期末余额：<span className="amount-code">{fMoney(data.pageEndingBalance)}</span>
+                                            销项税额：<span className="amount-code">{fMoney(data.pageOutputTax)}</span>
+                                            价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                        </div>
+                                        <div className="footer-total-meta-title">
+                                            <label>总计：</label>
+                                        </div>
+                                        <div className="footer-total-meta-detail">
+                                            期初余额：<span className="amount-code">{fMoney(data.totalInitialBalance)}</span>
+                                            本期发生额：<span className="amount-code">{fMoney(data.totalCurrentAmount)}</span>
+                                            本期应扣除金额：<span className="amount-code">{fMoney(data.totalCurrentDeductAmount)}</span>
+                                            本期实际扣除金额：<span className="amount-code">{fMoney(data.totalActualDeductAmount)}</span>
+                                            <br/>
+                                            期末余额：<span className="amount-code">{fMoney(data.totalEndingBalance)}</span>
+                                            销项税额：<span className="amount-code">{fMoney(data.totalOutputTax)}</span>
+                                            价税合计：<span className="amount-code">{fMoney(data.totalTotalAmount)}</span>
+                                        </div>
                                     </div>
                                 </div>
                             )

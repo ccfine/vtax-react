@@ -290,21 +290,27 @@ export default class PrePaidHousingSales extends Component{
                     renderFooter:data=>{
                         return(
                             <div className="footer-total">
-                                <div>
-                                    <label>本页合计：</label>
-                                    累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
-                                    累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
-                                    当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
-                                    当期预收价款：<span className="amount-code">{fMoney(data.pageCurrentPrepaidPayment)}</span>
-                                    预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
-                                </div>
-                                <div>
-                                    <label>总计：</label>
-                                    累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
-                                    累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
-                                    当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
-                                    当期预收价款：<span className="amount-code">{fMoney(data.totalCurrentPrepaidPayment)}</span>
-                                    预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>本页合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
+                                        累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
+                                        当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
+                                        当期预收价款：<span className="amount-code">{fMoney(data.pageCurrentPrepaidPayment)}</span>
+                                        预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
+                                        <div className="footer-total-meta-title">
+                                            <label>总计：</label>
+                                        </div>
+                                        <div className="footer-total-meta-detail">
+                                            累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
+                                            累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
+                                            当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
+                                            当期预收价款：<span className="amount-code">{fMoney(data.totalCurrentPrepaidPayment)}</span>
+                                            预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )

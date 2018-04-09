@@ -229,12 +229,16 @@ class TableTaxStructure extends Component {
                                     renderFooter:data=>{
                                         return (
                                             <div className="footer-total">
-                                                <div>
-                                                    <label>合计：</label>
-                                                    金额：<span className="amount-code">{fMoney(data.totalAdjustAmount)}</span>
-                                                    税额：<span className="amount-code">{fMoney(data.totalAdjustTaxAmount)}</span>
-                                                    调整金额：<span className="amount-code">{fMoney(data.totalAmount)}</span>
-                                                    调整税额：<span className="amount-code">{fMoney(data.totalTaxAmount)}</span>
+                                                <div className="footer-total-meta">
+                                                    <div className="footer-total-meta-title">
+                                                        <label>合计：</label>
+                                                    </div>
+                                                    <div className="footer-total-meta-detail">
+                                                        金额：<span className="amount-code">{fMoney(data.totalAdjustAmount)}</span>
+                                                        税额：<span className="amount-code">{fMoney(data.totalAdjustTaxAmount)}</span>
+                                                        调整金额：<span className="amount-code">{fMoney(data.totalAmount)}</span>
+                                                        调整税额：<span className="amount-code">{fMoney(data.totalTaxAmount)}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )

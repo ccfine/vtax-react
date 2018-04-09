@@ -348,11 +348,15 @@ class TaxExemptionDetails extends Component{
                     renderFooter:data=>{
                         return(
                             <div className="footer-total">
-                                <div>
-                                    <label>本页合计：</label>
-                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                    减免税金额：<span className="amount-code">{fMoney(data.pageReduceTaxAmount)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                        减免税金额：<span className="amount-code">{fMoney(data.pageReduceTaxAmount)}</span>
+                                    </div>
                                 </div>
                             </div>
                         )
