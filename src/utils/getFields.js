@@ -117,7 +117,6 @@ const getFields = (form,fieldsData=[]) =>{
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
-                            initialValue:'',
                             ...item['fieldDecoratorOptions'],
                         })(
                             <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
