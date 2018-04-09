@@ -40,19 +40,19 @@
     - 其他台帐--``otherAccount``
         - 售房预缴台账--``prePaidHousingSales``
         - 预缴税款台账--``prepayTax``
-- 纳税申报
-    - 创建申报
-    - 查询申报
-- 报表管理
-    - 业务报表
-    - 管理分析报表
-- 系统管理
-    - 组织架构
-    - 用户权限
-    - 系统维护
-    - 接口管理
-    - 流程管理
-    - 系统监控
+- 纳税申报--``taxDeclare``
+    - 创建申报--``createADeclare``
+    - 查询申报--``searchDeclare``
+- 报表管理--``reportManage``
+    - 业务报表--``businessReport``
+    - 管理分析报表--``manageAnalysisReport``
+- 系统管理--``systemManage``
+    - 组织架构--``organization``
+    - 用户权限--``userPermissions``
+    - 系统维护--``systemMaintain``
+    - 接口管理--``interfaceManage``
+    - 流程管理--``processManage``
+    - 系统监控--``systemMonitor``
         
 
 ## Commitizen
