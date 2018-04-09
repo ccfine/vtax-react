@@ -115,15 +115,8 @@ export default class AsyncSelect extends Component{
                         if(data.code===200 ){
 
                             const result = data.data.records;
-                            const newData = [];
-                            result.forEach((r) => {
-                                newData.push({
-                                    value: `${r.id}`,
-                                    text: r.itemName,
-                                });
-                            });
                             this.setState({
-                                dataSource:result
+                                dataSource: result
                             })
                         }
                     });
@@ -135,6 +128,8 @@ export default class AsyncSelect extends Component{
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
         const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
+        const newData =  dataSource.length > 0 ? [{itemName:'全部', id:''}].concat(dataSource) : dataSource;
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
@@ -148,7 +143,7 @@ export default class AsyncSelect extends Component{
                             {...selectOptions}
                         >
                             {
-                                dataSource.map((item,i)=>(
+                                newData.map((item,i)=>(
                                     <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
                                 ))
                             }
