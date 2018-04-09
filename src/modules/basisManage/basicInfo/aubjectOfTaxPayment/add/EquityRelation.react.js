@@ -161,7 +161,7 @@ class EquityRelation extends Component {
                                               rowKey:record=>record.id,
                                               pagination:true,
                                               bordered:true,
-                                              size:'middle',
+                                              size:'small',
                                               columns:columns,
                                               rowSelection:rowSelection
                                           }} />

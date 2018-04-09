@@ -73,7 +73,6 @@ const getColumns=(context)=>[
             {
                 title: '分摊比例',
                 dataIndex: 'proScale',
-                render:text=>text? `${text}%`: text,
             },{
                 title: '转出',
                 dataIndex: 'proOutAmount',
@@ -86,7 +85,6 @@ const getColumns=(context)=>[
             {
                 title: '分摊比例',
                 dataIndex: 'taxScale',
-                render:text=>text? `${text}%`: text,
             },{
                 title: '转出',
                 dataIndex: 'taxOutAmount',
@@ -120,6 +118,7 @@ export default class TabPage extends Component{
                         url="/account/income/taxContract/detail/upload"
                         title="导入"
                         fields={fields}
+                        disabled={props.disabled}
                         onSuccess={()=>{
                             this.refreshTable()
                         }}
@@ -128,6 +127,7 @@ export default class TabPage extends Component{
                         url='account/income/taxContract/detail/download'
                         title="下载导入模板"
                         size="small"
+                        disabled={props.disabled}
                         setButtonStyle={{marginRight:5}}
                     />
                 </div>

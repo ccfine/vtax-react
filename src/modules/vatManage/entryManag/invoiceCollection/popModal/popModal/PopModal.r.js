@@ -234,11 +234,11 @@ class PopModal extends Component{
                                     fieldDecoratorOptions:{
                                         initialValue:initData.qty,
                                         rules:[
-                                            regRules.integer,
                                             {
                                                 required:true,
                                                 message:'请输入数量'
-                                            }
+                                            },
+                                            regRules.integer,
                                         ],
                                     }
                                 },{
@@ -300,11 +300,11 @@ class PopModal extends Component{
                                     fieldDecoratorOptions:{
                                         initialValue:initData.taxRate,
                                         rules: [
-                                            regRules.integer,
                                             {
                                                 required:true,
                                                 message:'请输入税率'
-                                            }
+                                            },
+                                            regRules.integer,
                                         ],
                                     }
                                 },{

@@ -259,9 +259,13 @@ class PopModal extends Component{
                                         renderFooter:data=>{
                                             return (
                                                 <div className="footer-total">
-                                                    <div>
-                                                        <label>合计：</label>
-                                                        建筑面积(m²)：<span className="amount-code">{data.allBuildingArea}</span>
+                                                    <div className="footer-total-meta">
+                                                        <div className="footer-total-meta-title">
+                                                            <label>合计：</label>
+                                                        </div>
+                                                        <div className="footer-total-meta-detail">
+                                                            建筑面积(m²)：<span className="amount-code">{data.allBuildingArea}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )
