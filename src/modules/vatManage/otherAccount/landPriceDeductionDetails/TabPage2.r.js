@@ -143,7 +143,7 @@ export default class TabPage extends Component{
         const {selectedRowKeys,updateKey,dataSource} = this.state;
         const props = this.props;
         let disabled1 = false;
-        if(props.disabled){
+        if(props.status === 2){
             disabled1 = !disabled1
         }else{
             disabled1 = !dataSource.length>0
@@ -154,7 +154,7 @@ export default class TabPage extends Component{
                     url='/carryover/incomeDetails/upload'
                     title="导入"
                     fields={fields}
-                    disabled={props.disabled}
+                    disabled={props.status === 2}
                     onSuccess={()=>{
                         this.refreshTable()
                     }}
@@ -164,7 +164,7 @@ export default class TabPage extends Component{
                     title="下载导入模板"
                     setButtonStyle={{marginTop:10,marginRight:5}}
                     size='small'
-                    disabled={props.disabled}
+                    disabled={props.status === 2}
                 />
                 <FileExport
                     url='carryover/incomeDetails/export'

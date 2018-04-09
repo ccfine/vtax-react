@@ -369,7 +369,7 @@ class LandPriceDeductionDetails extends Component{
                     }}
                 >
 
-                    <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} disabled={disabled1} />
+                    <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} status={parseInt(statusParam.status, 0)} />
                 </SearchTable>
 
         )
