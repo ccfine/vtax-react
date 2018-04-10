@@ -6,6 +6,7 @@
 - [redux](https://github.com/reactjs/redux) --- 数据状态管理
 - [react-router](https://github.com/ReactTraining/react-router) --- 路由
 - [ant design](https://ant.design) --- 组件库
+- [@storybook/react](https://github.com/storybooks/storybook) --- UI测试组件库
 - less、sass
 
 ## 导航

@@ -52,7 +52,7 @@ const routes = [
         icon:'form',
         exact:true,
         permissions:false,
-        component:TaxDeclare,
+        component:wrapPage('纳税申报',TaxDeclare),
         children:Children_Routes
     },{
         path:`${PATH}/reportManage`,
