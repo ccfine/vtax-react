@@ -8,6 +8,8 @@
 - [ant design](https://ant.design) --- 组件库
 - [@storybook/react](https://github.com/storybooks/storybook) --- UI测试组件库
 - [echarts](https://github.com/apache/incubator-echarts) --- 图表组件库
+- [cross-env](https://github.com/kentcdodds/cross-env) --- 跨平台设置环境变量
+
 - less、sass
 
 ## 导航

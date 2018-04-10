@@ -8,13 +8,14 @@ import LoadAble from 'react-loadable'
 import {LoadingPage} from '../../compoments'
 import { Layout, Card, Col, Row,Menu,Icon,Dropdown } from 'antd'
 import ImageGallery from 'react-image-gallery';
+import { pieOption, barOption, lineOption, scatterOption, mapOption, radarOption, candlestickOption } from './optionConfig/options'
 
 import banner1 from './images/banner1.jpg'
 import banner2 from './images/banner2.jpg'
 import "react-image-gallery/styles/css/image-gallery.css";
 
 
-import { pieOption, barOption, lineOption, scatterOption, mapOption, radarOption, candlestickOption } from './optionConfig/options'
+
 const AsyncPieReact = LoadAble({
     loader: () => import('./echartsTest/PieReact'),//饼图组件
     loading: LoadingPage,
