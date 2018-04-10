@@ -3,8 +3,9 @@
  * createTime   : 2017/12/7 15:38
  * description  :
  */
-import {wrapPage} from '../compoments'
-import Home from './home'
+import LoadAble from 'react-loadable'
+import {wrapPage,LoadingPage} from '../compoments'
+/*import Home from './home'*/
 import TaxDeclare from './taxDeclare'
 import VatManage_Routes from './vatManage'
 import ReportManage_Routes from './reportManage'
@@ -12,11 +13,17 @@ import BasisManage_Routes from './basisManage'
 import SystemManage_Routes from './systemManage'
 import Children_Routes from './taxDeclare/children/routes'
 
+
+const AsyncHome = LoadAble({
+    loader: () => import('./home'),
+    loading: LoadingPage,
+});
+
 const PATH = '/web';
 const routes = [
     {
         path:`${PATH}`,
-        component:wrapPage('首页',Home),
+        component:wrapPage('首页',AsyncHome),
         name:'首页',
         icon:'user',
         exact:true,
@@ -45,7 +52,7 @@ const routes = [
         icon:'form',
         exact:true,
         permissions:false,
-        component:TaxDeclare,
+        component:wrapPage('纳税申报',TaxDeclare),
         children:Children_Routes
     },{
         path:`${PATH}/reportManage`,
