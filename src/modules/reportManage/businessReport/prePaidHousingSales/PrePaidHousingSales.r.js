@@ -3,7 +3,7 @@
  * 售房预缴台账
  */
 import React,{Component} from 'react'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import {fMoney} from '../../../../utils'
 const searchFields = (getFieldValue)=> {
     return [

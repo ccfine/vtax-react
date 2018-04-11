@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../../utils'
+import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from '../../../../../compoments'
 import PageTwo from './TabPage2.r'
 import { withRouter } from 'react-router'

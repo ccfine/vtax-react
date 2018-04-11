@@ -4,7 +4,7 @@
 import React,{Component} from 'react';
 import {Table,message} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
+import {request} from 'utils'
 export default class AsyncTable extends Component{
     constructor(props){
         super(props);

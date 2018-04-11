@@ -2,7 +2,7 @@
 import React from "react";
 import {Modal} from "antd";
 import SourceTable from '../sourceTable';
-import {request,accAdd} from '../../../../../../utils';
+import {request,accAdd} from 'utils';
 import findIndex from 'lodash/findIndex'
 export default class SourceModal extends React.Component{
     state={

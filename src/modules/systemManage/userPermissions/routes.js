@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 import RoleManage from './roleManage'
 
 //const RoleManage =()=><div>角色管理</div>

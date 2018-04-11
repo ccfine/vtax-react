@@ -3,10 +3,10 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import {fMoney,getUrlParam,request} from '../../../../utils'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {fMoney,getUrlParam,request} from 'utils'
 import PopModal from './popModal'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import uniqBy from 'lodash/uniqBy'

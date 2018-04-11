@@ -10,13 +10,13 @@ import {
   FileImportModal,
   FileExport,
   SearchTable
-} from "../../../../compoments";
+} from "compoments";
 import {
   request,
   fMoney,
   getUrlParam,
   listMainResultStatus
-} from "../../../../utils";
+} from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
 const buttonStyle = {

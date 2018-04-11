@@ -5,8 +5,8 @@
  */
 import React, { Component } from 'react';
 import {Button,Icon,message} from 'antd'
-import {request} from '../../../utils'
-import {SearchTable,FileExport} from '../../../compoments';
+import {request} from 'utils'
+import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
 const searchFields =(context) => [

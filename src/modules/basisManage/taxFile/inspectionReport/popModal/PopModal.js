@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Form, Button, message, Spin, Row, Divider } from 'antd'
-import { getFields, request } from '../../../../../utils'
-import {ButtonWithFileUploadModal} from '../../../../../compoments'
+import { getFields, request } from 'utils'
+import {ButtonWithFileUploadModal} from 'compoments'
 import moment from 'moment'
 const confirm = Modal.confirm;
 const formItemLayout = {

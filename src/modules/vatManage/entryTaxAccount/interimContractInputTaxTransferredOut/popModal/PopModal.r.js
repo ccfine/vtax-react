@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Card,Form,Button,Row,Col,Modal,message} from 'antd'
-import {AsyncTable} from '../../../../../compoments'
+import {AsyncTable} from 'compoments'
 import {getFields,htmlDecode,request,accDiv} from '../../../../../utils'
 import {List} from 'immutable'
 // style={{width:'160px',overflow:'hidden',margin:'0 auto'}}

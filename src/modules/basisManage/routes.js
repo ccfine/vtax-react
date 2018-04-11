@@ -3,7 +3,7 @@
  * createTime   : 2017/12/15 18:09
  * description  :
  */
-import {wrapPage} from '../../compoments'
+import {wrapPage} from 'compoments'
 
 import BasicInfo from './basicInfo'
 import TaxFile from './taxFile'

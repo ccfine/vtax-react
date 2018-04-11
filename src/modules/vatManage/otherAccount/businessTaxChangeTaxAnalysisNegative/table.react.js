@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table, Card, Button, Icon, message} from 'antd'
-import { request, fMoney, listMainResultStatus } from '../../../../utils'
-import { CusFormItem } from '../../../../compoments'
+import { request, fMoney, listMainResultStatus } from 'utils'
+import { CusFormItem } from 'compoments'
 const NumericItem = CusFormItem.NumericInput
 const getColumns = (context, tax1Count = 0, tax2Count = 0) => [{
     title: '项目及栏次',

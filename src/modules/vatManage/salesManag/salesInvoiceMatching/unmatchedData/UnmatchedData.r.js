@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {fMoney,getUrlParam,request} from '../../../../../utils'
-import {SearchTable,FileExport} from '../../../../../compoments'
+import {SearchTable,FileExport} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
 import {message} from 'antd';
 import { withRouter } from 'react-router'

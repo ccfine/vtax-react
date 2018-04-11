@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules} from '../../../../../utils'
+import {request,getFields,regRules} from 'utils'
 
 class PopModal extends Component{
     static defaultProps={

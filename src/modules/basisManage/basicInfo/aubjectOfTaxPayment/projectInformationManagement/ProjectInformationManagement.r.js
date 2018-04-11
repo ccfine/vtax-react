@@ -4,7 +4,7 @@ import React,{Component} from 'react'
 import {Button,Modal,Icon,Table,Card,message} from 'antd'
 import {List} from 'immutable'
 import {request} from '../../../../../utils'
-import {FileExport,AutoFileUpload} from '../../../../../compoments'
+import {FileExport,AutoFileUpload} from 'compoments'
 const confirm = Modal.confirm;
 const constants = {
     PROJECT_NAME:'itemName',

@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Modal,Form,Row,message,Button} from 'antd'
-import {request,getFields} from '../../../../../utils'
+import {request,getFields} from 'utils'
 import PropTypes from 'prop-types'
 class FeildModal extends Component{
     static propTypes ={

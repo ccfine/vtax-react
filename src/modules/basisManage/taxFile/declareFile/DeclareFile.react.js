@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,DatePicker} from 'antd'
-import {AsyncTable,CusFormItem} from '../../../../compoments'
+import {AsyncTable,CusFormItem} from 'compoments'
 import PopModal from './popModal'
 const RangePicker = DatePicker.RangePicker;
 const FormItem = Form.Item;

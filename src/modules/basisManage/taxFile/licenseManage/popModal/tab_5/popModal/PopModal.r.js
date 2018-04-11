@@ -1,8 +1,8 @@
 import React,{Component} from 'react'
 import {Modal,Form,Input,Col,Button,message,Spin,Row} from 'antd'
-import {getFields,request} from '../../../../../../../utils'
+import {getFields,request} from 'utils'
 import moment from 'moment'
-import { ButtonWithFileUploadModal } from '../../../../../../../compoments'
+import { ButtonWithFileUploadModal } from 'compoments'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {

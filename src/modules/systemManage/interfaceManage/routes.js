@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 
 const InterfaceMaintain =()=><div>接口维护</div>
 

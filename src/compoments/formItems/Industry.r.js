@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Icon,Select,Modal,Tree,message} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
+import {request} from 'utils'
 const TreeNode = Tree.TreeNode;
 export default class Industry extends Component{
     static propTypes={

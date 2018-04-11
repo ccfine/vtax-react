@@ -9,7 +9,7 @@ import {Spin} from 'antd'
 export default ({isLoading, error}) => {
     // Handle the loading state
     if (isLoading) {
-        return <div style={{position:'fixed',left:'50%',top:'50%'}}><Spin size="large" /></div>;
+        return <Spin />;//<div style={{position:'fixed',left:'50%',top:'50%'}}><Spin size="large" /></div>;
     }
     // Handle the error state
     else if (error) {

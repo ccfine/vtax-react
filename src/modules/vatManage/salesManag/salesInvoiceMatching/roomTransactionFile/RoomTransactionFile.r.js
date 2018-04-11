@@ -3,10 +3,10 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
-import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
-import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
+import {AsyncTable,FileExport,FileImportModal} from 'compoments'
+import {getFields,request,fMoney,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
-import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import moment from 'moment';
 const transformDataStatus = status =>{
     status = parseInt(status,0)

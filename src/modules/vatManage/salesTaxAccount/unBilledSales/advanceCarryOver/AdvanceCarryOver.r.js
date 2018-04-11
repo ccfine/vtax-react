@@ -4,9 +4,9 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../../compoments'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
 import {fMoney,request,getUrlParam} from '../../../../../utils'
-import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle={

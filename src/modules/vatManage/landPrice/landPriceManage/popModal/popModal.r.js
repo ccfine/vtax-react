@@ -1,9 +1,9 @@
 import React from "react";
 import { Modal, Form, Input, Row, Col, Radio, Icon, message, Spin } from 'antd';
-import { CusFormItem } from "../../../../../compoments";
+import { CusFormItem } from "compoments";
 import StageTable from './stageTable';
 import SourceModal from "./sourcePopModal";
-import { request } from '../../../../../utils'
+import { request } from 'utils'
 import findIndex from 'lodash/findIndex'
 
 

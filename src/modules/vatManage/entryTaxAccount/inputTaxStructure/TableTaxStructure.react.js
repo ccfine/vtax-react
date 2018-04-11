@@ -3,8 +3,8 @@
  */
 import React,{Component} from 'react'
 import {Card,Form,Button,Icon,message} from 'antd'
-import {AsyncTable} from '../../../../compoments'
-import {getFields,htmlDecode,regRules,request,fMoney,listMainResultStatus} from '../../../../utils'
+import {AsyncTable} from 'compoments'
+import {getFields,htmlDecode,regRules,request,fMoney,listMainResultStatus} from 'utils'
 const buttonStyle={
     marginRight:5
 }

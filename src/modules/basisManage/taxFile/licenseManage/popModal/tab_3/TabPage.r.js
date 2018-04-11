@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
 import {Button,Popconfirm,message,Icon} from 'antd'
 import PopModal from './popModal'
-import {request,fMoney} from '../../../../../../utils'
+import {request,fMoney} from 'utils'
 const getColumns = context=> [
     {
         title:'操作',

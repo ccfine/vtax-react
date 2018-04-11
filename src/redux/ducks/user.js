@@ -7,7 +7,7 @@
 import { createActions, handleActions } from 'redux-actions'
 //TODO:  npm 的时候必须加上版本号 4.0.0-rc.9  要不然 getIn() 用不了
 import {fromJS} from 'immutable';
-import {request} from '../../utils'
+import {request} from 'utils'
 
 const initialState = fromJS({
     /**用户个人信息*/

@@ -5,9 +5,9 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,message } from 'antd'
-import {AsyncTable,FileExport,FileImportModal,FileUndoImportModal} from '../../../../compoments'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,requestDict,fMoney,getFields,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {AsyncTable,FileExport,FileImportModal,FileUndoImportModal} from 'compoments'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {request,requestDict,fMoney,getFields,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 import PopModal from './popModal'

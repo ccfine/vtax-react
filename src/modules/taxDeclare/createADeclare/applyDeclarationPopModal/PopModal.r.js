@@ -7,7 +7,7 @@ import React,{Component} from 'react'
 import {Button,Icon,Modal,Row,Col,Steps,List, Card} from 'antd'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
-import {composeMenus,request} from '../../../../utils'
+import {composeMenus,request} from 'utils'
 import routes from '../../../../modules/routes'
 import './styles.less'
 

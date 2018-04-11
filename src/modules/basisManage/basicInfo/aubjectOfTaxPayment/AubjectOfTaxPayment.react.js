@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Form,Button,Icon,Modal} from 'antd'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import ProjectInformationManagement from './projectInformationManagement'
 import AddEditModal from './add'
 

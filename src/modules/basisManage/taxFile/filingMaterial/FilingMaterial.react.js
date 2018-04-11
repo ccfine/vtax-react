@@ -3,7 +3,7 @@
  * 备案资料
  */
 import React, { Component } from 'react'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import PopModal from './PopModal.r'
 import { Button, Icon } from 'antd'
 const searchFields = [

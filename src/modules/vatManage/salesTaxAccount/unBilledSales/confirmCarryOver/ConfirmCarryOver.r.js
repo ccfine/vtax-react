@@ -4,10 +4,10 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport} from '../../../../../compoments'
+import {SearchTable,FileExport} from 'compoments'
 import {fMoney,getUrlParam,request} from '../../../../../utils'
 import ManualMatchRoomModal from './SummarySheetModal'
-import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const transformDataStatus = status =>{
