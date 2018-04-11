@@ -72,19 +72,15 @@ class Web extends Component {
                 <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     <BreadCrumb location={this.props.location} routes={routes} />
-                    <Content style={{ margin: '12px 12px 0', height: '100%'}}>
-                        {/*<div style={{ minHeight: 'calc(100vh - 260px)' }}>*/}
-
-                            <Switch>
-                                {
-                                    composeMenus(routes).map((route, i) => (
-                                        <RouteWithSubRoutes key={i} {...route}/>
-                                    ))
-                                }
-                                <Route path="*" component={()=><div>no match</div>} />
-                            </Switch>
-
-                        {/*</div>*/}
+                    <Content style={{ margin: '12px 12px 0'}}>
+                        <Switch>
+                            {
+                                composeMenus(routes).map((route, i) => (
+                                    <RouteWithSubRoutes key={i} {...route}/>
+                                ))
+                            }
+                            <Route path="*" component={()=><div>no match</div>} />
+                        </Switch>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
                         {
