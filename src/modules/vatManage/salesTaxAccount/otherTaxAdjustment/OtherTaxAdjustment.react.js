@@ -6,7 +6,7 @@
  */
 import React, { Component } from "react";
 import { Button, Popconfirm, message, Icon } from "antd";
-import { SearchTable } from "../../../../compoments";
+import { SearchTable } from "compoments";
 import PopModal from "./popModal";
 import {
   request,

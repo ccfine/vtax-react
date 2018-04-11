@@ -4,7 +4,7 @@
  * description  :
  */
 import LoadAble from 'react-loadable'
-import {wrapPage,LoadingPage} from '../compoments'
+import {wrapPage,LoadingPage} from 'compoments'
 /*import Home from './home'*/
 import TaxDeclare from './taxDeclare'
 import VatManage_Routes from './vatManage'

@@ -3,8 +3,8 @@
  */
 import React, { Component } from 'react'
 import {Button, Icon } from 'antd'
-import { SearchTable } from '../../../../compoments'
-import { fMoney } from '../../../../utils'
+import { SearchTable } from 'compoments'
+import { fMoney } from 'utils'
 import PopModal from './popModal'
 const buttonStyle = {
     margin: '0 5px'

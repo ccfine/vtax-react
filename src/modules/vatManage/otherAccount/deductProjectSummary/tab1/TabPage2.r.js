@@ -2,9 +2,9 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {AsyncTable} from '../../../../../compoments'
+import {AsyncTable} from 'compoments'
 import {Card} from 'antd'
-import {fMoney} from '../../../../../utils'
+import {fMoney} from 'utils'
 
 const columns=[
     {

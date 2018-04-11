@@ -20,7 +20,9 @@ export default class RadarReact extends Component {
     }
 
     componentDidMount(){
-        this.onResize()
+        setTimeout(()=>{
+            this.onResize()
+        },200)
         window.addEventListener('resize',this.onResize)
     }
     componentWillUnmount(){
@@ -28,6 +30,6 @@ export default class RadarReact extends Component {
     }
 
     render() {
-        return <div ref={r => this.radar = r} style={{width:'100%', height:'500px'}}></div>
+        return <div ref={r => this.radar = r} style={{width:'100%', height:'484px'}}></div>
     }
 }

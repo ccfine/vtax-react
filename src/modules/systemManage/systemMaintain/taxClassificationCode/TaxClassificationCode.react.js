@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react';
 import {Button,Icon,Modal,message } from 'antd'
-import {SearchTable} from '../../../../compoments';
+import {SearchTable} from 'compoments';
 import {request} from '../../../../utils'
 import PopModal from './popModal'
 const confirm = Modal.confirm;

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Form, Row, Col, Button } from 'antd'
-import { getFields,getUrlParam } from '../../../../utils'
+import { getFields,getUrlParam } from 'utils'
 import moment from 'moment'
 const FormItem = Form.Item
 const handleSubmit = (props, e) => {

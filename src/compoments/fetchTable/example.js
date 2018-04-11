@@ -1,6 +1,6 @@
 import React from 'react'
 import Table from './FetchTable.r'
-import {fMoney} from '../../utils'
+import {fMoney} from 'utils'
 const getColumns = context => [
     {
         title: '操作',

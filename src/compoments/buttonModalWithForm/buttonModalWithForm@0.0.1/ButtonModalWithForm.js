@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import {Button,Icon,Modal,Form,Row,message} from 'antd'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import {request,getFields} from '../../../utils'
+import {request,getFields} from 'utils'
 
 const formatMoment = values=>{
     for(let key in values){

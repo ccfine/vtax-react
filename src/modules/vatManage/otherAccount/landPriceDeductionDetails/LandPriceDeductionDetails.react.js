@@ -5,9 +5,9 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import PageTwo from './TabPage2.r'
-import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 

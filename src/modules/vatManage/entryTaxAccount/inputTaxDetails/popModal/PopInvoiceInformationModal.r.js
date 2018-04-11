@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Card,Row,Col,Form,Button,Modal } from 'antd'
-import {AsyncTable} from '../../../../../compoments'
-import {getFields,fMoney} from '../../../../../utils'
+import {AsyncTable} from 'compoments'
+import {getFields,fMoney} from 'utils'
 class PopInvoiceInformationModal extends Component{
     static defaultProps={
         visible:true,

@@ -3,7 +3,7 @@
  * 税收优惠
  */
 import React, { Component } from 'react'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import {Button,Icon} from 'antd'
 import PopModal from './PopModal.r'
 const searchFields = [

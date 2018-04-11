@@ -5,8 +5,8 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Layout,Card,Row,Col,Form,Button} from 'antd'
 import moment from 'moment'
-import {AsyncTable} from '../../../../../compoments'
-import {getFields} from '../../../../../utils'
+import {AsyncTable} from 'compoments'
+import {getFields} from 'utils'
 class SearchTable extends Component{
     static propTypes = {
         searchOption:PropTypes.object,

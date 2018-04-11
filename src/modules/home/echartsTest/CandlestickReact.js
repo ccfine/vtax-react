@@ -23,7 +23,9 @@ export default class CandlestickReact extends Component {
         myChart.resize()
     }
     componentDidMount(){
-        this.onResize()
+        setTimeout(()=>{
+            this.onResize()
+        },200)
         window.addEventListener('resize',this.onResize)
     }
     componentWillUnmount(){

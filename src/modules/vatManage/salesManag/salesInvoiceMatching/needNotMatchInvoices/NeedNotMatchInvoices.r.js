@@ -2,8 +2,8 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney,request,getUrlParam} from '../../../../../utils'
-import {SearchTable} from '../../../../../compoments'
+import {fMoney,request,getUrlParam} from 'utils'
+import {SearchTable} from 'compoments'
 import {Button,Icon,message,Modal} from 'antd'
 import ManualMatchRoomModal from './addDataModal'
 import { withRouter } from 'react-router'

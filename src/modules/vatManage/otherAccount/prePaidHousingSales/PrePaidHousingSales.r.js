@@ -4,8 +4,8 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import {fMoney,request,getUrlParam} from '../../../../utils'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {fMoney,request,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const transformDataStatus = status =>{

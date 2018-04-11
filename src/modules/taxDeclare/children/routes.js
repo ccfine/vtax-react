@@ -4,7 +4,7 @@
  * description  :
  */
 import LoadAble from 'react-loadable'
-import {wrapPage,LoadingPage} from '../../../compoments'
+import {wrapPage,LoadingPage} from 'compoments'
 /*import CreateADeclare from '../../taxDeclare/createADeclare'*/
 /*import SearchDeclare from '../../taxDeclare/searchDeclare'*/
 const ICON_URL_PATH = '/assets/routes_avatar/'

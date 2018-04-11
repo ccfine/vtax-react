@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/16.
  */
 import React,{Component} from 'react'
-import {SearchTable} from '../../../../../compoments'
+import {SearchTable} from 'compoments'
 import {fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';

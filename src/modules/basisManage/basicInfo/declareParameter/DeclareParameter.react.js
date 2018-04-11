@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import PopModal from './popModal'
 
 const buttonStyle={

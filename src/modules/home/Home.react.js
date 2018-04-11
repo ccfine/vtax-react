@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import LoadAble from 'react-loadable'
-import {LoadingPage} from '../../compoments'
+import {LoadingPage} from 'compoments'
 import { Layout, Card, Col, Row,Menu,Icon,Dropdown } from 'antd'
 import ImageGallery from 'react-image-gallery';
 import { pieOption, barOption, lineOption, scatterOption, mapOption, radarOption, candlestickOption } from './optionConfig/options'

@@ -7,8 +7,8 @@ import React,{Component} from 'react';
 import moment from 'moment';
 import {connect} from 'react-redux'
 import {Button,Modal,Form,Row,Col,Card,message} from 'antd';
-import {SearchTable} from '../../../../compoments'
-import {request,requestDict,getFields} from '../../../../utils'
+import {SearchTable} from 'compoments'
+import {request,requestDict,getFields} from 'utils'
 
 const searchFields = (getFieldValue,setFieldsValue)=> {
     return [

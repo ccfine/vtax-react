@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Form,Select} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
+import {request} from 'utils'
 const FormItem = Form.Item;
 const Option = Select.Option
 let timeout;

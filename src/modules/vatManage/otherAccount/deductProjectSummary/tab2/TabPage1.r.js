@@ -3,8 +3,8 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../../utils'
-import {SearchTable} from '../../../../../compoments'
+import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import {SearchTable} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const searchFields =(disabled)=> [

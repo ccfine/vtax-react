@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, message, Row } from 'antd'
-import { getFields, request } from '../../../../../../../utils'
+import { getFields, request } from 'utils'
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },

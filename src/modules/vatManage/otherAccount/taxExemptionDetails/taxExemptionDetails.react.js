@@ -5,8 +5,8 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
+import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 

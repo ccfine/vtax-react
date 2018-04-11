@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/24.
  */
 import React from 'react'
-import {CusFormItem} from '../../../../compoments'
+import {CusFormItem} from 'compoments'
 export default class EditableCell extends React.Component {
     render() {
         const {getFieldDecorator,fieldName,renderValue} = this.props;

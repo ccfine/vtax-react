@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Form,Button,Icon,Modal,message} from 'antd';
-import {TreeTable} from '../../../../compoments'
+import {TreeTable} from 'compoments'
 import PopModal from './popModal'
 import {request} from '../../../../utils'
 

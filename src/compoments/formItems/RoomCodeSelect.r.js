@@ -3,8 +3,8 @@
  */
 import React,{Component} from 'react'
 import {Select,Modal} from 'antd'
-import {SearchTable} from '../../compoments'
-import {fMoney} from '../../utils'
+import {SearchTable} from 'compoments'
+import {fMoney} from 'utils'
 import PropTypes from 'prop-types'
 import uniqBy from 'lodash/uniqBy'
 export default class RoomCodeSelect extends Component{

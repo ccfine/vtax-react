@@ -5,10 +5,10 @@
  * @Last Modified time: 2018-04-04 17:52:39 
  */
 import React, { Component } from 'react';
-import { SearchTable } from '../../../../compoments';
+import { SearchTable } from 'compoments';
 import PopModal from "./popModal";
-import { fMoney } from '../../../../utils'
-// import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import { fMoney } from 'utils'
+// import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 
 const searchFields = [
     {

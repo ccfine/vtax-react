@@ -20,9 +20,10 @@ export default class BarReact extends Component {
         myChart.setOption(option)
         myChart.resize()
     }
-
     componentDidMount(){
-        this.onResize()
+        setTimeout(()=>{
+            this.onResize()
+        },200)
         window.addEventListener('resize',this.onResize)
     }
     componentWillUnmount(){

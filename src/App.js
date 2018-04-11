@@ -6,7 +6,7 @@ import createHistory from 'history/createBrowserHistory'
 import configureStore from './redux/store/configureStore'
 //TODO：npm install 的时候 react-router-redux要加上 @next 最新版本号
 import {ConnectedRouter} from 'react-router-redux'
-import {request} from './utils'
+import {request} from 'utils'
 import './App.css';
 
 const {store,persistor} = configureStore();

@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Button,Icon,Modal,Form,Row,message} from 'antd'
 import PropTypes from 'prop-types'
-import {request,getFields} from '../../utils'
+import {request,getFields} from 'utils'
 import moment from 'moment'
 class FileImportModal extends Component{
     static propTypes={

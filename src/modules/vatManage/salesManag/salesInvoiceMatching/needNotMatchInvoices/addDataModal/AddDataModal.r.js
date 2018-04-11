@@ -3,8 +3,8 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,message} from 'antd';
-import {request,fMoney} from '../../../../../../utils'
-import {SearchTable} from '../../../../../../compoments'
+import {request,fMoney} from 'utils'
+import {SearchTable} from 'compoments'
 const searchFields = [
     {
         label:'纳税主体',

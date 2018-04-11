@@ -23,7 +23,9 @@ export default class ScatterReact extends Component {
     }
 
     componentDidMount(){
-        this.onResize()
+        setTimeout(()=>{
+            this.onResize()
+        },200)
         window.addEventListener('resize',this.onResize)
     }
     componentWillUnmount(){

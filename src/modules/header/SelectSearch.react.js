@@ -7,7 +7,7 @@ import React,{Component} from 'react'
 import { Form,Select,Spin } from 'antd'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom';
-import {request} from '../../utils'
+import {request} from 'utils'
 import {saveOrgId,saveToken} from '../../redux/ducks/user'
 
 const Option = Select.Option;

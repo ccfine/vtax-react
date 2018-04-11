@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Row} from 'antd'
-import {getFields} from '../../../../../utils'
+import {getFields} from 'utils'
 import './styles.less'
 
 class TaxIdentification extends Component {

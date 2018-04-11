@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Select,Modal,Tree,Form,Button,Row,message} from 'antd'
 import PropTypes from 'prop-types'
-import {request,getFields} from '../../utils'
+import {request,getFields} from 'utils'
 const TreeNode = Tree.TreeNode;
 
 export default class TaxableProject extends Component{

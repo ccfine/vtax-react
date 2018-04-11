@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {NavRouter} from '../../../compoments'
+import {NavRouter} from 'compoments'
 import routes from '../../basisManage/taxFile/routes'
 class TaxFile extends Component {
     render() {

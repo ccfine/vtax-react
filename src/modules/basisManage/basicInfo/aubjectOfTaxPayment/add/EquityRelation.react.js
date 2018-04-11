@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Card,Button,Icon,Modal} from 'antd'
-import {SynchronizeTable} from '../../../../../compoments'
+import {SynchronizeTable} from 'compoments'
 import PopModal from './equityRelationPopModal'
 const confirm = Modal.confirm;
 const buttonStyle={

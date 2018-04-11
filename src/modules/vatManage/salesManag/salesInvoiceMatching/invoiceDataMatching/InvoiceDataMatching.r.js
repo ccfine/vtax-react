@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {request,fMoney,getUrlParam} from '../../../../../utils'
-import {SearchTable,FileExport} from '../../../../../compoments'
-import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {request,fMoney,getUrlParam} from 'utils'
+import {SearchTable,FileExport} from 'compoments'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const transformDataStatus = status =>{

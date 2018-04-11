@@ -5,9 +5,9 @@
  */
 import React,{Component} from 'react'
 import {Form,Button,Icon,Popconfirm,message} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'

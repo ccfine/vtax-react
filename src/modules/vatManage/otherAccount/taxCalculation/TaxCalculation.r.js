@@ -3,12 +3,11 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Form,Modal} from 'antd'
-import {SearchTable} from '../../../../compoments'
-import {request,getUrlParam} from '../../../../utils'
+import {SearchTable} from 'compoments'
+import {request,getUrlParam,fMoney} from 'utils'
 import EditableCell from './EditableCell.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-import {fMoney} from '../../../../utils'
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {

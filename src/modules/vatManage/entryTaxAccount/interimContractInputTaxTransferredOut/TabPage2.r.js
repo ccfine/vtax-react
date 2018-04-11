@@ -2,9 +2,9 @@
  * Created by liuliyuan on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
+import {AsyncTable,FileExport,FileImportModal} from 'compoments'
 import {Card} from 'antd'
-import {fMoney} from '../../../../utils'
+import {fMoney} from 'utils'
 const fields = [
     {
         label:'纳税主体',

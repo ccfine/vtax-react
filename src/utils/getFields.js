@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader,Radio } from 'antd'
-import {CusFormItem} from '../compoments'
+import {CusFormItem} from 'compoments'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const Option = Select.Option;

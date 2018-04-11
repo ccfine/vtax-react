@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Card,Row,Col,Form,Button,Modal } from 'antd'
-import {AsyncTable,FileExport} from '../../../../../compoments'
+import {AsyncTable,FileExport} from 'compoments'
 import {getFields,fMoney} from '../../../../../utils'
 const columns = [
     {

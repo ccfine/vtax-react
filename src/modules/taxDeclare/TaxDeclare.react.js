@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {NavRouter} from '../../compoments'
+import {NavRouter} from 'compoments'
 import routes from './children/routes'
 
 class TaxDeclare extends Component {
@@ -23,7 +23,7 @@ export default TaxDeclare
 import React, { Component } from 'react'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {RouteWithSubRoutes} from '../../compoments'
-import {composeMenus} from '../../utils'
+import {composeMenus} from 'utils'
 import routes from './children/routes'
 
 class TaxDeclare extends Component {

@@ -1,7 +1,7 @@
 import React from "react";
 import {Modal, Form, Input, Row, Col, Select} from "antd";
-import {requestDict} from '../../../../../../../utils'
-import {CusFormItem} from "../../../../../../../compoments";
+import {requestDict} from 'utils'
+import {CusFormItem} from "compoments";
 const FormItem = Form.Item;
 const Option = Select.Option;
 const {NumericInput} = CusFormItem;

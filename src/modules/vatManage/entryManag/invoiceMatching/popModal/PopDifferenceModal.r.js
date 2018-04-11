@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,message,Spin} from 'antd';
-import {request,regRules} from '../../../../../utils'
+import {request,regRules} from 'utils'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
