@@ -35,7 +35,7 @@ const getColumns = context => ([
             </span>)
         },
         fixed: 'left',
-        width: '70px',
+        width: '75px',
         dataIndex: 'action'
     }, {
         title: '纳税主体编码',
