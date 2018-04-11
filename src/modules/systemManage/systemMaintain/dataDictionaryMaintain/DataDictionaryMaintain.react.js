@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Form,Button,Icon,Modal,message} from 'antd';
-import {TreeTable} from '../../../../compoments'
+import {TreeTable} from 'compoments'
 import PopModal from './popModal'
 import {request} from '../../../../utils'
 
@@ -141,7 +141,7 @@ class DataDictionaryMaintain extends Component {
                 cardTableOption={{
                     extra:<div>
                         <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="file-add" />
+                            <Icon type="plus" />
                             新增
                         </Button>
                         <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('edit')}>

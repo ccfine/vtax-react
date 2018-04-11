@@ -4,8 +4,8 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import {fMoney,request,getUrlParam} from '../../../../utils'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {fMoney,request,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const transformDataStatus = status =>{
@@ -534,25 +534,31 @@ class PrePaidHousingSales extends Component{
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button size="small" style={{marginRight:5}} type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && hasData && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="file-add" />提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && hasData && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
                         <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && hasData && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(
                             <div className="footer-total">
-                                <div>
-                                    <label>本页合计：</label>
-                                    累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
-                                    当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
-                                    累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
-                                    预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
-                                </div>
-                                <div>
-                                    <label>总计：</label>
-                                    累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
-                                    当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
-                                    累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
-                                    预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>本页合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
+                                        当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
+                                        累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
+                                        预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
+                                    </div>
+                                    <div className="footer-total-meta-title">
+                                        <label>总计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
+                                        当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
+                                        累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
+                                        预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
+                                    </div>
                                 </div>
                             </div>
                         )

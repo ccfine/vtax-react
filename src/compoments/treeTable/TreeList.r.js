@@ -6,7 +6,7 @@
 import React,{Component} from 'react';
 import { Tree,Spin } from 'antd';
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
+import {request} from 'utils'
 
 const TreeNode = Tree.TreeNode;
 class TreeList extends Component {

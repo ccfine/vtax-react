@@ -3,12 +3,11 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Form,Modal} from 'antd'
-import {SearchTable} from '../../../../compoments'
-import {request,getUrlParam} from '../../../../utils'
+import {SearchTable} from 'compoments'
+import {request,getUrlParam,fMoney} from 'utils'
 import EditableCell from './EditableCell.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-import {fMoney} from '../../../../utils'
 const searchFields =(disabled)=>(getFieldValue)=> {
     return [
         {
@@ -336,7 +335,7 @@ class TaxCalculation extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===1)}><Icon type="file-add" />提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===1)}><Icon type="check" />提交</Button>
                         <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
                     </div>
                 }}

@@ -2,9 +2,9 @@
  * Created by liuliyuan on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {AsyncTable,FileExport,FileImportModal} from '../../../../compoments'
+import {AsyncTable,FileExport,FileImportModal} from 'compoments'
 import {Card} from 'antd'
-import {fMoney} from '../../../../utils'
+import {fMoney} from 'utils'
 const fields = [
     {
         label:'纳税主体',
@@ -73,7 +73,6 @@ const getColumns=(context)=>[
             {
                 title: '分摊比例',
                 dataIndex: 'proScale',
-                render:text=>text? `${text}%`: text,
             },{
                 title: '转出',
                 dataIndex: 'proOutAmount',
@@ -86,7 +85,6 @@ const getColumns=(context)=>[
             {
                 title: '分摊比例',
                 dataIndex: 'taxScale',
-                render:text=>text? `${text}%`: text,
             },{
                 title: '转出',
                 dataIndex: 'taxOutAmount',
@@ -120,6 +118,7 @@ export default class TabPage extends Component{
                         url="/account/income/taxContract/detail/upload"
                         title="导入"
                         fields={fields}
+                        disabled={props.disabled}
                         onSuccess={()=>{
                             this.refreshTable()
                         }}
@@ -128,6 +127,7 @@ export default class TabPage extends Component{
                         url='account/income/taxContract/detail/download'
                         title="下载导入模板"
                         size="small"
+                        disabled={props.disabled}
                         setButtonStyle={{marginRight:5}}
                     />
                 </div>

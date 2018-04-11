@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Spin} from 'antd'
-import {getFields,getUrlParam,request} from '../../../../utils'
+import {getFields,getUrlParam,request} from 'utils'
 import TableTaxStructure from './TableTaxStructure.react'
 import { withRouter } from 'react-router'
 import moment from 'moment';

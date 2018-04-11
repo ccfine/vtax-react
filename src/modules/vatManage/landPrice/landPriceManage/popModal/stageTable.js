@@ -1,7 +1,7 @@
 import React from "react";
 import {Table,Card} from "antd";
 import StageModal from './stagePopModal';
-import {fMoney,toPercent} from '../../../../../utils';
+import {fMoney,toPercent} from 'utils';
 
 const getColumns =(context,length)=>[
     {

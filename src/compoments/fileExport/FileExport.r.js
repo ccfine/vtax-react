@@ -52,7 +52,7 @@ class FileExport extends Component{
         const {setButtonStyle,size,title,disabled,WrapComponent} = this.props;
         return(
             <WrapComponent size={size} style={{...setButtonStyle}} disabled={disabled} onClick={this.handleDownload.bind(this)}>
-                <Icon type="download" /> {title}
+                <Icon type="download" />{title}
             </WrapComponent>
         )
     }

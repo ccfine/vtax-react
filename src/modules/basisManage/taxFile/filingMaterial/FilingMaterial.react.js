@@ -3,7 +3,7 @@
  * 备案资料
  */
 import React, { Component } from 'react'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import PopModal from './PopModal.r'
 import { Button, Icon } from 'antd'
 const searchFields = [
@@ -120,7 +120,7 @@ export default class FilingMaterial extends Component{
                     extra:(
                         <div>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="file-add" />
+                                <Icon type="plus" />
                                 新增
                             </Button>
                         </div>

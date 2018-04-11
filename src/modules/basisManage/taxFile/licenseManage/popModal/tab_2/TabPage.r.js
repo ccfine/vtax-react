@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {SearchTable} from '../../../../../../compoments'
+import {SearchTable} from 'compoments'
 import PopModal from './popModal'
 const getColumns = context=>[
     {

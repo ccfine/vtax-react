@@ -4,8 +4,8 @@
 import React,{Component} from 'react'
 import {Form,Select,Spin} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
-import {debounce} from 'lodash'
+import {request} from 'utils'
+import debounce from 'lodash/debounce'
 const FormItem = Form.Item;
 const Option = Select.Option
 export default class AsyncSelect extends Component{
@@ -36,7 +36,7 @@ export default class AsyncSelect extends Component{
                 span:18
             }
         },
-        initialValue:'',
+        initialValue:undefined,
         label:'field',
         selectOptions:{
 
@@ -115,15 +115,8 @@ export default class AsyncSelect extends Component{
                         if(data.code===200 ){
 
                             const result = data.data.records;
-                            const newData = [];
-                            result.forEach((r) => {
-                                newData.push({
-                                    value: `${r.id}`,
-                                    text: r.itemName,
-                                });
-                            });
                             this.setState({
-                                dataSource:result
+                                dataSource: result
                             })
                         }
                     });
@@ -135,6 +128,8 @@ export default class AsyncSelect extends Component{
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
         const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
+        const newData =  dataSource.length > 0 ? [{itemName:'全部', id:''}].concat(dataSource) : dataSource;
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
@@ -145,10 +140,11 @@ export default class AsyncSelect extends Component{
                         <Select
                             style={{ width: '100%' }}
                             onSearch={this.onSearch}
+                            placeholder={`请选择${label}`}
                             {...selectOptions}
                         >
                             {
-                                dataSource.map((item,i)=>(
+                                newData.map((item,i)=>(
                                     <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
                                 ))
                             }

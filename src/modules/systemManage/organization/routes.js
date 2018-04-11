@@ -3,7 +3,7 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 import OrganizationalStructureMaintenance from './organizationalStructureMaintenance'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'

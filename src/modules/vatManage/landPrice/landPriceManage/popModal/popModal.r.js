@@ -1,10 +1,10 @@
 import React from "react";
 import { Modal, Form, Input, Row, Col, Radio, Icon, message, Spin } from 'antd';
-import { CusFormItem } from "../../../../../compoments";
+import { CusFormItem } from "compoments";
 import StageTable from './stageTable';
 import SourceModal from "./sourcePopModal";
-import { request } from '../../../../../utils'
-import _ from 'lodash'
+import { request } from 'utils'
+import findIndex from 'lodash/findIndex'
 
 
 const FormItem = Form.Item;
@@ -36,7 +36,7 @@ class LandPriceModal extends React.Component {
         item.action = "modify";
         // 更新项目分期信息
         let stageSource = this.state.stageSource;
-        let index = _.findIndex(stageSource,ele => item.id === ele.id);
+        let index = findIndex(stageSource,ele => item.id === ele.id);
         stageSource[index] = item;
         stageSource.pop();
         stageSource = this.countStage(stageSource);

@@ -9,7 +9,7 @@ import BasicInfo from './BasicInfo.react'
 import TaxIdentification from './TaxIdentification.react'
 import Shareholding from './Shareholding.react'
 import EquityRelation from './EquityRelation.react'
-import {request} from '../../../../../utils'
+import {request} from 'utils'
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 

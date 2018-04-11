@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import {Layout,Card,Row,Col,Form,Button,Spin} from 'antd'
 import moment from 'moment'
 import {AsyncTable} from '../../index'
-import {getFields} from '../../../utils'
+import {getFields} from 'utils'
 class SearchTable extends Component{
     static propTypes = {
         searchOption:PropTypes.object,

@@ -5,9 +5,9 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
-import {AsyncTable,FileImportModal,FileExport} from '../../../../compoments'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getFields,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {AsyncTable,FileImportModal,FileExport} from 'compoments'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {request,fMoney,getFields,getUrlParam,listMainResultStatus} from 'utils'
 import PopDifferenceModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -273,17 +273,23 @@ class InvoiceMatching extends Component {
                             renderFooter:data=>{
                                 return (
                                     <div className="footer-total">
-                                        <div>
-                                            <label>本页合计：</label>
-                                            本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                            本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                            本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                        </div>
-                                        <div>
-                                            <label>总计：</label>
-                                            总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                            总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                            总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                        <div className="footer-total-meta">
+                                            <div className="footer-total-meta-title">
+                                                <label>本页合计：</label>
+                                            </div>
+                                            <div className="footer-total-meta-detail">
+                                                本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                            </div>
+                                            <div className="footer-total-meta-title">
+                                                <label>总计：</label>
+                                            </div>
+                                            <div className="footer-total-meta-detail">
+                                                总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                                总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                                总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 )

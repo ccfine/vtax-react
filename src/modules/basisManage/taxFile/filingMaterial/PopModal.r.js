@@ -4,9 +4,9 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields} from '../../../../utils'
+import {request,getFields} from 'utils'
 import moment from 'moment'
-import { ButtonWithFileUploadModal } from '../../../../compoments'
+import { ButtonWithFileUploadModal } from 'compoments'
 const confirm = Modal.confirm
 const formItemStyle = {
     labelCol:{

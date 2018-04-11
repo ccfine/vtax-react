@@ -2,7 +2,7 @@ import React from 'react'
 import {message} from 'antd'
 import PropTypes from 'prop-types'
 import Table from './PaginationTable.r'
-import {request} from '../../utils'
+import {request} from 'utils'
 
 export default class FetchTable extends React.Component{
     static propTypes={

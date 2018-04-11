@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Button,Icon,Modal,message,Upload,Spin} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../../utils'
+import {request} from 'utils'
 const transformData = data =>{
     return data.map(item=>{
         return {

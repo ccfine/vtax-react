@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/16.
  */
 import React,{Component} from 'react'
-import {SearchTable} from '../../../../../compoments'
+import {SearchTable} from 'compoments'
 import {fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -153,17 +153,23 @@ class InvoicesWithNeedNotMatchRoom extends Component{
                     renderFooter:data=>{
                         return(
                             <div className="footer-total">
-                                <div>
-                                    <label>本页合计：</label>
-                                    本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                    本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                    本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                </div>
-                                <div>
-                                    <label>总计：</label>
-                                    总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                    总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                    总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>本页合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                        本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                        本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                    </div>
+                                    <div className="footer-total-meta-title">
+                                        <label>总计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                        总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
+                                        总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
+                                    </div>
                                 </div>
                             </div>
                         )

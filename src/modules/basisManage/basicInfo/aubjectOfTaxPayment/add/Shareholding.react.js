@@ -4,9 +4,9 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Card,Button,Icon,Modal} from 'antd'
-import {SynchronizeTable} from '../../../../../compoments'
-import {fMoney} from '../../../../../utils'
+import {Card,Button,Icon,Modal} from 'antd'
+import {SynchronizeTable} from 'compoments'
+import {fMoney} from 'utils'
 import PopModal from './shareholdingPopModal'
 const confirm = Modal.confirm;
 const buttonStyle={
@@ -123,13 +123,12 @@ class Shareholding extends Component {
             getCheckboxProps:this.getCheckboxProps
         };
         return (
-            <Layout style={{background:'transparent'}} >
                 <div style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
                     <Card title="查询结果"
                           extra={
                                   this.props.type !== 'view' ?  <div>
                                       <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                                          <Icon type="file-add" />
+                                          <Icon type="plus" />
                                           新增
                                       </Button>
                                       <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
@@ -192,23 +191,24 @@ class Shareholding extends Component {
                                         rowKey:record=>record.id,
                                         pagination:true,
                                         bordered:true,
-                                        size:'middle',
+                                        size:'small',
                                         columns:columns,
                                         rowSelection:rowSelection
                                     }} />
                     </Card>
+
+                    <PopModal
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        selectedRowKeys={selectedRowKeys}
+                        selectedRows={selectedRows}
+                        initData={defaultData}
+                        toggleModalVisible={this.toggleModalVisible}
+                        setGdjcgDate={this.props.setGdjcgDate.bind(this)}
+                        setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
+                    />
                 </div>
-                <PopModal
-                    visible={visible}
-                    modalConfig={modalConfig}
-                    selectedRowKeys={selectedRowKeys}
-                    selectedRows={selectedRows}
-                    initData={defaultData}
-                    toggleModalVisible={this.toggleModalVisible}
-                    setGdjcgDate={this.props.setGdjcgDate.bind(this)}
-                    setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
-                />
-            </Layout>
+
         )
     }
 }

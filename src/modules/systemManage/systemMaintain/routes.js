@@ -3,7 +3,7 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 
 import DataDictionaryMaintain from './dataDictionaryMaintain'
 import TaxReturnsCustom from './taxReturnsCustom'

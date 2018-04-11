@@ -7,8 +7,8 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Layout,Card,Row,Col,Form,Button,Spin} from 'antd'
 import moment from 'moment'
-import {AsyncTable} from '../../compoments'
-import {getFields} from '../../utils'
+import {AsyncTable} from 'compoments'
+import {getFields} from 'utils'
 import TreeList from './TreeList.r'
 
 class TreeTable extends Component{

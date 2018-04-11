@@ -1,5 +1,5 @@
 /**
- * Created by liurunbin on 2017/12/21.
+ * Created by liuliyuan on 2017/12/21.
  */
 import React,{Component} from 'react';
 import {Table} from 'antd'

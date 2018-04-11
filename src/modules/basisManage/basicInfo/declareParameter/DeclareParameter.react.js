@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import PopModal from './popModal'
 
 const buttonStyle={
@@ -171,7 +171,7 @@ export default class DeclareParameter extends Component{
                     url:'/sys/declarationParam/list',
                     extra:<div>
                         <Button size="small" style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="file-add" />
+                            <Icon type="plus" />
                             新增
                         </Button>
                     </div>

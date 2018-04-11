@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,Modal,Form,Row,message} from 'antd'
-import {request,getFields} from '../../../../../utils'
+import {request,getFields} from 'utils'
 class FileImportModal extends Component{
     state={
         visible:false,

@@ -3,8 +3,8 @@
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,ButtonWithFileUploadModal} from '../../../../compoments'
-import {fMoney,request,getUrlParam} from '../../../../utils'
+import {SearchTable,FileExport,ButtonWithFileUploadModal} from 'compoments'
+import {fMoney,request,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 
@@ -382,25 +382,31 @@ class PrepayTax extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="file-add" />提交</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
                         <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
                     </div>,
                     renderFooter:data=>{
                         return(
                             <div className="footer-total">
-                                <div>
-                                    <label>合计：</label>
-                                    销售额（含税）：<span className="amount-code">{fMoney(data.amountWithTax)}</span>
-                                    销售额（不含税）：<span className="amount-code">{fMoney(data.amountWithoutTax)}</span>
-                                    实际销售额（不含税）：<span className="amount-code">{fMoney(data.actualAmountWithoutTax)}</span>
-                                    实际预征税额：<span className="amount-code">{fMoney(data.actualPreTaxAmount)}</span>
-                                </div>
-                                <div>
-                                    <label>合计：</label>
-                                    扣除金额 ：<span className="amount-code">{fMoney(data.deductAmount)}</span>
-                                    上期未退税（负数）：<span className="amount-code">{fMoney(data.taxRebates)}</span>
-                                    预征税额 ：<span className="amount-code">{fMoney(data.preTaxAmount)}</span>
-                                    调整销售额（不含税）：<span className="amount-code">{fMoney(data.adjustSales)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        销售额（含税）：<span className="amount-code">{fMoney(data.amountWithTax)}</span>
+                                        销售额（不含税）：<span className="amount-code">{fMoney(data.amountWithoutTax)}</span>
+                                        实际销售额（不含税）：<span className="amount-code">{fMoney(data.actualAmountWithoutTax)}</span>
+                                        实际预征税额：<span className="amount-code">{fMoney(data.actualPreTaxAmount)}</span>
+                                    </div>
+                                    <div className="footer-total-meta-title">
+                                        <label>合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        扣除金额 ：<span className="amount-code">{fMoney(data.deductAmount)}</span>
+                                        上期未退税（负数）：<span className="amount-code">{fMoney(data.taxRebates)}</span>
+                                        预征税额 ：<span className="amount-code">{fMoney(data.preTaxAmount)}</span>
+                                        调整销售额（不含税）：<span className="amount-code">{fMoney(data.adjustSales)}</span>
+                                    </div>
                                 </div>
                             </div>
                         )

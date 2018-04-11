@@ -5,8 +5,8 @@
  */
 import React, { Component } from 'react';
 import {Button,Icon,message} from 'antd'
-import {request} from '../../../utils'
-import {SearchTable,FileExport} from '../../../compoments';
+import {request} from 'utils'
+import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
 const searchFields =(context) => [
@@ -229,7 +229,7 @@ export default class CreateADeclare extends Component{
                         },
                         extra: <div>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="file-add" />
+                                <Icon type="plus" />
                                 创建申报
                             </Button>
                             <Button size='small' style={{marginRight:5}} disabled={!selectedRowKeys} >

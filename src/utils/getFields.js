@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader,Radio } from 'antd'
-import {CusFormItem} from '../compoments'
+import {CusFormItem} from 'compoments'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const Option = Select.Option;
@@ -109,15 +109,19 @@ const getFields = (form,fieldsData=[]) =>{
                 <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} decoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
             </Col>
         }else if(type==='select'){
+            //TODO:为了设置所有不是必填的select都加上一个全部默认选项
+            const isShowAll = item['fieldDecoratorOptions'] && item['fieldDecoratorOptions'].rules && item['fieldDecoratorOptions'].rules.map(item=>item.required)[0] === true,
+                  newData =  item.options.length>0 ? [{text:'全部', value:''}].concat(item.options) : item.options,
+                  selectOptions = isShowAll ? item.options : newData;
             return (
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
-                            ...item['fieldDecoratorOptions']
+                            ...item['fieldDecoratorOptions'],
                         })(
                             <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
                                 {
-                                    item.options.map((option,i)=>(
+                                    selectOptions.map((option,i)=>(
                                         <Option key={i} value={option.value}>{option.text}</Option>
                                     ))
                                 }

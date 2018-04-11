@@ -154,7 +154,25 @@ form .ant-pagination .ant-select{
 }
 
 /*amount table class*/
-.amount-code{
+.footer-total{
+  padding-top: 10px;
+  zoom: 1;
+  line-height: 25px;
+}
+.footer-total-meta {
+  zoom: 1;
+}
+.footer-total-meta-title {
+  padding-right: 16px;
+  float: left;
+  text-align: right;
+  width: 86px;
+}
+.footer-total-meta-detail {
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+.footer-total-meta-detail .amount-code{
   margin: 0 1px;
   background: #f2f4f5;
   border-radius: 3px;

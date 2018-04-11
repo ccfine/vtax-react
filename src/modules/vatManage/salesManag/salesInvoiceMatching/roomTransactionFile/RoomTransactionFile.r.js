@@ -3,10 +3,10 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
-import {AsyncTable,FileExport,FileImportModal} from '../../../../../compoments'
-import {getFields,request,fMoney,getUrlParam} from '../../../../../utils'
+import {AsyncTable,FileExport,FileImportModal} from 'compoments'
+import {getFields,request,fMoney,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
-import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import moment from 'moment';
 const transformDataStatus = status =>{
     status = parseInt(status,0)
@@ -471,13 +471,19 @@ class RoomTransactionFile extends Component{
                                     renderFooter:data=>{
                                         return(
                                             <div className="footer-total">
-                                                <div>
-                                                    <label>本页合计：</label>
-                                                    本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
-                                                </div>
-                                                <div>
-                                                    <label>总计：</label>
-                                                    全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
+                                                <div className="footer-total-meta">
+                                                    <div className="footer-total-meta-title">
+                                                        <label>本页合计：</label>
+                                                    </div>
+                                                    <div className="footer-total-meta-detail">
+                                                        本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
+                                                    </div>
+                                                    <div className="footer-total-meta-title">
+                                                        <label>总计：</label>
+                                                    </div>
+                                                    <div className="footer-total-meta-detail">
+                                                        全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )

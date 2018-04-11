@@ -3,7 +3,7 @@
  * createTime   : 2017/12/15 18:09
  * description  :
  */
-import {wrapPage} from '../../compoments'
+import {wrapPage} from 'compoments'
 
 import SalesManag from './salesManag'
 import EntryManag from './entryManag'

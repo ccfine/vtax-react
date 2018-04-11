@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 
 const ProcessConfiguration =()=><div>流程配置</div>
 const ApproveTheConfiguration =()=><div>审批配置</div>

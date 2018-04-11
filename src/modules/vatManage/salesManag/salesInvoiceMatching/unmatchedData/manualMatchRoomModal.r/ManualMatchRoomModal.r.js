@@ -4,7 +4,7 @@
 import React,{Component} from 'react';
 import {Button,Modal,Row,Col,message,Card,Input} from 'antd';
 import {request,fMoney} from '../../../../../../utils'
-import {SearchTable} from '../../../../../../compoments'
+import {SearchTable} from 'compoments'
 const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
     return [
         {

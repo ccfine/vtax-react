@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
-import {getFields,request} from '../../../../../../../utils'
-import { ButtonWithFileUploadModal } from '../../../../../../../compoments'
+import {getFields,request} from 'utils'
+import { ButtonWithFileUploadModal } from 'compoments'
 const formItemLayout = {
     labelCol: {
       xs: { span: 12 },

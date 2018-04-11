@@ -1,7 +1,7 @@
 import React from 'react'
 import Search from './search.react'
 import Table from './table.react'
-import { getUrlParam } from '../../../../utils'
+import { getUrlParam } from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 class BusinessTaxChangeTaxAnalysisNegative extends React.Component {

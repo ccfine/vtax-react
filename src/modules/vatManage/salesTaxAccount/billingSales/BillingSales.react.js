@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Icon} from 'antd'
-import {AsyncTable,FileExport} from '../../../../compoments'
-import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {AsyncTable,FileExport} from 'compoments'
+import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';

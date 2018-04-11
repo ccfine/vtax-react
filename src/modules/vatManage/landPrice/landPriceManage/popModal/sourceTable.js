@@ -1,7 +1,7 @@
 import React from "react";
 import {Table,Card,Popconfirm,Icon,Button} from "antd";
 import PopModal from "./sourcePopModal/popModal";
-import {fMoney} from '../../../../../utils';
+import {fMoney} from 'utils';
 
 const renderContent =function(length){ return ((value, row, index) => {
     const obj = {

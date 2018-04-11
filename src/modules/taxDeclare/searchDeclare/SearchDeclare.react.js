@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {SearchTable} from '../../../compoments';
+import {SearchTable} from 'compoments';
 const searchFields = [
     {
         label:'纳税主体',

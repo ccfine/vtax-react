@@ -6,14 +6,16 @@
 import React from 'react'
 import {Spin} from 'antd'
 
-export default ({ error, isLoading })=> {
-    console.log(error, isLoading)
-    if (error) {
-        console.log(error, '加载出错了')
+export default ({isLoading, error}) => {
+    // Handle the loading state
+    if (isLoading) {
+        return <Spin />;//<div style={{position:'fixed',left:'50%',top:'50%'}}><Spin size="large" /></div>;
+    }
+    // Handle the error state
+    else if (error) {
         return <div>加载出错了！</div>;
-    } else if (isLoading) {
-        return <div style={{position:'fixed',left:'50%',top:'50%'}}><Spin size="large" /></div>;
-    } else {
+    }
+    else {
         return null;
     }
-}
+};

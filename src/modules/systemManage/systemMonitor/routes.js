@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 
 const LogMonitoring =()=><div>日志监控</div>
 const systemMaintain =()=><div>系统维护</div>

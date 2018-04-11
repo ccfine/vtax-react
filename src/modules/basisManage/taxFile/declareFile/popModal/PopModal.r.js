@@ -3,8 +3,8 @@
  */
 import React,{Component} from 'react';
 import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
-import {request} from '../../../../../utils'
-import {CusFormItem} from '../../../../../compoments'
+import {request} from 'utils'
+import {CusFormItem} from 'compoments'
 import moment from 'moment';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

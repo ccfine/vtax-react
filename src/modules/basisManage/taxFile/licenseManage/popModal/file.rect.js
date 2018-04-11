@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Popconfirm, message, Icon, List, Row, Col, Upload } from 'antd'
-import { request } from '../../../../../utils'
-import { FileExport } from '../../../../../compoments'
+import { request } from 'utils'
+import { FileExport } from 'compoments'
 
 const getProps = context => ({
     action: `${window.baseURL}${context.props.url}/file/upload/${context.props.id}`,

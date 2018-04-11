@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Form, Input, Row, Col, Radio } from 'antd';
-import {CusFormItem} from "../../../../../../compoments";
-import {toPercent,accDiv,accSub} from '../../../../../../utils';
+import {CusFormItem} from "compoments";
+import {toPercent,accDiv,accSub} from 'utils';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const {NumericInput} = CusFormItem;

@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react';
 import {Button,Icon,Modal,message } from 'antd'
-import {SearchTable} from '../../../../compoments';
+import {SearchTable} from 'compoments';
 import {request} from '../../../../utils'
 import PopModal from './popModal'
 const confirm = Modal.confirm;
@@ -148,7 +148,7 @@ export default class TaxClassificationCode extends Component{
                     },
                     extra:<div>
                         <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                            <Icon type="file-add" />
+                            <Icon type="plus" />
                             新增
                         </Button>
                         <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>

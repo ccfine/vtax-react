@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 import RoomTransactionFile from './roomTransactionFile'
 import PrePaidSalesQuery from './prePaidHousingSales'
 import TaxReturnForm from './taxReturnForm'

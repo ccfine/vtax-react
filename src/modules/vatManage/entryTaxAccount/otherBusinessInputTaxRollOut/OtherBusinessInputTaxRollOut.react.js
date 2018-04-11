@@ -2,22 +2,21 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-04 11:39:17
+ * @Last Modified time: 2018-04-08 12:29:43
  */
 import React, { Component } from "react";
-import { Icon, message, Button, Card } from "antd";
+import { Icon, message, Button } from "antd";
 import {
   FileImportModal,
   FileExport,
-  CardSearch,
-  FetchTable
-} from "../../../../compoments";
+  SearchTable
+} from "compoments";
 import {
   request,
   fMoney,
   getUrlParam,
   listMainResultStatus
-} from "../../../../utils";
+} from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
 const buttonStyle = {
@@ -202,7 +201,92 @@ class OtherBusinessInputTaxRollOut extends Component {
     params.authMonth = moment(params.authMonth).format("YYYY-MM");
     return (
       <div>
-        <CardSearch
+        <SearchTable
+          backCondition={this.updateStatus}
+          doNotFetchDidMount={!search}
+          tableOption={{
+            key: this.state.updateKey,
+            url: "/account/income/taxout/list",
+            pagination: true,
+            columns: getColumns(this),
+            rowKey: "id",
+            onDataChange: data => {
+              let hasData = data && data.length > 0;
+              this.setState({
+                buttonDisabled: !hasData,
+                dataSource: data
+              });
+            },
+            renderFooter: data => {
+              return (
+                <div className="footer-total">
+                  <div>
+                    <label>本页合计：</label>
+                    转出税额：<span className="amount-code">
+                      {fMoney(data.pageOutTaxAmount)}
+                    </span>
+                  </div>
+                </div>
+              );
+            },
+            cardProps: {
+              title: "其他业务进项税额转出台账",
+              extra: (
+                <div>
+                  {dataSource.length > 0 && listMainResultStatus(status)}
+                  <FileImportModal
+                    style={buttonStyle}
+                    url="/account/income/taxout/upload"
+                    title="导入"
+                    fields={getFields("导入", 24, {
+                      labelCol: {
+                        span: 6
+                      },
+                      wrapperCol: {
+                        span: 11
+                      }
+                    })}
+                    disabled={isSubmit}
+                    onSuccess={() => {
+                      this.setState({ updateKey: Date.now() });
+                    }}
+                  />
+                  <FileExport
+                    url={`account/income/taxout/download`}
+                    title="下载模板"
+                    size="small"
+                    setButtonStyle={buttonStyle}
+                    disabled={isSubmit}
+                  />
+                  <Button
+                    size="small"
+                    style={{ marginLeft: 5 }}
+                    disabled={buttonDisabled || isSubmit}
+                    onClick={this.submit}
+                    loading={this.state.submitLoading}
+                  >
+                    <Icon type="check" />
+                    提交
+                  </Button>
+                  <Button
+                    size="small"
+                    style={{ marginLeft: 5 }}
+                    disabled={buttonDisabled || !isSubmit}
+                    onClick={this.revoke}
+                    loading={this.state.revokeLoading}
+                  >
+                    <Icon type="rollback" />
+                    撤回提交
+                  </Button>
+                </div>
+              )
+            }
+          }}
+          searchOption={{
+            fields: getFields("查询", 8)
+          }}
+        />
+        {/* <CardSearch
           doNotSubmitDidMount={!search}
           feilds={getFields("查询", 8)}
           feildvalue={filter}
@@ -214,12 +298,6 @@ class OtherBusinessInputTaxRollOut extends Component {
           extra={
             <div>
               {dataSource.length > 0 && listMainResultStatus(status)}
-              <FileExport
-                url={`account/income/taxout/download`}
-                title="下载模板"
-                size="small"
-                setButtonStyle={buttonStyle}
-              />
               <FileImportModal
                 style={buttonStyle}
                 url="/account/income/taxout/upload"
@@ -232,9 +310,17 @@ class OtherBusinessInputTaxRollOut extends Component {
                     span: 11
                   }
                 })}
+                disabled={isSubmit}
                 onSuccess={() => {
                   this.setState({ updateKey: Date.now() });
                 }}
+              />
+              <FileExport
+                url={`account/income/taxout/download`}
+                title="下载模板"
+                size="small"
+                setButtonStyle={buttonStyle}
+                disabled={isSubmit}
               />
               <Button
                 size="small"
@@ -293,7 +379,7 @@ class OtherBusinessInputTaxRollOut extends Component {
             }}
             filters={params}
           />
-        </Card>
+        </Card> */}
       </div>
     );
   }

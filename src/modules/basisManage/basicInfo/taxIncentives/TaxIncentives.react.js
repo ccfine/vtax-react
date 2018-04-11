@@ -3,7 +3,7 @@
  * 税收优惠
  */
 import React, { Component } from 'react'
-import {SearchTable} from '../../../../compoments'
+import {SearchTable} from 'compoments'
 import {Button,Icon} from 'antd'
 import PopModal from './PopModal.r'
 const searchFields = [
@@ -159,7 +159,7 @@ export default class TaxIncentives extends Component{
                     extra:(
                         <div>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="file-add" />
+                                <Icon type="plus" />
                                 新增
                             </Button>
                         </div>

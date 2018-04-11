@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,message} from 'antd'
-import {AsyncTable} from '../../../../compoments'
-import {request,getFields,fMoney,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {AsyncTable} from 'compoments'
+import {request,getFields,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -221,7 +221,7 @@ class InputTaxDetails extends Component {
                                 dataSource.length>0 && listMainResultStatus(statusParam)
                             }
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
-                            <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="rollback" />重算</Button>
+                            <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="retweet" />重算</Button>
                             <Button size="small" style={buttonStyle} disabled={disabled2} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
                         </div>
                     }
@@ -238,10 +238,14 @@ class InputTaxDetails extends Component {
                                     renderFooter:data=>{
                                         return (
                                             <div className="footer-total">
-                                                <div>
-                                                    <label>合计：</label>
-                                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                <div className="footer-total-meta">
+                                                    <div className="footer-total-meta-title">
+                                                        <label>合计：</label>
+                                                    </div>
+                                                    <div className="footer-total-meta-detail">
+                                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )

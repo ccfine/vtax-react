@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {wrapPage} from '../../../compoments'
+import {wrapPage} from 'compoments'
 
 const TaxStructureAnalysis =()=><div>纳税结构分析</div>
 const TaxTrendsAnalysis =()=><div>纳税趋势分析</div>

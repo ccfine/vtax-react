@@ -4,9 +4,9 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../../compoments'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
 import {fMoney,request,getUrlParam} from '../../../../../utils'
-import SubmitOrRecall from '../../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle={
@@ -351,13 +351,19 @@ class AdvanceCarryOver extends Component{
                     renderFooter:data=>{
                         return(
                             <div className="footer-total">
-                                <div>
-                                    <label>本页合计：</label>
-                                    预结转收入金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                </div>
-                                <div>
-                                    <label>总计：</label>
-                                    预结转收入金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>本页合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        预结转收入金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                    </div>
+                                    <div className="footer-total-meta-title">
+                                        <label>总计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        预结转收入金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
+                                    </div>
                                 </div>
                             </div>
                         )

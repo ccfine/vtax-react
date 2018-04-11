@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import {Form,Select} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
+import {request} from 'utils'
 const FormItem = Form.Item;
 const Option = Select.Option
 let timeout;
@@ -65,20 +65,23 @@ export default class TaxMain extends Component{
         }
     }
     state={
-        mainTaxItems:[
-        ]
+        mainTaxItems:[]
     }
     onSearch = (value) => {
         this.props.onSearch && this.props.onSearch(value)
         if(value){
             fetchTaxMain(value, data => {
-                this.mounted && this.setState({ mainTaxItems:data })
+                this.mounted && this.setState({
+                    mainTaxItems:data
+                })
             });
         }
     }
     componentDidMount(){
         fetchTaxMain('',data => {
-            this.mounted && this.setState({ mainTaxItems:data })
+            this.mounted && this.setState({
+                mainTaxItems: data
+            })
         });
     }
     mounted = true
@@ -89,10 +92,14 @@ export default class TaxMain extends Component{
         const {mainTaxItems}=this.state;
         const {getFieldDecorator} = this.props.form;
         const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
+        const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true;
+        const newData =  mainTaxItems.length>0 ? [{text:'全部', value:''}].concat(mainTaxItems) : mainTaxItems;
+        const optionItem = isShowAll ? mainTaxItems :  newData;
         return(
             <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
-                    ...fieldDecoratorOptions
+                    ...fieldDecoratorOptions,
                 })(
                     <Select
                         showSearch
@@ -103,7 +110,7 @@ export default class TaxMain extends Component{
                         {...componentProps}
                     >
                         {
-                            mainTaxItems.map((item,i)=>(
+                            optionItem.map((item,i)=>(
                                 <Option key={i} value={item.value}>{item.text}</Option>
                             ))
                         }

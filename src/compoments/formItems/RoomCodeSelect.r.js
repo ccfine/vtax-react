@@ -3,10 +3,10 @@
  */
 import React,{Component} from 'react'
 import {Select,Modal} from 'antd'
-import {SearchTable} from '../../compoments'
-import {fMoney} from '../../utils'
+import {SearchTable} from 'compoments'
+import {fMoney} from 'utils'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
+import uniqBy from 'lodash/uniqBy'
 export default class RoomCodeSelect extends Component{
     static propTypes={
         formItemStyle:PropTypes.object,
@@ -129,7 +129,7 @@ const searchFields = context => (getFieldValue) =>{
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,
                 transformData:data=>{
                     //数组去重
-                    return _.uniqBy(data, 'buildingName');
+                    return uniqBy(data, 'buildingName');
                 }
             }
         },

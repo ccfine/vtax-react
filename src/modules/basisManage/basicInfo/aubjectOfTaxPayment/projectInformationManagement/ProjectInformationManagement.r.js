@@ -4,7 +4,7 @@ import React,{Component} from 'react'
 import {Button,Modal,Icon,Table,Card,message} from 'antd'
 import {List} from 'immutable'
 import {request} from '../../../../../utils'
-import {FileExport,AutoFileUpload} from '../../../../../compoments'
+import {FileExport,AutoFileUpload} from 'compoments'
 const confirm = Modal.confirm;
 const constants = {
     PROJECT_NAME:'itemName',
@@ -121,7 +121,7 @@ export default class ProjectInformationManagement extends Component{
         return(
             <div style={{display:'inline-block',...this.props.style}}>
                 <Button size='small' disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
-                    <Icon type="plus-circle" />
+                    <Icon type="file-add" />
                     项目信息管理
                 </Button>
                 <Modal

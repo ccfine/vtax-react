@@ -5,9 +5,9 @@
  */
 import React,{Component} from 'react'
 import {Form,Button,Icon,Popconfirm,message} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from '../../../../compoments'
-import SubmitOrRecall from '../../../../compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {fMoney,request,getUrlParam,listMainResultStatus} from '../../../../utils'
+import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'
@@ -295,11 +295,19 @@ class InterimContractInputTaxTransferredOut extends Component {
     render() {
         const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam} = this.state;
         const {mainId, authMonth} = this.state.filters;
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 1;
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
-        const reset_disabled = !((mainId && authMonth) || (statusParam && parseInt(statusParam.status, 0) === 1));
-        const revoke_disabled = statusParam && parseInt(statusParam.status, 0) === 1;
+        const disabled3 = !((mainId && authMonth) || (statusParam && parseInt(statusParam.status, 0) === 1));
+        let disabled4 = false;
+        if(parseInt(statusParam.status, 0) === 2){
+            disabled4 = !disabled4
+        }else{
+            disabled4 = !selectedRowKeys
+        }
         const {search} = this.props.location;
         let disabled = !!search;
+
+
         return (
             <SearchTable
                 spinning={searchTableLoading}
@@ -340,16 +348,16 @@ class InterimContractInputTaxTransferredOut extends Component {
                     cardProps: {
                         title: '进项转出差异调整表'
                     },
-                    rowSelection:parseInt(statusParam.status, 0)  === 1 ? {
+                    rowSelection:{
                         type: 'radio',
-                    } : undefined,
-                    onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
+                    },
+                    onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
                             selectedRowKeys:selectedRowKeys[0],
                             selectedRows,
                             pageTwoKey:Date.now(),
                         })
-                    } : undefined,
+                    },
                     onSuccess:()=>{
                         this.setState({
                             selectedRowKeys:undefined,
@@ -388,7 +396,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                             }}
                         />
                         <Button
-                            disabled={!selectedRowKeys}
+                            disabled={disabled4}
                             size='small'
                             style={{marginRight: 5}}
                             onClick={() => {
@@ -407,13 +415,13 @@ class InterimContractInputTaxTransferredOut extends Component {
                         <Button
                             size='small'
                             style={{marginRight:5}}
-                            disabled={reset_disabled || disabled2}
+                            disabled={disabled3 || disabled2}
                             onClick={this.handleReset}>
                             <Icon type="retweet" />
                             重算
                         </Button>
                         <SubmitOrRecall type={1} disabled={disabled2} url="/account/income/taxContract/adjustment/submit" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
-                        <SubmitOrRecall type={2} disabled={revoke_disabled}url="/account/income/taxContract/adjustment/revoke" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
+                        <SubmitOrRecall type={2} disabled={disabled1} url="/account/income/taxContract/adjustment/revoke" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
                     </div>,
                     onDataChange: (dataSource) => {
                         this.setState({
@@ -423,11 +431,15 @@ class InterimContractInputTaxTransferredOut extends Component {
                     renderFooter:data=>{
                         return (
                             <div className="footer-total">
-                                <div>
-                                    <label>合计：</label>
-                                    金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                    税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                    价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                <div className="footer-total-meta">
+                                    <div className="footer-total-meta-title">
+                                        <label>合计：</label>
+                                    </div>
+                                    <div className="footer-total-meta-detail">
+                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                        价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                    </div>
                                 </div>
                             </div>
                         )
@@ -435,7 +447,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                 }}
             >
 
-                <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters}/>
+                <PageTwo key={pageTwoKey} selectedRows={selectedRows} filters={filters} disabled={disabled2} />
 
                 <PopModal
                     title="税务分摊比例列表设置"
