@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Icon} from 'antd'
-import {AsyncTable,FileExport} from 'compoments'
+import {FileExport,SynchronizeTable} from 'compoments'
 import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
@@ -167,11 +167,12 @@ class BillingSales extends Component {
          * */
         tableUpDateKey:Date.now(),
         visible:false,
+        loaded:true,
         sysTaxRateId:undefined,
         invoiceType:undefined,
         statusParam:{},
         dataSource:[],
-        dataSource2:[],
+        notDataSource:[],
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -182,7 +183,7 @@ class BillingSales extends Component {
         this.setState({
             tableUpDateKey:Date.now()
         },()=>{
-            this.updateStatus()
+            this.fetch()
         })
     }
     handleSubmit = (e,type) => {
@@ -215,6 +216,33 @@ class BillingSales extends Component {
                 }
             }
         });
+    }
+
+    fetch=()=>{
+        this.setState({ loaded: false });
+        request.get('/account/output/billingSale/list',{
+            params:this.state.filters
+        }).then(({data}) => {
+            if(data.code===200){
+                this.setState({
+                    dataSource: data.data.records,
+                    notDataSource: data.data.notRecords,
+                    loaded: true,
+                },()=>{
+                    this.updateStatus()
+                });
+            }else{
+                message.error(data.msg)
+                this.setState({
+                    loaded: true
+                });
+            }
+        }).catch(err=>{
+            this.setState({
+                loaded: true
+            });
+        });
+
     }
 
     requestPut=(url,type,value={})=>{
@@ -256,7 +284,7 @@ class BillingSales extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,dataSource,dataSource2,visible,sysTaxRateId,invoiceType,statusParam} = this.state;
+        const {tableUpDateKey,filters,dataSource,notDataSource,visible,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
@@ -364,49 +392,43 @@ class BillingSales extends Component {
                       }
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/account/output/billingSale/list?isEstate=1"
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.sysTaxRateId,
-                                    pagination:false,
-                                    size:'small',
-                                    columns:columns(this),
-                                    onDataChange:(dataSource)=>{
-                                        this.setState({
-                                            dataSource
-                                        })
-                                    }
-                                }} />
-                </Card>
-                <Card title="开票销售统计表-非地产" extra={<div>
-                    <FileExport
-                        url={`account/output/billingSale/export`}
-                        title='导出'
-                        setButtonStyle={{marginRight:5}}
-                        disabled={disabled1 || !dataSource2.length>0}
-                        params={{
-                            isEstate:0,
-                            ...filters
-                        }}
-                    />
-                </div>}
-                           style={{marginTop:10}}>
+                    <SynchronizeTable
+                        data={dataSource}
+                        updateKey={tableUpDateKey}
+                        loaded={loaded}
+                        tableProps={{
+                            rowKey:record=>record.sysTaxRateId,
+                            pagination:false,
+                            size:'small',
+                            columns:columns(this),
+                        }} />
 
-                    <AsyncTable url="/account/output/billingSale/list?isEstate=0"
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.sysTaxRateId,
-                                    pagination:false,
-                                    size:'small',
-                                    columns:notColumns(this),
-                                    onDataChange:(dataSource2)=>{
-                                        this.setState({
-                                            dataSource2
-                                        })
-                                    }
-                                }} />
+                </Card>
+                <Card title="开票销售统计表-非地产"
+                      extra={<div>
+                                <FileExport
+                                    url={`account/output/billingSale/export`}
+                                    title='导出'
+                                    setButtonStyle={{marginRight:5}}
+                                    disabled={disabled1 || !notDataSource.length>0}
+                                    params={{
+                                        isEstate:0,
+                                        ...filters
+                                    }}
+                                />
+                            </div>}
+                      style={{marginTop:10}}>
+
+                      <SynchronizeTable
+                            data={notDataSource}
+                            updateKey={tableUpDateKey}
+                            loaded={loaded}
+                            tableProps={{
+                                rowKey:record=>record.sysTaxRateId,
+                                pagination:false,
+                                size:'small',
+                                columns:notColumns(this),
+                            }} />
                 </Card>
 
                 <PopInvoiceInformationModal

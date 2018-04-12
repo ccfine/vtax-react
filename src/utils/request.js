@@ -2,6 +2,10 @@
  * author       : liuliyuan
  * createTime   : 2017/12/5 18:10
  * description  :
+ * 服务超时可以用
+ *  https://github.com/softonic/axios-retry
+ *  https://github.com/axios/axios/issues/164#issuecomment-327837467
+ * 这个方法解决
  */
 import Axios from 'axios';
 import {message} from 'antd'
@@ -9,7 +13,7 @@ import {logout} from '../redux/ducks/user'
 
 const request = Axios.create({
     baseURL:window.baseURL,
-    timeout:20000
+    timeout:20000,
 });
 request.getToken = ()=>{
     return request.getState().user.get('token') || false
@@ -76,6 +80,11 @@ request.interceptors.response.use(function (response) {
     return response;
 
 }, function (error) {
+
+    if(error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
+        return message.error('请求超时',4)
+    }
+
     // 对响应错误做点什么
     if (error.response) {
         switch (error.response.status) {
