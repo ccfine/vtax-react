@@ -6,9 +6,10 @@
 import React from 'react'
 import {wrapPage} from 'compoments'
 import RoleManage from './roleManage'
+import UserManage from './userManage'
 
 //const RoleManage =()=><div>角色管理</div>
-const UserManage =()=><div>用户管理</div>
+// const UserManage =()=><div>用户管理</div>
 const UserRightsManage =()=><div>用户权限管理</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
