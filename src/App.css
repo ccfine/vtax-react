@@ -116,6 +116,7 @@ select位置偏下问题源于ant版本，升级到3.1x即可
 }
 .ant-modal-body{
   padding:12px;
+  overflow: hidden;
 }
 .ant-modal-footer{
   padding:10px 12px;

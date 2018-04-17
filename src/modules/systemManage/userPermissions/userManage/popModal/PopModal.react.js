@@ -1,318 +1,295 @@
-/*
- * @Author: liuchunxiu 
- * @Date: 2018-04-16 15:11:26 
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-16 18:17:50
+/**
+ * Created by liuliyuan on 2018/4/17.
  */
-import React, { Component } from "react";
-import { Modal, Form, Button, message, Spin, Row,Alert } from "antd";
-import { getFields, request, regRules } from "../../../../../utils";
-import { connect } from "react-redux";
+import React,{Component} from 'react'
+import { Form,Modal,message,Row,Col,Alert,Spin} from 'antd';
+import {request,getFields} from 'utils'
+import {connect} from 'react-redux'
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 12 },
-    sm: { span: 8 }
-  },
-  wrapperCol: {
-    xs: { span: 12 },
-    sm: { span: 16 }
-  }
-};
-const setComItem = (
-  initialValue,
-  readonly = false,
-  required = true,
-  message
-) => ({
-  span: "12",
-  type: "input",
-  formItemStyle: formItemLayout,
-  fieldDecoratorOptions: {
-    initialValue,
-    rules: [
-      {
-        required: required,
-        message: message
-      }
-    ]
-  },
-  componentProps: {
-    disabled: readonly
-  }
-});
-class PopModal extends Component {
-  state = {
-    loading: false,
-    formLoading: false,
-    record: {},
-    roleList: [
-      { label: "业务员", value: "123" },
-      { label: "管理员", value: "1" }
-    ]
-  };
-  componentDidMount() {
-    //-------暂时注释调，角色还没数据
-    //this.fetchAllRoles();
-  }
-  componentWillReceiveProps(props) {
-    if (props.visible && this.props.visible !== props.visible) {
-      if (props.userName) {
-        this.setState({ formLoading: true });
-        request.get(`/users/${props.userName}`).then(({ data }) => {
-          if (data.code === 200) {
-            this.setState({ formLoading: false, record: data.data });
-          }
-        });
-      } else {
-        this.props.form.resetFields();
-        this.setState({ formLoading: false, record: {} });
-      }
-    }
-  }
-  fetchAllRoles() {
-    request.get(`/roleAll`).then(({ data }) => {
-      if (data.code === 200) {
-        this.setState({
-          roleList: data.data.map(ele => ({
-            label: ele.roleName,
-            value: ele.roleId
-          }))
-        });
-      }
-    });
-  }
-  hideSelfModal = () => {
-    this.props.form.resetFields();
-    this.setState({ formLoading: false, record: {} });
-    this.props.hideModal();
-  };
-  handleOk() {
-    if (
-      (this.props.action !== "modify" && this.props.action !== "add") ||
-      this.state.formLoading
-    ) {
-      this.hideSelfModal();
-      return;
-    }
-
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        // 提交数据
-        //处理启用数据 状态，1：启用，2：禁用
-        values.enabled = values.enabled ? 1 : 2;
-        let obj = Object.assign({}, this.state.record, values);
-
-        let result, sucessMsg;
-        if (this.props.action === "modify") {
-          result = request.put(`/users/${this.state.record.userId}`, obj);
-          sucessMsg = "修改成功";
-        } else if (this.props.action === "add") {
-          obj.password = '888888'; 
-          result = request.post(
-            `/organizations/${this.props.orgId}/users`,
-            obj
-          );
-          sucessMsg = "添加成功";
+const transformCharList = list => {
+    return list.map(item=>{
+        return {
+            label:item.roleName,
+            value:item.roleId
         }
-
-        this.setState({ loading: true });
-        result &&
-          result
-            .then(({ data }) => {
-              if (data.code === 200) {
-                message.success(sucessMsg, 4);
-                this.setState({ loading: false });
-                this.props.update && this.props.update();
-                this.props.hideModal();
-              } else {
-                this.setState({ loading: false });
-                message.error(data.msg, 4);
-              }
-            })
-            .catch(err => {
-              message.error(err.message);
-              this.setState({ loading: false });
-            });
-      }
-    });
-  }
-  render() {
-    const readonly = this.props.action === "look",
-      form = this.props.form;
-    let { record = {} } = this.state,
-      title = "查看";
-    if (this.props.action === "add") {
-      title = "添加";
-    } else if (this.props.action === "modify") {
-      title = "修改";
-    }
-    return (
-      <Modal
-        title={title}
-        visible={this.props.visible}
-        width="700px"
-        style={{ top: "10%" }}
-        bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
-        onCancel={this.hideSelfModal}
-        footer={[
-          <Button key="back" onClick={this.hideSelfModal}>
-            取消
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            loading={this.state.loading}
-            onClick={() => {
-              this.handleOk();
-            }}
-          >
-            确认
-          </Button>
-        ]}
-        maskClosable={false}
-        destroyOnClose={true}
-      >
-        <Spin spinning={this.state.formLoading}>
-          <Form>
-            <Row>
-              {getFields(form, [
-                {
-                  ...setComItem(record.realname, readonly, true, "请填写姓名"),
-                  label: "姓名",
-                  fieldName: "realname",
-                  type: "input"
-                },
-                {
-                  ...setComItem(record.username, readonly, true, "请填写帐号"),
-                  label: "帐号",
-                  fieldName: "username",
-                  type: "input",
-                  fieldDecoratorOptions: {
-                    initialValue: record.username,
-                    rules: [
-                      {
-                        required: true,
-                        message: "请填写帐号"
-                      },
-                      regRules.userName
-                    ]
-                  }
-                }
-              ])}
-            </Row>
-            <Row>
-              {getFields(form, [
-                {
-                  ...setComItem(
-                    record.phoneNumber,
-                    readonly,
-                    true,
-                    "请填写手机号码"
-                  ),
-                  label: "手机",
-                  fieldName: "phoneNumber",
-                  type: "input",
-                  fieldDecoratorOptions: {
-                    initialValue: record.phoneNumber,
-                    rules: [
-                      {
-                        required: true,
-                        message: "请填写手机号码"
-                      },
-                      regRules.mobile_phone
-                    ]
-                  }
-                },
-                {
-                  ...setComItem(record.email, readonly, true, "请填写邮箱"),
-                  label: "邮箱",
-                  fieldName: "email",
-                  type: "input",
-                  span: 12,
-                  fieldDecoratorOptions: {
-                    initialValue: record.email,
-                    rules: [
-                      {
-                        required: true,
-                        message: "请填写邮箱"
-                      },
-                      regRules.email
-                    ]
-                  }
-                }
-              ])}
-            </Row>
-            <Row>
-              {getFields(form, [
-                {
-                  ...setComItem(record.fax, readonly, false),
-                  span: 12,
-                  label: "传真",
-                  fieldName: "fax",
-                  type: "input"
-                }
-              ])}
-            </Row>
-            <Row>
-              {getFields(form, [
-                {
-                  ...setComItem(record.roleIds, readonly, true, "请选择角色"),
-                  label: "角色",
-                  fieldName: "roleIds",
-                  type: "checkboxGroup",
-                  span: 16,
-                  formItemStyle: {
-                    labelCol: {
-                      xs: { span: 12 },
-                      sm: { span: 6 }
-                    },
-                    wrapperCol: {
-                      xs: { span: 12 },
-                      sm: { span: 18 }
-                    }
-                  },
-                  options: this.state.roleList
-                }
-              ])}
-              <span>目前还是静态数据，角色还没数据 L55 注释取消便可以</span>
-            </Row>
-            <Row>
-              {getFields(form, [
-                {
-                  ...setComItem(record.enabled===1, readonly, false),
-                  label: "状态",
-                  fieldName: "enabled",
-                  type: "switch",
-                  span: 16,
-                  formItemStyle: {
-                    labelCol: {
-                      xs: { span: 12 },
-                      sm: { span: 6 }
-                    },
-                    wrapperCol: {
-                      xs: { span: 12 },
-                      sm: { span: 18 }
-                    }
-                  },
-                  componentProps: {
-                    disabled: readonly,
-                    checkedChildren: "启用",
-                    unCheckedChildren: "禁用",
-                    defaultChecked:record.enabled===1
-                  }
-                }
-              ])}
-              <span>还需要修改getFeild文件</span>
-            </Row>
-          </Form>
-        </Spin>
-        {this.props.action === "add" && <Alert message="新添加的帐号的初始密码为：888888" type="info" showIcon />}
-      </Modal>
-    );
-  }
+    })
 }
 
-export default connect(state => ({
-  orgId: state.user.get("orgId")
-}))(Form.create()(PopModal));
+class PopModal extends Component {
+
+    state = {
+        assignmentModalKey:Date.now(),
+        submitLoading:false,
+        charLoaded:false,
+        charAllList:[],
+        charList:[
+
+        ],
+    }
+
+    static defaultProps={
+        modalType:'create'
+    }
+
+    onChange = (checkedValues) => {
+        console.log('checked = ', checkedValues);
+    }
+
+    handleOk = (e) => {
+        this.props.toggleModalVisible(false)
+        //this.handleSubmit()
+    }
+    handleCancel = (e) => {
+        this.props.toggleModalVisible(false)
+
+    }
+    handleSubmit = (e) => {
+        e && e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+
+            if (!err) {
+
+                this.setState({
+                    submitLoading:true
+                })
+
+
+                //状态从true变更未数字1,2
+                values.enabled = values.enabled ? 1 :2;
+
+                //新建
+                if(this.props.modalType==='create'){
+                    //默认密码
+                    values.password = '888888'
+
+                    request.post(`/organizations/${this.props.orgId}/users`,values)
+                        .then(({data})=>{
+                            this.setState({
+                                submitLoading:false
+                            })
+                            if(data.code===200){
+                                message.success('用户新建成功',4)
+
+                                //新建成功，关闭当前窗口,刷新父级组件
+                                this.props.toggleModalVisible(false)
+                                this.props.refreshTable()
+
+                            }else{
+                                message.error(data.msg,4)
+                            }
+                        })
+                        .catch(err=>{
+                            message.error(err.message)
+                            this.mounted&&this.setState({
+                                submitLoading:false
+                            })
+                        })
+                }
+
+                //编辑
+
+                if(this.props.modalType==='edit'){
+                    const {defaultFields,fetchUserInfo,toggleModalVisible} = this.props;
+                    request.put(`/users/${defaultFields.userId}`,values)
+                        .then(({data})=>{
+                            this.setState({
+                                submitLoading:false
+                            })
+                            if(data.code===200){
+                                message.success('用户修改成功',4)
+
+                                //更新单个用户数据
+                                fetchUserInfo(defaultFields.username)
+                                toggleModalVisible(false)
+                            }else{
+                                message.error(data.msg,4)
+                            }
+                        })
+                        .catch(err=>{
+                            message.error(err.message)
+                            this.mounted&&this.setState({
+                                submitLoading:false
+                            })
+                        })
+
+                }
+
+
+
+            }
+        });
+    }
+
+    fetchCharList(){
+        request.get('/roles')
+            .then(({data})=>{
+                if(data.code===200){
+                    this.mounted && this.setState({
+                        charAllList:[...data.data.records],
+                        charList:transformCharList(data.data.records),
+                        charLoaded:true
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
+    }
+    componentDidMount(){
+        this.fetchCharList()
+    }
+    mounted=true;
+    componentWillUnmount(){
+        this.mounted=null;
+    }
+    render() {
+
+        const formItemStyle = {
+            labelCol:{
+                span:3
+            },
+            wrapperCol:{
+                span:21
+            }
+        };
+
+        const {modalType} = this.props;
+        const defaultFields = {...this.props.defaultFields}
+        return (
+            <Modal
+                maskClosable={false}
+                destroyOnClose={true}
+                title={modalType==='create'?'添加用户':'编辑用户'}
+                key={this.state.createSysModalKey}
+                visible={this.props.visible}
+                onOk={this.handleSubmit}
+                onCancel={this.handleCancel}
+                cancelText='取消'
+                confirmLoading={this.state.charLoaded && this.state.submitLoading }
+                width="900px"
+            >
+              <Spin spinning={!this.state.charLoaded}>
+                <Form onSubmit={this.handleSubmit}>
+                  <Row>
+                      {
+                          getFields(this.props.form, [
+                              {
+                                  label:'姓名',
+                                  fieldName:'realname',
+                                  type:'input',
+                                  span:12,
+                                  fieldDecoratorOptions:{
+                                      initialValue:defaultFields.realname || '',
+                                      rules: [
+                                          {
+                                              required: true, message: '请输入姓名',
+                                          },
+                                          {
+                                              max:20,message:'请输入20位以内的姓名'
+                                          }
+                                      ],
+                                  },
+                              },{
+                                  label:'帐号',
+                                  fieldName:'username',
+                                  type:'input',
+                                  span:12,
+                                  componentProps:{
+                                      disabled: modalType !== 'create'
+                                  },
+                                  fieldDecoratorOptions:{
+                                      initialValue:defaultFields.username || '',
+                                      rules: [
+                                          {
+                                              required: true, message: '请输入帐号',
+                                          },
+                                          {
+                                              pattern:/^(\d|\w){6,20}$/g,message:'请输入6-20位字母或数字'
+                                          }
+                                      ],
+                                  },
+                              },{
+                                  label:'手机',
+                                  fieldName:'phoneNumber',
+                                  type:'input',
+                                  span:12,
+                                  fieldDecoratorOptions:{
+                                      initialValue:defaultFields.phoneNumber || '',
+                                      rules: [{
+                                          required: true, message: '请输入手机号码',
+                                      }, {
+                                          pattern:/^1(\d){10}$/,message: '请输入正确的手机号码',
+                                      }],
+                                  },
+                              },{
+                                  label:'邮箱',
+                                  fieldName:'email',
+                                  type:'input',
+                                  span:12,
+                                  componentProps:{
+                                      type:'email',
+                                  },
+                                  fieldDecoratorOptions:{
+                                      initialValue:defaultFields.email || '',
+                                      rules: [{
+                                          type: 'email', message: '请输入正确的邮箱',
+                                      }, {
+                                          required: true, message: '请输入邮箱',
+                                      }],
+                                  },
+                              },{
+                                  label:'传真',
+                                  fieldName:'fax',
+                                  type:'input',
+                                  span:12,
+                                  fieldDecoratorOptions:{
+                                      initialValue:defaultFields.fax || '',
+                                      rules: [{
+                                          pattern:/^(\d{3,4}-)?\d{7,8}$/,
+                                          message:'请输入正确的传真号'
+                                      }],
+                                  },
+                              },{
+                                  label:'角色',
+                                  fieldName:'roleIds',
+                                  type:'checkboxGroup',
+                                  span:24,
+                                  formItemStyle,
+                                  fieldDecoratorOptions:{
+                                      initialValue:this.props.defaultCharValues || [],
+                                      rules: [{
+                                          required: true, message: '请选择角色',
+                                      }],
+                                  },
+                                  options: this.state.charList
+                              },{
+                                  label:'状态',
+                                  fieldName:'enabled',
+                                  type:'switch',
+                                  span:24,
+                                  formItemStyle,
+                                  fieldDecoratorOptions:{
+                                      initialValue:defaultFields.hasOwnProperty('enabled') ? (parseInt(defaultFields.enabled,0)===1) : true,
+                                      valuePropName: 'checked' ,
+                                  },
+                              }
+                          ])
+                      }
+                      {
+                          modalType === 'create' ? (
+                              <Col span={24}>
+                                <Alert message="新添加的帐号的初始密码为：888888" type="info" showIcon />
+                              </Col>
+                          ) : null
+                      }
+                  </Row>
+                </Form>
+              </Spin>
+            </Modal>
+
+        );
+    }
+}
+
+export default connect(state=>({
+    orgId: state.user.get("orgId")
+}))(Form.create()(PopModal))
