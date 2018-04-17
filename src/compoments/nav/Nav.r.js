@@ -14,14 +14,15 @@ class NavRouter extends Component {
 
     composeNav=(routes)=>{
         return routes.map((item,i)=>{
-            if(item && !item.to){
+            if(item && !item.to && item.icon){
                 return {
                     path:item.path,
                     name:item.name,
-                    icon:item.icon || {
+                    icon:item.icon
+                    /*|| {
                         url:'/assets/routes_avatar/mainTax.svg',
                         backgroundColor:'#61C5C3'
-                    } //`icon_${i}`,
+                    } `icon_${i}`,*/
                 }
             }
             return null;

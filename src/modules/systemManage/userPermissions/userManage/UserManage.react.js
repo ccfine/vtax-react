@@ -69,7 +69,7 @@ const columns = [
     render: (text, record) => (
       <Link
         to={{
-          pathname: `/web/sysManagement/${record.username}`,
+          pathname: `/web/systemManage/userPermissions/userManage/${record.username}`,
         //   state: {
         //     single
         //   }

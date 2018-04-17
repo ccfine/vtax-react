@@ -410,7 +410,7 @@ class BillingSales extends Component {
                                     url={`account/output/billingSale/export`}
                                     title='导出'
                                     setButtonStyle={{marginRight:5}}
-                                    disabled={disabled1 || !notDataSource.length>0}
+                                    disabled={disabled1 || !(notDataSource && notDataSource.length>0)}
                                     params={{
                                         isEstate:0,
                                         ...filters
