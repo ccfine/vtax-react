@@ -1,8 +1,6 @@
 /**
- * Created by liurunbin on 2017/9/27.
+ * Created by liuliyuan on 2017/9/27.
  */
-
-
 
 export default {
     userName:{
