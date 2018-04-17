@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/28.
  */
 import React from 'react';
-import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader,Radio } from 'antd'
+import {Col,Form,Input,DatePicker,Select,Checkbox,Cascader,Radio,Switch } from 'antd'
 import {CusFormItem} from 'compoments'
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -99,6 +99,9 @@ const getFields = (form,fieldsData=[]) =>{
                 break;
             case 'taxableProject':
                 CusComponent = CusFormItem.TaxableProject;
+                break;
+            case 'switch':
+                CusComponent = Switch;
                 break;
             default:
                 CusComponent = Input
