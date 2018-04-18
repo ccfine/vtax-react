@@ -8,8 +8,8 @@ import {wrapPage} from 'compoments'
 import RoleManage from './roleManage'
 import UserManage from './userManage'
 import UserManagementDetail from './userManage/userManagementDetail'
+import RoleManagementDetail from './roleManage/roleManagementDetail'
 
-const RoleManagementDetail =()=><div>角色管理详情</div>
 const UserRightsManage =()=><div>用户权限管理</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
