@@ -7,7 +7,6 @@ import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields} from 'utils'
 import moment from 'moment'
 import { ButtonWithFileUploadModal } from 'compoments'
-const confirm = Modal.confirm
 const formItemStyle = {
     labelCol:{
         span:10
@@ -211,9 +210,9 @@ class PopModal extends Component{
                             {
                                 type === 'edit' && <Button
                                     onClick={()=>{
-                                        confirm({
+                                        const modalRef = Modal.confirm({
                                             title: '友情提醒',
-                                            content: '是否删除该条数据？',
+                                            content: '该删除后将不可恢复，是否删除？',
                                             okText: '确定',
                                             okType: 'danger',
                                             cancelText: '取消',
@@ -222,7 +221,7 @@ class PopModal extends Component{
                                                 this.deleteRecord(initData['id'])
                                             },
                                             onCancel() {
-
+                                                modalRef.destroy()
                                             },
                                         });
                                     }}

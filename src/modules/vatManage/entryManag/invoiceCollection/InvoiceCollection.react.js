@@ -11,7 +11,6 @@ import {request,requestDict,fMoney,getFields,getUrlParam,listMainResultStatus} f
 import { withRouter } from 'react-router'
 import moment from 'moment';
 import PopModal from './popModal'
-const confirm = Modal.confirm;
 const buttonStyle={
     marginRight:5
 }
@@ -358,13 +357,13 @@ class InvoiceCollection extends Component {
                                           }
                                       });
                                   }else {
-                                      confirm({
+                                      const modalRef = Modal.confirm({
                                           title: '友情提醒',
                                           content: '该删除后将不可恢复，是否删除？',
                                           okText: '确定',
                                           okType: 'danger',
                                           cancelText: '取消',
-                                          onOk: () => {
+                                          onOk:()=>{
                                               request.delete(`/income/invoice/collection/delete/${this.state.selectedRowKeys[0]}`)
                                                   .then(({data}) => {
                                                       if (data.code === 200) {
@@ -376,8 +375,8 @@ class InvoiceCollection extends Component {
                                                   })
                                               this.toggleModalVisible(false)
                                           },
-                                          onCancel: () => {
-                                              console.log('Cancel');
+                                          onCancel() {
+                                              modalRef.destroy()
                                           },
                                       });
                                   }

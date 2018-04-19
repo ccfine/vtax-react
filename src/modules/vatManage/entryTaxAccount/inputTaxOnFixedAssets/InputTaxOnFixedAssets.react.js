@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,message,Popconfirm,Icon} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,message,Modal,Icon} from 'antd'
 import {AsyncTable,FileExport,FileImportModal} from 'compoments'
 import {getFields,request,getUrlParam,fMoney,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
@@ -81,11 +81,29 @@ class InputTaxOnFixedAssets extends Component {
             title:'操作',
             key:'actions',
             render:(text,record)=> (this.state.statusParam && parseInt(this.state.statusParam.status, 0)) !== 2 && (
-                <div>
-                    <Popconfirm title="确定要删除吗?" onConfirm={()=>{this.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
-                        <a style={{marginRight:"5px"}}>删除</a>
-                    </Popconfirm>
-                </div>
+                    <span style={{
+                        color:'#f5222d',
+                        cursor:'pointer'
+                    }} onClick={()=>{
+                        const modalRef = Modal.confirm({
+                            title: '友情提醒',
+                            content: '该删除后将不可恢复，是否删除？',
+                            okText: '确定',
+                            okType: 'danger',
+                            cancelText: '取消',
+                            onOk:()=>{
+                                this.deleteRecord(record.id,()=>{
+                                    modalRef && modalRef.destroy();
+                                    this.refreshTable()
+                                })
+                            },
+                            onCancel() {
+                                modalRef.destroy()
+                            },
+                        });
+                    }}>
+                        删除
+                    </span>
             ),
             fixed:'left',
             width:'70px',
@@ -103,20 +121,22 @@ class InputTaxOnFixedAssets extends Component {
             render:text=>fMoney(text)
         }
     ];
-    deleteRecord(record){
-        request.delete(`/account/income/fixedAssets/delete/${record.id}`).then(({data}) => {
-            if (data.code === 200) {
-                message.success('删除成功', 4);
-                this.refreshTable()
-            } else {
-                message.error(data.msg, 4);
-            }
-        })
+    deleteRecord = (id,cb) => {
+        request.delete(`/account/income/fixedAssets/delete/${id}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success("删除成功", 4);
+                    cb && cb()
+                }else{
+                    message.error(data.msg, 4);
+                }
+            })
             .catch(err => {
                 message.error(err.message);
                 this.setState({loading:false})
-            })
+            });
     }
+
     requestPost=(url,type,value={})=>{
         this.setState({ loading:true })
         request.post(url,value)

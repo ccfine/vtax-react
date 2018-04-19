@@ -153,7 +153,7 @@ const Mock ={
 }
 
 class RoleManagementDetail extends Component{
-  constructor(props){
+    constructor(props){
     super(props)
     this.state={
       editAble:false,
@@ -165,13 +165,13 @@ class RoleManagementDetail extends Component{
       enabled:props.location.state.enabled,
       modalKey:Date.now(),
     }
-  }
+    }
 
-  setData = data=>{
+    setData = data=>{
     this.setData({data})
-  }
+    }
 
-  handleSubmit = (e) => {
+    handleSubmit = (e) => {
       e && e.preventDefault();
       this.props.form.validateFields((err, values) => {
           if (!err) {
@@ -195,10 +195,10 @@ class RoleManagementDetail extends Component{
               },3000)
           }
       });
-  }
+    }
 
 
-  fetch(){
+    fetch(){
       request.get(`/roles/${this.props.match.params.roleId}/permissions`)
           .then(({data})=>{
               if(data.code===200){
@@ -209,63 +209,56 @@ class RoleManagementDetail extends Component{
                   message.error(data.msg)
               }
           })
-  }
+    }
 
-  deleteRole = roleId=>{
-        const _this = this;
-        Modal.confirm({
-            title: '删除角色',
-            content: '确定要删除该角色吗',
-            onOk() {
+    deleteRole = roleId=>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '确定要删除该角色吗？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+
+                modalRef && modalRef.destroy();
                 //删除角色
                 request.delete(`/roles/${roleId}`)
                     .then(({data})=>{
                         if(data.code===200){
                             message.success('删除成功');
-                            _this.props.history.goBack();
+                            this.props.history.goBack();
                         }else{
                             message.error(data.msg);
                         }
                     })
             },
             onCancel() {
+                modalRef.destroy()
             },
         });
-  }
 
-  componentDidMount(){
-    this.fetch()
-  }
+    }
 
-format=(data)=>{
-  return data.map((item,index)=>{
-    return ({'label':item.name,'value':item.code})
-  })
-}
+    componentDidMount(){
+        this.fetch()
+    }
 
-isChecked=(data)=>{
-  const arr = [];
-  data.forEach((item) => {
-        console.log(item.grantedByCurrentRole)
-        if(parseInt(item.grantedByCurrentRole,0)===1){
-          arr.push(item.code)
-        }
-  });
-  console.log(arr)
-  return arr;
-}
+    formatOptions=(data)=>{
+      return data.map((item)=>{
+        return ({'label':item.name,'value':item.code})
+      })
+    }
 
-  // checkboxGroupOptions=data=>{
-  //   let option=[],checkedArr=[];
-  //   data.map((item,index)=>{
-  //     option.push({'label':item.name,'value':item.code})
-  //     if(item.grantedByCurrentRole===1){
-  //       checkedArr.push({'label':item.name,'value':item.code})
-  //     }
-  //   })
-  //   console.log(option,checkedArr)
-  //   return {option,checkedArr}
-  // }
+    isChecked=(data)=>{
+      const arr = [];
+      data.forEach((item) => {
+            if(parseInt(item.grantedByCurrentRole,0)===1){
+              arr.push(item.code)
+            }
+      });
+      return arr;
+    }
+
     render(){
       const { data,modalKey,roleName,enabled,remark } = this.state;
       const roleId = this.props.match.params.roleId;
@@ -326,7 +319,7 @@ isChecked=(data)=>{
                                                  },
                                                  className:'vTax-CheckboxGroup',
                                              },
-                                             options:this.format(item.permissions),
+                                             options:this.formatOptions(item.permissions) ,
                                              componentProps:{
                                                  disabled:true
                                              },

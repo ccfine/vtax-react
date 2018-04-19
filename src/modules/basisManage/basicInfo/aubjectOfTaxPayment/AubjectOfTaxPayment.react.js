@@ -147,30 +147,24 @@ class AubjectOfTaxPayment extends Component {
             <SearchTable
                 searchOption={{
                     fields:searchFields,
-                    cardProps:{
-                        className:''
-                    }
                 }}
                 doNotFetchDidMount={true}
                 tableOption={{
                     key: tableUpDateKey,
                     pageSize:100,
                     columns:columns,
-                    cardProps: {
-                        title: '进项转出差异调整表'
-                    },
                     rowSelection:{
                         type: 'radio',
                     } ,
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
-                            selectedRowKeys:selectedRowKeys,
+                            selectedRowKeys,
                             selectedRows,
                         })
                     },
                     onSuccess:()=>{
                         this.setState({
-                            selectedRowKeys:undefined,
+                            selectedRowKeys:null,
                             selectedRows:[],
                         })
                     },

@@ -1,156 +1,151 @@
-/**
- * author       : xiaminghua
- * createTime   : 2018/4/16
- * description  :
- */
 import React,{Component} from 'react';
-import {Form,Checkbox,Row,Button,Icon,Col,message,Modal,Input,Switch} from 'antd'
+import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch} from 'antd'
 import {request} from 'utils'
 const FormItem = Form.Item;
-const Mock ={
-  "code" : 200,
-  "msg" : "OK",
-  "data" : [ {
-    "code" : "basicInfo",
-    "name" : "基础管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "aubjectOfTaxPayment",
-      "name" : "纳税主体",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, {
-      "code" : "taxIncentives",
-      "name" : "税收优惠",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, {
-      "code" : "declareParameter",
-      "name" : "申报参数",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    } ,
-    {
-      "code" : "declareFile",
-      "name" : "申报档案",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "inspectionReport",
-      "name" : "稽查报告",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "filingMaterial",
-      "name" : "备案资料",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "licenseManage",
-      "name" : "证照管理",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "otherFiles",
-      "name" : "其他档案",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
+const dataList ={
+    "code" : 200,
+    "msg" : "OK",
+    "data" : [ {
+        "code" : "basicInfo",
+        "name" : "基础管理",
+        "description" : "",
+        "permissions" : [ {
+            "code" : "aubjectOfTaxPayment",
+            "name" : "纳税主体",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        }, {
+            "code" : "taxIncentives",
+            "name" : "税收优惠",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        }, {
+            "code" : "declareParameter",
+            "name" : "申报参数",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        } ,
+            {
+                "code" : "declareFile",
+                "name" : "申报档案",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },
+            {
+                "code" : "inspectionReport",
+                "name" : "稽查报告",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },
+            {
+                "code" : "filingMaterial",
+                "name" : "备案资料",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },
+            {
+                "code" : "licenseManage",
+                "name" : "证照管理",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },
+            {
+                "code" : "otherFiles",
+                "name" : "其他档案",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },
 
-  ]
-  }, {
-    "code" : "vatManage",
-    "name" : "增值税管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "salesManag",
-      "name" : "销项管理",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "entryManag",
-      "name" : "进项管理",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "landPrice",
-      "name" : "土地价款",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "otherAccount",
-      "name" : "其他台账",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }
-  ]
-  }, {
-    "code" : "taxDeclare",
-    "name" : "纳税申报",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "createADeclare",
-      "name" : "创建申报",
-      "description" : "",
-      "grantedByCurrentRole" : 0
-    },{
-      "code" : "searchDeclare",
-      "name" : "查询申报",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    } ]
-  },
-  {
-    "code" : "userManage",
-    "name" : "用户管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "lookUserInfo",
-      "name" : "查看用户信息",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "createUser",
-      "name" : "新增用户",
-      "description" : "",
-      "grantedByCurrentRole" : 0
+        ]
+    }, {
+        "code" : "vatManage",
+        "name" : "增值税管理",
+        "description" : "",
+        "permissions" : [ {
+            "code" : "salesManag",
+            "name" : "销项管理",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        },{
+            "code" : "entryManag",
+            "name" : "进项管理",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        },{
+            "code" : "landPrice",
+            "name" : "土地价款",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        },{
+            "code" : "otherAccount",
+            "name" : "其他台账",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        }
+        ]
+    }, {
+        "code" : "taxDeclare",
+        "name" : "纳税申报",
+        "description" : "",
+        "permissions" : [ {
+            "code" : "createADeclare",
+            "name" : "创建申报",
+            "description" : "",
+            "grantedByCurrentRole" : 0
+        },{
+            "code" : "searchDeclare",
+            "name" : "查询申报",
+            "description" : "",
+            "grantedByCurrentRole" : 1
+        } ]
     },
-    {
-      "code" : "modifiUserInfo",
-      "name" : "修改用户信息",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, ]
-  },{
-    "code" : "roleManage",
-    "name" : "角色管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "lookRolePermission",
-      "name" : "查看角色权限",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "createRole",
-      "name" : "添加角色",
-      "description" : "",
-      "grantedByCurrentRole" : 0
-    },
-    {
-      "code" : "modifiRolePermission",
-      "name" : "修改角色权限",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, ]
-  },
+        {
+            "code" : "userManage",
+            "name" : "用户管理",
+            "description" : "",
+            "permissions" : [ {
+                "code" : "lookUserInfo",
+                "name" : "查看用户信息",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },{
+                "code" : "createUser",
+                "name" : "新增用户",
+                "description" : "",
+                "grantedByCurrentRole" : 0
+            },
+                {
+                    "code" : "modifiUserInfo",
+                    "name" : "修改用户信息",
+                    "description" : "",
+                    "grantedByCurrentRole" : 1
+                }, ]
+        },{
+            "code" : "roleManage",
+            "name" : "角色管理",
+            "description" : "",
+            "permissions" : [ {
+                "code" : "lookRolePermission",
+                "name" : "查看角色权限",
+                "description" : "",
+                "grantedByCurrentRole" : 1
+            },{
+                "code" : "createRole",
+                "name" : "添加角色",
+                "description" : "",
+                "grantedByCurrentRole" : 0
+            },
+                {
+                    "code" : "modifiRolePermission",
+                    "name" : "修改角色权限",
+                    "description" : "",
+                    "grantedByCurrentRole" : 1
+                }, ]
+        },
 
- ]
+    ]
 }
-class RolePopModal extends Component{
+class RoleModal extends Component{
     state={
         editAble:true,
         submitLoading:false,
@@ -166,78 +161,69 @@ class RolePopModal extends Component{
     handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-          if (!err) {
-            console.log(values);
-            debugger
-          }
+            if (!err) {
+                this.setState({
+                    submitLoading:true
+                })
+                let permissionCodes = [];
+                for(let key in values){
+                    if(values[key] && key !=='remark' && key !== 'roleName' && key !== 'enabled'){
+                        permissionCodes.push(key)
+                    }
+                }
+                let params = {
+                    permissionCodes,
+                    remark:values.remark,
+                    roleName:values.roleName,
+                    enabled:values.enabled ? 1 : 0
+                }
+                if(this.props.type==='edit'){
 
+                    request.put(`/roles/${this.props.roleId}`,params)
+                        .then(({data})=>{
+                            this.setState({
+                                submitLoading:false
+                            })
+                            if(data.code===200){
+                                if(this.mounted){
+                                    message.success('角色编辑成功!');
+                                    this.props.setData({
+                                        roleName:params.roleName,
+                                        enabled:params.enabled,
+                                        remark:params.remark
+                                    });
+                                    this.setState({
+                                        visible:false
+                                    })
+                                    this.props.refresh()
+                                }
 
+                            }else{
+                                message.error(data.msg)
+                            }
+                        })
+                }else{
+                    request.post('/roles',params)
+                        .then(({data})=>{
+                            this.setState({
+                                submitLoading:false
+                            })
+                            if(data.code===200){
+                                if(this.mounted){
+                                    message.success('角色添加成功!');
+                                    this.setState({
+                                        visible:false
+                                    })
+                                    this.props.refresh()
+                                }
 
-            // if (!err) {
-            //
-            //
-            //     this.setState({
-            //         submitLoading:true
-            //     })
-            //     let permissionCodes = [];
-            //     for(let key in values){
-            //         if(values[key] && key !=='remark' && key !== 'roleName' && key !== 'enabled'){
-            //             permissionCodes.push(key)
-            //         }
-            //     }
-            //     let params = {
-            //         permissionCodes,
-            //         remark:values.remark,
-            //         roleName:values.roleName,
-            //         enabled:values.enabled ? 1 : 0
-            //     }
-            //     if(this.props.type==='edit'){
-            //
-            //         request.put(`/roles/${this.props.roleId}`,params)//编辑成功
-            //             .then(({data})=>{
-            //                 this.setState({
-            //                     submitLoading:false
-            //                 })
-            //                 if(data.code===200){
-            //                     if(this.mounted){
-            //                         message.success('角色编辑成功!');
-            //                         this.props.setData({
-            //                             roleName:params.roleName,
-            //                             enabled:params.enabled,
-            //                             remark:params.remark
-            //                         });
-            //                         this.setState({
-            //                             visible:false
-            //                         })
-            //                         this.props.refresh()
-            //                     }
-            //
-            //                 }else{
-            //                     message.error(data.msg)
-            //                 }
-            //             })
-            //     }else{
-            //         request.post('/roles',params)//新增角色
-            //             .then(({data})=>{
-            //                 this.setState({
-            //                     submitLoading:false
-            //                 })
-            //                 if(data.code===200){
-            //                     if(this.mounted){
-            //                         message.success('角色添加成功!');
-            //                         this.setState({
-            //                             visible:false
-            //                         })
-            //                         this.props.refresh()
-            //                     }
-            //
-            //                 }else{
-            //                     message.error(data.msg)
-            //                 }
-            //             })
-            //     }
-            //
-            // }
+                            }else{
+                                message.error(data.msg)
+                            }
+                        })
+                }
+
+            }
         });
     }
     fetchList(){
@@ -245,11 +231,11 @@ class RolePopModal extends Component{
         if(this.props.type==='edit'){
             url = `/roles/${this.props.roleId}/permissions`
         }
-        request.get(url)//查询角色已分配的权限
+        request.get(url)
             .then(({data})=>{
                 if(data.code===200){
                     this.mounted && this.setState({
-                        data:data.data.length>0 || Mock.data
+                        data: dataList.data //data.data ||
                     })
                 }else{
                     message.error(data.msg)
@@ -309,55 +295,17 @@ class RolePopModal extends Component{
         const {data} = this.state;
         return(
             <div style={{display:'inline-block',marginLeft:15}}>
-              <Button
-                    onClick={()=>{
-                      resetFields();
-                      this.setState({
-                          visible:true
-                      })
-                  }}>
-                  <Icon type={this.props.type==="edit"?`${this.props.type}`:`plus-circle`} />
-                  {this.props.buttonTxt}
-              </Button>
-                <Modal
-                  title={this.props.title}
-                  onCancel={this.handleCancel}
-                  width={800}
-                  maskClosable={false}
-                  visible={this.state.visible}
-                  confirmLoading={this.state.submitLoading}
-                  onOk={this.handleSubmit}
-
-                  >
+                <Button type="primary" style={{marginBottom:15,width:'100%'}} onClick={()=>{
+                    resetFields();
+                    this.setState({
+                        visible:true
+                    })
+                }}>{this.props.buttonTxt}</Button>
+                <Modal title={this.props.title} onCancel={this.handleCancel} width={800} visible={this.state.visible} confirmLoading={this.state.submitLoading} onOk={this.handleSubmit}>
                     <Form
-                        style={{maxHeight:'390px',overflow:'hidden',overflowY:'auto'}}
                         layout="inline" onSubmit={this.handleSubmit}>
                         <Row>
                             <Col span={8}>
-                               {/* {
-                                 getFields(this.props.form,[
-                                     {
-                                         label:'',
-                                         fieldName:'roleName',
-                                         type:'input',
-                                         span:12,
-                                         formItemStyle,
-                                         componentProps:{
-
-                                         },
-                                         fieldDecoratorOptions:{
-                                            initialValue:this.props.type==='edit'? this.props.data.roleName : '',
-                                             rules: [
-                                               {
-                                                   required:true,
-                                                   message:'请输入角色名称'
-                                               },{
-                                                   pattern:/^[^ ]+$/,message:'不能包含空格'
-                                               }
-                                             ],
-                                         }
-                                     },
-                               } */}
                                 <FormItem>
                                     {
                                         getFieldDecorator('roleName',{
@@ -371,7 +319,7 @@ class RolePopModal extends Component{
                                                 }
                                             ]
                                         })(
-                                            <Input style={{fontSize:14}} placeholder="请输入角色名称" />
+                                            <Input placeholder="请输入角色名称" />
                                         )
                                     }
                                 </FormItem>
@@ -380,7 +328,7 @@ class RolePopModal extends Component{
                         </Row>
                         <div style={{
                             width:'100%',
-                            // backgroundColor:'#F8F8F8',
+                            backgroundColor:'#F8F8F8',
                             padding:'20px 0',
                             margin:'20px 0'
                         }}>
@@ -405,7 +353,7 @@ class RolePopModal extends Component{
                                                         return(
                                                             <FormItem key={j}>
                                                                 {
-                                                                    getFieldDecorator(`${item.code[fieldItem.code]}`,{
+                                                                    getFieldDecorator(fieldItem.code,{
                                                                         initialValue:parseInt(fieldItem.grantedByCurrentRole,0)===1,
                                                                         valuePropName: 'checked',
                                                                     })(
@@ -468,4 +416,4 @@ class RolePopModal extends Component{
     }
 }
 
-export default  Form.create()(RolePopModal)
+export default  Form.create()(RoleModal)

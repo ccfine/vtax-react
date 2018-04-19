@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Popconfirm,message,Card,Icon} from 'antd'
+import {Button,Modal,message,Card,Icon} from 'antd'
 import PopModal from './popModal'
 import {request} from 'utils'
 import PartTwo from './TabPage2.r'
@@ -28,9 +28,27 @@ const getColumns = context=> [
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
                 }}>修改</a>
-                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
-                    <a>删除</a>
-                </Popconfirm>
+                <span style={{
+                    color:'#f5222d',
+                    cursor:'pointer'
+                }} onClick={()=>{
+                    const modalRef = Modal.confirm({
+                        title: '友情提醒',
+                        content: '该删除后将不可恢复，是否删除？',
+                        okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
+                        onOk:()=>{
+                            context.deleteRecord(record)
+                            modalRef && modalRef.destroy();
+                        },
+                        onCancel() {
+                            modalRef.destroy()
+                        },
+                    });
+                }}>
+                    删除
+                </span>
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'look',opid:record.id});
                 }}>查看</a>

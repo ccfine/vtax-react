@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-04-08 10:09:50
  */
 import React, { Component } from "react";
-import { Button, Popconfirm, message, Icon } from "antd";
+import { Button, Modal, message, Icon } from "antd";
 import { SearchTable } from "compoments";
 import PopModal from "./popModal";
 import {
@@ -65,7 +65,7 @@ const getColumns = context => [
     title: "操作",
     render(text, record, index) {
       return (
-        <span>
+        <div>
           <a
             style={{ margin: "0 5px" }}
             onClick={() => {
@@ -78,18 +78,30 @@ const getColumns = context => [
           >
             修改
           </a>
-          <Popconfirm
-            title="确定要删除吗?"
-            onConfirm={() => {
-              context.deleteRecord(record);
-            }}
-            onCancel={() => {}}
-            okText="确认"
-            cancelText="取消"
-          >
-            <a style={{ marginRight: "5px" }}>删除</a>
-          </Popconfirm>
-        </span>
+          <span style={{
+              color:'#f5222d',
+              cursor:'pointer'
+          }} onClick={()=>{
+              const modalRef = Modal.confirm({
+                  title: '友情提醒',
+                  content: '该删除后将不可恢复，是否删除？',
+                  okText: '确定',
+                  okType: 'danger',
+                  cancelText: '取消',
+                  onOk:()=>{
+                      context.deleteRecord(record.id,()=>{
+                          modalRef && modalRef.destroy();
+                          context.update()
+                      })
+                  },
+                  onCancel() {
+                      modalRef.destroy()
+                  },
+              });
+          }}>
+                删除
+            </span>
+        </div>
       );
     },
     fixed: "left",
@@ -191,21 +203,20 @@ class OtherTaxAdjustment extends Component {
   update = () => {
     this.setState({ updateKey: Date.now() });
   };
-  deleteRecord = record => {
-    request
-      .delete(`/account/output/othertax/delete/${record.id}`)
-      .then(({ data }) => {
-        if (data.code === 200) {
-          message.success("删除成功", 4);
-          this.setState({ updateKey: Date.now() });
-        } else {
-          message.error(data.msg, 4);
-        }
-      })
-      .catch(err => {
-        message.error(err.message);
-      });
-  };
+  deleteRecord = (id,cb) => {
+      request.delete(`/account/output/othertax/delete/${id}`)
+          .then(({data})=>{
+              if(data.code===200){
+                  message.success("删除成功", 4);
+                  cb && cb()
+              }else{
+                  message.error(data.msg, 4);
+              }
+          })
+          .catch(err => {
+              message.error(err.message);
+          });
+  }
   updateStatus = (values = this.state.filters) => {
     this.setState({ filters: values });
     request

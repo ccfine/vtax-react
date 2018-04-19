@@ -36,7 +36,7 @@ export default class AsyncSelect extends Component{
                 span:18
             }
         },
-        initialValue:undefined,
+        initialValue:'',
         label:'field',
         selectOptions:{
 
