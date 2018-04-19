@@ -36,7 +36,7 @@ class PopModal extends React.Component{
                     newobj.priceClassTxt = item.name;
                 }
             });
-            newobj.amount = parseFloat(newobj.amount);
+            //newobj.amount = parseFloat(newobj.amount);
             if(this.props.action === "add"){
                 newobj.id = Date.now();
                 newobj.action = "add";
