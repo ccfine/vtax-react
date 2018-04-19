@@ -36,6 +36,7 @@ class PopModal extends Component{
          * */
         tableUpDateKey:Date.now(),
         submitLoading:false,
+        loaded:true,
         selectedRowKeys:null,
         selectedRows:{},
         visible:false,
@@ -242,20 +243,30 @@ class PopModal extends Component{
     }
 
     fetch = id=> {
+        this.setState({ loaded: false });
         request.get(`/income/invoice/collection/get/${id}`,{
         })
             .then(({data}) => {
+
                 if(data.code===200){
                     this.setState({
                         initData:{...data.data.incomeInvoiceCollectionDO},
                         detailsDate:[...data.data.list],
+                        loaded: true,
                     },()=>{
-                        console.log(this.state.detailsDate)
                         this.cellAmountSum(['amount','taxAmount','totalAmount']);
                     })
                 }else{
+                    this.setState({
+                        loaded: true
+                    });
                     message.error(data.msg, 4);
                 }
+
+            }).catch(err=>{
+                this.setState({
+                    loaded: true
+                });
             });
     }
 
@@ -316,7 +327,7 @@ class PopModal extends Component{
         this.mounted=null
     }
     render(){
-        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,detailsDate,initData,footerDate} = this.state;
+        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,detailsDate,initData,footerDate,loaded} = this.state;
         const props = this.props;
         let title='';
         let disabled =  props.modalConfig.type ==='view';
@@ -789,6 +800,7 @@ class PopModal extends Component{
                             <SynchronizeTable
                                 data={detailsDate}
                                 updateKey={tableUpDateKey}
+                                loaded={loaded}
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,

@@ -319,11 +319,12 @@ class PrePaidHousingSales extends Component{
             tableKey:Date.now()
         })
     }
-    deleteData = () =>{
+    deleteRecord = () =>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
-            content: '是否要删除选中的记录？',
+            content: '该删除后将不可恢复，是否删除？',
             okText: '确定',
+            okType: 'danger',
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
@@ -341,8 +342,8 @@ class PrePaidHousingSales extends Component{
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -533,7 +534,7 @@ class PrePaidHousingSales extends Component{
                             size="small"
                             setButtonStyle={{marginRight:5}}
                         />
-                        <Button size="small" style={{marginRight:5}} type='danger' onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
+                        <Button size="small" style={{marginRight:5}} type='danger' onClick={this.deleteRecord} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
                         <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && hasData && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
                         <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && hasData && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
                     </div>,

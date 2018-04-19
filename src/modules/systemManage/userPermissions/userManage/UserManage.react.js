@@ -28,9 +28,10 @@ const columns = [
     {
         title: "操作",
         dataIndex:'action',
-        render:(text,record)=> <div style={{textAlign:'center'}}><Link to={{
+        className:'text-center',
+        render:(text,record)=> <Link to={{
             pathname:`/web/systemManage/userPermissions/userManage/${record.username}`
-        }}>详情</Link></div>
+        }}>详情</Link>
     }, {
         title: "用户名",
         dataIndex: "username"

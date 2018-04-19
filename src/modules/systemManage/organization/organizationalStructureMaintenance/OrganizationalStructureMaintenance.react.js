@@ -130,8 +130,9 @@ class OrganizationalStructureMaintenance extends Component {
     deleteData = () =>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
-            content: '是否要删除选中的记录？',
+            content: '该删除后将不可恢复，是否删除？',
             okText: '确定',
+            okType: 'danger',
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
