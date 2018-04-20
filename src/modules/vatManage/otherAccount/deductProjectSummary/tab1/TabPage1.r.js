@@ -278,13 +278,13 @@ class tab1 extends Component{
                         cardProps:{
                             title:'项目信息'
                         },
-                        rowSelection:parseInt(statusParam.status, 0)  === 1 ? {type:'radio',} : undefined,
-                        onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
+                        rowSelection:{type:'radio'},
+                        onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({
                                 selectedRows,
                                 pageTwoKey:Date.now(),
                             })
-                        } : undefined,
+                        },
                         onSuccess:()=>{
                             this.setState({
                                 selectedRows:[],
