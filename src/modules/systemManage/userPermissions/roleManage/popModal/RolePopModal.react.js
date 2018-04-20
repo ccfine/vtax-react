@@ -1,3 +1,8 @@
+/**
+ * author       : liuliyuan
+ * createTime   : 2018/4/20
+ * description  :
+ */
 import React,{Component} from 'react';
 import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch} from 'antd'
 import {request} from 'utils'
@@ -162,7 +167,9 @@ class RoleModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.setState({
+                console.log(values)
+
+                /*this.setState({
                     submitLoading:true
                 })
                 let permissionCodes = [];
@@ -221,7 +228,7 @@ class RoleModal extends Component{
                                 message.error(data.msg)
                             }
                         })
-                }
+                }*/
 
             }
         });
@@ -264,22 +271,21 @@ class RoleModal extends Component{
             })
         }
     }
-    checkAllChecked(name){
+    checkAllChecked= (allCode, code) => e =>{
         const data = this.state.data;
-        const {getFieldValue} = this.props.form;
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        setFieldsValue({
+            [code]:e.target.checked
+        })
         for(let i = 0 ;i<data.length;i++){
-            if(data[i].name === name){
-
+            if(data[i].code === allCode){
                 let arr = [];
-                data[i].forEach(item=>{
-
+                data[i].permissions.forEach(item=>{
                     arr.push( getFieldValue(item.code) )
-
                 })
-                this.setState({
-                    [name]:arr.filter(item=>!item).length === 0
+                setFieldsValue({
+                    [allCode]: arr.filter(item=>!item).length === 0
                 })
-
                 break;
             }
         }
@@ -345,8 +351,16 @@ class RoleModal extends Component{
                                             </Col>
                                             <Col span={21}>
                                                 <FormItem>
-                                                    <Checkbox defaultChecked={(()=>item.permissions.filter(item=>!item.grantedByCurrentRole).length === 0)()}
-                                                              onChange={this.onCheckAllChange(item)}>全选</Checkbox>
+                                                    {
+                                                        getFieldDecorator(item.code,{
+                                                            initialValue:item.permissions.filter(item=>!item.grantedByCurrentRole).length === 0,
+                                                            valuePropName: 'checked',
+                                                            onChange:this.onCheckAllChange(item)
+                                                        })(
+                                                            <Checkbox>全选</Checkbox>
+                                                        )
+                                                    }
+
                                                 </FormItem>
                                                 {
                                                     item.permissions.map((fieldItem,j)=>{
@@ -356,6 +370,7 @@ class RoleModal extends Component{
                                                                     getFieldDecorator(fieldItem.code,{
                                                                         initialValue:parseInt(fieldItem.grantedByCurrentRole,0)===1,
                                                                         valuePropName: 'checked',
+                                                                        onChange:this.checkAllChecked(item.code, fieldItem.code)
                                                                     })(
                                                                         <Checkbox disabled={!this.state.editAble}>{fieldItem.name}</Checkbox>
                                                                     )

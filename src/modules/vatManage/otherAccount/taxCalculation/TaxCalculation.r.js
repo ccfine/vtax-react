@@ -145,19 +145,19 @@ class TaxCalculation extends Component{
             content: '确定要重算吗',
             onOk : ()=> {
                 this.toggleSearchTableLoading(true)
-                request.get('/account/taxCalculation/reset',{
-                    params:this.state.resultFieldsValues
-                })
-                    .then(({data})=>{
+                request.put('/account/taxCalculation/reset',this.state.resultFieldsValues
+                )
+                    .then(({data}) => {
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
+                            message.success('重算成功!');
                             this.setState({
                                 tableKey:Date.now()
                             })
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    })
+                    });
             },
             onCancel() {
 
