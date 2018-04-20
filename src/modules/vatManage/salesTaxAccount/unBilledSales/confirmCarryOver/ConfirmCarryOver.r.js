@@ -276,18 +276,15 @@ class ConfirmCarryOver extends Component{
     }
     recount = ()=>{
         const { mainId,month:authMonth }  = this.state.resultFieldsValues;
+
         Modal.confirm({
             title: '友情提醒',
             content: '确定要重算吗',
             onOk : ()=> {
                 this.toggleSearchTableLoading(true)
-                request.get('/account/output/notInvoiceSale/reset',{
-                    params:{
-                        mainId,
-                        authMonth
-                    }
-                })
-                    .then(({data})=>{
+                request.put('/account/output/notInvoiceSale/reset',{mainId, authMonth}
+                )
+                    .then(({data}) => {
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
                             message.success('重算成功!');
@@ -295,7 +292,7 @@ class ConfirmCarryOver extends Component{
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    })
+                    });
             }
         })
     }

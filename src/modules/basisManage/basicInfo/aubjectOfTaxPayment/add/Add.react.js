@@ -11,7 +11,6 @@ import Shareholding from './Shareholding.react'
 import EquityRelation from './EquityRelation.react'
 import {request} from 'utils'
 const TabPane = Tabs.TabPane;
-const confirm = Modal.confirm;
 
 class Add extends Component {
     static defaultProps={
@@ -191,14 +190,13 @@ class Add extends Component {
         })
     }
     handleDelete=()=>{
-        confirm({
+        const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '该删除后将不可恢复，是否删除？',
             okText: '确定',
             okType: 'danger',
             cancelText: '取消',
             onOk:()=>{
-
                 request.delete(`/taxsubject/delete/${this.props.selectedRowKeys[0]}`)
                     .then(({data})=>{
                         if(data.code===200){
@@ -210,8 +208,8 @@ class Add extends Component {
                         }
                     })
             },
-            onCancel:()=>{
-                console.log('Cancel');
+            onCancel() {
+                modalRef.destroy()
             },
         });
     }

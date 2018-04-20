@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,message,Icon} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,message,Icon,Modal} from 'antd'
 import {FileExport,SynchronizeTable} from 'compoments'
 import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
@@ -204,8 +204,21 @@ class BillingSales extends Component {
                         this.requestPost(url,type,values);
                         break;
                     case '重算':
-                        url = '/account/output/billingSale/reset';
-                        this.requestPut(url,type,values);
+                        Modal.confirm({
+                            title: '友情提醒',
+                            content: '确定要重算吗',
+                            onOk : ()=> {
+                                request.put('/account/output/billingSale/reset',values)
+                                    .then(({data})=>{
+                                        if(data.code===200){
+                                            message.success(`${type}成功!`);
+                                            this.refreshTable();
+                                        }else{
+                                            message.error(`${type}失败:${data.msg}`)
+                                        }
+                                    })
+                            }
+                        })
                         break;
                     default:
                         this.setState({
@@ -245,17 +258,6 @@ class BillingSales extends Component {
 
     }
 
-    requestPut=(url,type,value={})=>{
-        request.put(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
     requestPost=(url,type,value={})=>{
         request.post(url,value)
             .then(({data})=>{
@@ -410,7 +412,7 @@ class BillingSales extends Component {
                                     url={`account/output/billingSale/export`}
                                     title='导出'
                                     setButtonStyle={{marginRight:5}}
-                                    disabled={disabled1 || !notDataSource.length>0}
+                                    disabled={disabled1 || !(notDataSource && notDataSource.length>0)}
                                     params={{
                                         isEstate:0,
                                         ...filters

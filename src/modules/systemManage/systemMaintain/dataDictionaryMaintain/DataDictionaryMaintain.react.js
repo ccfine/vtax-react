@@ -1,6 +1,6 @@
 /**
  * author       : liuliyuan
- * createTime   : 2017/12/16 17:47
+ * createTime   : 2018/4/20
  * description  :
  */
 import React, { Component } from 'react'
@@ -94,8 +94,9 @@ class DataDictionaryMaintain extends Component {
     deleteData = () =>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
-            content: '是否要删除选中的记录？',
+            content: '该删除后将不可恢复，是否删除？',
             okText: '确定',
+            okType: 'danger',
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();

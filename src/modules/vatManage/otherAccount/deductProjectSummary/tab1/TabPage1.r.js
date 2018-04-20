@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {Button,Icon,message,Modal} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from '../../../../../compoments'
 import PageTwo from './TabPage2.r'
@@ -150,15 +150,22 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.put('/account/land/price/deducted/main/reset',this.state.filters)
-            .then(({data}) => {
-                if(data.code===200){
-                    message.success('重算成功!');
-                    this.refreshTable();
-                }else{
-                    message.error(`重算失败:${data.msg}`)
-                }
-            });
+        Modal.confirm({
+            title: '友情提醒',
+            content: '确定要重算吗',
+            onOk : ()=> {
+                request.put('/account/land/price/deducted/main/reset',this.state.filters)
+                    .then(({data}) => {
+                        if(data.code===200){
+                            message.success('重算成功!');
+                            this.refreshTable();
+                        }else{
+                            message.error(`重算失败:${data.msg}`)
+                        }
+                    });
+            }
+        })
+
     }
     handleClickActions=type=>{
         let url = '';
@@ -271,13 +278,13 @@ class tab1 extends Component{
                         cardProps:{
                             title:'项目信息'
                         },
-                        rowSelection:parseInt(statusParam.status, 0)  === 1 ? {type:'radio',} : undefined,
-                        onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys,selectedRows)=>{
+                        rowSelection:{type:'radio'},
+                        onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({
                                 selectedRows,
                                 pageTwoKey:Date.now(),
                             })
-                        } : undefined,
+                        },
                         onSuccess:()=>{
                             this.setState({
                                 selectedRows:[],

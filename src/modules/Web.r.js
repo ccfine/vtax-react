@@ -63,6 +63,7 @@ class Web extends Component {
         this.checkLoggedIn(nextProps);
     }
 
+
     render() {
         const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
         //const pathname = this.props.history.location.pathname;

@@ -6,9 +6,10 @@
 import React from 'react'
 import {wrapPage} from 'compoments'
 import RoleManage from './roleManage'
+import UserManage from './userManage'
+import UserManagementDetail from './userManage/userManagementDetail'
+import RoleManagementDetail from './roleManage/roleManagementDetail'
 
-//const RoleManage =()=><div>角色管理</div>
-const UserManage =()=><div>用户管理</div>
 const UserRightsManage =()=><div>用户权限管理</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -42,6 +43,16 @@ const UserPermissions_Routes = [
             backgroundColor:'#7ED431'
         },
         exact:true,
+    },{
+        path:`${PATH}/roleManage/:roleId`,
+        component:wrapPage('角色管理详情',RoleManagementDetail),
+        name:'角色管理详情',
+        exact:true
+    },{
+        path:`${PATH}/userManage/:userName`,
+        component:wrapPage('用户管理详情',UserManagementDetail),
+        name:'用户管理详情',
+        exact:true
     },{
         path:`${PATH}`,
         redirect:true,

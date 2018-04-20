@@ -2,8 +2,9 @@
 import React from "react";
 import {Modal} from "antd";
 import SourceTable from '../sourceTable';
-import {request,accAdd} from 'utils';
+import {request} from 'utils';
 import findIndex from 'lodash/findIndex'
+import {BigNumber} from 'bignumber.js'
 export default class SourceModal extends React.Component{
     state={
         sourceTable:null,
@@ -41,10 +42,10 @@ export default class SourceModal extends React.Component{
         this.setState({sourceTable:this.state.sourceTable});
     }
     countAmount(sourceTable){ // 计算合计
-        let allAmount=0;
+        let allAmount=new BigNumber('0');
         sourceTable.forEach(element => {
             if(element.action !== "delete"){
-                allAmount=accAdd(allAmount,element.amount);
+                allAmount=allAmount.plus(element.amount);
             }
         });
         sourceTable.push({amount:allAmount,id:"-1"});

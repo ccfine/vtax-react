@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,message} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,Icon,message,Modal} from 'antd'
 import {AsyncTable} from 'compoments'
 import {request,getFields,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
@@ -85,8 +85,21 @@ class InputTaxDetails extends Component {
                         this.requestPost(url,type,values);
                         break;
                     case '重算':
-                        url = '/account/income/taxDetail/reset';
-                        this.requestPut(url,type,values);
+                        Modal.confirm({
+                            title: '友情提醒',
+                            content: '确定要重算吗',
+                            onOk : ()=> {
+                                request.put('/account/income/taxDetail/reset',values)
+                                    .then(({data})=>{
+                                        if(data.code===200){
+                                            message.success(`${type}成功!`);
+                                            this.refreshTable();
+                                        }else{
+                                            message.error(`${type}失败:${data.msg}`)
+                                        }
+                                    })
+                            }
+                        })
                         break;
                     default:
                         this.setState({
@@ -109,17 +122,6 @@ class InputTaxDetails extends Component {
         },()=>{
             this.updateStatus();
         })
-    }
-    requestPut=(url,type,data={})=>{
-        request.put(url,data)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
     }
     requestPost=(url,type,data={})=>{
         request.post(url,data)

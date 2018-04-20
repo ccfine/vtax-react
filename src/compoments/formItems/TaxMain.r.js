@@ -61,7 +61,6 @@ export default class TaxMain extends Component{
         },
         fieldName:'mainId',
         fieldDecoratorOptions:{
-
         }
     }
     state={
@@ -99,6 +98,7 @@ export default class TaxMain extends Component{
         return(
             <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
+                    initialValue:'',
                     ...fieldDecoratorOptions,
                 })(
                     <Select

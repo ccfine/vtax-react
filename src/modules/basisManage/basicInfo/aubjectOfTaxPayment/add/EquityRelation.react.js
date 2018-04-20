@@ -76,12 +76,6 @@ class EquityRelation extends Component {
         })
     }
 
-    componentDidMount() {
-
-    }
-    componentWillReceiveProps(nextProps){
-
-    }
     render() {
         const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
         const {defaultData} = this.props;

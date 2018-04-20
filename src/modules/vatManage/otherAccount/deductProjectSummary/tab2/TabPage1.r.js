@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {Button,Icon,message,Modal} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import { withRouter } from 'react-router'
@@ -122,16 +122,21 @@ class tab1 extends Component{
         })
     }
     handleReset=()=>{
-        request.put('/account/othertax/deducted/main/reset',this.state.filters
-        )
-            .then(({data}) => {
-                if(data.code===200){
-                    message.success('重算成功!');
-                    this.refreshTable();
-                }else{
-                    message.error(`重算失败:${data.msg}`)
-                }
-            });
+        Modal.confirm({
+            title: '友情提醒',
+            content: '确定要重算吗',
+            onOk : ()=> {
+                request.put('/account/othertax/deducted/main/reset',this.state.filters)
+                    .then(({data}) => {
+                        if(data.code===200){
+                            message.success('重算成功!');
+                            this.refreshTable();
+                        }else{
+                            message.error(`重算失败:${data.msg}`)
+                        }
+                    });
+            }
+        })
     }
     handleClick=type=>{
         let url = '';
