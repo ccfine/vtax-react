@@ -233,7 +233,7 @@ class LandPriceModal extends React.Component {
                                 label="合同建筑面积(m²)"
                             >
                                 {getFieldDecorator('coveredArea', { initialValue: this.state.record.coveredArea })(
-                                    <NumericInput disabled={true} />
+                                    <NumericInput decimalPlaces={4} disabled={true} />
                                 )}
                             </FormItem>
                         </Col>
@@ -243,7 +243,7 @@ class LandPriceModal extends React.Component {
                                 label="调整后建筑面积(m²)"
                             >
                                 {getFieldDecorator('buildArea', { initialValue: this.state.record.buildArea })(
-                                    <NumericInput disabled={this.props.readOnly} />
+                                    <NumericInput decimalPlaces={4} disabled={this.props.readOnly} />
                                 )}
                             </FormItem>
                         </Col>

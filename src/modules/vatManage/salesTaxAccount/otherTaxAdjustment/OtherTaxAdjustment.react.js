@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-08 10:09:50
+ * @Last Modified time: 2018-04-19 11:52:33
  */
 import React, { Component } from "react";
 import { Button, Modal, message, Icon } from "antd";
@@ -310,7 +310,7 @@ class OtherTaxAdjustment extends Component {
                   <Button
                     size="small"
                     style={{ marginRight: 5 }}
-                    disabled={(buttonDisabled || isSubmit) && filters}
+                    disabled={isSubmit}
                     onClick={() => {
                       this.setState({
                         visible: true,
