@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Form,Button,Icon,Popconfirm,message} from 'antd'
+import {Form,Button,Icon,message,Modal} from 'antd'
 import {SearchTable,FileExport,FileImportModal} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
@@ -121,10 +121,28 @@ const getColumns =context =>[
     {
         title:'操作',
         render:(text,record,index)=> (context.state.statusParam && parseInt(context.state.statusParam.status, 0)) === 1 && (
-            <span>
-                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确定" cancelText="取消">
-                    <a alt="删除" style={{marginRight:"5px"}}>删除</a>
-                </Popconfirm>
+            <span style={{
+                color:'#f5222d',
+                cursor:'pointer'
+            }} onClick={()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record.id,()=>{
+                            modalRef && modalRef.destroy();
+                            context.refreshTable()
+                        })
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }}>
+                删除
             </span>
         ),
         fixed:'left',
@@ -229,17 +247,23 @@ class InterimContractInputTaxTransferredOut extends Component {
         })
     }
     handleReset=()=>{
-        request.put('/account/income/taxContract/adjustment/reset',this.state.filters
-        )
-            .then(({data}) => {
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success('重算成功!');
-                    this.refreshTable();
-                }else{
-                    message.error(`重算失败:${data.msg}`)
-                }
-            });
+        Modal.confirm({
+            title: '友情提醒',
+            content: '确定要重算吗',
+            onOk : ()=> {
+                request.put('/account/income/taxContract/adjustment/reset',this.state.filters
+                )
+                    .then(({data}) => {
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            message.success('重算成功!');
+                            this.refreshTable();
+                        }else{
+                            message.error(`重算失败:${data.msg}`)
+                        }
+                    });
+            }
+        })
     }
     updateStatus=()=>{
         request.get('/account/income/taxContract/listMain',{params:this.state.filters}).then(({data}) => {
@@ -250,19 +274,20 @@ class InterimContractInputTaxTransferredOut extends Component {
             }
         })
     }
-    deleteRecord(record){
-        request.delete(`/account/income/taxContract/adjustment/delete/${record.id}`).then(({data}) => {
-            if (data.code === 200) {
-                message.success('删除成功', 4);
-                this.setState({updateKey:Date.now()});
-            } else {
-                message.error(data.msg, 4);
-            }
-        })
+    deleteRecord = (id,cb) => {
+        request.delete(`/account/income/taxContract/adjustment/delete/${id}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success("删除成功", 4);
+                    cb && cb()
+                }else{
+                    message.error(data.msg, 4);
+                }
+            })
             .catch(err => {
                 message.error(err.message);
-                this.setState({loading:false});
-            })
+                this.setState({loading:false})
+            });
     }
     toggleModalVisible=visible=>{
         this.setState({

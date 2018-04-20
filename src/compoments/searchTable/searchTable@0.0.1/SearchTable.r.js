@@ -19,7 +19,7 @@ class SearchTable extends Component{
     static defaultProps = {
         spinning:false,
         doNotFetchDidMount:false,
-        searchOption:{}
+        searchOption:{},
     }
     constructor(props){
         super(props)
@@ -168,7 +168,7 @@ class SearchTable extends Component{
                                     updateKey={tableUpDateKey}
                                     filters={filters}
                                     tableProps={{
-                                        rowKey:record=>record.id,
+                                        rowKey:record=>record[tableOption.rowKey] || record.id,
                                         pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
                                         pageSize:tableOption.pageSize || 10,
                                         size:'small',

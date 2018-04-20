@@ -97,6 +97,7 @@ class TaxableItems extends Component {
             title: '友情提醒',
             content: '是否要删除选中的记录？',
             okText: '确定',
+            okType: 'danger',
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();

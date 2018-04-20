@@ -3,7 +3,6 @@ import { Modal, Form, Button, message, Spin, Row } from 'antd'
 import { getFields, request } from 'utils'
 import {ButtonWithFileUploadModal} from 'compoments'
 import moment from 'moment'
-const confirm = Modal.confirm;
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -43,14 +42,19 @@ class PopModal extends Component {
         this.props.hideModal();
     }
     showConfirm = ()=> {
-        let _self = this;
-        confirm({
-          title: '是否确定删除该项?',
-          content: '点击确定删除',
-          onOk() {
-            return _self.deleteRecord()
-          },
-          onCancel() {},
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '该删除后将不可恢复，是否删除？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                this.deleteRecord();
+                modalRef && modalRef.destroy();
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
         });
       }
     deleteRecord = (record = this.state.record) =>{

@@ -71,7 +71,7 @@ class WimsHeader extends Component {
                 <div className='right'>
 
                     <div style={{float: 'left',width: '328px',padding:'0 12px'}}>
-                        <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />
+                        {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                     </div>
 
                     <Message />
@@ -95,6 +95,7 @@ class WimsHeader extends Component {
 
 export default withRouter(connect(state=>{
     return {
+        isAuthed:state.user.get('isAuthed'),
         userName:state.user.getIn(['personal','username'])
     }
 })(WimsHeader))

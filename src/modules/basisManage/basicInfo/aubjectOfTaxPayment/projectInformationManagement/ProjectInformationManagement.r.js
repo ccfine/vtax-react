@@ -56,8 +56,10 @@ export default class ProjectInformationManagement extends Component{
         visible && this.initData()
     }
     componentWillReceiveProps(nextProps){
-        if(this.props.taxSubjectId!==nextProps.taxSubjectId){
-            this.initData()
+        if(this.state.visible){
+            if(this.props.taxSubjectId !== nextProps.taxSubjectId){
+                this.initData()
+            }
         }
     }
     initData=()=>{

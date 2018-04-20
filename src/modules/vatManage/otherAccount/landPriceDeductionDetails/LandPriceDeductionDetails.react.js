@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable} from 'compoments'
 import PageTwo from './TabPage2.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
@@ -146,7 +146,7 @@ const columns= [
     },{
         title: '税率',
         dataIndex: 'taxRate',
-        render:text=>fMoney(text),
+        render:text=>text ? `${text}%`: text,
     },{
         title: '税额',
         dataIndex: 'taxAmount',
@@ -195,8 +195,23 @@ class LandPriceDeductionDetails extends Component{
                 this.requestPost(url,type,this.state.filters);
                 break;
             case '重算':
-                url='/account/landPrice/deductedDetails/reset';
-                this.requestPut(url,type,this.state.filters);
+                Modal.confirm({
+                    title: '友情提醒',
+                    content: '确定要重算吗',
+                    onOk : ()=> {
+                        request.put('/account/landPrice/deductedDetails/reset',this.state.filters
+                        )
+                            .then(({data}) => {
+                                this.toggleSearchTableLoading(false)
+                                if(data.code===200){
+                                    message.success('重算成功!');
+                                    this.refreshTable();
+                                }else{
+                                    message.error(`重算失败:${data.msg}`)
+                                }
+                            });
+                    }
+                })
                 break;
             default:
                 this.setState({
@@ -206,20 +221,6 @@ class LandPriceDeductionDetails extends Component{
                     this.updateStatus()
                 })
         }
-    }
-
-    requestPut=(url,type,values={})=>{
-        this.toggleSearchTableLoading(true)
-        request.put(url,values)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable()
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
     }
     requestPost=(url,type,values={})=>{
         this.toggleSearchTableLoading(true)
