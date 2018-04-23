@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Button,Icon,message} from 'antd'
+import {Button,Icon,message,Modal} from 'antd'
 import {request} from 'utils'
 import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
@@ -174,18 +174,33 @@ export default class CreateADeclare extends Component{
         })
     }
     handelProcessStop=()=>{
-        request.put('/tax/declaration/stop',{
-            mainId: this.state.selectedRows[0].mainId,
-            authMonth:this.state.selectedRows[0].month
-        })
-            .then(({data})=>{
-                if (data.code === 200) {
-                    message.success('流程终止成功!');
-                    this.refreshTable();
-                } else {
-                    message.error(data.msg)
-                }
-            })
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否确定要流程终止？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                request.put('/tax/declaration/stop',{
+                    mainId: this.state.selectedRows[0].mainId,
+                    authMonth:this.state.selectedRows[0].month
+                })
+                    .then(({data})=>{
+                        if (data.code === 200) {
+                            message.success('流程终止成功!');
+                            this.refreshTable();
+                        } else {
+                            message.error(data.msg)
+                        }
+                    })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+
+
     }
     render(){
         const {updateKey,selectedRowKeys,selectedRows,filters,visible,dataSource,modalConfig} = this.state;
@@ -213,6 +228,7 @@ export default class CreateADeclare extends Component{
                         },
                         url:'/tax/declaration/list',
                         onRowSelect:(selectedRowKeys,selectedRows)=>{
+                            console.log(selectedRowKeys,selectedRows);
                             this.setState({
                                 selectedRowKeys:selectedRowKeys[0],
                                 selectedRows,
@@ -249,10 +265,6 @@ export default class CreateADeclare extends Component{
                                     this.refreshTable()
                                 }}
                                 style={{marginRight:5}} />
-                            <Button size='small' style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys} >
-                                <Icon type="exception" />
-                                流程终止
-                            </Button>
                             <FileExport
                                 url='account/income/taxContract/adjustment/download'
                                 title="下载附件"
@@ -269,6 +281,10 @@ export default class CreateADeclare extends Component{
                                     ...filters
                                 }}
                             />
+                            <Button size='small' type="danger" style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys} >
+                                <Icon type="exception" />
+                                流程终止
+                            </Button>
                         </div>,
                         onDataChange:(dataSource)=>{
                             this.setState({

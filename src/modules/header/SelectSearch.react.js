@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import { Form,Select,Spin } from 'antd'
+import { Form,Select,Spin,message } from 'antd'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom';
 import {request} from 'utils'
@@ -45,8 +45,13 @@ class SelectSearch extends Component {
             .then(({data})=>{
                 if(data.code ===200){
                     saveToken(data.data.token)
+                }else{
+                    message.error(`查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message);
+            });
     }
 
     componentDidMount(){
@@ -60,8 +65,13 @@ class SelectSearch extends Component {
                             orgId:this.props.orgId
                         })
                     });
+                }else{
+                    message.error(`查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message);
+            });
     }
 
     mounted = true;

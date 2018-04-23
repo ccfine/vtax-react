@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Card,Form,Button,Row,Col,Modal,message} from 'antd'
 import {AsyncTable} from 'compoments'
-import {getFields,htmlDecode,request,accDiv} from '../../../../../utils'
+import {getFields,htmlDecode,request,accDiv} from 'utils'
 import {List} from 'immutable'
 // style={{width:'160px',overflow:'hidden',margin:'0 auto'}}
 const EditableCell = ({record, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
@@ -19,7 +19,9 @@ const EditableCell = ({record, form, column, type,options,componentProps,fieldDe
                         fieldName:`${column}`,
                         type:type,
                         span:24,
-                        notLabel:true,/*
+                        notLabel:true,
+                        whetherShowAll:true,
+                        /*
                         formItemStyle:{
                             labelCol:{
                                 span:0
@@ -98,16 +100,15 @@ class PopModal extends Component{
         }
     ];
     handleChange=(value,record)=>{
-        const params = {
-            stagesId:record.stagesId,
-            source:value,
-        }
-        let sum  = 0;
         request.get('/account/income/taxContract/proportion/source',{
-            params:params
+            params:{
+                stagesId:record.stagesId,
+                source:!value ? value=5 : value,
+            }
         }).then(({data}) => {
             if (data.code === 200) {
 
+                let sum  = 0;
                 //修改 建筑面积 的数据
                 this.setState(prevState=>({
                     $$dataSource:prevState.$$dataSource.set(record.key, {
@@ -152,6 +153,7 @@ class PopModal extends Component{
             }
         });
     }
+
     renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:`${text}`}) {
 
         return parseInt(record.status, 0) === 1 ? <EditableCell

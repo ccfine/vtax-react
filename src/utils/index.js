@@ -58,7 +58,7 @@ const requestDict = async (type,callback)=>{
  ** 返回值：arg1除以arg2的精确结果
  **/
 const accDiv=(arg1, arg2)=> {
-    if(arg1 === 0 && arg2 === 0) return 0;
+    if(parseInt(arg1, 0) === 0 && parseInt(arg2, 0) === 0) return 0;
 
     let t1 = 0, t2 = 0, r1, r2;
     try {

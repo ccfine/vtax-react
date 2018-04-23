@@ -68,6 +68,7 @@ class PopModal extends Component{
                 if(type==='edit'){
                     const data = {
                         id:this.state.initData.id,
+                        parentId:this.state.initData.parentId,
                         ...values
                     }
                     this.updateRecord(data)
