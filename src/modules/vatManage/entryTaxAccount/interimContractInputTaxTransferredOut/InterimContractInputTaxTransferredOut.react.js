@@ -123,7 +123,7 @@ const getColumns =context =>[
         render:(text,record,index)=> (context.state.statusParam && parseInt(context.state.statusParam.status, 0)) === 1 && (
             <span style={{
                 color:'#f5222d',
-                cursor:'pointer'
+                cursor:'pointer',
             }} onClick={()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -147,7 +147,8 @@ const getColumns =context =>[
         ),
         fixed:'left',
         width:'50px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center'
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',

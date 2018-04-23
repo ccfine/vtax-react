@@ -160,7 +160,7 @@ export default class ApplyDeclarationPopModal extends Component{
         const {data,visible,loading,current} = this.state;
         return(
             <span style={props.style}>
-               <Button size={props.size} disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
+               <Button size={props.size} type="primary" disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
                    <Icon type="download" />申报办理
                </Button>
                 <Modal

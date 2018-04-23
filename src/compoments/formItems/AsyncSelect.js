@@ -20,6 +20,7 @@ export default class AsyncSelect extends Component{
         url:PropTypes.string.isRequired,
         selectOptions:PropTypes.object,
         doNotFetchDidMount:PropTypes.bool,
+        whetherShowAll:PropTypes.bool,
         decoratorOptions:PropTypes.object,
 
         //外部条件，用来提供给外部控制该组件是否要异步获取信息的条件，可选
@@ -38,6 +39,7 @@ export default class AsyncSelect extends Component{
         },
         initialValue:'',
         label:'field',
+        whetherShowAll:false,
         selectOptions:{
 
         },
@@ -127,9 +129,9 @@ export default class AsyncSelect extends Component{
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions} = this.props;
+        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll} = this.props;
         //TODO:为了设置所有不是必填的select都加上一个全部默认选项
-        const newData =  dataSource.length > 0 ? [{itemName:'全部', id:''}].concat(dataSource) : dataSource;
+        const newData =  dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>

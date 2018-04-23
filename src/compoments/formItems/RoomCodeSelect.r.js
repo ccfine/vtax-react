@@ -123,7 +123,7 @@ const searchFields = context => (getFieldValue) =>{
             span:12,
             componentProps:{
                 fieldTextName:'buildingName',
-                fieldValueName:'buildingName',
+                fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('stagesId') || false,
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,

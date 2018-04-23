@@ -18,8 +18,10 @@ const config = {
 }
 
 const persistedReducer = persistReducer(config, rootReducer);
+// 创建一个中间件集合
 const middleware = applyMiddleware(thunk,promiseMiddleware);
 
+// 利用compose增强store，这个 store 与 applyMiddleware 和 redux-devtools 一起使用
 const configureStore = preloadedState => {
 
     const store = createStore(persistedReducer, preloadedState, compose(
