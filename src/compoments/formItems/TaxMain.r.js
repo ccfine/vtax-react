@@ -47,6 +47,7 @@ export default class TaxMain extends Component{
         form:PropTypes.object.isRequired,
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
+        whetherShowAll:PropTypes.bool,
         fieldDecoratorOptions:PropTypes.object,
         componentProps:PropTypes.object
     }
@@ -60,6 +61,7 @@ export default class TaxMain extends Component{
             }
         },
         fieldName:'mainId',
+        whetherShowAll:false,
         fieldDecoratorOptions:{
         }
     }
@@ -90,10 +92,10 @@ export default class TaxMain extends Component{
     render(){
         const {mainTaxItems}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps} = this.props;
+        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps,whetherShowAll} = this.props;
         //TODO:为了设置所有不是必填的select都加上一个全部默认选项
         const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true;
-        const newData =  mainTaxItems.length>0 ? [{text:'全部', value:''}].concat(mainTaxItems) : mainTaxItems;
+        const newData =  mainTaxItems.length>0 ? [{text: whetherShowAll ? '无' : '全部', value:''}].concat(mainTaxItems) : mainTaxItems;
         const optionItem = isShowAll ? mainTaxItems :  newData;
         return(
             <FormItem label='纳税主体' {...formItemStyle}>

@@ -399,15 +399,15 @@ class InvoiceCollection extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
-                                    rowSelection:parseInt(statusParam.status, 0) === 1 ? {
+                                    rowSelection:{
                                         type: 'radio',
-                                    } : undefined,
-                                    onRowSelect:parseInt(statusParam.status, 0) === 1 ? (selectedRowKeys,selectedRows)=>{
+                                    },
+                                    onRowSelect:(selectedRowKeys,selectedRows)=>{
                                         this.setState({
                                             selectedRowKeys,
                                             selectedRows
                                         })
-                                    } : undefined,
+                                    },
                                     scroll:{ x: '150%' },
                                     renderFooter:data=>{
                                         return (

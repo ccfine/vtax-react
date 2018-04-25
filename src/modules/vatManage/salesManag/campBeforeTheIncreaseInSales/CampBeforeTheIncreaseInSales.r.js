@@ -117,7 +117,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             formItemStyle,
             componentProps:{
                 fieldTextName:'buildingName',
-                fieldValueName:'buildingName',
+                fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('stagesId') || false,
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,
