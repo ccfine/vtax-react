@@ -199,7 +199,7 @@ const transformDataStatus = status =>{
 }
 const listMainResultStatus = (statusParam) =>{
     return (statusParam && statusParam.status) && <div style={{marginRight: 30, display: 'inline-block'}}>
-                                <span style={{marginRight: 20}}>状态：<label style={{color: 'red'}}>{
+                                <span style={{marginRight: 20}}>状态：<label style={{color: '#f5222d'}}>{
                                     transformDataStatus(statusParam.status)
                                 }</label></span>
         {

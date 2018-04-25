@@ -145,7 +145,7 @@ class DeclareFile extends Component {
                       extra={<div>
                           <Button disabled={!selectedRowKeys} size='small' onClick={()=>this.showModal('add')} style={buttonStyle}>
                               <Icon type="plus" />
-                              查看附件
+                              新增
                           </Button>
                           <Button size='small' onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                               <Icon type="search" />

@@ -172,7 +172,7 @@ class InputTaxDetails extends Component {
                                         label:'纳税主体',
                                         fieldName:'mainId',
                                         type:'taxMain',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                             disabled,
                                         },
@@ -189,7 +189,7 @@ class InputTaxDetails extends Component {
                                         label:'认证月份',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                             format:'YYYY-MM',
                                             disabled,
@@ -207,11 +207,9 @@ class InputTaxDetails extends Component {
                                 ])
                             }
 
-                            <Col span={12} style={{textAlign:'right'}}>
-                                <Form.Item>
+                            <Col  style={{width:'100%',textAlign:'right'}}>
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                 <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
-                                </Form.Item>
                             </Col>
                         </Row>
                     </Form>

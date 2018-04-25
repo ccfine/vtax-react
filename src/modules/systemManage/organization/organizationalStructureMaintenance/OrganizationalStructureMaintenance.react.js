@@ -52,7 +52,7 @@ const columns =[
                     t=<span style={{color:'#b7eb8f'}}>可用</span>;
                     break;
                 case 2:
-                    t=<span style={{color: "red"}}>禁用</span>;
+                    t=<span style={{color: '#f5222d'}}>禁用</span>;
                     break;
                 case 3:
                     t=<span style={{color: "#f50"}}>删除</span>;
@@ -204,7 +204,7 @@ class OrganizationalStructureMaintenance extends Component {
                             删除
                         </Button>
                         <Button size="small" style={buttonStyle} disabled={!id} type='danger' onClick={this.disabledData}>
-                            <Icon type="delete" />
+                            <Icon type="retweet" />
                             禁用/启用
                         </Button>
                     </div>

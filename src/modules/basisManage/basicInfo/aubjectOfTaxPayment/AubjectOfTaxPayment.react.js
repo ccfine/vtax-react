@@ -50,7 +50,7 @@ const columns = [{
             return <span style={{color: "#87d068"}}>营业</span>;
         }
         if(text==='02'){
-            return <span style={{color: "red"}}>停业</span>
+            return <span style={{color: '#f5222d'}}>停业</span>
         }
         return ''
     }
@@ -68,7 +68,7 @@ const columns = [{
         let t = '';
         switch (parseInt(text,0)){
             case 0:
-                t=<span style={{color: "red"}}>删除</span>;
+                t=<span style={{color: '#f5222d'}}>删除</span>;
                 break;
             case 1:
                 t=<span style={{color: "#2db7f5"}}>保存</span>;

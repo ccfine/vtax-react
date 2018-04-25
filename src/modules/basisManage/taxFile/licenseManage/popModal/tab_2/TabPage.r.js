@@ -12,7 +12,7 @@ const getColumns = context=>[
                 <span>
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',oprecord:record});
-                }}>修改</a>
+                }}>编辑</a>
                 </span>
             );
         },

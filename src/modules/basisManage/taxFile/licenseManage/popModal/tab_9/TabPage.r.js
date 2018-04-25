@@ -26,7 +26,10 @@ const getColumns = context=> [
                 <span>
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
-                }}>修改</a>
+                }}>编辑</a>
+                <a style={{margin:"0 5px"}} onClick={()=>{
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}>查看</a>
                 <span style={{
                     color:'#f5222d',
                     cursor:'pointer'
@@ -48,9 +51,6 @@ const getColumns = context=> [
                 }}>
                     删除
                 </span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'look',opid:record.id});
-                }}>查看</a>
                 </span>
             );
         },

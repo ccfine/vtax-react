@@ -21,6 +21,7 @@ class SheetWithSearchFields extends Component{
                 label:'纳税主体',
                 fieldName:'mainId',
                 type:'taxMain',
+                span:8,
                 componentProps:{
                     disabled: !!getUrlParam('mainId'),
                 },
@@ -37,6 +38,7 @@ class SheetWithSearchFields extends Component{
             {
                 label:'月份',
                 fieldName:'taxMonth',
+                span:8,
                 type:'monthPicker',
                 componentProps:{
                     disabled: !!getUrlParam('authMonth')
