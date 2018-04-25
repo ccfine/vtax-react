@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import {Button,Modal,Form,Row,Col,Spin,message,Icon,Card} from 'antd';
+import {Button,Modal,Form,Row,Col,Spin,message,Card} from 'antd';
 import {request,getFields,requestDict} from 'utils'
 import {AsyncTable} from 'compoments'
 import moment from 'moment';
