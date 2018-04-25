@@ -13,14 +13,14 @@ const getColumns =(context,length)=>[
             }else if(context.props.readOnly){
                 return (<div>
                     <a style={{margin:'0 5px'}} onClick={()=>{
-                        context.setState({visible:true,readOnly:true,stage:record});}}>查看</a>
+                        context.setState({visible:true,readOnly:true,type:'look',stage:record});}}>查看</a>
                 </div>);
             }else{
             return (<div>
                 <a style={{margin:'0 5px'}} onClick={()=>{
-                    context.setState({visible:true,readOnly:true,stage:record});}}>查看</a>
+                    context.setState({visible:true,readOnly:true,type:'look',stage:record});}}>查看</a>
                 <a style={{marginRight:5}} onClick={()=>{
-                    context.setState({visible:true,readOnly:false,stage:record});}}>编辑</a>
+                    context.setState({visible:true,readOnly:false,type:'edit',stage:record});}}>编辑</a>
             </div>);
             }
         },
@@ -111,7 +111,8 @@ export default class StageTable extends React.Component{
     state = {
         visible:false,
         readOnly:false,
-        stage:{}
+        stage:{},
+        type:undefined
     }
     showModal(){
         this.setState({visible:true});
@@ -123,10 +124,11 @@ export default class StageTable extends React.Component{
         return (
             <Card title="项目分期信息" style={{ width: "100%" }}>
                 <Table columns={getColumns(this,this.props.dataSource?this.props.dataSource.length:0)}  size="small" dataSource={this.props.dataSource} pagination={false} scroll={{x:"250%"}} rowKey="id"/>
-                <StageModal 
-                visible={this.state.visible} 
-                readOnly={this.state.readOnly} 
-                hideModal={()=>{this.hideModal()}} 
+                <StageModal
+                type={this.state.type}
+                visible={this.state.visible}
+                readOnly={this.state.readOnly}
+                hideModal={()=>{this.hideModal()}}
                 update={(stage)=>{this.props.update(stage)}}
                 stage = {this.state.stage}
                 />
