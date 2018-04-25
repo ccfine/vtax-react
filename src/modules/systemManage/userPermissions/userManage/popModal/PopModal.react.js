@@ -267,9 +267,12 @@ class PopModal extends Component {
                                   type:'switch',
                                   span:24,
                                   formItemStyle,
+                                  componentProps:{
+                                      checkedChildren:"启用" ,
+                                      unCheckedChildren:"禁用"
+                                  },
                                   fieldDecoratorOptions:{
                                       initialValue:defaultFields.hasOwnProperty('enabled') ? (parseInt(defaultFields.enabled,0)===1) : true,
-                                      valuePropName: 'checked' ,
                                   },
                               }
                           ])
