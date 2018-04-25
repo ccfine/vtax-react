@@ -72,6 +72,15 @@ class UpdateAccount extends Component{
         }
     }
     render(){
+      const formItemStyle={
+          labelCol:{
+            offset:1,
+              span:6
+          },
+          wrapperCol:{
+              span:12
+          }
+      }
         return(
             <Modal
                 maskClosable={false}
@@ -93,6 +102,7 @@ class UpdateAccount extends Component{
                                 fieldName:'newPassword',
                                 type:'input',
                                 span:24,
+                                formItemStyle,
                                 componentProps:{
                                     type:'password',
                                     onBlur:()=>this.handleConfirmBlur
@@ -114,6 +124,7 @@ class UpdateAccount extends Component{
                                 fieldName:'renewPassword',
                                 type:'input',
                                 span:24,
+                                formItemStyle,
                                 componentProps:{
                                     type:'password',
                                 },

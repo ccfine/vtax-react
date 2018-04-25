@@ -153,7 +153,7 @@ class PopInvoiceInformationModal extends Component{
                 title={props.title}>
                 <Card
                     style={{
-                        borderTop:'none'
+                        border:'none'
                     }}
                     className="search-card"
                 >
@@ -172,9 +172,9 @@ class PopInvoiceInformationModal extends Component{
                                 ])
                             }
 
-                            <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            <Col style={{width:"100%",textAlign:"right"}}>
+                                <Button size="small" style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button size="small" style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
@@ -187,8 +187,8 @@ class PopInvoiceInformationModal extends Component{
                     setButtonStyle={{marginRight:5}}
                 />
             </div>}*/}
-                <Card  style={{marginTop:10}}>
-                </Card>
+                {/* <Card  style={{marginTop:10}}>
+                </Card> */}
 
                 <AsyncTable url={'/income/invoice/collection/list'}
                             updateKey={tableUpDateKey}

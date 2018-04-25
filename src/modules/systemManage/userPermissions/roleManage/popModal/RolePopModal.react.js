@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch} from 'antd'
+import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch,Icon} from 'antd'
 import {request} from 'utils'
 const FormItem = Form.Item;
 const dataList ={
@@ -136,7 +136,7 @@ const dataList ={
                 "grantedByCurrentRole" : 1
             },{
                 "code" : "createRole",
-                "name" : "添加角色",
+                "name" : "新增角色",
                 "description" : "",
                 "grantedByCurrentRole" : 0
             },
@@ -217,7 +217,7 @@ class RoleModal extends Component{
                             })
                             if(data.code===200){
                                 if(this.mounted){
-                                    message.success('角色添加成功!');
+                                    message.success('角色增加成功!');
                                     this.setState({
                                         visible:false
                                     })
@@ -301,12 +301,12 @@ class RoleModal extends Component{
         const {data} = this.state;
         return(
             <div style={{display:'inline-block',marginLeft:15}}>
-                <Button type="primary" style={{marginBottom:15,width:'100%'}} onClick={()=>{
+                <Button size='small' style={{marginBottom:15,width:'100%'}} onClick={()=>{
                     resetFields();
                     this.setState({
                         visible:true
                     })
-                }}>{this.props.buttonTxt}</Button>
+                }}><Icon type={this.props.type==='add'?'plus':'edit'}/>{this.props.buttonTxt}</Button>
                 <Modal title={this.props.title} onCancel={this.handleCancel} width={800} visible={this.state.visible} confirmLoading={this.state.submitLoading} onOk={this.handleSubmit}>
                     <Form
                         layout="inline" onSubmit={this.handleSubmit}>
@@ -334,7 +334,7 @@ class RoleModal extends Component{
                         </Row>
                         <div style={{
                             width:'100%',
-                            backgroundColor:'#F8F8F8',
+                            // backgroundColor:'#F8F8F8',
                             padding:'20px 0',
                             margin:'20px 0'
                         }}>

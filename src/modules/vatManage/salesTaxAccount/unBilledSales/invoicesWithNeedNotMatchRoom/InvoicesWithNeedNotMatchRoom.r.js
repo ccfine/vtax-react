@@ -6,13 +6,22 @@ import {SearchTable} from 'compoments'
 import {fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:14
+    }
+}
 const searchFields = (disabled) => {
     return [
         {
             label: '开票时间',
             fieldName: 'billingDate',
             type: 'rangePicker',
+            span:6,
+            formItemStyle,
             componentProps:{
                 disabled,
             },
@@ -23,21 +32,29 @@ const searchFields = (disabled) => {
         {
             label: '货物名称',
             fieldName: 'commodityName',
+            formItemStyle,
+            span:6,
             type: 'input',
         },
         {
             label: '购货单位名称',
             fieldName: 'purchaseName',
+            formItemStyle,
+            span:6,
             type: 'input',
         },
         {
             label: '发票号码',
             fieldName: 'invoiceNum',
+            formItemStyle,
+            span:6,
             type: 'input',
         },
         {
             label: '税率',
             fieldName: 'taxRate',
+            formItemStyle,
+            span:6,
             type: 'numeric',
             componentProps: {
                 valueType: 'int'

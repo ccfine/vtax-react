@@ -12,7 +12,14 @@ import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'
 import PopModal from './popModal'
-
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
 const fields = [
     {
         label:'纳税主体',
@@ -65,7 +72,8 @@ const searchFields =(disabled)=> {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
                 disabled
             },
@@ -82,7 +90,8 @@ const searchFields =(disabled)=> {
             label:'认证月份',
             fieldName:'authMonth',
             type:'monthPicker',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
                 format:'YYYY-MM',
                 disabled
@@ -100,7 +109,8 @@ const searchFields =(disabled)=> {
             label:'合同编号',
             fieldName:'contractNum',
             type:'input',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
             },
             fieldDecoratorOptions:{
@@ -109,7 +119,8 @@ const searchFields =(disabled)=> {
             label:'结算单/产值单',
             fieldName:'bill',
             type:'input',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
             },
             fieldDecoratorOptions:{

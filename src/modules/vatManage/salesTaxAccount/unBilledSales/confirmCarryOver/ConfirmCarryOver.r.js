@@ -332,7 +332,7 @@ class ConfirmCarryOver extends Component{
                     extra:<div>
                         {
                             dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
                                 {
@@ -340,7 +340,7 @@ class ConfirmCarryOver extends Component{
                                 }
                             </div>
                         }
-                        <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />汇总表</Button>
+                        <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         <FileExport
                             url={`account/output/notInvoiceSale/export`}
                             title="导出"
@@ -405,7 +405,7 @@ class ConfirmCarryOver extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="添加信息" month={searchFieldsValues.month} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="汇总信息" month={searchFieldsValues.month} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

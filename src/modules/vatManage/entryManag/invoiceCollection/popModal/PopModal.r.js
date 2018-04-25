@@ -338,7 +338,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -348,7 +348,7 @@ class PopModal extends Component{
                 disabled=true;
                 break;
             default:
-                title = '添加';
+                title = '新增';
                 break;
         }
         const max20={

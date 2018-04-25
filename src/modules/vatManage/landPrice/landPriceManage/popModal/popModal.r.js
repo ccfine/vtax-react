@@ -165,7 +165,7 @@ class LandPriceModal extends React.Component {
             wrapperCol: { span: 19 },
         };
         return (<div><Modal
-            title="修改"
+            title="编辑"
             visible={this.props.visible}
             onOk={() => {
                 this.state.loading || this.handleOk();

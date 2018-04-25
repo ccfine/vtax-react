@@ -176,7 +176,7 @@ class Shareholding extends Component {
                                   </div>
                                       :
                                   <div>
-                                      <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                                           <Icon type="search" />
                                           查看
                                       </Button>

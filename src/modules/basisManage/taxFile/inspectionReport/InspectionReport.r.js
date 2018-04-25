@@ -28,7 +28,7 @@ const getColumns = context => ([
             return (<span>
                 <a style={{margin:"0 5px" }} onClick={() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
-                }}>修改</a>
+                }}>编辑</a>
                 <a style={{marginRight:5}} onClick={() => {
                     context.setState({ visible: true, action: 'look', opid: record.id });
                 }}>查看</a>

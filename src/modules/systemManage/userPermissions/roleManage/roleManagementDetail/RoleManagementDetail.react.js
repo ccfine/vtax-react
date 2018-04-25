@@ -214,7 +214,7 @@ class RoleManagementDetail extends Component{
     deleteRole = roleId=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
-            content: '确定要删除该角色吗？',
+            content: '该删除后将不可恢复，是否删除？',
             okText: '确定',
             okType: 'danger',
             cancelText: '取消',
@@ -270,6 +270,7 @@ class RoleManagementDetail extends Component{
                   <div style={{textAlign:'right'}}>
                       <Button
                        type='danger'
+                       size='small'
                        style={{marginRight:"5px"}}
                        onClick={()=>this.deleteRole(roleId)}>
                        <Icon type="delete" />

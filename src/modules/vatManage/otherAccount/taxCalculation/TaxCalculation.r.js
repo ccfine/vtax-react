@@ -14,7 +14,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
-            span:6,
+            span:8,
             formItemStyle:{
                 labelCol:{
                     span:8
@@ -40,7 +40,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'查询期间',
             fieldName:'authMonth',
             type:'monthPicker',
-            span:6,
+            span:8,
             formItemStyle:{
                 labelCol:{
                     span:8
@@ -318,7 +318,7 @@ class TaxCalculation extends Component{
                     extra:<div>
                         {
                             dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
                                 {

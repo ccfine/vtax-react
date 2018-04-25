@@ -10,6 +10,25 @@ import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
+
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:8
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:16
+        }
+    }
+}
 const columns = context => [
     {
         title: '项目',
@@ -307,10 +326,10 @@ class BillingSales extends Component {
                                         label:'纳税主体',
                                         fieldName:'mainId',
                                         type:'taxMain',
-                                        span:6,
                                         componentProps:{
                                             disabled:disabled
                                         },
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && getUrlParam('mainId')) || undefined,
                                             rules:[
@@ -324,11 +343,11 @@ class BillingSales extends Component {
                                         label:'查询期间',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
-                                        span:6,
                                         componentProps:{
                                             format:'YYYY-MM',
                                             disabled:disabled
                                         },
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
                                             rules:[
@@ -342,7 +361,7 @@ class BillingSales extends Component {
                                 ])
                             }
 
-                            <Col span={12} style={{textAlign:'right'}}>
+                            <Col span={8} style={{textAlign:'right'}}>
                                 <Form.Item>
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                 <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>

@@ -117,7 +117,7 @@ class PopModal extends Component{
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 if(this.state.selectedRows.length<1){
-                    return message.error('请选择要添加申报的纳税主体！')
+                    return message.error('请选择要创建申报的纳税主体！')
                 }
                 if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
                     values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
@@ -215,7 +215,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '创建';
                 break;
             case 'edit':
                 title = '编辑';

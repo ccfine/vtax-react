@@ -38,6 +38,7 @@ const searchFields=(disabled)=> {
             label:'纳税主体',
             type:'taxMain',
             fieldName:'mainId',
+            span:6,
             componentProps:{
                 disabled,
             },
@@ -56,6 +57,7 @@ const searchFields=(disabled)=> {
             label:'开票月份',
             type:'monthPicker',
             formItemStyle,
+            span:6,
             fieldName:'billingDate',
             componentProps:{
                 disabled,
@@ -74,6 +76,7 @@ const searchFields=(disabled)=> {
             label:'发票号码',
             type:'input',
             fieldName:'invoiceNum',
+            span:6,
             formItemStyle,
             fieldDecoratorOptions:{},
             componentProps:{}
@@ -81,6 +84,7 @@ const searchFields=(disabled)=> {
         {
             label:'税收分类编码',
             type:'input',
+            span:6,
             formItemStyle,
             fieldName:'taxClassificationCoding',
             fieldDecoratorOptions:{}
@@ -88,6 +92,7 @@ const searchFields=(disabled)=> {
         {
             label:'税率',
             type:'numeric',
+            span:6,
             formItemStyle,
             fieldName:'taxRate',
             componentProps:{
@@ -98,12 +103,14 @@ const searchFields=(disabled)=> {
         {
             label:'商品名称',
             type:'input',
+            span:6,
             formItemStyle,
             fieldName:'commodityName',
         },
         {
             label:'发票类型',
             fieldName:'invoiceType',
+            span:6,
             formItemStyle,
             type:'select',
             options:[
@@ -318,7 +325,7 @@ class SalesInvoiceCollection extends Component{
                     extra:<div>
                         {
                             dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
                                 {

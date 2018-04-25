@@ -20,14 +20,6 @@ const fields = [
         fieldName:'mainId',
         type:'taxMain',
         span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:15
-            }
-        },
         fieldDecoratorOptions:{
             rules:[
                 {
@@ -41,14 +33,6 @@ const fields = [
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:15
-            }
-        },
         componentProps: {},
         fieldDecoratorOptions: {
             rules: [
@@ -248,7 +232,7 @@ class InvoiceCollection extends Component {
                                         label:'纳税主体',
                                         fieldName:'mainId',
                                         type:'taxMain',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                             disabled
                                         },
@@ -265,7 +249,7 @@ class InvoiceCollection extends Component {
                                         label:'认证月份',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                             format:"YYYY-MM",
                                             disabled
@@ -283,7 +267,7 @@ class InvoiceCollection extends Component {
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
-                                        span:6,
+                                        span:8,
                                         componentProps:{
                                         },
                                         fieldDecoratorOptions:{
@@ -291,11 +275,11 @@ class InvoiceCollection extends Component {
                                     }
                                 ])
                             }
-                            <Col span={6} style={{textAlign:'right'}}>
-                                <Form.Item>
+                            <Col  style={{width:'100%', textAlign:'right'}}>
+
                                     <Button disabled={disabled} size='small' type="primary" htmlType="submit">查询</Button>
                                     <Button disabled={disabled} size='small' style={{marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
-                                </Form.Item>
+                                
                             </Col>
                         </Row>
                     </Form>

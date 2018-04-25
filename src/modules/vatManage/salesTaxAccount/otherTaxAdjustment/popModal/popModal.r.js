@@ -147,7 +147,7 @@ class PopModal extends Component{
         const form= this.props.form;
         let title = "查看";
         if(this.props.action==="add"){
-            title = "添加";
+            title = "新增";
         }else if(this.props.action==="modify"){
             title="修改"
         }

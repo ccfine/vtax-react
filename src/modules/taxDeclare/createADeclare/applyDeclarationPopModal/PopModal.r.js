@@ -126,7 +126,7 @@ export default class ApplyDeclarationPopModal extends Component{
                                         authMonthEnd:this.props.selectedRows[0].subordinatePeriodEnd,
                                     }  //const {state} = this.props.location;  state && state.filters.mainId || undefined,
                                 }
-                            }}>{item.name} 【{parseInt(item.status,0) === 1 ? <span style={{color:'red'}}>未提交</span> : <span style={{color:'#333'}}>已提交</span> }】</Link>
+                            }}>{item.name} 【{parseInt(item.status,0) === 1 ? <span style={{color:'#f5222d'}}>未提交</span> : <span style={{color:'#333'}}>已提交</span> }】</Link>
 
                         </Card>
                     </List.Item>

@@ -182,7 +182,7 @@ const getColumns = context =>[
                                 },()=>{
                                     context.toggleModalVisible(true)
                                 })
-                            }}>修改</span>
+                            }}>编辑</span>
                         )
                     }
                     <span style={{
@@ -347,7 +347,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                     extra:<div>
                         {
                             dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
                                 {

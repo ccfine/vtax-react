@@ -186,7 +186,9 @@ class InvoiceMatching extends Component {
     }
     refreshTable = ()=>{
         this.setState({
-            [`${this.state.activeKey}UpdateKey`]:Date.now()
+            [`${this.state.activeKey}UpdateKey`]:Date.now(),
+            selectedRowKeys:null,
+            selectedRows:null
         },()=>{
             this.updateStatus();
         })
@@ -361,7 +363,7 @@ class InvoiceMatching extends Component {
                 label:'纳税主体',
                 fieldName:'mainId',
                 type:'taxMain',
-                span:6,
+                span:8,
                 componentProps:{
                     disabled
                 },
@@ -377,7 +379,7 @@ class InvoiceMatching extends Component {
             },{
                 label:'认证时间',
                 type:'monthPicker',
-                span:6,
+                span:8,
                 fieldName:'authMonth',
                 componentProps:{
                     disabled,
@@ -409,7 +411,7 @@ class InvoiceMatching extends Component {
                                     {
                                         label:'发票来源',
                                         type:'select',
-                                        span:6,
+                                        span:8,
                                         fieldName:'sourceType',
                                         options:[
                                             {
@@ -423,8 +425,7 @@ class InvoiceMatching extends Component {
                                     }
                                 ) : FieldsList)
                             }
-                            <Col span={this.state.activeKey==='tab2' ? 6 : 12} style={{textAlign:'right'}}>
-                                <Form.Item>
+                            <Col  style={{width:'100%',textAlign:'right'}}>                              
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                 <Button
                                     style={{marginLeft:10}}
@@ -441,7 +442,6 @@ class InvoiceMatching extends Component {
                                 >
                                     重置
                                 </Button>
-                                </Form.Item>
                             </Col>
                         </Row>
                     </Form>

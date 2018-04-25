@@ -202,7 +202,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 disabled=true;
@@ -235,7 +235,6 @@ class PopModal extends Component{
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                             {
                                 type === 'edit' && <Button type='danger' onClick={this.deleteRecord}>
-                                    <Icon type="delete" />
                                     删除
                                 </Button>
                             }

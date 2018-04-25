@@ -17,7 +17,7 @@ const searchFields = [
         label:'名称',
         fieldName:'name',
         type:'input',
-        span:8,
+        span:6,
     }
 ]
 
