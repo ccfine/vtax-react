@@ -186,7 +186,9 @@ class InvoiceMatching extends Component {
     }
     refreshTable = ()=>{
         this.setState({
-            [`${this.state.activeKey}UpdateKey`]:Date.now()
+            [`${this.state.activeKey}UpdateKey`]:Date.now(),
+            selectedRowKeys:null,
+            selectedRows:null
         },()=>{
             this.updateStatus();
         })
