@@ -71,8 +71,9 @@ class RoleManage extends Component{
                     cardProps: {
                         title: "角色列表",
                         extra: <RoleModal
-                                    buttonTxt="添加"
-                                    title="添加角色"
+                                    buttonTxt="新增"
+                                    title="新增角色"
+                                    type='add'
                                     key={this.state.modalKey}
                                     refresh={()=>{
                                         this.setState({

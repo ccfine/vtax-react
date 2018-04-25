@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React,{Component} from 'react';
-import {Form,Row,Button,Col,message,Card} from 'antd'
+import {Form,Row,Button,Col,message,Card,Icon} from 'antd'
 import PopModal from '../../userManage/popModal'
 import UpdateAccount from './UpdateAccount.react'
 import {request} from 'utils'
@@ -91,7 +91,7 @@ class UserDetail extends Component{
         const {userData} = this.state;
         return(
             <Card title='用户信息'
-                  extra={<Button style={{color:'#0F83E6'}}  onClick={this.showModal('editUser')} >修改</Button>}
+                  extra={<Button size="small"    onClick={this.showModal('editUser')} ><Icon type='edit' />编辑</Button>}
                   style={{...this.props.style}}>
                 <div style={{padding: '30px',color: '#999' }}>
                     <Row gutter={16}>

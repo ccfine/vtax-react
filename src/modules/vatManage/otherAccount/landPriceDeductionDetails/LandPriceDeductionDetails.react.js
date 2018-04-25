@@ -10,7 +10,14 @@ import PageTwo from './TabPage2.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
 const searchFields =(disabled)=> (getFieldValue)=> {
     return [
         {
@@ -18,6 +25,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
             fieldName:'mainId',
             type:'taxMain',
             span:6,
+            formItemStyle,
             componentProps:{
                 disabled
             },
@@ -34,6 +42,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
             label:'查询期间',
             fieldName:'authMonth',
             type:'monthPicker',
+            formItemStyle,
             span:6,
             componentProps:{
                 format:'YYYY-MM',
@@ -52,6 +61,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
             label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
+            formItemStyle,
             span:6,
             componentProps:{
                 fieldTextName:'itemName',
@@ -64,6 +74,7 @@ const searchFields =(disabled)=> (getFieldValue)=> {
             label:'项目分期',
             fieldName:'stagesId',
             type:'asyncSelect',
+            formItemStyle,
             span:6,
             componentProps:{
                 fieldTextName:'itemName',

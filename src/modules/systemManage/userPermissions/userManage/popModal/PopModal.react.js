@@ -158,7 +158,7 @@ class PopModal extends Component {
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
-                title={modalType==='create'?'添加用户':'编辑用户'}
+                title={modalType==='create'?'新增用户':'编辑用户'}
                 key={this.state.createSysModalKey}
                 visible={this.props.visible}
                 onOk={this.handleSubmit}

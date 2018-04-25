@@ -16,7 +16,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
-            span:6,
+            span:8,
             componentProps:{
                 disabled
             },
@@ -33,7 +33,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'查询期间',
             fieldName:'authMonth',
             type:'monthPicker',
-            span:6,
+            span:8,
             componentProps:{
                 format:'YYYY-MM',
                 disabled
@@ -51,7 +51,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',

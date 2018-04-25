@@ -115,16 +115,16 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增明细';
                 break;
             case 'edit':
-                title = '编辑';
+                title = '编辑明细';
                 break;
             case 'view':
                 title = '查看';
                 break;
             default:
-                title = '添加';
+                title = '新增明细';
                 break;
         }
         const max20={

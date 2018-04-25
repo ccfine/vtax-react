@@ -12,7 +12,7 @@ const searchFields =(disabled)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:6,
+        span:8,
         componentProps:{
             disabled
         },
@@ -29,7 +29,7 @@ const searchFields =(disabled)=> [
         label:'查询期间',
         fieldName:'authMonth',
         type:'monthPicker',
-        span:6,
+        span:8,
         componentProps:{
             format:'YYYY-MM',
             disabled

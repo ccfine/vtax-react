@@ -76,7 +76,7 @@ const getColumns = context => [
               });
             }}
           >
-            修改
+            编辑
           </a>
           <span style={{
               color:'#f5222d',

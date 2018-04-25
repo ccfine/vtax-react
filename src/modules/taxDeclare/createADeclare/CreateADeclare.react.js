@@ -9,17 +9,27 @@ import {request} from 'utils'
 import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
 const searchFields =(context) => [
     {
         label:'纳税主体',
         type:'taxMain',
         fieldName:'mainId',
-        span:8,
+        formItemStyle,
+        span:6,
     },{
         label:'办理进度',
         type:'select',
         fieldName:'status',
-        span:8,
+        formItemStyle,
+        span:6,
         options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             {
                 text:'申报办理',
@@ -45,12 +55,14 @@ const searchFields =(context) => [
         label:'所属期起止',
         type:'rangePicker',
         fieldName:'subordinatePeriod',
-        span:8,
+        formItemStyle,
+        span:6,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
-        span:8,
+        formItemStyle,
+        span:6,
         options:[
             {
                 text:'增值税',
@@ -254,7 +266,7 @@ export default class CreateADeclare extends Component{
                             </Button>
                             <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('view')}  disabled={!selectedRowKeys} >
                                 <Icon type="search" />
-                                查看
+                                查看申报
                             </Button>
                             <ApplyDeclarationPopModal
                                 title={selectedRows.length>0 && `申报处理【${selectedRows[0].mainName}】 申报期间 【${selectedRows[0].subordinatePeriodStart} 至 ${ selectedRows[0].subordinatePeriodEnd}】`}

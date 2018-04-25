@@ -13,7 +13,7 @@ const formItemLayout = {
         sm: { span: 16 },
     },
 };
-  
+
 class PopModal extends Component {
     state = {
         loading: false,
@@ -99,7 +99,7 @@ class PopModal extends Component {
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
                     result = request.post('/other/file/add', obj);
-                    sucessMsg = '添加成功';
+                    sucessMsg = '新增成功';
                 }
 
                 this.setState({ loading: true });
@@ -127,9 +127,9 @@ class PopModal extends Component {
         const form = this.props.form;
         let title = "查看";
         if (this.props.action === "add") {
-            title = "添加";
+            title = "新增";
         } else if (this.props.action === "modify") {
-            title = "修改"
+            title = "编辑"
         }
         let buttons = [];
 
@@ -142,29 +142,28 @@ class PopModal extends Component {
             readOnly = {readonly}
             size='default'
             id={record.id}
-            key="fileInfo" 
+            key="fileInfo"
             uploadUrl={`/other/file/file/upload/${record.id}`}
         />)
 
-        this.props.action !== "look" 
-        && buttons.push(<Button 
-            key="submit" 
-            type="primary" 
-            loading={this.state.loading} 
+        this.props.action !== "look"
+        && buttons.push(<Button
+            key="submit"
+            type="primary"
+            loading={this.state.loading}
             onClick={() => { this.handleOk() }}>保存</Button>)
-        this.props.action === "modify" 
-        && buttons.push(<Button 
-            type="danger" 
-            key="delete" 
-            onClick={this.showConfirm}>删除</Button>)
-        this.props.action !== "look" 
-            && buttons.push(<Button 
-            key="back" 
+        this.props.action !== "look"
+        && buttons.push(<Button
+            key="back"
             onClick={this.hideSelfModal}>取消</Button>)
-
-        this.props.action === "look" 
-            && buttons.push(<Button 
-            key="close" 
+        this.props.action === "modify"
+        && buttons.push(<Button
+            type="danger"
+            key="delete"
+            onClick={this.showConfirm}>删除</Button>)
+        this.props.action === "look"
+        && buttons.push(<Button
+            key="close"
             onClick={this.hideSelfModal}>关闭</Button>)
 
         return (
@@ -223,7 +222,7 @@ class PopModal extends Component {
                                 ])
                             }
                         </Row>
-                        
+
                         <Row>
                             {
                                 getFields(form, [{

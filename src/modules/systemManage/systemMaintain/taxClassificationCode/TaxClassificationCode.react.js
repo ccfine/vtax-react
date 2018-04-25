@@ -18,7 +18,7 @@ const searchFields = [
         label:'税收分类编码',
         fieldName:'num',
         type:'input',
-        span:8,
+        span:6,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -27,7 +27,7 @@ const searchFields = [
         label:'商品名称',
         fieldName:'commodityName',
         type:'input',
-        span:8,
+        span:6,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -36,7 +36,7 @@ const searchFields = [
         label:'税率',
         fieldName:'taxRate',
         type:'input',
-        span:8,
+        span:6,
         componentProps:{
         },
         fieldDecoratorOptions:{
