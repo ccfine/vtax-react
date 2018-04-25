@@ -113,6 +113,24 @@ class PopInvoiceInformationModal extends Component{
     render(){
         const {tableUpDateKey,filters,dataSource } = this.state;
         const props = this.props;
+        const formItemStyle = {
+            labelCol:{
+                sm:{
+                    span:10,
+                },
+                xl:{
+                    span:8
+                }
+            },
+            wrapperCol:{
+                sm:{
+                    span:14
+                },
+                xl:{
+                    span:16
+                }
+            }
+        }
         return(
             <Modal
                 maskClosable={false}
@@ -144,6 +162,7 @@ class PopInvoiceInformationModal extends Component{
                                         label:'发票号码',
                                         fieldName:'invoiceNum',
                                         type:'input',
+                                        formItemStyle,
                                         span:6,
                                         componentProps:{
                                         }
@@ -151,9 +170,9 @@ class PopInvoiceInformationModal extends Component{
                                 ])
                             }
 
-                            <Col span={6}>
-                                <Button style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
+                            <Col  style={{width:'100%',textAlign:'right'}}>
+                                <Button size="small" style={{marginTop:3,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
+                                <Button size="small" style={{marginTop:3,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                             </Col>
                         </Row>
                     </Form>
