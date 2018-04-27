@@ -214,6 +214,19 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
+        }else if(type==='switch'){
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            valuePropName: 'checked' ,
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } />
+                        )}
+                    </FormItem>
+                </Col>
+            )
         }else{
             return (
                 <Col key={i} span={item['span'] || 8} className={type==='textArea' ? 'fix-ie10-formItem-textArea' : ''}>
@@ -221,7 +234,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } style={{width: type !=='switch' ? '100%' : 'auto'}} />
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

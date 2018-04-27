@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Button,Icon,message,Modal} from 'antd'
+import {Button,Icon,message,Modal,Badge} from 'antd'
 import {request} from 'utils'
 import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
@@ -79,33 +79,34 @@ const getColumns =(context)=>[
     {
         title: '申报状态',
         dataIndex: 'status',
+        className:'text-center',
         render:text=>{
             //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠; ,
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
-                    t='申报办理';
+                    t=<Badge count='申报办理' style={{ backgroundColor: '#44b973' }} />;
                     break;
                 case 2:
-                    t='申报审核';
+                    t=<Badge count='申报审核' style={{ backgroundColor: '#2783d8' }} />;
                     break;
                 case 3:
-                    t='申报审批';
+                    t=<Badge count='申报审批' style={{ backgroundColor: '#373ac6' }} />;
                     break;
                 case 4:
-                    t='申报完成';
+                    t=<Badge count='申报完成' style={{ backgroundColor: '#1795f6' }} />;
                     break;
                 case 5:
-                    t='归档';
+                    t=<Badge count='归档' style={{ backgroundColor: '#7a7e91' }} />;
                     break;
                 case -1:
-                    t='流程终止';
+                    t=<Badge count='流程终止' style={{ backgroundColor: '#ed2550' }} />;
                     break;
 
                 default:
                 //no default
             }
-            return t
+            return t;
         }
     }, {
         title: '上一步完成时间',

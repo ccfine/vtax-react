@@ -5,12 +5,12 @@
 import React from 'react'
 import {findDOMNode} from 'react-dom';
 import {withRouter} from 'react-router-dom';
-import * as enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import * as Enzyme from 'enzyme';
+import * as Adapter from 'enzyme-adapter-react-16';
 import { accDiv } from 'utils'
 import Message from 'modules/header/Message.react'
 
-enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('测试', function () {
     it('测试除法函数', function () {
