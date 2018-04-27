@@ -247,7 +247,7 @@ class PopModal extends Component{
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainId'],
+                                            initialValue:initData['mainName'],
                                             rules:[
                                                 {
                                                     required:true,
