@@ -301,7 +301,7 @@ class RoleModal extends Component{
         const {data} = this.state;
         return(
             <div style={{display:'inline-block',marginLeft:15}}>
-                <Button size='small' style={{marginBottom:15,width:'100%'}} onClick={()=>{
+                <Button size='small'onClick={()=>{
                     resetFields();
                     this.setState({
                         visible:true

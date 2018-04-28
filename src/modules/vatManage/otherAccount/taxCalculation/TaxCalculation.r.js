@@ -181,8 +181,11 @@ class TaxCalculation extends Component{
         this.toggleSearchTableLoading(true)
         this.props.form.validateFields((err, values) => {
             if(!err){
-                //this.refreshTable()
-                request.post('/account/taxCalculation/save',values)
+                request.post('/account/taxCalculation/save',{
+                    data:values,
+                    mainId:this.state.searchFieldsValues.mainId,
+                    authMonth:this.state.searchFieldsValues.authMonth
+                })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){

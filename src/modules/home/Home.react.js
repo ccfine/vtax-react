@@ -104,24 +104,14 @@ class Home extends Component {
                 }
             ],
             banner: [{
+                key:'1',
                 original: banner1,
             },{
+                key:'2',
                 original: banner2,
             }]
         }
     }
-
-    componentDidMount(){
-
-    }
-
-    componentWillMount(){
-
-    }
-    componentWillReceiveProps(nextProps){
-
-    }
-
     render() {
         const menu = (
             <Menu>
