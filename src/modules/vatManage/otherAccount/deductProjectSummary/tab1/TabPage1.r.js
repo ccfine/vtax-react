@@ -1,11 +1,14 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
- * description  :
+ * @Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
+ *
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import {SearchTable} from '../../../../../compoments'
 import PageTwo from './TabPage2.r'
 import { withRouter } from 'react-router'
@@ -167,36 +170,6 @@ class tab1 extends Component{
         })
 
     }
-    handleClickActions=type=>{
-        let url = '';
-        switch (type){
-            case '提交':
-                url='/account/land/price/deducted/main/submit';
-                break;
-            case '撤回':
-                url='/account/land/price/deducted/main/revoke';
-                break;
-            default:
-                break;
-        }
-        this.toggleSearchTableLoading(true)
-        request.post(url,this.state.filters)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                    this.setState({
-                        pageTwoKey:Date.now(),
-                    })
-
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
-    }
     updateStatus=()=>{
         request.get('/account/land/price/deducted/main/listMain',{params:this.state.filters})
             .then(({data}) => {
@@ -232,7 +205,6 @@ class tab1 extends Component{
         const {updateKey,pageTwoKey,searchTableLoading,selectedRows,filters,dataSource,statusParam} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -308,22 +280,17 @@ class tab1 extends Component{
                                                     <Icon type="check" />
                                                     清算
                                                 </Button>*/}
-                            <Button
-                                size='small'
-                                style={{marginRight:5}}
-                                disabled={disabled1}
-                                onClick={()=>this.handleClickActions('提交')}>
-                                <Icon type="check" />
-                                提交
-                            </Button>
-                            <Button
-                                size='small'
-                                style={{marginRight:5}}
-                                disabled={disabled2}
-                                onClick={()=>this.handleClickActions('撤回')}>
-                                <Icon type="rollback" />
-                                撤回提交
-                            </Button>
+                            <SubmitOrRecallMutex
+                                buttonSize="small"
+                                paramsType="object"
+                                url="/account/land/price/deducted/main"
+                                restoreStr="revoke"//撤销接口命名不一致添加属性
+                                refreshTable={this.refreshTable}
+                                toggleSearchTableLoading={this.toggleSearchTableLoading}
+                                hasParam={mainId && authMonth}
+                                dataStatus={statusParam.status}
+                                searchFieldsValues={this.state.filters}
+                              />
                         </div>,
                         onDataChange:(dataSource)=>{
                             this.setState({

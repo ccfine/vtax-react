@@ -229,7 +229,7 @@ class PopModal extends Component{
                                         span:12,
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainId'] || undefined,
+                                            initialValue:initData['mainName'] || undefined,
                                             rules:[
                                                 {
                                                     required:true,

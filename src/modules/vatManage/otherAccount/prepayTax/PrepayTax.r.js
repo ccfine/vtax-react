@@ -1,9 +1,13 @@
 /**
  * Created by liurunbin on 2018/1/18.
+ *@Last Modified by: xiaminghua
+ *@Last Modified time: 2018-04-28 
+ *
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable,FileExport,ButtonWithFileUploadModal} from 'compoments'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import {fMoney,request,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -238,40 +242,14 @@ class PrepayTax extends Component{
             }
         })
     }
-    handleClickActions = action => ()=>{
-        let actionText,
-            actionUrl;
 
+    handleClickActions = action => ()=>{
         if(action ==='recount'){
             this.recount();
             return false;
         }
-        switch (action){
-            case 'submit':
-                actionText='提交';
-                actionUrl='/account/prepaytax/submit';
-                break;
-            case 'restore':
-                actionText='撤回';
-                actionUrl='/account/prepaytax/restore';
-                break;
-            default:
-                break;
-        }
-        this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${actionText}成功！`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${actionText}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
     }
+
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -382,8 +360,17 @@ class PrepayTax extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
+                      <SubmitOrRecallMutex
+                          buttonSize="small"
+                          paramsType="object"
+                          url="/account/prepaytax"
+                          restoreStr="restore"//撤销接口命名不一致添加属性
+                          refreshTable={this.refreshTable}
+                          toggleSearchTableLoading={this.toggleSearchTableLoading}
+                          hasParam={mainId && receiveMonth}
+                          dataStatus={dataStatus}
+                          searchFieldsValues={this.state.searchFieldsValues}
+                        />
                     </div>,
                     renderFooter:data=>{
                         return(

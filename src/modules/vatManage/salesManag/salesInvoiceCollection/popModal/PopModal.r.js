@@ -253,7 +253,7 @@ class PopModal extends Component{
                                         fieldName:'mainId',
                                         type:'taxMain',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainId'],
+                                            initialValue:initData['mainName'],
                                             rules:[
                                                 {
                                                     required:true,

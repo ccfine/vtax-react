@@ -137,7 +137,7 @@ const columns = [
     {
         title:'匹配状态',
         dataIndex:'matchingStatus',
-        render:text=>parseInt(text,0) === 0 ? '未匹配' : '已匹配' //0:未匹配,1:已匹配
+        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
     },
     {
         title:'交易日期',
