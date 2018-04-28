@@ -1,12 +1,13 @@
 /*
- * @Author: liuchunxiu 
- * @Date: 2018-04-20 09:46:25 
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-20 09:51:22
+ * @Author: liuchunxiu
+ * @Date: 2018-04-20 09:46:25
+ * @Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
  */
 import React from "react";
 import { Table, Card, Button, Icon, message, Modal } from "antd";
 import { request, fMoney, listMainResultStatus } from "utils";
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import { CusFormItem } from "compoments";
 const NumericItem = CusFormItem.NumericInput;
 const getColumns = (context, tax1Count = 0, tax2Count = 0) => [
@@ -636,31 +637,24 @@ export default class extends React.Component {
               <Icon type="retweet" />
               重算
             </Button>
-            <Button
-              size="small"
-              style={{ marginRight: 5 }}
-              disabled={buttonDisabled || isSubmit}
-              onClick={this.submit}
-              loading={this.state.submitLoading}
-            >
-              <Icon type="check" />
-              提交
-            </Button>
-            <Button
-              size="small"
-              style={{ marginRight: 5 }}
-              disabled={buttonDisabled || !isSubmit}
-              onClick={this.revoke}
-              loading={this.state.revokeLoading}
-            >
-              <Icon type="rollback" />
-              撤回提交
-            </Button>
+            <SubmitOrRecallMutex
+                buttonSize="small"
+                paramsType="object"
+                url="/account/other/camping"
+                restoreStr="revoke"//撤销接口命名不一致添加属性
+                refreshTable={this.props.refreshTable}
+                // toggleSearchTableLoading={this.toggleSearchTableLoading}
+                hasParam={this.props.filter || (dataSource && dataSource.length && dataSource.length > 0)}
+                dataStatus={currentStatus && currentStatus.status}
+                searchFieldsValues={this.props.filter}
+              />
+
           </div>
         }
         style={{ marginTop: 10 }}
       >
         <Table
+          key={this.state.tableKey}
           loading={this.state.loading}
           columns={getColumns(this, tax1Count, tax2Count)}
           dataSource={dataSource}

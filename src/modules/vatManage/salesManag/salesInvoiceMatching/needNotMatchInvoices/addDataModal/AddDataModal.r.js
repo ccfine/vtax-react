@@ -1,5 +1,8 @@
 /**
  * Created by liurunbin on 2018/1/11.
+ *@Last Modified by: xiaminghua
+ *@Last Modified time: 2018-04-28 
+ *
  */
 import React,{Component} from 'react';
 import {Button,Modal,message} from 'antd';
@@ -144,7 +147,7 @@ class ManualMatchRoomModal extends Component{
     addDataWithAsync = () =>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
-            content: '是否添加选中的数据？',
+            content: '是否增加选中的数据？',
             okText: '确定',
             cancelText: '取消',
             onOk:()=>{

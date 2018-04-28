@@ -1,10 +1,14 @@
 /**
  * Created by liurunbin on 2018/1/24.
+ *@Last Modified by: xiaminghua
+ *@Last Modified time: 2018-04-28 
+ *
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Form,Modal} from 'antd'
 import {SearchTable} from 'compoments'
 import {request,getUrlParam,fMoney} from 'utils'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import EditableCell from './EditableCell.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -165,58 +169,13 @@ class TaxCalculation extends Component{
         })
     }
     handleClickActions = action => ()=>{
-        let actionText,
-            actionUrl;
         if(action ==='recount'){
             this.recount()
             return false;
         }
-        switch (action){
-            case 'submit':
-                actionText='提交';
-                actionUrl='/account/taxCalculation/submit';
-                this.handleSubmit(actionUrl,actionText);
-                break;
-            case 'restore':
-                actionText='撤回';
-                actionUrl='/account/taxCalculation/revoke';
-                this.handleRestore(actionUrl,actionText);
-                break;
-            default:
-                break;
-        }
+    }
 
-    }
-    handleSubmit = (actionUrl,actionText)=>{
-        this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${actionText}成功！`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${actionText}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
-    }
-    handleRestore = (actionUrl,actionText)=>{
-        this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${actionText}成功！`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${actionText}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
-    }
+
     save = e =>{
         e && e.preventDefault()
         this.toggleSearchTableLoading(true)
@@ -335,8 +294,17 @@ class TaxCalculation extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===1)}><Icon type="check" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(hasData && mainId && authMonth && parseInt(dataStatus,0) ===2)}><Icon type="rollback" />撤回提交</Button>
+                        <SubmitOrRecallMutex
+                          paramsType="object"
+                          buttonSize="small"
+                          restoreStr="revoke"//撤销接口命名不一致添加属性
+                          url="/account/taxCalculation"
+                          refreshTable={this.refreshTable}
+                          toggleSearchTableLoading={this.toggleSearchTableLoading}
+                          hasParam={mainId && hasData && authMonth}
+                          dataStatus={dataStatus}
+                          searchFieldsValues={this.state.resultFieldsValues}
+                        />
                     </div>
                 }}
             >

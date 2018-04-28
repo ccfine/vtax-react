@@ -1,5 +1,8 @@
 /**
  * Created by liurunbin on 2018/1/11.
+ *@Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
+ *
  */
 import React, { Component } from 'react'
 import {fMoney,request,getUrlParam} from 'utils'
@@ -313,7 +316,7 @@ class NeedNotMatchInvoices extends Component{
                                 }
                             </div>
                         }
-                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus" />添加</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus" />新增</Button>
                         <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>
                     </div>,
                     renderFooter:data=>{
@@ -345,7 +348,7 @@ class NeedNotMatchInvoices extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="添加信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

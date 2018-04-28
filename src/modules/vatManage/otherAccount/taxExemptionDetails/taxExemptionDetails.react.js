@@ -1,12 +1,15 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
- * description  :
+ * @Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
+ *
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 
@@ -199,31 +202,6 @@ class TaxExemptionDetails extends Component{
 
     }
 
-    handleClickActions=type=>{
-        let url = '';
-        switch (type){
-            case '提交':
-                url='/account/other/reduceTaxDetail/submit';
-                break;
-            case '撤回':
-                url='/account/other/reduceTaxDetail/revoke';
-                break;
-            default:
-        }
-        this.toggleSearchTableLoading(true)
-        request.post(url,this.state.filters)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-                this.toggleSearchTableLoading(false)
-            })
-    }
     updateStatus=()=>{
         request.get('/account/other/reduceTaxDetail/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
@@ -250,7 +228,6 @@ class TaxExemptionDetails extends Component{
         const {tableKey,searchTableLoading,selectedRowKeys,filters,statusParam,dataSource} = this.state;
         const {mainId,authMonth} = filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled= !!search;
         return(
@@ -329,22 +306,17 @@ class TaxExemptionDetails extends Component{
                                 ...filters
                             }}
                         />
-                        <Button
-                            size='small'
-                            style={{marginRight:5}}
-                            disabled={disabled1}
-                            onClick={()=>this.handleClickActions('提交')}>
-                            <Icon type="check" />
-                            提交
-                        </Button>
-                        <Button
-                            size='small'
-                            style={{marginRight:5}}
-                            disabled={disabled2}
-                            onClick={()=>this.handleClickActions('撤回')}>
-                            <Icon type="rollback" />
-                            撤回提交
-                        </Button>
+                        <SubmitOrRecallMutex
+                            buttonSize="small"
+                            paramsType="object"
+                            url="/account/other/reduceTaxDetail"
+                            restoreStr="revoke"//撤销接口命名不一致添加属性
+                            refreshTable={this.refreshTable}
+                            toggleSearchTableLoading={this.toggleSearchTableLoading}
+                            hasParam={mainId && authMonth}
+                            dataStatus={statusParam.status}
+                            searchFieldsValues={this.state.filters}
+                          />
                     </div>,
                     renderFooter:data=>{
                         return(
