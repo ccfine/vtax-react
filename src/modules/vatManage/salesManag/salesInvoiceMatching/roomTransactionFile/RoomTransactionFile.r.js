@@ -6,7 +6,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
-import {AsyncTable,FileExport,FileImportModal} from 'compoments'
+import {AsyncTable,FileExport,FileImportModal,TableTotal} from 'compoments'
 import {getFields,request,fMoney,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
@@ -171,7 +171,8 @@ class RoomTransactionFile extends Component{
         searchFieldsValues:{
 
         },
-        hasData:false
+        hasData:false,
+        totalSource:undefined
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -243,7 +244,7 @@ class RoomTransactionFile extends Component{
             })
     }
     render(){
-        const {tableUpDateKey,filters,submitDate,dataStatus} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus,totalSource} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -453,6 +454,22 @@ class RoomTransactionFile extends Component{
                         />
                         <SubmitOrRecall type={1} url="/output/room/files/submit" onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} url="/output/room/files/revoke" onSuccess={this.refreshTable} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'本页合计',
+                                    total:[
+                                        {title: '本页总价', dataIndex: 'pageTotalPrice'},
+                                    ],
+                                },{
+                                    title:'总计',
+                                    total:[
+                                        {title: '全部总价', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]
+                        } />
+
                     </div>
                 }>
                     <AsyncTable url={'/output/room/files/list'}
@@ -471,25 +488,10 @@ class RoomTransactionFile extends Component{
                                             this.state.searchFieldsValues.transactionDate && this.state.searchFieldsValues.mainId && this.fetchResultStatus()
                                         })
                                     },
-                                    renderFooter:data=>{
-                                        return(
-                                            <div className="footer-total">
-                                                <div className="footer-total-meta">
-                                                    <div className="footer-total-meta-title">
-                                                        <label>本页合计：</label>
-                                                    </div>
-                                                    <div className="footer-total-meta-detail">
-                                                        本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
-                                                    </div>
-                                                    <div className="footer-total-meta-title">
-                                                        <label>总计：</label>
-                                                    </div>
-                                                    <div className="footer-total-meta-detail">
-                                                        全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
+                                    onTotalSource: (totalSource) => {
+                                        this.setState({
+                                            totalSource
+                                        })
                                     },
                                     columns:getColumns(this)
                                 }} />

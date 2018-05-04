@@ -95,7 +95,7 @@ class UserManage extends Component {
                     key: this.state.updateKey,
                     pageSize: 10,
                     columns: columns,
-                    url: `/organizations/${this.props.orgId}/users`,
+                    url: '/sysUser/list',//`/organizations/${this.props.orgId}/users`,
                     cardProps: {
                         title: "用户列表",
                         extra: <div>

@@ -9,6 +9,7 @@ import composeMenus from './composeMenus'
 import regRules from './regRules'
 import getFields from './getFields'
 import {BigNumber} from 'bignumber.js'
+
 const fMoney = (s,n=2)=>{
     if(s === "" || s === 0 || typeof (s) === 'undefined'){
         return '0.00';
@@ -223,5 +224,5 @@ export {
     htmlDecode,
     toPercent,
     fromPercent,
-    listMainResultStatus
+    listMainResultStatus,
 }

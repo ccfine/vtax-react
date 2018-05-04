@@ -12,9 +12,16 @@ import {request} from 'utils'
 const initialState = fromJS({
     /**用户个人信息*/
     personal:{
+        email:null ,// 邮箱
+        options: null,// 用户所有权限(查询详情时才加载数据)
+        phoneNumber:null ,// 手机号码
+        realname:null ,// 真实姓名
+        type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
+        username:null ,// 用户名
+    },
 
-     /*
-        非必须参数
+       /*
+        { //非必须参数
         id:'' ,// 主键
         isEnabled:'' ,// 是否可用,1:可用 2:禁用 3:删除
         lastModifiedBy:'' ,// 修改人
@@ -25,7 +32,6 @@ const initialState = fromJS({
         remark:'' ,// 备注
         token:'' ,// 用户身份令牌
         wechat:'' ,// 微信号
-    */
 
         email:null ,// 邮箱
         options: null,// 用户所有权限(查询详情时才加载数据)
@@ -33,7 +39,7 @@ const initialState = fromJS({
         realname:null ,// 真实姓名
         type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
         username:null ,// 用户名
-    },
+    },*/
     /**组织代码 - 当前组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）*/
     orgId:null,
 

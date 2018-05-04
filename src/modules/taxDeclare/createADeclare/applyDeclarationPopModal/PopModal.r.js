@@ -42,6 +42,8 @@ const parseJsonToParams = data=>{
     }
     return str;
 }
+
+
 export default class ApplyDeclarationPopModal extends Component{
 
     static propTypes={
@@ -126,7 +128,7 @@ export default class ApplyDeclarationPopModal extends Component{
                                         authMonthEnd:this.props.selectedRows[0].subordinatePeriodEnd,
                                     }  //const {state} = this.props.location;  state && state.filters.mainId || undefined,
                                 }
-                            }}>{item.name} 【{parseInt(item.status,0) === 1 ? <span style={{color:'#f5222d'}}>未提交</span> : <span style={{color:'#333'}}>已提交</span> }】</Link>
+                            }} onClick={this.LockPageRefresh} >{item.name} 【{parseInt(item.status,0) === 1 ? <span style={{color:'#f5222d'}}>未提交</span> : <span style={{color:'#333'}}>已提交</span> }】</Link>
 
                         </Card>
                     </List.Item>
@@ -134,6 +136,24 @@ export default class ApplyDeclarationPopModal extends Component{
             />
         )
     }
+
+
+    LockPageRefresh =()=>{
+        const ref = Modal.warning({
+            title: '友情提醒',
+            content: <h2>操作完成后，请刷新当前页面！</h2>,
+            okText: '刷新',
+            onOk:()=>{
+                ref.destroy();
+                this.fetchDeclarationById({
+                    decConduct:this.state.current,
+                    mainId:this.props.selectedRows[0].mainId,
+                    authMonth:this.props.selectedRows[0].partTerm,
+                })
+            }
+        });
+    }
+
     fetchDeclarationById =(data)=>{
         request.get('/tax/decConduct/list',{
             params:data
@@ -160,7 +180,9 @@ export default class ApplyDeclarationPopModal extends Component{
         const {data,visible,loading,current} = this.state;
         return(
             <span style={props.style}>
-               <Button size={props.size} type="primary" disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
+               <Button size={props.size} type="primary" disabled={props.disabled} onClick={()=>{
+                   this.toggleVisible(true);
+               }}>
                    <Icon type="download" />申报办理
                </Button>
                 <Modal

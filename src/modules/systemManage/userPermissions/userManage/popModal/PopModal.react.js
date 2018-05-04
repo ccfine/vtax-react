@@ -62,7 +62,7 @@ class PopModal extends Component {
                     //默认密码
                     values.password = '888888'
 
-                    request.post(`/organizations/${this.props.orgId}/users`,values)
+                    request.post(`/sysUser/add${this.props.orgId}/users`,values)
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false

@@ -7,149 +7,6 @@ import React,{Component} from 'react';
 import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch,Icon} from 'antd'
 import {request} from 'utils'
 const FormItem = Form.Item;
-const dataList ={
-    "code" : 200,
-    "msg" : "OK",
-    "data" : [ {
-        "code" : "basicInfo",
-        "name" : "基础管理",
-        "description" : "",
-        "permissions" : [ {
-            "code" : "aubjectOfTaxPayment",
-            "name" : "纳税主体",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        }, {
-            "code" : "taxIncentives",
-            "name" : "税收优惠",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        }, {
-            "code" : "declareParameter",
-            "name" : "申报参数",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        } ,
-            {
-                "code" : "declareFile",
-                "name" : "申报档案",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "inspectionReport",
-                "name" : "稽查报告",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "filingMaterial",
-                "name" : "备案资料",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "licenseManage",
-                "name" : "证照管理",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "otherFiles",
-                "name" : "其他档案",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-
-        ]
-    }, {
-        "code" : "vatManage",
-        "name" : "增值税管理",
-        "description" : "",
-        "permissions" : [ {
-            "code" : "salesManag",
-            "name" : "销项管理",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        },{
-            "code" : "entryManag",
-            "name" : "进项管理",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        },{
-            "code" : "landPrice",
-            "name" : "土地价款",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        },{
-            "code" : "otherAccount",
-            "name" : "其他台账",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        }
-        ]
-    }, {
-        "code" : "taxDeclare",
-        "name" : "纳税申报",
-        "description" : "",
-        "permissions" : [ {
-            "code" : "createADeclare",
-            "name" : "创建申报",
-            "description" : "",
-            "grantedByCurrentRole" : 0
-        },{
-            "code" : "searchDeclare",
-            "name" : "查询申报",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        } ]
-    },
-        {
-            "code" : "userManage",
-            "name" : "用户管理",
-            "description" : "",
-            "permissions" : [ {
-                "code" : "lookUserInfo",
-                "name" : "查看用户信息",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },{
-                "code" : "createUser",
-                "name" : "新增用户",
-                "description" : "",
-                "grantedByCurrentRole" : 0
-            },
-                {
-                    "code" : "modifiUserInfo",
-                    "name" : "修改用户信息",
-                    "description" : "",
-                    "grantedByCurrentRole" : 1
-                }, ]
-        },{
-            "code" : "roleManage",
-            "name" : "角色管理",
-            "description" : "",
-            "permissions" : [ {
-                "code" : "lookRolePermission",
-                "name" : "查看角色权限",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },{
-                "code" : "createRole",
-                "name" : "新增角色",
-                "description" : "",
-                "grantedByCurrentRole" : 0
-            },
-                {
-                    "code" : "modifiRolePermission",
-                    "name" : "修改角色权限",
-                    "description" : "",
-                    "grantedByCurrentRole" : 1
-                }, ]
-        },
-
-    ]
-}
 class RoleModal extends Component{
     state={
         editAble:true,
@@ -167,26 +24,25 @@ class RoleModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values)
-
-                /*this.setState({
+                this.setState({
                     submitLoading:true
                 })
-                let permissionCodes = [];
+                let options = [];
                 for(let key in values){
-                    if(values[key] && key !=='remark' && key !== 'roleName' && key !== 'enabled'){
-                        permissionCodes.push(key)
+                    if(values[key] && key !=='remark' && key !== 'roleName' && key !== 'isEnabled' && key.indexOf('allCode') === -1){
+                        options.push(key)
                     }
                 }
                 let params = {
-                    permissionCodes,
+                    options,
                     remark:values.remark,
                     roleName:values.roleName,
-                    enabled:values.enabled ? 1 : 0
+                    isEnabled:values.isEnabled ? 1 : 0
                 }
                 if(this.props.type==='edit'){
 
-                    request.put(`/roles/${this.props.roleId}`,params)
+                    request.put(`/sysRole/update`,{...params, id:this.props.id,
+                    })
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false
@@ -195,8 +51,9 @@ class RoleModal extends Component{
                                 if(this.mounted){
                                     message.success('角色编辑成功!');
                                     this.props.setData({
+                                        options,
                                         roleName:params.roleName,
-                                        enabled:params.enabled,
+                                        isEnabled:params.isEnabled,
                                         remark:params.remark
                                     });
                                     this.setState({
@@ -210,7 +67,7 @@ class RoleModal extends Component{
                             }
                         })
                 }else{
-                    request.post('/roles',params)
+                    request.post('/sysRole/add',params)
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false
@@ -221,28 +78,24 @@ class RoleModal extends Component{
                                     this.setState({
                                         visible:false
                                     })
-                                    this.props.refresh()
+                                    this.props.refreshTable()
                                 }
 
                             }else{
                                 message.error(data.msg)
                             }
                         })
-                }*/
+                }
 
             }
         });
     }
     fetchList(){
-        let url = '/permissions'
-        if(this.props.type==='edit'){
-            url = `/roles/${this.props.roleId}/permissions`
-        }
-        request.get(url)
+        request.get('/permissions')
             .then(({data})=>{
                 if(data.code===200){
                     this.mounted && this.setState({
-                        data: dataList.data //data.data ||
+                        data: data.data
                     })
                 }else{
                     message.error(data.msg)
@@ -250,22 +103,23 @@ class RoleModal extends Component{
             })
     }
     componentDidMount(){
-        this.fetchList()
+         this.fetchList()
     }
     onCheckAllChange = item => e => {
         const {setFieldsValue} = this.props.form;
-        let newItems = [...item.permissions]
+
+        let newItems = [...item.permissionVOs]
         if (e.target.checked) {
             newItems.forEach(item => {
                 setFieldsValue({
-                    [item.code]:true
+                    [item.permissionId]:true
                 })
                 return item;
             })
         } else {
             newItems.forEach(item => {
                 setFieldsValue({
-                    [item.code]:false
+                    [item.permissionId]:false
                 })
                 return item;
             })
@@ -278,10 +132,10 @@ class RoleModal extends Component{
             [code]:e.target.checked
         })
         for(let i = 0 ;i<data.length;i++){
-            if(data[i].code === allCode){
+            if(`allCode${i}` === allCode){
                 let arr = [];
-                data[i].permissions.forEach(item=>{
-                    arr.push( getFieldValue(item.code) )
+                data[i].permissionVOs.forEach(item=>{
+                    arr.push( getFieldValue(item.permissionId) )
                 })
                 setFieldsValue({
                     [allCode]: arr.filter(item=>!item).length === 0
@@ -289,7 +143,15 @@ class RoleModal extends Component{
                 break;
             }
         }
-
+    }
+    initCheckboxAll = (data) =>{
+        let arr = [];
+        for(let i = 0 ;i<data.length;i++){
+            if(this.props.data.options.indexOf(Number(data[i].permissionId)) !== -1){
+                arr.push(data.permissionId)
+            }
+        }
+        return data.length === arr.length
     }
 
     mounted=true;
@@ -308,8 +170,7 @@ class RoleModal extends Component{
                     })
                 }}><Icon type={this.props.type==='add'?'plus':'edit'}/>{this.props.buttonTxt}</Button>
                 <Modal title={this.props.title} onCancel={this.handleCancel} width={800} visible={this.state.visible} confirmLoading={this.state.submitLoading} onOk={this.handleSubmit}>
-                    <Form
-                        layout="inline" onSubmit={this.handleSubmit}>
+                    <Form layout="inline" onSubmit={this.handleSubmit}>
                         <Row>
                             <Col span={8}>
                                 <FormItem>
@@ -347,13 +208,13 @@ class RoleModal extends Component{
                                                 lineHeight:'32px',
                                                 paddingRight:15
                                             }} span={3}>
-                                                {item.name}:
+                                                {item.moduleName}:
                                             </Col>
                                             <Col span={21}>
                                                 <FormItem>
                                                     {
-                                                        getFieldDecorator(item.code,{
-                                                            initialValue:item.permissions.filter(item=>!item.grantedByCurrentRole).length === 0,
+                                                        getFieldDecorator(`allCode${i}`,{
+                                                            initialValue:this.props.type==='edit' && this.props.data.options && this.initCheckboxAll(item.permissionVOs),
                                                             valuePropName: 'checked',
                                                             onChange:this.onCheckAllChange(item)
                                                         })(
@@ -363,16 +224,16 @@ class RoleModal extends Component{
 
                                                 </FormItem>
                                                 {
-                                                    item.permissions.map((fieldItem,j)=>{
+                                                    item.permissionVOs.map((fieldItem,j)=>{
                                                         return(
                                                             <FormItem key={j}>
                                                                 {
-                                                                    getFieldDecorator(fieldItem.code,{
-                                                                        initialValue:parseInt(fieldItem.grantedByCurrentRole,0)===1,
+                                                                    getFieldDecorator(fieldItem.permissionId,{
+                                                                        initialValue:this.props.type==='edit' && this.props.data.options && this.props.data.options.indexOf(Number(fieldItem.permissionId)) !== -1,
                                                                         valuePropName: 'checked',
-                                                                        onChange:this.checkAllChecked(item.code, fieldItem.code)
+                                                                        onChange:this.checkAllChecked(`allCode${i}`, fieldItem.permissionId)
                                                                     })(
-                                                                        <Checkbox disabled={!this.state.editAble}>{fieldItem.name}</Checkbox>
+                                                                        <Checkbox disabled={!this.state.editAble}>{fieldItem.actionName}</Checkbox>
                                                                     )
                                                                 }
                                                             </FormItem>
@@ -393,8 +254,8 @@ class RoleModal extends Component{
                                 paddingRight:15
                             }}>状态:</span>
                                 {
-                                    getFieldDecorator('enabled', {
-                                        initialValue:this.props.type==='edit'? parseInt(this.props.data.enabled,0)===1 : true,
+                                    getFieldDecorator('isEnabled', {
+                                        initialValue:this.props.type==='edit'? parseInt(this.props.data.isEnabled,0)===1 : true,
                                         valuePropName: 'checked' ,
                                     })(
                                         <Switch checkedChildren="启用" unCheckedChildren="禁用" />
@@ -411,6 +272,7 @@ class RoleModal extends Component{
                                 <FormItem>
                                     {
                                         getFieldDecorator('remark', {
+                                            initialValue:this.props.type==='edit' && this.props.data.remark ,
                                         })(
                                             <Input.TextArea style={{width:500}} autosize={
                                                 {

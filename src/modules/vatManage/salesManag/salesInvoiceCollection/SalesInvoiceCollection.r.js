@@ -3,23 +3,14 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {SearchTable,FileExport} from 'compoments'
+import {SearchTable,FileExport,TableTotal} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam} from 'utils'
+import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
+
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -169,17 +160,16 @@ const getColumns = context =>[
                         context.toggleModalVisible(true)
                     })
                 }}>
-                    查看
+                    <Icon title="查看" type="search" style={{ fontSize: 16, color: '#08c' }} />
                 </span>
             </div>
         ),
         fixed:'left',
         width:'70px'
-
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
-    }, {
+   /* }, {
         title: '发票类型',
         dataIndex: 'invoiceType'
     },{
@@ -190,11 +180,59 @@ const getColumns = context =>[
         dataIndex: 'invoiceNum'
     },{
         title: '发票明细号',
-        dataIndex: 'invoiceDetailNum',
+        dataIndex: 'invoiceDetailNum',*/
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">发票类型</p>
+            <p className="apply-form-list-p2">发票代码</p>
+        </div>,
+        dataIndex: 'invoiceType',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.invoiceCode}</p>
+            </div>
+        )
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">发票号码</p>
+            <p className="apply-form-list-p2">发票明细号</p>
+        </div>,
+        dataIndex: 'invoiceNum',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
+            </div>
+        )
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">商品名称</p>
+            <p className="apply-form-list-p2">金额</p>
+        </div>,
+        dataIndex: 'commodityName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{fMoney(record.amount)}</p>
+            </div>
+        )
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">购货单位</p>
+            <p className="apply-form-list-p2">购方税号</p>
+        </div>,
+        dataIndex: 'purchaseName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.purchaseTaxNum}</p>
+            </div>
+        )
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
-        width:'75px'
+        width:'75px'/*
     },{
         title: '购货单位',
         dataIndex: 'purchaseName',
@@ -208,7 +246,7 @@ const getColumns = context =>[
         title: '金额',
         dataIndex: 'amount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money'*/
     },{
         title: '税额',
         dataIndex: 'taxAmount',
@@ -248,14 +286,13 @@ class SalesInvoiceCollection extends Component{
         searchFieldsValues:{
 
         },
-
+        dataSource:[],
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
-        submitDate:'',
-
-        hasData:false
+        statusParam:{},
+        hasData:false,
+        totalSource:undefined
     }
     fetchResultStatus = ()=>{
         request.get('/output/invoice/collection/listMain',{
@@ -264,8 +301,7 @@ class SalesInvoiceCollection extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
+                        statusParam: data.data,
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -290,6 +326,7 @@ class SalesInvoiceCollection extends Component{
             tableKey:Date.now()
         })
     }
+
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -297,9 +334,10 @@ class SalesInvoiceCollection extends Component{
         }
     }
     render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues,hasData,submitDate,dataStatus} = this.state;
+        const {visible,modalConfig,tableKey,searchFieldsValues,hasData,dataSource,totalSource,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
+
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -311,7 +349,7 @@ class SalesInvoiceCollection extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:getColumns(this),
                     url:'/output/invoice/collection/list',
                     onSuccess:(params,data)=>{
@@ -322,67 +360,51 @@ class SalesInvoiceCollection extends Component{
                             this.fetchResultStatus()
                         })
                     },
-                    extra:<div>
-                        {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
-                        }
-                        <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <FileImportModal style={{marginRight:5}} />
-                        <FileExport
-                            url={`output/invoice/collection/export`}
-                            title="导出"
-                            size="small"
-                            disabled={!hasData}
-                            params={
-                                searchFieldsValues
+                    cardProps: {
+                        title: "销项发票采集列表",
+                        extra:<div>
+                            {
+                                dataSource.length>0 && listMainResultStatus(statusParam)
                             }
-                            setButtonStyle={{marginRight:5}}
-                        />
-                        <FileExport
-                            url='output/invoice/collection/download'
-                            title="下载导入模板"
-                            size="small"
-                            setButtonStyle={{marginRight:5}}
-                        />
-                        <SubmitOrRecall type={1} url="/output/invoice/collection/submit" onSuccess={this.refreshTable} />
-                        <SubmitOrRecall type={2} url="/output/invoice/collection/revoke" onSuccess={this.refreshTable} />
-                    </div>,
-                    scroll:{
-                        x:'180%'
+                            <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
+                                <Icon type="plus" />
+                                新增
+                            </Button>
+                            <FileImportModal style={{marginRight:5}} />
+                            <FileExport
+                                url={`output/invoice/collection/export`}
+                                title="导出"
+                                size="small"
+                                disabled={!hasData}
+                                params={
+                                    searchFieldsValues
+                                }
+                                setButtonStyle={{marginRight:5}}
+                            />
+                            <FileExport
+                                url='output/invoice/collection/download'
+                                title="下载导入模板"
+                                size="small"
+                                setButtonStyle={{marginRight:5}}
+                            />
+                            <SubmitOrRecall type={1} url="/output/invoice/collection/submit" onSuccess={this.refreshTable} />
+                            <SubmitOrRecall type={2} url="/output/invoice/collection/revoke" onSuccess={this.refreshTable} />
+                            <TableTotal totalSource={totalSource} />
+
+                        </div>,
                     },
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                        总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                        总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
+                    /*scroll:{
+                        x:'180%'
+                    },*/
+                    onDataChange:(dataSource)=>{
+                        this.setState({
+                            dataSource
+                        })
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                 }}
             >
