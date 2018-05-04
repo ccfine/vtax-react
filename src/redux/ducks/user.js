@@ -12,23 +12,38 @@ import {request} from 'utils'
 const initialState = fromJS({
     /**用户个人信息*/
     personal:{
-        adminUrl:null,
-        email:null,
-        enabled:null,
-        fax:null,
-        phoneNumber:null,
-        realname:null,
-        roleType:null,
-        roles:null,
-        sex:null,
-        userId:null,
-        userType:null,
-        username:null,
+        email:null ,// 邮箱
+        options: null,// 用户所有权限(查询详情时才加载数据)
+        phoneNumber:null ,// 手机号码
+        realname:null ,// 真实姓名
+        type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
+        username:null ,// 用户名
     },
-    /**组织代码*/
+
+       /*
+        { //非必须参数
+        id:'' ,// 主键
+        isEnabled:'' ,// 是否可用,1:可用 2:禁用 3:删除
+        lastModifiedBy:'' ,// 修改人
+        lastModifiedDate:'' ,// 修改时间
+        orgId:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
+        orgIds:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
+        password:'' ,// 用户密码
+        remark:'' ,// 备注
+        token:'' ,// 用户身份令牌
+        wechat:'' ,// 微信号
+
+        email:null ,// 邮箱
+        options: null,// 用户所有权限(查询详情时才加载数据)
+        phoneNumber:null ,// 手机号码
+        realname:null ,// 真实姓名
+        type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
+        username:null ,// 用户名
+    },*/
+    /**组织代码 - 当前组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）*/
     orgId:null,
 
-    /**登录凭证*/
+    /**登录凭证 - 用户身份令牌*/
     token:null,
 
     /**是否登录成功*/
@@ -81,12 +96,11 @@ export const login = dispatch => async ({userName,password,success,fail})=>{
             password
         }).then(res=>{
             request.testSuccess(res.data,data=>{
-               // console.log(data)
                 dispatch(token.increment(data.token))
                 //获取组织信息
                 dispatch(orgId.increment(data.orgId))
                 //获取用户信息
-                dispatch(personal.increment(data.secUserBasicBO))
+                dispatch(personal.increment(data))
                 //用户信息获取成功的话
                 //所需信息全部加载完毕，完成登录
                 dispatch(isAuthed.login())

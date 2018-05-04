@@ -288,7 +288,7 @@ class InvoiceCollection extends Component {
                 <Card
                       extra={<div>
                           {
-                              dataSource.length>0 &&listMainResultStatus(statusParam)
+                              dataSource.length>0 && listMainResultStatus(statusParam)
                           }
                           <Button size="small" onClick={()=>this.showModal('add')} disabled={disabled2} style={buttonStyle}>
                               <Icon type="plus" />

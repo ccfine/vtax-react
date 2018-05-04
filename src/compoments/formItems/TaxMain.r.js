@@ -100,7 +100,7 @@ export default class TaxMain extends Component{
         return(
             <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
-                    initialValue:'',
+                    initialValue:isShowAll ? undefined : '',
                     ...fieldDecoratorOptions,
                 })(
                     <Select

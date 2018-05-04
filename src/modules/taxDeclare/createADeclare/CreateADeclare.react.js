@@ -174,7 +174,7 @@ export default class CreateADeclare extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            updateKey:Date.now()
+            updateKey:Date.now(),
         })
     }
     showModal=type=>{
@@ -294,7 +294,7 @@ export default class CreateADeclare extends Component{
                                     ...filters
                                 }}
                             />
-                            <Button size='small' type="danger" style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys} >
+                            <Button size='small' type="danger" style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===-1)} >
                                 <Icon type="exception" />
                                 流程终止
                             </Button>

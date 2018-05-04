@@ -1,5 +1,5 @@
 /**
- * author       : xiaminghua
+ * author       : liuliyuan
  * createTime   : 2018/04/16
  * description  :
  */
@@ -22,12 +22,12 @@ const columns = [
         width:'10%',
         dataIndex:'action',
         className:'text-center',
-        render:(text,record)=> (
+        render:(text,record)=>(
             <Link to={{
-                pathname:`/web/systemManage/userPermissions/roleManage/${record.roleId}`,
+                pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
                 state:{
                     roleName:record.roleName,
-                    enabled:record.enabled,
+                    isEnabled:record.isEnabled,
                     remark:record.remark
                 }
             }}>详情</Link>
@@ -38,7 +38,7 @@ const columns = [
         width:'15%'
     },{
         title: '状态',
-        dataIndex:'enabled',
+        dataIndex:'isEnabled',
         width:'15%',
         render:(text)=> parseInt(text,0) ===0 ?<span style={{color:'#FF0000'}}>停用</span> :<span style={{color:'#008000'}}>启用</span>
     },{
@@ -49,6 +49,7 @@ const columns = [
 
 class RoleManage extends Component{
     state={
+        modalKey:Date.now(),
         tableUpDateKey:Date.now(),
         userInfo:{},
         list:[],
@@ -63,24 +64,27 @@ class RoleManage extends Component{
                 }}
                 doNotFetchDidMount={false}
                 tableOption={{
-                    rowKey:'roleId',
+                    rowKey:'id',
                     key: tableUpDateKey,
                     pageSize: 10,
                     columns: columns,
-                    url: '/roles',
+                    url: '/sysRole/list',
                     cardProps: {
                         title: "角色列表",
                         extra: <RoleModal
-                                    buttonTxt="新增"
-                                    title="新增角色"
-                                    type='add'
-                                    key={this.state.modalKey}
-                                    refresh={()=>{
-                                        this.setState({
-                                            modalKey:Date.now()
-                                        })
-                                    }}
-                                />,
+                            buttonTxt="添加"
+                            title="添加角色"
+                            key={this.state.modalKey}
+                            refreshTable={()=>{
+                                this.setState({
+                                    tableUpDateKey:Date.now()
+                                })
+                            }}
+                            refresh={()=>{
+                                this.setState({
+                                    modalKey:Date.now()
+                                })
+                            }} />,
                     }
                 }}
             />

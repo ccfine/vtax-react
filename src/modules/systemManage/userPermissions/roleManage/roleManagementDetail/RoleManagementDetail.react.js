@@ -8,167 +8,20 @@ import {Card,message,Form,Button,Icon,Modal,Row,Col} from 'antd'
 import RolePopModal from '../popModal'
 import {getFields,request} from 'utils'
 
-const Mock ={
-  "code" : 200,
-  "msg" : "OK",
-  "data" : [ {
-    "code" : "basicInfo",
-    "name" : "基础管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "aubjectOfTaxPayment",
-      "name" : "纳税主体",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, {
-      "code" : "taxIncentives",
-      "name" : "税收优惠",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, {
-      "code" : "declareParameter",
-      "name" : "申报参数",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    } ,
-    {
-      "code" : "declareFile",
-      "name" : "申报档案",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "inspectionReport",
-      "name" : "稽查报告",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "filingMaterial",
-      "name" : "备案资料",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "licenseManage",
-      "name" : "证照管理",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-    {
-      "code" : "otherFiles",
-      "name" : "其他档案",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },
-
-  ]
-  }, {
-    "code" : "vatManage",
-    "name" : "增值税管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "salesManag",
-      "name" : "销项管理",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "entryManag",
-      "name" : "进项管理",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "landPrice",
-      "name" : "土地价款",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "otherAccount",
-      "name" : "其他台账",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }
-  ]
-  }, {
-    "code" : "taxDeclare",
-    "name" : "纳税申报",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "createADeclare",
-      "name" : "创建申报",
-      "description" : "",
-      "grantedByCurrentRole" : 0
-    },{
-      "code" : "searchDeclare",
-      "name" : "查询申报",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    } ]
-  },
-  {
-    "code" : "userManage",
-    "name" : "用户管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "lookUserInfo",
-      "name" : "查看用户信息",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "createUser",
-      "name" : "新增用户",
-      "description" : "",
-      "grantedByCurrentRole" : 0
-    },
-    {
-      "code" : "modifiUserInfo",
-      "name" : "修改用户信息",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, ]
-  },{
-    "code" : "roleManage",
-    "name" : "角色管理",
-    "description" : "",
-    "permissions" : [ {
-      "code" : "lookRolePermission",
-      "name" : "查看角色权限",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    },{
-      "code" : "createRole",
-      "name" : "添加角色",
-      "description" : "",
-      "grantedByCurrentRole" : 0
-    },
-    {
-      "code" : "modifiRolePermission",
-      "name" : "修改角色权限",
-      "description" : "",
-      "grantedByCurrentRole" : 1
-    }, ]
-  },
-
- ]
-}
-
 class RoleManagementDetail extends Component{
     constructor(props){
     super(props)
     this.state={
-      editAble:false,
-      submitLoading:false,
-      showEditButton:false,
-      data:[],
-      roleName:props.location.state.roleName,
-      remark:props.location.state.remark,
-      enabled:props.location.state.enabled,
-      modalKey:Date.now(),
-    }
-    }
-
-    setData = data=>{
-    this.setData({data})
+        editAble:false,
+        submitLoading:false,
+        showEditButton:false,
+        data:[],
+        permissions:[],
+        roleName:props.location.state.roleName,
+        remark:props.location.state.remark,
+        isEnabled:props.location.state.isEnabled,
+        modalKey:Date.now(),
+        }
     }
 
     handleSubmit = (e) => {
@@ -196,22 +49,34 @@ class RoleManagementDetail extends Component{
           }
       });
     }
-
-
+    setData(data){
+        this.setState(data)
+    }
     fetch(){
-      request.get(`/roles/${this.props.match.params.roleId}/permissions`)
-          .then(({data})=>{
-              if(data.code===200){
-                  this.setState({
-                      data:data.data.length>0 || Mock.data, //模拟数据
-                  })
-              }else{
-                  message.error(data.msg)
-              }
-          })
+        request.get('/permissions')
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        permissions: data.data
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
+
+        request.get(`/sysRole/find/${this.props.match.params.id}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.setState({
+                        data:data.data
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
     }
 
-    deleteRole = roleId=>{
+    deleteRole = id=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '该删除后将不可恢复，是否删除？',
@@ -222,7 +87,7 @@ class RoleManagementDetail extends Component{
 
                 modalRef && modalRef.destroy();
                 //删除角色
-                request.delete(`/roles/${roleId}`)
+                request.delete(`/sysRole/delete/${id}`)
                     .then(({data})=>{
                         if(data.code===200){
                             message.success('删除成功');
@@ -238,31 +103,31 @@ class RoleManagementDetail extends Component{
         });
 
     }
-
+    formatOptions=(data)=>{
+        return data.map((item)=>{
+            return ({'label':item.actionName,'value':item.permissionId})
+        })
+    }
+    isChecked=(data,options)=>{
+        const arr = [];
+        data.forEach((d) => {
+            /**
+             * TODO: 报错 Missing radix parameter  radix  解决办法是把parseInt 转成 Number
+             */
+            if(options && options.indexOf(Number(d.permissionId)) !== -1){
+                arr.push(d.permissionId)
+            }
+        });
+        return arr;
+    }
     componentDidMount(){
         this.fetch()
     }
 
-    formatOptions=(data)=>{
-      return data.map((item)=>{
-        return ({'label':item.name,'value':item.code})
-      })
-    }
-
-    isChecked=(data)=>{
-      const arr = [];
-      data.forEach((item) => {
-            if(parseInt(item.grantedByCurrentRole,0)===1){
-              arr.push(item.code)
-            }
-      });
-      return arr;
-    }
-
     render(){
-      const { data,modalKey,roleName,enabled,remark } = this.state;
-      const roleId = this.props.match.params.roleId;
-
+      const { data,permissions,modalKey,roleName,isEnabled,remark } = this.state;
+      const id = this.props.match.params.id;
+      const options = data.options;
         return (
           <div>
               <h2 style={{marginBottom:15}}>{roleName}</h2>
@@ -272,14 +137,13 @@ class RoleManagementDetail extends Component{
                        type='danger'
                        size='small'
                        style={{marginRight:"5px"}}
-                       onClick={()=>this.deleteRole(roleId)}>
+                       onClick={()=>this.deleteRole(id)}>
                        <Icon type="delete" />
                        删除
                      </Button>
-
-                     <RolePopModal data={{roleName,enabled,remark}}
+                      <RolePopModal data={{roleName,isEnabled,remark,options}}
                                  key={modalKey}
-                                 setData={this.setData}
+                                 setData={this.setData.bind(this)}
                                  refresh={
                                      ()=>{
                                          this.fetch();
@@ -288,9 +152,8 @@ class RoleManagementDetail extends Component{
                                          })
                                      }
                                  }
-                                 type="edit" roleId={roleId} buttonTxt="编辑"
-                                 title="编辑角色"
-                              />
+                                 type="edit" id={id} buttonTxt="编辑"
+                                 title="编辑角色" />
                   </div>
                 }
               title="角色信息">
@@ -301,14 +164,14 @@ class RoleManagementDetail extends Component{
                       }}
                       onSubmit={this.handleSubmit}>
                       {
-                          data.map((item,i)=>{
+                          permissions && permissions.map((item,i)=>{
                               return (
                                   <Row key={i}>
                                    {
                                      getFields(this.props.form,
                                          [{
-                                             label:item.name,
-                                             fieldName:item.code,
+                                             label:item.moduleName,
+                                             fieldName:`allCode${i}`,
                                              type:'checkboxGroup',
                                              span:24,
                                              formItemStyle:{
@@ -320,12 +183,12 @@ class RoleManagementDetail extends Component{
                                                  },
                                                  className:'vTax-CheckboxGroup',
                                              },
-                                             options:this.formatOptions(item.permissions) ,
+                                             options:this.formatOptions(item.permissionVOs) ,
                                              componentProps:{
                                                  disabled:true
                                              },
                                              fieldDecoratorOptions:{
-                                                 initialValue:this.isChecked(item.permissions)
+                                                 initialValue:this.isChecked(item.permissionVOs,options)
                                              }
                                          }]
 
@@ -347,7 +210,7 @@ class RoleManagementDetail extends Component{
                           </Col>
                           <Col span={21}>
                               {
-                                  parseInt(enabled,0) ===1 ? <span style={{color:'#008000'}}>启用</span>:<span style={{color:'#FF0000'}}>停用</span>
+                                  parseInt(isEnabled,0) ===1 ? <span style={{color:'#008000'}}>启用</span>:<span style={{color:'#FF0000'}}>停用</span>
                               }
                           </Col>
                       </Row>

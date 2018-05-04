@@ -156,9 +156,9 @@ form .ant-pagination .ant-select{
 
 /*amount table class*/
 .footer-total{
-  padding-top: 10px;
   zoom: 1;
   line-height: 25px;
+
 }
 .footer-total-meta {
   zoom: 1;
@@ -171,7 +171,6 @@ form .ant-pagination .ant-select{
 }
 .footer-total-meta-detail {
   overflow: hidden;
-  padding-bottom: 10px;
 }
 .footer-total-meta-detail .amount-code{
   margin: 0 1px;

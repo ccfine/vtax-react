@@ -44,7 +44,7 @@ const UserPermissions_Routes = [
         },
         exact:true,
     },{
-        path:`${PATH}/roleManage/:roleId`,
+        path:`${PATH}/roleManage/:id`,
         component:wrapPage('角色管理详情',RoleManagementDetail),
         name:'角色管理详情',
         exact:true

@@ -22,6 +22,7 @@ import ButtonWithFileUploadModal from './buttonWithFileUploadModal'
 import {FetchTable,CardSearch} from './fetchTable'
 import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
+import TableTotal from './tableTotal'
 
 export {
     RouteWithSubRoutes,
@@ -42,4 +43,5 @@ export {
     CardSearch,
     TreeTable,
     LoadingPage,
+    TableTotal,
 }

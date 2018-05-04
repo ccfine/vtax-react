@@ -179,6 +179,7 @@ class SearchTable extends Component{
                                         onSuccess:tableOption.onSuccess || undefined,
                                         scroll:tableOption.scroll || undefined,
                                         onDataChange:tableOption.onDataChange || undefined,
+                                        onTotalSource:tableOption.onTotalSource || undefined,
                                         renderFooter:tableOption.renderFooter || undefined
                                     }} />
                     </Card>
