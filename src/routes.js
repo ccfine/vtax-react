@@ -16,7 +16,7 @@ const routes = [
     {
         path:'/web',
         component:Web,
-        name:'主页'
+        name:'主页',
     },{
         path:'/login',
         component:Login,

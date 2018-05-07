@@ -46,7 +46,7 @@ class UpdateAccount extends Component{
 
                 this.toggleConfirmLoading()
 
-                request.put(`/users/${this.props.userId}/passwords`,{
+                request.put(`/sysUser/users/${this.props.userId}/passwords`,{
                     ...values
                 })
                     .then(({data})=>{
