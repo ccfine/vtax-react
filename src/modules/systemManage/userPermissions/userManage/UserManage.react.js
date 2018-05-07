@@ -15,7 +15,7 @@ const searchFields = [
         label: "用户名",
         type: "input",
         span: 8,
-        fieldName: "username"
+        fieldName: "username "
     },
     {
         label: "姓名",
@@ -44,9 +44,9 @@ const columns = [
     }, {
         title: "邮箱",
         dataIndex: "email"
-    }, {
+        /* }, {
         title: "角色",
-        render: (text, record) => (
+       render: (text, record) => (
             <div>
                 {record.roles.map((item, i) => (
                     <span key={i} style={{ color: "#108ee9" }}>
@@ -55,17 +55,29 @@ const columns = [
           </span>
                 ))}
             </div>
-        )
+        )*/
     },
     {
         title: "状态",
-        dataIndex: "enabled",
-        render: text =>
-            parseInt(text, 0) === 1 ? (
-                <span style={{ color: "#008000" }}>启用</span>
-            ) : (
-                <span style={{ color: "#FF0000" }}>停用</span>
-            )
+        dataIndex: "isEnabled",
+        render:text=>{
+            //1:启用;2:停用;3:删除; ,
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t=<span style={{color: '#008000'}}>启用</span>;
+                    break;
+                case 2:
+                    t=<span style={{color: "#FF0000"}}>停用</span>;
+                    break;
+                case 3:
+                    t=<span style={{color: "#f5222d"}}>删除</span>;
+                    break;
+                default:
+                //no default
+            }
+            return t
+        },
     }
 ];
 
@@ -95,7 +107,7 @@ class UserManage extends Component {
                     key: this.state.updateKey,
                     pageSize: 10,
                     columns: columns,
-                    url: '/sysUser/list',//`/organizations/${this.props.orgId}/users`,
+                    url: '/sysUser/list',
                     cardProps: {
                         title: "用户列表",
                         extra: <div>

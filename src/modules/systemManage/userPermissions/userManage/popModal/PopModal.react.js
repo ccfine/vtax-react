@@ -56,13 +56,14 @@ class PopModal extends Component {
 
                 //状态从true变更未数字1,2
                 values.enabled = values.enabled ? 1 :2;
+                values.id = this.props.orgId;
 
                 //新建
                 if(this.props.modalType==='create'){
                     //默认密码
                     values.password = '888888'
 
-                    request.post(`/sysUser/add${this.props.orgId}/users`,values)
+                    request.post(`/sysUser/add`,values)
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false
@@ -90,7 +91,7 @@ class PopModal extends Component {
 
                 if(this.props.modalType==='edit'){
                     const {defaultFields,fetchUserInfo,toggleModalVisible} = this.props;
-                    request.put(`/users/${defaultFields.userId}`,values)
+                    request.put(`/sysUser/update`,values)
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false
@@ -280,7 +281,8 @@ class PopModal extends Component {
                       {
                           modalType === 'create' ? (
                               <Col span={24}>
-                                <Alert message="新添加的帐号的初始密码为：888888" type="info" showIcon />
+                                <Alert message="新添加的帐号的初始密码
+                                为：888888" type="info" showIcon />
                               </Col>
                           ) : null
                       }

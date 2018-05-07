@@ -45,6 +45,14 @@ const AsyncCandlestickReact = LoadAble({
     loading: LoadingPage,
 });
 
+const banner = [{
+    key:'1',
+    original: banner1,
+},{
+    key:'2',
+    original: banner2,
+}]
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -102,16 +110,10 @@ class Home extends Component {
                         subUrl:'',
                     }]
                 }
-            ],
-            banner: [{
-                key:'1',
-                original: banner1,
-            },{
-                key:'2',
-                original: banner2,
-            }]
+            ]
         }
     }
+
     render() {
         const menu = (
             <Menu>
@@ -142,7 +144,7 @@ class Home extends Component {
                     showPlayButton={false}
                     useTranslate3D={false}
                     showThumbnails={false}
-                    items={this.state.banner}
+                    items={banner}
                 />
 
                 <div style={{ padding: '24px'}}>
