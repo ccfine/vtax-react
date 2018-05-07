@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/16.
  */
 import React,{Component} from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,getUrlParam} from '../../../../../utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -132,6 +132,7 @@ const columns = [
 class InvoicesWithNeedNotMatchRoom extends Component{
     state={
         tableKey:Date.now(),
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -147,6 +148,7 @@ class InvoicesWithNeedNotMatchRoom extends Component{
         }
     }
     render(){
+        const {tableKey,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -163,36 +165,20 @@ class InvoicesWithNeedNotMatchRoom extends Component{
                     }
                 }}
                 tableOption={{
-                    key:this.state.tableKey,
+                    key:tableKey,
                     pageSize:10,
                     columns:columns,
                     url:'/output/invoice/marry/unwanted/list',
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                        总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                        总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    },
+                    extra:<div>
+                            <TableTotal totalSource={totalSource} />
+                        </div>,
                     scroll:{
                         x:'150%'
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                 }}
             >

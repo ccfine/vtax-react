@@ -9,7 +9,8 @@ import { Icon, message, Button } from "antd";
 import {
   FileImportModal,
   FileExport,
-  SearchTable
+  SearchTable,
+    TableTotal
 } from "compoments";
 import {
   request,
@@ -143,7 +144,7 @@ class OtherBusinessInputTaxRollOut extends Component {
     this.updateStatus(values);
   };
   render() {
-    const { dataSource } = this.state;
+    const { dataSource,totalSource } = this.state;
     const { search } = this.props.location;
     let disabled = !!search;
     const getFields = (title, span, formItemStyle, record = {}) => [
@@ -217,18 +218,11 @@ class OtherBusinessInputTaxRollOut extends Component {
                 dataSource: data
               });
             },
-            renderFooter: data => {
-              return (
-                <div className="footer-total">
-                  <div>
-                    <label>本页合计：</label>
-                    转出税额：<span className="amount-code">
-                      {fMoney(data.pageOutTaxAmount)}
-                    </span>
-                  </div>
-                </div>
-              );
-            },
+              onTotalSource: (totalSource) => {
+                  this.setState({
+                      totalSource
+                  })
+              },
             cardProps: {
               title: "其他业务进项税额转出台账",
               extra: (
@@ -278,6 +272,16 @@ class OtherBusinessInputTaxRollOut extends Component {
                     <Icon type="rollback" />
                     撤回提交
                   </Button>
+                  <TableTotal type={3} totalSource={totalSource} data={
+                      [
+                          {
+                              title:'本页合计',
+                              total:[
+                                  {title: '转出税额', dataIndex: 'pageOutTaxAmount'},
+                              ],
+                          }
+                      ]
+                  } />
                 </div>
               )
             }
