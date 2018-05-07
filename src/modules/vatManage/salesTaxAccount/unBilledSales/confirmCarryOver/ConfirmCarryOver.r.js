@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport} from 'compoments'
+import {SearchTable,FileExport,TableTotal} from 'compoments'
 import {fMoney,getUrlParam,request} from '../../../../../utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
@@ -225,6 +225,7 @@ class ConfirmCarryOver extends Component{
          * */
         dataStatus:'',
         submitDate:'',
+        totalSource:undefined,
     }
     toggleSearchTableLoading = searchTableLoading =>{
         this.setState({
@@ -297,7 +298,7 @@ class ConfirmCarryOver extends Component{
         })
     }
     render(){
-        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount,dataStatus,submitDate,searchTableLoading} = this.state;
+        const {tableKey,visible,searchFieldsValues,hasData,doNotFetchDidMount,dataStatus,submitDate,searchTableLoading,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -359,8 +360,43 @@ class ConfirmCarryOver extends Component{
                         </Button>
                         <SubmitOrRecall type={1} url="/account/output/notInvoiceSale/submit" onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} url="/account/output/notInvoiceSale/revoke" onSuccess={this.refreshTable} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'本页合计',
+                                    total:[
+                                        {title: '上期-增值税收入确认金额合计', dataIndex: 'pageSumTotalPrice'},
+                                        {title: '上期-增值税开票金额', dataIndex: 'pageSumTotalAmount'},
+                                        {title: '上期末合计金额-未开具发票销售额', dataIndex: 'pageSumNoInvoiceSales'},
+
+                                        {title: '本期-增值税收入确认金额合计', dataIndex: 'pageTotalPrice'},
+                                        {title: '本期-增值税开票金额', dataIndex: 'pageTotalAmount'},
+                                        {title: '本期-未开具发票销售额', dataIndex: 'pageNoInvoiceSales'},
+
+                                        {title: '本期末合计-增值税收入确认金额合计', dataIndex: 'pageEndTotalPrice'},
+                                        {title: '本期末合计-增值税开票金额', dataIndex: 'pageEndTotalAmount'},
+                                        {title: '本期末合计-未开具发票销售额', dataIndex: 'pageEndNoInvoiceSales'},
+                                    ],
+                                },{
+                                title:'总计',
+                                total:[
+                                    {title: '上期-增值税收入确认金额合计', dataIndex: 'allSumTotalPrice'},
+                                    {title: '上期-增值税开票金额', dataIndex: 'allSumTotalAmount'},
+                                    {title: '上期末合计金额-未开具发票销售额', dataIndex: 'allSumNoInvoiceSales'},
+
+                                    {title: '本期-增值税收入确认金额合计', dataIndex: 'allTotalPrice'},
+                                    {title: '本期-增值税开票金额', dataIndex: 'allTotalAmount'},
+                                    {title: '本期-未开具发票销售额', dataIndex: 'allNoInvoiceSales'},
+
+                                    {title: '本期末合计-增值税收入确认金额合计', dataIndex: 'allEndTotalPrice'},
+                                    {title: '本期末合计-增值税开票金额', dataIndex: 'allEndTotalAmount'},
+                                    {title: '本期末合计-未开具发票销售额', dataIndex: 'allEndNoInvoiceSales'},
+                                ],
+                            }
+                            ]
+                        } />
                     </div>,
-                    renderFooter:data=>{
+                    /*renderFooter:data=>{
                         return(
                             <div className="footer-total">
                                 <div className="footer-total-meta">
@@ -399,9 +435,14 @@ class ConfirmCarryOver extends Component{
                                 </div>
                             </div>
                         )
-                    },
+                    },*/
                     scroll:{
                         x:'200%'
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                 }}
             >

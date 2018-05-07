@@ -51,6 +51,7 @@ export default class TableTotal extends Component {
     static defaultProps={
         totalSource:[],
         type:1,
+        data:dataOne,
     }
 
     //显示合计总计
