@@ -70,7 +70,7 @@ export default class TableTotal extends Component {
                                         {
                                             item.total.map((t,i)=>{
                                                 return (
-                                                    <span key={i}>
+                                                    <span key={i} className="footer-amount">
                                                     {t.title}：<span className="amount-code">{fMoney(totalSource && totalSource[t.dataIndex])  || 0.00}</span>
                                                 </span>
                                                 )
@@ -84,10 +84,20 @@ export default class TableTotal extends Component {
                 </div>
             </div>);
     }
-
+    getBreifAmounts(dataSource){
+        let amountList = [];
+        for(let item of dataSource){
+            for(let i of item.total){
+                amountList.push(i);
+                if(amountList.length>1)break;
+            }
+            if(amountList.length>1)break;
+        }
+        return amountList;
+    }
     render() {
         const {totalSource,data,type} = this.props;
-        let dataSource = [];
+        let dataSource = [],briefData=[];
         switch(parseInt(type,0)){
             case 1:
                 dataSource = dataOne;
@@ -102,16 +112,18 @@ export default class TableTotal extends Component {
                 dataSource = dataOne;
                 return;
         }
+
+        briefData = this.getBreifAmounts(dataSource);
         return (
-            <span style={{display:'inline-block',marginLeft:15,color:'#FF9700'}}>
-            <Popover placement="topRight" content={this.popoverContent(totalSource, dataSource)} trigger="click" >
-                <Icon type="calculator" style={{ fontSize: 16, color: '#1890ff',marginRight:5 }} />
+            <span className="popover-total-container">
+            <Popover placement="topRight" content={this.popoverContent(totalSource, dataSource)} trigger="hover" >
+                <Icon type="calculator"/>
                 {
-                    dataSource.map((item,i)=>{
+                    briefData.map((t,i)=>{
                         return (
-                            <span key={i}>
-                                {item.total[0].title}：<span className="amount-code" style={{marginRight:10}}>{fMoney(totalSource && totalSource[item.total[0].dataIndex]) || 0.00}</span>
-                            </span>
+                            <span key={i} className="total-amount">
+                            {t.title}：<span className="amount-code">{fMoney(totalSource && totalSource[t.dataIndex])  || 0.00}</span>
+                        </span>
                         )
                     })
                 }
