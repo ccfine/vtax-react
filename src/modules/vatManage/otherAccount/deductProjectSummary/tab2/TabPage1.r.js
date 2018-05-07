@@ -1,14 +1,14 @@
 /**
  * Created by liurunbin on 2018/1/2.
- *@Last Modified by: xiaminghua
- *@Last Modified time: 2018-04-28 
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-07 12:25:16
  *
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const searchFields =(disabled)=> [
@@ -102,6 +102,32 @@ const columns = [{
     dataIndex: 'outputTax',
     render:text=>fMoney(text),
 }];
+// 总计数据结构，用于传递至TableTotal中
+const totalData =  [
+    {
+        title:'本页合计',
+        total:[
+            {title: '期初余额', dataIndex: 'pageInitialBalance'},
+            {title: '本期发生额', dataIndex: 'pageCurrentAmount'},
+            {title: '本期应扣除金额', dataIndex: 'pageCurrentDeductAmount'},
+            {title: '本期实际扣除金额', dataIndex: 'pageActualDeductAmount'},
+            {title: '期末余额', dataIndex: 'pageEndingBalance'},
+            {title: '销项税额', dataIndex: 'pageOutputTax'},
+            {title: '价税合计', dataIndex: 'pageTotalAmount'},
+        ],
+    },{
+        title:'总计',
+        total:[
+            {title: '期初余额', dataIndex: 'totalInitialBalance'},
+            {title: '本期发生额', dataIndex: 'totalCurrentAmount'},
+            {title: '本期应扣除金额', dataIndex: 'totalCurrentDeductAmount'},
+            {title: '本期实际扣除金额', dataIndex: 'totalActualDeductAmount'},
+            {title: '期末余额', dataIndex: 'totalEndingBalance'},
+            {title: '销项税额', dataIndex: 'totalOutputTax'},
+            {title: '价税合计', dataIndex: 'totalTotalAmount'},
+        ],
+    }
+];
 class tab1 extends Component{
     state={
         updateKey:Date.now(),
@@ -112,6 +138,7 @@ class tab1 extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -172,7 +199,7 @@ class tab1 extends Component{
         }
     }
     render(){
-        const {updateKey,searchTableLoading,dataSource,statusParam} = this.state;
+        const {updateKey,searchTableLoading,dataSource,statusParam,totalSource} = this.state;
         const {mainId,authMonth} = this.state.filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const {search} = this.props.location;
@@ -244,44 +271,16 @@ class tab1 extends Component{
                                 dataStatus={statusParam.status}
                                 searchFieldsValues={this.state.filters}
                               />
+                              <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                         </div>,
-                        renderFooter:data=>{
-                            return(
-                                <div className="footer-total">
-                                    <div className="footer-total-meta">
-                                        <div className="footer-total-meta-title">
-                                            <label>本页合计：</label>
-                                        </div>
-                                        <div className="footer-total-meta-detail">
-                                            期初余额：<span className="amount-code">{fMoney(data.pageInitialBalance)}</span>
-                                            本期发生额：<span className="amount-code">{fMoney(data.pageCurrentAmount)}</span>
-                                            本期应扣除金额：<span className="amount-code">{fMoney(data.pageCurrentDeductAmount)}</span>
-                                            本期实际扣除金额：<span className="amount-code">{fMoney(data.pageActualDeductAmount)}</span>
-                                            <br/>
-                                            期末余额：<span className="amount-code">{fMoney(data.pageEndingBalance)}</span>
-                                            销项税额：<span className="amount-code">{fMoney(data.pageOutputTax)}</span>
-                                            价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                        </div>
-                                        <div className="footer-total-meta-title">
-                                            <label>总计：</label>
-                                        </div>
-                                        <div className="footer-total-meta-detail">
-                                            期初余额：<span className="amount-code">{fMoney(data.totalInitialBalance)}</span>
-                                            本期发生额：<span className="amount-code">{fMoney(data.totalCurrentAmount)}</span>
-                                            本期应扣除金额：<span className="amount-code">{fMoney(data.totalCurrentDeductAmount)}</span>
-                                            本期实际扣除金额：<span className="amount-code">{fMoney(data.totalActualDeductAmount)}</span>
-                                            <br/>
-                                            期末余额：<span className="amount-code">{fMoney(data.totalEndingBalance)}</span>
-                                            销项税额：<span className="amount-code">{fMoney(data.totalOutputTax)}</span>
-                                            价税合计：<span className="amount-code">{fMoney(data.totalTotalAmount)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        },
                         onDataChange:(dataSource)=>{
                             this.setState({
                                 dataSource
+                            })
+                        },
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
                             })
                         },
                     }}
