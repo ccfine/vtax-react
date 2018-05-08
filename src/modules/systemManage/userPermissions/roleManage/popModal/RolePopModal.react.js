@@ -1,296 +1,199 @@
 /**
  * author       : liuliyuan
- * createTime   : 2018/4/20
+ * createTime   : 2018/1/26 18:10
  * description  :
  */
 import React,{Component} from 'react';
-import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch,Icon} from 'antd'
-import {request} from 'utils'
-const FormItem = Form.Item;
-class RoleModal extends Component{
+import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
+import {request,getFields,regRules} from 'utils'
+
+class PopModal extends Component{
+    static defaultProps={
+        type:'edit',
+        visible:true
+    }
     state={
-        editAble:true,
-        submitLoading:false,
-        showEditButton:false,
-        data:[],
-        visible:false
+        businessType:[],
+        loaded:false,
     }
-    handleCancel = (e) => {
-        this.setState({
-            visible: false,
-        });
-    }
-    handleSubmit = (e) => {
+
+    toggleLoaded = loaded => this.setState({loaded})
+
+    handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
+
             if (!err) {
-                this.setState({
-                    submitLoading:true
-                })
-                let options = [];
-                for(let key in values){
-                    if(values[key] && key !=='remark' && key !== 'roleName' && key !== 'isEnabled' && key.indexOf('allCode') === -1){
-                        options.push(key)
+                const type = this.props.modalConfig.type;
+                this.toggleLoaded(false)
+                if(type==='edit'){
+                    if(this.props.selectedRowKeys){
+                        values['id'] = this.props.selectedRowKeys;
                     }
+                    this.updateRecord(values)
+                }else if(type==='add'){
+                    this.createRecord(values)
                 }
-                let params = {
-                    options,
-                    remark:values.remark,
-                    roleName:values.roleName,
-                    isEnabled:values.isEnabled ? 1 : 0
-                }
-                if(this.props.type==='edit'){
-
-                    request.put(`/sysRole/update`,{...params, id:this.props.id,
-                    })
-                        .then(({data})=>{
-                            this.setState({
-                                submitLoading:false
-                            })
-                            if(data.code===200){
-                                if(this.mounted){
-                                    message.success('角色编辑成功!');
-                                    this.props.setData({
-                                        options,
-                                        roleName:params.roleName,
-                                        isEnabled:params.isEnabled,
-                                        remark:params.remark
-                                    });
-                                    this.setState({
-                                        visible:false
-                                    })
-                                    this.props.refresh()
-                                }
-
-                            }else{
-                                message.error(data.msg)
-                            }
-                        })
-                }else{
-                    request.post('/sysRole/add',params)
-                        .then(({data})=>{
-                            this.setState({
-                                submitLoading:false
-                            })
-                            if(data.code===200){
-                                if(this.mounted){
-                                    message.success('角色增加成功!');
-                                    this.setState({
-                                        visible:false
-                                    })
-                                    this.props.refreshTable()
-                                }
-
-                            }else{
-                                message.error(data.msg)
-                            }
-                        })
-                }
-
             }
         });
+
     }
-    fetchList(){
-        request.get('/permissions')
+    updateRecord = data =>{
+        request.put('/sysRole/update',data)
             .then(({data})=>{
+                this.toggleLoaded(true)
                 if(data.code===200){
-                    this.mounted && this.setState({
-                        data: data.data
-                    })
+                    const props = this.props;
+                    message.success('更新成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
                 }else{
-                    message.error(data.msg)
+                    message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
+
+    createRecord = data =>{
+        request.post('/sysRole/add',data)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    const props = this.props;
+                    message.success('新增成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
+                }else{
+                    message.error(`新增失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
+
+
     componentDidMount(){
-         this.fetchList()
-    }
-    onCheckAllChange = item => e => {
-        const {setFieldsValue} = this.props.form;
 
-        let newItems = [...item.permissionVOs]
-        if (e.target.checked) {
-            newItems.forEach(item => {
-                setFieldsValue({
-                    [item.permissionId]:true
-                })
-                return item;
-            })
-        } else {
-            newItems.forEach(item => {
-                setFieldsValue({
-                    [item.permissionId]:false
-                })
-                return item;
-            })
-        }
     }
-    checkAllChecked= (allCode, code) => e =>{
-        const data = this.state.data;
-        const {setFieldsValue,getFieldValue} = this.props.form;
-        setFieldsValue({
-            [code]:e.target.checked
-        })
-        for(let i = 0 ;i<data.length;i++){
-            if(`allCode${i}` === allCode){
-                let arr = [];
-                data[i].permissionVOs.forEach(item=>{
-                    arr.push( getFieldValue(item.permissionId) )
-                })
-                setFieldsValue({
-                    [allCode]: arr.filter(item=>!item).length === 0
-                })
-                break;
-            }
-        }
-    }
-    initCheckboxAll = (data) =>{
-        let arr = [];
-        for(let i = 0 ;i<data.length;i++){
-            if(this.props.data.options.indexOf(Number(data[i].permissionId)) !== -1){
-                arr.push(data.permissionId)
-            }
-        }
-        return data.length === arr.length
-    }
-
-    mounted=true;
+    mounted=true
     componentWillUnmount(){
         this.mounted=null
     }
+    componentWillReceiveProps(nextProps){
+
+        if(!nextProps.visible){
+            /**
+             * 关闭的时候清空表单
+             * */
+            nextProps.form.resetFields();
+            this.setState({
+                initData:{}
+            })
+        }
+        if(nextProps.modalConfig.type === 'add'){
+            this.setState({
+                loaded:true
+            })
+        }
+        if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
+            nextProps.selectedRows && this.setState({
+                loaded:true
+            })
+        }
+    }
     render(){
-        const { getFieldDecorator,resetFields} = this.props.form;
-        const {data} = this.state;
+        const {toggleModalVisible,modalConfig,visible,selectedRows,form} = this.props;
+        const {loaded} = this.state;
+
+        let title='';
+        const type = modalConfig.type;
+        switch (type){
+            case 'add':
+                title = '新增';
+                break;
+            case 'edit':
+                title = '编辑';
+                break;
+            default :
+            //no default
+        }
+
+        const formItemStyle={
+            labelCol:{
+                span:4
+            },
+            wrapperCol:{
+                span:20
+            }
+        }
         return(
-            <div style={{display:'inline-block',marginLeft:15}}>
-                <Button size='small'onClick={()=>{
-                    resetFields();
-                    this.setState({
-                        visible:true
-                    })
-                }}><Icon type={this.props.type==='add'?'plus':'edit'}/>{this.props.buttonTxt}</Button>
-                <Modal title={this.props.title} onCancel={this.handleCancel} width={800} visible={this.state.visible} confirmLoading={this.state.submitLoading} onOk={this.handleSubmit}>
-                    <Form layout="inline" onSubmit={this.handleSubmit}>
+            <Modal
+                maskClosable={false}
+                destroyOnClose={true}
+                onCancel={()=>toggleModalVisible(false)}
+                width={600}
+                style={{
+                    maxWidth:'90%'
+                }}
+                visible={visible}
+                footer={
+                    <Row>
+                        <Col span={12}></Col>
+                        <Col span={12}>
+                            <Button onClick={()=>toggleModalVisible(false)}>取消</Button>
+                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
+                        </Col>
+                    </Row>
+                }
+                title={title}>
+                <Spin spinning={!loaded}>
+                    <Form style={{height:'200px'}}>
                         <Row>
-                            <Col span={8}>
-                                <FormItem>
+                            {
+                                getFields(form,[
                                     {
-                                        getFieldDecorator('roleName',{
-                                            initialValue:this.props.type==='edit'? this.props.data.roleName : '',
+                                        label:'角色名称',
+                                        fieldName:'roleName',
+                                        type:'input',
+                                        span:24,
+                                        formItemStyle,
+                                        fieldDecoratorOptions:{
+                                            initialValue:selectedRows && selectedRows.roleName,
                                             rules:[
+                                                regRules.trim,
                                                 {
                                                     required:true,
                                                     message:'请输入角色名称'
-                                                },{
-                                                    pattern:/^[^ ]+$/,message:'不能包含空格'
                                                 }
                                             ]
-                                        })(
-                                            <Input placeholder="请输入角色名称" />
-                                        )
+                                        },
+                                    }, {
+                                        label:'备注',
+                                        fieldName:'remark',
+                                        type:'textArea',
+                                        span:24,
+                                        formItemStyle,
+                                        fieldDecoratorOptions:{
+                                            initialValue:selectedRows && selectedRows.remark,
+                                        },
+                                        componentProps:{
+                                            autosize:{
+                                                minRows:5
+                                            }
+                                        }
                                     }
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-                        <div style={{
-                            width:'100%',
-                            // backgroundColor:'#F8F8F8',
-                            padding:'20px 0',
-                            margin:'20px 0'
-                        }}>
-                            {
-                                data.map((item,i)=>{
-                                    return (
-                                        <Row key={i}>
-                                            <Col style={{
-                                                textAlign:'right',
-                                                lineHeight:'32px',
-                                                paddingRight:15
-                                            }} span={3}>
-                                                {item.moduleName}:
-                                            </Col>
-                                            <Col span={21}>
-                                                <FormItem>
-                                                    {
-                                                        getFieldDecorator(`allCode${i}`,{
-                                                            initialValue:this.props.type==='edit' && this.props.data.options && this.initCheckboxAll(item.permissionVOs),
-                                                            valuePropName: 'checked',
-                                                            onChange:this.onCheckAllChange(item)
-                                                        })(
-                                                            <Checkbox>全选</Checkbox>
-                                                        )
-                                                    }
-
-                                                </FormItem>
-                                                {
-                                                    item.permissionVOs.map((fieldItem,j)=>{
-                                                        return(
-                                                            <FormItem key={j}>
-                                                                {
-                                                                    getFieldDecorator(fieldItem.permissionId,{
-                                                                        initialValue:this.props.type==='edit' && this.props.data.options && this.props.data.options.indexOf(Number(fieldItem.permissionId)) !== -1,
-                                                                        valuePropName: 'checked',
-                                                                        onChange:this.checkAllChecked(`allCode${i}`, fieldItem.permissionId)
-                                                                    })(
-                                                                        <Checkbox disabled={!this.state.editAble}>{fieldItem.actionName}</Checkbox>
-                                                                    )
-                                                                }
-                                                            </FormItem>
-                                                        )
-                                                    })
-                                                }
-                                            </Col>
-                                        </Row>
-                                    )
-                                })
+                                ])
                             }
-                            <Row>
-                            <span style={{
-                                display:'inline-block',
-                                width:100,
-                                lineHeight:'32px',
-                                textAlign:'right',
-                                paddingRight:15
-                            }}>状态:</span>
-                                {
-                                    getFieldDecorator('isEnabled', {
-                                        initialValue:this.props.type==='edit'? parseInt(this.props.data.isEnabled,0)===1 : true,
-                                        valuePropName: 'checked' ,
-                                    })(
-                                        <Switch checkedChildren="启用" unCheckedChildren="禁用" />
-                                    )}
-                            </Row>
-                            <Row style={{marginTop:10}}>
-                            <span style={{
-                                display:'inline-block',
-                                width:100,
-                                lineHeight:'32px',
-                                textAlign:'right',
-                                paddingRight:15
-                            }}>备注:</span>
-                                <FormItem>
-                                    {
-                                        getFieldDecorator('remark', {
-                                            initialValue:this.props.type==='edit' && this.props.data.remark ,
-                                        })(
-                                            <Input.TextArea style={{width:500}} autosize={
-                                                {
-                                                    minRows:3
-                                                }
-                                            } placeholder="请输入备注" />
-                                        )}
-                                </FormItem>
-
-                            </Row>
-
-                        </div>
+                        </Row>
                     </Form>
-                </Modal>
-            </div>
+                </Spin>
 
+            </Modal>
         )
     }
 }
 
-export default  Form.create()(RoleModal)
+export default Form.create()(PopModal)

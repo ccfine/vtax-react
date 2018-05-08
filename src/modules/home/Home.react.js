@@ -7,13 +7,12 @@ import React, { Component } from 'react'
 import LoadAble from 'react-loadable'
 import {LoadingPage} from 'compoments'
 import { Layout, Card, Col, Row,Menu,Icon,Dropdown } from 'antd'
-import ImageGallery from 'react-image-gallery';
+/*import ImageGallery from 'react-image-gallery';*/
 import { pieOption, barOption, lineOption, scatterOption, mapOption, radarOption, candlestickOption } from './optionConfig/options'
 
 import banner1 from './images/banner1.jpg'
 import banner2 from './images/banner2.jpg'
 import "react-image-gallery/styles/css/image-gallery.css";
-
 
 
 const AsyncPieReact = LoadAble({
@@ -44,15 +43,10 @@ const AsyncCandlestickReact = LoadAble({
     loader: () => import('./echartsTest/CandlestickReact'), //k线图组件
     loading: LoadingPage,
 });
-
-const banner = [{
-    key:'1',
-    original: banner1,
-},{
-    key:'2',
-    original: banner2,
-}]
-
+const AsyncImageGallery = LoadAble({
+    loader: () => import('react-image-gallery'), //k线图组件
+    loading: LoadingPage,
+});
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -110,7 +104,14 @@ class Home extends Component {
                         subUrl:'',
                     }]
                 }
-            ]
+            ],
+            banner : [{
+                key:'1',
+                original: banner1,
+            },{
+                key:'2',
+                original: banner2,
+            }]
         }
     }
 
@@ -128,25 +129,25 @@ class Home extends Component {
                 </Menu.Item>
             </Menu>
         );
+
         return (
             <Layout style={{background:'transparent'}} >
-                <ImageGallery
-                    infinite={true}
-                    autoPlay={true}
-                    showBullets={true}
-                    slideInterval={3000}
-                    slideDuration={500}
-                    lazyLoad={false}
-                    showNav={false}
-                    thumbnailPosition='bottom'
-                    showFullscreenButton={false}
-                    useBrowserFullscreen={false}
-                    showPlayButton={false}
-                    useTranslate3D={false}
-                    showThumbnails={false}
-                    items={banner}
-                />
-
+                 <AsyncImageGallery
+                        infinite={true}
+                        autoPlay={true}
+                        showBullets={true}
+                        slideInterval={3000}
+                        slideDuration={500}
+                        lazyLoad={false}
+                        showNav={false}
+                        thumbnailPosition='bottom'
+                        showFullscreenButton={false}
+                        useBrowserFullscreen={false}
+                        showPlayButton={false}
+                        useTranslate3D={false}
+                        showThumbnails={false}
+                        items={this.state.banner}
+                    />
                 <div style={{ padding: '24px'}}>
                     <Row gutter={16} style={{marginBottom:20}}>
                         <Col span={8}>
