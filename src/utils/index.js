@@ -17,7 +17,12 @@ const fMoney = (s,n=2)=>{
     n = n > 0 && n <= 20 ? n : 2;
     /**添加一下代码 大数字用parseFloat不精确 */
     s = s.toString().replace(/[^\d\\.-]/g, "");
-    return (new BigNumber(s)).toFormat(n);
+    try{
+        return (new BigNumber(s)).toFormat(n);
+    }catch(e){
+        console.warn('fMoney error：',e)
+        return '';
+    }
 
     // s = parseFloat((s + "").replace(/[^\d\\.-]/g, "")).toFixed(n) + "";
     // /**过滤负号 .replace(/-/g,'') 解决负数转换 2018/3/19*/
