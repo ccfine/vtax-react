@@ -4,8 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Card,message,Form,Button,Icon,Modal,Row,Col} from 'antd'
-import RolePopModal from '../popModal'
+import {Card,message,Form,Button,Icon,Modal,Row,Col,Transfer} from 'antd'
 import {getFields,request} from 'utils'
 
 class RoleManagementDetail extends Component{
@@ -21,6 +20,9 @@ class RoleManagementDetail extends Component{
         remark:props.location.state.remark,
         isEnabled:props.location.state.isEnabled,
         modalKey:Date.now(),
+
+        mockData: [],
+        targetKeys: [],
         }
     }
 
@@ -49,8 +51,22 @@ class RoleManagementDetail extends Component{
           }
       });
     }
-    setData(data){
-        this.setState(data)
+    getMock = () => {
+        const targetKeys = [];
+        const mockData = [];
+        for (let i = 0; i < 20; i++) {
+            const data = {
+                key: i.toString(),
+                title: `content${i + 1}`,
+                description: `description of content${i + 1}`,
+                chosen: Math.random() * 2 > 1,
+            };
+            if (data.chosen) {
+                targetKeys.push(data.key);
+            }
+            mockData.push(data);
+        }
+        this.setState({ mockData, targetKeys });
     }
     fetch(){
         request.get('/permissions')
@@ -96,6 +112,9 @@ class RoleManagementDetail extends Component{
                             message.error(data.msg);
                         }
                     })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -122,15 +141,15 @@ class RoleManagementDetail extends Component{
     }
     componentDidMount(){
         this.fetch()
+        this.getMock();
     }
 
     render(){
-      const { data,permissions,modalKey,roleName,isEnabled,remark } = this.state;
+      const { data,permissions,roleName,isEnabled,remark } = this.state;
       const id = this.props.match.params.id;
       const options = data.options;
         return (
           <div>
-              <h2 style={{marginBottom:15}}>{roleName}</h2>
               <Card extra={
                   <div style={{textAlign:'right'}}>
                       <Button
@@ -141,19 +160,6 @@ class RoleManagementDetail extends Component{
                        <Icon type="delete" />
                        删除
                      </Button>
-                      <RolePopModal data={{roleName,isEnabled,remark,options}}
-                                 key={modalKey}
-                                 setData={this.setData.bind(this)}
-                                 refresh={
-                                     ()=>{
-                                         this.fetch();
-                                         this.setState({
-                                             modalKey:Date.now()
-                                         })
-                                     }
-                                 }
-                                 type="edit" id={id} buttonTxt="编辑"
-                                 title="编辑角色" />
                   </div>
                 }
               title="角色信息">
@@ -163,6 +169,19 @@ class RoleManagementDetail extends Component{
                           padding:'20px 0',
                       }}
                       onSubmit={this.handleSubmit}>
+                      <Row style={{marginTop:10}}>
+                          <Col span={3} style={{textAlign:'right'}}>
+                          <span style={{
+                              display:'inline-block',
+                              width:100,
+                              textAlign:'right',
+                              paddingRight:15,
+                          }}>角色名称:</span>
+                          </Col>
+                          <Col span={21}>
+                              {roleName}
+                          </Col>
+                      </Row>
                       {
                           permissions && permissions.map((item,i)=>{
                               return (
@@ -199,6 +218,28 @@ class RoleManagementDetail extends Component{
                               )
                           })
                       }
+                      <Row style={{marginTop:10}}>
+                          <Col span={3} style={{textAlign:'right'}}>
+                              <span style={{
+                                  display:'inline-block',
+                                  width:100,
+                                  textAlign:'right',
+                                  paddingRight:15
+                              }}>用户:</span>
+                          </Col>
+                          <Col span={21}>
+                              <Transfer
+                                  listStyle={{
+                                      width: 280,
+                                      height: 400,
+                                  }}
+                                  dataSource={this.state.mockData}
+                                  targetKeys={this.state.targetKeys}
+                                  onChange={this.handleChange}
+                                  render={item => item.title}
+                              />
+                          </Col>
+                      </Row>
                       <Row style={{marginTop:10}}>
                           <Col span={3} style={{textAlign:'right'}}>
                           <span style={{

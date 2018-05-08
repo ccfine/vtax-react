@@ -9,7 +9,7 @@ import {Layout} from 'antd'
 import Web from './modules/Web.r'
 import Login from './modules/login'
 import {RouteWithSubRoutes} from 'compoments'
-const NoMatch = () => <div>no match</div>
+/*const NoMatch = () => <div>no match</div>*/
 
 
 const routes = [
@@ -19,12 +19,19 @@ const routes = [
         name:'主页',
     },{
         path:'/login',
-        component:Login,
+        component:props=><Login {...props} type={1}/>,
         name:'登录'
     },{
+        path:'/loginA',
+        component:props=><Login {...props} type={2}/>,
+        name:'url登录'
+    },{
         path:'*',
-        component:NoMatch
-
+        redirect:true,
+        to:'/web'
+    /*},{
+        path:'*',
+        component:NoMatch*/
     }
 ]
 
