@@ -2,15 +2,35 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-16 18:22:41
+ * @Last Modified time: 2018-05-08 17:56:52
  */
 import React, { Component } from "react";
-import {Link} from 'react-router-dom';
-import { Button, Icon } from "antd";
+import { Link } from "react-router-dom";
+import { Button, Icon, Divider, Tooltip, Modal, message } from "antd";
+import { request } from "utils";
 import { SearchTable } from "compoments";
-import PopModal from "./popModal";
+import PopModal, { RoleModal } from "./popModal";
 import { connect } from "react-redux";
 const searchFields = [
+    {
+        label: "组织",
+        fieldName: "orgId",
+        type: "asyncSelect",
+        span: 8,
+        componentProps: {
+            fieldTextName: "orgName",
+            fieldValueName: "orgId",
+            url: `/org/user_belong_organizations`
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择组织"
+                }
+            ]
+        }
+    },
     {
         label: "用户名",
         type: "input",
@@ -24,35 +44,111 @@ const searchFields = [
         fieldName: "realname"
     }
 ];
-const columns = [
+const getColumns = context => [
     {
         title: "操作",
-        dataIndex:'action',
-        className:'text-center',
-        render:(text,record)=> <Link to={{
-            pathname:`/web/systemManage/userPermissions/userManage/${record.username}`
-        }}>详情</Link>
-    }, {
+        dataIndex: "action",
+        className: "text-center",
+        render: (text, record) => {
+            return (
+                <span className="table-operate">
+                    <Link
+                        to={{
+                            pathname: `/web/systemManage/userPermissions/userManage/${
+                                record.username
+                            }`
+                        }}
+                    >
+                        <Tooltip placement="top" title="详情">
+                            <Icon type="search" />
+                        </Tooltip>
+                    </Link>
+                    <a
+                        onClick={() => {
+                            context
+                                .fetchUser(`/sysUser/find/${record.id}`)
+                                .then(data => {
+                                    data &&
+                                        context.setState({
+                                            createUserVisible: true,
+                                            createModalType: "edit",
+                                            createUserDefault: data,
+                                            createUserKey: Date.now()
+                                        });
+                                });
+                        }}
+                    >
+                        <Tooltip placement="top" title="编辑">
+                            <Icon type="edit" />
+                        </Tooltip>
+                    </a>
+                    <a
+                        onClick={() => {
+                            context.handleDelete(record.id);
+                        }}
+                    >
+                        <Tooltip placement="top" title="删除">
+                            <Icon type="delete" />
+                        </Tooltip>
+                    </a>
+                    <Divider type="vertical" />
+                    <a
+                        onClick={() => {
+                            context
+                                .fetchUser(
+                                    `/sysRole/queryRoleByUserId/${
+                                        context.state.searchValues["orgId"]
+                                    }/${record.id}`
+                                )
+                                .then(data => {
+                                    data &&
+                                        context.setState({
+                                            roleModalKey: Date.now(),
+                                            roleModalVisible: true,
+                                            roleModalDefault: data
+                                        });
+                                });
+                        }}
+                    >
+                        <Tooltip placement="top" title="角色分配">
+                            <Icon type="team" />
+                        </Tooltip>
+                    </a>
+                    <a>
+                        <Tooltip placement="top" title="权限配置">
+                            <Icon type="setting" />
+                        </Tooltip>
+                    </a>
+                </span>
+            );
+        },
+        width: 150
+    },
+    {
         title: "用户名",
         dataIndex: "username"
-    }, {
+    },
+    {
         title: "姓名",
         dataIndex: "realname"
-    }, {
+    },
+    {
         title: "手机",
         dataIndex: "phoneNumber"
-    }, {
+    },
+    {
         title: "邮箱",
         dataIndex: "email"
-        /* }, {
+    },
+    {
         title: "角色",
-       render: (text, record) => (
+        dataIndex: "roleNames"
+        /*render: (text, record) => (
             <div>
                 {record.roles.map((item, i) => (
                     <span key={i} style={{ color: "#108ee9" }}>
-            {item.roleName}
-                        、
-          </span>
+                        {item.roleName}
+                    </span>
                 ))}
             </div>
         )*/
@@ -60,82 +156,151 @@ const columns = [
     {
         title: "状态",
         dataIndex: "isEnabled",
-        render:text=>{
+        render: text => {
             //1:启用;2:停用;3:删除; ,
-            let t = '';
-            switch (parseInt(text,0)){
+            let t = "";
+            switch (parseInt(text, 0)) {
                 case 1:
-                    t=<span style={{color: '#008000'}}>启用</span>;
+                    t = <span style={{ color: "#008000" }}>启用</span>;
                     break;
                 case 2:
-                    t=<span style={{color: "#FF0000"}}>停用</span>;
+                    t = <span style={{ color: "#FF0000" }}>停用</span>;
                     break;
                 case 3:
-                    t=<span style={{color: "#f5222d"}}>删除</span>;
+                    t = <span style={{ color: "#f5222d" }}>删除</span>;
                     break;
                 default:
                 //no default
             }
-            return t
-        },
+            return t;
+        }
     }
 ];
 
 class UserManage extends Component {
     state = {
         updateKey: Date.now(),
-        createUserKey:Date.now(),
+        createUserKey: Date.now(),
         createUserVisible: false,
-        action: "",
+        createModalType: "create",
+        createUserDefault: undefined,
+        roleModalVisible: false,
+        roleModalKey: Date.now(),
+        roleModalDefault: undefined,
+        searchValues: undefined
     };
-
+    async fetchUser(url) {
+        return await request
+            .get(url)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    return Promise.resolve(data.data);
+                } else {
+                    message.error(data.msg, 4);
+                }
+            })
+            .catch(err => {
+                message.error(err, 4);
+            });
+    }
     hideModal = () => {
         this.setState({ createUserVisible: false });
     };
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-
+    handleDelete = id => {
+        const modalRef = Modal.confirm({
+            title: "友情提醒",
+            content: "该删除后将不可恢复，是否删除？",
+            okText: "确定",
+            okType: "danger",
+            cancelText: "取消",
+            onOk: () => {
+                request
+                    .delete(`/sysUser/delete/${id}`)
+                    .then(({ data }) => {
+                        if (data.code === 200) {
+                            message.success("删除成功!");
+                            this.refreshTable();
+                        } else {
+                            message.error(data.msg, 4);
+                        }
+                    })
+                    .catch(e => {
+                        message.error(e, 4);
+                    });
+            },
+            onCancel() {
+                modalRef.destroy();
+            }
+        });
+    };
     render() {
         return (
             <SearchTable
                 searchOption={{
-                    fields:searchFields
+                    fields: searchFields
                 }}
-                doNotFetchDidMount={false}
+                doNotFetchDidMount={true}
+                backCondition={values => {
+                    console.log("values：", values);
+                    this.setState({
+                        searchValues: values
+                    });
+                }}
                 tableOption={{
                     key: this.state.updateKey,
                     pageSize: 10,
-                    columns: columns,
-                    url: '/sysUser/list',
+                    columns: getColumns(this),
+                    url: "/sysUser/list",
                     cardProps: {
                         title: "用户列表",
-                        extra: <div>
-                            <Button size="small" style={{marginRight: 5}} onClick={() => {
-                                this.setState({
-                                    createUserVisible: true,
-                                    action: "add",
-                                });
-                            }}>
-                                <Icon type="plus"/>新增
-                            </Button>
-                        </div>,
+                        extra: (
+                            <div>
+                                <Button
+                                    size="small"
+                                    style={{ marginRight: 5 }}
+                                    onClick={() => {
+                                        this.setState({
+                                            createUserVisible: true,
+                                            createModalType: "create",
+                                            createUserDefault: undefined
+                                        });
+                                    }}
+                                >
+                                    <Icon type="plus" />新增
+                                </Button>
+                            </div>
+                        )
                     }
                 }}
             >
-
                 <PopModal
-                    key={this.state.createUserKey}
-                    toggleModalVisible={ visible =>{
+                    defaultFields={this.state.createUserDefault}
+                    toggleModalVisible={visible => {
                         this.setState({
-                            createUserVisible:visible,
-                            createUserKey:Date.now()
-                        })
+                            createUserVisible: visible,
+                            createUserKey: Date.now()
+                        });
+                    }}
+                    modalType={this.state.createModalType}
+                    refreshTable={this.refreshTable}
+                    visible={this.state.createUserVisible}
+                />
+                <RoleModal
+                    defaultFields={this.state.roleModalDefault}
+                    toggleModalVisible={visible => {
+                        this.setState({
+                            roleModalVisible: visible,
+                            roleModalKey: Date.now()
+                        });
                     }}
                     refreshTable={this.refreshTable}
-                    visible={this.state.createUserVisible} />
+                    visible={this.state.roleModalVisible}
+                />
             </SearchTable>
-        )
+        );
     }
 }
 

@@ -131,12 +131,14 @@ export default class AsyncSelect extends Component{
         const {getFieldDecorator} = this.props.form;
         const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll} = this.props;
         //TODO:为了设置所有不是必填的select都加上一个全部默认选项
+        const isShowAll = decoratorOptions && decoratorOptions.rules && decoratorOptions.rules.map(item=>item.required)[0] === true;
         const newData =  dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
+        const optionItem = isShowAll ? dataSource :  newData;
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
                     {getFieldDecorator(fieldName,{
-                        initialValue,
+                        initialValue: initialValue || (isShowAll ? undefined : ''),
                         ...decoratorOptions
                     })(
                         <Select
@@ -146,7 +148,7 @@ export default class AsyncSelect extends Component{
                             {...selectOptions}
                         >
                             {
-                                newData.map((item,i)=>(
+                                optionItem.map((item,i)=>(
                                     <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
                                 ))
                             }

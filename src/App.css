@@ -252,3 +252,9 @@ table.data-grid{
   height: 30px;
   line-height: 30px;
 }
+
+/* Table中操作变成图标 */
+.table-operate .anticon{
+  margin:0 3px;
+  font-size: 12px;
+}
