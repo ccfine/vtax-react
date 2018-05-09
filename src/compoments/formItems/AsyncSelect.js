@@ -94,6 +94,8 @@ export default class AsyncSelect extends Component{
                         dataSource:this.props.transformData(result)
                     })
                 }
+            }).catch(err=>{
+                console.error('记载数据异常')
             });
     }
     mounted = true

@@ -2,16 +2,16 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-08 17:56:52
+ * @Last Modified time: 2018-05-09 20:29:24
  */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, Icon, Divider, Tooltip, Modal, message } from "antd";
+import { Button, Icon, Divider, Tooltip, Modal, message, Switch } from "antd";
 import { request } from "utils";
 import { SearchTable } from "compoments";
-import PopModal, { RoleModal } from "./popModal";
+import PopModal, { RoleModal, PermissionModal } from "./popModal";
 import { connect } from "react-redux";
-const searchFields = [
+const getSearchFields = context => [
     {
         label: "组织",
         fieldName: "orgId",
@@ -23,6 +23,7 @@ const searchFields = [
             url: `/org/user_belong_organizations`
         },
         fieldDecoratorOptions: {
+            initialValue: context.props.orgId || undefined,
             rules: [
                 {
                     required: true,
@@ -55,8 +56,8 @@ const getColumns = context => [
                     <Link
                         to={{
                             pathname: `/web/systemManage/userPermissions/userManage/${
-                                record.username
-                            }`
+                                context.props.orgId
+                            }|${record.id}`
                         }}
                     >
                         <Tooltip placement="top" title="详情">
@@ -103,6 +104,7 @@ const getColumns = context => [
                                 .then(data => {
                                     data &&
                                         context.setState({
+                                            roleAssignUserId: record.id,
                                             roleModalKey: Date.now(),
                                             roleModalVisible: true,
                                             roleModalDefault: data
@@ -114,7 +116,25 @@ const getColumns = context => [
                             <Icon type="team" />
                         </Tooltip>
                     </a>
-                    <a>
+                    <a
+                        onClick={() => {
+                            context
+                                .fetchUser(
+                                    `/sysUser/queryUserPermissions/${
+                                        context.state.searchValues["orgId"]
+                                    }/${record.id}`
+                                )
+                                .then(data => {
+                                    data &&
+                                        context.setState({
+                                            permissionKey: Date.now(),
+                                            permissionVisible: true,
+                                            permissionDefault: data,
+                                            permissionUserId: record.id
+                                        });
+                                });
+                        }}
+                    >
                         <Tooltip placement="top" title="权限配置">
                             <Icon type="setting" />
                         </Tooltip>
@@ -156,23 +176,63 @@ const getColumns = context => [
     {
         title: "状态",
         dataIndex: "isEnabled",
-        render: text => {
+        className: "text-center",
+        render: (text, record) => {
+            return (
+                <Switch
+                    checkedChildren="启"
+                    unCheckedChildren="停"
+                    size="small"
+                    onChange={checked => {
+                        const t = checked === true ? "启用" : "禁用";
+                        const modalRef = Modal.confirm({
+                            title: "友情提醒",
+                            content: `是否${t}？`,
+                            okText: "确定",
+                            okType: "danger",
+                            cancelText: "取消",
+                            onOk: () => {
+                                modalRef && modalRef.destroy();
+                                request
+                                    .put(
+                                        `/sysUser/enableOrDisable/${record.id}`
+                                    )
+                                    .then(({ data }) => {
+                                        if (data.code === 200) {
+                                            message.success("操作成功");
+                                            context.refreshTable();
+                                        } else {
+                                            message.error(data.msg, 4);
+                                        }
+                                    })
+                                    .catch(err => {
+                                        message.error(err, 4);
+                                    });
+                            },
+                            onCancel() {
+                                modalRef.destroy();
+                            }
+                        });
+                    }}
+                    checked={parseInt(text, 0) === 1 ? true : false}
+                />
+            );
             //1:启用;2:停用;3:删除; ,
-            let t = "";
-            switch (parseInt(text, 0)) {
-                case 1:
-                    t = <span style={{ color: "#008000" }}>启用</span>;
-                    break;
-                case 2:
-                    t = <span style={{ color: "#FF0000" }}>停用</span>;
-                    break;
-                case 3:
-                    t = <span style={{ color: "#f5222d" }}>删除</span>;
-                    break;
-                default:
-                //no default
-            }
-            return t;
+            // let t = "";
+            // switch (parseInt(text, 0)) {
+            //     case 1:
+            //         t = <span style={{ color: "#008000" }}>启用</span>;
+            //         break;
+            //     case 2:
+            //         t = <span style={{ color: "#FF0000" }}>停用</span>;
+            //         break;
+            //     case 3:
+            //         t = <span style={{ color: "#f5222d" }}>删除</span>;
+            //         break;
+            //     default:
+            //no default
+            // }
+            // return t;
         }
     }
 ];
@@ -180,13 +240,22 @@ const getColumns = context => [
 class UserManage extends Component {
     state = {
         updateKey: Date.now(),
-        createUserKey: Date.now(),
+
+        createUserKey: Date.now() + 1,
         createUserVisible: false,
         createModalType: "create",
         createUserDefault: undefined,
+
         roleModalVisible: false,
-        roleModalKey: Date.now(),
+        roleModalKey: Date.now() + 2,
         roleModalDefault: undefined,
+        roleAssignUserId: undefined,
+
+        permissionVisible: false,
+        permissionKey: Date.now() + 3,
+        permissionDefault: undefined,
+        permissionId: undefined,
+
         searchValues: undefined
     };
     async fetchUser(url) {
@@ -240,11 +309,10 @@ class UserManage extends Component {
         return (
             <SearchTable
                 searchOption={{
-                    fields: searchFields
+                    fields: getSearchFields(this)
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={false}
                 backCondition={values => {
-                    console.log("values：", values);
                     this.setState({
                         searchValues: values
                     });
@@ -289,6 +357,11 @@ class UserManage extends Component {
                     visible={this.state.createUserVisible}
                 />
                 <RoleModal
+                    userId={this.state.roleAssignUserId}
+                    orgId={
+                        this.state.searchValues &&
+                        this.state.searchValues["orgId"]
+                    }
                     defaultFields={this.state.roleModalDefault}
                     toggleModalVisible={visible => {
                         this.setState({
@@ -298,6 +371,23 @@ class UserManage extends Component {
                     }}
                     refreshTable={this.refreshTable}
                     visible={this.state.roleModalVisible}
+                    key={this.state.roleModalKey}
+                />
+                <PermissionModal
+                    userId={this.state.permissionUserId}
+                    orgId={
+                        this.state.searchValues &&
+                        this.state.searchValues["orgId"]
+                    }
+                    defaultFields={this.state.permissionDefault}
+                    toggleModalVisible={visible => {
+                        this.setState({
+                            permissionVisible: visible,
+                            permissionKey: Date.now()
+                        });
+                    }}
+                    visible={this.state.permissionVisible}
+                    editAble={true}
                 />
             </SearchTable>
         );
