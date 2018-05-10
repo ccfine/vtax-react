@@ -58,7 +58,7 @@ class PopModal extends Component {
                         toggleModalVisible
                     } = this.props;
                     request
-                        .put(`/sysUser/assign`, { ...defaultFields, ...values })
+                        .put(`/sysUser/update`, { ...defaultFields, ...values })
                         .then(({ data }) => {
                             this.setState({
                                 submitLoading: false

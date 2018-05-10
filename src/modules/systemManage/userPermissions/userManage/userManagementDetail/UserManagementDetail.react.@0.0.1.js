@@ -10,7 +10,9 @@ class UserManagementDetail extends Component {
     state = {
         userInfo: {},
         checkedPermission: [],
-        loaded: false
+        loaded: false,
+        permissionLoading: true,
+        allPermission: []
     };
 
     mounted = true;
@@ -18,14 +20,36 @@ class UserManagementDetail extends Component {
         this.mounted = null;
     }
     getParams() {
-        return this.props.match.params.user.split("|");
+        return this.props.match.params.user.split("-");
     }
     componentDidMount() {
         const [orgId, userId] = this.getParams();
+        this.fetchAllPermission();
         this.fetchUserInfo(userId);
         this.fetchPermission(orgId, userId);
     }
+    fetchAllPermission() {
+        this.setState({ permissionLoading: true });
+        request
+            .get("/permissions")
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    this.setState({
+                        allPermission: data.data,
+                        permissionLoading: false
+                    });
+                } else {
+                    message.error(data.msg, 4);
+                    this.setState({ permissionLoading: false });
+                }
+            })
+            .catch(err => {
+                message.error(err, 4);
+                this.setState({ permissionLoading: false });
+            });
+    }
     fetchPermission(orgid, userid) {
+        this.setState({ permissionLoading: true });
         request
             .get(`/sysUser/queryUserPermissions/${orgid}/${userid}`)
             .then(({ data }) => {
@@ -33,16 +57,19 @@ class UserManagementDetail extends Component {
                     const permissions = data.data;
                     this.mounted &&
                         this.setState({
+                            permissionLoading: false,
                             checkedPermission: [
                                 ...permissions.userPermissions,
                                 ...permissions.rolePermissions
                             ]
                         });
                 } else {
+                    this.setState({ permissionLoading: false });
                     message.error(data.msg);
                 }
             })
             .catch(err => {
+                this.setState({ permissionLoading: false });
                 message.error(err);
             });
     }
@@ -69,7 +96,12 @@ class UserManagementDetail extends Component {
             });
     }
     render() {
-        const { userInfo, checkedPermission } = this.state,
+        const {
+                userInfo,
+                checkedPermission,
+                allPermission,
+                permissionLoading
+            } = this.state,
             [orgId] = this.getParams();
 
         return (
@@ -80,9 +112,10 @@ class UserManagementDetail extends Component {
                 {userInfo.id ? (
                     <UserDetail
                         orgId={orgId}
-                        fetchUserInfo={this.fetchUserInfo.bind(this)}
                         userInfo={userInfo}
                         checkedPermission={checkedPermission}
+                        allPermission={allPermission}
+                        permissionLoading={permissionLoading}
                     />
                 ) : null}
             </div>
