@@ -13,7 +13,7 @@ class PopModal extends Component{
         visible:true
     }
     state={
-        businessType:[],
+        initData:{},
         loaded:false,
     }
 
@@ -27,8 +27,8 @@ class PopModal extends Component{
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
                 if(type==='edit'){
-                    if(this.props.selectedRowKeys){
-                        values['id'] = this.props.selectedRowKeys;
+                    if(this.props.id){
+                        values['id'] = this.props.id;
                     }
                     this.updateRecord(values)
                 }else if(type==='add'){
@@ -82,6 +82,7 @@ class PopModal extends Component{
     componentWillUnmount(){
         this.mounted=null
     }
+
     componentWillReceiveProps(nextProps){
 
         if(!nextProps.visible){
@@ -99,14 +100,15 @@ class PopModal extends Component{
             })
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
-            nextProps.selectedRows && this.setState({
-                loaded:true
+            this.setState({
+                loaded:true,
+                initData:nextProps.modalConfig.record
             })
         }
     }
     render(){
-        const {toggleModalVisible,modalConfig,visible,selectedRows,form} = this.props;
-        const {loaded} = this.state;
+        const {toggleModalVisible,modalConfig,visible,form} = this.props;
+        const {loaded,initData} = this.state;
 
         let title='';
         const type = modalConfig.type;
@@ -161,7 +163,7 @@ class PopModal extends Component{
                                         span:24,
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:selectedRows && selectedRows.roleName,
+                                            initialValue:initData.roleName,
                                             rules:[
                                                 regRules.trim,
                                                 {
@@ -177,7 +179,7 @@ class PopModal extends Component{
                                         span:24,
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue:selectedRows && selectedRows.remark,
+                                            initialValue:initData.remark,
                                         },
                                         componentProps:{
                                             autosize:{
