@@ -81,10 +81,16 @@ export default class ProjectInformationManagement extends Component{
                         table_1_loaded:true
                     }))
                 }else{
+                    this.setState({
+                        table_1_loaded:true
+                    })
                     message.error(`项目列表获取失败:${data.msg}`)
                 }
             })
             .catch(err => {
+                this.setState({
+                    table_1_loaded:true
+                })
                 message.error(err.message)
             });
     }

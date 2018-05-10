@@ -263,6 +263,9 @@ class Add extends Component {
                 }
             })
             .catch(err => {
+                this.setState({
+                    submitLoading: false
+                })
                 message.error(err.message)
             });
     }

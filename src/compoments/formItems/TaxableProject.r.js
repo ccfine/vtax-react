@@ -135,6 +135,7 @@ class TaxableProjectTreeForm extends Component{
         })
         .catch(err => {
             message.error(err.message)
+            this.mounted && this.setState({ submitLoading: false });
         });
     }
     onSelect = (selectedKeys, info) => {
