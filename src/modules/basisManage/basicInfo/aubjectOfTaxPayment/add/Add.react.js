@@ -207,6 +207,9 @@ class Add extends Component {
                             message.error(data.msg)
                         }
                     })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -258,6 +261,9 @@ class Add extends Component {
                         submitLoading: false
                     })
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             });
     }
     mounted = true;

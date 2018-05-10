@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Form,Select} from 'antd'
+import {Form,Select,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from 'utils'
 const FormItem = Form.Item;
@@ -37,6 +37,9 @@ function fetchTaxMain(value, callback) {
                     });
                     callback(newData);
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             });
     }
 

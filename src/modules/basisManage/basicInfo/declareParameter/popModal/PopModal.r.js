@@ -143,6 +143,9 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
 
     createRecord = data =>{

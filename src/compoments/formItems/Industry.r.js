@@ -134,6 +134,10 @@ class IndustryTree extends Component{
                     })
                 }
             })
+            .catch(err => {
+                this.mounted && this.setState({ submitLoading: false });
+                message.error(err.message)
+            })
     }
     //根据id查询行业
     getIndustryTitle=(id)=>{
@@ -150,6 +154,9 @@ class IndustryTree extends Component{
                     });
                     onChange && onChange(fieldData);
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     componentDidMount() {
