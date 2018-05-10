@@ -258,3 +258,8 @@ table.data-grid{
   margin:0 3px;
   font-size: 12px;
 }
+
+/* switch 为small时文字太大  不协调*/
+.ant-switch-small.ant-switch .ant-switch-inner{
+  font-size: 10px;
+}

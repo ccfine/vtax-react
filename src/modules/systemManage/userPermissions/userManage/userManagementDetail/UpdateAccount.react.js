@@ -6,7 +6,6 @@ import {Modal,Form,message,Row} from 'antd';
 import {request,getFields} from 'utils'
 
 class UpdateAccount extends Component{
-
     state = {
         assignmentModalKey:Date.now(),
         confirmLoading:false,
