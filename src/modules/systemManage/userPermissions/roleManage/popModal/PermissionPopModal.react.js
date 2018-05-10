@@ -17,7 +17,7 @@ class PopModal extends Component{
         submitLoading:false,
         showEditButton:false,
         data:[],
-        visible:false
+        roleData:[],
     }
     handleSubmit = (e) => {
         e && e.preventDefault();
@@ -43,10 +43,8 @@ class PopModal extends Component{
                         })
                         if(data.code===200){
                             if(this.mounted){
-                                message.success('角色分配成功!');
-                                this.setState({
-                                    visible:false
-                                })
+                                message.success('角色权限分配成功!');
+                                this.props.togglePermissionModalVisible(false);
                                 this.props.refreshTable()
                             }
 
@@ -75,8 +73,20 @@ class PopModal extends Component{
                 message.error(err.message)
             })
     }
-    componentDidMount(){
-        this.fetchList()
+    fetchRoleIdList(roleId){
+        request.get(`/sysRole/queryRolePermissions/${roleId}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.mounted && this.setState({
+                        roleData: data.data
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     onCheckAllChange = item => e => {
         const {setFieldsValue} = this.props.form;
@@ -118,15 +128,23 @@ class PopModal extends Component{
         }
     }
     initCheckboxAll = (data) =>{
+
+        //es5 写法  每一项都返回true才返回true
+        /*return data.every(item=>{
+            return this.state.roleData.indexOf(item.permissionId) > -1;
+        })*/
+
         let arr = [];
-        for(let i = 0 ;i<data.length;i++){
-            if(this.props.data.options.indexOf(Number(data[i].permissionId)) !== -1){
+        data.forEach(item=>{
+            if(this.state.roleData.indexOf(item.permissionId) > -1){
                 arr.push(data.permissionId)
             }
-        }
+        })
         return data.length === arr.length
     }
-
+    componentDidMount(){
+        this.fetchList()
+    }
     mounted=true;
     componentWillUnmount(){
         this.mounted=null
@@ -139,11 +157,16 @@ class PopModal extends Component{
              * */
             nextProps.form.resetFields();
         }
+
+        if(this.props.visible !== nextProps.visible && !this.props.visible){
+            this.fetchRoleIdList(nextProps.id)
+        }
+
     }
     render(){
         const { getFieldDecorator} = this.props.form;
         const {togglePermissionModalVisible,visible} = this.props;
-        const {loaded,data} = this.state;
+        const {loaded,data,roleData} = this.state;
         return(
             <Modal
                 maskClosable={false}
@@ -189,7 +212,7 @@ class PopModal extends Component{
                                                 <FormItem>
                                                     {
                                                         getFieldDecorator(`allCode${i}`,{
-                                                            //initialValue:this.props.data.options && this.initCheckboxAll(item.permissionVOs),
+                                                            initialValue: this.initCheckboxAll(item.permissionVOs),
                                                             valuePropName: 'checked',
                                                             onChange:this.onCheckAllChange(item)
                                                         })(
@@ -204,7 +227,7 @@ class PopModal extends Component{
                                                             <FormItem key={j}>
                                                                 {
                                                                     getFieldDecorator(fieldItem.permissionId,{
-                                                                        //initialValue: this.props.data.options && this.props.data.options.indexOf(Number(fieldItem.permissionId)) !== -1,
+                                                                        initialValue: roleData.indexOf(fieldItem.permissionId) > -1,
                                                                         valuePropName: 'checked',
                                                                         onChange:this.checkAllChecked(`allCode${i}`, fieldItem.permissionId)
                                                                     })(

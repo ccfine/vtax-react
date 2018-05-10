@@ -74,15 +74,6 @@ class PopModal extends Component{
             })
     }
 
-
-    componentDidMount(){
-
-    }
-    mounted=true
-    componentWillUnmount(){
-        this.mounted=null
-    }
-
     componentWillReceiveProps(nextProps){
 
         if(!nextProps.visible){

@@ -13,6 +13,11 @@ import {request,} from 'utils'
 const buttonStyle={
     marginRight:5
 }
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff',
+    marginRight:10
+}
 const searchFields = context => [
     {
         label: "组织",
@@ -55,11 +60,11 @@ const columns = context => [
                         isEnabled:record.isEnabled,
                         remark:record.remark
                     }
-                }} style={{marginRight:10}}><Icon type="search" style={{ fontSize: 16 }} /></Link>
-                <a title="编辑" onClick={()=>context.showModal('edit',record)} style={{marginRight:10}}>
-                    <Icon type="edit" style={{ fontSize: 16 }} />
-                </a>
-                <Switch checkedChildren="启用" unCheckedChildren="停用" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
+                }} style={{marginRight:10}}><Icon type="search" /></Link>
+                <span title="编辑" onClick={()=>context.showModal('edit',record)} style={pointerStyle}>
+                    <Icon type="edit" />
+                </span>
+                <Switch checkedChildren="启" unCheckedChildren="停" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
             </span>
 
         )
@@ -252,22 +257,18 @@ class RoleManage extends Component{
                     refreshTable={this.refreshTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
-                {
-                    selectedRowKeys && <PermissionPopModal
+                 <PermissionPopModal
                         visible={permissionVisible}
                         id={selectedRowKeys}
                         refreshTable={this.refreshTable}
                         togglePermissionModalVisible={this.togglePermissionModalVisible}
                     />
-                }
-                {
-                    selectedRowKeys && <UserPopModal
+                 <UserPopModal
                         visible={userVisible}
                         id={selectedRowKeys}
                         refreshTable={this.refreshTable}
                         toggleUserModalVisible={this.toggleUserModalVisible}
                     />
-                }
 
             </SearchTable>
 
