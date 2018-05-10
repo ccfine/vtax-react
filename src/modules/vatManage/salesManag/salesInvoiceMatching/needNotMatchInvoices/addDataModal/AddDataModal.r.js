@@ -163,6 +163,7 @@ class ManualMatchRoomModal extends Component{
                         message.error(`添加失败:${data.msg}`)
                     }
                 }).catch(err=>{
+                    message.error(err.message)
                     this.toggleSearchTableLoading(false)
                 })
             },

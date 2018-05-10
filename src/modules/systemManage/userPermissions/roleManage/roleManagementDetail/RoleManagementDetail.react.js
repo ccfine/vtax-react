@@ -4,73 +4,29 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Card,message,Form,Button,Icon,Modal,Row,Col,Transfer} from 'antd'
+import {Card,message,Form,Button,Icon,Modal,Row,Col,Badge} from 'antd'
 import {getFields,request} from 'utils'
 
 class RoleManagementDetail extends Component{
     constructor(props){
     super(props)
-    this.state={
-        editAble:false,
-        submitLoading:false,
-        showEditButton:false,
-        data:[],
-        permissions:[],
-        roleName:props.location.state.roleName,
-        remark:props.location.state.remark,
-        isEnabled:props.location.state.isEnabled,
-        modalKey:Date.now(),
-
-        mockData: [],
-        targetKeys: [],
+    this.state= {
+            loading: true,
+            data: [],
+            permissions: [],
+            roleData:[],
+            roleName: props.location.state.roleName,
+            remark: props.location.state.remark,
+            isEnabled: props.location.state.isEnabled,
+            modalKey: Date.now(),
         }
     }
-
-    handleSubmit = (e) => {
-      e && e.preventDefault();
-      this.props.form.validateFields((err, values) => {
-          if (!err) {
-              this.setState({
-                  submitLoading:true
-              })
-              console.log('Received values of form: ', values);
-              setTimeout(()=>{
-                  const data = {
-                      code:210,
-                      msg:'错误'
-                  }
-                  this.setState({
-                      submitLoading:false
-                  })
-                  if(data.code===200){
-                  }else{
-                      message.error(data.msg)
-                  }
-
-              },3000)
-          }
-      });
-    }
-    getMock = () => {
-        const targetKeys = [];
-        const mockData = [];
-        for (let i = 0; i < 20; i++) {
-            const data = {
-                key: i.toString(),
-                title: `content${i + 1}`,
-                description: `description of content${i + 1}`,
-                chosen: Math.random() * 2 > 1,
-            };
-            if (data.chosen) {
-                targetKeys.push(data.key);
-            }
-            mockData.push(data);
-        }
-        this.setState({ mockData, targetKeys });
-    }
+    toggleLoading = loading => this.setState({loading})
     fetch(){
+        this.toggleLoading(true)
         request.get('/permissions')
             .then(({data})=>{
+                this.toggleLoading(false)
                 if(data.code===200){
                     this.setState({
                         permissions: data.data
@@ -79,16 +35,48 @@ class RoleManagementDetail extends Component{
                     message.error(data.msg)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoading(false)
+            })
 
-        request.get(`/sysRole/find/${this.props.match.params.id}`)
+        this.fetchRole(this.props.match.params.id)
+        this.fetchRoleId(this.props.match.params.id)
+    }
+    fetchRole = (id) =>{
+        this.toggleLoading(true)
+        request.get(`/sysRole/find/${id}`)
             .then(({data})=>{
                 if(data.code===200){
+                    this.toggleLoading(false)
                     this.setState({
                         data:data.data
                     })
                 }else{
                     message.error(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoading(false)
+            })
+    }
+    fetchRoleId=(id)=>{
+        this.toggleLoading(true)
+        request.get(`/sysRole/queryUserByRoleId/${id}`)
+            .then(({data})=>{
+                if(data.code===200){
+                    this.toggleLoading(false)
+                    this.setState({
+                        roleData:data.data
+                    })
+                }else{
+                    message.error(data.msg)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoading(false)
             })
     }
 
@@ -141,11 +129,10 @@ class RoleManagementDetail extends Component{
     }
     componentDidMount(){
         this.fetch()
-        this.getMock();
     }
 
     render(){
-      const { data,permissions,roleName,isEnabled,remark } = this.state;
+      const { data,permissions,roleData,roleName,isEnabled,remark,loading } = this.state;
       const id = this.props.match.params.id;
       const options = data.options;
         return (
@@ -162,6 +149,7 @@ class RoleManagementDetail extends Component{
                      </Button>
                   </div>
                 }
+              loading={loading}
               title="角色信息">
                   <Form
                       style={{
@@ -228,16 +216,9 @@ class RoleManagementDetail extends Component{
                               }}>用户:</span>
                           </Col>
                           <Col span={21}>
-                              <Transfer
-                                  listStyle={{
-                                      width: 280,
-                                      height: 400,
-                                  }}
-                                  dataSource={this.state.mockData}
-                                  targetKeys={this.state.targetKeys}
-                                  onChange={this.handleChange}
-                                  render={item => item.title}
-                              />
+                              {
+                                  roleData.map(item=><Badge key={item.key} count={item.title} style={{ backgroundColor: '#52c41a',marginRight:10 }} />)
+                              }
                           </Col>
                       </Row>
                       <Row style={{marginTop:10}}>

@@ -99,6 +99,9 @@ class InputTaxDetails extends Component {
                                             message.error(`${type}失败:${data.msg}`)
                                         }
                                     })
+                                    .catch(err => {
+                                        message.error(err.message)
+                                    })
                             }
                         })
                         break;
@@ -134,6 +137,9 @@ class InputTaxDetails extends Component {
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     updateStatus=()=>{
         request.get('/account/income/taxDetail/listMain',{params:this.state.filters}).then(({data}) => {
@@ -142,6 +148,9 @@ class InputTaxDetails extends Component {
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     componentDidMount(){

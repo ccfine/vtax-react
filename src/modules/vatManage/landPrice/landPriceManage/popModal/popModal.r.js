@@ -142,7 +142,11 @@ class LandPriceModal extends React.Component {
                 if (data.code === 200) {
                     this.setState({ record: data.data, loading: false })
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.setState({ loading: false })
+            })
 
             // 加载table数据
             request.get(`/land/priceProjectStages/list/${props.id}`).then(({ data }) => {
@@ -151,7 +155,11 @@ class LandPriceModal extends React.Component {
                     stageSource = this.countStage(stageSource);
                     this.setState({ stageSource: stageSource, stageLoaded: true })
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.setState({ stageLoaded: true })
+            })
         }
     }
     render() {

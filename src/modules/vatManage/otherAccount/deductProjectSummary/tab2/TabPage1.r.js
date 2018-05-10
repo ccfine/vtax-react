@@ -165,7 +165,10 @@ class tab1 extends Component{
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    });
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             }
         })
     }
@@ -176,6 +179,9 @@ class tab1 extends Component{
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     componentDidMount(){

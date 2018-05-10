@@ -66,6 +66,12 @@ class RoleModal extends Component{
                                 message.error(data.msg)
                             }
                         })
+                        .catch(err => {
+                            message.error(err.message)
+                            this.setState({
+                                submitLoading:false
+                            })
+                        })
                 }else{
                     request.post('/sysRole/add',params)
                         .then(({data})=>{
@@ -85,6 +91,12 @@ class RoleModal extends Component{
                                 message.error(data.msg)
                             }
                         })
+                        .catch(err => {
+                            message.error(err.message)
+                            this.setState({
+                                submitLoading:false
+                            })
+                        })
                 }
 
             }
@@ -100,6 +112,9 @@ class RoleModal extends Component{
                 }else{
                     message.error(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     componentDidMount(){

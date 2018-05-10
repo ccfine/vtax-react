@@ -195,6 +195,9 @@ class InvoiceCollection extends Component {
                 message.error(`列表主信息查询失败:${data.msg}`)
             }
         })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     componentDidMount(){
         //获取纳税申报对应的数据字典
@@ -358,7 +361,11 @@ class InvoiceCollection extends Component {
                                                           message.error(data.msg)
                                                       }
                                                   })
+                                                  .catch(err => {
+                                                      message.error(err.message)
+                                                  })
                                               this.toggleModalVisible(false)
+
                                           },
                                           onCancel() {
                                               modalRef.destroy()

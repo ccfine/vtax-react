@@ -81,7 +81,7 @@ class PopModal extends Component {
                         })
                         .catch(err=>{
                             message.error(err.message)
-                            this.mounted&&this.setState({
+                            this.mounted && this.setState({
                                 submitLoading:false
                             })
                         })
@@ -108,7 +108,7 @@ class PopModal extends Component {
                         })
                         .catch(err=>{
                             message.error(err.message)
-                            this.mounted&&this.setState({
+                            this.mounted && this.setState({
                                 submitLoading:false
                             })
                         })
@@ -133,6 +133,9 @@ class PopModal extends Component {
                 }else{
                     message.error(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     componentDidMount(){

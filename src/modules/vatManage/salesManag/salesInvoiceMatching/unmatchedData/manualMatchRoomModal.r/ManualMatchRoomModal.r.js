@@ -174,6 +174,7 @@ class ManualMatchRoomModal extends Component{
                 }
             })
             .catch(err=>{
+                message.error(err.message)
                 this.toggleMatching(false)
             })
     }
@@ -191,6 +192,7 @@ class ManualMatchRoomModal extends Component{
                 }
             })
             .catch(err=>{
+                message.error(err.message)
                 this.toggleMatching(false)
             })
     }

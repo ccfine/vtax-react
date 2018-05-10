@@ -63,6 +63,9 @@ class InputTaxStructure extends Component {
                 })
             }
         })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     toggleSearchTableLoading = b =>{
         this.setState({

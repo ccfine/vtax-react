@@ -363,6 +363,9 @@ class InvoiceDataMatching extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     deleteRecord = (id,cb) => {
         request.delete(`/output/invoice/marry/already/delete/${id}`)
@@ -373,6 +376,9 @@ class InvoiceDataMatching extends Component{
                 }else{
                     message.error(`解除匹配失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     toggleMatching = matching =>{
@@ -393,8 +399,8 @@ class InvoiceDataMatching extends Component{
                     message.error(`数据匹配失败:${data.msg}`)
                 }
             }).catch(err=>{
-            message.error(`数据匹配失败:${err.message}`)
-        })
+                message.error(`数据匹配失败:${err.message}`)
+            })
     }
     componentDidMount(){
         const {search} = this.props.location;
