@@ -124,6 +124,9 @@ export default class AsyncSelect extends Component{
                                 dataSource: result
                             })
                         }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
                     });
             }
 

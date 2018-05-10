@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Row,Card} from 'antd'
+import {Row,Card,message} from 'antd'
 import moment from 'moment';
 import {request,getFields,regRules,requestDict} from 'utils'
 import './styles.less'
@@ -66,6 +66,9 @@ class BasicInfo extends Component {
                     })
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            });
     }
 
     componentDidMount() {
