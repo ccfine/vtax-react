@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 12:26:23
+ * @Last Modified time: 2018-05-10 17:42:52
  */
 import React, { Component } from "react";
 import { Form, Modal, message } from "antd";
@@ -35,7 +35,7 @@ class PermissionModal extends Component {
                 }
             })
             .catch(err => {
-                message.error(err, 4);
+                message.error(err.message, 4);
                 this.setState({ permissionLoading: false });
             });
     }
@@ -45,7 +45,7 @@ class PermissionModal extends Component {
             if (!err) {
                 let params = [];
                 for (let item in values) {
-                    values[item] && params.push(item);
+                    (values[item] && item.indexOf('allCode')===-1) && params.push(item);
                 }
 
                 // 筛选剔除角色权限
@@ -73,7 +73,7 @@ class PermissionModal extends Component {
                         this.setState({ submitLoading: false });
                     })
                     .catch(err => {
-                        message.error(err);
+                        message.error(err.message);
                         this.setState({ submitLoading: false });
                     });
             }
@@ -104,7 +104,11 @@ class PermissionModal extends Component {
                 onCancel={this.handleCancel}
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
-                width="700px"
+                width="900px"
+                bodyStyle={{
+                    maxHeight:400,
+                    overflowY:'auto'
+                }}
             >
                 <Form layout="inline">
                     <PermissionFeilds

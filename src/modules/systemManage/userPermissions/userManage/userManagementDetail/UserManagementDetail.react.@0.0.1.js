@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React, { Component } from "react";
-import { message } from "antd";
+import { message,Spin } from "antd";
 import { request } from "utils";
 import UserDetail from "./UserDetail.react.@0.0.1";
 
@@ -44,7 +44,7 @@ class UserManagementDetail extends Component {
                 }
             })
             .catch(err => {
-                message.error(err, 4);
+                message.error(err.message, 4);
                 this.setState({ permissionLoading: false });
             });
     }
@@ -70,7 +70,7 @@ class UserManagementDetail extends Component {
             })
             .catch(err => {
                 this.setState({ permissionLoading: false });
-                message.error(err);
+                message.error(err.message);
             });
     }
     fetchUserInfo(userid) {
@@ -88,11 +88,17 @@ class UserManagementDetail extends Component {
                             loaded: true
                         });
                 } else {
+                    this.setState({
+                        loaded: true
+                    });
                     message.error(data.msg);
                 }
             })
             .catch(err => {
-                message.error(err);
+                this.setState({
+                    loaded: true
+                });
+                message.error(err.message);
             });
     }
     render() {
@@ -100,12 +106,13 @@ class UserManagementDetail extends Component {
                 userInfo,
                 checkedPermission,
                 allPermission,
-                permissionLoading
+                permissionLoading,
+                loaded
             } = this.state,
             [orgId] = this.getParams();
 
         return (
-            <div>
+            <Spin spinning={!loaded}>
                 <h2 style={{ margin: "10px 0 5px 16px" }}>
                     {userInfo["realname"]}
                 </h2>
@@ -118,7 +125,7 @@ class UserManagementDetail extends Component {
                         permissionLoading={permissionLoading}
                     />
                 ) : null}
-            </div>
+            </Spin>
         );
     }
 }

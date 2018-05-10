@@ -82,11 +82,11 @@ request.interceptors.response.use(function (response) {
 }, function (error) {
 
     if(error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
-        return message.error('请求超时',4)
+        error.message = "请求超时";
+        // return message.error('请求超时',4)
     }
-
     // 对响应错误做点什么
-    if (error.response) {
+    else if (error.response) {
         switch (error.response.status) {
             case 400:
                 error.message = '请求错误'
@@ -132,12 +132,14 @@ request.interceptors.response.use(function (response) {
                 error.message = 'HTTP版本不受支持'
                 break
             default:
-                message.error(error.response.statusText,4)
+                error.message = error.response.statusText;
+                //message.error(error.response.statusText,4)
             //no default statusText
         }
-        message.error(error.message)
+        //message.error(error.message)
     }else{
-        message.error('网络错误')
+        //message.error('网络错误')
+        error.message = "网络错误";
     }
     return Promise.reject(error);
 });
