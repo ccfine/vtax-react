@@ -5,15 +5,35 @@
  */
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 import {Icon,Button,Switch,message,Modal} from 'antd'
-import {SearchTable} from 'compoments'
+import {SearchTable,PermissibleRender,Permissible} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
 import {request,} from 'utils'
 const buttonStyle={
     marginRight:5
 }
-const searchFields = [
+const searchFields = context => [
     {
+        label: "组织",
+        fieldName: "orgId",
+        type: "asyncSelect",
+        span: 8,
+        componentProps: {
+            fieldTextName: "orgName",
+            fieldValueName: "orgId",
+            url: `/org/user_belong_organizations`
+        },
+        fieldDecoratorOptions: {
+            initialValue: context.props.orgId || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: "请选择组织"
+                }
+            ]
+        }
+    },{
         label: "角色名称",
         type: "input",
         span: 8,
@@ -28,36 +48,31 @@ const columns = context => [
         className:'text-center',
         render:(text,record)=>(
             <span>
-                <a onClick={()=>{
-                    context.setState({
-                        selectedRowKeys:record.id,
-                        selectedRows:record,
-                    },()=>{
-                        context.showModal('edit')
-                    })
-                }}><Icon type="edit" style={{ fontSize: 16, color: '#08c',marginRight:10 }} /></a>
-                <Link to={{
+                <Link title="详情" to={{
                     pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
                     state:{
                         roleName:record.roleName,
                         isEnabled:record.isEnabled,
                         remark:record.remark
                     }
-                }} style={{marginRight:10}}>详情</Link>
+                }} style={{marginRight:10}}><Icon type="search" style={{ fontSize: 16 }} /></Link>
+                <a title="编辑" onClick={()=>context.showModal('edit',record)} style={{marginRight:10}}>
+                    <Icon type="edit" style={{ fontSize: 16 }} />
+                </a>
+                <Switch checkedChildren="启用" unCheckedChildren="停用" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
             </span>
 
         )
-    },{
+    /*},{
         title: '状态',
         dataIndex:'isEnabled',
         className:'text-center',
-        width:'5%',
+        width:'10%',
         render:(text,record)=>{
             return (
                 <Switch checkedChildren="启用" unCheckedChildren="停用" checked={ parseInt(text,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
             )
-        }
-        //render:(text)=> parseInt(text,0) ===0 ?<span style={{color:'#FF0000'}}>停用</span> :<span style={{color:'#008000'}}>启用</span>
+        }*/
     },{
         title: '角色名称',
         dataIndex:'roleName',
@@ -69,21 +84,41 @@ const columns = context => [
     },{
         title:'备注',
         dataIndex:'remark',
+        width:'60%',
     }];
 
 
 class RoleManage extends Component{
-    state={
-        updateKey:Date.now(),
-        selectedRowKeys:null,
-        selectedRows:null,
-        visible:false,
-        userVisible:false,
-        permissionVisible:false,
-        modalConfig:{
-            type:''
+    state= {
+        updateKey: Date.now(),
+        selectedRowKeys: null,
+        selectedRows: null,
+        visible: false,
+        userVisible: false,
+        permissionVisible: false,
+        modalConfig: {
+            type: ''
         },
     }
+    RestrictedComponent = () =>{
+        return (
+            <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
+                <Icon type="plus" />
+                HOC新增
+            </Button>
+        )
+    }
+    callbackFunction=({ userPermissions, requiredPermissions })=>{
+        console.log(userPermissions, requiredPermissions, '权限不匹配');
+    }
+
+    PermissibleComponent = Permissible(
+        this.RestrictedComponent,
+        ['admin01'], // userPermissions
+        ['111'], // requiredPermissions
+        this.callbackFunction, // no callback || null
+        true, // true: 一个权限必须匹配 false: 所有权限必须匹配
+    );
 
     toggleModalVisible=visible=>{
         this.setState({
@@ -95,12 +130,13 @@ class RoleManage extends Component{
             updateKey:Date.now()
         })
     }
-    showModal=type=>{
+    showModal=(type,record)=>{
         this.toggleModalVisible(true)
         this.setState({
             modalConfig:{
                 type,
-                id:this.state.selectedRowKeys
+                id:record.id,
+                record
             }
         })
     }
@@ -151,12 +187,13 @@ class RoleManage extends Component{
         });
 
     }
+
     render(){
-        const {updateKey,selectedRowKeys,selectedRows,visible,userVisible,permissionVisible,modalConfig} = this.state;
+        const {updateKey,selectedRowKeys,visible,userVisible,permissionVisible,modalConfig} = this.state;
         return (
             <SearchTable
                 searchOption={{
-                    fields:searchFields
+                    fields:this.props.orgId && searchFields(this)
                 }}
                 doNotFetchDidMount={false}
                 tableOption={{
@@ -169,17 +206,18 @@ class RoleManage extends Component{
                         title: '角色列表',
                         extra:
                             <div>
-                                <Button size="small" onClick={()=>{
-                                    this.setState({
-                                        selectedRowKeys:null,
-                                        selectedRows:null,
-                                    },()=>{
-                                        this.showModal('add')
-                                    })
-                                }} style={buttonStyle}>
-                                    <Icon type="plus" />
-                                    新增
-                                </Button>
+                                <PermissibleRender
+                                    userPermissions={['admin01']}
+                                    requiredPermissions={['admin01']}
+                                >
+                                    <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
+                                        <Icon type="plus" />
+                                        新增
+                                    </Button>
+                                </PermissibleRender>
+
+                                <this.PermissibleComponent  />
+
                                 <Button size="small" disabled={!selectedRowKeys} onClick={()=>this.togglePermissionModalVisible(true)}  style={buttonStyle}>
                                     <Icon type="edit" />
                                     分配权限
@@ -210,16 +248,14 @@ class RoleManage extends Component{
                 <RolePopModal
                     visible={visible}
                     modalConfig={modalConfig}
-                    selectedRowKeys={selectedRowKeys}
-                    selectedRows={selectedRows}
+                    id={modalConfig.id}
                     refreshTable={this.refreshTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />
                 {
                     selectedRowKeys && <PermissionPopModal
                         visible={permissionVisible}
-                        selectedRowKeys={selectedRowKeys}
-                        selectedRows={selectedRows}
+                        id={selectedRowKeys}
                         refreshTable={this.refreshTable}
                         togglePermissionModalVisible={this.togglePermissionModalVisible}
                     />
@@ -227,7 +263,7 @@ class RoleManage extends Component{
                 {
                     selectedRowKeys && <UserPopModal
                         visible={userVisible}
-                        selectedRowKeys={selectedRowKeys}
+                        id={selectedRowKeys}
                         refreshTable={this.refreshTable}
                         toggleUserModalVisible={this.toggleUserModalVisible}
                     />
@@ -238,4 +274,8 @@ class RoleManage extends Component{
         )
     }
 }
-export default RoleManage
+export default connect(state=>({
+    orgId: state.user.get("orgId")
+}))(RoleManage)
+
+

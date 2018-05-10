@@ -34,64 +34,29 @@ class PopModal extends Component{
                 }
                 let params = {
                     options,
-                    remark:values.remark,
-                    roleName:values.roleName,
-                    isEnabled:values.isEnabled ? 1 : 0
+                    id:this.props.id,
                 }
-                if(this.props.type==='edit'){
+                request.post('/sysRole/assignPermission',params)
+                    .then(({data})=>{
+                        this.setState({
+                            submitLoading:false
+                        })
+                        if(data.code===200){
+                            if(this.mounted){
+                                message.success('角色分配成功!');
+                                this.setState({
+                                    visible:false
+                                })
+                                this.props.refreshTable()
+                            }
 
-                    request.put(`/sysRole/update`,{...params, id:this.props.id,
+                        }else{
+                            message.error(data.msg)
+                        }
                     })
-                        .then(({data})=>{
-                            this.setState({
-                                submitLoading:false
-                            })
-                            if(data.code===200){
-                                if(this.mounted){
-                                    message.success('角色编辑成功!');
-                                    this.props.setData({
-                                        options,
-                                        roleName:params.roleName,
-                                        isEnabled:params.isEnabled,
-                                        remark:params.remark
-                                    });
-                                    this.setState({
-                                        visible:false
-                                    })
-                                    this.props.refresh()
-                                }
-
-                            }else{
-                                message.error(data.msg)
-                            }
-                        })
-                        .catch(err => {
-                            message.error(err.message)
-                        })
-                }else{
-                    request.post('/sysRole/add',params)
-                        .then(({data})=>{
-                            this.setState({
-                                submitLoading:false
-                            })
-                            if(data.code===200){
-                                if(this.mounted){
-                                    message.success('角色增加成功!');
-                                    this.setState({
-                                        visible:false
-                                    })
-                                    this.props.refreshTable()
-                                }
-
-                            }else{
-                                message.error(data.msg)
-                            }
-                        })
-                        .catch(err => {
-                            message.error(err.message)
-                        })
-                }
-
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             }
         });
     }
@@ -184,6 +149,7 @@ class PopModal extends Component{
                 maskClosable={false}
                 destroyOnClose={true}
                 onCancel={()=>togglePermissionModalVisible(false)}
+                confirmLoading={this.state.submitLoading}
                 width={800}
                 style={{
                     maxWidth:'90%'
@@ -223,7 +189,7 @@ class PopModal extends Component{
                                                 <FormItem>
                                                     {
                                                         getFieldDecorator(`allCode${i}`,{
-                                                            initialValue:this.props.type==='edit' && this.props.data.options && this.initCheckboxAll(item.permissionVOs),
+                                                            //initialValue:this.props.data.options && this.initCheckboxAll(item.permissionVOs),
                                                             valuePropName: 'checked',
                                                             onChange:this.onCheckAllChange(item)
                                                         })(
@@ -238,7 +204,7 @@ class PopModal extends Component{
                                                             <FormItem key={j}>
                                                                 {
                                                                     getFieldDecorator(fieldItem.permissionId,{
-                                                                        initialValue:this.props.type==='edit' && this.props.data.options && this.props.data.options.indexOf(Number(fieldItem.permissionId)) !== -1,
+                                                                        //initialValue: this.props.data.options && this.props.data.options.indexOf(Number(fieldItem.permissionId)) !== -1,
                                                                         valuePropName: 'checked',
                                                                         onChange:this.checkAllChecked(`allCode${i}`, fieldItem.permissionId)
                                                                     })(

@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Form,Select,Spin} from 'antd'
+import {Form,Select,Spin,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from 'utils'
 import debounce from 'lodash/debounce'
@@ -94,7 +94,10 @@ export default class AsyncSelect extends Component{
                         dataSource:this.props.transformData(result)
                     })
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     mounted = true
     componentWillUnmount(){

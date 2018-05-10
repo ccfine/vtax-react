@@ -2,6 +2,7 @@
  * Created by liuliyuan on 2018/5/8.
  */
 import React,{Component} from 'react';
+import {connect} from 'react-redux'
 import {Button,Modal,Form,Row,Col,Spin,message,Transfer } from 'antd';
 import {request} from 'utils'
 class PopModal extends Component{
@@ -9,22 +10,59 @@ class PopModal extends Component{
         visible:true
     }
     state={
+        submitLoading:false,
         mockData: [],
-        targetKeys: [],
+        targetKeys:[],
         loaded:true,
     }
+
+    handleSubmit = () => {
+        if(this.state.targetKeys.length < 1) {
+            return message.success('请选择要分配的用户!');
+        }
+        let params = {
+            userIds:this.state.targetKeys,
+            id:this.props.id,
+        }
+        this.setState({
+            submitLoading:true
+        })
+        request.post(`/sysRole/assignUser/${this.props.orgId}`,params)
+            .then(({data})=>{
+                this.setState({
+                    submitLoading:false
+                })
+                if(data.code===200){
+                    if(this.mounted){
+                        message.success('角色分配成功!');
+                        this.setState({
+                            visible:false
+                        })
+                        this.props.refreshTable()
+                    }
+
+                }else{
+                    message.error(data.msg)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
+
+
     toggleLoaded = loaded => this.setState({loaded})
+
     fetchList(){
-        request.get('/sysUser/queryUserList')
+        request.get(`/sysUser/queryUserList/${this.props.orgId}`)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
                     this.toggleLoaded(false)
                     this.mounted && this.setState({
                         mockData: data.data,
-                    },()=>{
-                        this.fetchRoleId(this.props.selectedRowKeys)
                     })
+                    this.fetchRoleId(this.props.id)
 
                 }else{
                     message.error(data.msg)
@@ -36,13 +74,15 @@ class PopModal extends Component{
     }
 
     fetchRoleId=(roleId)=>{
+        const targetKeys = [];
         request.get(`/sysRole/queryUserByRoleId/${roleId}`)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
                     this.toggleLoaded(false)
+                    data.data.map(item=>targetKeys.push(item.key));
                     this.mounted && this.setState({
-                        targetKeys: data.data,
+                        targetKeys
                     })
                 }else{
                     message.error(data.msg)
@@ -53,6 +93,7 @@ class PopModal extends Component{
             })
     }
 
+
     filterOption = (inputValue, option) => {
         return option.description.indexOf(inputValue) > -1;
     }
@@ -61,22 +102,22 @@ class PopModal extends Component{
         this.setState({ targetKeys });
     }
 
+
     componentDidMount() {
-        this.fetchList()
+       this.fetchList()
+        //this.getMock()
     }
     mounted=true
     componentWillUnmount(){
         this.mounted=null
     }
     componentWillReceiveProps(nextProps){
-
         if(!nextProps.visible){
             /**
              * 关闭的时候清空表单
              * */
             nextProps.form.resetFields();
         }
-
     }
     render(){
         const {toggleUserModalVisible,visible} = this.props;
@@ -91,6 +132,7 @@ class PopModal extends Component{
                     maxWidth:'90%'
                 }}
                 visible={visible}
+                confirmLoading={this.state.submitLoading}
                 footer={
                     <Row>
                         <Col span={12}></Col>
@@ -107,6 +149,7 @@ class PopModal extends Component{
                         margin: '0 auto'
                     }}>
                         <Transfer
+                            rowKey={record => record.key}
                             listStyle={{
                                 width: 280,
                                 height: 400,
@@ -126,4 +169,6 @@ class PopModal extends Component{
     }
 }
 
-export default Form.create()(PopModal)
+export default connect(state=>({
+    orgId: state.user.get("orgId")
+}))(Form.create()(PopModal))
