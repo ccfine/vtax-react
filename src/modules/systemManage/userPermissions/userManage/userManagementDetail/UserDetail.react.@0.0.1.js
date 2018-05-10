@@ -40,6 +40,11 @@ class UserDetail extends Component {
 
     render() {
         const { userData } = this.state;
+        let {
+            allPermission,
+            checkedPermission,
+            permissionLoading
+        } = this.props;
         return (
             <Card title="用户信息" style={{ ...this.props.style }}>
                 <div style={{ padding: "30px", color: "#999" }}>
@@ -50,10 +55,6 @@ class UserDetail extends Component {
                                     {userData.username}
                                 </span>
                             </p>
-                            <p>
-                                角色：
-                                {userData.roleNames}
-                            </p>
                         </Col>
                         <Col span={6}>
                             <p>
@@ -61,6 +62,24 @@ class UserDetail extends Component {
                                     {userData.phoneNumber}
                                 </span>
                             </p>
+                        </Col>
+                        <Col span={8}>
+                            <p>
+                                邮箱：<span style={{ color: "#333" }}>
+                                    {userData.email}
+                                </span>
+                            </p>
+                        </Col>
+                        <Col span={4}>
+                            <p>
+                                微信：<span style={{ color: "#333" }}>
+                                    {userData.webchat}
+                                </span>
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={6}>
                             <p>
                                 状态：<span
                                     style={{
@@ -77,12 +96,7 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col>
-                        <Col span={8}>
-                            <p>
-                                邮箱：<span style={{ color: "#333" }}>
-                                    {userData.email}
-                                </span>
-                            </p>
+                        <Col span={6}>
                             <p>
                                 密码：
                                 <span
@@ -97,23 +111,66 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col>
-                        <Col span={4}>
-                            <p>
-                                微信：<span style={{ color: "#333" }}>
-                                    {userData.webchat}
-                                </span>
-                            </p>
+                        <Col />
+                    </Row>
+                    <Row gutter={16}>
+                        <Col>
+                            <Col span={24}>
+                                <p>
+                                    组织：<span style={{ color: "#333" }}>
+                                        {userData.orgNames}
+                                    </span>
+                                </p>
+                            </Col>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col>
+                            <Col span={24}>
+                                <p>
+                                    角色：<span style={{ color: "#333" }}>
+                                        {userData.roleNames}
+                                    </span>
+                                </p>
+                            </Col>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col>
+                            <Col span={24}>
+                                <div>
+                                    权限：
+                                    <span style={{ color: "#333" }}>
+                                        <Form layout="inline">
+                                            <PermissionFeilds
+                                                editAble={false}
+                                                checkedPermission={
+                                                    checkedPermission
+                                                }
+                                                form={this.props.form}
+                                                allPermission={allPermission}
+                                                permissionLoading={
+                                                    permissionLoading
+                                                }
+                                            />
+                                        </Form>
+                                    </span>
+                                </div>
+                            </Col>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col>
+                            <Col span={24}>
+                                <p>
+                                    备注：<span style={{ color: "#333" }}>
+                                        {userData.remark}
+                                    </span>
+                                </p>
+                            </Col>
                         </Col>
                     </Row>
                 </div>
-
-                <Form layout="inline">
-                    <PermissionFeilds
-                        editAble={false}
-                        checkedPermission={this.props.checkedPermission}
-                        form={this.props.form}
-                    />
-                </Form>
                 <UpdateAccount
                     key={this.state.updateAccountKey}
                     refreshCurdTable={this.refreshCurdTable}

@@ -2,31 +2,36 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-09 20:41:15
+ * @Last Modified time: 2018-05-10 12:31:55
  */
 import React from "react";
-import { Form, Spin, message, Modal, Checkbox, Row, Col } from "antd";
+import { Form, Spin, message, Modal, Checkbox } from "antd";
 import { request } from "utils";
 class RoleModal extends React.Component {
     state = {
         charAllList: [],
         charLoaded: false,
-        checkAll: false,
+        checkAll: undefined,
         submitLoading: false
     };
     fetchCharList() {
-        request.get("/sysRole/queryAllRole").then(({ data }) => {
-            if (data.code === 200) {
-                let charAllList = [...data.data];
-                this.mounted &&
-                    this.setState({
-                        charAllList,
-                        charLoaded: true
-                    });
-            } else {
-                message.error(data.msg);
-            }
-        });
+        request
+            .get("/sysRole/queryAllRole")
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    let charAllList = [...data.data];
+                    this.mounted &&
+                        this.setState({
+                            charAllList,
+                            charLoaded: true
+                        });
+                } else {
+                    message.error(data.msg);
+                }
+            })
+            .catch(err => {
+                message.error(err);
+            });
     }
     isAllCheck = roleIds => {
         let { charAllList = [] } = this.state;
@@ -82,7 +87,6 @@ class RoleModal extends React.Component {
     };
     onCheckAllChange = e => {
         this.setState({
-            indeterminate: false,
             checkAll: e.target.checked
         });
         this.props.form.setFieldsValue({
@@ -91,12 +95,16 @@ class RoleModal extends React.Component {
                 : []
         });
     };
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(nextProps) {
         // 存在数据比较下是否全选
-        if (props.key !== this.props.key && props.defaultFields && props.defaultFields.length > 0) {
+        if (
+            nextProps.updateKey !== this.props.updateKey &&
+            nextProps.defaultFields &&
+            nextProps.defaultFields.length > 0
+        ) {
             this.setState({
                 checkAll: this.isAllCheck(
-                    props.defaultFields.map(item => item.roleId)
+                    nextProps.defaultFields.map(item => item.roleId)
                 )
             });
         }
@@ -128,7 +136,10 @@ class RoleModal extends React.Component {
                 width="700px"
             >
                 <Spin spinning={!this.state.charLoaded}>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form
+                        onSubmit={this.handleSubmit}
+                        style={{ padding: "0 16px" }}
+                    >
                         <div
                             style={{
                                 borderBottom: "1px solid #E9E9E9",
@@ -154,45 +165,32 @@ class RoleModal extends React.Component {
                                 }
                             ]
                         })(
-                            <Checkbox.Group
-                                style={{ width: "100%" }}
-                                // onChange={onChange}
-                            >
-                                <Row>
+                            <Checkbox.Group style={{ width: "100%" }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexWrap: "wrap"
+                                    }}
+                                >
                                     {charAllList.map((item, index) => {
                                         return (
-                                            <Col
-                                                span={4}
+                                            <span
                                                 key={item.roleId}
-                                                style={{ marginBottom: 15 }}
+                                                style={{
+                                                    flex: "0 0 auto",
+                                                    height: 48,
+                                                    paddingRight: 8
+                                                }}
                                             >
                                                 <Checkbox value={item.roleId}>
                                                     {item.roleName}
                                                 </Checkbox>
-                                            </Col>
+                                            </span>
                                         );
                                     })}
-                                </Row>
+                                </div>
                             </Checkbox.Group>
                         )}
-                        {/* {getFields(this.props.form, [
-                            {
-                                fieldName: "roleIds",
-                                type: "checkboxGroup",
-                                span: 24,
-                                formItemStyle,
-                                fieldDecoratorOptions: {
-                                    initialValue: [],
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: "请选择角色"
-                                        }
-                                    ]
-                                },
-                                options: this.state.charList
-                            }
-                        ])} */}
                     </Form>
                 </Spin>
             </Modal>

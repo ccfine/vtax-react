@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-09 20:29:24
+ * @Last Modified time: 2018-05-10 14:24:38
  */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
@@ -36,7 +36,7 @@ const getSearchFields = context => [
         label: "用户名",
         type: "input",
         span: 8,
-        fieldName: "username "
+        fieldName: "username"
     },
     {
         label: "姓名",
@@ -57,7 +57,7 @@ const getColumns = context => [
                         to={{
                             pathname: `/web/systemManage/userPermissions/userManage/${
                                 context.props.orgId
-                            }|${record.id}`
+                            }-${record.id}`
                         }}
                     >
                         <Tooltip placement="top" title="详情">
@@ -139,10 +139,20 @@ const getColumns = context => [
                             <Icon type="setting" />
                         </Tooltip>
                     </a>
+                    <Divider type="vertical" />
+                    <Switch
+                        checkedChildren="启"
+                        unCheckedChildren="停"
+                        size="small"
+                        onChange={context.handleState(record.id)}
+                        checked={
+                            parseInt(record.isEnabled, 0) === 1 ? true : false
+                        }
+                    />
                 </span>
             );
         },
-        width: 150
+        width: 240
     },
     {
         title: "用户名",
@@ -162,7 +172,8 @@ const getColumns = context => [
     },
     {
         title: "角色",
-        dataIndex: "roleNames"
+        dataIndex: "roleNames",
+        width: "40%"
         /*render: (text, record) => (
             <div>
                 {record.roles.map((item, i) => (
@@ -172,69 +183,39 @@ const getColumns = context => [
                 ))}
             </div>
         )*/
-    },
-    {
-        title: "状态",
-        dataIndex: "isEnabled",
-        className: "text-center",
-        render: (text, record) => {
-            return (
-                <Switch
-                    checkedChildren="启"
-                    unCheckedChildren="停"
-                    size="small"
-                    onChange={checked => {
-                        const t = checked === true ? "启用" : "禁用";
-                        const modalRef = Modal.confirm({
-                            title: "友情提醒",
-                            content: `是否${t}？`,
-                            okText: "确定",
-                            okType: "danger",
-                            cancelText: "取消",
-                            onOk: () => {
-                                modalRef && modalRef.destroy();
-                                request
-                                    .put(
-                                        `/sysUser/enableOrDisable/${record.id}`
-                                    )
-                                    .then(({ data }) => {
-                                        if (data.code === 200) {
-                                            message.success("操作成功");
-                                            context.refreshTable();
-                                        } else {
-                                            message.error(data.msg, 4);
-                                        }
-                                    })
-                                    .catch(err => {
-                                        message.error(err, 4);
-                                    });
-                            },
-                            onCancel() {
-                                modalRef.destroy();
-                            }
-                        });
-                    }}
-                    checked={parseInt(text, 0) === 1 ? true : false}
-                />
-            );
-            //1:启用;2:停用;3:删除; ,
-            // let t = "";
-            // switch (parseInt(text, 0)) {
-            //     case 1:
-            //         t = <span style={{ color: "#008000" }}>启用</span>;
-            //         break;
-            //     case 2:
-            //         t = <span style={{ color: "#FF0000" }}>停用</span>;
-            //         break;
-            //     case 3:
-            //         t = <span style={{ color: "#f5222d" }}>删除</span>;
-            //         break;
-            //     default:
-            //no default
-            // }
-            // return t;
-        }
     }
+    // {
+    //     title: "状态",
+    //     dataIndex: "isEnabled",
+    //     className: "text-center",
+    //     render: (text, record) => {
+    //         return (
+    //             <Switch
+    //                 checkedChildren="启"
+    //                 unCheckedChildren="停"
+    //                 size="small"
+    //                 onChange={context.handleState(record.id)}
+    //                 checked={parseInt(text, 0) === 1 ? true : false}
+    //             />
+    //         );
+    //         //1:启用;2:停用;3:删除; ,
+    //         // let t = "";
+    //         // switch (parseInt(text, 0)) {
+    //         //     case 1:
+    //         //         t = <span style={{ color: "#008000" }}>启用</span>;
+    //         //         break;
+    //         //     case 2:
+    //         //         t = <span style={{ color: "#FF0000" }}>停用</span>;
+    //         //         break;
+    //         //     case 3:
+    //         //         t = <span style={{ color: "#f5222d" }}>删除</span>;
+    //         //         break;
+    //         //     default:
+    //         //no default
+    //         // }
+    //         // return t;
+    //     }
+    // }
 ];
 
 class UserManage extends Component {
@@ -277,6 +258,35 @@ class UserManage extends Component {
     };
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
+    };
+    handleState = id => checked => {
+        const t = checked === true ? "启用" : "禁用";
+        const modalRef = Modal.confirm({
+            title: "友情提醒",
+            content: `是否${t}？`,
+            okText: "确定",
+            okType: "danger",
+            cancelText: "取消",
+            onOk: () => {
+                modalRef && modalRef.destroy();
+                request
+                    .put(`/sysUser/enableOrDisable/${id}`)
+                    .then(({ data }) => {
+                        if (data.code === 200) {
+                            message.success("操作成功");
+                            this.refreshTable();
+                        } else {
+                            message.error(data.msg, 4);
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err, 4);
+                    });
+            },
+            onCancel() {
+                modalRef.destroy();
+            }
+        });
     };
     handleDelete = id => {
         const modalRef = Modal.confirm({
@@ -371,7 +381,7 @@ class UserManage extends Component {
                     }}
                     refreshTable={this.refreshTable}
                     visible={this.state.roleModalVisible}
-                    key={this.state.roleModalKey}
+                    updateKey={this.state.roleModalKey}
                 />
                 <PermissionModal
                     userId={this.state.permissionUserId}
