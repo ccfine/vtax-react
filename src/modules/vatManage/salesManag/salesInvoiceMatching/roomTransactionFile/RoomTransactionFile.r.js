@@ -227,6 +227,9 @@ class RoomTransactionFile extends Component{
                     message.error(`删除失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     fetchResultStatus = ()=>{
         request.get('/output/room/files/listMain',{
@@ -241,6 +244,9 @@ class RoomTransactionFile extends Component{
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     render(){

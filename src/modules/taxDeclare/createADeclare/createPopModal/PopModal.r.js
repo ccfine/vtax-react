@@ -177,6 +177,9 @@ class PopModal extends Component{
                     initData:data.data,
                 })
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     componentWillReceiveProps(nextProps) {
         if (!nextProps.visible) {

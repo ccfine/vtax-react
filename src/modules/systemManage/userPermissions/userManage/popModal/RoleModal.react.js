@@ -26,7 +26,10 @@ class RoleModal extends React.Component {
             } else {
                 message.error(data.msg);
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     isAllCheck = roleIds => {
         let { charAllList = [] } = this.state;

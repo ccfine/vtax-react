@@ -36,6 +36,10 @@ class PopModal extends Component{
                     })
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -73,6 +77,10 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
 
     createRecord = data =>{
@@ -88,6 +96,10 @@ class PopModal extends Component{
                     message.error(`新增失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
 
     //根据应税项目查询一般计税方法税率列表
@@ -102,6 +114,9 @@ class PopModal extends Component{
                     message.error(data.msg)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
 
     //根据应税项目查询简易计税方法税率列表
@@ -115,6 +130,9 @@ class PopModal extends Component{
                 }else{
                     message.error(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
 

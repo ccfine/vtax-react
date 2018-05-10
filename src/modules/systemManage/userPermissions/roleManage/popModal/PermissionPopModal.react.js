@@ -54,6 +54,9 @@ class PopModal extends Component{
                     })
                     .catch(err => {
                         message.error(err.message)
+                        this.setState({
+                            submitLoading:false
+                        })
                     })
             }
         });

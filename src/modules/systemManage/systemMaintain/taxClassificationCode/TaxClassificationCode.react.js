@@ -101,6 +101,7 @@ export default class TaxClassificationCode extends Component{
             okType: 'danger',
             cancelText: '取消',
             onOk: () => {
+                this.toggleModalVisible(false)
                 request.delete(`/tax/classification/coding/delete/${this.state.selectedRowKeys}`)
                     .then(({data}) => {
                         if (data.code === 200) {
@@ -110,7 +111,9 @@ export default class TaxClassificationCode extends Component{
                             message.error(data.msg)
                         }
                     })
-                this.toggleModalVisible(false)
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             },
             onCancel: () => {
                 console.log('Cancel');

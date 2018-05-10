@@ -1,6 +1,6 @@
 
 import React from "react";
-import {Modal} from "antd";
+import {Modal,message} from "antd";
 import SourceTable from '../sourceTable';
 import {request} from 'utils';
 import findIndex from 'lodash/findIndex'
@@ -54,11 +54,15 @@ export default class SourceModal extends React.Component{
     componentWillReceiveProps(props){
         if(this.props.updateKey !== props.updateKey){
             request.get(`/land/priceSource/list/${props.id}`).then(({data}) => {
-                if(data.code===200){
-                    // 计算总共金额并放置在数据的最后一条
-                    let sourceTable = this.countAmount(data.data.items);
-                    this.setState({sourceTable:sourceTable, loaded:true});
-                }});
+                    if(data.code===200){
+                        // 计算总共金额并放置在数据的最后一条
+                        let sourceTable = this.countAmount(data.data.items);
+                        this.setState({sourceTable:sourceTable, loaded:true});
+                    }
+                })
+                .catch(err => {
+                    message.error(err.message)
+                })
         }
     }
     render(){

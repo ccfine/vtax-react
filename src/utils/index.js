@@ -4,6 +4,7 @@
  * description  :
  */
 import React from 'react';
+import {message} from 'antd'
 import request from './request'
 import composeMenus from './composeMenus'
 import regRules from './regRules'
@@ -49,6 +50,9 @@ const getDict = type => {
                 }else{
                     reject(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     })
 }

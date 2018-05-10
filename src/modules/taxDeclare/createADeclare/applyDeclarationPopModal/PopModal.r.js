@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Button,Icon,Modal,Row,Col,Steps,List, Card} from 'antd'
+import {Button,Icon,Modal,Row,Col,Steps,List, Card, message} from 'antd'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import {composeMenus,request} from 'utils'
@@ -156,11 +156,14 @@ export default class ApplyDeclarationPopModal extends Component{
 
     fetchDeclarationById =(data)=>{
         request.get('/tax/decConduct/list',{
-            params:data
-        }).then(({data})=>{
+                params:data
+            }).then(({data})=>{
                 this.setState({
                     data:data.data,
                 })
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     componentWillReceiveProps(nextProps) {

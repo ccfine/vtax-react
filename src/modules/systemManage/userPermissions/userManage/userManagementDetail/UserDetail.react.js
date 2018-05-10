@@ -64,6 +64,9 @@ class UserDetail extends Component{
                     message.error(data.msg)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
 
 

@@ -140,6 +140,7 @@ class TableTaxStructure extends Component {
                                     this.props.toggleSearchTableLoading(false)
                                 }
                             }).catch(err=> {
+                                message.error(err.message)
                                 this.props.toggleSearchTableLoading(false)
                             })
                         break;
@@ -174,6 +175,7 @@ class TableTaxStructure extends Component {
                     message.error(`${type}失败:${data.msg}`)
                 }
             }).catch(err=> {
+                message.error(err.message)
                 this.props.toggleSearchTableLoading(false)
             })
     }
@@ -189,6 +191,7 @@ class TableTaxStructure extends Component {
                     message.error(`${type}失败:${data.msg}`)
                 }
             }).catch(err=> {
+                message.error(err.message)
                 this.props.toggleSearchTableLoading(false)
             })
     }

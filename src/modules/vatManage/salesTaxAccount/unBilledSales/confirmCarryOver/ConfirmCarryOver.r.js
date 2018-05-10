@@ -274,6 +274,9 @@ class ConfirmCarryOver extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     recount = ()=>{
         const { mainId,month:authMonth }  = this.state.resultFieldsValues;
@@ -293,7 +296,11 @@ class ConfirmCarryOver extends Component{
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    });
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             }
         })
     }

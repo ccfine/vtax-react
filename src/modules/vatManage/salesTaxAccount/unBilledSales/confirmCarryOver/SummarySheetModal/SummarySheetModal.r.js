@@ -68,6 +68,9 @@ class SummarySheetModal extends Component{
                     message.error(`汇总表数据获取失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.visible && nextProps.month){

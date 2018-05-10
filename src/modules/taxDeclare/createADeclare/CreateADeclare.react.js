@@ -206,6 +206,9 @@ export default class CreateADeclare extends Component{
                             message.error(data.msg)
                         }
                     })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             },
             onCancel() {
                 modalRef.destroy()

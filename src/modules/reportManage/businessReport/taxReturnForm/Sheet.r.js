@@ -91,8 +91,9 @@ export default class Sheet extends Component{
                     message.error(`报表数据获取失败:${data.msg}`,4)
                 }
             }).catch(err=>{
-            this.toggleLoading(false);
-        })
+                message.error(err.message)
+                this.toggleLoading(false);
+            })
     }
     mounted=true;
     componentWillUnmount(){

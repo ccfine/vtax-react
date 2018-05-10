@@ -37,6 +37,7 @@ class RoleManagementDetail extends Component{
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoading(false)
             })
 
         this.fetchRole(this.props.match.params.id)
@@ -57,6 +58,7 @@ class RoleManagementDetail extends Component{
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoading(false)
             })
     }
     fetchRoleId=(id)=>{
@@ -74,6 +76,7 @@ class RoleManagementDetail extends Component{
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoading(false)
             })
     }
 

@@ -125,6 +125,7 @@ export default class TabPage extends Component{
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
+                    message.error(err.message)
                     this.toggleSearchTableLoading(false)
                 })
             },

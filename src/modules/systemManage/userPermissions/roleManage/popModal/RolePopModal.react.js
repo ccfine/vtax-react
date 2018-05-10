@@ -53,6 +53,7 @@ class PopModal extends Component{
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
 
@@ -71,6 +72,7 @@ class PopModal extends Component{
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
 
