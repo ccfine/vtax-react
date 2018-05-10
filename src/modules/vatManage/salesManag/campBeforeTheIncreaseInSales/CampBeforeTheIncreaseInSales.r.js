@@ -317,6 +317,9 @@ class CampBeforeTheIncreaseInSales extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
         const {visible,modalConfig,tableKey,searchFieldsValues,hasData,dataStatus,submitDate} = this.state;

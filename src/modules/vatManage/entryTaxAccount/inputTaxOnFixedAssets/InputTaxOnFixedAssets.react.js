@@ -149,6 +149,10 @@ class InputTaxOnFixedAssets extends Component {
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.setState({ loading:false })
+            })
     }
     updateStatus=()=>{
         request.get('/account/income/fixedAssets/listMain',{params:this.state.filters}).then(({data}) => {
@@ -157,6 +161,9 @@ class InputTaxOnFixedAssets extends Component {
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     handleSubmit = (e,type) => {

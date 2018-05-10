@@ -214,7 +214,11 @@ class LandPriceDeductionDetails extends Component{
                                 }else{
                                     message.error(`重算失败:${data.msg}`)
                                 }
-                            });
+                            })
+                            .catch(err => {
+                                message.error(err.message)
+                                this.toggleSearchTableLoading(false)
+                            })
                     }
                 })
                 break;
@@ -234,6 +238,9 @@ class LandPriceDeductionDetails extends Component{
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     componentDidMount(){

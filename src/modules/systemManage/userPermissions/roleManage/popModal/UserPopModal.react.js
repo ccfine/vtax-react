@@ -13,7 +13,7 @@ class PopModal extends Component{
         submitLoading:false,
         mockData: [],
         targetKeys:[],
-        loaded:true,
+        loaded:false,
     }
 
     handleSubmit = () => {
@@ -33,14 +33,11 @@ class PopModal extends Component{
                     submitLoading:false
                 })
                 if(data.code===200){
-                    if(this.mounted){
-                        message.success('角色分配成功!');
-                        this.setState({
-                            visible:false
-                        })
+                    if(this.mounted) {
+                        message.success('角色分配用户成功!');
+                        this.props.toggleUserModalVisible(false);
                         this.props.refreshTable()
                     }
-
                 }else{
                     message.error(data.msg)
                 }
@@ -53,23 +50,22 @@ class PopModal extends Component{
 
     toggleLoaded = loaded => this.setState({loaded})
 
-    fetchList(){
-        request.get(`/sysUser/queryUserList/${this.props.orgId}`)
+    fetchList(orgId){
+        request.get(`/sysUser/queryUserList/${orgId}`)
             .then(({data})=>{
-                this.toggleLoaded(true)
+                this.toggleLoaded(false)
                 if(data.code===200){
-                    this.toggleLoaded(false)
+                    this.toggleLoaded(true)
                     this.mounted && this.setState({
                         mockData: data.data,
                     })
-                    this.fetchRoleId(this.props.id)
-
                 }else{
                     message.error(data.msg)
                 }
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
 
@@ -77,10 +73,12 @@ class PopModal extends Component{
         const targetKeys = [];
         request.get(`/sysRole/queryUserByRoleId/${roleId}`)
             .then(({data})=>{
-                this.toggleLoaded(true)
+                this.toggleLoaded(false)
                 if(data.code===200){
-                    this.toggleLoaded(false)
-                    data.data.map(item=>targetKeys.push(item.key));
+                    this.toggleLoaded(true)
+                    for (let i = 0; i < data.data.length; i++) {
+                        targetKeys.push(data.data[i].key);
+                    }
                     this.mounted && this.setState({
                         targetKeys
                     })
@@ -90,24 +88,18 @@ class PopModal extends Component{
             })
             .catch(err => {
                 message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
 
 
     filterOption = (inputValue, option) => {
-        return option.description.indexOf(inputValue) > -1;
+        return option.title.indexOf(inputValue) > -1;
     }
     handleChange = (targetKeys) => {
-        console.log(targetKeys)
         this.setState({ targetKeys });
     }
-
-
-    componentDidMount() {
-       this.fetchList()
-        //this.getMock()
-    }
-    mounted=true
+    mounted=true;
     componentWillUnmount(){
         this.mounted=null
     }
@@ -117,6 +109,10 @@ class PopModal extends Component{
              * 关闭的时候清空表单
              * */
             nextProps.form.resetFields();
+        }
+        if(this.props.visible !== nextProps.visible && !this.props.visible){
+            this.fetchList(nextProps.orgId)
+            this.fetchRoleId(nextProps.id)
         }
     }
     render(){
@@ -138,18 +134,18 @@ class PopModal extends Component{
                         <Col span={12}></Col>
                         <Col span={12}>
                             <Button onClick={()=>toggleUserModalVisible(false)}>取消</Button>
-                            <Button type="primary" loading={loaded} onClick={this.handleSubmit}>确定</Button>
+                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
                         </Col>
                     </Row>
                 }
                 title='分配用户'>
-                <Spin spinning={loaded}>
+                <Spin spinning={!loaded}>
                     <div style={{
                         width: 606,
                         margin: '0 auto'
                     }}>
                         <Transfer
-                            rowKey={record => record.key}
+                            //rowKey={record => record.key}
                             listStyle={{
                                 width: 280,
                                 height: 400,

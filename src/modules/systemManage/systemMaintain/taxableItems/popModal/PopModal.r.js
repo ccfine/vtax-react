@@ -31,6 +31,10 @@ class PopModal extends Component{
                     })
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
     updateRecord = data =>{
         request.put('/taxable/project/update',data)
@@ -44,6 +48,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`更新失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
 
@@ -59,6 +67,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`新增失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
     //设置select值名不同
@@ -78,14 +90,21 @@ class PopModal extends Component{
                     commonlyTaxRateList:this.setFormat(data.data),
                 });
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
+
         request.get('/sys/taxrate/list/2').then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     simpleTaxRateList:this.setFormat(data.data),
                 });
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     handleSubmit = e => {
         e && e.preventDefault();

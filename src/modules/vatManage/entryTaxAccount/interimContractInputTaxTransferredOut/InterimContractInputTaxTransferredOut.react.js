@@ -274,7 +274,11 @@ class InterimContractInputTaxTransferredOut extends Component {
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    });
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             }
         })
     }
@@ -285,6 +289,9 @@ class InterimContractInputTaxTransferredOut extends Component {
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     deleteRecord = (id,cb) => {

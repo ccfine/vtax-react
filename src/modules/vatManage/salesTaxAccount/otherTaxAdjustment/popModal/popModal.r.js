@@ -49,7 +49,11 @@ class PopModal extends Component{
                         }
                         this.setState({formLoading:false,record:data.data});
                     }
-                });
+                })
+                .catch(err => {
+                    message.error(err.message)
+                    this.setState({formLoading:false});
+                })
             }else{
                 this.props.form.resetFields();
                 this.setState({formLoading:false,record:{},typelist:[]});
@@ -74,7 +78,10 @@ class PopModal extends Component{
             if (data.code === 200) {
                 this.setState({typelist:data.data});
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     autoCalTax = (amount,tax)=>{
         // 计算公式：销售额（不含税）*税率

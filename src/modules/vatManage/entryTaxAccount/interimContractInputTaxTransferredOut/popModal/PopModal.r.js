@@ -151,7 +151,10 @@ class PopModal extends Component{
                     })
                 })
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
 
     renderColumns(text, record, column,type,options=[],fieldDecoratorOptions={initialValue:`${text}`}) {
@@ -188,6 +191,9 @@ class PopModal extends Component{
                         }else{
                             message.error(`保存失败:${data.msg}`)
                         }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
                     })
 
             }

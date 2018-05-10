@@ -31,6 +31,10 @@ class PopModal extends Component{
                     })
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -97,6 +101,10 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
 
     createRecord = data =>{
@@ -111,6 +119,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`新增失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
     render(){
