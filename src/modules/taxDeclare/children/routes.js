@@ -5,10 +5,14 @@
  */
 import LoadAble from 'react-loadable'
 import {wrapPage,LoadingPage} from 'compoments'
+import strategies from 'config/routingAuthority.config'
+
 /*import CreateADeclare from '../../taxDeclare/createADeclare'*/
 /*import SearchDeclare from '../../taxDeclare/searchDeclare'*/
+
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/taxDeclare`
+const taxDeclare = strategies['taxDeclare'];
 
 const AsyncCreateADeclare = LoadAble({
     loader: () => import('../../taxDeclare/createADeclare'),
@@ -28,6 +32,7 @@ const Children_Routes = [
             url:`${ICON_URL_PATH}createAMatter.svg`,
             backgroundColor:'#56C7F3'
         },
+        authorityInfo:taxDeclare['createADeclare'].options,
         exact:true,
     },{
         path:`${PATH}/searchDeclare`,
@@ -37,6 +42,7 @@ const Children_Routes = [
             url:`${ICON_URL_PATH}upcomingMatter.svg`,
             backgroundColor:'#F5A544'
         },
+        authorityInfo:taxDeclare['searchDeclare'].options,
         exact:true,
     },{
         path:`${PATH}`,

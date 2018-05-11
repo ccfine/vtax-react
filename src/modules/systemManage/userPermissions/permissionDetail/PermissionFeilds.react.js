@@ -55,9 +55,9 @@ class PermissionFeilds extends React.Component {
             // 如果时禁用的checkbox不要改变
             newItems.forEach(item => {
                 this.checkDisabled(item.permissionId) ||
-                    setFieldsValue({
-                        [item.permissionId]: false
-                    });
+                setFieldsValue({
+                    [item.permissionId]: false
+                });
                 return item;
             });
         }
@@ -118,20 +118,20 @@ class PermissionFeilds extends React.Component {
                                         {editAble && (
                                             <FormItem>
                                                 {getFieldDecorator(`allCode${i}`,{
-                                                            initialValue: this.initCheckboxAll(
-                                                                item.permissionVOs
-                                                            )
-                                                        })(
-                                                <Checkbox
-                                                    defaultChecked={this.initCheckboxAll(
+                                                    initialValue: this.initCheckboxAll(
                                                         item.permissionVOs
-                                                    )}
-                                                    onChange={this.onCheckAllChange(
-                                                        item
-                                                    )}
-                                                >
-                                                    全选
-                                                </Checkbox>)}
+                                                    )
+                                                })(
+                                                    <Checkbox
+                                                        defaultChecked={this.initCheckboxAll(
+                                                            item.permissionVOs
+                                                        )}
+                                                        onChange={this.onCheckAllChange(
+                                                            item
+                                                        )}
+                                                    >
+                                                        全选
+                                                    </Checkbox>)}
                                             </FormItem>
                                         )}
                                         {item.permissionVOs.map(
@@ -142,9 +142,9 @@ class PermissionFeilds extends React.Component {
                                                             fieldItem.permissionId,
                                                             {
                                                                 initialValue:
-                                                                    checkedPermission.indexOf(
-                                                                        fieldItem.permissionId
-                                                                    ) > -1,
+                                                                checkedPermission.indexOf(
+                                                                    fieldItem.permissionId
+                                                                ) > -1,
                                                                 valuePropName:
                                                                     "checked",
                                                                 onChange: this.checkAllChecked(

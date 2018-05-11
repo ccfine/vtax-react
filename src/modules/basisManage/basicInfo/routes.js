@@ -8,10 +8,13 @@ import {wrapPage} from 'compoments'
 import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
+import strategies from 'config/routingAuthority.config'
 
 
 const PATHS = '/web/basisManage/basicInfo';
-const ICON_URL_PATH = '/assets/routes_avatar/'
+const ICON_URL_PATH = '/assets/routes_avatar/';
+const basicInfo = strategies['basisManage']['basicInfo'];
+
 const BasicInfo_Routes = [
     {
         path:`${PATHS}/aubjectOfTaxPayment`,
@@ -21,6 +24,7 @@ const BasicInfo_Routes = [
             url:`${ICON_URL_PATH}mainTax.svg`,
             backgroundColor:'#61C5C3'
         },
+        authorityInfo:basicInfo['aubjectOfTaxPayment'].options,
         exact:true,
     },{
         path:`${PATHS}/taxIncentives`,
@@ -30,6 +34,7 @@ const BasicInfo_Routes = [
             url:`${ICON_URL_PATH}taxIncentives.svg`,
             backgroundColor:'#4DC1F0'
         },
+        authorityInfo:basicInfo['taxIncentives'].options,
         exact:true,
     },{
         path:`${PATHS}/declareParameter`,
@@ -39,6 +44,7 @@ const BasicInfo_Routes = [
             url:`${ICON_URL_PATH}declareParameter.svg`,
             backgroundColor:'#9FD360'
         },
+        authorityInfo:basicInfo['declareParameter'].options,
         exact:true,
     },{
         path:`${PATHS}`,

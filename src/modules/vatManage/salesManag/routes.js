@@ -10,9 +10,11 @@ import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
 import BillingSales from '../salesTaxAccount/billingSales'
 import UnBilledSales from '../salesTaxAccount/unBilledSales'
 import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
+import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/salesManag`;
+const salesManag = strategies['vatManage']['salesManag'];
 
 const SalesManag_Routes = [
     {
@@ -23,6 +25,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}salesInvoiceCollection.svg`,
             backgroundColor:'#73CF2B'
         },
+        authorityInfo:salesManag['salesInvoiceCollection'].options,
         exact:true,
     },{
         path:`${PATH}/salesInvoiceMatching`,
@@ -32,6 +35,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}salesInvoiceMatching.svg`,
             backgroundColor:'#4DC1F0'
         },
+        authorityInfo:salesManag['salesInvoiceMatching'].options,
         exact:true,
     },{
         path:`${PATH}/campBeforeTheIncreaseInSales`,
@@ -41,6 +45,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}campBeforeTheIncreaseInSales.svg`,
             backgroundColor:'#FFBE06'
         },
+        authorityInfo:salesManag['campBeforeTheIncreaseInSales'].options,
         exact:true,
     },{
         path:`${PATH}/billingSales`,
@@ -50,6 +55,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}billingSales.svg`,
             backgroundColor:'#7ED530'
         },
+        authorityInfo:salesManag['billingSales'].options,
         exact:true,
     },{
         path:`${PATH}/unBilledSales`,
@@ -59,6 +65,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}unbilledAales.svg`,
             backgroundColor:'#F5A544'
         },
+        authorityInfo:salesManag['unBilledSales'].options,
         exact:true,
     },{
         path:`${PATH}/otherTaxAdjustment`,
@@ -68,6 +75,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
             backgroundColor:'#57C8F2'
         },
+        authorityInfo:salesManag['otherTaxAdjustment'].options,
         exact:true,
     },{
         path:`${PATH}`,
