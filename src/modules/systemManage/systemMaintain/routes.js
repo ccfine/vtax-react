@@ -10,6 +10,7 @@ import TaxReturnsCustom from './taxReturnsCustom'
 import OtherReportsAreCustom from './otherReportsAreCustom'
 import TaxClassificationCode from './taxClassificationCode'
 import TaxableItems from './taxableItems'
+import SubjectRateRela from './subjectRateRela'
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/';
@@ -66,6 +67,16 @@ const SystemMaintain_Routes = [
             backgroundColor:'#6CCCCA'
         },
         authorityInfo:systemMaintain['taxableItems'].options,
+        exact:true,
+    },
+    {
+        path:`${PATHS}/subjectRateRela`,
+        component:wrapPage('主营业收入科目税率对应表',SubjectRateRela),
+        name:'主营业收入科目税率对应表',
+        icon:{
+            url:`${ICON_URL_PATH}subjectRateRela.svg`,
+            backgroundColor:'#6CCCCA'
+        },
         exact:true,
     },{
         path:`${PATHS}`,
