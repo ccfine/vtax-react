@@ -7,6 +7,9 @@ import React, { Component } from 'react';
 import { Layout, Menu,Icon} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
+import checkPermissions from 'compoments/permissible/index'
+
 import logo from './images/logo.png'
 import './styles.less'
 
@@ -32,6 +35,7 @@ class VTaxSider extends Component {
     }
 
     getNavMenuItems=(menusData)=>{
+
         if (!menusData) {
             return [];
         }
@@ -42,36 +46,37 @@ class VTaxSider extends Component {
             }
 
             if (item.permissions && item.children && item.children.some(child => child.name)) {
-                return (
-                    <SubMenu
-                        title={
-                            item.icon ? (
-                                <span>
+                    return checkPermissions(item, this.props.options) &&  (
+                            <SubMenu
+                                title={
+                                    item.icon ? (
+                                        <span>
                               <Icon type={item.icon} />
                               <span>{item.name}</span>
                             </span>
-                            ) : item.name
-                        }
-                        key={item.key || item.path}
-                    >
-                        {this.getNavMenuItems(item.children)}
-                    </SubMenu>
-                );
-            }
+                                    ) : item.name
+                                }
+                                key={item.key || item.path}
+                            >
+                                {this.getNavMenuItems(item.children)}
+                            </SubMenu>
+                        );
+                }
 
             const icon = item.icon && <Icon type={item.icon} />;
-            return (
-                <Menu.Item key={item.key || item.path}>
-                    <Link
-                        to={item.path}
-                        target={item.target}
-                        replace={item.path === this.props.location.pathname}
-                    >
-                        {icon}<span>{item.name}</span>
-                    </Link>
-                </Menu.Item>
-            );
 
+            //判断有权限
+            return checkPermissions(item, this.props.options) &&  (
+                    <Menu.Item key={item.key || item.path}>
+                        <Link
+                            to={item.path}
+                            target={item.target}
+                            replace={item.path === this.props.location.pathname}
+                        >
+                            {icon}<span>{item.name}</span>
+                        </Link>
+                    </Menu.Item>
+                );
 
         });
     }
@@ -147,4 +152,6 @@ class VTaxSider extends Component {
     }
 }
 
-export default withRouter(VTaxSider)
+export default withRouter(connect(state=>({
+    options:state.user.getIn(['personal','options'])
+}))(VTaxSider))

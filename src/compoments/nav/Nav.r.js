@@ -6,6 +6,8 @@
 import React, { Component } from 'react'
 import {Layout,Avatar,List, Card } from 'antd'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+import checkPermissions from 'compoments/permissible/index'
 import './styles.less'
 
 const { Meta } = Card;
@@ -13,19 +15,19 @@ const { Meta } = Card;
 class NavRouter extends Component {
 
     composeNav=(routes)=>{
-        return routes.map((item,i)=>{
+        return routes.map(item=>{
             if(item && !item.to && item.icon){
-                return {
-                    path:item.path,
-                    name:item.name,
-                    icon:item.icon
-                    /*|| {
-                        url:'/assets/routes_avatar/mainTax.svg',
-                        backgroundColor:'#61C5C3'
-                    } `icon_${i}`,*/
-                }
+                //console.log(difference(this.props.options, item.authorityInfo).length > 0)
+                //判断有权限
+                return checkPermissions(item, this.props.options) &&  {
+                        path:item.path,
+                        name:item.name,
+                        icon:item.icon  //|| {url:'/assets/routes_avatar/mainTax.svg', backgroundColor:'#61C5C3'} `icon_${i}`,
+                    }
             }
+
             return null;
+
         }).filter(item=>item);
     }
 
@@ -38,15 +40,15 @@ class NavRouter extends Component {
                     renderItem={item => (
                         <List.Item>
                             <Card className="nav-card">
-                                    <Meta
-                                        avatar={<Avatar className="IconImg" src={item.icon.url} style={{
-                                            background:item.icon.backgroundColor
-                                        }} />}
-                                        //title={item.name}
-                                        description={<Link to={item.path}>
-                                            {item.name}
-                                        </Link>}
-                                    />
+                                <Meta
+                                    avatar={<Avatar className="IconImg" src={item.icon.url} style={{
+                                        background:item.icon.backgroundColor
+                                    }} />}
+                                    //title={item.name}
+                                    description={<Link to={item.path}>
+                                        {item.name}
+                                    </Link>}
+                                />
                             </Card>
                         </List.Item>
                     )}
@@ -57,5 +59,6 @@ class NavRouter extends Component {
 }
 
 
-
-export default NavRouter
+export default connect(state=>({
+    options:state.user.getIn(['personal','options'])
+}))(NavRouter)

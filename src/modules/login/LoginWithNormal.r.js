@@ -124,8 +124,8 @@ class LoginWithNormal extends Component {
                                     {getFieldDecorator('password', {
                                         rules: [{
                                             required: true, message: '请输入密码!'
-                                        },{
-                                            pattern:regRules.password.pattern, message: regRules.password.message,
+                                        /*},{
+                                            pattern:regRules.password.pattern, message: regRules.password.message,*/
                                         }],
                                     })(
                                         <Input prefix={<Icon type="lock" style={{ fontSize: 14 }} />} type="password" placeholder="密码" />

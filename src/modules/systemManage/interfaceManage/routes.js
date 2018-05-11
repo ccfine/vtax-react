@@ -5,11 +5,13 @@
  */
 import React from 'react'
 import {wrapPage} from 'compoments'
+import strategies from 'config/routingAuthority.config'
 
 const InterfaceMaintain =()=><div>接口维护</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/systemManage/interfaceManage`
+const interfaceManage = strategies['systemManage']['interfaceManage']
 
 const InterfaceManage_Routes = [
     {
@@ -20,6 +22,7 @@ const InterfaceManage_Routes = [
             url:`${ICON_URL_PATH}interfaceMaintain.svg`,
             backgroundColor:'#7ED530'
         },
+        authorityInfo:interfaceManage['interfaceMaintain'].options,
         exact:true,
     },{
         path:`${PATH}`,

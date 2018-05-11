@@ -5,8 +5,11 @@
  */
 import {wrapPage} from 'compoments'
 import LandPriceManage from './landPriceManage'
+import strategies from 'config/routingAuthority.config'
+
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/landPrice`;
+const landPrice = strategies['vatManage']['landPrice'];
 
 const LandPrice_Routes = [
     {
@@ -17,6 +20,7 @@ const LandPrice_Routes = [
             url:`${ICON_URL_PATH}landPriceManage.svg`,
             backgroundColor:'#904C27'
         },
+        authorityInfo:landPrice['landPriceManage'].options,
         exact:true,
     },{
         path:`${PATH}`,

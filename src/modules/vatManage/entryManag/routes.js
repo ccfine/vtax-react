@@ -11,9 +11,11 @@ import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
 import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
+import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/entryManag`;
+const entryManag = strategies['vatManage']['entryManag'];
 
 const EntryManag_Routes = [
     {
@@ -24,6 +26,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}invoiceCollection.svg`,
             backgroundColor:'#73CF2B'
         },
+        authorityInfo:entryManag['invoiceCollection'].options,
         exact:true,
     },{
         path:`${PATH}/invoiceMatching`,
@@ -33,6 +36,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}invoiceMatching.svg`,
             backgroundColor:'#4DC1F0'
         },
+        authorityInfo:entryManag['invoiceMatching'].options,
         exact:true,
     },{
         path:`${PATH}/inputTaxDetails`,
@@ -42,6 +46,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}inputTaxDetails.svg`,
             backgroundColor:'#307173'
         },
+        authorityInfo:entryManag['inputTaxDetails'].options,
         exact:true,
   /*},{
         path:`${PATH}/inputTaxStructure`,
@@ -60,6 +65,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}inputTaxOnFixedAssets.svg`,
             backgroundColor:'#2F7597'
         },
+        authorityInfo:entryManag['inputTaxOnFixedAssets'].options,
         exact:true,
     },{
         path:`${PATH}/interimContractInputTaxTransferredOut`,
@@ -69,6 +75,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}interimContractInputTaxTransferredOut.svg`,
             backgroundColor:'#FD6A60'
         },
+        authorityInfo:entryManag['interimContractInputTaxTransferredOut'].options,
         exact:true,
     },{
         path:`${PATH}/otherBusinessInputTaxRollOut`,
@@ -78,6 +85,8 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
             backgroundColor:'#3B4A83'
         },
+        authorityInfo:entryManag['otherBusinessInputTaxRollOut'].options,
+        exact:true,
     },{
         exact:true,
         path:`${PATH}`,

@@ -2,7 +2,8 @@
  * Created by liuliyuan on 2018/5/9.
  */
 import { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
 import intersection from 'lodash/intersection'; //取出各数组中全等的元素，使用SameValueZero方式平等比较。
 import difference from 'lodash/difference'; //只要array中比[values]中多出的值，都会返回，不管个数出现了几次
 
@@ -10,37 +11,43 @@ import difference from 'lodash/difference'; //只要array中比[values]中多出
  * 普通组件
  *
  必填：
- userPermissions是为当前用户设置的权限数组
- requiredPermissions是所需权限的数组
  RestrictedComponent 是要呈现的组件
+ userPermissions 是为当前用户设置的权限数组
+ options 是所需权限的数组
 
  可选：
- oneperm - 只需要一个必需的权限（布尔）
- renderOtherwise - 如果权限不匹配，则显示另一个组件（用户不被允许）。
+ oneperm- 布尔值确定只需要其中一个权限而不需要所有通过的权限（默认值）
+ true: 一个权限必须匹配
+ false: 所有权限必须匹配
+ renderOtherwise- 如果权限不匹配，则显示另一个组件（用户不被允许）。
  */
-export class PermissibleRender extends Component {
+class PermissibleRender extends Component {
     static propTypes = {
         oneperm: PropTypes.bool,
         userPermissions: PropTypes.arrayOf(PropTypes.string).isRequired,
-        requiredPermissions: PropTypes.arrayOf(PropTypes.string).isRequired,
+        //options: PropTypes.arrayOf(PropTypes.string).isRequired,
         children: PropTypes.element.isRequired,
         renderOtherwise: PropTypes.element,
     }
 
+    static defaultProps = {
+        oneperm:true,
+    }
+
     checkPermissions() {
-        const { userPermissions, requiredPermissions, oneperm } = this.props;
+        const { userPermissions, options, oneperm } = this.props;
 
         if (oneperm) {
-            return intersection(userPermissions, requiredPermissions).length;
+            return intersection(userPermissions, options).length;
         }
 
-        return difference(requiredPermissions, userPermissions).length === 0;
+        return difference(options, userPermissions).length === 0;
     }
 
     render() {
-        const { children, userPermissions, requiredPermissions, renderOtherwise } = this.props;
+        const { children, userPermissions, options, renderOtherwise } = this.props;
 
-        if (!children || !userPermissions || !requiredPermissions) {
+        if (!children || !userPermissions || !options) {
             return null;
         }
 
@@ -52,3 +59,7 @@ export class PermissibleRender extends Component {
         return null;
     }
 }
+
+export default connect(state=>({
+    options:state.user.getIn(['personal','options'])
+}))(PermissibleRender)

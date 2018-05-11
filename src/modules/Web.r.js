@@ -15,8 +15,32 @@ import Sider from './sider'
 import BreadCrumb from './breadcrumb/Breadcrumb'
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
+//import strategies from 'config/routingAuthority.config'
 
 const { Content,Footer } = Layout;
+
+/*const returnAuthority = (authority) => {
+    const new_routes = composeMenus(routes);
+    let list = [];
+    Object.keys(new_routes).forEach((item) => {
+        Object.keys(authority).forEach((ele) => {
+            if(!new_routes[item].to) {
+                if(new_routes[item].name === authority[ele].name){
+                    list.push({...new_routes[item], authority:authority[ele].authorityInfo})
+                    return;
+                }
+            }
+        })
+
+    })
+    let newList = [];
+    let data =  {...new_routes,...list}
+    for(let item in data){
+        newList.push(data[item])
+    }
+    return newList;
+}
+const routesData = returnAuthority(strategies);*/
 
 class Web extends Component {
 
@@ -50,6 +74,11 @@ class Web extends Component {
         })
     }
 
+    componentDidMount() {
+        //console.log(routesData)
+        //this.returnAuthority(strategies)
+    }
+
     componentWillMount(){
         this.checkLoggedIn(this.props)
     }
@@ -65,6 +94,7 @@ class Web extends Component {
 
 
     render() {
+        //console.log(routesData)
         const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
         //const pathname = this.props.history.location.pathname;
         return (
