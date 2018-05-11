@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 14:10:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 14:06:15
+ * @Last Modified time: 2018-05-10 17:41:36
  */
 import React from "react";
 import { Form, Row, Col, Checkbox, Spin } from "antd";
@@ -36,7 +36,7 @@ class PermissionFeilds extends React.Component {
     //             }
     //         })
     //         .catch(err => {
-    //             message.error(err, 4);
+    //             message.error(err.message, 4);
     //             this.setState({ allPermissionLoading: false });
     //         });
     // }
@@ -63,7 +63,7 @@ class PermissionFeilds extends React.Component {
         }
     };
     checkAllChecked = (allCode, code) => e => {
-        const { allPermission } = this.props;
+        const { allPermission=[] } = this.props;
         const { setFieldsValue, getFieldValue } = this.props.form;
         setFieldsValue({
             [code]: e.target.checked
@@ -110,13 +110,18 @@ class PermissionFeilds extends React.Component {
                                             lineHeight: "32px",
                                             paddingRight: 15
                                         }}
-                                        span={3}
+                                        span={4}
                                     >
                                         {item.moduleName}:
                                     </Col>
-                                    <Col span={21}>
+                                    <Col span={20}>
                                         {editAble && (
                                             <FormItem>
+                                                {getFieldDecorator(`allCode${i}`,{
+                                                            initialValue: this.initCheckboxAll(
+                                                                item.permissionVOs
+                                                            )
+                                                        })(
                                                 <Checkbox
                                                     defaultChecked={this.initCheckboxAll(
                                                         item.permissionVOs
@@ -126,7 +131,7 @@ class PermissionFeilds extends React.Component {
                                                     )}
                                                 >
                                                     全选
-                                                </Checkbox>
+                                                </Checkbox>)}
                                             </FormItem>
                                         )}
                                         {item.permissionVOs.map(

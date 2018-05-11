@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 12:31:55
+ * @Last Modified time: 2018-05-10 16:46:48
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox } from "antd";
@@ -30,7 +30,7 @@ class RoleModal extends React.Component {
                 }
             })
             .catch(err => {
-                message.error(err);
+                message.error(err.message);
             });
     }
     isAllCheck = roleIds => {

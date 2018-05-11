@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 14:24:38
+ * @Last Modified time: 2018-05-10 17:38:04
  */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
@@ -85,7 +85,7 @@ const getColumns = context => [
                     </a>
                     <a
                         onClick={() => {
-                            context.handleDelete(record.id);
+                            context.handleDelete(record.id,record.isEnabled);
                         }}
                     >
                         <Tooltip placement="top" title="删除">
@@ -250,7 +250,7 @@ class UserManage extends Component {
                 }
             })
             .catch(err => {
-                message.error(err, 4);
+                message.error(err.message, 4);
             });
     }
     hideModal = () => {
@@ -280,7 +280,7 @@ class UserManage extends Component {
                         }
                     })
                     .catch(err => {
-                        message.error(err, 4);
+                        message.error(err.message, 4);
                     });
             },
             onCancel() {
@@ -288,7 +288,11 @@ class UserManage extends Component {
             }
         });
     };
-    handleDelete = id => {
+    handleDelete = (id,isEnabled) => {
+        if(parseInt(isEnabled, 0) === 1){
+            message.error('请禁用后，再删除');
+            return;
+        }
         const modalRef = Modal.confirm({
             title: "友情提醒",
             content: "该删除后将不可恢复，是否删除？",
