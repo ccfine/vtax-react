@@ -192,12 +192,15 @@ export default class ApplyDeclarationPopModal extends Component {
         let list = data[current];
         let dataSource = [];
         list.forEach((item, index) => {
-            dataSource[index] = [];
-            item.forEach(t => {
+            dataSource[index] = {
+                title: item.title,
+                options: []
+            };
+            item.options.forEach(t => {
                 let findData = false;
                 allPlainRoutes.forEach(d => {
                     if (t.name === d.name) {
-                        dataSource[index].push({
+                        dataSource[index].options.push({
                             name: t.name,
                             path: d.path,
                             status: t.status
@@ -207,43 +210,40 @@ export default class ApplyDeclarationPopModal extends Component {
                 });
 
                 findData ||
-                    dataSource[index].push({
+                    dataSource[index].options.push({
                         name: t.name,
                         status: t.status
                     });
             });
         });
 
+        // 计算没一列的span
+        let everySpan = 7;
+        everySpan = Math.floor((25 - dataSource.length) / dataSource.length);
+
         return (
             <Row gutter={0} justify="center" type="flex">
-                <Col span={7}>
-                    <h4 className="steps-title">数据采集</h4>
-                    <div className="steps-content">
-                        {this.getOneContent(dataSource[0], 0)}
-                    </div>
-                </Col>
-                <Col span={1}>
-                    <div className="steps-icon">
-                        <Icon type="arrow-right" />
-                    </div>
-                </Col>
-                <Col span={7}>
-                    <h4 className="steps-title">数据处理</h4>
-                    <div className="steps-content">
-                        {this.getOneContent(dataSource[1], 1)}
-                    </div>
-                </Col>
-                <Col span={1}>
-                    <div className="steps-icon">
-                        <Icon type="arrow-right" />
-                    </div>
-                </Col>
-                <Col span={7}>
-                    <h4 className="steps-title">生成台账</h4>
-                    <div className="steps-content">
-                        {this.getOneContent(dataSource[2], 2)}
-                    </div>
-                </Col>
+                {dataSource.map((item, index) => {
+                    let res = [];
+                    if (index !== 0) {
+                        res.push(
+                            <Col span={1}>
+                                <div className="steps-icon">
+                                    <Icon type="arrow-right" />
+                                </div>
+                            </Col>
+                        );
+                    }
+                    res.push(
+                        <Col span={everySpan}>
+                            <h4 className="steps-title">{item.title}</h4>
+                            <div className="steps-content">
+                                {this.getOneContent(item.options, 0)}
+                            </div>
+                        </Col>
+                    );
+                    return res;
+                })}
             </Row>
         );
     };
