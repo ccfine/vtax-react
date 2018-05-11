@@ -23,7 +23,6 @@ import {FetchTable,CardSearch} from './fetchTable'
 import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
-import { Permissible,PermissibleRender } from './permissible';
 
 export {
     RouteWithSubRoutes,
@@ -45,6 +44,4 @@ export {
     TreeTable,
     LoadingPage,
     TableTotal,
-    Permissible,
-    PermissibleRender,
 }

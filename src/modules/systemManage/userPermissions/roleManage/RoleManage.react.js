@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {Icon,Button,Switch,message,Modal} from 'antd'
-import {SearchTable,PermissibleRender,Permissible} from 'compoments'
+import {SearchTable} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
 import {request,} from 'utils'
 const buttonStyle={
@@ -105,26 +105,6 @@ class RoleManage extends Component{
             type: ''
         },
     }
-    RestrictedComponent = () =>{
-        return (
-            <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
-                <Icon type="plus" />
-                HOC新增
-            </Button>
-        )
-    }
-    callbackFunction=({ userPermissions, requiredPermissions })=>{
-        console.log(userPermissions, requiredPermissions, '权限不匹配');
-    }
-
-    PermissibleComponent = Permissible(
-        this.RestrictedComponent,
-        ['admin01'], // userPermissions
-        ['111'], // requiredPermissions
-        this.callbackFunction, // no callback || null
-        true, // true: 一个权限必须匹配 false: 所有权限必须匹配
-    );
-
     toggleModalVisible=visible=>{
         this.setState({
             visible
@@ -211,18 +191,10 @@ class RoleManage extends Component{
                         title: '角色列表',
                         extra:
                             <div>
-                                <PermissibleRender
-                                    userPermissions={['admin01']}
-                                    requiredPermissions={['admin01']}
-                                >
-                                    <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
-                                        <Icon type="plus" />
-                                        新增
-                                    </Button>
-                                </PermissibleRender>
-
-                                <this.PermissibleComponent  />
-
+                                <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
+                                    <Icon type="plus" />
+                                    新增
+                                </Button>
                                 <Button size="small" disabled={!selectedRowKeys} onClick={()=>this.togglePermissionModalVisible(true)}  style={buttonStyle}>
                                     <Icon type="edit" />
                                     分配权限

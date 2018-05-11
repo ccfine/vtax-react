@@ -5,12 +5,14 @@
  */
 import React from 'react'
 import {wrapPage} from 'compoments'
+import strategies from 'config/routingAuthority.config'
 
 const LogMonitoring =()=><div>日志监控</div>
 const systemMaintain =()=><div>系统维护</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
-const PATH = `/web/systemManage/systemMonitor`;
+const PATH = `/web/systemManage/systemMonitor`
+const systemMonitor = strategies['systemManage']['systemMonitor']
 
 const SystemMonitor_Routes = [
     {
@@ -21,6 +23,7 @@ const SystemMonitor_Routes = [
             url:`${ICON_URL_PATH}logMonitoring.svg`,
             backgroundColor:'#56C7F3'
         },
+        authorityInfo:systemMonitor['logMonitoring'].options,
         exact:true,
     },{
         path:`${PATH}/systemMaintain`,
@@ -30,6 +33,7 @@ const SystemMonitor_Routes = [
             url:`${ICON_URL_PATH}systemMaintain.svg`,
             backgroundColor:'#7ED530'
         },
+        authorityInfo:systemMonitor['systemMaintain'].options,
         exact:true,
     },{
         path:`${PATH}`,

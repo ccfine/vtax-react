@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
 import {SearchTable,FileExport,TableTotal} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import PermissibleRender from 'compoments/permissible/PermissibleRender.r'
 import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import FileImportModal from './fileImportModal'
 import PopModal from './popModal'
@@ -369,29 +370,44 @@ class SalesInvoiceCollection extends Component{
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)
                             }
-                            <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="plus" />
-                                新增
-                            </Button>
-                            <FileImportModal style={{marginRight:5}} />
-                            <FileExport
-                                url={`output/invoice/collection/export`}
-                                title="导出"
-                                size="small"
-                                disabled={!hasData}
-                                params={
-                                    searchFieldsValues
-                                }
-                                setButtonStyle={{marginRight:5}}
-                            />
-                            <FileExport
-                                url='output/invoice/collection/download'
-                                title="下载导入模板"
-                                size="small"
-                                setButtonStyle={{marginRight:5}}
-                            />
-                            <SubmitOrRecall type={1} url="/output/invoice/collection/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall type={2} url="/output/invoice/collection/revoke" onSuccess={this.refreshTable} />
+                            <PermissibleRender userPermissions={['1061003']}>
+                                <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
+                                    <Icon type="plus" />
+                                    新增
+                                </Button>
+                            </PermissibleRender>
+
+                            <PermissibleRender userPermissions={['1061005']}>
+                                <FileImportModal style={{marginRight:5}} />
+                            </PermissibleRender>
+
+                            <PermissibleRender userPermissions={['1061007']}>
+                                <FileExport
+                                    url={`output/invoice/collection/export`}
+                                    title="导出"
+                                    size="small"
+                                    disabled={!hasData}
+                                    params={
+                                        searchFieldsValues
+                                    }
+                                    setButtonStyle={{marginRight:5}}
+                                />
+                            </PermissibleRender>
+                            <PermissibleRender userPermissions={['1061006']}>
+                                <FileExport
+                                    url='output/invoice/collection/download'
+                                    title="下载导入模板"
+                                    size="small"
+                                    setButtonStyle={{marginRight:5}}
+                                />
+                            </PermissibleRender>
+                            <PermissibleRender userPermissions={['1061010']}>
+                                <SubmitOrRecall type={1} url="/output/invoice/collection/submit" onSuccess={this.refreshTable} />
+                            </PermissibleRender>
+                            <PermissibleRender userPermissions={['1061011']}>
+                                <SubmitOrRecall type={2} url="/output/invoice/collection/revoke" onSuccess={this.refreshTable} />
+                            </PermissibleRender>
+
                             <TableTotal totalSource={totalSource} />
 
                         </div>,

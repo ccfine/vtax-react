@@ -63,7 +63,7 @@ class PermissionFeilds extends React.Component {
         }
     };
     checkAllChecked = (allCode, code) => e => {
-        const { allPermission } = this.state;
+        const { allPermission } = this.props;
         const { setFieldsValue, getFieldValue } = this.props.form;
         setFieldsValue({
             [code]: e.target.checked

@@ -10,9 +10,11 @@ import TaxReturnsCustom from './taxReturnsCustom'
 import OtherReportsAreCustom from './otherReportsAreCustom'
 import TaxClassificationCode from './taxClassificationCode'
 import TaxableItems from './taxableItems'
+import strategies from 'config/routingAuthority.config'
 
-const ICON_URL_PATH = '/assets/routes_avatar/'
-const PATHS = '/web/systemManage/systemMaintain'
+const ICON_URL_PATH = '/assets/routes_avatar/';
+const PATHS = '/web/systemManage/systemMaintain';
+const systemMaintain = strategies['systemManage']['systemMaintain'];
 
 const SystemMaintain_Routes = [
     {
@@ -23,6 +25,7 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}taxReturnsCustom.svg`,
             backgroundColor:'#56C7F3'
         },
+        authorityInfo:systemMaintain['taxReturnsCustom'].options,
         exact:true,
     },{
         path:`${PATHS}/otherReportsAreCustom`,
@@ -32,6 +35,7 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}otherReportsAreCustom.svg`,
             backgroundColor:'#56C7F3'
         },
+        authorityInfo:systemMaintain['otherReportsAreCustom'].options,
         exact:true,
     },{
         path:`${PATHS}/dataDictionaryMaintain`,
@@ -41,6 +45,7 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}dataDictionaryMaintain.svg`,
             backgroundColor:'#56C7F3'
         },
+        authorityInfo:systemMaintain['dataDictionaryMaintain'].options,
         exact:true,
     },{
         path:`${PATHS}/taxClassificationCode`,
@@ -50,6 +55,7 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}taxClassificationCode.svg`,
             backgroundColor:'#6CCCCA'
         },
+        authorityInfo:systemMaintain['taxClassificationCode'].options,
         exact:true,
     },{
         path:`${PATHS}/taxableItems`,
@@ -59,6 +65,7 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}taxClassificationCode.svg`,
             backgroundColor:'#6CCCCA'
         },
+        authorityInfo:systemMaintain['taxableItems'].options,
         exact:true,
     },{
         path:`${PATHS}`,

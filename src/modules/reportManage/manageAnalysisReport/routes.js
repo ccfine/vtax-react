@@ -5,6 +5,7 @@
  */
 import React from 'react'
 import {wrapPage} from 'compoments'
+import strategies from 'config/routingAuthority.config'
 
 const TaxStructureAnalysis =()=><div>纳税结构分析</div>
 const TaxTrendsAnalysis =()=><div>纳税趋势分析</div>
@@ -12,6 +13,7 @@ const TaxAnalysis =()=><div>税负分析</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/manageAnalysisReport`
+const manageAnalysisReport = strategies['reportManage']['manageAnalysisReport'];
 
 const OtherAccount_Routes = [
     {
@@ -22,6 +24,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}taxStructureAnalysis.svg`,
             backgroundColor:'#57C6F4'
         },
+        authorityInfo:manageAnalysisReport['taxStructureAnalysis'].options,
         exact:true,
     },{
         path:`${PATH}/taxTrendsAnalysis`,
@@ -31,6 +34,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}taxTrendsAnalysis.svg`,
             backgroundColor:'#7ED530'
         },
+        authorityInfo:manageAnalysisReport['taxTrendsAnalysis'].options,
         exact:true,
     },{
         path:`${PATH}/taxAnalysis`,
@@ -40,6 +44,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}taxAnalysis.svg`,
             backgroundColor:'#FD6A60'
         },
+        authorityInfo:manageAnalysisReport['taxAnalysis'].options,
         exact:true,
     },{
         path:`${PATH}`,

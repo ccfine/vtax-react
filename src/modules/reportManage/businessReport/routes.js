@@ -8,6 +8,8 @@ import {wrapPage} from 'compoments'
 import RoomTransactionFile from './roomTransactionFile'
 import PrePaidSalesQuery from './prePaidHousingSales'
 import TaxReturnForm from './taxReturnForm'
+import strategies from 'config/routingAuthority.config'
+
 const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
 const VATPrepaymentForm =()=><div>增值税预缴表</div>
 const RoomFileSummaryQuery =()=><div>房间档案汇总查询</div>
@@ -22,6 +24,7 @@ const DeclareQuery =()=><div>申报查询</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
+const businessReport = strategies['reportManage']['businessReport'];
 
 const BusinessReport_Routes = [
     {
@@ -32,6 +35,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}generalTaxpayerVATReturn.svg`,
             backgroundColor:'#00AFD8'
         },
+        authorityInfo:businessReport['generalTaxpayerVATReturn'].options,
         exact:true,
     },{
         path:`${PATH}/vatPrepaymentForm`,
@@ -41,6 +45,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}vatPrepaymentForm.svg`,
             backgroundColor:'#00D01A'
         },
+        authorityInfo:businessReport['vatPrepaymentForm'].options,
         exact:true,
     },{
         path:`${PATH}/roomTransactionFile`,
@@ -50,6 +55,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}roomTransactionFile.svg`,
             backgroundColor:'#6CCCCA'
         },
+        authorityInfo:businessReport['roomTransactionFile'].options,
         exact:true,
     },{
         path:`${PATH}/roomFileSummaryQuery`,
@@ -59,6 +65,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}roomFileSummaryQuery.svg`,
             backgroundColor:'#2F7597'
         },
+        authorityInfo:businessReport['roomFileSummaryQuery'].options,
         exact:true,
     },{
         path:`${PATH}/interimContractInputTaxTransferredOutQuery`,
@@ -68,6 +75,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}interimContractInputTaxTransferredOutQuery.svg`,
             backgroundColor:'#57C8F2'
         },
+        authorityInfo:businessReport['interimContractInputTaxTransferredOutQuery'].options,
         exact:true,
     },{
         path:`${PATH}/landPriceDeductionDetails`,
@@ -77,6 +85,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}report_landPriceDeductionDetails.svg`,
             backgroundColor:'#9B562C'
         },
+        authorityInfo:businessReport['landPriceDeductionDetails'].options,
         exact:true,
     },{
         path:`${PATH}/prePaidSalesQuery`,
@@ -86,6 +95,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}prePaidSalesQuery.svg`,
             backgroundColor:'#3B4A83'
         },
+        authorityInfo:businessReport['prePaidSalesQuery'].options,
         exact:true,
     },{
         path:`${PATH}/taxpayersQuery`,
@@ -95,15 +105,17 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}taxpayersQuery.svg`,
             backgroundColor:'#6CCCCA'
         },
+        authorityInfo:businessReport['taxpayersQuery'].options,
         exact:true,
     },{
         path:`${PATH}/taxIncentives`,
         component:wrapPage('税收优惠',TaxIncentives),
-        name:'税收优惠',
+        name:'税收优惠报表',
         icon:{
             url:`${ICON_URL_PATH}report_taxIncentives.svg`,
             backgroundColor:'#57C8F2'
         },
+        authorityInfo:businessReport['taxIncentives'].options,
         exact:true,
     },{
         path:`${PATH}/taxFileQuery`,
@@ -113,6 +125,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}taxFileQuery.svg`,
             backgroundColor:'#F5A544'
         },
+        authorityInfo:businessReport['taxFileQuery'].options,
         exact:true,
     },{
         path:`${PATH}/declareParametersQuery`,
@@ -122,6 +135,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}declareParametersQuery.svg`,
             backgroundColor:'#A9D96B'
         },
+        authorityInfo:businessReport['declareParametersQuery'].options,
         exact:true,
     },{
         path:`${PATH}/invoiceQuery`,
@@ -131,6 +145,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}invoiceQuery.svg`,
             backgroundColor:'#57C8F2'
         },
+        authorityInfo:businessReport['invoiceQuery'].options,
         exact:true,
     },{
         path:`${PATH}/declareQuery`,
@@ -140,6 +155,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}declareQuery.svg`,
             backgroundColor:'#2E8A57'
         },
+        authorityInfo:businessReport['declareQuery'].options,
         exact:true,
     },{
         path:`${PATH}/taxReturn`,
@@ -149,6 +165,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}declareQuery.svg`,
             backgroundColor:'#2E8A57'
         },
+        authorityInfo:businessReport['taxReturn'].options,
         exact:true,
     },{
         path:`${PATH}`,
