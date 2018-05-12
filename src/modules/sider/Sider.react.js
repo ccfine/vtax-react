@@ -39,44 +39,56 @@ class VTaxSider extends Component {
         if (!menusData) {
             return [];
         }
-        return menusData.map((item) => {
+        return menusData.map((item,i) => {
 
             if (!item.name  || item.path === '/web' ) {
                 return null;
             }
 
             if (item.permissions && item.children && item.children.some(child => child.name)) {
-                    return checkPermissions(item, this.props.options) &&  (
-                            <SubMenu
-                                title={
-                                    item.icon ? (
-                                        <span>
+
+                const componentSbu = (
+                    <SubMenu
+                        title={
+                            item.icon ? (
+                                <span>
                               <Icon type={item.icon} />
                               <span>{item.name}</span>
                             </span>
-                                    ) : item.name
-                                }
-                                key={item.key || item.path}
-                            >
-                                {this.getNavMenuItems(item.children)}
-                            </SubMenu>
-                        );
+                            ) : item.name
+                        }
+                        key={item.key || item.path}
+                    >
+                        {this.getNavMenuItems(item.children)}
+                    </SubMenu>
+                )
+
+                //当权限是管理员的时候直接放行
+                if(parseInt(this.props.type, 0) ===1){
+                    return checkPermissions(item, this.props.options) &&  componentSbu
                 }
+                return componentSbu
+            }
 
             const icon = item.icon && <Icon type={item.icon} />;
 
-            //判断有权限
-            return checkPermissions(item, this.props.options) &&  (
-                    <Menu.Item key={item.key || item.path}>
-                        <Link
-                            to={item.path}
-                            target={item.target}
-                            replace={item.path === this.props.location.pathname}
-                        >
-                            {icon}<span>{item.name}</span>
-                        </Link>
-                    </Menu.Item>
-                );
+            const componentParent = (
+                <Menu.Item key={item.key || item.path}>
+                    <Link
+                        to={item.path}
+                        target={item.target}
+                        replace={item.path === this.props.location.pathname}
+                    >
+                        {icon}<span>{item.name}</span>
+                    </Link>
+                </Menu.Item>
+            );
+
+            //当权限是管理员的时候直接放行
+            if(parseInt(this.props.type, 0) ===1){
+                return checkPermissions(item, this.props.options) &&  componentParent
+            }
+            return  componentParent
 
         });
     }
@@ -153,5 +165,6 @@ class VTaxSider extends Component {
 }
 
 export default withRouter(connect(state=>({
-    options:state.user.getIn(['personal','options'])
+    options:state.user.getIn(['personal','options']),
+    type:state.user.getIn(['personal','type'])
 }))(VTaxSider))

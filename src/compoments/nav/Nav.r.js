@@ -18,12 +18,18 @@ class NavRouter extends Component {
         return routes.map(item=>{
             if(item && !item.to && item.icon){
                 //console.log(difference(this.props.options, item.authorityInfo).length > 0)
+
+                const component = {
+                    path:item.path,
+                    name:item.name,
+                    icon:item.icon  //|| {url:'/assets/routes_avatar/mainTax.svg', backgroundColor:'#61C5C3'} `icon_${i}`,
+                }
+
                 //判断有权限
-                return checkPermissions(item, this.props.options) &&  {
-                        path:item.path,
-                        name:item.name,
-                        icon:item.icon  //|| {url:'/assets/routes_avatar/mainTax.svg', backgroundColor:'#61C5C3'} `icon_${i}`,
-                    }
+                if(parseInt(this.props.type, 0) ===1){
+                    return checkPermissions(item, this.props.options) && component
+                }
+                return component
             }
 
             return null;
@@ -60,5 +66,6 @@ class NavRouter extends Component {
 
 
 export default connect(state=>({
-    options:state.user.getIn(['personal','options'])
+    options:state.user.getIn(['personal','options']),
+    type:state.user.getIn(['personal','type'])
 }))(NavRouter)
