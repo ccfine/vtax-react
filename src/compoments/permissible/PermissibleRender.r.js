@@ -46,20 +46,25 @@ class PermissibleRender extends Component {
 
     render() {
         const { children, userPermissions, options, renderOtherwise } = this.props;
-
-        if (!children || !userPermissions || !options) {
+        //当权限是管理员的时候直接放行
+        if(parseInt(this.props.type,0)!==1){
+            return children;
+        }else{
+            if (!children || !userPermissions || !options) {
+                return null;
+            }
+            if (this.checkPermissions()) {
+                return children;
+            } else if (renderOtherwise) {
+                return renderOtherwise;
+            }
             return null;
         }
 
-        if (this.checkPermissions()) {
-            return children;
-        } else if (renderOtherwise) {
-            return renderOtherwise;
-        }
-        return null;
     }
 }
 
 export default connect(state=>({
-    options:state.user.getIn(['personal','options'])
+    options:state.user.getIn(['personal','options']),
+    type:state.user.getIn(['personal','type'])
 }))(PermissibleRender)
