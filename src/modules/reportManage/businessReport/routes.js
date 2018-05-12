@@ -8,6 +8,7 @@ import {wrapPage} from 'compoments'
 import RoomTransactionFile from './roomTransactionFile'
 import PrePaidSalesQuery from './prePaidHousingSales'
 import TaxReturnForm from './taxReturnForm'
+import FixedAssetCard from './fixedAssetCard'
 import strategies from 'config/routingAuthority.config'
 
 const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
@@ -163,6 +164,16 @@ const BusinessReport_Routes = [
         name:'纳税申报表',
         icon:{
             url:`${ICON_URL_PATH}declareQuery.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['taxReturn'].options,
+        exact:true,
+    },{
+        path:`${PATH}/fixedAssetCard`,
+        component:wrapPage('固定资产卡片',FixedAssetCard),
+        name:'固定资产卡片',
+        icon:{
+            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['taxReturn'].options,
