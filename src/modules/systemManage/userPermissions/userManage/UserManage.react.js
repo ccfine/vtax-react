@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 17:38:04
+ * @Last Modified time: 2018-05-12 10:27:59
  */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
@@ -66,6 +66,7 @@ const getColumns = context => [
                     </Link>
                     <a
                         onClick={() => {
+                            context.setState({createUserLoading:true,createUserVisible:true})
                             context
                                 .fetchUser(`/sysUser/find/${record.id}`)
                                 .then(data => {
@@ -76,6 +77,8 @@ const getColumns = context => [
                                             createUserDefault: data,
                                             createUserKey: Date.now()
                                         });
+                                    
+                                    context.setState({createUserLoading:false})
                                 });
                         }}
                     >
@@ -95,6 +98,7 @@ const getColumns = context => [
                     <Divider type="vertical" />
                     <a
                         onClick={() => {
+                            context.setState({roleLoading:true,roleModalVisible:true})
                             context
                                 .fetchUser(
                                     `/sysRole/queryRoleByUserId/${
@@ -109,6 +113,8 @@ const getColumns = context => [
                                             roleModalVisible: true,
                                             roleModalDefault: data
                                         });
+                                    
+                                    context.setState({roleLoading:false})
                                 });
                         }}
                     >
@@ -118,6 +124,7 @@ const getColumns = context => [
                     </a>
                     <a
                         onClick={() => {
+                            context.setState({permissionLoading:true,permissionVisible:true})
                             context
                                 .fetchUser(
                                     `/sysUser/queryUserPermissions/${
@@ -132,6 +139,8 @@ const getColumns = context => [
                                             permissionDefault: data,
                                             permissionUserId: record.id
                                         });
+                                    
+                                    context.setState({permissionLoading:false})
                                 });
                         }}
                     >
@@ -226,16 +235,19 @@ class UserManage extends Component {
         createUserVisible: false,
         createModalType: "create",
         createUserDefault: undefined,
+        createUserLoading:false,
 
         roleModalVisible: false,
         roleModalKey: Date.now() + 2,
         roleModalDefault: undefined,
         roleAssignUserId: undefined,
+        roleLoading:false,
 
         permissionVisible: false,
         permissionKey: Date.now() + 3,
         permissionDefault: undefined,
         permissionId: undefined,
+        permissionLoading:false,
 
         searchValues: undefined
     };
@@ -369,6 +381,7 @@ class UserManage extends Component {
                     modalType={this.state.createModalType}
                     refreshTable={this.refreshTable}
                     visible={this.state.createUserVisible}
+                    loading={this.state.createUserLoading}
                 />
                 <RoleModal
                     userId={this.state.roleAssignUserId}
@@ -386,6 +399,7 @@ class UserManage extends Component {
                     refreshTable={this.refreshTable}
                     visible={this.state.roleModalVisible}
                     updateKey={this.state.roleModalKey}
+                    loading={this.state.roleLoading}
                 />
                 <PermissionModal
                     userId={this.state.permissionUserId}
@@ -402,6 +416,7 @@ class UserManage extends Component {
                     }}
                     visible={this.state.permissionVisible}
                     editAble={true}
+                    loading={this.state.permissionLoading}
                 />
             </SearchTable>
         );
