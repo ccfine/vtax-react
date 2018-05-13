@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 14:10:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 17:41:36
+ * @Last Modified time: 2018-05-12 10:30:19
  */
 import React from "react";
 import { Form, Row, Col, Checkbox, Spin } from "antd";
@@ -97,7 +97,8 @@ class PermissionFeilds extends React.Component {
             <Row>
                 <div
                     style={{
-                        width: "100%"
+                        width: "100%",
+                        minHeight:200                        
                     }}
                 >
                     <Spin spinning={permissionLoading}>

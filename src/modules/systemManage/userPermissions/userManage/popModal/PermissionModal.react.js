@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 17:42:52
+ * @Last Modified time: 2018-05-12 12:25:57
  */
 import React, { Component } from "react";
-import { Form, Modal, message } from "antd";
+import { Form, Modal, message, Spin } from "antd";
 import { request } from "utils";
 import PermissionFeilds from "../../permissionDetail";
 
@@ -45,7 +45,9 @@ class PermissionModal extends Component {
             if (!err) {
                 let params = [];
                 for (let item in values) {
-                    (values[item] && item.indexOf('allCode')===-1) && params.push(item);
+                    values[item] &&
+                        item.indexOf("allCode") === -1 &&
+                        params.push(item);
                 }
 
                 // 筛选剔除角色权限
@@ -92,7 +94,8 @@ class PermissionModal extends Component {
                 ? this.props.defaultFields
                 : {},
             checkedPermission = [...userPermissions, ...rolePermissions],
-            { permissionLoading, allPermission } = this.state;
+            { permissionLoading, allPermission } = this.state,
+            { loading: wrapperLoading } = this.props;
 
         return (
             <Modal
@@ -106,20 +109,22 @@ class PermissionModal extends Component {
                 confirmLoading={this.state.submitLoading}
                 width="900px"
                 bodyStyle={{
-                    maxHeight:400,
-                    overflowY:'auto'
+                    maxHeight: 400,
+                    overflowY: "auto"
                 }}
             >
-                <Form layout="inline">
-                    <PermissionFeilds
-                        form={this.props.form}
-                        editAble={true}
-                        checkedPermission={checkedPermission}
-                        disabledPermission={rolePermissions}
-                        allPermission={allPermission}
-                        permissionLoading={permissionLoading}
-                    />
-                </Form>
+                <Spin spinning={wrapperLoading}>
+                    <Form layout="inline">
+                        <PermissionFeilds
+                            form={this.props.form}
+                            editAble={true}
+                            checkedPermission={checkedPermission}
+                            disabledPermission={rolePermissions}
+                            allPermission={allPermission}
+                            permissionLoading={permissionLoading}
+                        />
+                    </Form>
+                </Spin>
             </Modal>
         );
     }

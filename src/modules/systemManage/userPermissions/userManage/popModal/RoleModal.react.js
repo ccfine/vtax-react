@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-10 16:46:48
+ * @Last Modified time: 2018-05-12 10:28:56
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox } from "antd";
@@ -119,7 +119,7 @@ class RoleModal extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form,
             { charAllList } = this.state,
-            { defaultFields = [] } = this.props;
+            { defaultFields = [],loading } = this.props;
         return (
             <Modal
                 maskClosable={false}
@@ -135,7 +135,7 @@ class RoleModal extends React.Component {
                 }
                 width="700px"
             >
-                <Spin spinning={!this.state.charLoaded}>
+                <Spin spinning={!this.state.charLoaded || loading}>
                     <Form
                         onSubmit={this.handleSubmit}
                         style={{ padding: "0 16px" }}
