@@ -21,6 +21,7 @@ export default class AsyncSelect extends Component{
         selectOptions:PropTypes.object,
         doNotFetchDidMount:PropTypes.bool,
         whetherShowAll:PropTypes.bool,
+        notShowAll:PropTypes.bool,
         decoratorOptions:PropTypes.object,
 
         //外部条件，用来提供给外部控制该组件是否要异步获取信息的条件，可选
@@ -40,6 +41,7 @@ export default class AsyncSelect extends Component{
         initialValue:'',
         label:'field',
         whetherShowAll:false,
+        notShowAll:false,
         selectOptions:{
 
         },
@@ -135,16 +137,22 @@ export default class AsyncSelect extends Component{
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll} = this.props;
-        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
-        const isShowAll = decoratorOptions && decoratorOptions.rules && decoratorOptions.rules.map(item=>item.required)[0] === true;
-        const newData =  dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
-        const optionItem = isShowAll ? dataSource :  newData;
+        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll,notShowAll} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项  notShowAll:是否添加无或者全部
+        let optionsData = [], initialValues;
+        if(notShowAll === true){
+            optionsData = dataSource;
+        }else{
+            const isShowAll = decoratorOptions && decoratorOptions.rules && decoratorOptions.rules.map(item=>item.required)[0] === true,
+            newData = dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
+        initialValues = initialValue || (isShowAll ? undefined : '');
+        optionsData = isShowAll ? dataSource :  newData;
+    }
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
                     {getFieldDecorator(fieldName,{
-                        initialValue: initialValue || (isShowAll ? undefined : ''),
+                        initialValue: initialValues,
                         ...decoratorOptions
                     })(
                         <Select
@@ -154,7 +162,7 @@ export default class AsyncSelect extends Component{
                             {...selectOptions}
                         >
                             {
-                                optionItem.map((item,i)=>(
+                                optionsData.map((item,i)=>(
                                     <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
                                 ))
                             }

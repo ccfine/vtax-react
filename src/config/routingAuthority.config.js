@@ -88,12 +88,18 @@ const strategies = {
     'vatManage':{
 
         //增值税管理
-        options:['1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'],
+        options:[
+
+            '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'  //销项发票采集
+        ],
 
         //销项管理
         salesManag:{
 
-            options:['1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'],
+            options:[
+
+                '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006' //销项发票采集
+            ],
 
             //销项发票采集
             salesInvoiceCollection:{
@@ -107,6 +113,11 @@ const strategies = {
 
             //营改增前售房
             campBeforeTheIncreaseInSales:{
+                options:[],
+            },
+
+            //收入检查
+            incomeCheck:{
                 options:[],
             },
 
@@ -137,10 +148,15 @@ const strategies = {
                 options:[],
             },
 
-            //进项发票匹配
-            invoiceMatching:{
+            //其他可抵扣进项税明细
+            otherDeductibleInputTaxDetails:{
                 options:[],
             },
+
+            //进项发票匹配 --- 已隐藏
+            /*invoiceMatching:{
+                options:[],
+            },*/
 
             //进项税额明细台账
             inputTaxDetails:{
@@ -487,11 +503,11 @@ const strategies = {
     }
 }
 
-/*export const getOptions = ( oneLevelMenu, twoLevelMenu ) => {
+export const getOptions = ( oneLevelMenu, twoLevelMenu ) => {
     if ( strategies[oneLevelMenu] && strategies[oneLevelMenu][twoLevelMenu] ) {
         return strategies[oneLevelMenu][twoLevelMenu].options || [];
     }
     return [];
-};*/
+};
 
 export default strategies;
