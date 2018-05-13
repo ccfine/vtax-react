@@ -69,36 +69,6 @@ class PopModal extends Component {
                     this.setState(
                         {
                             initData: data.data
-                        },
-                        () => {
-                            if (props.type === "edit") {
-                                //根据税收分类编码的值去查询整条税收分类编码，因为税率会根据这条数据的值自动变化，所以需要这条数据源
-                                request
-                                    .get(
-                                        `/tax/classification/coding/get/${
-                                            data.data.outputInvCollectionDO
-                                                .taxClassificationCoding
-                                        }`
-                                    )
-                                    .then(({ data }) => {
-                                        if (data.code === 200) {
-                                            props.form.setFieldsValue({
-                                                taxClassificationCoding: {
-                                                    ...data.data,
-                                                    label:
-                                                        data.data
-                                                            .num,
-                                                    key:
-                                                        data.data
-                                                            .id
-                                                }
-                                            });
-                                        }
-                                    })
-                                    .catch(err => {
-                                        message.error(err.message);
-                                    });
-                            }
                         }
                     );
                 }
@@ -308,95 +278,6 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled
-                                        }
-                                    },
-                                    {
-                                        label: "税收分类编码",
-                                        fieldName: "taxClassificationCoding",
-                                        type: "taxClassCodingSelect",
-                                        fieldDecoratorOptions: {
-                                            initialValue: initData[
-                                                "taxClassificationCodingNum"
-                                            ]
-                                                ? {
-                                                      label:
-                                                          initData[
-                                                              "taxClassificationCodingNum"
-                                                          ] || "",
-                                                      key:
-                                                          initData[
-                                                              "taxClassificationCoding"
-                                                          ] || ""
-                                                  }
-                                                : undefined,
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "请选择税收分类编码"
-                                                }
-                                            ]
-                                        },
-                                        formItemStyle,
-                                        componentProps: {
-                                            disabled,
-                                            conditionValue: getFieldValue(
-                                                "taxRate"
-                                            )
-                                                ? {
-                                                      taxMethod: getFieldValue(
-                                                          "taxMethod"
-                                                      ),
-                                                      taxRate: getFieldValue(
-                                                          "taxRate"
-                                                      )
-                                                  }
-                                                : {
-                                                      taxMethod:
-                                                          initData["taxMethod"],
-                                                      taxRate:
-                                                          initData["taxRate"]
-                                                  },
-                                            onChange: data => {
-                                                let type = parseInt(
-                                                    getFieldValue("taxMethod"),
-                                                    0
-                                                );
-                                                let rateValue = "",
-                                                    amount = parseInt(
-                                                        getFieldValue("amount"),
-                                                        0
-                                                    );
-                                                if (!!type) {
-                                                    if (type === 1) {
-                                                        rateValue = getFieldValue(
-                                                            "taxClassificationCoding"
-                                                        ).commonlyTaxRate;
-                                                    }
-                                                    if (type === 2) {
-                                                        rateValue = getFieldValue(
-                                                            "taxClassificationCoding"
-                                                        ).simpleTaxRate;
-                                                    }
-                                                    setFieldsValue({
-                                                        taxRate: rateValue
-                                                    });
-                                                }
-                                                if (rateValue && amount) {
-                                                    let taxAmount =
-                                                        amount *
-                                                        parseFloat(rateValue) /
-                                                        100;
-                                                    setFieldsValue({
-                                                        taxAmount: fMoney(
-                                                            taxAmount
-                                                        ),
-                                                        totalAmount: fMoney(
-                                                            amount + taxAmount
-                                                        )
-                                                    });
-                                                }
-                                            }
                                         }
                                     },
                                     {
@@ -617,20 +498,6 @@ class PopModal extends Component {
                                                     message: "请输入商品名称"
                                                 }
                                             ]
-                                        },
-                                        componentProps: {
-                                            disabled
-                                        }
-                                    },
-                                    {
-                                        label: "规格型号",
-                                        fieldName: "specificationModel",
-                                        type: "input",
-                                        formItemStyle,
-                                        fieldDecoratorOptions: {
-                                            initialValue:
-                                                initData["specificationModel"],
-                                            rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
                                             disabled

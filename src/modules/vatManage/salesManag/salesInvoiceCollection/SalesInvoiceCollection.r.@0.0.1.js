@@ -282,10 +282,6 @@ const getColumns = context => [
         className: "table-money"
     },
     {
-        title: "税收分类编码",
-        dataIndex: "taxClassificationCoding"
-    },
-    {
         title: "数据来源",
         dataIndex: "sourceType",
         width: "60px",
