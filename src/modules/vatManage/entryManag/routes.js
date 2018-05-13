@@ -5,6 +5,7 @@
  */
 import {wrapPage} from 'compoments'
 import InvoiceCollection from './invoiceCollection'
+import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
 import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
@@ -13,7 +14,7 @@ import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
 import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
-import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
+/*import SimpleTaxInputTaxTransferredToTheAccount from '../entryTaxAccount/simpleTaxInputTaxTransferredToTheAccount'*/
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -100,6 +101,16 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['otherBusinessInputTaxRollOut'].options,
         exact:true,
+/*    },{
+        path:`${PATH}/simpleTaxInputTaxTransferredToTheAccount`,
+        component:wrapPage('简易计税进项税额转出台账',SimpleTaxInputTaxTransferredToTheAccount),
+        name:'简易计税进项税额转出台账',
+        icon:{
+            url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
+            backgroundColor:'#3B4A83'
+        },
+        authorityInfo:entryManag['simpleTaxInputTaxTransferredToTheAccount'].options,
+        exact:true,*/
     },{
         exact:true,
         path:`${PATH}`,

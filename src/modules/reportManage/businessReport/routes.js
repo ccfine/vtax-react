@@ -9,6 +9,10 @@ import RoomTransactionFile from './roomTransactionFile'
 import PrePaidSalesQuery from './prePaidHousingSales'
 import TaxReturnForm from './taxReturnForm'
 import FixedAssetCard from './fixedAssetCard'
+import FinancialDocuments from './financialDocuments'
+import IncomingInvoiceCollection from './incomingInvoiceCollection'
+import SalesInvoiceCollection from './salesInvoiceCollection'
+
 import strategies from 'config/routingAuthority.config'
 
 const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
@@ -176,7 +180,37 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}fixedAssetCard.svg`,
             backgroundColor:'#2E8A57'
         },
-        authorityInfo:businessReport['taxReturn'].options,
+        authorityInfo:businessReport['fixedAssetCard'].options,
+        exact:true,
+    },{
+        path:`${PATH}/financialDocuments`,
+        component:wrapPage('财务凭证',FinancialDocuments),
+        name:'财务凭证',
+        icon:{
+            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['financialDocuments'].options,
+        exact:true,
+    },{
+        path:`${PATH}/incomingInvoiceCollection`,
+        component:wrapPage('进项发票采集',IncomingInvoiceCollection),
+        name:'进项发票采集',
+        icon:{
+            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['incomingInvoiceCollection'].options,
+        exact:true,
+    },{
+        path:`${PATH}/salesInvoiceCollection`,
+        component:wrapPage('销项发票采集',SalesInvoiceCollection),
+        name:'销项发票采集',
+        icon:{
+            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['salesInvoiceCollection'].options,
         exact:true,
     },{
         path:`${PATH}`,

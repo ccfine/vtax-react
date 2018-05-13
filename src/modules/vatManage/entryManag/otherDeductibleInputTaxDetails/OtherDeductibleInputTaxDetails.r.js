@@ -84,7 +84,7 @@ const searchFields=(disabled)=> {
         },
     ]
 }
-const getColumns = context =>[
+const columns=[
     {
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">纳税主体名称</p>
@@ -123,17 +123,11 @@ const getColumns = context =>[
             </div>
         )
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">凭证号</p>
-            <p className="apply-form-list-p2">凭证类型</p>
-        </div>,
+        title: '凭证号',
         dataIndex: 'voucherNum',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.voucherType}</p>
-            </div>
-        )
+    },{
+        title: '凭证类型',
+        dataIndex: 'voucherType',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
@@ -275,7 +269,7 @@ class SalesInvoiceCollection extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this),
+                    columns:columns,
                     url:'/income/financeDetails/controller/list',
                     onSuccess:(params)=>{
                         this.setState({
