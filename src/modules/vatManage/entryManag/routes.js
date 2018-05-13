@@ -5,12 +5,15 @@
  */
 import {wrapPage} from 'compoments'
 import InvoiceCollection from './invoiceCollection'
-import InvoiceMatching from './invoiceMatching'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
-/*import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'*/
+/*
+import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
+ import InvoiceMatching from './invoiceMatching'
+* */
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
 import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
+import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -29,6 +32,16 @@ const EntryManag_Routes = [
         authorityInfo:entryManag['invoiceCollection'].options,
         exact:true,
     },{
+        path:`${PATH}/otherDeductibleInputTaxDetails`,
+        component:wrapPage('其他可抵扣进项税明细',OtherDeductibleInputTaxDetails),
+        name:'其他可抵扣进项税明细',
+        icon:{
+            url:`${ICON_URL_PATH}invoiceMatching.svg`,
+            backgroundColor:'#4DC1F0'
+        },
+        authorityInfo:entryManag['otherDeductibleInputTaxDetails'].options,
+        exact:true,
+    /*},{
         path:`${PATH}/invoiceMatching`,
         component:wrapPage('进项发票匹配',InvoiceMatching),
         name:'进项发票匹配',
@@ -37,7 +50,7 @@ const EntryManag_Routes = [
             backgroundColor:'#4DC1F0'
         },
         authorityInfo:entryManag['invoiceMatching'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/inputTaxDetails`,
         component:wrapPage('进项税额明细台账',InputTaxDetails),
