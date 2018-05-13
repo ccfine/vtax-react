@@ -220,7 +220,7 @@ const getColumns = context =>[
         )
     },{
         title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">购货单位</p>
+            <p className="apply-form-list-p1">购货单位名称</p>
             <p className="apply-form-list-p2">购方税号</p>
         </div>,
         dataIndex: 'purchaseName',
