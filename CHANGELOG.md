@@ -135,4 +135,24 @@
 * **日志:** 日志更新功能 ([e1d4591](https://github.com/Slebee/vtax/commit/e1d4591))
 
 
+### 如果遇到  (https://stackoverflow.com/questions/26094420/fatal-error-call-and-retry-last-allocation-failed-process-out-of-memory)
 
+FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - process out of memory  问题
+方法是加大内存
+ node --max_new_space_size=4096 app.js
+ 或者
+ node --max_old_space_size=4096 app.js
+
+ 或者在 package.json 里面加
+
+ "prod": "node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build --prod"
+
+ "scripts": {
+     "ng": "ng",
+     "start": "ng serve",
+     "build": "ng build",
+     "test": "ng test",
+     "lint": "ng lint",
+     "e2e": "ng e2e",
+     "prod": "node --max-old-space-size=4096./node_modules/@angular/cli/bin/ng build --prod"
+ }

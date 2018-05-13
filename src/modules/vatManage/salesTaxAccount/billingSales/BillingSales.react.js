@@ -236,6 +236,9 @@ class BillingSales extends Component {
                                             message.error(`${type}失败:${data.msg}`)
                                         }
                                     })
+                                    .catch(err => {
+                                        message.error(err.message)
+                                    })
                             }
                         })
                         break;
@@ -288,6 +291,9 @@ class BillingSales extends Component {
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     updateStatus=()=>{
         request.get('/account/output/billingSale/listMain',{params:this.state.filters}).then(({data}) => {
@@ -296,6 +302,9 @@ class BillingSales extends Component {
                     statusParam: data.data
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     componentDidMount(){

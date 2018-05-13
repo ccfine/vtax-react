@@ -1,7 +1,7 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/5 15:43
- * description  : 
+ * description  :
  */
 @maxWidth:1240px;
 #login-container{
@@ -115,4 +115,9 @@
     bottom:10px;left:0;
     /*margin-top:15px;*/
   }
+}
+// 消除Chrome记住密码输入框黄色背景的问题
+input:-webkit-autofill ,input:focus:-webkit-autofill{
+-webkit-box-shadow: 0 0 0px 1000px white inset;
+border: 1px solid #CCC!important;
 }

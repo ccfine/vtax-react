@@ -39,6 +39,10 @@ class PopModal extends Component{
                     })
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -115,6 +119,10 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
 
     createRecord = data =>{
@@ -130,6 +138,10 @@ class PopModal extends Component{
                     message.error(`新增失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
 
     deleteRecord = id => {
@@ -144,6 +156,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`删除失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
             })
     }
 
@@ -248,7 +264,7 @@ class PopModal extends Component{
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainId'],
+                                            initialValue:initData['mainName'],
                                             rules:[
                                                 {
                                                     required:true,

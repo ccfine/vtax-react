@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Tree,Spin } from 'antd';
+import { Tree,Spin,message } from 'antd';
 import PropTypes from 'prop-types'
 import {request} from 'utils'
 
@@ -50,7 +50,10 @@ class TreeList extends Component {
                         resolve();
                    // }, 1000);
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+            });;
 
         });
     }
@@ -81,6 +84,10 @@ class TreeList extends Component {
                     eidtLoading: false,
                 })
             }
+        })
+        .catch(err => {
+            this.mounted && this.setState({ eidtLoading: false });
+            message.error(err.message)
         });
     }
 

@@ -29,6 +29,10 @@ class PopModal extends Component {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data });
                     }
+                })
+                .catch(err => {
+                    this.setState({formLoading:false});
+                    message.error(err.message)
                 });
             } else {
                 this.props.form.resetFields();

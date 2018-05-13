@@ -81,9 +81,18 @@ export default class ProjectInformationManagement extends Component{
                         table_1_loaded:true
                     }))
                 }else{
+                    this.setState({
+                        table_1_loaded:true
+                    })
                     message.error(`项目列表获取失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.setState({
+                    table_1_loaded:true
+                })
+                message.error(err.message)
+            });
     }
     fetchTable_2_Data = projectId =>{
         request.get(`/project/stages/${projectId}`)
@@ -100,6 +109,9 @@ export default class ProjectInformationManagement extends Component{
                     message.error(`项目分期列表获取失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            });
     }
     onChange=(selectedRowKeys, selectedRows) => {
         this.setState({
@@ -167,6 +179,9 @@ export default class ProjectInformationManagement extends Component{
                                                         }else{
                                                             message.error(data.msg)
                                                         }
+                                                    })
+                                                    .catch(err => {
+                                                        message.error(err.message)
                                                     })
                                             },
                                             onCancel:()=>{

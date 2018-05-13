@@ -5,9 +5,11 @@
  */
 import {wrapPage} from 'compoments'
 import OrganizationalStructureMaintenance from './organizationalStructureMaintenance'
+import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/systemManage/organization`
+const organization = strategies['systemManage']['organization'];
 
 const Organization_Routes = [
     {
@@ -18,6 +20,7 @@ const Organization_Routes = [
             url:`${ICON_URL_PATH}organizationalStructureMaintenance.svg`,
             backgroundColor:'#6CCCCA'
         },
+        authorityInfo:organization['organizationalStructureMaintenance'].options,
         exact:true,
     },{
         path:`${PATH}`,

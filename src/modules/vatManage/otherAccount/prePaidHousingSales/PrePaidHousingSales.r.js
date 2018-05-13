@@ -1,13 +1,17 @@
 /**
  * Created by liurunbin on 2018/1/17.
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-07 10:45:12
+ *
  * 售房预缴台账
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {SearchTable,FileExport,FileImportModal,TableTotal} from 'compoments'
 import {fMoney,request,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 const transformDataStatus = status =>{
     status = parseInt(status,0)
     if(status===1){
@@ -289,32 +293,55 @@ const columns = [
         width:'110px',
     }
 ];
+// 总计数据结构，用于传递至TableTotal中
+const totalData =  [
+    {
+        title:'本页合计',
+        total:[
+            {title: '累计预收价款', dataIndex: 'pageCumulativePrepaidPayment'},
+            {title: '当期结转收入金额', dataIndex: 'pageCurrentIncomeAmount'},
+            {title: '累计结转收入金额', dataIndex: 'pageCumulativeIncomeAmount'},
+            {title: '预缴销售额', dataIndex: 'pagePrepaidSales'},
+        ],
+    },{
+        title:'总计',
+        total:[
+            {title: '累计预收价款', dataIndex: 'totalCumulativePrepaidPayment'},
+            {title: '当期结转收入金额', dataIndex: 'totalCurrentIncomeAmount'},
+            {title: '累计结转收入金额', dataIndex: 'totalCumulativeIncomeAmount'},
+            {title: '预缴销售额', dataIndex: 'totalPrepaidSales'},
+        ],
+    }
+];
 
 class PrePaidHousingSales extends Component{
-    state={
-        selectedRowKeys:[],
-        tableKey:Date.now(),
-        searchTableLoading:false,
-        searchFieldsValues:{},
 
-        hasData:false,
+      state={
+          selectedRowKeys:[],
+          tableKey:Date.now(),
+          searchTableLoading:false,
+          searchFieldsValues:{},
 
-        resultFieldsValues:{
+          hasData:false,
 
-        },
+          resultFieldsValues:{
 
-        /**
-         *修改状态和时间
-         * */
-        dataStatus:'',
-        submitDate:'',
-    }
+          },
+
+          /**
+           *修改状态和时间
+           * */
+          dataStatus:'',
+          submitDate:'',
+          totalSource:undefined,
+      }
+
     toggleSearchTableLoading = b =>{
         this.setState({
             searchTableLoading:b
         })
     }
-    refreshTable = ()=>{
+    refreshTable=()=>{
         this.setState({
             tableKey:Date.now()
         })
@@ -342,6 +369,7 @@ class PrePaidHousingSales extends Component{
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
+                        message.error(err.message)
                         this.toggleSearchTableLoading(false)
                     })
             },
@@ -351,36 +379,7 @@ class PrePaidHousingSales extends Component{
         });
 
     }
-    handleClickActions = action => () =>{
-        let actionText,
-            actionUrl;
-        switch (action){
-            case 'submit':
-                actionText='提交';
-                actionUrl='/account/salehouse/submit';
-                break;
-            case 'restore':
-                actionText='撤回';
-                actionUrl='/account/salehouse/restore';
-                break;
-            default:
-                break;
-        }
-        this.toggleSearchTableLoading(true)
-        const {mainId,receiveMonth} = this.state.searchFieldsValues;
-        request.post(`${actionUrl}/${mainId}/${receiveMonth}`)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${actionText}成功！`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${actionText}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
-    }
+
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -404,9 +403,12 @@ class PrePaidHousingSales extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
-        const {selectedRowKeys,searchTableLoading,tableKey,hasData,resultFieldsValues,submitDate,dataStatus} = this.state;
+        const {selectedRowKeys,searchTableLoading,tableKey,hasData,resultFieldsValues,submitDate,dataStatus,totalSource} = this.state;
         const {mainId,receiveMonth} = resultFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -464,6 +466,14 @@ class PrePaidHousingSales extends Component{
                         },()=>{
                             this.fetchResultStatus()
                         })
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
+                    cardProps: {
+                        title: "售房预缴台账",
                     },
                     extra:<div>
                         {
@@ -535,35 +545,19 @@ class PrePaidHousingSales extends Component{
                             setButtonStyle={{marginRight:5}}
                         />
                         <Button size="small" style={{marginRight:5}} type='danger' onClick={this.deleteRecord} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && hasData && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && hasData && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
+                       <SubmitOrRecallMutex
+                         paramsType="string"
+                         buttonSize="small"
+                         restoreStr="restore"//撤销接口命名不一致添加属性
+                         url="/account/salehouse"
+                         refreshTable={this.refreshTable}
+                         toggleSearchTableLoading={this.toggleSearchTableLoading}
+                         hasParam={mainId && hasData && receiveMonth}
+                         dataStatus={dataStatus}
+                         searchFieldsValues={this.state.searchFieldsValues}
+                       />
+                       <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                     </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
-                                        当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
-                                        累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
-                                        预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
-                                        当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
-                                        累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
-                                        预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    },
                     scroll:{
                         x:'1430px',
                         y:'400px'

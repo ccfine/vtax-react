@@ -156,9 +156,12 @@ form .ant-pagination .ant-select{
 
 /*amount table class*/
 .footer-total{
-  padding-top: 10px;
   zoom: 1;
   line-height: 25px;
+  color: #FF9700;
+
+  max-width: 800px;
+
 }
 .footer-total-meta {
   zoom: 1;
@@ -171,8 +174,15 @@ form .ant-pagination .ant-select{
 }
 .footer-total-meta-detail {
   overflow: hidden;
-  padding-bottom: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
 }
+
+.footer-total-meta-detail .footer-amount{
+  flex: 0 0 auto;
+}
+
 .footer-total-meta-detail .amount-code{
   margin: 0 1px;
   background: #f2f4f5;
@@ -184,6 +194,25 @@ form .ant-pagination .ant-select{
   line-height: 20px;
 }
 
+/* 表格右上方的总计样式 */
+.popover-total-container{
+  margin-left:15px;
+  color:#FF9700;
+  max-width:500px;
+  display: inline-block;
+  vertical-align:middle;
+}
+.popover-total-container>*>.anticon{
+  font-size: 16px;
+  color: #1890ff;
+  margin-right:5px;
+  vertical-align:middle;
+}
+
+.popover-total-container .total-amount{
+  vertical-align:middle;
+  margin-right: 15px;
+}
 
 /*data grid*/
 table.data-grid{
@@ -222,4 +251,15 @@ table.data-grid{
   display: block;
   height: 30px;
   line-height: 30px;
+}
+
+/* Table中操作变成图标 */
+.table-operate .anticon{
+  margin:0 3px;
+  font-size: 12px;
+}
+
+/* switch 为small时文字太大  不协调*/
+.ant-switch-small.ant-switch .ant-switch-inner{
+  font-size: 10px;
 }

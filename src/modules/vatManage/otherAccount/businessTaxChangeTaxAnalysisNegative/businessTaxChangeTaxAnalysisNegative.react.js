@@ -1,3 +1,6 @@
+/*@Last Modified by: xiaminghua
+* @Last Modified time: 2018-04-28
+*/
 import React from 'react'
 import Search from './search.react'
 import Table from './table.react'
@@ -21,13 +24,18 @@ class BusinessTaxChangeTaxAnalysisNegative extends React.Component {
             })
         }
     }
+    refreshTable = ()=>{
+        this.setState({
+            updateKey:Date.now()
+        })
+    }
     render() {
         const {search} = this.props.location;
         let disabled = !!search;
         return (
             <div>
                 <Search search={search} disabled={disabled} filterChange={this.filterChange} />
-                <Table filter={this.state.filter} updateKey={this.state.updateKey}/>
+                <Table filter={this.state.filter} refreshTable={this.refreshTable}  updateKey={this.state.updateKey}/>
             </div>
         );
     }

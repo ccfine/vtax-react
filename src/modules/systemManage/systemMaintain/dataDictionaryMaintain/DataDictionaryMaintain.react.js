@@ -17,7 +17,7 @@ const searchFields = [
         label:'名称',
         fieldName:'name',
         type:'input',
-        span:6,
+        span:8,
     }
 ]
 
@@ -111,8 +111,9 @@ class DataDictionaryMaintain extends Component {
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()

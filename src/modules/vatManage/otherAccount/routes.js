@@ -11,9 +11,11 @@ import DeductProjectSummary from './deductProjectSummary'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
 import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
+import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/otherAccount`
+const otherAccount = strategies['vatManage']['otherAccount'];
 
 const OtherAccount_Routes = [
     {
@@ -24,6 +26,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}prePaidHousingSales.svg`,
             backgroundColor:'#2E8A57'
         },
+        authorityInfo:otherAccount['prePaidHousingSales'].options,
         exact:true,
     },{
         path:`${PATH}/prepayTax`,
@@ -33,6 +36,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}prepayTax.svg`,
             backgroundColor:'#00D01A'
         },
+        authorityInfo:otherAccount['prepayTax'].options,
         exact:true,
     },{
         path:`${PATH}/landPriceDeductionDetails`,
@@ -42,6 +46,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
             backgroundColor:'#9A572C'
         },
+        authorityInfo:otherAccount['landPriceDeductionDetails'].options,
         exact:true,
     },{
         path:`${PATH}/deductProjectSummary`,
@@ -51,6 +56,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}deductProjectSummary.svg`,
             backgroundColor:'#FD6A60'
         },
+        authorityInfo:otherAccount['deductProjectSummary'].options,
         exact:true,
     },{
         path:`${PATH}/taxExemptionDetails`,
@@ -60,6 +66,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}taxExemptionDetails.svg`,
             backgroundColor:'#57C8F2'
         },
+        authorityInfo:otherAccount['taxExemptionDetails'].options,
         exact:true,
     },{
         path:`${PATH}/businessTaxChangeTaxAnalysisNegative`,
@@ -69,6 +76,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}businessTaxChangeTaxAnalysisNegative.svg`,
             backgroundColor:'#2F7597'
         },
+        authorityInfo:otherAccount['businessTaxChangeTaxAnalysisNegative'].options,
         exact:true,
     },{
         path:`${PATH}/taxCalculation`,
@@ -78,6 +86,7 @@ const OtherAccount_Routes = [
             url:`${ICON_URL_PATH}taxCalculation.svg`,
             backgroundColor:'#3B4A83'
         },
+        authorityInfo:otherAccount['taxCalculation'].options,
         exact:true,
     },{
         path:`${PATH}`,

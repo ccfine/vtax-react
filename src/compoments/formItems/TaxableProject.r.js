@@ -97,6 +97,9 @@ class TaxableProjectTreeForm extends Component{
                     resolve();
                     // }, 1000);
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             });
 
         });
@@ -129,6 +132,10 @@ class TaxableProjectTreeForm extends Component{
                     submitLoading: false,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
+            this.mounted && this.setState({ submitLoading: false });
         });
     }
     onSelect = (selectedKeys, info) => {

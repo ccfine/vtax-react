@@ -12,30 +12,51 @@ import {request} from 'utils'
 const initialState = fromJS({
     /**用户个人信息*/
     personal:{
-        adminUrl:null,
-        email:null,
-        enabled:null,
-        fax:null,
-        phoneNumber:null,
-        realname:null,
-        roleType:null,
-        roles:null,
-        sex:null,
-        userId:null,
-        userType:null,
-        username:null,
+        email:null ,// 邮箱
+        options: null,// 用户所有权限(查询详情时才加载数据)
+        phoneNumber:null ,// 手机号码
+        realname:null ,// 真实姓名
+        type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
+        username:null ,// 用户名
     },
-    /**组织代码*/
+
+       /*
+        { //非必须参数
+        id:'' ,// 主键
+        isEnabled:'' ,// 是否可用,1:可用 2:禁用 3:删除
+        lastModifiedBy:'' ,// 修改人
+        lastModifiedDate:'' ,// 修改时间
+        orgId:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
+        orgIds:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
+        password:'' ,// 用户密码
+        remark:'' ,// 备注
+        token:'' ,// 用户身份令牌
+        wechat:'' ,// 微信号
+
+        email:null ,// 邮箱
+        options: null,// 用户所有权限(查询详情时才加载数据)
+        phoneNumber:null ,// 手机号码
+        realname:null ,// 真实姓名
+        type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
+        username:null ,// 用户名
+    },*/
+    /**组织代码 - 当前组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）*/
     orgId:null,
 
-    /**登录凭证*/
+    /**
+     * 登录方式
+     * 1：通过登录页登录
+     * 2：通过url登录*/
+    loginType:null,
+
+    /**登录凭证 - 用户身份令牌*/
     token:null,
 
     /**是否登录成功*/
     isAuthed:false,
 });
 
-export const {personal, token, isAuthed, orgId} = createActions({
+export const {personal, token, isAuthed, orgId, loginType} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -52,7 +73,11 @@ export const {personal, token, isAuthed, orgId} = createActions({
     },
     ORG_ID:{
         INCREMENT: info => info
-    }
+    },
+    LOGIN_TYPE:{
+        /**增加*/
+        INCREMENT:type => type,
+    },
 })
 
 export default handleActions({
@@ -70,23 +95,25 @@ export default handleActions({
     },
     [orgId.increment] : (state, {payload})=>{
         return state.set('orgId', payload)
-    }
+    },
+    [loginType.increment]:(state,{payload})=>{
+        return state.set('loginType',payload)
+    },
 }, initialState)
 
-export const login = dispatch => async ({userName,password,success,fail})=>{
+export const login = dispatch => async ({userName,password,success,fail,type,loginToken})=>{
     try {
-
-        await request.post('/oauth/login',{
+        //正常登录获取token
+        type === 1 && await request.post('/oauth/login',{
             userName,
             password
         }).then(res=>{
             request.testSuccess(res.data,data=>{
-               // console.log(data)
                 dispatch(token.increment(data.token))
                 //获取组织信息
                 dispatch(orgId.increment(data.orgId))
                 //获取用户信息
-                dispatch(personal.increment(data.secUserBasicBO))
+                dispatch(personal.increment(data))
                 //用户信息获取成功的话
                 //所需信息全部加载完毕，完成登录
                 dispatch(isAuthed.login())
@@ -98,6 +125,37 @@ export const login = dispatch => async ({userName,password,success,fail})=>{
         }).catch(err=>{
             fail && fail(err.message)
         })
+
+        //url登录直接获得token
+        if(type===2){
+            dispatch(token.increment(loginToken))
+            //获取用户信息
+            await request.post('/oauth/loginName',{userName:userName})
+                .then(res=>{
+                    request.testSuccess(res.data,data=>{
+                        dispatch(token.increment(data.token))
+                        //获取组织信息
+                        dispatch(orgId.increment(data.orgId))
+                        //获取用户信息
+                        dispatch(personal.increment(data))
+
+                    },err=>{
+                        fail && fail(err)
+                        console.log(`用户信息获取失败:${err}`)
+                    })
+                }).catch(err=>{
+                    fail && fail(err.message)
+                })
+
+            //所有信息获取完毕后，设置登录方式
+            dispatch(loginType.increment(type))
+            //用户信息获取成功的话
+            //所需信息全部加载完毕，完成登录
+            dispatch(isAuthed.login())
+            //执行登录成功回调
+            success && success()
+
+        }
 
     }catch(err) {
         console.log(err)

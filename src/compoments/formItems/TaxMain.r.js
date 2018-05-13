@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Form,Select} from 'antd'
+import {Form,Select,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from 'utils'
 const FormItem = Form.Item;
@@ -37,6 +37,9 @@ function fetchTaxMain(value, callback) {
                     });
                     callback(newData);
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             });
     }
 
@@ -48,6 +51,7 @@ export default class TaxMain extends Component{
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
         whetherShowAll:PropTypes.bool,
+        notShowAll:PropTypes.bool,
         fieldDecoratorOptions:PropTypes.object,
         componentProps:PropTypes.object
     }
@@ -62,6 +66,7 @@ export default class TaxMain extends Component{
         },
         fieldName:'mainId',
         whetherShowAll:false,
+        notShowAll:false,
         fieldDecoratorOptions:{
         }
     }
@@ -92,15 +97,22 @@ export default class TaxMain extends Component{
     render(){
         const {mainTaxItems}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps,whetherShowAll} = this.props;
-        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
-        const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true;
-        const newData =  mainTaxItems.length>0 ? [{text: whetherShowAll ? '无' : '全部', value:''}].concat(mainTaxItems) : mainTaxItems;
-        const optionItem = isShowAll ? mainTaxItems :  newData;
+        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps,whetherShowAll,notShowAll} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项   notShowAll:是否添加无或者全部
+        let optionsData = [], initialValue;
+        if(notShowAll === true){
+            optionsData = mainTaxItems;
+        }else{
+            const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true,
+                newData =  mainTaxItems.length>0 ? [{text: whetherShowAll ? '无' : '全部', value:''}].concat(mainTaxItems) : mainTaxItems;
+            initialValue = isShowAll ? undefined : '';
+            optionsData = isShowAll ? mainTaxItems : newData;
+        }
+
         return(
             <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
-                    initialValue:'',
+                    initialValue:initialValue,
                     ...fieldDecoratorOptions,
                 })(
                     <Select
@@ -112,7 +124,7 @@ export default class TaxMain extends Component{
                         {...componentProps}
                     >
                         {
-                            optionItem.map((item,i)=>(
+                            optionsData.map((item,i)=>(
                                 <Option key={i} value={item.value}>{item.text}</Option>
                             ))
                         }

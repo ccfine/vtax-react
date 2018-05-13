@@ -1,12 +1,15 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
- * description  :
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-07 14:19:47
+ *
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
-import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {SearchTable,FileExport,FileImportModal,TableTotal} from 'compoments'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 
@@ -146,6 +149,17 @@ const getColumns = context=> [
         }
     }
 ];
+// 总计数据结构，用于传递至TableTotal中
+const totalData =  [
+    {
+        title:'合计',
+        total:[
+            {title: '金额', dataIndex: 'pageAmount'},
+            {title: '税额', dataIndex: 'pageTaxAmount'},
+            {title: '减免税金额', dataIndex: 'pageReduceTaxAmount'},
+        ],
+    }
+];
 class TaxExemptionDetails extends Component{
     state={
         tableKey:Date.now(),
@@ -156,6 +170,7 @@ class TaxExemptionDetails extends Component{
         selectedRowKeys:[],
         dataSource:[],
         searchTableLoading:false,
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -189,8 +204,9 @@ class TaxExemptionDetails extends Component{
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -199,31 +215,6 @@ class TaxExemptionDetails extends Component{
 
     }
 
-    handleClickActions=type=>{
-        let url = '';
-        switch (type){
-            case '提交':
-                url='/account/other/reduceTaxDetail/submit';
-                break;
-            case '撤回':
-                url='/account/other/reduceTaxDetail/revoke';
-                break;
-            default:
-        }
-        this.toggleSearchTableLoading(true)
-        request.post(url,this.state.filters)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-                this.toggleSearchTableLoading(false)
-            })
-    }
     updateStatus=()=>{
         request.get('/account/other/reduceTaxDetail/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
@@ -231,6 +222,9 @@ class TaxExemptionDetails extends Component{
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     componentDidMount(){
@@ -247,10 +241,9 @@ class TaxExemptionDetails extends Component{
         }
     }
     render(){
-        const {tableKey,searchTableLoading,selectedRowKeys,filters,statusParam,dataSource} = this.state;
+        const {tableKey,searchTableLoading,selectedRowKeys,filters,statusParam,dataSource,totalSource} = this.state;
         const {mainId,authMonth} = filters;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled= !!search;
         return(
@@ -329,44 +322,29 @@ class TaxExemptionDetails extends Component{
                                 ...filters
                             }}
                         />
-                        <Button
-                            size='small'
-                            style={{marginRight:5}}
-                            disabled={disabled1}
-                            onClick={()=>this.handleClickActions('提交')}>
-                            <Icon type="check" />
-                            提交
-                        </Button>
-                        <Button
-                            size='small'
-                            style={{marginRight:5}}
-                            disabled={disabled2}
-                            onClick={()=>this.handleClickActions('撤回')}>
-                            <Icon type="rollback" />
-                            撤回提交
-                        </Button>
+                        <SubmitOrRecallMutex
+                            buttonSize="small"
+                            paramsType="object"
+                            url="/account/other/reduceTaxDetail"
+                            restoreStr="revoke"//撤销接口命名不一致添加属性
+                            refreshTable={this.refreshTable}
+                            toggleSearchTableLoading={this.toggleSearchTableLoading}
+                            hasParam={mainId && authMonth}
+                            dataStatus={statusParam.status}
+                            searchFieldsValues={this.state.filters}
+                          />
+                          <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                     </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        减免税金额：<span className="amount-code">{fMoney(data.pageReduceTaxAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    },
                     onDataChange:(dataSource)=>{
                         this.setState({
                             dataSource
                         })
-                    }
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                 }}
             >
             </SearchTable>

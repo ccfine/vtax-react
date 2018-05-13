@@ -74,6 +74,10 @@ class FileModal extends React.Component {
                 this.setState({ data: data.data, loading: false });
             }
         })
+        .catch(err => {
+            this.setState({ loading: false });
+            message.error(err.message)
+        })
     }
     componentWillReceiveProps(props) {
         if (this.props.visible !== props.visible) {

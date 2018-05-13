@@ -49,7 +49,11 @@ class PopModal extends Component{
                         }
                         this.setState({formLoading:false,record:data.data});
                     }
-                });
+                })
+                .catch(err => {
+                    message.error(err.message)
+                    this.setState({formLoading:false});
+                })
             }else{
                 this.props.form.resetFields();
                 this.setState({formLoading:false,record:{},typelist:[]});
@@ -74,10 +78,13 @@ class PopModal extends Component{
             if (data.code === 200) {
                 this.setState({typelist:data.data});
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     autoCalTax = (amount,tax)=>{
-        // 计算公式：销售额（不含税）*税率 
+        // 计算公式：销售额（不含税）*税率
         if(!(amount === undefined ||amount === null || tax === undefined || tax === null)){
             let res = Number(accMul(amount,tax)/100);
             if(!isNaN(res)){
@@ -110,7 +117,7 @@ class PopModal extends Component{
                 }
 
                 let obj = Object.assign({},this.state.record,values);
-                
+
                 let result ,
                 sucessMsg ;
                 if(this.props.action==="modify"){
@@ -149,10 +156,10 @@ class PopModal extends Component{
         if(this.props.action==="add"){
             title = "新增";
         }else if(this.props.action==="modify"){
-            title="修改"
+            title="编辑"
         }
         return (
-            <Modal 
+            <Modal
             title={title}
             visible={this.props.visible}
             width='700px'
@@ -248,7 +255,7 @@ class PopModal extends Component{
                                             this.setState({record:{...record, businessType:value, taxRateName:obj.name,taxRate:obj.taxRate}})
                                              // 计算公式：销售额（不含税）*税率
                                              this.autoCalTax(record.amountWithoutTax,obj.taxRate);
-                                        }                                        
+                                        }
                                     }
                                 }
                             },
@@ -273,8 +280,8 @@ class PopModal extends Component{
                                 allowNegative:true,
                                 onChange:(value)=>{
                                     this.setState({record:{...record, amountWithoutTax:value}});
-                                    // 计算公式：销售额（不含税）*税率 
-                                    this.autoCalTax(value,record.taxRate);                                      
+                                    // 计算公式：销售额（不含税）*税率
+                                    this.autoCalTax(value,record.taxRate);
                                 }
                             }
                         },

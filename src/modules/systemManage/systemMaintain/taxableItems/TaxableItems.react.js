@@ -112,8 +112,9 @@ class TaxableItems extends Component {
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()

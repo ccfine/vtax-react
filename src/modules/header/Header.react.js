@@ -96,6 +96,6 @@ class WimsHeader extends Component {
 export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
-        userName:state.user.getIn(['personal','username'])
+        userName:state.user.getIn(['personal','username'])  //'secUserBasicBO',
     }
 })(WimsHeader))

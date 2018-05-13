@@ -18,7 +18,7 @@ const searchFields = [
         label:'税收分类编码',
         fieldName:'num',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -27,7 +27,7 @@ const searchFields = [
         label:'商品名称',
         fieldName:'commodityName',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -36,7 +36,7 @@ const searchFields = [
         label:'税率',
         fieldName:'taxRate',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
         },
         fieldDecoratorOptions:{
@@ -101,6 +101,7 @@ export default class TaxClassificationCode extends Component{
             okType: 'danger',
             cancelText: '取消',
             onOk: () => {
+                this.toggleModalVisible(false)
                 request.delete(`/tax/classification/coding/delete/${this.state.selectedRowKeys}`)
                     .then(({data}) => {
                         if (data.code === 200) {
@@ -110,7 +111,9 @@ export default class TaxClassificationCode extends Component{
                             message.error(data.msg)
                         }
                     })
-                this.toggleModalVisible(false)
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             },
             onCancel: () => {
                 console.log('Cancel');

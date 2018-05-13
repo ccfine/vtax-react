@@ -1,9 +1,12 @@
 /**
  * Created by liurunbin on 2018/1/11.
+ *@Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
+ *
  */
 import React, { Component } from 'react'
 import {fMoney,request,getUrlParam} from 'utils'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {Button,Icon,message,Modal} from 'antd'
 import ManualMatchRoomModal from './addDataModal'
 import { withRouter } from 'react-router'
@@ -195,6 +198,7 @@ class NeedNotMatchInvoices extends Component{
          * */
         dataStatus:'',
         submitDate:'',
+        totalSource:undefined,
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -229,6 +233,7 @@ class NeedNotMatchInvoices extends Component{
                         message.error(`撤销失败:${data.msg}`)
                     }
                 }).catch(err=>{
+                    message.error(err.message)
                     this.toggleSearchTableLoading(false)
                 })
             },
@@ -258,9 +263,12 @@ class NeedNotMatchInvoices extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
-        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus} = this.state;
+        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -313,39 +321,22 @@ class NeedNotMatchInvoices extends Component{
                                 }
                             </div>
                         }
-                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus" />添加</Button>
+                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus" />新增</Button>
                         <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>
+                        <TableTotal totalSource={totalSource} />
+
                     </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                        总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                        总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
                         x:'180%'
                     },
                 }}
             >
-                <ManualMatchRoomModal title="添加信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

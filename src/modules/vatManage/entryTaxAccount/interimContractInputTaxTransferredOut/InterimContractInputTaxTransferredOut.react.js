@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Form,Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {SearchTable,FileExport,FileImportModal,TableTotal} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
@@ -245,6 +245,7 @@ class InterimContractInputTaxTransferredOut extends Component {
          * */
         statusParam: {},
         dataSource: [],
+        totalSource:undefined,
     }
     refreshTable = () => {
         this.setState({
@@ -273,7 +274,11 @@ class InterimContractInputTaxTransferredOut extends Component {
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    });
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             }
         })
     }
@@ -284,6 +289,9 @@ class InterimContractInputTaxTransferredOut extends Component {
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     deleteRecord = (id,cb) => {
@@ -330,7 +338,7 @@ class InterimContractInputTaxTransferredOut extends Component {
     }
 
     render() {
-        const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam} = this.state;
+        const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam,totalSource} = this.state;
         const {mainId, authMonth} = this.state.filters;
         const disabled1 = statusParam && parseInt(statusParam.status, 0) === 1;
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
@@ -459,28 +467,29 @@ class InterimContractInputTaxTransferredOut extends Component {
                         </Button>
                         <SubmitOrRecall type={1} disabled={disabled2} url="/account/income/taxContract/adjustment/submit" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} disabled={disabled1} url="/account/income/taxContract/adjustment/revoke" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '金额', dataIndex: 'pageAmount'},
+                                        {title: '税额', dataIndex: 'pageTaxAmount'},
+                                        {title: '价税合计', dataIndex: 'pageTotalAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
                     onDataChange: (dataSource) => {
                         this.setState({
                             dataSource
                         })
                     },
-                    renderFooter:data=>{
-                        return (
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    }
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                 }}
             >
 

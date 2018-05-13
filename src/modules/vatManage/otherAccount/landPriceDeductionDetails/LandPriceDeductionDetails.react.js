@@ -1,13 +1,16 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
- * description  :
+ * @Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
+ *
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable} from 'compoments'
 import PageTwo from './TabPage2.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle={
@@ -195,16 +198,7 @@ class LandPriceDeductionDetails extends Component{
     }
 
     handleClickActions=type=>{
-        let url = '';
         switch (type){
-            case '提交':
-                url='/account/landPrice/deductedDetails/submit';
-                this.requestPost(url,type,this.state.filters);
-                break;
-            case '撤回':
-                url='/account/landPrice/deductedDetails/revoke';
-                this.requestPost(url,type,this.state.filters);
-                break;
             case '重算':
                 Modal.confirm({
                     title: '友情提醒',
@@ -220,7 +214,11 @@ class LandPriceDeductionDetails extends Component{
                                 }else{
                                     message.error(`重算失败:${data.msg}`)
                                 }
-                            });
+                            })
+                            .catch(err => {
+                                message.error(err.message)
+                                this.toggleSearchTableLoading(false)
+                            })
                     }
                 })
                 break;
@@ -233,19 +231,6 @@ class LandPriceDeductionDetails extends Component{
                 })
         }
     }
-    requestPost=(url,type,values={})=>{
-        this.toggleSearchTableLoading(true)
-        request.post(url,values)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable()
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
     updateStatus=()=>{
         request.get('/account/landPrice/deductedDetails/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
@@ -253,6 +238,9 @@ class LandPriceDeductionDetails extends Component{
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     componentDidMount(){
@@ -279,9 +267,8 @@ class LandPriceDeductionDetails extends Component{
 
     render(){
         const {updateKey,pageTwoKey,searchTableLoading,selectedRows,filters,dataSource,statusParam} = this.state;
-        const {mainId,authMonth} = this.state.filters;
+        const {mainId,authMonth} = this.state.filters
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -356,22 +343,19 @@ class LandPriceDeductionDetails extends Component{
                                                     <Icon type="check" />
                                                     清算
                                                 </Button>*/}
-                            <Button
-                                size='small'
-                                style={{marginRight:5}}
-                                disabled={disabled1}
-                                onClick={()=>this.handleClickActions('提交')}>
-                                <Icon type="check" />
-                                提交
-                            </Button>
-                            <Button
-                                size='small'
-                                style={{marginRight:5}}
-                                disabled={disabled2}
-                                onClick={()=>this.handleClickActions('撤回')}>
-                                <Icon type="rollback" />
-                                撤回提交
-                            </Button>
+
+                            <SubmitOrRecallMutex
+                                buttonSize="small"
+                                restoreStr="revoke"//撤销接口命名不一致添加属性
+                                paramsType="object"
+                                url="/account/landPrice/deductedDetails"
+                                refreshTable={this.refreshTable}
+                                toggleSearchTableLoading={this.toggleSearchTableLoading}
+                                hasParam={mainId && authMonth}
+                                dataStatus={statusParam.status}
+                                searchFieldsValues={this.state.filters}
+                              />
+
                         </div>,
                         onDataChange:(dataSource)=>{
                             this.setState({

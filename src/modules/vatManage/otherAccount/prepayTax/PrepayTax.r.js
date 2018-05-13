@@ -1,9 +1,13 @@
 /**
  * Created by liurunbin on 2018/1/18.
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-07 12:23:47
+ *
  */
 import React,{Component} from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,ButtonWithFileUploadModal} from 'compoments'
+import {SearchTable,FileExport,ButtonWithFileUploadModal,TableTotal} from 'compoments'
+import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
 import {fMoney,request,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -186,6 +190,22 @@ const transformDataStatus = status =>{
     }
     return status
 }
+// 总计数据结构，用于传递至TableTotal中
+const totalData =  [
+    {
+        title:'合计',
+        total:[
+            {title: '销售额（含税）', dataIndex: 'amountWithTax'},
+            {title: '销售额（不含税）', dataIndex: 'amountWithoutTax'},
+            {title: '实际销售额（不含税）', dataIndex: 'actualAmountWithoutTax'},
+            {title: '实际预征税额', dataIndex: 'actualPreTaxAmount'},
+            {title: '扣除金额', dataIndex: 'deductAmount'},
+            {title: '上期未退税（负数）', dataIndex: 'taxRebates'},
+            {title: '预征税额', dataIndex: 'preTaxAmount'},
+            {title: '调整销售额（不含税）', dataIndex: 'adjustSales'},
+        ],
+    }
+];
 class PrepayTax extends Component{
     state={
         tableKey:Date.now(),
@@ -205,9 +225,8 @@ class PrepayTax extends Component{
         dataStatus:'',
         submitDate:'',
         resultStatusId:'',
-
-
-        hasData:false
+        hasData:false,
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -235,43 +254,21 @@ class PrepayTax extends Component{
                             message.error(`重算失败:${data.msg}`)
                         }
                     })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             }
         })
     }
-    handleClickActions = action => ()=>{
-        let actionText,
-            actionUrl;
 
+    handleClickActions = action => ()=>{
         if(action ==='recount'){
             this.recount();
             return false;
         }
-        switch (action){
-            case 'submit':
-                actionText='提交';
-                actionUrl='/account/prepaytax/submit';
-                break;
-            case 'restore':
-                actionText='撤回';
-                actionUrl='/account/prepaytax/restore';
-                break;
-            default:
-                break;
-        }
-        this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${actionText}成功！`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${actionText}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
     }
+
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -296,9 +293,12 @@ class PrepayTax extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultStatusId,resultFieldsValues} = this.state;
+        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultStatusId,resultFieldsValues,totalSource} = this.state;
         const {mainId,receiveMonth} = resultFieldsValues;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -349,6 +349,14 @@ class PrepayTax extends Component{
                             this.fetchResultStatus()
                         })
                     },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
+                    cardProps: {
+                        title: "预缴税款台账",
+                    },
                     pageSize:100,
                     columns:getColumns(this),
                     url:tableUrl,
@@ -382,35 +390,19 @@ class PrepayTax extends Component{
                             <Icon type="retweet" />
                             重算
                         </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
+                      <SubmitOrRecallMutex
+                          buttonSize="small"
+                          paramsType="object"
+                          url="/account/prepaytax"
+                          restoreStr="restore"//撤销接口命名不一致添加属性
+                          refreshTable={this.refreshTable}
+                          toggleSearchTableLoading={this.toggleSearchTableLoading}
+                          hasParam={mainId && receiveMonth}
+                          dataStatus={dataStatus}
+                          searchFieldsValues={this.state.searchFieldsValues}
+                        />
+                        <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                     </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        销售额（含税）：<span className="amount-code">{fMoney(data.amountWithTax)}</span>
-                                        销售额（不含税）：<span className="amount-code">{fMoney(data.amountWithoutTax)}</span>
-                                        实际销售额（不含税）：<span className="amount-code">{fMoney(data.actualAmountWithoutTax)}</span>
-                                        实际预征税额：<span className="amount-code">{fMoney(data.actualPreTaxAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        扣除金额 ：<span className="amount-code">{fMoney(data.deductAmount)}</span>
-                                        上期未退税（负数）：<span className="amount-code">{fMoney(data.taxRebates)}</span>
-                                        预征税额 ：<span className="amount-code">{fMoney(data.preTaxAmount)}</span>
-                                        调整销售额（不含税）：<span className="amount-code">{fMoney(data.adjustSales)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    },
                     scroll:{
                         x:'1400px',
                     },

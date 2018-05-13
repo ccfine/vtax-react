@@ -147,8 +147,9 @@ class OrganizationalStructureMaintenance extends Component {
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -166,7 +167,12 @@ class OrganizationalStructureMaintenance extends Component {
                     this.refreshTable()
                 }else{
                     message.error(`启用/禁用失败:${data.msg}`)
+                    this.toggleSearchTableLoading(false)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleSearchTableLoading(false)
             })
     }
     render() {

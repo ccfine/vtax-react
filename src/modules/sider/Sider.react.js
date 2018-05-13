@@ -7,6 +7,9 @@ import React, { Component } from 'react';
 import { Layout, Menu,Icon} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
+import checkPermissions from 'compoments/permissible/index'
+
 import logo from './images/logo.png'
 import './styles.less'
 
@@ -32,17 +35,19 @@ class VTaxSider extends Component {
     }
 
     getNavMenuItems=(menusData)=>{
+
         if (!menusData) {
             return [];
         }
-        return menusData.map((item) => {
+        return menusData.map((item,i) => {
 
             if (!item.name  || item.path === '/web' ) {
                 return null;
             }
 
             if (item.permissions && item.children && item.children.some(child => child.name)) {
-                return (
+
+                const componentSbu = (
                     <SubMenu
                         title={
                             item.icon ? (
@@ -56,11 +61,18 @@ class VTaxSider extends Component {
                     >
                         {this.getNavMenuItems(item.children)}
                     </SubMenu>
-                );
+                )
+
+                //当权限是管理员的时候直接放行
+                if(parseInt(this.props.type, 0) ===1){
+                    return checkPermissions(item, this.props.options) &&  componentSbu
+                }
+                return componentSbu
             }
 
             const icon = item.icon && <Icon type={item.icon} />;
-            return (
+
+            const componentParent = (
                 <Menu.Item key={item.key || item.path}>
                     <Link
                         to={item.path}
@@ -72,6 +84,11 @@ class VTaxSider extends Component {
                 </Menu.Item>
             );
 
+            //当权限是管理员的时候直接放行
+            if(parseInt(this.props.type, 0) ===1){
+                return checkPermissions(item, this.props.options) &&  componentParent
+            }
+            return  componentParent
 
         });
     }
@@ -147,4 +164,7 @@ class VTaxSider extends Component {
     }
 }
 
-export default withRouter(VTaxSider)
+export default withRouter(connect(state=>({
+    options:state.user.getIn(['personal','options']),
+    type:state.user.getIn(['personal','type'])
+}))(VTaxSider))

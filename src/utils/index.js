@@ -4,11 +4,13 @@
  * description  :
  */
 import React from 'react';
+import {message} from 'antd'
 import request from './request'
 import composeMenus from './composeMenus'
 import regRules from './regRules'
 import getFields from './getFields'
 import {BigNumber} from 'bignumber.js'
+
 const fMoney = (s,n=2)=>{
     if(s === "" || s === 0 || typeof (s) === 'undefined'){
         return '0.00';
@@ -16,7 +18,12 @@ const fMoney = (s,n=2)=>{
     n = n > 0 && n <= 20 ? n : 2;
     /**添加一下代码 大数字用parseFloat不精确 */
     s = s.toString().replace(/[^\d\\.-]/g, "");
-    return (new BigNumber(s)).toFormat(n);
+    try{
+        return (new BigNumber(s)).toFormat(n);
+    }catch(e){
+        console.warn('fMoney error：',e)
+        return '';
+    }
 
     // s = parseFloat((s + "").replace(/[^\d\\.-]/g, "")).toFixed(n) + "";
     // /**过滤负号 .replace(/-/g,'') 解决负数转换 2018/3/19*/
@@ -43,6 +50,9 @@ const getDict = type => {
                 }else{
                     reject(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     })
 }
@@ -172,11 +182,15 @@ const htmlDecode = html =>{
 };
 
 //将0.5转换成50%
-const toPercent = val=>{
+const toPercent = val => {
     let valNum = Number(val);
-    if(isNaN(valNum) || valNum === 0)return val;
-    return `${valNum*100}%`;
-}
+    if (isNaN(valNum)){
+         return val;
+    }else if (valNum === 0) {
+        return valNum;
+    }
+    return `${valNum * 100}%`;
+};
 
 //将50%转换成0.5
 const fromPercent = val=>{
@@ -223,5 +237,5 @@ export {
     htmlDecode,
     toPercent,
     fromPercent,
-    listMainResultStatus
+    listMainResultStatus,
 }

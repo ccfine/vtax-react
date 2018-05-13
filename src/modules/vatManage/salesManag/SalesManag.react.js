@@ -8,6 +8,7 @@ import {NavRouter} from 'compoments'
 import routes from '../../vatManage/salesManag/routes'
 
 class SalesManag extends Component {
+
     render() {
 
         return (

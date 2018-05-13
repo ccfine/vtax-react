@@ -1,9 +1,12 @@
 /**
  * Created by liurunbin on 2018/1/8.
+ *@Last Modified by: xiaminghua
+ * @Last Modified time: 2018-04-28
+ *
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Modal,message} from 'antd'
-import {AsyncTable,FileExport,FileImportModal} from 'compoments'
+import {AsyncTable,FileExport,FileImportModal,TableTotal} from 'compoments'
 import {getFields,request,fMoney,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
@@ -136,7 +139,7 @@ const getColumns = context => [
     {
         title:'匹配状态',
         dataIndex:'matchingStatus',
-        render:text=>parseInt(text,0) === 0 ? '未匹配' : '已匹配' //0:未匹配,1:已匹配
+        render:text=>parseInt(text,0) === 0 ?<span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
     },
     {
         title:'交易日期',
@@ -168,7 +171,8 @@ class RoomTransactionFile extends Component{
         searchFieldsValues:{
 
         },
-        hasData:false
+        hasData:false,
+        totalSource:undefined
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -223,6 +227,9 @@ class RoomTransactionFile extends Component{
                     message.error(`删除失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     fetchResultStatus = ()=>{
         request.get('/output/room/files/listMain',{
@@ -238,9 +245,12 @@ class RoomTransactionFile extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
-        const {tableUpDateKey,filters,submitDate,dataStatus} = this.state;
+        const {tableUpDateKey,filters,submitDate,dataStatus,totalSource} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -450,6 +460,22 @@ class RoomTransactionFile extends Component{
                         />
                         <SubmitOrRecall type={1} url="/output/room/files/submit" onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} url="/output/room/files/revoke" onSuccess={this.refreshTable} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'本页合计',
+                                    total:[
+                                        {title: '本页总价', dataIndex: 'pageTotalPrice'},
+                                    ],
+                                },{
+                                    title:'总计',
+                                    total:[
+                                        {title: '全部总价', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]
+                        } />
+
                     </div>
                 }>
                     <AsyncTable url={'/output/room/files/list'}
@@ -468,25 +494,10 @@ class RoomTransactionFile extends Component{
                                             this.state.searchFieldsValues.transactionDate && this.state.searchFieldsValues.mainId && this.fetchResultStatus()
                                         })
                                     },
-                                    renderFooter:data=>{
-                                        return(
-                                            <div className="footer-total">
-                                                <div className="footer-total-meta">
-                                                    <div className="footer-total-meta-title">
-                                                        <label>本页合计：</label>
-                                                    </div>
-                                                    <div className="footer-total-meta-detail">
-                                                        本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
-                                                    </div>
-                                                    <div className="footer-total-meta-title">
-                                                        <label>总计：</label>
-                                                    </div>
-                                                    <div className="footer-total-meta-detail">
-                                                        全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
+                                    onTotalSource: (totalSource) => {
+                                        this.setState({
+                                            totalSource
+                                        })
                                     },
                                     columns:getColumns(this)
                                 }} />

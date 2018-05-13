@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,message,Modal} from 'antd'
-import {AsyncTable} from 'compoments'
+import {AsyncTable,TableTotal} from 'compoments'
 import {request,getFields,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
@@ -30,6 +30,7 @@ class InputTaxDetails extends Component {
         params:{},
         statusParam:{},
         dataSource:[],
+        totalSource:undefined,
     }
 
     columns = [
@@ -98,6 +99,9 @@ class InputTaxDetails extends Component {
                                             message.error(`${type}失败:${data.msg}`)
                                         }
                                     })
+                                    .catch(err => {
+                                        message.error(err.message)
+                                    })
                             }
                         })
                         break;
@@ -133,6 +137,9 @@ class InputTaxDetails extends Component {
                     message.error(`${type}失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     updateStatus=()=>{
         request.get('/account/income/taxDetail/listMain',{params:this.state.filters}).then(({data}) => {
@@ -142,6 +149,9 @@ class InputTaxDetails extends Component {
                 })
             }
         })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     componentDidMount(){
         const {search} = this.props.location;
@@ -150,7 +160,7 @@ class InputTaxDetails extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,visible,params,dataSource,statusParam} = this.state;
+        const {tableUpDateKey,filters,visible,params,dataSource,statusParam,totalSource} = this.state;
         const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
 
@@ -223,6 +233,17 @@ class InputTaxDetails extends Component {
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
                             <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="retweet" />重算</Button>
                             <Button size="small" style={buttonStyle} disabled={disabled2} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '金额', dataIndex: 'pageAmount'},
+                                            {title: '税额', dataIndex: 'pageTaxAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>
                     }
                     style={{marginTop:10}}>
@@ -235,24 +256,14 @@ class InputTaxDetails extends Component {
                                     pagination:true,
                                     size:'small',
                                     columns:this.columns,
-                                    renderFooter:data=>{
-                                        return (
-                                            <div className="footer-total">
-                                                <div className="footer-total-meta">
-                                                    <div className="footer-total-meta-title">
-                                                        <label>合计：</label>
-                                                    </div>
-                                                    <div className="footer-total-meta-detail">
-                                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    },
                                     onDataChange:(dataSource)=>{
                                         this.setState({
                                             dataSource
+                                        })
+                                    },
+                                    onTotalSource: (totalSource) => {
+                                        this.setState({
+                                            totalSource
                                         })
                                     },
                                 }} />

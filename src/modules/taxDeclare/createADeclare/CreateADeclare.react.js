@@ -81,7 +81,7 @@ const getColumns =(context)=>[
         dataIndex: 'status',
         className:'text-center',
         render:text=>{
-            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠; ,
+            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠;
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
@@ -102,7 +102,6 @@ const getColumns =(context)=>[
                 case -1:
                     t=<Badge count='流程终止' style={{ backgroundColor: '#ed2550' }} />;
                     break;
-
                 default:
                 //no default
             }
@@ -174,7 +173,7 @@ export default class CreateADeclare extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            updateKey:Date.now()
+            updateKey:Date.now(),
         })
     }
     showModal=type=>{
@@ -206,6 +205,9 @@ export default class CreateADeclare extends Component{
                         } else {
                             message.error(data.msg)
                         }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
                     })
             },
             onCancel() {
@@ -269,15 +271,17 @@ export default class CreateADeclare extends Component{
                                 <Icon type="search" />
                                 查看申报
                             </Button>
-                            <ApplyDeclarationPopModal
-                                title={selectedRows.length>0 && `申报处理【${selectedRows[0].mainName}】 申报期间 【${selectedRows[0].subordinatePeriodStart} 至 ${ selectedRows[0].subordinatePeriodEnd}】`}
-                                disabled={!selectedRowKeys}
-                                selectedRowKeys={selectedRowKeys}
-                                selectedRows={selectedRows}
-                                onSuccess={()=>{
-                                    this.refreshTable()
-                                }}
-                                style={{marginRight:5}} />
+                            {
+                                selectedRows.length>0 &&  <ApplyDeclarationPopModal
+                                    title={`申报处理【${selectedRows[0].mainName}】 申报期间 【${selectedRows[0].subordinatePeriodStart} 至 ${ selectedRows[0].subordinatePeriodEnd}】`}
+                                    disabled={!selectedRowKeys}
+                                    selectedRowKeys={selectedRowKeys}
+                                    selectedRows={selectedRows}
+                                    onSuccess={()=>{
+                                        this.refreshTable()
+                                    }}
+                                    style={{marginRight:5}} />
+                            }
                             <FileExport
                                 url='account/income/taxContract/adjustment/download'
                                 title="下载附件"
@@ -294,7 +298,7 @@ export default class CreateADeclare extends Component{
                                     ...filters
                                 }}
                             />
-                            <Button size='small' type="danger" style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys} >
+                            <Button size='small' type="danger" style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===-1)} >
                                 <Icon type="exception" />
                                 流程终止
                             </Button>
