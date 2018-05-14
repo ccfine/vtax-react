@@ -198,9 +198,11 @@ form .ant-pagination .ant-select{
 .popover-total-container{
   margin-left:15px;
   color:#FF9700;
-  max-width:500px;
+  max-width:300px;
   display: inline-block;
   vertical-align:middle;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .popover-total-container>*>.anticon{
   font-size: 16px;
@@ -212,11 +214,6 @@ form .ant-pagination .ant-select{
 .popover-total-container .total-amount{
   vertical-align:middle;
   margin-right: 15px;
-  /* 长度限制下，小屏幕下太占位置 max-width: 120px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display:inline-block; */
 }
 
 /*data grid*/

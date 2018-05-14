@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/15.
  */
 import React,{Component} from 'react';
-import {Modal,Table,message} from 'antd';
+import {Modal,Table,message,Spin} from 'antd';
 import {request,fMoney} from 'utils'
 const columns = [
     {
@@ -44,7 +44,8 @@ const columns = [
 class SummarySheetModal extends Component{
     static defaultProps={
         type:'edit',
-        visible:true
+        visible:true,
+        loading:false,
     }
     state={
 
@@ -53,11 +54,10 @@ class SummarySheetModal extends Component{
     componentWillUnmount(){
         this.mounted=null
     }
-    fetchData = month =>{
+    fetchData = params =>{
+        this.setState({loading:true})
         request.get('/account/output/notInvoiceSale/realty/sumList',{
-            params:{
-                month
-            }
+            params
         })
             .then(({data})=>{
                 if(data.code===200){
@@ -67,14 +67,16 @@ class SummarySheetModal extends Component{
                 }else{
                     message.error(`汇总表数据获取失败:${data.msg}`)
                 }
+                this.setState({loading:false})
             })
             .catch(err => {
+                this.setState({loading:false})
                 message.error(err.message)
             })
     }
     componentWillReceiveProps(nextProps){
-        if(nextProps.visible && nextProps.month){
-            this.fetchData(nextProps.month)
+        if(nextProps.visible && nextProps.params){
+            this.fetchData(nextProps.params)
         }
         if(!nextProps.visible){
             this.setState({
@@ -85,7 +87,7 @@ class SummarySheetModal extends Component{
     render(){
         const props = this.props;
         const {title} = this.props;
-        const {dataSource} = this.state;
+        const {dataSource,loading} = this.state;
         return(
             <Modal
                 maskClosable={false}
@@ -101,7 +103,9 @@ class SummarySheetModal extends Component{
                 footer={null}
                 visible={props.visible}
                 title={title}>
-                <Table dataSource={dataSource} columns={columns} />
+                <Spin spinning={loading}>
+                    <Table dataSource={dataSource} columns={columns} />
+                </Spin>
             </Modal>
         )
     }

@@ -393,7 +393,7 @@ class unBilledSalesEstate extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="汇总信息" month={searchFieldsValues.month} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="汇总信息" params={searchFieldsValues} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }
