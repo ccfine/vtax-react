@@ -212,6 +212,11 @@ form .ant-pagination .ant-select{
 .popover-total-container .total-amount{
   vertical-align:middle;
   margin-right: 15px;
+  /* 长度限制下，小屏幕下太占位置 max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display:inline-block; */
 }
 
 /*data grid*/
