@@ -23,6 +23,11 @@ const AsyncSearchDeclare = LoadAble({
     loader: () => import('../../taxDeclare/searchDeclare'),
     loading: LoadingPage,
 });
+
+const AsyncDeclareHandle = LoadAble({
+    loader: () => import('../../taxDeclare/declareHandle'),
+    loading: LoadingPage,
+});
 const Children_Routes = [
     {
         path:`${PATH}/createADeclare`,
@@ -33,6 +38,16 @@ const Children_Routes = [
             backgroundColor:'#56C7F3'
         },
         authorityInfo:taxDeclare['createADeclare'].options,
+        exact:true,
+    },{
+        path:`${PATH}/declareHandle`,
+        component:wrapPage('申报办理',AsyncDeclareHandle),
+        name:'申报办理',
+        icon:{
+            url:`${ICON_URL_PATH}createAMatter.svg`,
+            backgroundColor:'#56C7F3'
+        },
+        authorityInfo:taxDeclare['declareHandle'].options,
         exact:true,
     },{
         path:`${PATH}/searchDeclare`,

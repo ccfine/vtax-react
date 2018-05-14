@@ -6,10 +6,13 @@
 import {wrapPage} from 'compoments'
 import SalesInvoiceCollection from './salesInvoiceCollection'
 import SalesInvoiceMatching from './salesInvoiceMatching'
+/*
 import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
+import UnBilledSales from '../salesTaxAccount/unBilledSales'
+* */
 import IncomeCheck from './incomeCheck'
 import BillingSales from '../salesTaxAccount/billingSales'
-import UnBilledSales from '../salesTaxAccount/unBilledSales'
+
 import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
 import strategies from 'config/routingAuthority.config'
 
@@ -38,7 +41,7 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['salesInvoiceMatching'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/campBeforeTheIncreaseInSales`,
         component:wrapPage('营改增前售房',CampBeforeTheIncreaseInSales),
         name:'营改增前售房',
@@ -47,7 +50,7 @@ const SalesManag_Routes = [
             backgroundColor:'#FFBE06'
         },
         authorityInfo:salesManag['campBeforeTheIncreaseInSales'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/incomeCheck`,
         component:wrapPage('收入检查',IncomeCheck),
@@ -68,7 +71,7 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['billingSales'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/unBilledSales`,
         component:wrapPage('未开票销售台账',UnBilledSales),
         name:'未开票销售台账',
@@ -77,7 +80,7 @@ const SalesManag_Routes = [
             backgroundColor:'#F5A544'
         },
         authorityInfo:salesManag['unBilledSales'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/otherTaxAdjustment`,
         component:wrapPage('其他涉税调整台账',OtherTaxAdjustment),

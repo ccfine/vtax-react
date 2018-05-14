@@ -3,7 +3,7 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import React from 'react'
+/*import React from 'react'*/
 import {wrapPage} from 'compoments'
 import RoomTransactionFile from './roomTransactionFile'
 import PrePaidSalesQuery from './prePaidHousingSales'
@@ -15,7 +15,7 @@ import SalesInvoiceCollection from './salesInvoiceCollection'
 
 import strategies from 'config/routingAuthority.config'
 
-const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
+/*const GeneralTaxpayerVATReturn =()=><div>增值税一般纳税人申报表</div>
 const VATPrepaymentForm =()=><div>增值税预缴表</div>
 const RoomFileSummaryQuery =()=><div>房间档案汇总查询</div>
 const InterimContractInputTaxTransferredOutQuery =()=><div>跨期合同进项税额转出查询</div>
@@ -25,7 +25,7 @@ const TaxIncentives =()=><div>税收优惠</div>
 const TaxFileQuery =()=><div>税务档案查询</div>
 const DeclareParametersQuery =()=><div>申报参数查询</div>
 const InvoiceQuery =()=><div>发票查询</div>
-const DeclareQuery =()=><div>申报查询</div>
+const DeclareQuery =()=><div>申报查询</div>*/
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -33,7 +33,7 @@ const businessReport = strategies['reportManage']['businessReport'];
 
 const BusinessReport_Routes = [
     {
-        path:`${PATH}/generalTaxpayerVATReturn`,
+    /*    path:`${PATH}/generalTaxpayerVATReturn`,
         component:wrapPage('增值税一般纳税人申报表',GeneralTaxpayerVATReturn),
         name:'增值税一般纳税人申报表',
         icon:{
@@ -52,7 +52,7 @@ const BusinessReport_Routes = [
         },
         authorityInfo:businessReport['vatPrepaymentForm'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATH}/roomTransactionFile`,
         component:wrapPage('房间交易档案',RoomTransactionFile),
         name:'房间交易档案',
@@ -63,6 +63,16 @@ const BusinessReport_Routes = [
         authorityInfo:businessReport['roomTransactionFile'].options,
         exact:true,
     },{
+        path:`${PATH}/prePaidSalesQuery`,
+        component:wrapPage('售房预缴查询',PrePaidSalesQuery),
+        name:'售房预缴查询',
+        icon:{
+            url:`${ICON_URL_PATH}prePaidSalesQuery.svg`,
+            backgroundColor:'#3B4A83'
+        },
+        authorityInfo:businessReport['prePaidSalesQuery'].options,
+        exact:true,
+    /*},{
         path:`${PATH}/roomFileSummaryQuery`,
         component:wrapPage('房间档案汇总查询',RoomFileSummaryQuery),
         name:'房间档案汇总查询',
@@ -91,16 +101,6 @@ const BusinessReport_Routes = [
             backgroundColor:'#9B562C'
         },
         authorityInfo:businessReport['landPriceDeductionDetails'].options,
-        exact:true,
-    },{
-        path:`${PATH}/prePaidSalesQuery`,
-        component:wrapPage('售房预缴查询',PrePaidSalesQuery),
-        name:'售房预缴查询',
-        icon:{
-            url:`${ICON_URL_PATH}prePaidSalesQuery.svg`,
-            backgroundColor:'#3B4A83'
-        },
-        authorityInfo:businessReport['prePaidSalesQuery'].options,
         exact:true,
     },{
         path:`${PATH}/taxpayersQuery`,
@@ -161,7 +161,7 @@ const BusinessReport_Routes = [
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['declareQuery'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/taxReturn`,
         component:wrapPage('纳税申报表',TaxReturnForm),

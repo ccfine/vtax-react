@@ -1,14 +1,14 @@
 /**
- * Created by liuliyuan on 2018/5/12.
+ * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {message,Button,Icon} from 'antd'
 import { withRouter } from 'react-router'
 import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import PopModal from './popModal'
-import ViewDocumentDetails from './viewDocumentDetailsPopModal'
+import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
 import moment from 'moment';
 const pointerStyle = {
     cursor:'pointer',
@@ -61,168 +61,90 @@ const searchFields=(disabled)=> {
                     }
                 ]
             }
-        }, {
-            label:'标记类型',
-            fieldName:'flag',
-            span:6,
-            formItemStyle,
-            type:'select',
-            options:[  //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
-                {
-                    text:'海关进口增值税专用缴款书',
-                    value:'1'
-                },{
-                    text:'农产品收购发票或者销售发票',
-                    value:'2'
-                },{
-                    text:'代扣代缴收缴款凭证',
-                    value:'3'
-                },{
-                    text:'其他',
-                    value:'4'
-                },{
-                    text:'无标记',
-                    value:'0'
-                }
-            ]
-        },
+        }
     ]
 }
 const columns = context =>[
     {
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">纳税主体名称</p>
-            <p className="apply-form-list-p2">纳税主体代码</p>
-        </div>,
+        title: '纳税主体名称',
         dataIndex: 'mainName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.mainNum}</p>
-            </div>
-        )
-
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">项目分期名称</p>
-            <p className="apply-form-list-p2">项目分期代码</p>
-        </div>,
+        title: '项目分期代码',
+        dataIndex: 'stagesNum',
+    },{
+        title: '项目分期名称',
         dataIndex: 'stagesName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stagesNum}</p>
-            </div>
-        )
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">凭证日期</p>
-            <p className="apply-form-list-p2">记账日期</p>
-        </div>,
+        title: '凭证日期',
         dataIndex: 'voucherDate',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.billingDate}</p>
-            </div>
-        )
+    },{
+        title: '凭证类型',
+        dataIndex: 'voucherType',
     },{
         title: '凭证号',
         dataIndex: 'voucherNum',
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
-                    context.setState({
-                        voucherNum:text,
-                    },()=>{
-                        context.toggleViewModalVisible(true)
-                    })
+                context.setState({
+                    voucherNum:text,
+                },()=>{
+                    context.toggleViewModalVisible(true)
+                })
             }} style={pointerStyle}>
                 {text}
             </span>
         )
     },{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
-    },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:'75px'
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">借方科目名称</p>
-            <p className="apply-form-list-p2">借方科目代码</p>
-        </div>,
+        title: '借方科目代码',
+        dataIndex: 'debitSubjectCode',
+    },{
+        title: '借方科目名称',
         dataIndex: 'debitSubjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
-            </div>
-        )
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
-        width:'75px',
         render: text => fMoney(text),
         className: "table-money"
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">借方辅助核算名称</p>
-            <p className="apply-form-list-p2">借方辅助核算代码</p>
-        </div>,
-        dataIndex: 'debitProjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.debitProjectNum}</p>
-            </div>
-        )
-    },{
-        title: '标记',
-        dataIndex: 'flag',
-        width:'75px',
+        title: '简易计税',
+        dataIndex: 'commonlyFlag',
         render: text => {
-            //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
-            let t = '';
-            switch (parseInt(text,0)){
+            //简易计税标记：一般计税标记为简易计税（1标记，0不标记） ,
+            let res = "";
+            switch (parseInt(text, 0)) {
                 case 1:
-                    t=<span style={{color:'#b7eb8f'}}>海关进口增值税专用缴款书</span>;
-                    break;
-                case 2:
-                    t=<span style={{color: '#f5222d'}}>农产品收购发票或者销售发票</span>;
-                    break;
-                case 3:
-                    t=<span style={{color: "#f50"}}>代扣代缴收缴款凭证</span>;
-                    break;
-                case 4:
-                    t=<span style={{color: "#91d5ff"}}>其他</span>;
+                    res = "标记";
                     break;
                 case 0:
-                    t=null;
+                    res = ""; //不标记
                     break;
                 default:
-                //no default
             }
-            return t
+            return res;
         }
     }
 ];
-class SalesInvoiceCollection extends Component{
+class GeneralTaxCertificate extends Component{
     state={
-
-        tableKey:Date.now(),
         visible:false,
+        tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
-        searchFieldsValues:{
-
-        },
+        searchFieldsValues:{},
         dataSource:[],
         selectedRowKeys:[],
         /**
          *修改状态和时间
          * */
         statusParam:{},
+    }
+    toggleViewModalVisible=visibleView=>{
+        this.setState({
+            visibleView
+        })
     }
     fetchResultStatus = ()=>{
         request.get('/income/financeDetails/controller/listMain',{
@@ -241,11 +163,7 @@ class SalesInvoiceCollection extends Component{
                 message.error(err.message)
             })
     }
-    toggleViewModalVisible=visibleView=>{
-        this.setState({
-            visibleView
-        })
-    }
+
     showModal=()=>{
         this.setState({
             visible:true,
@@ -273,7 +191,7 @@ class SalesInvoiceCollection extends Component{
         }
     }
     render(){
-        const {visible,visibleView,tableKey,searchFieldsValues,selectedRowKeys,voucherNum,dataSource,statusParam} = this.state;
+        const {visible,visibleView,voucherNum,tableKey,searchFieldsValues,selectedRowKeys,dataSource,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         const {mainId,authMonth} = searchFieldsValues;
@@ -281,18 +199,23 @@ class SalesInvoiceCollection extends Component{
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
         return(
             <SearchTable
+                style={{
+                    marginTop:-16
+                }}
                 doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields(disabled),
                     cardProps:{
-                        className:''
-                    },
+                        style:{
+                            borderTop:0
+                        }
+                    }
                 }}
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
                     columns:columns(this),
-                    url:'/income/financeDetails/controller/list',
+                    url:'/account/incomeSimpleOut/controller/commonlyTaxList',
                     onSuccess:(params)=>{
                         this.setState({
                             searchFieldsValues:params,
@@ -307,7 +230,7 @@ class SalesInvoiceCollection extends Component{
                         })
                     },
                     cardProps: {
-                        title: "其他可抵扣进项税明细",
+                        title: "一般计税凭证列表",
                         extra:<div>
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)
@@ -332,7 +255,7 @@ class SalesInvoiceCollection extends Component{
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} filters={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
+                <PopModal refreshTable={this.refreshTable} visible={visible} searchFieldsValues={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visibleView}
@@ -342,4 +265,4 @@ class SalesInvoiceCollection extends Component{
         )
     }
 }
-export default withRouter(SalesInvoiceCollection)
+export default withRouter(GeneralTaxCertificate)

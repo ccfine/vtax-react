@@ -256,6 +256,11 @@ const strategies = {
             options:[],
         },
 
+        //申报办理
+        declareHandle:{
+            options:[],
+        },
+
         //查询申报
         searchDeclare:{
             options:[],
