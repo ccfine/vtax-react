@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,TableTotal} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,getUrlParam,request,listMainResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
@@ -302,7 +302,7 @@ class unBilledSalesEstate extends Component{
         })
     }
     render(){
-        const {tableKey,visible,searchFieldsValues={},hasData,doNotFetchDidMount,statusParams={},searchTableLoading,totalSource,dataSource=[]} = this.state;
+        const {tableKey,visible,searchFieldsValues={},hasData,doNotFetchDidMount,statusParams={},searchTableLoading,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         const isSubmit = parseInt(statusParams.status,0)===2;
