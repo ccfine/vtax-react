@@ -363,11 +363,19 @@ class SalesInvoiceCollection extends Component {
             tableKey,
             dataSource,
             totalSource,
-            statusParam
+            statusParam,
+            searchFieldsValues={}
         } = this.state;
-        const { search } = this.props.location;
-        let disabled = !!search;
-
+        const { search } = this.props.location,
+            {mainId,billingDate} = searchFieldsValues;
+        let disabled = !!search,
+        submitDefaultValue = {...searchFieldsValues,taxMonth:searchFieldsValues.billingDate};        
+        const disabled1 = dataSource.length===0 || !!(
+            mainId &&
+            billingDate &&
+            (statusParam && parseInt(statusParam.status, 0) === 1)
+        );
+        const disabled2 = dataSource.length===0 || (statusParam && parseInt(statusParam.status, 0) === 2);
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -406,6 +414,8 @@ class SalesInvoiceCollection extends Component {
                                         type={1}
                                         url="/output/invoice/collection/submit"
                                         onSuccess={this.refreshTable}
+                                        initialValue={submitDefaultValue}
+                                        disabled={disabled1}
                                     />
                                 </PermissibleRender>
                                 <PermissibleRender
@@ -415,6 +425,8 @@ class SalesInvoiceCollection extends Component {
                                         type={2}
                                         url="/output/invoice/collection/revoke"
                                         onSuccess={this.refreshTable}
+                                        initialValue={submitDefaultValue}
+                                        disabled={disabled2}
                                     />
                                 </PermissibleRender>
 
