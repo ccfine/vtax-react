@@ -251,9 +251,6 @@ class InvoiceCollection extends Component {
         this.setState(
             {
                 tableUpDateKey: Date.now()
-            },
-            () => {
-                this.updateStatus();
             }
         );
     };
@@ -323,9 +320,8 @@ class InvoiceCollection extends Component {
                 statusParam,
                 totalSource
             } = this.state,
-            // 这里有些不合理
+            // (字段名字不一致)这里有些不合理
             defaultValues = { ...filters, taxMonth: filters.authMonth };
-
         const { mainId, authMonth } = this.state.filters;
         const disabled1 = !!(
             mainId &&
@@ -343,7 +339,10 @@ class InvoiceCollection extends Component {
                         fields: getSearchFields(disabled)
                     }}
                     backCondition={values => {
-                        this.setState({ filters: values });
+                        this.setState({ filters: values },
+                            () => {
+                                this.updateStatus();
+                            });
                     }}
                     tableOption={{
                         columns: this.columns,
@@ -377,20 +376,25 @@ class InvoiceCollection extends Component {
                                     disabled={disabled2}
                                     url="/income/invoice/collection/submit"
                                     onSuccess={this.refreshTable}
-                                    defaultValues={defaultValues}
+                                    initialValue={defaultValues}
                                 />
                                 <SubmitOrRecall
                                     type={2}
                                     disabled={disabled1}
                                     url="/income/invoice/collection/revoke"
                                     onSuccess={this.refreshTable}
-                                    defaultValues={defaultValues}
+                                    initialValue={defaultValues}
                                 />
                                 <TableTotal totalSource={totalSource} />
                             </div>
                         ),
                         cardProps: {
                             title: "进项发票采集"
+                        },
+                        onDataChange: dataSource => {
+                            this.setState({
+                                dataSource
+                            });
                         },
                         onTotalSource: totalSource => {
                             this.setState({

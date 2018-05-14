@@ -198,9 +198,11 @@ form .ant-pagination .ant-select{
 .popover-total-container{
   margin-left:15px;
   color:#FF9700;
-  max-width:500px;
+  max-width:300px;
   display: inline-block;
   vertical-align:middle;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .popover-total-container>*>.anticon{
   font-size: 16px;
