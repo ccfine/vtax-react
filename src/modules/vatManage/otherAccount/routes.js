@@ -10,7 +10,7 @@ import PrePaidHousingSales from './prePaidHousingSales'
 import DeductProjectSummary from './deductProjectSummary'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
-import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
+/*import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'*/
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -68,7 +68,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['taxExemptionDetails'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/businessTaxChangeTaxAnalysisNegative`,
         component:wrapPage('营改增税负分析测算台账',BusinessTaxChangeTaxAnalysisNegative),
         name:'营改增税负分析测算台账',
@@ -77,7 +77,7 @@ const OtherAccount_Routes = [
             backgroundColor:'#2F7597'
         },
         authorityInfo:otherAccount['businessTaxChangeTaxAnalysisNegative'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/taxCalculation`,
         component:wrapPage('税款计算台账',TaxCalculation),

@@ -44,12 +44,11 @@ class PopModal extends Component{
                 this.toggleLoaded(false)
                 const props = this.props;
                 const params = {
-                    ...props.filters,
+                    ...props.searchFieldsValues,
                     ...values,
                     mainIds:props.selectedRowKeys
                 }
-                console.log(params)
-                request.put('/income/financeDetails/controller/upFlag',params)
+                request.put('/account/incomeSimpleOut/controller/commonlyFlag',params)
                     .then(({data})=>{
                         this.toggleLoaded(true)
                         if(data.code===200){
@@ -100,26 +99,17 @@ class PopModal extends Component{
                             {
                                 getFields(props.form,[
                                     {
-                                        label:'标记类型',
-                                        fieldName:'flag',
+                                        label:'简易计税标记',
+                                        fieldName:'commonlyFlag',
                                         type:'select',
                                         notShowAll:true,
                                         span:'24',
-                                        options:[  //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
+                                        options:[  //简易计税标记：一般计税标记为简易计税（1标记，0不标记） ,
                                             {
-                                                text:'海关进口增值税专用缴款书',
+                                                text:'标记',
                                                 value:'1'
                                             },{
-                                                text:'农产品收购发票或者销售发票',
-                                                value:'2'
-                                            },{
-                                                text:'代扣代缴收缴款凭证',
-                                                value:'3'
-                                            },{
-                                                text:'其他',
-                                                value:'4'
-                                            },{
-                                                text:'无标记',
+                                                text:'不标记',
                                                 value:'0'
                                             }
                                         ],

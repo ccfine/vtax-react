@@ -8,13 +8,14 @@ import InvoiceCollection from './invoiceCollection'
 import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
-import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
+ import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
  import InvoiceMatching from './invoiceMatching'
+ import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 * */
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
-import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
+
 import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
-/*import SimpleTaxInputTaxTransferredToTheAccount from '../entryTaxAccount/simpleTaxInputTaxTransferredToTheAccount'*/
+import SimpleTaxInputTaxTransferredToTheAccount from '../entryTaxAccount/simpleTaxInputTaxTransferredToTheAccount'
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -81,7 +82,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['inputTaxOnFixedAssets'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/interimContractInputTaxTransferredOut`,
         component:wrapPage('跨期合同进项税额转出台账',InterimContractInputTaxTransferredOut),
         name:'跨期合同进项税额转出台账',
@@ -90,7 +91,7 @@ const EntryManag_Routes = [
             backgroundColor:'#FD6A60'
         },
         authorityInfo:entryManag['interimContractInputTaxTransferredOut'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/otherBusinessInputTaxRollOut`,
         component:wrapPage('其他业务进项税额转出台账',OtherBusinessInputTaxRollOut),
@@ -101,7 +102,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['otherBusinessInputTaxRollOut'].options,
         exact:true,
-/*    },{
+    },{
         path:`${PATH}/simpleTaxInputTaxTransferredToTheAccount`,
         component:wrapPage('简易计税进项税额转出台账',SimpleTaxInputTaxTransferredToTheAccount),
         name:'简易计税进项税额转出台账',
@@ -110,7 +111,7 @@ const EntryManag_Routes = [
             backgroundColor:'#3B4A83'
         },
         authorityInfo:entryManag['simpleTaxInputTaxTransferredToTheAccount'].options,
-        exact:true,*/
+        exact:true,
     },{
         exact:true,
         path:`${PATH}`,

@@ -4,8 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Button,Icon,message,Modal,Badge} from 'antd'
-import {request} from 'utils'
+import {Button,Icon,Badge} from 'antd'
 import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
@@ -24,7 +23,7 @@ const searchFields =(context) => [
         fieldName:'mainId',
         formItemStyle,
         span:6,
-    },{
+    /*},{
         label:'办理进度',
         type:'select',
         fieldName:'status',
@@ -50,7 +49,7 @@ const searchFields =(context) => [
                 text:'流程终止',
                 value:'-1'
             }
-        ],
+        ],*/
     },{
         label:'所属期起止',
         type:'rangePicker',
@@ -185,38 +184,6 @@ export default class CreateADeclare extends Component{
             }
         })
     }
-    handelProcessStop=()=>{
-        const modalRef = Modal.confirm({
-            title: '友情提醒',
-            content: '是否确定要流程终止？',
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk:()=>{
-                modalRef && modalRef.destroy();
-                request.put('/tax/declaration/stop',{
-                    mainId: this.state.selectedRows[0].mainId,
-                    authMonth:this.state.selectedRows[0].month
-                })
-                    .then(({data})=>{
-                        if (data.code === 200) {
-                            message.success('流程终止成功!');
-                            this.refreshTable();
-                        } else {
-                            message.error(data.msg)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                    })
-            },
-            onCancel() {
-                modalRef.destroy()
-            },
-        });
-
-
-    }
     render(){
         const {updateKey,selectedRowKeys,selectedRows,filters,visible,dataSource,modalConfig} = this.state;
         return(
@@ -298,10 +265,6 @@ export default class CreateADeclare extends Component{
                                     ...filters
                                 }}
                             />
-                            <Button size='small' type="danger" style={{marginRight:5}} onClick={this.handelProcessStop} disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===-1)} >
-                                <Icon type="exception" />
-                                流程终止
-                            </Button>
                         </div>,
                         onDataChange:(dataSource)=>{
                             this.setState({
