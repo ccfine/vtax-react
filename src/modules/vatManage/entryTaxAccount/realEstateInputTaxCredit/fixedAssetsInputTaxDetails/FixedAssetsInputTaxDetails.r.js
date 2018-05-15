@@ -6,59 +6,7 @@ import { withRouter } from 'react-router'
 import {message} from 'antd'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam,listMainResultStatus,toPercent} from 'utils'
-import moment from 'moment';
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
-const searchFields=(disabled)=> {
-    return [
-        {
-            label:'纳税主体',
-            type:'taxMain',
-            fieldName:'mainId',
-            span:6,
-            componentProps:{
-                disabled,
-            },
-            formItemStyle,
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
-
-        }, {
-            label:'凭证月份',
-            type:'monthPicker',
-            formItemStyle,
-            span:6,
-            fieldName:'authMonth',
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择凭证月份'
-                    }
-                ]
-            }
-        }
-    ]
-}
-
+import {request,fMoney,listMainResultStatus,toPercent} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体名称',
@@ -233,8 +181,6 @@ class FixedAssetsInputTaxDetails extends Component{
     }
     render(){
         const {tableKey,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
         const {mainId,authMonth} = searchFieldsValues;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
@@ -245,7 +191,7 @@ class FixedAssetsInputTaxDetails extends Component{
                 }}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:this.props.searchFields,
                     cardProps:{
                         style:{
                             borderTop:0

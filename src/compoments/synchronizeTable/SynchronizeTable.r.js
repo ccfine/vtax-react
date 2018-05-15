@@ -54,8 +54,8 @@ export default class SynchronizeTable extends Component{
         this.getDate({
             results: pagination.pageSize,
             current: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sor,
+            orderByField: sorter.field,
+            isAsc: sor ? sor === 'asc' : undefined,
             ...filters,
         });
     }

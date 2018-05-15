@@ -130,8 +130,8 @@ export default class AsyncTable extends Component{
         this.fetch({
             size: pagination.pageSize,
             current: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sor,
+            orderByField: sorter.field,
+            isAsc: sor ? sor === 'asc' : undefined,
             ...filters,
             //...this.props.filters.values,
         });

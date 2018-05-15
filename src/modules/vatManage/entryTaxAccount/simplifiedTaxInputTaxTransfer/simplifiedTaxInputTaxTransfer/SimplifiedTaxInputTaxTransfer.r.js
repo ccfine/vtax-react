@@ -6,62 +6,11 @@ import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
+import {request,fMoney,listMainResultStatus} from 'utils'
 import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
-import moment from 'moment';
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
-}
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
-const searchFields=(disabled)=> {
-    return [
-        {
-            label:'纳税主体',
-            type:'taxMain',
-            fieldName:'mainId',
-            span:6,
-            componentProps:{
-                disabled,
-            },
-            formItemStyle,
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
-
-        }, {
-            label:'凭证月份',
-            type:'monthPicker',
-            formItemStyle,
-            span:6,
-            fieldName:'authMonth',
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择凭证月份'
-                    }
-                ]
-            }
-        }
-    ]
 }
 const columns = context =>[
     {
@@ -158,8 +107,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
     }
     render(){
         const {tableKey,visibleView,voucherNum,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
         const {mainId,authMonth} = searchFieldsValues;
         const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
@@ -170,7 +117,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                 }}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:this.props.searchFields,
                     cardProps:{
                         style:{
                             borderTop:0

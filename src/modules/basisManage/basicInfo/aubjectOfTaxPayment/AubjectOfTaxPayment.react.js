@@ -54,12 +54,12 @@ const columns = [{
         }
         return ''
     }
-},{
+/*},{
     title: '更新人',
     dataIndex: 'lastModifiedBy',
 },{
     title: '更新时间',
-    dataIndex: 'lastModifiedDate',
+    dataIndex: 'lastModifiedDate',*/
 },{
     title: '当前状态',
     dataIndex: 'status',
