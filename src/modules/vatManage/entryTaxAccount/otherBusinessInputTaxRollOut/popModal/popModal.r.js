@@ -324,7 +324,7 @@ class PopModal extends Component {
                                 },
                                 {
                                     ...setComItem(
-                                        moment(record.taxDate),
+                                        record.taxDate && moment(record.taxDate),
                                         readonly,
                                         true,
                                         "请选择日期"

@@ -75,14 +75,6 @@ const searchFields = disabled => {
             componentProps: {}
         },
         {
-            label: "税收分类编码",
-            type: "input",
-            span: 6,
-            formItemStyle,
-            fieldName: "taxClassificationCoding",
-            fieldDecoratorOptions: {}
-        },
-        {
             label: "税率",
             type: "numeric",
             span: 6,
@@ -92,13 +84,6 @@ const searchFields = disabled => {
                 valueType: "int"
             },
             fieldDecoratorOptions: {}
-        },
-        {
-            label: "商品名称",
-            type: "input",
-            span: 6,
-            formItemStyle,
-            fieldName: "commodityName"
         },
         {
             label: "发票类型",
@@ -235,19 +220,10 @@ const getColumns = context => [
         )
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">商品名称</p>
-                <p className="apply-form-list-p2">金额</p>
-            </div>
-        ),
-        dataIndex: "commodityName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{fMoney(record.amount)}</p>
-            </div>
-        )
+        title: '金额',
+        dataIndex: "amount",
+        className:'table-money',
+        render: (text, record) => fMoney(text)
     },
     {
         title: (
