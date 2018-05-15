@@ -125,12 +125,15 @@ export default class AsyncTable extends Component{
         this.setState({
             pagination: pager,
         });
+        //设置去掉排序默认设置的值
+        let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
         this.fetch({
             size: pagination.pageSize,
             current: pagination.current,
             sortField: sorter.field,
-            sortOrder: sorter.order,
+            sortOrder: sor,
             ...filters,
+            //...this.props.filters.values,
         });
     }
     mounted=true

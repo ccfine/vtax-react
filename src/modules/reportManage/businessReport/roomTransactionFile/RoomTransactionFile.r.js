@@ -41,50 +41,10 @@ const searchFields = (getFieldValue)=> [
         }
     },
     {
-        label:'房号',
-        fieldName:'roomNumber',
-        type:'input',
-        span:6
-    },
-    {
-        label:'客户名称',
-        fieldName:'customerName',
-        type:'input',
-        span:6
-    },
-    {
-        label:'发票号码',
-        fieldName:'invoiceNum',
-        type:'input',
-        span:6
-    },
-    {
-        label:'发票代码',
-        fieldName:'invoiceCode',
-        type:'input',
-        span:6
-    },
-    {
-        label:'交易日期',
+        label:'交易月份',
         fieldName:'transactionDate',
-        type:'rangePicker',
+        type:'monthPicker',
         span:6
-    },
-    {
-        label:'匹配状态',
-        fieldName:'matchingStatus',
-        type:'select',
-        span:6,
-        options:[
-            {
-                text:'未匹配',
-                value:'0'
-            },
-            {
-                text:'已匹配',
-                value:'1'
-            }
-        ]
     },
 ]
 const columns = [

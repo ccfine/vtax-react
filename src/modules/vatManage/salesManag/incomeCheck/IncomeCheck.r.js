@@ -36,10 +36,10 @@ const columns= [
         dataIndex: 'projectName',
     },{
         title: '项目分期名称',
-        dataIndex: 'contractNum',
+        dataIndex: 'stagesName',
     },{
         title: '项目分期代码',
-        dataIndex: 'stagesName',
+        dataIndex: 'stagesNum',
     },{
         title: '财务期间 ',
         dataIndex: 'voucherDate',
@@ -148,6 +148,7 @@ class IncomeCheck extends Component {
     }
     render(){
         const {tableUpDateKey,filters,totalSource,totalSource2} = this.state;
+        const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -197,18 +198,32 @@ class IncomeCheck extends Component {
                                                 }
                                             ]
                                         },
-                                    }, {
+                                    },{
                                         label:'项目名称',
-                                        fieldName:'projectName',
-                                        type:'input',
+                                        fieldName:'projectId',
+                                        type:'asyncSelect',
                                         span:8,
                                         formItemStyle,
+                                        componentProps:{
+                                            fieldTextName:'itemName',
+                                            fieldValueName:'id',
+                                            doNotFetchDidMount:true,
+                                            fetchAble:getFieldValue('mainId') || false,
+                                            url:`/project/list/${getFieldValue('mainId')}`,
+                                        }
                                     }, {
-                                        label:'分期名称',
-                                        fieldName:'stagesName',
-                                        type:'input',
+                                        label:'项目分期',
+                                        fieldName:'stagesId',
+                                        type:'asyncSelect',
                                         span:8,
                                         formItemStyle,
+                                        componentProps:{
+                                            fieldTextName:'itemName',
+                                            fieldValueName:'id',
+                                            doNotFetchDidMount:true,
+                                            fetchAble:getFieldValue('projectId') || false,
+                                            url:`/project/stages/${getFieldValue('projectId') || ''}`,
+                                        }
                                     }
                                 ])
                             }
@@ -224,7 +239,7 @@ class IncomeCheck extends Component {
                 </Card>
                 <Card title="财务收入数据"
                       extra={<div>
-                            <span>
+                            <span style={{color:'#FF9700'}}>
                                 收入合计：{fMoney(totalSource ? totalSource.allAmount : 0.00)}
                             </span>
                       </div>}
@@ -249,9 +264,9 @@ class IncomeCheck extends Component {
                 </Card>
                 <Card title="房间交易信息"
                       extra={<div>
-                          <span style={{marginRight:20}}>人民币成交总价合计：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
-                          <span style={{marginRight:20}}>税额总价合计：{fMoney(totalSource2 ? totalSource2.allTaxAmount : 0.00)}</span>
-                          <span>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalPrice : 0.00)}</span>
+                          <span style={{marginRight:20,color:'#FF9700'}}>人民币成交总价合计：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
+                          <span style={{marginRight:20,color:'#FF9700'}}>税额总价合计：{fMoney(totalSource2 ? totalSource2.allTaxAmount : 0.00)}</span>
+                          <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalPrice : 0.00)}</span>
                       </div>}
                       style={{marginTop:10}}>
 
@@ -271,9 +286,9 @@ class IncomeCheck extends Component {
                                 }} />
 
                     <div>
-                        <span style={{marginRight:20}}>财务收入金额：{fMoney(totalSource ? totalSource.allAmount : 0.00)}</span>
-                        <span style={{marginRight:20}}>营销系统收入：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
-                        <span>收入差异金额：{
+                        <span style={{marginRight:20,color:'#FF9700'}}>财务收入金额：{fMoney(totalSource ? totalSource.allAmount : 0.00)}</span>
+                        <span style={{marginRight:20,color:'#FF9700'}}>营销系统收入：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
+                        <span style={{color:'red'}}>收入差异金额：{
                             fMoney(parseFloat(totalSource && totalSource.allAmount) - parseFloat(totalSource2 && totalSource2.allAmount) || 0.00)
                         }</span>
                     </div>

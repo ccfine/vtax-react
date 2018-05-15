@@ -320,8 +320,17 @@ class RoomTransactionFile extends Component{
         ];
         return(
             <SearchTable
+                style={{
+                    marginTop:-16
+                }}
                 searchOption={{
-                    fields: searchFeilds
+                    fields:searchFeilds,
+                    cardProps:{
+                        style:{
+                            borderTop:0
+                        },
+                        className:''
+                    }
                 }}
                 doNotFetchDidMount={true}
                 tableOption={{
