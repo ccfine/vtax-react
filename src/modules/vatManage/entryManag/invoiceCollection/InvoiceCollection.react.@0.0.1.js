@@ -250,7 +250,8 @@ class InvoiceCollection extends Component {
     refreshTable = () => {
         this.setState(
             {
-                tableUpDateKey: Date.now()
+                tableUpDateKey: Date.now(),
+                selectedRowKeys:null
             }
         );
     };
@@ -346,7 +347,7 @@ class InvoiceCollection extends Component {
                     }}
                     tableOption={{
                         columns: this.columns,
-                        url: "/income/invoice/collection/inter/list",
+                        url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         rowSelection: {
                             type: "radio"
