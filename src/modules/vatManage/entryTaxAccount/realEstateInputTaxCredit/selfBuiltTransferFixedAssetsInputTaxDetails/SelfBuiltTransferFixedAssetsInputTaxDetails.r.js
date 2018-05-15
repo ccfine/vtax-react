@@ -2,12 +2,11 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {message,Button,Icon} from 'antd'
+import {message} from 'antd'
 import { withRouter } from 'react-router'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import PopModal from './popModal'
+import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
 import moment from 'moment';
 const pointerStyle = {
@@ -108,34 +107,15 @@ const columns = context =>[
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
         className: "table-money"
-    },{
-        title: '简易计税',
-        dataIndex: 'commonlyFlag',
-        render: text => {
-            //简易计税标记：一般计税标记为简易计税（1标记，0不标记） ,
-            let res = "";
-            switch (parseInt(text, 0)) {
-                case 1:
-                    res = "标记";
-                    break;
-                case 0:
-                    res = ""; //不标记
-                    break;
-                default:
-            }
-            return res;
-        }
     }
 ];
-class GeneralTaxCertificate extends Component{
+class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
     state={
-        visible:false,
         tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
         searchFieldsValues:{},
         dataSource:[],
-        selectedRowKeys:[],
         /**
          *修改状态和时间
          * */
@@ -147,7 +127,7 @@ class GeneralTaxCertificate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/income/financeDetails/controller/listMain',{
+        request.get('/account/income/estate/listMain',{
             params:this.state.searchFieldsValues
         })
             .then(({data})=>{
@@ -164,20 +144,6 @@ class GeneralTaxCertificate extends Component{
             })
     }
 
-    showModal=()=>{
-        this.setState({
-            visible:true,
-            searchFieldsValues:this.state.searchFieldsValues,
-            selectedRows:this.state.searchFieldsValues,
-        })
-    }
-
-    hideModal=()=>{
-        this.setState({
-            visible:false,
-        })
-    }
-
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
@@ -191,7 +157,7 @@ class GeneralTaxCertificate extends Component{
         }
     }
     render(){
-        const {visible,visibleView,voucherNum,tableKey,searchFieldsValues,selectedRowKeys,dataSource,statusParam} = this.state;
+        const {tableKey,visibleView,voucherNum,searchFieldsValues,dataSource,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         const {mainId,authMonth} = searchFieldsValues;
@@ -213,35 +179,24 @@ class GeneralTaxCertificate extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:20,
                     columns:columns(this),
-                    url:'/account/incomeSimpleOut/controller/commonlyTaxList',
+                    url:'/account/income/estate/buildList',
                     onSuccess:(params)=>{
                         this.setState({
                             searchFieldsValues:params,
-                            selectedRowKeys:[],
                         },()=>{
                             this.fetchResultStatus()
                         })
                     },
-                    onRowSelect:(selectedRowKeys)=>{
-                        this.setState({
-                            selectedRowKeys
-                        })
-                    },
                     cardProps: {
-                        title: "一般计税凭证列表",
+                        title: "自建转自用固定资产进项税额明细",
                         extra:<div>
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)
                             }
-
-                            <Button size='small' disabled={!selectedRowKeys.length>0 || disabled1} style={{marginRight:5}} onClick={()=>this.showModal()} >
-                                <Icon type="pushpin-o" />
-                                标记
-                            </Button>
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/income/financeDetails/controller/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/income/financeDetails/controller/revoke" onSuccess={this.refreshTable} />
+                            <SubmitOrRecall disabled={disabled2} type={1} url="/account/income/estate/submit" onSuccess={this.refreshTable} />
+                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/income/estate/revoke" onSuccess={this.refreshTable} />
 
                         </div>,
                     },
@@ -255,7 +210,6 @@ class GeneralTaxCertificate extends Component{
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} searchFieldsValues={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visibleView}
@@ -265,4 +219,4 @@ class GeneralTaxCertificate extends Component{
         )
     }
 }
-export default withRouter(GeneralTaxCertificate)
+export default withRouter(SelfBuiltTransferFixedAssetsInputTaxDetails)

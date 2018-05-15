@@ -178,7 +178,11 @@ const strategies = {
                 options:[],
             },
             //简易计税进项税额转出台账
-            simpleTaxInputTaxTransferredToTheAccount:{
+            simplifiedTaxInputTaxTransfer:{
+                options:[],
+            },
+            //不动产进项税额抵扣台账
+            realEstateInputTaxCredit:{
                 options:[],
             },
 
