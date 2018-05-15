@@ -3,13 +3,17 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
+import { withRouter } from 'react-router'
+import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import PopModal from './popModal'
-import { withRouter } from 'react-router'
+import ViewDocumentDetails from './viewDocumentDetailsPopModal'
 import moment from 'moment';
-
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff'
+}
 const formItemStyle={
     labelCol:{
         span:8
@@ -84,7 +88,7 @@ const searchFields=(disabled)=> {
         },
     ]
 }
-const getColumns = context =>[
+const columns = context =>[
     {
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">纳税主体名称</p>
@@ -123,17 +127,22 @@ const getColumns = context =>[
             </div>
         )
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">凭证号</p>
-            <p className="apply-form-list-p2">凭证类型</p>
-        </div>,
+        title: '凭证号',
         dataIndex: 'voucherNum',
         render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.voucherType}</p>
-            </div>
+            <span title="查看凭证详情" onClick={()=>{
+                    context.setState({
+                        voucherNum:text,
+                    },()=>{
+                        context.toggleViewModalVisible(true)
+                    })
+            }} style={pointerStyle}>
+                {text}
+            </span>
         )
+    },{
+        title: '凭证类型',
+        dataIndex: 'voucherType',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
@@ -200,8 +209,11 @@ const getColumns = context =>[
 ];
 class SalesInvoiceCollection extends Component{
     state={
-        visible:false,
+
         tableKey:Date.now(),
+        visible:false,
+        visibleView:false,
+        voucherNum:undefined,
         searchFieldsValues:{
 
         },
@@ -229,7 +241,11 @@ class SalesInvoiceCollection extends Component{
                 message.error(err.message)
             })
     }
-
+    toggleViewModalVisible=visibleView=>{
+        this.setState({
+            visibleView
+        })
+    }
     showModal=()=>{
         this.setState({
             visible:true,
@@ -257,7 +273,7 @@ class SalesInvoiceCollection extends Component{
         }
     }
     render(){
-        const {visible,tableKey,searchFieldsValues,selectedRowKeys,dataSource,statusParam} = this.state;
+        const {visible,visibleView,tableKey,searchFieldsValues,selectedRowKeys,voucherNum,dataSource,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         const {mainId,authMonth} = searchFieldsValues;
@@ -275,7 +291,7 @@ class SalesInvoiceCollection extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this),
+                    columns:columns(this),
                     url:'/income/financeDetails/controller/list',
                     onSuccess:(params)=>{
                         this.setState({
@@ -291,7 +307,7 @@ class SalesInvoiceCollection extends Component{
                         })
                     },
                     cardProps: {
-                        title: "销项发票采集列表",
+                        title: "其他可抵扣进项税明细",
                         extra:<div>
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)
@@ -316,7 +332,12 @@ class SalesInvoiceCollection extends Component{
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} searchFieldsValues={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
+                <PopModal refreshTable={this.refreshTable} visible={visible} filters={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
+                <ViewDocumentDetails
+                    title="查看凭证详情"
+                    visible={visibleView}
+                    voucherNum={voucherNum}
+                    toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
         )
     }

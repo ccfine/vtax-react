@@ -6,10 +6,15 @@
 import {wrapPage} from 'compoments'
 import SalesInvoiceCollection from './salesInvoiceCollection'
 import SalesInvoiceMatching from './salesInvoiceMatching'
+/*
 import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
+import UnBilledSales from '../salesTaxAccount/unBilledSales'
+ import UnBilledSales from '../salesTaxAccount/unBilledSales'
+* */
 import IncomeCheck from './incomeCheck'
 import BillingSales from '../salesTaxAccount/billingSales'
-import UnBilledSales from '../salesTaxAccount/unBilledSales'
+import UnBilledSalesEstate from './unBilledSalesEstate'
+import UnBilledSalesNotEstate from './unBilledSalesNotEstate'
 import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
 import strategies from 'config/routingAuthority.config'
 
@@ -38,7 +43,7 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['salesInvoiceMatching'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/campBeforeTheIncreaseInSales`,
         component:wrapPage('营改增前售房',CampBeforeTheIncreaseInSales),
         name:'营改增前售房',
@@ -47,7 +52,7 @@ const SalesManag_Routes = [
             backgroundColor:'#FFBE06'
         },
         authorityInfo:salesManag['campBeforeTheIncreaseInSales'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/incomeCheck`,
         component:wrapPage('收入检查',IncomeCheck),
@@ -68,10 +73,30 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['billingSales'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/unBilledSales`,
         component:wrapPage('未开票销售台账',UnBilledSales),
         name:'未开票销售台账',
+        icon:{
+            url:`${ICON_URL_PATH}unbilledAales.svg`,
+            backgroundColor:'#F5A544'
+        },
+        authorityInfo:salesManag['unBilledSales'].options,
+        exact:true,*/
+    },{
+        path:`${PATH}/unBilledSalesEstate`,
+        component:wrapPage('未开票销售台账-地产',UnBilledSalesEstate),
+        name:'未开票销售台账-地产',
+        icon:{
+            url:`${ICON_URL_PATH}billingSales.svg`,
+            backgroundColor:'#7ED530'
+        },
+        authorityInfo:salesManag['billingSales'].options,
+        exact:true,
+    },{
+        path:`${PATH}/unBilledSalesNotEstate`,
+        component:wrapPage('未开票销售台账-非地产',UnBilledSalesNotEstate),
+        name:'未开票销售台账-非地产',
         icon:{
             url:`${ICON_URL_PATH}unbilledAales.svg`,
             backgroundColor:'#F5A544'

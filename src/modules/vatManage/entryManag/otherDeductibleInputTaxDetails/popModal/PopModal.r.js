@@ -44,7 +44,7 @@ class PopModal extends Component{
                 this.toggleLoaded(false)
                 const props = this.props;
                 const params = {
-                    ...props.searchFieldsValues,
+                    ...props.filters,
                     ...values,
                     mainIds:props.selectedRowKeys
                 }

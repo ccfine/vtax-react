@@ -173,7 +173,7 @@ export default class SearchDeclare extends Component{
                     cardProps:{
                         title:'列表信息'
                     },
-                    url:'/tax/declaration/list',
+                    url:'/tax/decConduct/queryList',
                 }}
             >
             </SearchTable>

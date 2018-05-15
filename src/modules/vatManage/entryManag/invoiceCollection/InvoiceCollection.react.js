@@ -72,6 +72,91 @@ class InvoiceCollection extends Component {
 
     columns = [
         {
+            title: <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">纳税主体</p>
+                <p className="apply-form-list-p2">纳税人识别号</p>
+            </div>,
+            dataIndex: 'mainName',
+            render:(text,record)=>(
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
+                </div>
+            )
+        },{
+            title: <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票类型</p>
+                <p className="apply-form-list-p2">发票代码</p>
+            </div>,
+            dataIndex: 'invoiceTypeName',
+            render:(text,record)=>(
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.invoiceCode}</p>
+                </div>
+            )
+        },{
+            title: <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票代码</p>
+                <p className="apply-form-list-p2">发票号码</p>
+            </div>,
+            dataIndex: 'invoiceCode',
+            render:(text,record)=>(
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.invoiceNum}</p>
+                </div>
+            )
+        },{
+            title: <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">认证月份</p>
+                <p className="apply-form-list-p2">认证时间</p>
+            </div>,
+            dataIndex: 'authMonth',
+            render:(text,record)=>(
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.authDate}</p>
+                </div>
+            )
+        },{
+            title: <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票代码</p>
+                <p className="apply-form-list-p2">发票号码</p>
+            </div>,
+            dataIndex: 'invoiceCode',
+            render:(text,record)=>(
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.invoiceNum}</p>
+                </div>
+            )
+        },{
+            title: '开票日期',
+            dataIndex: 'billingDate',
+        },{
+            title: '销货单位名称',
+            dataIndex: 'sellerName',
+        },{
+            title: <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">金额</p>
+                <p className="apply-form-list-p2">税额</p>
+            </div>,
+            dataIndex: 'amount',
+            className: "table-money",
+            render:(text,record)=>(
+                <div>
+                    <p className="apply-form-list-p1">{fMoney(text)}</p>
+                    <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
+                </div>
+            )
+
+        },{
+            title: '价税合计',
+            dataIndex: 'totalAmount',
+            className: "table-money",
+            render:text=>fMoney(text)
+        },{
             title: '数据来源',
             dataIndex: 'sourceType',
             render:text=>{
@@ -84,45 +169,7 @@ class InvoiceCollection extends Component {
                 }
                 return ''
             }
-        },{
-            title: '纳税主体',
-            dataIndex: 'mainName',
-        }, {
-            title: '发票类型',
-            dataIndex: 'invoiceTypeName',
-        },{
-            title: '发票代码',
-            dataIndex: 'invoiceCode',
-        },{
-            title: '发票号码',
-            dataIndex: 'invoiceNum',
-        },{
-            title: '开票日期',
-            dataIndex: 'billingDate',
-        },{
-            title: '认证月份',
-            dataIndex: 'authMonth',
-        },{
-            title: '认证时间',
-            dataIndex: 'authDate',
-        },{
-            title: '销售单位名称',
-            dataIndex: 'sellerName',
-        },{
-            title: '纳税人识别号',
-            dataIndex: 'sellerTaxNum',
-        },{
-            title: '金额',
-            dataIndex: 'amount',
-            render:text=>fMoney(text)
-        },{
-            title: '税额',
-            dataIndex: 'taxAmount',
-            render:text=>fMoney(text)
-        },{
-            title: '价税合计',
-            dataIndex: 'totalAmount',
-            render:text=>fMoney(text)
+
         }
     ];
     handleSubmit = e => {
@@ -401,7 +448,7 @@ class InvoiceCollection extends Component {
                                             selectedRows
                                         })
                                     },
-                                    scroll:{ x: '150%' },
+                                    //scroll:{ x: '150%' },
                                     onDataChange:(dataSource)=>{
                                         this.setState({
                                             dataSource

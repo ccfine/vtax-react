@@ -177,6 +177,14 @@ const strategies = {
             otherBusinessInputTaxRollOut:{
                 options:[],
             },
+            //简易计税进项税额转出台账
+            simplifiedTaxInputTaxTransfer:{
+                options:[],
+            },
+            //不动产进项税额抵扣台账
+            realEstateInputTaxCredit:{
+                options:[],
+            },
 
         },
 
@@ -252,6 +260,11 @@ const strategies = {
             options:[],
         },
 
+        //申报办理
+        declareHandle:{
+            options:[],
+        },
+
         //查询申报
         searchDeclare:{
             options:[],
@@ -262,7 +275,8 @@ const strategies = {
     /**
      * 模块： 报表管理
      * 导航： 增值税一般纳税人申报表---增值税预缴表---房间交易档案---房间档案汇总查询---跨期合同进项税额转出查询---土地价款扣除明细查询---售房预缴查询
-     *       ---纳税主体查询---税收优惠报表---税务档案查询---申报参数查询---发票查询---申报查询---纳税申报表---纳税结构分析---纳税趋势分析---税负分析
+     *       ---纳税主体查询---税收优惠报表---税务档案查询---申报参数查询---发票查询---申报查询---纳税申报表---固定资产卡片---财务凭证---进项发票采集
+     *       ---销项发票采集---纳税结构分析---纳税趋势分析---税负分析
      */
 
     'reportManage':{
@@ -345,6 +359,22 @@ const strategies = {
                 options:[],
             },
 
+            //固定资产卡片
+            fixedAssetCard:{
+                options:[],
+            },
+            //财务凭证
+            financialDocuments:{
+                options:[],
+            },
+            //进项发票采集
+            incomingInvoiceCollection:{
+                options:[],
+            },
+            //销项发票采集
+            salesInvoiceCollection:{
+                options:[],
+            },
         },
 
         //管理分析报表
