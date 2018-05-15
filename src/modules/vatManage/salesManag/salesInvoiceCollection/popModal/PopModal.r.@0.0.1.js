@@ -484,26 +484,6 @@ class PopModal extends Component {
                                         }
                                     },
                                     {
-                                        label: "商品名称",
-                                        fieldName: "commodityName",
-                                        type: "input",
-                                        formItemStyle,
-                                        fieldDecoratorOptions: {
-                                            initialValue:
-                                                initData["commodityName"],
-                                            rules: [
-                                                regRules.input_length_20,
-                                                {
-                                                    required: true,
-                                                    message: "请输入商品名称"
-                                                }
-                                            ]
-                                        },
-                                        componentProps: {
-                                            disabled
-                                        }
-                                    },
-                                    {
                                         label: "购货单位名称",
                                         fieldName: "purchaseName",
                                         type: "input",
