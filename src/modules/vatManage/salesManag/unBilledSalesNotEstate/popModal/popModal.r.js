@@ -1,6 +1,13 @@
+/*
+ * @Author: liuchunxiu 
+ * @Date: 2018-05-15 16:12:23 
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-15 17:28:20
+ */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
 import { getFields, request } from "../../../../../utils";
+import moment from 'moment';
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -46,7 +53,7 @@ class PopModal extends Component {
             if (props.id) {
                 this.setState({ formLoading: true });
                 request
-                    .get(`/account/income/taxout/find/${props.id}`)
+                    .get(`/accountNotInvoiceUnsaleRealty/find/${props.id}`)
                     .then(({ data }) => {
                         if (data.code === 200) {
                             this.setState({
@@ -85,8 +92,7 @@ class PopModal extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // 提交数据
-                // 处理日期
-                values.taxDate = values.taxDate.format("YYYY-MM-DD");
+                values.month = values.month.format('YYYY-MM');
                 //处理下拉数据
                 if (values.main) {
                     values.mainId = values.main.key;
@@ -94,26 +100,32 @@ class PopModal extends Component {
                     values.main = undefined;
                 }
                 // 处理应税项目
-                if (values.taxableItem) {
-                    values.taxableItemId = values.taxableItem.key;
-                    values.taxableItemName = values.taxableItem.label;
-                    values.taxableItem = undefined;
+                if (values.project) {
+                    values.projectId = values.project.key;
+                    values.projectName = values.project.label;
+                    values.project = undefined;
                 }
                 // 处理转出项目
-                if (values.outProject) {
-                    values.outProjectId = values.outProject.key;
-                    values.outProjectName = values.outProject.label;
-                    values.outProject = undefined;
+                if (values.stages) {
+                    values.stagesId = values.stages.key;
+                    values.stagesName = values.stages.label;
+                    values.stages = undefined;
                 }
 
                 let obj = Object.assign({}, this.state.record, values);
 
                 let result, sucessMsg;
                 if (this.props.action === "modify") {
-                    result = request.put("/account/income/taxout/update", obj);
+                    result = request.put(
+                        "/accountNotInvoiceUnsaleRealty/update",
+                        obj
+                    );
                     sucessMsg = "修改成功";
                 } else if (this.props.action === "add") {
-                    result = request.post("/account/income/taxout/add", obj);
+                    result = request.post(
+                        "/accountNotInvoiceUnsaleRealty/add",
+                        obj
+                    );
                     sucessMsg = "添加成功";
                 }
 
@@ -147,13 +159,16 @@ class PopModal extends Component {
         const readonly = this.props.action === "look";
         // const NotModifyWhenEdit = this.props.action === "modify";
         let { record = {} } = this.state;
+
         const form = this.props.form;
+        const { getFieldValue } = form;
         let title = "查看";
         if (this.props.action === "add") {
             title = "新增";
         } else if (this.props.action === "modify") {
             title = "编辑";
         }
+
         return (
             <Modal
                 title={title}
@@ -207,16 +222,58 @@ class PopModal extends Component {
                                         labelInValue: true,
                                         disabled: readonly
                                     }
+                                }
+                            ])}
+                        </Row>
+                        <Row>
+                            {getFields(form, [
+                                {
+                                    ...setComItem(
+                                        record && record.projectId
+                                            ? {
+                                                  label:
+                                                      record.projectName ||
+                                                      "",
+                                                  key:
+                                                      record.projectId || ""
+                                              }
+                                            : undefined,
+                                        readonly,
+                                        true,
+                                        "请选择项目"
+                                    ),
+                                    label: "项目",
+                                    fieldName: "project",
+                                    type: "asyncSelect",
+                                    span: 12,
+                                    componentProps: {
+                                        disabled:readonly,
+                                        selectOptions: {
+                                            disabled:readonly,
+                                            labelInValue: true
+                                        },
+                                        fieldTextName: "itemName",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount: true,
+                                        fetchAble:
+                                            (getFieldValue("main") &&
+                                            getFieldValue("main").key) || (record && record.mainId),
+                                        url: `/project/list/${(getFieldValue(
+                                            "main"
+                                        ) &&
+                                            getFieldValue("main").key) || (record && record.mainId) ||
+                                            ""}`
+                                    }
                                 },
                                 {
                                     ...setComItem(
-                                        record && record.taxableItemId
+                                        record && record.stagesId
                                             ? {
                                                   label:
-                                                      record.taxableItemName ||
+                                                      record.stagesName ||
                                                       "",
                                                   key:
-                                                      record.taxableItemId || ""
+                                                      record.stagesId || ""
                                               }
                                             : undefined,
                                         readonly,
@@ -224,47 +281,51 @@ class PopModal extends Component {
                                         "请选择项目分期"
                                     ),
                                     label: "项目分期",
-                                    fieldName: "taxableItem",
-                                    type: "taxableProject",
-                                    fieldDecoratorOptions: {
-                                        initialValue:
-                                            record && record.taxableItemId
-                                                ? {
-                                                      label:
-                                                          record.taxableItemName ||
-                                                          "",
-                                                      key:
-                                                          record.taxableItemId ||
-                                                          ""
-                                                  }
-                                                : undefined,
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: "请选择项目分期"
-                                            }
-                                        ]
+                                    fieldName: "stages",
+                                    type: "asyncSelect",
+                                    span: 12,
+                                    componentProps: {
+                                        disabled:readonly,
+                                        selectOptions: {
+                                            disabled:readonly,
+                                            labelInValue: true
+                                        },
+                                        fieldTextName: "itemName",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount: true,
+                                        fetchAble:
+                                            (getFieldValue("project") &&
+                                            getFieldValue("project").key) || (record && record.projectId),
+                                        url: `/project/stages/${(getFieldValue(
+                                            "project"
+                                        ) &&
+                                            getFieldValue("project").key) || (record && record.projectId) ||
+                                            ""}`
                                     }
                                 }
                             ])}
                         </Row>
                         <Row>
-                            {
-                            getFields(form, [
+                            {getFields(form, [
                                 {
                                     ...setComItem(
-                                        record.taxMethod,
+                                        record.creditSubjectCode,
                                         readonly,
                                         true,
-                                        "请选择科目"
+                                        "请输入科目代码"
                                     ),
-                                    label: "科目",
-                                    fieldName: "taxMethod",
-                                    type: "select",
-                                    options: [
-                                        { text: "一般计税方法", value: "1" },
-                                        { text: "简易计税方法", value: "2" }
-                                    ]
+                                    label: "科目代码",
+                                    fieldName: "creditSubjectCode"
+                                },
+                                {
+                                    ...setComItem(
+                                        record.creditSubjectName,
+                                        readonly,
+                                        true,
+                                        "请输入科目名称"
+                                    ),
+                                    label: "科目名称",
+                                    fieldName: "creditSubjectName"
                                 }
                             ])}
                         </Row>
@@ -272,23 +333,54 @@ class PopModal extends Component {
                             {getFields(form, [
                                 {
                                     ...setComItem(
-                                        record.outTaxAmount,
+                                        record.creditAmount,
                                         readonly,
                                         true,
                                         "请输入金额"
                                     ),
                                     label: "金额",
-                                    fieldName: "outTaxAmount",
+                                    fieldName: "creditAmount",
                                     type: "numeric"
-                                },{
+                                },
+                                {
                                     ...setComItem(
-                                        record.outTaxAmount,
+                                        record.taxRate,
                                         readonly,
                                         true,
                                         "请输入税率"
                                     ),
-                                    label: "税率",
-                                    fieldName: "outTaxAmount",
+                                    label: "税率（%）",
+                                    fieldName: "taxRate",
+                                    type: "numeric",
+                                    componentProps: {
+                                        disabled: readonly,
+                                        placeholder: "请输入税率（单位：%）"
+                                    }
+                                }
+                            ])}
+                        </Row>
+                        <Row>
+                            {getFields(form, [
+                                {
+                                    ...setComItem(
+                                        record.taxAmount,
+                                        readonly,
+                                        true,
+                                        "请输入税额"
+                                    ),
+                                    label: "税额",
+                                    fieldName: "taxAmount",
+                                    type: "numeric"
+                                },
+                                {
+                                    ...setComItem(
+                                        record.totalAmount,
+                                        readonly,
+                                        true,
+                                        "请输入价税合计"
+                                    ),
+                                    label: "价税合计",
+                                    fieldName: "totalAmount",
                                     type: "numeric"
                                 }
                             ])}
@@ -297,24 +389,14 @@ class PopModal extends Component {
                             {getFields(form, [
                                 {
                                     ...setComItem(
-                                        record.outTaxAmount,
+                                        record.month && moment(record.month),
                                         readonly,
                                         true,
-                                        "请输入税额"
+                                        "请选择期间"
                                     ),
-                                    label: "税额",
-                                    fieldName: "outTaxAmount",
-                                    type: "numeric"
-                                },{
-                                    ...setComItem(
-                                        record.outTaxAmount,
-                                        readonly,
-                                        true,
-                                        "请输入价税合计"
-                                    ),
-                                    label: "价税合计",
-                                    fieldName: "outTaxAmount",
-                                    type: "numeric"
+                                    label: "期间",
+                                    fieldName: "month",
+                                    type: "monthPicker"
                                 }
                             ])}
                         </Row>

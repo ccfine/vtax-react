@@ -2,15 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-13 18:22:34
+ * @Last Modified time: 2018-05-15 18:14:38
  */
 import React, { Component } from "react";
 import { Icon, message, Button, Modal } from "antd";
 import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
-import {
-    SearchTable,
-    TableTotal
-} from "compoments";
+import { SearchTable, TableTotal } from "compoments";
 import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
@@ -18,7 +15,7 @@ import PopModal from "./popModal";
 const getColumns = context => [
     {
         title: "操作",
-        className:'text-center',
+        className: "text-center",
         render(text, record, index) {
             return (
                 <span className="table-operate">
@@ -46,7 +43,7 @@ const getColumns = context => [
                     </a>
                     <a
                         style={{
-                            color: "#f5222d",
+                            color: "#f5222d"
                         }}
                         onClick={() => {
                             const modalRef = Modal.confirm({
@@ -81,40 +78,45 @@ const getColumns = context => [
         dataIndex: "mainName"
     },
     {
+        title: "项目名称",
+        dataIndex: "projectName"
+    },
+    {
         title: "项目分期代码",
-        dataIndex: "taxableItemName"
+        dataIndex: "stagesId"
     },
     {
         title: "项目分期名称",
-        dataIndex: "taxableItemName"
+        dataIndex: "stagesName"
     },
     {
         title: "科目代码",
-        dataIndex: "outProjectItem"
+        dataIndex: "creditSubjectCode"
     },
     {
         title: "科目名称",
-        dataIndex: "voucherNum"
+        dataIndex: "creditSubjectName"
     },
     {
         title: "金额",
-        dataIndex: "outTaxAmount",
+        dataIndex: "creditAmount",
         render: text => fMoney(text),
         className: "table-money"
     },
     {
         title: "税率",
-        dataIndex: "outTaxAmount"
+        dataIndex: "taxRate",
+        render: text => `${text}${text ? "%" : ""}`
     },
     {
         title: "税额",
-        dataIndex: "outTaxAmount",
+        dataIndex: "taxAmount",
         render: text => fMoney(text),
         className: "table-money"
     },
     {
         title: "价税合计",
-        dataIndex: "outTaxAmount",
+        dataIndex: "totalAmount",
         render: text => fMoney(text),
         className: "table-money"
     }
@@ -128,7 +130,6 @@ class UnBilledSalesNotEstate extends Component {
         updateKey: Date.now(),
         status: undefined,
         filter: undefined,
-        // buttonDisabled:true,
         submitLoading: false,
         revokeLoading: false,
         dataSource: []
@@ -136,9 +137,37 @@ class UnBilledSalesNotEstate extends Component {
     hideModal() {
         this.setState({ visible: false });
     }
+    reCalculate = () => {
+        const { mainId,month:taxMonth }  = this.state.filter;
+        const modalRef = Modal.confirm({
+            title: "友情提醒",
+            content: "确定需要重算吗？",
+            okText: "确定",
+            okType: "danger",
+            cancelText: "取消",
+            onOk: () => {
+                request
+                    .put(`/accountNotInvoiceUnsaleRealty/reset`,{mainId,taxMonth})
+                    .then(({ data }) => {
+                        if (data.code === 200) {
+                            message.success("重算成功", 4);
+                            this.refreshTable()
+                        } else {
+                            message.error(data.msg, 4);
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message);
+                    });
+            },
+            onCancel() {
+                modalRef.destroy();
+            }
+        });
+    };
     deleteRecord = (id, cb) => {
         request
-            .delete(`/account/income/taxout/delete/${id}`)
+            .delete(`/accountNotInvoiceUnsaleRealty/delete/${id}`)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success("删除成功", 4);
@@ -159,7 +188,7 @@ class UnBilledSalesNotEstate extends Component {
         let params = { ...values };
         params.authMonth = moment(params.authMonth).format("YYYY-MM");
         request
-            .get("/account/income/taxout/listMain", { params: params })
+            .get("/accountNotInvoiceUnsaleRealty/listMain", { params: params })
             .then(({ data }) => {
                 if (data.code === 200) {
                     let status = {};
@@ -201,62 +230,92 @@ class UnBilledSalesNotEstate extends Component {
         const { dataSource, totalSource } = this.state;
         const { search } = this.props.location;
         let disabled = !!search;
-        const getFields = (title, span, formItemStyle, record = {}) => [
-            {
-                label: "纳税主体",
-                type: "taxMain",
-                span,
-                fieldName: "mainId",
-                formItemStyle,
-                componentProps: {
-                    disabled
+        const getFields = (
+            context,
+            title,
+            span,
+            formItemStyle,
+            record = {}
+        ) => getFieldValue => {
+            return [
+                {
+                    label: "纳税主体",
+                    type: "taxMain",
+                    span,
+                    fieldName: "mainId",
+                    formItemStyle,
+                    componentProps: {
+                        disabled
+                    },
+                    fieldDecoratorOptions: {
+                        initialValue:
+                            (disabled && getUrlParam("mainId")) || undefined,
+                        rules: [
+                            {
+                                required: true,
+                                message: "请选择纳税主体"
+                            }
+                        ]
+                    }
                 },
-                fieldDecoratorOptions: {
-                    initialValue:
-                        (disabled && getUrlParam("mainId")) || undefined,
-                    rules: [
-                        {
-                            required: true,
-                            message: "请选择纳税主体"
-                        }
-                    ]
-                }
-            },
-            {
-                label: `期间`,
-                fieldName: "authMonth",
-                type: "monthPicker",
-                span,
-                formItemStyle,
-                componentProps: {
-                    format: "YYYY-MM",
-                    disabled
+                {
+                    label: `期间`,
+                    fieldName: "month",
+                    type: "monthPicker",
+                    span,
+                    formItemStyle,
+                    componentProps: {
+                        format: "YYYY-MM",
+                        disabled
+                    },
+                    fieldDecoratorOptions: {
+                        initialValue:
+                            (disabled &&
+                                (!!search &&
+                                    moment(
+                                        getUrlParam("authMonth"),
+                                        "YYYY-MM"
+                                    ))) ||
+                            undefined,
+                        rules: [
+                            {
+                                required: true,
+                                message: `请选择${title}月份`
+                            }
+                        ]
+                    }
                 },
-                fieldDecoratorOptions: {
-                    initialValue:
-                        (disabled &&
-                            (!!search &&
-                                moment(getUrlParam("authMonth"), "YYYY-MM"))) ||
-                        undefined,
-                    rules: [
-                        {
-                            required: true,
-                            message: `请选择${title}月份`
-                        }
-                    ]
+                {
+                    label: "项目名称",
+                    fieldName: "projectId",
+                    type: "asyncSelect",
+                    span,
+                    formItemStyle,
+                    componentProps: {
+                        fieldTextName: "itemName",
+                        fieldValueName: "id",
+                        doNotFetchDidMount: false,
+                        fetchAble: getFieldValue("mainId"),
+                        url: `/project/list/${getFieldValue("mainId")}`
+                    }
+                },
+                {
+                    label: "项目分期",
+                    fieldName: "stagesId",
+                    type: "asyncSelect",
+                    span,
+                    formItemStyle,
+                    componentProps: {
+                        fieldTextName: "itemName",
+                        fieldValueName: "id",
+                        doNotFetchDidMount: true,
+                        fetchAble: getFieldValue("projectId"),
+                        url: `/project/stages/${getFieldValue("projectId") ||
+                            ""}`
+                    }
                 }
-            },
-            {
-                label:'项目分期',
-                type:'asyncSelect',
-                fieldName:'stagesId',
-                componentProps:{
-                    url:`/project/stages/`,
-                    fieldTextName:"itemName",
-                    fieldValueName:"id"
-                }
-            }
-        ];
+            ];
+        };
 
         let { filter, status } = this.state,
             buttonDisabled =
@@ -274,7 +333,7 @@ class UnBilledSalesNotEstate extends Component {
                     doNotFetchDidMount={!search}
                     tableOption={{
                         key: this.state.updateKey,
-                        url: "/account/income/taxout/list",
+                        url: "/accountNotInvoiceUnsaleRealty/list",
                         pagination: true,
                         columns: getColumns(this),
                         rowKey: "id",
@@ -310,21 +369,28 @@ class UnBilledSalesNotEstate extends Component {
                                     >
                                         <Icon type="plus" />新增
                                     </Button>
+                                    <Button
+                                        size="small"
+                                        style={{ marginRight:5 }}
+                                        disabled={buttonDisabled || isSubmit}
+                                        onClick={this.reCalculate}
+                                    >
+                                        <Icon type="retweet" />
+                                        重算
+                                    </Button>
                                     <SubmitOrRecall
                                         type={1}
                                         disabled={buttonDisabled || isSubmit}
-                                        url="/account/income/taxout/submit"
+                                        url="/accountNotInvoiceUnsaleRealty/submit"
                                         onSuccess={this.refreshTable}
-                                        monthFieldName="authMonth"
-                                        initialValue={filter}
+                                        initialValue={{...filter,taxMonth:filter && filter.month}}
                                     />
                                     <SubmitOrRecall
                                         type={2}
                                         disabled={buttonDisabled || !isSubmit}
-                                        url="/account/income/taxout/revoke"
+                                        url="/accountNotInvoiceUnsaleRealty/revoke"
                                         onSuccess={this.refreshTable}
-                                        monthFieldName="authMonth"
-                                        initialValue={filter}
+                                        initialValue={{...filter,taxMonth:filter && filter.month}}
                                     />
                                     <TableTotal
                                         type={3}
@@ -336,31 +402,34 @@ class UnBilledSalesNotEstate extends Component {
                                                     {
                                                         title: "金额",
                                                         dataIndex:
-                                                            "pageOutTaxAmount"
+                                                            "pageCreditAmount"
                                                     },
                                                     {
                                                         title: "税额",
                                                         dataIndex:
-                                                            "pageOutTaxAmount"
+                                                            "pageTaxAmount"
                                                     },
                                                     {
                                                         title: "价税合计",
                                                         dataIndex:
-                                                            "pageOutTaxAmount"
+                                                            "pageTotalAmount"
                                                     }
                                                 ]
-                                            },{
+                                            },
+                                            {
                                                 title: "总计",
                                                 total: [
                                                     {
-                                                        title: "非地产财务系统未开票收入金额",
+                                                        title:
+                                                            "非地产财务系统未开票收入金额",
                                                         dataIndex:
-                                                            "pageOutTaxAmount"
+                                                            "allunAmount"
                                                     },
                                                     {
-                                                        title: "非地产开票销售收入金额",
+                                                        title:
+                                                            "非地产开票销售收入金额",
                                                         dataIndex:
-                                                            "pageOutTaxAmount"
+                                                            "allamount"
                                                     }
                                                 ]
                                             }
@@ -371,7 +440,7 @@ class UnBilledSalesNotEstate extends Component {
                         }
                     }}
                     searchOption={{
-                        fields: getFields("查询", 8)
+                        fields: getFields(this, "查询", 8)
                     }}
                 />
                 <PopModal

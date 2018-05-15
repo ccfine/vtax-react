@@ -133,7 +133,7 @@ const getColumns = context => [
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
-                    {toPercent(record.intaxRate)}
+                    {record.intaxRate && record.intaxRate+'%'}
                 </p>
             </div>
         )
