@@ -148,7 +148,7 @@ class GeneralTaxCertificate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/income/financeDetails/controller/listMain',{
+        request.get('/account/incomeSimpleOut/controller/listMain',{
             params:this.state.searchFieldsValues
         })
             .then(({data})=>{

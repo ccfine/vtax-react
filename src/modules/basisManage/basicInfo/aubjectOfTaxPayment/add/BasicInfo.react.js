@@ -761,7 +761,7 @@ class BasicInfo extends Component {
 
                         {
                             this.props.type !== 'add' && getFields(this.props.form,[
-                                {
+                                {/*
                                     label:'更新人',
                                     fieldName:'jbxx.lastModifiedBy',
                                     type:'input',
@@ -785,7 +785,7 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.lastModifiedDate,
                                     }
-                                },{
+                                },{*/
                                     label:'当前状态',
                                     fieldName:'jbxx.status',
                                     type:'select',
