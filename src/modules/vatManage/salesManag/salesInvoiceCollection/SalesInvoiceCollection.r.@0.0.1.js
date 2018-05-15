@@ -389,7 +389,7 @@ class SalesInvoiceCollection extends Component {
                     key: tableKey,
                     pageSize: 10,
                     columns: getColumns(this),
-                    url: "/output/invoice/collection/inter/list",
+                    url: "/output/invoice/collection/list",
                     onSuccess: (params, data) => {
                         this.setState(
                             {
