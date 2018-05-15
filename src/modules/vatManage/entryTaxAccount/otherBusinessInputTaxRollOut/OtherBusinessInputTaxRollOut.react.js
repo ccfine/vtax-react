@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-13 15:54:11
+ * @Last Modified time: 2018-05-15 10:38:41
  */
 import React, { Component } from "react";
 import { Icon, message, Button, Modal } from "antd";
@@ -100,7 +100,7 @@ const getColumns = context => [
     },
     {
         title: "转出项目",
-        dataIndex: "outProjectItem"
+        dataIndex: "outProjectName"
     },
     {
         title: "凭证号",

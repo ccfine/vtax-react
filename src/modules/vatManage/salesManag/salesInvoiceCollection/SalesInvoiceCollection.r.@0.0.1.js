@@ -415,7 +415,7 @@ class SalesInvoiceCollection extends Component {
                                         url="/output/invoice/collection/submit"
                                         onSuccess={this.refreshTable}
                                         initialValue={submitDefaultValue}
-                                        disabled={disabled1}
+                                        disabled={disabled2}
                                     />
                                 </PermissibleRender>
                                 <PermissibleRender
@@ -426,7 +426,7 @@ class SalesInvoiceCollection extends Component {
                                         url="/output/invoice/collection/revoke"
                                         onSuccess={this.refreshTable}
                                         initialValue={submitDefaultValue}
-                                        disabled={disabled2}
+                                        disabled={disabled1}
                                     />
                                 </PermissibleRender>
 
