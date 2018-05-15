@@ -55,7 +55,7 @@ export default class SynchronizeTable extends Component{
             results: pagination.pageSize,
             current: pagination.current,
             orderByField: sorter.field,
-            openSort: sor === 'asc' ,
+            isAsc: sor ? sor === 'asc' : undefined,
             ...filters,
         });
     }
