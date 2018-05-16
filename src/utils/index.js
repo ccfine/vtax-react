@@ -10,6 +10,7 @@ import composeMenus from './composeMenus'
 import regRules from './regRules'
 import getFields from './getFields'
 import {BigNumber} from 'bignumber.js'
+import getButtons from './getButtons';
 
 const fMoney = (s,n=2)=>{
     if(s === "" || s === 0 || typeof (s) === 'undefined'){
@@ -238,4 +239,5 @@ export {
     toPercent,
     fromPercent,
     listMainResultStatus,
+    getButtons,
 }

@@ -5,9 +5,9 @@
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus} from 'utils'
+import {fMoney,getUrlParam,request,listMainResultStatus,getButtons} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+// import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
@@ -302,10 +302,10 @@ class unBilledSalesEstate extends Component{
         })
     }
     render(){
-        const {tableKey,visible,searchFieldsValues={},hasData,doNotFetchDidMount,statusParams={},searchTableLoading,totalSource} = this.state;
+        const {tableKey,visible,searchFieldsValues={},doNotFetchDidMount,statusParams={},searchTableLoading,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
-        const isSubmit = parseInt(statusParams.status,0)===2;
+        // const isSubmit = parseInt(statusParams.status,0)===2;
         let submitIntialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.month}
         return(
             <SearchTable
@@ -338,15 +338,34 @@ class unBilledSalesEstate extends Component{
                     },
                     extra:<div>
                         {
-                            hasData && listMainResultStatus(statusParams)
+                            listMainResultStatus(statusParams)
                         }
                         <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
-                        <Button onClick={this.recount} disabled={isSubmit} size='small' style={{marginRight:5}}>
+                        {
+                            getButtons([{
+                                type:'recaculate',
+                                url:'/account/output/notInvoiceSale/realty/reset',
+                                params:{...submitIntialValue,authMonth:submitIntialValue.taxMonth},
+                                onSuccess:this.refreshTable,
+                                userPermissions:[],
+                            },{
+                                type:'submit',
+                                url:'/account/output/notInvoiceSale/realty/submit',
+                                params:{...submitIntialValue},
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'recall',
+                                url:'/account/output/notInvoiceSale/realty/revoke',
+                                params:{...submitIntialValue},
+                                onSuccess:this.refreshTable,
+                            }],statusParams)
+                        }
+                        {/* <Button onClick={this.recount} disabled={isSubmit} size='small' style={{marginRight:5}}>
                             <Icon type="retweet" />
                             重算
                         </Button>
                         <SubmitOrRecall disabled={!hasData || isSubmit} type={1} url="/account/output/notInvoiceSale/realty/submit" onSuccess={this.refreshTable} initialValue={submitIntialValue}/>
-                        <SubmitOrRecall disabled={!(hasData && isSubmit)} type={2} url="/account/output/notInvoiceSale/realty/revoke" onSuccess={this.refreshTable} initialValue={submitIntialValue}/>
+                        <SubmitOrRecall disabled={!(hasData && isSubmit)} type={2} url="/account/output/notInvoiceSale/realty/revoke" onSuccess={this.refreshTable} initialValue={submitIntialValue}/> */}
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {
