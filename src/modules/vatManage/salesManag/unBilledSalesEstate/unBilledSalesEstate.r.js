@@ -3,7 +3,7 @@
  * 确认结转收入
  */
 import React, { Component } from 'react'
-import {Button,Icon,message,Modal} from 'antd'
+import {Button,Icon,message} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,getUrlParam,request,listMainResultStatus,getButtons} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
@@ -275,32 +275,32 @@ class unBilledSalesEstate extends Component{
                 message.error(err.message)
             })
     }
-    recount = ()=>{
-        const { mainId,month:authMonth }  = this.state.resultFieldsValues;
+    // recount = ()=>{
+    //     const { mainId,month:authMonth }  = this.state.resultFieldsValues;
 
-        Modal.confirm({
-            title: '友情提醒',
-            content: '确定要重算吗',
-            onOk : ()=> {
-                this.toggleSearchTableLoading(true)
-                request.put('/account/output/notInvoiceSale/realty/reset',{mainId, authMonth}
-                )
-                    .then(({data}) => {
-                        this.toggleSearchTableLoading(false)
-                        if(data.code===200){
-                            message.success('重算成功!');
-                            this.refreshTable()
-                        }else{
-                            message.error(`重算失败:${data.msg}`)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                        this.toggleSearchTableLoading(false)
-                    })
-            }
-        })
-    }
+    //     Modal.confirm({
+    //         title: '友情提醒',
+    //         content: '确定要重算吗',
+    //         onOk : ()=> {
+    //             this.toggleSearchTableLoading(true)
+    //             request.put('/account/output/notInvoiceSale/realty/reset',{mainId, authMonth}
+    //             )
+    //                 .then(({data}) => {
+    //                     this.toggleSearchTableLoading(false)
+    //                     if(data.code===200){
+    //                         message.success('重算成功!');
+    //                         this.refreshTable()
+    //                     }else{
+    //                         message.error(`重算失败:${data.msg}`)
+    //                     }
+    //                 })
+    //                 .catch(err => {
+    //                     message.error(err.message)
+    //                     this.toggleSearchTableLoading(false)
+    //                 })
+    //         }
+    //     })
+    // }
     render(){
         const {tableKey,visible,searchFieldsValues={},doNotFetchDidMount,statusParams={},searchTableLoading,totalSource} = this.state;
         const {search} = this.props.location;
