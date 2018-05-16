@@ -2,11 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 17:03:55
+ * @Last Modified time: 2018-05-16 17:17:09
  */
 import React from "react";
 import ButtonWithPut from "../compoments/buttonWithPut";
 import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
+import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 //1：暂存 2：提交
 // 判断当前状态是否提交
 const isSubmit = (statusParam = {}) => {
@@ -54,7 +55,7 @@ const getSubmitOptions = (item, statusParam) => {
         disabled: true,
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
-        type:1,
+        type: 1
     };
     if (
         res.url &&
@@ -75,7 +76,7 @@ const getRecallOptions = (item, statusParam) => {
         disabled: true,
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
-        type:2,
+        type: 2
     };
     if (
         res.url &&
@@ -89,35 +90,38 @@ const getRecallOptions = (item, statusParam) => {
 };
 
 //buttons 参数形式
-// [{type:'re',url:'',params:'',buttonOptions}]
+// [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const getButtons = (buttons = [], ...params) => {
     let buttonElements = buttons.map(item => {
         switch (item.type) {
             case "recaculate":
                 return (
-                    <ButtonWithPut
-                        key={item.type}
-                        {...getRecaculateOptions(item, ...params)}
-                    />
+                    <PermissibleRender key={item.type} userPermissions={item.userPermissions||[]}>
+                        <ButtonWithPut
+                            {...getRecaculateOptions(item, ...params)}
+                        />
+                    </PermissibleRender>
                 );
             case "submit":
                 return (
-                    <SubmitOrRecall
-                        key={item.type}
-                        type={1}
-                        {...getSubmitOptions(item, ...params)}
-                    />
+                    <PermissibleRender key={item.type} userPermissions={item.userPermissions||[]}>
+                        <SubmitOrRecall
+                            type={1}
+                            {...getSubmitOptions(item, ...params)}
+                        />
+                    </PermissibleRender>
                 );
             case "recall":
                 return (
-                    <SubmitOrRecall
-                        key={item.type}
-                        type={2}
-                        {...getRecallOptions(item, ...params)}
-                    />
+                    <PermissibleRender key={item.type} userPermissions={item.userPermissions||[]}>
+                        <SubmitOrRecall
+                            type={2}
+                            {...getRecallOptions(item, ...params)}
+                        />
+                    </PermissibleRender>
                 );
             default:
-                return '';
+                return "";
         }
     });
 

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 17:02:15
+ * @Last Modified time: 2018-05-16 17:14:39
  */
 import React, { Component } from "react";
 import { Icon, message, Button, Modal } from "antd";
@@ -318,7 +318,7 @@ class UnBilledSalesNotEstate extends Component {
                                         getButtons([{
                                             type:'recaculate',
                                             url:'/accountNotInvoiceUnsaleRealty/reset',
-                                            params:{...filter,taxMonth:filter && filter.month},
+                                            params:{...filter,authMonth:filter && filter.month},
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'submit',
