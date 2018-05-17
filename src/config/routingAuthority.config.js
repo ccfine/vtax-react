@@ -148,8 +148,8 @@ const strategies = {
                 options:[],
             },
 
-            //其他可抵扣进项税明细
-            otherDeductibleInputTaxDetails:{
+            //其他扣税凭证
+            otherDeductionVoucher:{
                 options:[],
             },
 
@@ -197,6 +197,15 @@ const strategies = {
             landPriceManage:{
                 options:[],
             },
+            //土地面积
+            LandArea:{
+                options:[],
+            },
+            //其他应税项目扣除台账
+            otherTaxableItemsDeduct:{
+                options:[],
+            },
+
 
         },
 

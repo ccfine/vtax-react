@@ -5,7 +5,7 @@
  */
 import {wrapPage} from 'compoments'
 import InvoiceCollection from './invoiceCollection'
-import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
+import OtherDeductionVoucher from './otherDeductionVoucher'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
 import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
@@ -34,14 +34,14 @@ const EntryManag_Routes = [
         authorityInfo:entryManag['invoiceCollection'].options,
         exact:true,
     },{
-        path:`${PATH}/otherDeductibleInputTaxDetails`,
-        component:wrapPage('其他可抵扣进项税明细',OtherDeductibleInputTaxDetails),
-        name:'其他可抵扣进项税明细',
+        path:`${PATH}/otherDeductionVoucher`,
+        component:wrapPage('其他扣税凭证',OtherDeductionVoucher),
+        name:'其他扣税凭证',
         icon:{
             url:`${ICON_URL_PATH}invoiceMatching.svg`,
             backgroundColor:'#4DC1F0'
         },
-        authorityInfo:entryManag['otherDeductibleInputTaxDetails'].options,
+        authorityInfo:entryManag['otherDeductionVoucher'].options,
         exact:true,
     /*},{
         path:`${PATH}/invoiceMatching`,

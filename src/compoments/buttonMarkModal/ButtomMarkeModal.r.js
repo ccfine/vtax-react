@@ -62,7 +62,6 @@ class ButtomMarkeModal extends Component{
                     ...values,
                     mainIds:selectedRowKeys
                 }
-                console.log(params)
                 request.put(url,params)
                     .then(({data})=>{
                         this.toggleLoading(false)

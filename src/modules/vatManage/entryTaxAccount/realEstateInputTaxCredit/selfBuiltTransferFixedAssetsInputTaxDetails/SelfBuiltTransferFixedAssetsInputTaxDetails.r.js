@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {request,fMoney,listMainResultStatus} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 const pointerStyle = {
     cursor:'pointer',

@@ -11,6 +11,7 @@ import {request} from 'utils';
 
 export default class ButtonWithPut extends React.Component {
     static propTypes = {
+        type:PropTypes.string.isRequired, //请求类型
         url: PropTypes.string.isRequired, // 操作地址
         params: PropTypes.any, // 操作参数
         buttonOptions: PropTypes.any,

@@ -8,7 +8,7 @@ import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 import moment from 'moment';
 const pointerStyle = {

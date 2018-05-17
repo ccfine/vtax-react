@@ -9,7 +9,7 @@ import {SearchTable,TableTotal} from 'compoments'
 import {fMoney} from 'utils'
 const searchFields = [
     {
-        label:'发票号码',
+        label:'凭证号',
         fieldName:'invoiceNum',
         type:'input',
         span:8,
@@ -18,75 +18,50 @@ const searchFields = [
 ]
 const columns = [
     {
-        title: '数据来源',
-        dataIndex: 'sourceType',
-        width:100,
-        render:text=>{
-            text = parseInt(text,0)
-            if(text===1){
-                return '手工采集'
-            }
-            if(text===2){
-                return '外部导入'
-            }
-            return ''
-        },
-    },{
         title: '纳税主体',
         dataIndex: 'mainName',
         width:180,
     }, {
-        title: '发票类型',
+        title: '项目分期代码',
         dataIndex: 'invoiceTypeName',
         width:180,
     },{
-        title: '发票代码',
+        title: '项目分期',
         dataIndex: 'invoiceCode',
         width:180,
     },{
-        title: '发票号码',
+        title: '凭证号日期',
         dataIndex: 'invoiceNum',
         width:180,
     },{
-        title: '开票日期',
+        title: '凭证号',
         dataIndex: 'billingDate',
         width:100,
     },{
-        title: '认证月份',
+        title: '凭证摘要',
         dataIndex: 'authMonth',
         width:70,
     },{
-        title: '认证时间',
+        title: '借方科目名称',
         dataIndex: 'authDate',
         width:100,
     },{
-        title: '销售单位名称',
+        title: '借方科目代码',
         dataIndex: 'sellerName',
         width:180,
     },{
-        title: '纳税人识别号',
-        dataIndex: 'sellerTaxNum',
-        width:180,
-    },{
-        title: '金额',
+        title: '借方金额',
         dataIndex: 'amount',
         width:100,
         render:text=>fMoney(text),
     },{
-        title: '税额',
-        dataIndex: 'taxAmount',
-        width:100,
-        render:text=>fMoney(text),
-
-    },{
-        title: '价税合计',
-        dataIndex: 'totalAmount',
-        width:150,
-        render:text=>fMoney(text),
+        title: '扣税凭证类型',
+        dataIndex: 'sellerTaxNum',
+        width:180,
     }
 ];
 
-export default class PopInvoiceInformationModal extends Component{
+export default class VoucherPopModal extends Component{
     state={
         tableKey:Date.now(),
         totalSource:{},
@@ -141,12 +116,6 @@ export default class PopInvoiceInformationModal extends Component{
                             scroll:{ x: '210%'},
                             extra:<div>
                                 <TableTotal totalSource={totalSource} />
-                                {/*<FileExport
-                                    url='income/invoice/marry/download'
-                                    title="导出"
-                                    size="small"
-                                    setButtonStyle={{marginRight:5}}
-                                />*/}
                             </div>,
                             onTotalSource: (totalSource) => {
                                 this.setState({

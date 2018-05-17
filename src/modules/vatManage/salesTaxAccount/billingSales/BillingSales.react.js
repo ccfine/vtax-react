@@ -4,9 +4,11 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,message,Icon,Modal} from 'antd'
+import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
 import {FileExport,SynchronizeTable} from 'compoments'
 import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import ButtonReset from 'compoments/buttonReset'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -205,50 +207,18 @@ class BillingSales extends Component {
             this.fetch()
         })
     }
-    handleSubmit = (e,type) => {
+    handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.authMonth){
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/account/output/billingSale/submit';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '撤回':
-                        url = '/account/output/billingSale/revoke';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '重算':
-                        Modal.confirm({
-                            title: '友情提醒',
-                            content: '确定要重算吗',
-                            onOk : ()=> {
-                                request.put('/account/output/billingSale/reset',values)
-                                    .then(({data})=>{
-                                        if(data.code===200){
-                                            message.success(`${type}成功!`);
-                                            this.refreshTable();
-                                        }else{
-                                            message.error(`${type}失败:${data.msg}`)
-                                        }
-                                    })
-                                    .catch(err => {
-                                        message.error(err.message)
-                                    })
-                            }
-                        })
-                        break;
-                    default:
-                        this.setState({
-                            filters:values
-                        },()=>{
-                            this.refreshTable();
-                        });
-                }
+                this.setState({
+                    filters:values
+                },()=>{
+                    this.refreshTable();
+                });
             }
         });
     }
@@ -280,21 +250,6 @@ class BillingSales extends Component {
 
     }
 
-    requestPost=(url,type,value={})=>{
-        request.post(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                    //this.props.form.resetFields()
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
     updateStatus=()=>{
         request.get('/account/output/billingSale/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
@@ -303,9 +258,9 @@ class BillingSales extends Component {
                 })
             }
         })
-        .catch(err => {
-            message.error(err.message)
-        })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     componentDidMount(){
         const {search} = this.props.location;
@@ -315,8 +270,7 @@ class BillingSales extends Component {
     }
     render(){
         const {tableUpDateKey,filters,dataSource,notDataSource,visible,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
-        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -372,8 +326,8 @@ class BillingSales extends Component {
 
                             <Col span={8} style={{textAlign:'right'}}>
                                 <Form.Item>
-                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                    <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
+                                    <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -382,42 +336,25 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-房地产"
                       extra={<div>
                           {
-                              dataSource.length>0 && listMainResultStatus(statusParam)
+                              listMainResultStatus(statusParam)
                           }
-                          <FileExport
-                              url={`account/output/billingSale/export`}
-                              title='导出'
-                              setButtonStyle={{marginRight:5}}
-                              disabled={disabled1 || !dataSource.length>0}
-                              params={{
-                                  isEstate:1,
-                                  ...filters
-                              }}
-                          />
-                          <Button
-                              size='small'
-                              style={{marginRight:5}}
-                              disabled={disabled1}
-                              onClick={(e)=>this.handleSubmit(e,'重算')}>
-                              <Icon type="retweet" />
-                              重算
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled1}
-                              onClick={(e) => this.handleSubmit(e,'提交')}>
-                              <Icon type="check"/>
-                              提交
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled2}
-                              onClick={(e) => this.handleSubmit(e,'撤回')}>
-                              <Icon type="rollback"/>
-                              撤回提交
-                          </Button>
+                          {
+                              JSON.stringify(filters) !== "{}" && <span>
+                                  <FileExport
+                                      url={`account/output/billingSale/export`}
+                                      title='导出'
+                                      setButtonStyle={{marginRight:5}}
+                                      disabled={disabled1}
+                                      params={{
+                                          isEstate:1,
+                                          ...filters
+                                      }}
+                                  />
+                                <ButtonReset style={{marginRight:5}} disabled={disabled1} filters={filters} url="/account/output/billingSale/reset" onSuccess={this.refreshTable} />
+                                <SubmitOrRecall disabled={disabled1} type={1} url="/account/output/billingSale/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
+                                <SubmitOrRecall disabled={!disabled1} type={2} url="/account/output/billingSale/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
+                            </span>
+                          }
                       </div>
                       }
                       style={{marginTop:10}}>
@@ -436,29 +373,33 @@ class BillingSales extends Component {
                 </Card>
                 <Card title="开票销售统计表-非地产"
                       extra={<div>
-                                <FileExport
-                                    url={`account/output/billingSale/export`}
-                                    title='导出'
-                                    setButtonStyle={{marginRight:5}}
-                                    disabled={disabled1 || !(notDataSource && notDataSource.length>0)}
-                                    params={{
-                                        isEstate:0,
-                                        ...filters
-                                    }}
-                                />
-                            </div>}
+                          {
+                              JSON.stringify(filters) !== "{}" && <span>
+                                  <FileExport
+                                      url={`account/output/billingSale/export`}
+                                      title='导出'
+                                      setButtonStyle={{marginRight:5}}
+                                      disabled={disabled1 || !(notDataSource && notDataSource.length>0)}
+                                      params={{
+                                          isEstate:0,
+                                          ...filters
+                                      }}
+                                  />
+                            </span>
+                          }
+                      </div>}
                       style={{marginTop:10}}>
 
-                      <SynchronizeTable
-                            data={notDataSource}
-                            updateKey={tableUpDateKey}
-                            loaded={loaded}
-                            tableProps={{
-                                rowKey:record=>record.sysTaxRateId,
-                                pagination:false,
-                                size:'small',
-                                columns:notColumns(this),
-                            }} />
+                    <SynchronizeTable
+                        data={notDataSource}
+                        updateKey={tableUpDateKey}
+                        loaded={loaded}
+                        tableProps={{
+                            rowKey:record=>record.sysTaxRateId,
+                            pagination:false,
+                            size:'small',
+                            columns:notColumns(this),
+                        }} />
                 </Card>
 
                 <PopInvoiceInformationModal

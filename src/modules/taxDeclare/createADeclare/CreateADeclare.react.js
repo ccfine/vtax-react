@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Button,Icon,Badge} from 'antd'
+import {Button,Icon} from 'antd'
 import {SearchTable,FileExport} from 'compoments';
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
@@ -84,22 +84,22 @@ const getColumns =(context)=>[
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
-                    t=<Badge count='申报办理' style={{ backgroundColor: '#44b973' }} />;
+                    t=<span style={{ color: '#44b973' }}>申报办理</span>;
                     break;
                 case 2:
-                    t=<Badge count='申报审核' style={{ backgroundColor: '#2783d8' }} />;
+                    t=<span style={{ color: '#2783d8' }}>申报审核</span>;
                     break;
                 case 3:
-                    t=<Badge count='申报审批' style={{ backgroundColor: '#373ac6' }} />;
+                    t=<span style={{ color: '#373ac6' }}>申报审批</span>;
                     break;
                 case 4:
-                    t=<Badge count='申报完成' style={{ backgroundColor: '#1795f6' }} />;
+                    t=<span style={{ color: '#1795f6' }}>申报完成</span>;
                     break;
                 case 5:
-                    t=<Badge count='归档' style={{ backgroundColor: '#7a7e91' }} />;
+                    t=<span style={{ color: '#7a7e91' }}>归档</span>;
                     break;
                 case -1:
-                    t=<Badge count='流程终止' style={{ backgroundColor: '#ed2550' }} />;
+                    t=<span style={{ color: '#ed2550' }}>流程终止</span>;
                     break;
                 default:
                 //no default
