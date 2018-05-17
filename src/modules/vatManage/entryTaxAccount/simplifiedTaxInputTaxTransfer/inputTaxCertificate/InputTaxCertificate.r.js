@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {request,fMoney,listMainResultStatus} from 'utils'
-import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -140,7 +140,7 @@ class InputTaxCertificate extends Component{
                             })
                         },
                         cardProps: {
-                            title: "进项税额凭证",
+                            title: "进项税额列表",
                             extra:<div>
                                 {
                                     dataSource.length>0 && listMainResultStatus(statusParam)

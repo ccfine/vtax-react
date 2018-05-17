@@ -51,9 +51,9 @@ const searchFields =(context) => [
             }
         ],*/
     },{
-        label:'所属期起止',
-        type:'rangePicker',
-        fieldName:'subordinatePeriod',
+        label:'所属期',
+        type:'monthPicker',
+        fieldName:'partTerm',
         formItemStyle,
         span:6,
     },{

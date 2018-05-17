@@ -49,18 +49,6 @@ const columns=[
         dataIndex: 'mainName',
     },{
         title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">是否需要认证</p>
-            <p className="apply-form-list-p2">认证标记</p>
-        </div>,
-        dataIndex: 'authFlag',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.authStatus}</p>
-            </div>
-        )
-    },{
-        title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">发票号码</p>
             <p className="apply-form-list-p2">发票代码</p>
         </div>,
@@ -92,6 +80,18 @@ const columns=[
                 </div>
             )
         }
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">项目名称</p>
+            <p className="apply-form-list-p2">项目编码 </p>
+        </div>,
+        dataIndex: 'projectName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.projectNum}</p>
+            </div>
+        )
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">商品名称</p>
@@ -156,6 +156,20 @@ const columns=[
         title: '开票日期',
         dataIndex: 'billingDate',
         width:'75px'
+    },{
+        title: '计税方法',
+        dataIndex: 'taxMethod',
+        render:text=>{
+            //1一般计税方法，2简易计税方法 ,
+            text = parseInt(text,0);
+            if(text===1){
+                return '一般计税方法'
+            }
+            if(text ===2){
+                return '简易计税方法'
+            }
+            return text;
+        }
     },{
         title: '税额',
         dataIndex: 'taxAmount',
@@ -226,7 +240,7 @@ export default class SalesInvoiceCollection extends Component{
                     cardProps:{
                         title:'销项发票采集'
                     },
-                    url:'/income/invoice/collection/inter/list',
+                    url:'/output/invoice/collection/inter/list',
                     scroll:{ x: '120%' },
                 }}
             />

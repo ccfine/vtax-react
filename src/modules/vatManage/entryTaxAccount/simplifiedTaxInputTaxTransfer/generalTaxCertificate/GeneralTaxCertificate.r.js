@@ -2,17 +2,35 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {message,Button,Icon} from 'antd'
+import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {request,fMoney,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import PopModal from './popModal'
-import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ButtonMarkModal from 'compoments/buttonMarkModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
+const markFieldsData = [
+    {
+        label:'简易计税标记',
+        fieldName:'commonlyFlag',
+        type:'select',
+        notShowAll:true,
+        span:'22',
+        options:[  //简易计税标记：一般计税标记为简易计税（1标记，0不标记） ,
+            {
+                text:'标记',
+                value:'1'
+            },{
+                text:'不标记',
+                value:'0'
+            }
+        ],
+    }
+]
 const columns = context =>[
     {
         title: '纳税主体名称',
@@ -81,7 +99,6 @@ class GeneralTaxCertificate extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
-        visibleView:false,
         voucherNum:undefined,
         searchFieldsValues:{},
         dataSource:[],
@@ -91,9 +108,9 @@ class GeneralTaxCertificate extends Component{
          * */
         statusParam:{},
     }
-    toggleViewModalVisible=visibleView=>{
+    toggleViewModalVisible=visible=>{
         this.setState({
-            visibleView
+            visible
         })
     }
     fetchResultStatus = ()=>{
@@ -114,20 +131,6 @@ class GeneralTaxCertificate extends Component{
             })
     }
 
-    showModal=()=>{
-        this.setState({
-            visible:true,
-            searchFieldsValues:this.state.searchFieldsValues,
-            selectedRows:this.state.searchFieldsValues,
-        })
-    }
-
-    hideModal=()=>{
-        this.setState({
-            visible:false,
-        })
-    }
-
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
@@ -141,10 +144,8 @@ class GeneralTaxCertificate extends Component{
         }
     }
     render(){
-        const {visible,visibleView,voucherNum,tableKey,searchFieldsValues,selectedRowKeys,dataSource,statusParam} = this.state;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {visible,voucherNum,tableKey,searchFieldsValues,selectedRowKeys,dataSource,statusParam} = this.state;
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         return(
             <SearchTable
                 style={{
@@ -178,17 +179,24 @@ class GeneralTaxCertificate extends Component{
                         })
                     },
                     cardProps: {
-                        title: "一般计税凭证列表",
+                        title: "一般计税列表",
                         extra:<div>
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)
                             }
 
-                            <Button size='small' disabled={!selectedRowKeys.length>0 || disabled1} style={{marginRight:5}} onClick={()=>this.showModal()} >
-                                <Icon type="pushpin-o" />
-                                标记
-                            </Button>
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/income/financeDetails/controller/submit" onSuccess={this.refreshTable} />
+                            <ButtonMarkModal
+                                style={{marginRight:5}}
+                                formOptions={{
+                                    disabled: !selectedRowKeys.length>0 || disabled1,
+                                    filters: searchFieldsValues,
+                                    selectedRowKeys: selectedRowKeys,
+                                    url:"/account/incomeSimpleOut/controller/commonlyFlag",
+                                    fields: markFieldsData,
+                                    onSuccess: this.refreshTable,
+                                }}
+                            />
+                            <SubmitOrRecall disabled={disabled1} type={1} url="/income/financeDetails/controller/submit" onSuccess={this.refreshTable} />
                             <SubmitOrRecall disabled={!disabled1} type={2} url="/income/financeDetails/controller/revoke" onSuccess={this.refreshTable} />
 
                         </div>,
@@ -203,10 +211,9 @@ class GeneralTaxCertificate extends Component{
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} searchFieldsValues={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
                 <ViewDocumentDetails
                     title="查看凭证详情"
-                    visible={visibleView}
+                    visible={visible}
                     voucherNum={voucherNum}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>

@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { SearchTable } from "compoments";
-import { fMoney, toPercent } from "utils";
+import { fMoney } from "utils";
 const searchFields = [
     {
         label: "纳税主体",

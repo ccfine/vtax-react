@@ -49,9 +49,9 @@ const searchFields = [
             }
         ],
     },{
-        label:'所属期起止',
-        type:'rangePicker',
-        fieldName:'subordinatePeriod',
+        label:'所属期',
+        type:'monthPicker',
+        fieldName:'partTerm',
         formItemStyle,
         span:6,
     },{
@@ -118,7 +118,7 @@ const getColumns =(context)=>[
         dataIndex: 'mainName',
     },{
         title: '所属期',
-        dataIndex: 'remark',
+        dataIndex: 'partTerm',
     },{
         title: '税（费）种',
         dataIndex: 'taxType',
