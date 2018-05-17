@@ -5,108 +5,68 @@
  * @Last Modified time: 2018-05-16 19:20:53
  */
 import React from "react";
-import ButtonWithPut from "../compoments/buttonWithPut";
+/*import ButtonWithPut from "../compoments/buttonWithPut";*/
+import ButtonReset from 'compoments/buttonReset'
 import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 import {FileExport,FileImportModal} from 'compoments';
 //1：暂存 2：提交
 // 判断当前状态是否提交
-const isSubmit = (statusParam = {}) => {
-    return parseInt(statusParam.status, 10) === 2;
-};
-
-// 判断参数数据是否存在
-const hasParams = (params = {}) => {
-    let hasMainId = false,
-        hasMonth = false;
-    for (let index in params) {
-        if (/^mainId$/i.test(index) && params[index]) {
-            hasMainId = true;
-        } else if (/month/i.test(index) && params[index]) {
-            hasMonth = true;
-        }
-    }
-
-    return hasMainId && hasMonth;
-};
+const isDisabled = (statusParam = {})=> parseInt(statusParam.status, 0) === 2;
 
 // 重算参数
-const getRecaculateOptions = (item, statusParam) => {
+const getResetOptions = (item, statusParam) => {
     // url,参数不存在，或是已经提交 重算不可用
-    let res = { ...item, type: undefined };
-    res.buttonOptions = res.buttonOptions || {};
-    res.buttonOptions.disabled = true;
-    res.buttonOptions.style = { marginRight: 5 };
-    if (
-        res.url &&
-        res.params &&
-        hasParams(res.params) &&
-        !isSubmit(statusParam)
-    ) {
-        res.buttonOptions.disabled = false;
-    }
-    return res;
+    return {
+        ...item,
+        url:item.url,
+        filters:item.item,
+        disabled: isDisabled(statusParam) || true,
+        onSuccess: item.onSuccess,
+        style: { marginRight: 5 }
+    };
 };
 
 // 提交参数
 const getSubmitOptions = (item, statusParam) => {
-    let res = {
+    return {
         ...item,
         url: item.url,
-        disabled: true,
+        disabled: isDisabled(statusParam) || true,
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
         type: 1
     };
-    if (
-        res.url &&
-        res.initialValue &&
-        hasParams(res.initialValue) &&
-        !isSubmit(statusParam)
-    ) {
-        res.disabled = false;
-    }
-    return res;
 };
 
 // 撤回参数
-const getRecallOptions = (item, statusParam) => {
-    let res = {
+const getRevokeOptions = (item, statusParam) => {
+    return {
         ...item,
         url: item.url,
-        disabled: true,
+        disabled: !isDisabled(statusParam) || true,
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
         type: 2
     };
-    if (
-        res.url &&
-        res.initialValue &&
-        hasParams(res.initialValue) &&
-        isSubmit(statusParam)
-    ) {
-        res.disabled = false;
-    }
-    return res;
 };
 
 //文件导入
 const getFileImportOptions = (item, statusParam)=>{
-    let res = {
+    return {
         title:"导入",
         url: item.url,
-        disabled: false,
+        disabled: isDisabled(statusParam) || true,
         onSuccess: item.onSuccess,
         fields: item.fields,
         ...item,
         style:item.style || item.setButtonStyle|| {marginRight:5},
     };
-    return res;
 }
 
 //文件导出
-const getFileExportOptions = (item, statusParam)=>{
-    let res = {
+const getFileExportOptions = (item)=>{
+    return {
         disabled: false,
         title:"下载导入模板",
         url: item.url,
@@ -114,58 +74,63 @@ const getFileExportOptions = (item, statusParam)=>{
         ...item,
         setButtonStyle:item.style || item.setButtonStyle || {marginRight:5},
     };
-    return res;
 };
 
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
-const getButtons = (buttons = [], ...params) => {
+const composeBotton = (buttons = [], ...params) => {
     let buttonElements = buttons.map(item => {
+
+        let paramsList = {
+            key:item.key || item.type,
+            userPermissions:item.userPermissions||[]
+        }
+
         switch (item.type) {
-            case "recaculate":
+            case "reset":
                 return (
-                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
-                        <ButtonWithPut
-                            {...getRecaculateOptions(item, ...params)}
+                    <PermissibleRender {...paramsList}>
+                        <ButtonReset
+                            {...getResetOptions(item, ...params)}
                         />
                     </PermissibleRender>
                 );
             case "submit":
                 return (
-                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender {...paramsList}>
                         <SubmitOrRecall
                             type={1}
                             {...getSubmitOptions(item, ...params)}
                         />
                     </PermissibleRender>
                 );
-            case "recall":
+            case "revoke":
                 return (
-                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender {...paramsList}>
                         <SubmitOrRecall
                             type={2}
-                            {...getRecallOptions(item, ...params)}
+                            {...getRevokeOptions(item, ...params)}
                         />
                     </PermissibleRender>
                 );
             case 'fileImport':
                 return (
-                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender {...paramsList}>
                         <FileImportModal {...getFileImportOptions(item, ...params)} />
                     </PermissibleRender>
                 );
             case 'fileExport':
                 return (
-                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender {...paramsList}>
                         <FileExport {...getFileExportOptions(item, ...params)} />
                     </PermissibleRender>
                 );
             default:
-                return "";
+                return null;
         }
     });
 
     return buttonElements;
 };
 
-export default getButtons;
+export default composeBotton;

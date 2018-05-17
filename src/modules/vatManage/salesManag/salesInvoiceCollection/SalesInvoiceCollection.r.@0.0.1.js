@@ -2,9 +2,9 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
-import { Icon, Modal, message } from "antd";
+import { Modal, message } from "antd";
 import { SearchTable, TableTotal } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,getButtons } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import PopModal from "./popModal";
 import { withRouter } from "react-router";
 import moment from "moment";
@@ -131,70 +131,70 @@ const getColumns = context => [
         title: "操作",
         key: "actions",
         render: (text, record) => (
-            <div style={{ textAlign: "center" }}>
-                {parseInt(context.state.dataStatus, 0) === 1 && (
-                    <span
-                        style={pointerStyle}
-                        onClick={() => {
-                            const type = parseInt(record.sourceType, 0);
-                            if (type !== 1) {
-                                Modal.warning({
-                                    title: "友情提示",
-                                    content: "只能修改手工新增的数据"
-                                });
-                                return false;
-                            }
+            <span>
+                {
+                    parseInt(context.state.dataStatus, 0) === 1 && (
+                        <span
+                            style={pointerStyle}
+                            onClick={() => {
+                                const type = parseInt(record.sourceType, 0);
+                                if (type !== 1) {
+                                    Modal.warning({
+                                        title: "友情提示",
+                                        content: "只能修改手工新增的数据"
+                                    });
+                                    return false;
+                                }
 
-                            context.setState(
-                                {
-                                    modalConfig: {
-                                        type: "edit",
-                                        id: record.id
+                                context.setState(
+                                    {
+                                        modalConfig: {
+                                            type: "edit",
+                                            id: record.id
+                                        }
+                                    },
+                                    () => {
+                                        context.toggleModalVisible(true);
                                     }
-                                },
-                                () => {
-                                    context.toggleModalVisible(true);
-                                }
-                            );
-                        }}
-                    >
-                        编辑
-                    </span>
-                )}
-
-                <span
-                    style={{
-                        ...pointerStyle,
-                        marginLeft: 5
-                    }}
-                    onClick={() => {
-                        context.setState(
-                            {
-                                modalConfig: {
-                                    type: "view",
-                                    id: record.id
-                                }
-                            },
-                            () => {
-                                context.toggleModalVisible(true);
-                            }
-                        );
-                    }}
-                >
-                    <Icon
-                        title="查看"
-                        type="search"
-                        style={{ fontSize: 16, color: "#08c" }}
-                    />
-                </span>
-            </div>
+                                );
+                            }}
+                        >
+                                    编辑
+                                </span>
+                    )
+                }
+        </span>
         ),
         fixed: "left",
-        width: "70px"
+        width: "70px",
+        className:'text-center'
     },
     {
         title: "纳税主体",
-        dataIndex: "mainName"
+        dataIndex: "mainName",
+        render: (text, record) => (
+            <span
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState(
+                        {
+                            modalConfig: {
+                                type: "view",
+                                id: record.id
+                            }
+                        },
+                        () => {
+                            context.toggleModalVisible(true);
+                        }
+                    );
+                }}
+            >
+                {text}
+            </span>
+        ),
     },
     {
         title: (
@@ -302,7 +302,7 @@ class SalesInvoiceCollection extends Component {
             type: ""
         },
         tableKey: Date.now(),
-        searchFieldsValues: {},
+        filters: {},
         dataSource: [],
         /**
          *修改状态和时间
@@ -314,7 +314,7 @@ class SalesInvoiceCollection extends Component {
     fetchResultStatus = () => {
         request
             .get("/output/invoice/collection/listMain", {
-                params: this.state.searchFieldsValues
+                params: this.state.filters
             })
             .then(({ data }) => {
                 if (data.code === 200) {
@@ -361,12 +361,12 @@ class SalesInvoiceCollection extends Component {
             tableKey,
             totalSource,
             statusParam,
-            searchFieldsValues={}
+            filters={}
         } = this.state;
         const { search } = this.props.location;
-            // {mainId,billingDate} = searchFieldsValues;
+            // {mainId,billingDate} = filters;
         let disabled = !!search,
-        submitDefaultValue = {...searchFieldsValues,taxMonth:searchFieldsValues.billingDate};        
+        submitDefaultValue = {...filters,taxMonth:filters.billingDate};
         // const disabled1 = dataSource.length===0 || !!(
         //     mainId &&
         //     billingDate &&
@@ -390,7 +390,7 @@ class SalesInvoiceCollection extends Component {
                     onSuccess: (params, data) => {
                         this.setState(
                             {
-                                searchFieldsValues: params,
+                                filters: params,
                                 hasData: data.length !== 0
                             },
                             () => {
@@ -404,22 +404,25 @@ class SalesInvoiceCollection extends Component {
                             <div>
                                 {listMainResultStatus(statusParam)}
                                 {
-                                    getButtons([{
+                                    composeBotton([{
+                                        type:'fileExport',
+                                        url:'output/invoice/collection/download',
+                                        onSuccess:this.refreshTable
+                                    }],statusParam)
+                                }
+                                {
+                                    JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                         type:'fileImport',
                                         url:'/output/invoice/collection/upload/',
                                         onSuccess:this.refreshTable,
                                         fields:fields
-                                    },{
-                                        type:'fileExport',
-                                        url:'output/invoice/collection/download',
-                                        onSuccess:this.refreshTable
                                     },{
                                         type:'submit',
                                         url:'/output/invoice/collection/submit',
                                         params:{...submitDefaultValue},
                                         onSuccess:this.refreshTable
                                     },{
-                                        type:'recall',
+                                        type:'revoke',
                                         url:'/output/invoice/collection/revoke',
                                         params:{...submitDefaultValue},
                                         onSuccess:this.refreshTable,

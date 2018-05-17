@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import {Button,Icon,message} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus,getButtons} from 'utils'
+import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 // import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
@@ -342,8 +342,8 @@ class unBilledSalesEstate extends Component{
                         }
                         <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         {
-                            getButtons([{
-                                type:'recaculate',
+                            composeBotton([{
+                                type:'reset',
                                 url:'/account/output/notInvoiceSale/realty/reset',
                                 params:{...submitIntialValue,authMonth:submitIntialValue.taxMonth},
                                 onSuccess:this.refreshTable,
@@ -354,7 +354,7 @@ class unBilledSalesEstate extends Component{
                                 params:{...submitIntialValue},
                                 onSuccess:this.refreshTable
                             },{
-                                type:'recall',
+                                type:'revoke',
                                 url:'/account/output/notInvoiceSale/realty/revoke',
                                 params:{...submitIntialValue},
                                 onSuccess:this.refreshTable,

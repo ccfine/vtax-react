@@ -153,12 +153,12 @@ class PopModal extends Component {
                 maskClosable={false}
                 destroyOnClose={true}
                 onCancel={() => props.toggleModalVisible(false)}
-                width={800}
+                width={900}
                 style={{
                     maxWidth: "90%"
                 }}
                 visible={props.visible}
-                bodyStyle={{maxHeight:400,overflow:'auto'}}
+                bodyStyle={{maxHeight:500,overflow:'auto'}}
                 footer={
                     type !== "view" ? (
                         <Row>

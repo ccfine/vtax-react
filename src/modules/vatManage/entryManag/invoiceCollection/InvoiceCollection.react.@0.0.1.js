@@ -6,7 +6,7 @@
 import React, { Component } from "react";
 import { Layout, Form, Button, Icon, Modal, message } from "antd";
 import { TableTotal, SearchTable } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,getButtons } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import { withRouter } from "react-router";
 import moment from "moment";
 import PopModal from "./popModal";
@@ -397,7 +397,7 @@ class InvoiceCollection extends Component {
                                     查看
                                 </Button>
                                 {
-                                    getButtons([{
+                                    composeBotton([{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         onSuccess:this.refreshTable,
@@ -412,7 +412,7 @@ class InvoiceCollection extends Component {
                                         params:{...defaultValues},
                                         onSuccess:this.refreshTable
                                     },{
-                                        type:'recall',
+                                        type:'revoke',
                                         url:'/income/invoice/collection/revoke',
                                         params:{...defaultValues},
                                         onSuccess:this.refreshTable,
