@@ -2,13 +2,13 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-15 18:14:38
+ * @Last Modified time: 2018-05-17 10:35:27
  */
 import React, { Component } from "react";
 import { Icon, message, Button, Modal } from "antd";
-import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
+// import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import { SearchTable, TableTotal } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,getButtons } from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
 import PopModal from "./popModal";
@@ -137,34 +137,6 @@ class UnBilledSalesNotEstate extends Component {
     hideModal() {
         this.setState({ visible: false });
     }
-    reCalculate = () => {
-        const { mainId,month:taxMonth }  = this.state.filter;
-        const modalRef = Modal.confirm({
-            title: "友情提醒",
-            content: "确定需要重算吗？",
-            okText: "确定",
-            okType: "danger",
-            cancelText: "取消",
-            onOk: () => {
-                request
-                    .put(`/accountNotInvoiceUnsaleRealty/reset`,{mainId,taxMonth})
-                    .then(({ data }) => {
-                        if (data.code === 200) {
-                            message.success("重算成功", 4);
-                            this.refreshTable()
-                        } else {
-                            message.error(data.msg, 4);
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message);
-                    });
-            },
-            onCancel() {
-                modalRef.destroy();
-            }
-        });
-    };
     deleteRecord = (id, cb) => {
         request
             .delete(`/accountNotInvoiceUnsaleRealty/delete/${id}`)
@@ -180,10 +152,7 @@ class UnBilledSalesNotEstate extends Component {
                 message.error(err.message);
             });
     };
-    update = () => {
-        this.setState({ updateKey: Date.now() });
-    };
-    updateStatus = (values = this.state.filter) => {
+    updateStatus = (values) => {
         this.setState({ filter: values });
         let params = { ...values };
         params.authMonth = moment(params.authMonth).format("YYYY-MM");
@@ -197,37 +166,18 @@ class UnBilledSalesNotEstate extends Component {
                         status.lastModifiedDate = data.data.lastModifiedDate;
                         this.setState({ status: status, filter: values });
                     }
+                }else{
+                    message.error(data.msg,4);
                 }
-            });
-    };
-    commonSubmit = (url, params, action, messageInfo) => {
-        this.setState({ [`${action}Loading`]: true });
-        request
-            .post(url, params)
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    message.success(messageInfo, 4);
-                    this.setState({ [`${action}Loading`]: false });
-                    this.updateStatus();
-                } else {
-                    message.error(data.msg, 4);
-                    this.setState({ [`${action}Loading`]: false });
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-                this.setState({ [`${action}Loading`]: false });
+            }).catch(err=>{
+                message.error(err.message,4);
             });
     };
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-    filterChange = values => {
-        this.setState({ updateKey: Date.now(), filters: values });
-        this.updateStatus(values);
-    };
     render() {
-        const { dataSource, totalSource } = this.state;
+        const { totalSource } = this.state;
         const { search } = this.props.location;
         let disabled = !!search;
         const getFields = (
@@ -316,16 +266,12 @@ class UnBilledSalesNotEstate extends Component {
                 }
             ];
         };
-
         let { filter, status } = this.state,
-            buttonDisabled =
-                !filter ||
-                !(dataSource && dataSource.length && dataSource.length > 0),
+            // buttonDisabled =
+            //     !filter ||
+            //     !(dataSource && dataSource.length && dataSource.length > 0),
             isSubmit = status && status.status === 2;
 
-        // 查询参数
-        let params = { ...filter };
-        params.authMonth = moment(params.authMonth).format("YYYY-MM");
         return (
             <div>
                 <SearchTable
@@ -353,8 +299,7 @@ class UnBilledSalesNotEstate extends Component {
                             title: "未开票销售台账-非地产",
                             extra: (
                                 <div>
-                                    {dataSource.length > 0 &&
-                                        listMainResultStatus(status)}
+                                    {listMainResultStatus(status)}
                                     <Button
                                         size="small"
                                         style={{ marginRight: 5 }}
@@ -369,16 +314,25 @@ class UnBilledSalesNotEstate extends Component {
                                     >
                                         <Icon type="plus" />新增
                                     </Button>
-                                    <Button
-                                        size="small"
-                                        style={{ marginRight:5 }}
-                                        disabled={buttonDisabled || isSubmit}
-                                        onClick={this.reCalculate}
-                                    >
-                                        <Icon type="retweet" />
-                                        重算
-                                    </Button>
-                                    <SubmitOrRecall
+                                    {
+                                        getButtons([{
+                                            type:'recaculate',
+                                            url:'/accountNotInvoiceUnsaleRealty/reset',
+                                            params:{...filter,authMonth:filter && filter.month},
+                                            onSuccess:this.refreshTable
+                                        },{
+                                            type:'submit',
+                                            url:'/accountNotInvoiceUnsaleRealty/submit',
+                                            params:{...filter,taxMonth:filter && filter.month},
+                                            onSuccess:this.refreshTable
+                                        },{
+                                            type:'recall',
+                                            url:'/accountNotInvoiceUnsaleRealty/revoke',
+                                            params:{...filter,taxMonth:filter && filter.month},
+                                            onSuccess:this.refreshTable,
+                                        }],status)
+                                    }
+                                    {/* <SubmitOrRecall
                                         type={1}
                                         disabled={buttonDisabled || isSubmit}
                                         url="/accountNotInvoiceUnsaleRealty/submit"
@@ -391,7 +345,7 @@ class UnBilledSalesNotEstate extends Component {
                                         url="/accountNotInvoiceUnsaleRealty/revoke"
                                         onSuccess={this.refreshTable}
                                         initialValue={{...filter,taxMonth:filter && filter.month}}
-                                    />
+                                    /> */}
                                     <TableTotal
                                         type={3}
                                         totalSource={totalSource}
@@ -440,7 +394,7 @@ class UnBilledSalesNotEstate extends Component {
                         }
                     }}
                     searchOption={{
-                        fields: getFields(this, "查询", 8)
+                        fields: getFields(this, "查询", 6)
                     }}
                 />
                 <PopModal
@@ -450,7 +404,7 @@ class UnBilledSalesNotEstate extends Component {
                         this.hideModal();
                     }}
                     id={this.state.opid}
-                    update={this.update}
+                    update={this.refreshTable}
                 />
             </div>
         );

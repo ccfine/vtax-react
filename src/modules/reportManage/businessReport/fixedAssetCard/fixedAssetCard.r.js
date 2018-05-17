@@ -1,5 +1,8 @@
-/**
- * Created by liurunbin on 2018/1/2.
+/*
+ * @Author: liuchunxiu 
+ * @Date: 2018-05-17 10:25:07 
+ * @Last Modified by:   liuchunxiu 
+ * @Last Modified time: 2018-05-17 10:25:07 
  */
 import React, { Component } from "react";
 import { SearchTable } from "compoments";
