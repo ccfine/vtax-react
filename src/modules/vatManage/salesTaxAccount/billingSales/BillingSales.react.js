@@ -179,9 +179,7 @@ class BillingSales extends Component {
         /**
          * params条件，给table用的
          * */
-        filters:{
-            pageSize:20
-        },
+        filters:{},
 
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
