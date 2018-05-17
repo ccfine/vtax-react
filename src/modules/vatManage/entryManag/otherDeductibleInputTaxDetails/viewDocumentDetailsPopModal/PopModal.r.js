@@ -103,8 +103,7 @@ export default class ViewDocumentDetails extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
-                            <Button onClick={()=>props.toggleViewModalVisible(false)}>取消</Button>
+                            <Button onClick={()=>props.toggleViewModalVisible(false)}>关闭</Button>
                         </Col>
                     </Row>
                 }

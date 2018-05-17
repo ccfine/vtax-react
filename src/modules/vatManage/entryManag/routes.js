@@ -8,12 +8,11 @@ import InvoiceCollection from './invoiceCollection'
 import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
- import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
- import InvoiceMatching from './invoiceMatching'
- import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
-* */
+import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
+import InvoiceMatching from './invoiceMatching'
+import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
-
+ * */
 import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
 import SimplifiedTaxInputTaxTransfer from '../entryTaxAccount/simplifiedTaxInputTaxTransfer'
 import RealEstateInputTaxCredit from '../entryTaxAccount/realEstateInputTaxCredit'
@@ -72,7 +71,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}inputTaxStructure.svg`,
             backgroundColor:'#6CCCCA'
         },
-        exact:true,*/
+        exact:true,
     },{
         path:`${PATH}/inputTaxOnFixedAssets`,
         component:wrapPage('固定资产进项税额台账',InputTaxOnFixedAssets),
@@ -83,7 +82,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['inputTaxOnFixedAssets'].options,
         exact:true,
-    /*},{
+    },{
         path:`${PATH}/interimContractInputTaxTransferredOut`,
         component:wrapPage('跨期合同进项税额转出台账',InterimContractInputTaxTransferredOut),
         name:'跨期合同进项税额转出台账',

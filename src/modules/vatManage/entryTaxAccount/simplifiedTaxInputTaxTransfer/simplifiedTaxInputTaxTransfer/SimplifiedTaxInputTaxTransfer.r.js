@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {request,fMoney,listMainResultStatus} from 'utils'
-import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -137,7 +137,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         })
                     },
                     cardProps: {
-                        title: "简易计税进项税额转出",
+                        title: "简易计税进项税额转出列表",
                         extra:<div>
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)

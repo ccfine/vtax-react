@@ -2,13 +2,14 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
+import ButtonMarkModal from 'compoments/buttonMarkModal'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import PopModal from './popModal'
-import ViewDocumentDetails from './viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+
 import moment from 'moment';
 const pointerStyle = {
     cursor:'pointer',
@@ -88,6 +89,33 @@ const searchFields=(disabled)=> {
         },
     ]
 }
+const markFieldsData = [
+    {
+        label:'标记类型',
+        fieldName:'flag',
+        type:'select',
+        notShowAll:true,
+        span:'22',
+        options:[  //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
+            {
+                text:'海关进口增值税专用缴款书',
+                value:'1'
+            },{
+                text:'农产品收购发票或者销售发票',
+                value:'2'
+            },{
+                text:'代扣代缴收缴款凭证',
+                value:'3'
+            },{
+                text:'其他',
+                value:'4'
+            },{
+                text:'无标记',
+                value:'0'
+            }
+        ],
+    }
+]
 const columns = context =>[
     {
         title: <div className="apply-form-list-th">
@@ -212,7 +240,6 @@ class SalesInvoiceCollection extends Component{
 
         tableKey:Date.now(),
         visible:false,
-        visibleView:false,
         voucherNum:undefined,
         searchFieldsValues:{
 
@@ -241,22 +268,9 @@ class SalesInvoiceCollection extends Component{
                 message.error(err.message)
             })
     }
-    toggleViewModalVisible=visibleView=>{
+    toggleViewModalVisible=visible=>{
         this.setState({
-            visibleView
-        })
-    }
-    showModal=()=>{
-        this.setState({
-            visible:true,
-            searchFieldsValues:this.state.searchFieldsValues,
-            selectedRows:this.state.searchFieldsValues,
-        })
-    }
-
-    hideModal=()=>{
-        this.setState({
-            visible:false,
+            visible
         })
     }
 
@@ -273,12 +287,10 @@ class SalesInvoiceCollection extends Component{
         }
     }
     render(){
-        const {visible,visibleView,tableKey,searchFieldsValues,selectedRowKeys,voucherNum,dataSource,statusParam} = this.state;
+        const {visible,tableKey,searchFieldsValues,selectedRowKeys,voucherNum,dataSource,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -313,11 +325,18 @@ class SalesInvoiceCollection extends Component{
                                 dataSource.length>0 && listMainResultStatus(statusParam)
                             }
 
-                            <Button size='small' disabled={!selectedRowKeys.length>0 || disabled1} style={{marginRight:5}} onClick={()=>this.showModal()} >
-                                <Icon type="pushpin-o" />
-                                标记
-                            </Button>
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/income/financeDetails/controller/submit" onSuccess={this.refreshTable} />
+                            <ButtonMarkModal
+                                style={{marginRight:5}}
+                                formOptions={{
+                                    disabled: !selectedRowKeys.length>0 || disabled1,
+                                    filters: searchFieldsValues,
+                                    selectedRowKeys: selectedRowKeys,
+                                    url:"/income/financeDetails/controller/upFlag",
+                                    fields: markFieldsData,
+                                    onSuccess: this.refreshTable,
+                                }}
+                            />
+                            <SubmitOrRecall disabled={disabled1} type={1} url="/income/financeDetails/controller/submit" onSuccess={this.refreshTable} />
                             <SubmitOrRecall disabled={!disabled1} type={2} url="/income/financeDetails/controller/revoke" onSuccess={this.refreshTable} />
 
                         </div>,
@@ -332,10 +351,9 @@ class SalesInvoiceCollection extends Component{
                     },
                 }}
             >
-                <PopModal refreshTable={this.refreshTable} visible={visible} filters={searchFieldsValues} selectedRowKeys={selectedRowKeys} hideModal={this.hideModal} />
                 <ViewDocumentDetails
                     title="查看凭证详情"
-                    visible={visibleView}
+                    visible={visible}
                     voucherNum={voucherNum}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>

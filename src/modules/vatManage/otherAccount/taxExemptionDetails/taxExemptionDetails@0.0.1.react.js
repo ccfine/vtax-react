@@ -204,9 +204,9 @@ class TaxExemptionDetails extends Component{
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                        message.error(err.message)
-                        this.toggleSearchTableLoading(false)
-                    })
+                    message.error(err.message)
+                    this.toggleSearchTableLoading(false)
+                })
             },
             onCancel() {
                 modalRef.destroy()
@@ -223,9 +223,9 @@ class TaxExemptionDetails extends Component{
                 })
             }
         })
-        .catch(err => {
-            message.error(err.message)
-        })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     componentDidMount(){
         const {search} = this.props.location;
@@ -332,8 +332,8 @@ class TaxExemptionDetails extends Component{
                             hasParam={mainId && authMonth}
                             dataStatus={statusParam.status}
                             searchFieldsValues={this.state.filters}
-                          />
-                          <TableTotal totalSource={totalSource} data={totalData} type={3}/>
+                        />
+                        <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                     </div>,
                     onDataChange:(dataSource)=>{
                         this.setState({

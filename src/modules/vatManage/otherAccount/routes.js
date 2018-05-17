@@ -6,11 +6,13 @@
 import {wrapPage} from 'compoments'
 import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
-import PrePaidHousingSales from './prePaidHousingSales'
 import DeductProjectSummary from './deductProjectSummary'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
-/*import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'*/
+/*
+import PrePaidHousingSales from './prePaidHousingSales'
+import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
+*/
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -19,7 +21,7 @@ const otherAccount = strategies['vatManage']['otherAccount'];
 
 const OtherAccount_Routes = [
     {
-        path:`${PATH}/prePaidHousingSales`,
+    /*    path:`${PATH}/prePaidHousingSales`,
         component:wrapPage('售房预缴台账',PrePaidHousingSales),
         name:'售房预缴台账',
         icon:{
@@ -28,7 +30,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['prePaidHousingSales'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATH}/prepayTax`,
         component:wrapPage('预缴税款台账',PrepayTax),
         name:'预缴税款台账',

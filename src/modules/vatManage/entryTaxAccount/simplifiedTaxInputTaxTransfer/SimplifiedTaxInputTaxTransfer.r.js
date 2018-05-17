@@ -76,13 +76,13 @@ export default class SimpleTaxInputTaxTransferredToTheAccount extends Component{
         let disabled = !!search;
         return(
             <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
-                <TabPane tab="进项税额凭证" key="1">
+                <TabPane tab="进项税额" key="1">
                     <InputTaxCertificate searchFields={searchFields(disabled)} />
                 </TabPane>
-                <TabPane tab="简易计税凭证" key="2">
+                <TabPane tab="简易计税" key="2">
                     <SimpleTaxCertificate searchFields={searchFields(disabled)} />
                 </TabPane>
-                <TabPane tab="一般计税凭证" key="3">
+                <TabPane tab="一般计税" key="3">
                     <GeneralTaxCertificate searchFields={searchFields(disabled)} />
                 </TabPane>
                 <TabPane tab="简易计税进项税额转出" key="4">

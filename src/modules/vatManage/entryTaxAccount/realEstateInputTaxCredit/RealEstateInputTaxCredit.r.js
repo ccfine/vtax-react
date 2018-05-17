@@ -75,11 +75,11 @@ export default class RealEstateInputTaxCredit extends Component{
         let disabled = !!search;
         return(
             <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
-                <TabPane tab="待抵扣进项税额" key="1">
-                    <DeductibleInputTaxAmount searchFields={searchFields(disabled)} />
-                </TabPane>
-                <TabPane tab="固定资产进项税额明细" key="2">
+                <TabPane tab="固定资产进项税额明细" key="1">
                     <FixedAssetsInputTaxDetails searchFields={searchFields(disabled)} />
+                </TabPane>
+                <TabPane tab="待抵扣进项税额" key="2">
+                    <DeductibleInputTaxAmount searchFields={searchFields(disabled)} />
                 </TabPane>
                 <TabPane tab="自建转自用固定资产进项税额明细" key="3">
                     <SelfBuiltTransferFixedAssetsInputTaxDetails searchFields={searchFields(disabled)} />

@@ -120,7 +120,7 @@ export default class TableTotal extends Component {
                 <Icon type="calculator"/>
                 {
                     briefData.map((t,i)=>{
-                        return (
+                        return  i===0 && (
                             <span key={i} className="total-amount">
                             {t.title}：<span className="amount-code">{fMoney(totalSource && totalSource[t.dataIndex])  || 0.00}</span>
                         </span>
