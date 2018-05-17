@@ -6,10 +6,10 @@
 import {wrapPage} from 'compoments'
 import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
-import DeductProjectSummary from './deductProjectSummary'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
 /*
+import DeductProjectSummary from './deductProjectSummary'
 import PrePaidHousingSales from './prePaidHousingSales'
 import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
 */
@@ -50,7 +50,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['landPriceDeductionDetails'].options,
         exact:true,
-    },{
+    },{/*
         path:`${PATH}/deductProjectSummary`,
         component:wrapPage('扣除项目汇总台账',DeductProjectSummary),
         name:'扣除项目汇总台账',
@@ -60,7 +60,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['deductProjectSummary'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATH}/taxExemptionDetails`,
         component:wrapPage('减免税明细台账',TaxExemptionDetails),
         name:'减免税明细台账',

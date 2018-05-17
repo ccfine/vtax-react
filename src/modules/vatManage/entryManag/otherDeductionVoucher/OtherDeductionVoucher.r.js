@@ -8,7 +8,7 @@ import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
 import {SearchTable} from 'compoments'
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 import moment from 'moment';
 const pointerStyle = {
@@ -319,7 +319,7 @@ class SalesInvoiceCollection extends Component{
                         })
                     },
                     cardProps: {
-                        title: "其他可抵扣进项税明细",
+                        title: "其他扣税凭证",
                         extra:<div>
                             {
                                 dataSource.length>0 && listMainResultStatus(statusParam)

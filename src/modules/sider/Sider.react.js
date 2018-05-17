@@ -39,8 +39,8 @@ class VTaxSider extends Component {
         if (!menusData) {
             return [];
         }
-        return menusData.map((item,i) => {
-
+        return menusData.map((item) => {
+            // || item.name === '增值税管理'  对用户隐藏，用户只是在纳税申报的时候引用增值税管理里面的页面
             if (!item.name  || item.path === '/web' ) {
                 return null;
             }

@@ -249,6 +249,7 @@ export default class ApplyDeclarationPopModal extends Component {
     };
 
     LockPageRefresh = () => {
+
         const ref = Modal.warning({
             title: "友情提醒",
             content: <h2>操作完成后，请刷新当前页面！</h2>,

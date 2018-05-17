@@ -10,7 +10,7 @@ import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
 const pointerStyle = {
     cursor:'pointer',
@@ -66,7 +66,7 @@ const searchFields =(disabled)=> {
                 rules:[
                     {
                         required:true,
-                        message:'请选查询期间'
+                        message:'请选择纳税申报期'
                     }
                 ]
             },
@@ -237,7 +237,6 @@ class PrepayTax extends Component{
                                 <SubmitOrRecall disabled={!disabled1} type={2} url="/account/prepaytax/revoke" onSuccess={this.refreshTable} />
                             </span>
                         }
-
                     </div>,
                     /*scroll:{
                         x:'1400px',

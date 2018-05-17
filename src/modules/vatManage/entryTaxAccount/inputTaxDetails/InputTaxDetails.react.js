@@ -4,271 +4,221 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,Icon,message,Modal} from 'antd'
-import {AsyncTable,TableTotal} from 'compoments'
-import {request,getFields,fMoney,getUrlParam,listMainResultStatus} from 'utils'
-import PopInvoiceInformationModal from './popModal'
+import {message} from 'antd'
 import { withRouter } from 'react-router'
+import {SearchTable,TableTotal} from 'compoments'
+import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
+import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import ButtonReset from 'compoments/buttonReset'
+import PopInvoiceInformationModal from './popModal'
 import moment from 'moment';
-const buttonStyle={
-    marginRight:5
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff'
 }
-class InputTaxDetails extends Component {
-    state={
-        /**
-         * params条件，给table用的
-         * */
-        filters:{
-            pageSize:20
+const searchFields =(disabled)=> {
+    return [
+        {
+            label:'纳税主体',
+            fieldName:'mainId',
+            type:'taxMain',
+            span:8,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            componentProps:{
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            }
         },
+        {
+            label:'认证月份',
+            fieldName:'authMonth',
+            type:'monthPicker',
+            span:8,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            componentProps:{
+                format:'YYYY-MM',
+                disabled
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择认证月份'
+                    }
+                ]
+            },
+        },
+    ]
+}
+const getColumns = context => [
+    {
+        title: '纳税主体',
+        dataIndex: 'mainName',
+    }, {
+        title: '抵扣凭据类型',
+        dataIndex: 'sysDictIdName',
+    },{
+        title: '凭据份数',
+        dataIndex: 'num',
+        render:(text,record)=>(
+            <span title="查看发票信息详情" onClick={()=>{
+                const params= {
+                    mainId:record.mainId,
+                    invoiceType:record.sysDictId,
+                }
+                context.setState({
+                    params:params
+                },()=>{
+                    context.toggleModalVisible(true)
+                })
+            }} style={pointerStyle}>
+                {text}
+            </span>
+        )
+    },{
+        title: '金额',
+        dataIndex: 'amount',
+        render:text=>fMoney(text),
+    },{
+        title: '税额',
+        dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
 
+    }
+];
+
+class InputTaxDetails extends Component{
+    state={
+        tableKey:Date.now(),
+        searchTableLoading:false,
+        filters:{},
         /**
-         * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
+         *修改状态和时间
          * */
-        tableUpDateKey:Date.now(),
+        statusParam:{},
+        totalSource:undefined,
         visible:false,
         params:{},
-        statusParam:{},
-        dataSource:[],
-        totalSource:undefined,
     }
-
-    columns = [
-        {
-            title: '纳税主体',
-            dataIndex: 'mainName',
-        }, {
-            title: '抵扣凭据类型',
-            dataIndex: 'sysDictIdName',
-        },{
-            title: '凭据份数',
-            dataIndex: 'num',
-            render:(text,record)=>(
-                <a onClick={()=>{
-                    const params= {
-                        mainId:record.mainId,
-                        invoiceType:record.sysDictId,
-                    }
-                    this.setState({
-                        params:params
-                    },()=>{
-                        this.toggleModalVisible(true)
-                    })
-                }}>{text}</a>
-            )
-        },{
-            title: '金额',
-            dataIndex: 'amount',
-            render:text=>fMoney(text),
-        },{
-            title: '税额',
-            dataIndex: 'taxAmount',
-            render:text=>fMoney(text),
-
-        }
-    ];
-
-    handleSubmit = (e,type) => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                if(values.authMonth){
-                    values.authMonth = values.authMonth.format('YYYY-MM')
-                }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/account/income/taxDetail/submit';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '撤回':
-                        url = '/account/income/taxDetail/revoke';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '重算':
-                        Modal.confirm({
-                            title: '友情提醒',
-                            content: '确定要重算吗',
-                            onOk : ()=> {
-                                request.put('/account/income/taxDetail/reset',values)
-                                    .then(({data})=>{
-                                        if(data.code===200){
-                                            message.success(`${type}成功!`);
-                                            this.refreshTable();
-                                        }else{
-                                            message.error(`${type}失败:${data.msg}`)
-                                        }
-                                    })
-                                    .catch(err => {
-                                        message.error(err.message)
-                                    })
-                            }
-                        })
-                        break;
-                    default:
-                        this.setState({
-                            filters:values,
-                        },()=>{
-                            this.refreshTable();
-                        });
-                }
-            }
-        });
+    refreshTable = ()=>{
+        this.setState({
+            tableKey:Date.now()
+        })
     }
     toggleModalVisible=visible=>{
         this.setState({
             visible
         })
     }
-    refreshTable = ()=>{
-        this.setState({
-            tableUpDateKey:Date.now()
-        },()=>{
-            this.updateStatus();
+    fetchResultStatus = ()=>{
+        request.get('/account/income/taxDetail/listMain',{
+            params:this.state.filters
         })
-    }
-    requestPost=(url,type,data={})=>{
-        request.post(url,data)
             .then(({data})=>{
                 if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
+                    this.setState({
+                        statusParam: data.data,
+                    })
                 }else{
-                    message.error(`${type}失败:${data.msg}`)
+                    message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
             .catch(err => {
                 message.error(err.message)
             })
     }
-    updateStatus=()=>{
-        request.get('/account/income/taxDetail/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                })
-            }
-        })
-        .catch(err => {
-            message.error(err.message)
-        })
-    }
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
-            this.handleSubmit()
+            this.refreshTable()
         }
     }
     render(){
-        const {tableUpDateKey,filters,visible,params,dataSource,statusParam,totalSource} = this.state;
-        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
-
+        const {searchTableLoading,tableKey,visible,params,statusParam,filters,totalSource} = this.state;
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
-            <Layout style={{background:'transparent'}} >
-                <Card
-                    style={{
-                        borderTop:'none'
-                    }}
-                    className="search-card"
-                >
-                    <Form onSubmit={this.handleSubmit}>
-                        <Row>
-                            {
-                                getFields(this.props.form,[
-                                    {
-                                        label:'纳税主体',
-                                        fieldName:'mainId',
-                                        type:'taxMain',
-                                        span:8,
-                                        componentProps:{
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择纳税主体'
-                                                }
-                                            ]
-                                        },
-                                    },{
-                                        label:'认证月份',
-                                        fieldName:'authMonth',
-                                        type:'monthPicker',
-                                        span:8,
-                                        componentProps:{
-                                            format:'YYYY-MM',
-                                            disabled,
-                                        },
-                                        fieldDecoratorOptions:{
-                                            initialValue: (disabled && (!!search && moment(getUrlParam('authMonth'), 'YYYY-MM'))) || undefined,
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择认证月份'
-                                                }
-                                            ]
-                                        },
-                                    },
-                                ])
-                            }
-
-                            <Col  style={{width:'100%',textAlign:'right'}}>
-                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Card>
-                <Card
-                    extra={
-                        <div>
-                            {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
-                            }
-                            <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'提交')}><Icon type="check" />提交</Button>
-                            <Button size="small" style={buttonStyle} disabled={disabled1} onClick={(e)=>this.handleSubmit(e,'重算')}><Icon type="retweet" />重算</Button>
-                            <Button size="small" style={buttonStyle} disabled={disabled2} onClick={(e)=>this.handleSubmit(e,'撤回')}><Icon type="rollback" />撤回提交</Button>
-                            <TableTotal type={3} totalSource={totalSource} data={
-                                [
-                                    {
-                                        title:'合计',
-                                        total:[
-                                            {title: '金额', dataIndex: 'pageAmount'},
-                                            {title: '税额', dataIndex: 'pageTaxAmount'},
-                                        ],
-                                    }
-                                ]
-                            } />
-                        </div>
-                    }
-                    style={{marginTop:10}}>
-
-                    <AsyncTable url="/account/income/taxDetail/list"
-                                updateKey={tableUpDateKey}
-                                filters={filters}
-                                tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:true,
-                                    size:'small',
-                                    columns:this.columns,
-                                    onDataChange:(dataSource)=>{
-                                        this.setState({
-                                            dataSource
-                                        })
-                                    },
-                                    onTotalSource: (totalSource) => {
-                                        this.setState({
-                                            totalSource
-                                        })
-                                    },
-                                }} />
-                </Card>
-
+            <SearchTable
+                searchOption={{
+                    fields:searchFields(disabled),
+                    cardProps:{
+                        className:''
+                    },
+                }}
+                doNotFetchDidMount={true}
+                spinning={searchTableLoading}
+                tableOption={{
+                    key:tableKey,
+                    onSuccess:(params)=>{
+                        this.setState({
+                            filters:params,
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
+                    cardProps: {
+                        title: "进项税额明细台账",
+                    },
+                    pageSize:100,
+                    columns:getColumns(this),
+                    url:'/account/income/taxDetail/list',
+                    extra:<div>
+                        {
+                            listMainResultStatus(statusParam)
+                        }
+                        {
+                            JSON.stringify(filters) !== "{}" && <span>
+                                <ButtonReset style={{marginRight:5}} disabled={disabled1} filters={filters} url="/account/income/taxDetail/reset" onSuccess={this.refreshTable} />
+                                <SubmitOrRecall disabled={disabled1} type={1} url="/account/income/taxDetail/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
+                                <SubmitOrRecall disabled={!disabled1} type={2} url="/account/income/taxDetail/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
+                            </span>
+                        }
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '金额', dataIndex: 'pageAmount'},
+                                        {title: '税额', dataIndex: 'pageTaxAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
+                    </div>,
+                    /*scroll:{
+                     x:'1400px',
+                     },*/
+                }}
+            >
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}
@@ -276,8 +226,8 @@ class InputTaxDetails extends Component {
                     filters={filters}
                     toggleModalVisible={this.toggleModalVisible}
                 />
-            </Layout>
+            </SearchTable>
         )
     }
 }
-export default Form.create()(withRouter(InputTaxDetails))
+export default withRouter(InputTaxDetails)
