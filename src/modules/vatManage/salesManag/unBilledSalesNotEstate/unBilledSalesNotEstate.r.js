@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 17:14:39
+ * @Last Modified time: 2018-05-17 10:35:27
  */
 import React, { Component } from "react";
 import { Icon, message, Button, Modal } from "antd";
@@ -394,7 +394,7 @@ class UnBilledSalesNotEstate extends Component {
                         }
                     }}
                     searchOption={{
-                        fields: getFields(this, "查询", 8)
+                        fields: getFields(this, "查询", 6)
                     }}
                 />
                 <PopModal

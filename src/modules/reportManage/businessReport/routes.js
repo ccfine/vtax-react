@@ -12,6 +12,7 @@ import FixedAssetCard from './fixedAssetCard'
 import FinancialDocuments from './financialDocuments'
 import IncomingInvoiceCollection from './incomingInvoiceCollection'
 import SalesInvoiceCollection from './salesInvoiceCollection'
+import AvailableArea from './availableArea'
 
 import strategies from 'config/routingAuthority.config'
 
@@ -211,6 +212,16 @@ const BusinessReport_Routes = [
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['salesInvoiceCollection'].options,
+        exact:true,
+    },{
+        path:`${PATH}/availableArea`,
+        component:wrapPage('可售面积',AvailableArea),
+        name:'可售面积',
+        icon:{
+            url:`${ICON_URL_PATH}invoiceQuery.svg`,
+            backgroundColor:'#57C8F2'
+        },
+        authorityInfo:businessReport['invoiceQuery'].options,
         exact:true,
     },{
         path:`${PATH}`,

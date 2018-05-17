@@ -6,16 +6,47 @@
 import React, { Component } from "react";
 import { Layout, Form, Button, Icon, Modal, message } from "antd";
 import { TableTotal, SearchTable } from "compoments";
-import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
-import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,getButtons } from "utils";
 import { withRouter } from "react-router";
 import moment from "moment";
 import PopModal from "./popModal";
 const buttonStyle = {
     marginRight: 5
 };
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        componentProps: {},
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: '请选择认证月份'
+                }
+            ]
+        },
+    }
+]
 
-const getSearchFields = disabled => [
+const getSearchFields = disabled => {
+    console.log('mainId：',getUrlParam("mainId"))
+    return [
     {
         label: "纳税主体",
         fieldName: "mainId",
@@ -63,7 +94,8 @@ const getSearchFields = disabled => [
         componentProps: {},
         fieldDecoratorOptions: {}
     }
-];
+]
+};
 class InvoiceCollection extends Component {
     state = {
         /**
@@ -317,19 +349,12 @@ class InvoiceCollection extends Component {
                 selectedRowKeys,
                 visible,
                 modalConfig,
-                dataSource,
                 statusParam,
                 totalSource
             } = this.state,
             // (字段名字不一致)这里有些不合理
             defaultValues = { ...filters, taxMonth: filters.authMonth };
-        const { mainId, authMonth } = this.state.filters;
-        const disabled1 = !!(
-            mainId &&
-            authMonth &&
-            (statusParam && parseInt(statusParam.status, 0) === 1)
-        );
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        
         const { search } = this.props.location;
         let disabled = !!(search && search.filters);
         return (
@@ -361,8 +386,7 @@ class InvoiceCollection extends Component {
                         scroll: { x: "110%" },
                         extra: (
                             <div>
-                                {dataSource.length > 0 &&
-                                    listMainResultStatus(statusParam)}
+                                {listMainResultStatus(statusParam)}
                                 <Button
                                     size="small"
                                     onClick={() => this.showModal("view")}
@@ -372,20 +396,28 @@ class InvoiceCollection extends Component {
                                     <Icon type="search" />
                                     查看
                                 </Button>
-                                <SubmitOrRecall
-                                    type={1}
-                                    disabled={disabled2}
-                                    url="/income/invoice/collection/submit"
-                                    onSuccess={this.refreshTable}
-                                    initialValue={defaultValues}
-                                />
-                                <SubmitOrRecall
-                                    type={2}
-                                    disabled={disabled1}
-                                    url="/income/invoice/collection/revoke"
-                                    onSuccess={this.refreshTable}
-                                    initialValue={defaultValues}
-                                />
+                                {
+                                    getButtons([{
+                                        type:'fileImport',
+                                        url:'/income/invoice/collection/upload',
+                                        onSuccess:this.refreshTable,
+                                        fields:fields
+                                    },{
+                                        type:'fileExport',
+                                        url:'income/invoice/collection/download',
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'submit',
+                                        url:'/income/invoice/collection/submit',
+                                        params:{...defaultValues},
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'recall',
+                                        url:'/income/invoice/collection/revoke',
+                                        params:{...defaultValues},
+                                        onSuccess:this.refreshTable,
+                                    }],statusParam)
+                                }
                                 <TableTotal totalSource={totalSource} />
                             </div>
                         ),

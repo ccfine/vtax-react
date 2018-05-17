@@ -4,9 +4,7 @@
 import React, { Component } from "react";
 import { Icon, Modal, message } from "antd";
 import { SearchTable, TableTotal } from "compoments";
-import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
-import PermissibleRender from "compoments/permissible/PermissibleRender.r";
-import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,getButtons } from "utils";
 import PopModal from "./popModal";
 import { withRouter } from "react-router";
 import moment from "moment";
@@ -23,6 +21,30 @@ const formItemStyle = {
         span: 16
     }
 };
+const fields=[
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:11
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }
+];
 const searchFields = disabled => {
     return [
         {
@@ -337,21 +359,20 @@ class SalesInvoiceCollection extends Component {
             visible,
             modalConfig,
             tableKey,
-            dataSource,
             totalSource,
             statusParam,
             searchFieldsValues={}
         } = this.state;
-        const { search } = this.props.location,
-            {mainId,billingDate} = searchFieldsValues;
+        const { search } = this.props.location;
+            // {mainId,billingDate} = searchFieldsValues;
         let disabled = !!search,
         submitDefaultValue = {...searchFieldsValues,taxMonth:searchFieldsValues.billingDate};        
-        const disabled1 = dataSource.length===0 || !!(
-            mainId &&
-            billingDate &&
-            (statusParam && parseInt(statusParam.status, 0) === 1)
-        );
-        const disabled2 = dataSource.length===0 || (statusParam && parseInt(statusParam.status, 0) === 2);
+        // const disabled1 = dataSource.length===0 || !!(
+        //     mainId &&
+        //     billingDate &&
+        //     (statusParam && parseInt(statusParam.status, 0) === 1)
+        // );
+        // const disabled2 = dataSource.length===0 || (statusParam && parseInt(statusParam.status, 0) === 2);
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -381,31 +402,29 @@ class SalesInvoiceCollection extends Component {
                         title: "销项发票采集列表",
                         extra: (
                             <div>
-                                {dataSource.length > 0 &&
-                                    listMainResultStatus(statusParam)}
-                                <PermissibleRender
-                                    userPermissions={["1061010"]}
-                                >
-                                    <SubmitOrRecall
-                                        type={1}
-                                        url="/output/invoice/collection/submit"
-                                        onSuccess={this.refreshTable}
-                                        initialValue={submitDefaultValue}
-                                        disabled={disabled2}
-                                    />
-                                </PermissibleRender>
-                                <PermissibleRender
-                                    userPermissions={["1061011"]}
-                                >
-                                    <SubmitOrRecall
-                                        type={2}
-                                        url="/output/invoice/collection/revoke"
-                                        onSuccess={this.refreshTable}
-                                        initialValue={submitDefaultValue}
-                                        disabled={disabled1}
-                                    />
-                                </PermissibleRender>
-
+                                {listMainResultStatus(statusParam)}
+                                {
+                                    getButtons([{
+                                        type:'fileImport',
+                                        url:'/output/invoice/collection/upload/',
+                                        onSuccess:this.refreshTable,
+                                        fields:fields
+                                    },{
+                                        type:'fileExport',
+                                        url:'output/invoice/collection/download',
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'submit',
+                                        url:'/output/invoice/collection/submit',
+                                        params:{...submitDefaultValue},
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'recall',
+                                        url:'/output/invoice/collection/revoke',
+                                        params:{...submitDefaultValue},
+                                        onSuccess:this.refreshTable,
+                                    }],statusParam)
+                                }
                                 <TableTotal totalSource={totalSource} />
                             </div>
                         )

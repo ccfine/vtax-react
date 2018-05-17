@@ -2,12 +2,13 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 17:17:09
+ * @Last Modified time: 2018-05-16 19:20:53
  */
 import React from "react";
 import ButtonWithPut from "../compoments/buttonWithPut";
 import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
+import {FileExport,FileImportModal} from 'compoments';
 //1：暂存 2：提交
 // 判断当前状态是否提交
 const isSubmit = (statusParam = {}) => {
@@ -89,6 +90,33 @@ const getRecallOptions = (item, statusParam) => {
     return res;
 };
 
+//文件导入
+const getFileImportOptions = (item, statusParam)=>{
+    let res = {
+        title:"导入",
+        url: item.url,
+        disabled: false,
+        onSuccess: item.onSuccess,
+        fields: item.fields,
+        ...item,
+        style:item.style || item.setButtonStyle|| {marginRight:5},
+    };
+    return res;
+}
+
+//文件导出
+const getFileExportOptions = (item, statusParam)=>{
+    let res = {
+        disabled: false,
+        title:"下载导入模板",
+        url: item.url,
+        onSuccess: item.onSuccess,
+        ...item,
+        setButtonStyle:item.style || item.setButtonStyle || {marginRight:5},
+    };
+    return res;
+};
+
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const getButtons = (buttons = [], ...params) => {
@@ -96,7 +124,7 @@ const getButtons = (buttons = [], ...params) => {
         switch (item.type) {
             case "recaculate":
                 return (
-                    <PermissibleRender key={item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
                         <ButtonWithPut
                             {...getRecaculateOptions(item, ...params)}
                         />
@@ -104,7 +132,7 @@ const getButtons = (buttons = [], ...params) => {
                 );
             case "submit":
                 return (
-                    <PermissibleRender key={item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
                         <SubmitOrRecall
                             type={1}
                             {...getSubmitOptions(item, ...params)}
@@ -113,11 +141,23 @@ const getButtons = (buttons = [], ...params) => {
                 );
             case "recall":
                 return (
-                    <PermissibleRender key={item.type} userPermissions={item.userPermissions||[]}>
+                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
                         <SubmitOrRecall
                             type={2}
                             {...getRecallOptions(item, ...params)}
                         />
+                    </PermissibleRender>
+                );
+            case 'fileImport':
+                return (
+                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
+                        <FileImportModal {...getFileImportOptions(item, ...params)} />
+                    </PermissibleRender>
+                );
+            case 'fileExport':
+                return (
+                    <PermissibleRender key={item.key || item.type} userPermissions={item.userPermissions||[]}>
+                        <FileExport {...getFileExportOptions(item, ...params)} />
                     </PermissibleRender>
                 );
             default:
