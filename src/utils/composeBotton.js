@@ -79,7 +79,7 @@ const getFileExportOptions = (item)=>{
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const composeBotton = (buttons = [], ...params) => {
-    let buttonElements = buttons.map(item => {
+    return buttons.map(item => {
         let component = undefined;
         switch (item.type) {
             case "reset":
@@ -129,8 +129,6 @@ const composeBotton = (buttons = [], ...params) => {
             )
         );
     });
-
-    return buttonElements;
 };
 
 export default composeBotton;
