@@ -8,7 +8,7 @@ import {request} from 'utils'
 
 class ButtonReset extends Component{
     static propTypes={
-            type: PropTypes.oneOf(['post','put']).isRequired,
+            //type: PropTypes.oneOf(['post','put']).isRequired,
             text:PropTypes.string,
             icon:PropTypes.string,
             filters:PropTypes.object,
@@ -17,18 +17,17 @@ class ButtonReset extends Component{
             onSuccess:PropTypes.func,
     }
     static defaultProps={
-            type:'put',
             text:'重算',
             icon:'retweet'
     }
 
     handleReset=()=>{
-        const {text,type,url,filters,onSuccess} = this.props;
+        const {text,url,filters,onSuccess} = this.props;
         Modal.confirm({
             title: '友情提醒',
             content: `确定要${text}吗`,
             onOk : ()=> {
-                request[type](url,filters)
+                request.put(url,filters)
                     .then(({data}) => {
                         if(data.code===200){
                             message.success(`${text}成功!`);
