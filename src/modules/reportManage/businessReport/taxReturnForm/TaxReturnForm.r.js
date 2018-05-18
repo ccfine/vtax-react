@@ -44,7 +44,7 @@ const sheetData = [
         grid:sheet_4,
         url:'/tax/declaration/addendum/four/list'
     }, {
-        tab:'附表五-不做',
+        tab:'附表五',
         grid:sheet_5,
         url:'/tax/decConduct/fixedAssets/list'
     /*}, {

@@ -2,14 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 18:29:51
+ * @Last Modified time: 2018-05-18 15:33:21
  */
-import React from 'react';
+import React from 'react'
 import {message} from 'antd'
 import {SearchTable} from 'compoments'
 import {fMoney,getUrlParam,request,listMainResultStatus,getButtons} from 'utils'
-import { withRouter } from 'react-router';
-import moment from 'moment';
+import { withRouter } from 'react-router'
+import moment from 'moment'
 
 const formItemStyle = {
     labelCol:{
@@ -106,44 +106,69 @@ const columns= [
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-    }, {
-        title: '项目名称',
-        dataIndex: 'projectName',
-    },{
-        title: '项目分期',
-        dataIndex: 'stagesName',
-    },{
-        title: '可售面积(㎡)',
+    },
+	{
+		title: (
+			<div className="apply-form-list-th">
+				<p className="apply-form-list-p1">项目名称</p>
+				<p className="apply-form-list-p2">项目分期</p>
+			</div>
+		),
+		dataIndex: 'projectName',
+		render: (text, record) => (
+			<div>
+				<p className="apply-form-list-p1">{text}</p>
+				<p className="apply-form-list-p2">{record.stagesName}</p>
+			</div>
+		)
+	},{
+        title: '可售面积',
         dataIndex: 'upAreaSale',
     },{
         title: '分摊抵扣的土地价款',
         dataIndex: 'deductibleLandPrice',
         render:text=>fMoney(text),
+        className:'table-money',
     },{
         title: '单方土地成本',
         dataIndex: 'singleLandCost',
+        render:text=>fMoney(text),
+        className:'table-money',
     },{
-        title: '累计销售面积(㎡)',
+        title: '累计销售面积',
         dataIndex: 'saleArea',
     },{
         title: '累计已扣除土地价款',
         dataIndex: 'actualDeductibleLandPrice',
         render:text=>fMoney(text),
+        className:'table-money',
     },{
-        title: '当期销售建筑面积（㎡）',
+        title: '当期销售建筑面积',
         dataIndex: 'salesBuildingArea',
     },{
-        title: '当起实际扣除土地价款',
-        dataIndex: 'deductPrice',
+        title: '当期实际扣除土地价款',
+        dataIndex: 'actualDeductPrice',
         render:text=>fMoney(text),
+        className:'table-money',
     },{
         title: '收入确认金额',
         dataIndex: 'price',
         render:text=>fMoney(text),
+        className:'table-money',
+    },{
+        title: '税率',
+        dataIndex: 'taxRate',
+        render:text=>parseInt(text,10) && text+'%',
+    },{
+        title: '税额',
+        dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
+        className:'table-money',
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
         render:text=>fMoney(text),
+        className:'table-money',
     }
 ];
 class HasDeduct extends React.Component{
@@ -183,10 +208,9 @@ class HasDeduct extends React.Component{
         }
     }
     fetchResultStatus = ()=>{
-        request.get('/account/output/notInvoiceSale/realty/listMain',{
+        request.get('/account/landPrice/deductedDetails/listMain',{
             params:{
-                ...this.state.searchFieldsValues,
-                authMonth:this.state.searchFieldsValues.month
+                ...this.state.searchFieldsValues
             }
         })
             .then(({data})=>{
@@ -229,7 +253,7 @@ class HasDeduct extends React.Component{
                     key:tableKey,
                     pageSize:10,
                     columns:columns,
-                    url:'/account/output/notInvoiceSale/realty/list',
+                    url:'/account/landPrice/deductedDetails/list',
                     onSuccess:(params,data)=>{
                         this.setState({
                             searchFieldsValues:params,
@@ -243,14 +267,21 @@ class HasDeduct extends React.Component{
                         }
                         {
                             getButtons([{
-                                type:'submit',
-                                url:'/account/output/notInvoiceSale/realty/submit',
+                                type:'recaculate',
+                                url:'/account/landPrice/deductedDetails/reset',
                                 params:{...submitIntialValue},
                                 onSuccess:this.refreshTable
                             },{
-                                type:'recall',
-                                url:'/account/output/notInvoiceSale/realty/revoke',
+                                type:'submit',
+                                url:'/account/landPrice/deductedDetails/submit',
                                 params:{...submitIntialValue},
+                                monthFieldName:'authMonth',
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'recall',
+                                url:'/account/landPrice/deductedDetails/revoke',
+                                params:{...submitIntialValue},
+                                monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable,
                             }],statusParams)
                         }

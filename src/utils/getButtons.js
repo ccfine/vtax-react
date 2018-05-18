@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 10:20:39
+ * @Last Modified time: 2018-05-18 15:02:00
  */
 import React from "react";
 import ButtonWithPut from "../compoments/buttonWithPut";
@@ -33,7 +33,7 @@ const hasParams = (params = {}) => {
 // 重算参数
 const getRecaculateOptions = (item, statusParam) => {
     // url,参数不存在，或是已经提交 重算不可用
-    let res = { ...item, type: undefined };
+    let res = { ...item, type: 'put' };
     res.buttonOptions = res.buttonOptions || {};
     res.buttonOptions.disabled = true;
     res.buttonOptions.style = { marginRight: 5 };

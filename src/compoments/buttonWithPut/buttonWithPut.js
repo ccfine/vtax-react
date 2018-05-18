@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:17:49 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 15:39:57
+ * @Last Modified time: 2018-05-18 15:00:05
  */
 import React from "react";
 import { Button, Modal, Icon,message } from "antd";
@@ -33,7 +33,6 @@ export default class ButtonWithPut extends React.Component {
     };
     put = () => {
         const { url, params, themeName, onSuccess } = this.props;
-        this.toggleIsPutting();
         const modalRef = Modal.confirm({
             title: "友情提醒",
             content: `确定需要${themeName}吗？`,
@@ -41,6 +40,7 @@ export default class ButtonWithPut extends React.Component {
             okType: "danger",
             cancelText: "取消",
             onOk: () => {
+                this.toggleIsPutting();
                 request
                     .put(url, params)
                     .then(({ data }) => {
@@ -64,9 +64,10 @@ export default class ButtonWithPut extends React.Component {
     };
     render() {
         const { buttonOptions, themeName, icon } = this.props;
+        const {isPutting} = this.state;
 
         return (
-            <Button size="small" onClick={this.put} {...buttonOptions}>
+            <Button size="small" onClick={this.put} {...buttonOptions} loading={isPutting}>
                 {icon}
                 {themeName}
             </Button>
