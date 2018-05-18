@@ -8,7 +8,7 @@ import React, { Component } from "react";
 import { Icon, message, Button, Modal } from "antd";
 // import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import { SearchTable, TableTotal } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,getButtons } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
 import PopModal from "./popModal";
@@ -315,8 +315,8 @@ class UnBilledSalesNotEstate extends Component {
                                         <Icon type="plus" />新增
                                     </Button>
                                     {
-                                        getButtons([{
-                                            type:'recaculate',
+                                        composeBotton([{
+                                            type:'reset',
                                             url:'/accountNotInvoiceUnsaleRealty/reset',
                                             params:{...filter,authMonth:filter && filter.month},
                                             onSuccess:this.refreshTable
@@ -326,7 +326,7 @@ class UnBilledSalesNotEstate extends Component {
                                             params:{...filter,taxMonth:filter && filter.month},
                                             onSuccess:this.refreshTable
                                         },{
-                                            type:'recall',
+                                            type:'revoke',
                                             url:'/accountNotInvoiceUnsaleRealty/revoke',
                                             params:{...filter,taxMonth:filter && filter.month},
                                             onSuccess:this.refreshTable,

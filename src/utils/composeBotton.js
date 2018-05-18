@@ -2,130 +2,89 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 15:02:00
+ * @Last Modified time: 2018-05-16 19:20:53
  */
 import React from "react";
-import ButtonWithPut from "../compoments/buttonWithPut";
+/*import ButtonWithPut from "../compoments/buttonWithPut";*/
+import ButtonReset from 'compoments/buttonReset'
 import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
-import { FileExport, FileImportModal } from "compoments";
+import {FileExport,FileImportModal} from 'compoments';
 //1：暂存 2：提交
 // 判断当前状态是否提交
-const isSubmit = (statusParam = {}) => {
-    return parseInt(statusParam.status, 10) === 2;
-};
-
-// 判断参数数据是否存在
-const hasParams = (params = {}) => {
-    let hasMainId = false,
-        hasMonth = false;
-    for (let index in params) {
-        if (/^mainId$/i.test(index) && params[index]) {
-            hasMainId = true;
-        } else if (/month/i.test(index) && params[index]) {
-            hasMonth = true;
-        }
-    }
-
-    return hasMainId && hasMonth;
-};
+const isDisabled = (statusParam = {})=> parseInt(statusParam.status, 0) === 2;
 
 // 重算参数
-const getRecaculateOptions = (item, statusParam) => {
+const getResetOptions = (item, statusParam) => {
     // url,参数不存在，或是已经提交 重算不可用
-    let res = { ...item, type: 'put' };
-    res.buttonOptions = res.buttonOptions || {};
-    res.buttonOptions.disabled = true;
-    res.buttonOptions.style = { marginRight: 5 };
-    if (
-        res.url &&
-        res.params &&
-        hasParams(res.params) &&
-        !isSubmit(statusParam)
-    ) {
-        res.buttonOptions.disabled = false;
-    }
-    return res;
+    return {
+        ...item,
+        url:item.url,
+        filters:item.item,
+        disabled: isDisabled(statusParam),
+        onSuccess: item.onSuccess,
+        style: { marginRight: 5 }
+    };
 };
 
 // 提交参数
 const getSubmitOptions = (item, statusParam) => {
-    let res = {
+    return {
         ...item,
         url: item.url,
-        disabled: true,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
         type: 1
     };
-    if (
-        res.url &&
-        res.initialValue &&
-        hasParams(res.initialValue) &&
-        !isSubmit(statusParam)
-    ) {
-        res.disabled = false;
-    }
-    return res;
 };
 
 // 撤回参数
-const getRecallOptions = (item, statusParam) => {
-    let res = {
+const getRevokeOptions = (item, statusParam) => {
+    return {
         ...item,
         url: item.url,
-        disabled: true,
+        disabled: !isDisabled(statusParam),
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
         type: 2
     };
-    if (
-        res.url &&
-        res.initialValue &&
-        hasParams(res.initialValue) &&
-        isSubmit(statusParam)
-    ) {
-        res.disabled = false;
-    }
-    return res;
 };
 
 //文件导入
-const getFileImportOptions = (item, statusParam) => {
-    let res = {
-        title: "导入",
+const getFileImportOptions = (item, statusParam)=>{
+    return {
+        title:"导入",
         url: item.url,
-        disabled: false,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         fields: item.fields,
         ...item,
-        style: item.style || item.setButtonStyle || { marginRight: 5 }
+        style:item.style || item.setButtonStyle|| {marginRight:5},
     };
-    return res;
-};
+}
 
 //文件导出
-const getFileExportOptions = (item, statusParam) => {
-    let res = {
+const getFileExportOptions = (item)=>{
+    return {
         disabled: false,
-        title: "下载导入模板",
+        title:"下载导入模板",
         url: item.url,
         onSuccess: item.onSuccess,
         ...item,
-        setButtonStyle: item.style || item.setButtonStyle || { marginRight: 5 }
+        setButtonStyle:item.style || item.setButtonStyle || {marginRight:5},
     };
-    return res;
 };
 
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
-const getButtons = (buttons = [], ...params) => {
-    let buttonElements = buttons.map(item => {
+const composeBotton = (buttons = [], ...params) => {
+    return buttons.map(item => {
         let component = undefined;
         switch (item.type) {
-            case "recaculate":
+            case "reset":
                 component = (
-                    <ButtonWithPut {...getRecaculateOptions(item, ...params)} />
+                    <ButtonReset {...getResetOptions(item, ...params)} />
                 );
                 break;
             case "submit":
@@ -136,11 +95,11 @@ const getButtons = (buttons = [], ...params) => {
                     />
                 );
                 break;
-            case "recall":
+            case "revoke":
                 component = (
                     <SubmitOrRecall
                         type={2}
-                        {...getRecallOptions(item, ...params)}
+                        {...getRevokeOptions(item, ...params)}
                     />
                 );
                 break;
@@ -170,8 +129,6 @@ const getButtons = (buttons = [], ...params) => {
             )
         );
     });
-
-    return buttonElements;
 };
 
-export default getButtons;
+export default composeBotton;

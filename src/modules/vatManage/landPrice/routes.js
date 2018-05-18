@@ -27,8 +27,8 @@ const LandPrice_Routes = [
         exact:true,
     },{
         path:`${PATH}/LandArea`,
-        component:wrapPage('土地面积',LandArea),
-        name:'土地面积',
+        component:wrapPage('分期可售土地面积',LandArea),
+        name:'分期可售土地面积',
         icon:{
             url:`${ICON_URL_PATH}landPriceManage.svg`,
             backgroundColor:'#904C27'

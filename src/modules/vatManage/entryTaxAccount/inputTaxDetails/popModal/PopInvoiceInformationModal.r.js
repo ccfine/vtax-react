@@ -137,7 +137,7 @@ export default class PopInvoiceInformationModal extends Component{
                             },
                             pageSize:10,
                             columns:columns,
-                            url:'/income/invoice/collection/list',
+                            url:'/account/income/taxDetail/taxDetailVoucherList',
                             scroll:{ x: '210%'},
                             extra:<div>
                                 <TableTotal totalSource={totalSource} />

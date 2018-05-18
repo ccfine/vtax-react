@@ -7,7 +7,7 @@
 import React from 'react';
 import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus,getButtons} from 'utils'
+import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
 import { withRouter } from 'react-router';
 import moment from 'moment';
 
@@ -242,13 +242,13 @@ class HasDeduct extends React.Component{
                             listMainResultStatus(statusParams)
                         }
                         {
-                            getButtons([{
+                            composeBotton([{
                                 type:'submit',
                                 url:'/account/output/notInvoiceSale/realty/submit',
                                 params:{...submitIntialValue},
                                 onSuccess:this.refreshTable
                             },{
-                                type:'recall',
+                                type:'revoke',
                                 url:'/account/output/notInvoiceSale/realty/revoke',
                                 params:{...submitIntialValue},
                                 onSuccess:this.refreshTable,

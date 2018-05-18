@@ -9,7 +9,7 @@ import { SearchTable } from 'compoments'
 import {
 	fMoney,
 	getUrlParam,
-	getButtons
+    composeBotton
 } from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
@@ -258,9 +258,9 @@ class ShouldDeduct extends React.Component {
 					},
 					extra: (
 						<div>
-							{getButtons([
+							{composeBotton([
 								{
-									type: 'recaculate',
+									type: 'reset',
 									url:
 										'/account/landPrice/deductedDetails/reset',
 									params: { ...submitIntialValue },

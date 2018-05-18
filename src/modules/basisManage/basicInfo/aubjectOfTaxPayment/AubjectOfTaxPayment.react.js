@@ -151,7 +151,7 @@ class AubjectOfTaxPayment extends Component {
                 doNotFetchDidMount={true}
                 tableOption={{
                     key: tableUpDateKey,
-                    pageSize:100,
+                    pageSize:10,
                     columns:columns,
                     rowSelection:{
                         type: 'radio',
