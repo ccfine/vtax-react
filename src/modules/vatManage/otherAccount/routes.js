@@ -4,7 +4,7 @@
  * description  :
  */
 import {wrapPage} from 'compoments'
-import LandPriceDeductionDetails from './landPriceDeductionDetails'
+// import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
@@ -40,16 +40,16 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['prepayTax'].options,
         exact:true,
-    },{
-        path:`${PATH}/landPriceDeductionDetails`,
-        component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
-        name:'土地价款扣除明细台账',
-        icon:{
-            url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
-            backgroundColor:'#9A572C'
-        },
-        authorityInfo:otherAccount['landPriceDeductionDetails'].options,
-        exact:true,
+    // },{
+    //     path:`${PATH}/landPriceDeductionDetails`,
+    //     component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
+    //     name:'土地价款扣除明细台账',
+    //     icon:{
+    //         url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
+    //         backgroundColor:'#9A572C'
+    //     },
+    //     authorityInfo:otherAccount['landPriceDeductionDetails'].options,
+    //     exact:true,
     },{/*
         path:`${PATH}/deductProjectSummary`,
         component:wrapPage('扣除项目汇总台账',DeductProjectSummary),

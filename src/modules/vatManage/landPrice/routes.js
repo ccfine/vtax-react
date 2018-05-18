@@ -8,6 +8,7 @@ import LandPriceManage from './landPriceManage'
 import LandArea from './landArea'
 import OtherTaxableItemsDeduct from './otherTaxableItemsDeduct'
 import strategies from 'config/routingAuthority.config'
+import LandPriceDeductionDetails from './landPriceDeductionDetails'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/landPrice`;
@@ -31,6 +32,16 @@ const LandPrice_Routes = [
         icon:{
             url:`${ICON_URL_PATH}landPriceManage.svg`,
             backgroundColor:'#904C27'
+        },
+        authorityInfo:landPrice['LandArea'].options,
+        exact:true,
+    },{
+        path:`${PATH}/landPriceDeductionDetails`,
+        component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
+        name:'土地价款扣除明细台账',
+        icon:{
+            url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
+            backgroundColor:'#9A572C'
         },
         authorityInfo:landPrice['LandArea'].options,
         exact:true,
