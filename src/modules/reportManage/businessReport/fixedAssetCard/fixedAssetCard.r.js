@@ -1,11 +1,11 @@
 /*
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
- * @Last Modified by:   liuchunxiu 
- * @Last Modified time: 2018-05-17 10:25:07 
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-18 11:28:26
  */
 import React, { Component } from "react";
-import { SearchTable } from "compoments";
+import { SearchTable, FileImportModal, FileExport } from "compoments";
 import { fMoney } from "utils";
 const searchFields = [
     {
@@ -19,6 +19,54 @@ const searchFields = [
         fieldName: "taxMonth"
     }
 ];
+
+const importFeilds = [
+    {
+        label: "纳税主体",
+        type: "taxMain",
+        fieldName: "mainId",
+        span: 24,
+        formItemStyle: {
+            labelCol: {
+                span: 6
+            },
+            wrapperCol: {
+                span: 17
+            }
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择纳税主体"
+                }
+            ]
+        }
+    },
+    {
+        label: "入账月份",
+        type: "monthPicker",
+        fieldName: "accountDate",
+        span: 24,
+        formItemStyle: {
+            labelCol: {
+                span: 6
+            },
+            wrapperCol: {
+                span: 17
+            }
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择入账月份"
+                }
+            ]
+        }
+    }
+];
+
 const getColumns = context => [
     {
         title: (
@@ -136,7 +184,7 @@ const getColumns = context => [
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
-                    {record.intaxRate && record.intaxRate+'%'}
+                    {parseInt(record.intaxRate,10) && record.intaxRate + "%"}
                 </p>
             </div>
         )
@@ -199,7 +247,23 @@ export default class fixedAssetCard extends Component {
                     },
                     scroll: {
                         x: "100%"
-                    }
+                    },
+                    extra: (
+                        <span>
+                            <FileImportModal
+                                url="/fixedAssetCard/upload"
+                                title="导入"
+                                fields={importFeilds}
+                                style={{ marginRight: 5 }}
+                                onSuccess={this.update}
+                            />
+                            <FileExport
+                                url="fixedAssetCard/download"
+                                title="下载导入模板"
+                                size="small"
+                            />
+                        </span>
+                    )
                 }}
             />
         );
