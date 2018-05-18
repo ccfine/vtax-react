@@ -196,8 +196,8 @@ class GeneralTaxCertificate extends Component{
                                     onSuccess: this.refreshTable,
                                 }}
                             />
-                            <SubmitOrRecall disabled={disabled1} type={1} url="/income/financeDetails/controller/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/income/financeDetails/controller/revoke" onSuccess={this.refreshTable} />
+                            <SubmitOrRecall disabled={disabled1} type={1} url="/account/incomeSimpleOut/controller/submit" onSuccess={this.refreshTable} />
+                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/incomeSimpleOut/controller/revoke" onSuccess={this.refreshTable} />
 
                         </div>,
                     },

@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Layout,Avatar,List, Card } from 'antd'
+import {Avatar,List, Card } from 'antd'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import checkPermissions from 'compoments/permissible/index'
@@ -39,27 +39,25 @@ class NavRouter extends Component {
 
     render() {
         return (
-            <Layout style={{background: 'transparent'}}>
-                <List
-                    grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }}
-                    dataSource={this.composeNav(this.props.data)}
-                    renderItem={item => (
-                        <List.Item>
+            <List
+                grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }}
+                dataSource={this.composeNav(this.props.data)}
+                renderItem={item => (
+                    <List.Item>
+                        <Link to={item.path}>
                             <Card className="nav-card">
                                 <Meta
                                     avatar={<Avatar className="IconImg" src={item.icon.url} style={{
                                         background:item.icon.backgroundColor
                                     }} />}
                                     //title={item.name}
-                                    description={<Link to={item.path}>
-                                        {item.name}
-                                    </Link>}
+                                    description={<span style={{color:'#666'}}>{item.name}</span>}
                                 />
                             </Card>
-                        </List.Item>
-                    )}
-                />
-            </Layout>
+                        </Link>
+                    </List.Item>
+                )}
+            />
         )
     }
 }

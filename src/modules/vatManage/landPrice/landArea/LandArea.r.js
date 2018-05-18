@@ -70,16 +70,16 @@ const getColumns = context => [
         dataIndex:'mainName',
     },{
         title: "项目名称",
-        dataIndex: "itemName"
-    },{
-        title: "项目代码",
-        dataIndex: "itemNum"
-    },{
-        title: "项目分期名称",
         dataIndex: "projectName"
     },{
-        title: "项目分期代码",
+        title: "项目代码",
         dataIndex: "projectNum"
+    },{
+        title: "项目分期名称",
+        dataIndex: "stageName"
+    },{
+        title: "项目分期代码",
+        dataIndex: "stageNum"
     },{
         title: "土地总可售面积（总数）",
         dataIndex: "builtArea"
@@ -134,11 +134,11 @@ class LandArea extends Component{
                 tableOption={{
                     key:tableKey,
                     cardProps: {
-                        title: "土地面积",
+                        title: "分期可售土地面积",
                     },
-                    pageSize:100,
+                    pageSize:10,
                     columns:getColumns(this),
-                    url:'/account/prepaytax/prepayTaxList',
+                    url:'/interAvailableBuildingAreaInformation/inter/list',
                 }}
             />
         )

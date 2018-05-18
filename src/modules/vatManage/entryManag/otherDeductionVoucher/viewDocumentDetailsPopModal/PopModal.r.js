@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React,{Component} from 'react';
-import {Button,Modal,Row,Col,Spin,Card,message} from 'antd';
+import {Modal,Row,Col,Spin,Card,message} from 'antd';
 import {SynchronizeTable} from 'compoments'
 import {request,fMoney} from 'utils'
 
@@ -99,14 +99,7 @@ export default class ViewDocumentDetails extends Component{
                     maxWidth:'90%'
                 }}
                 visible={props.visible}
-                footer={
-                    <Row>
-                        <Col span={12}></Col>
-                        <Col span={12}>
-                            <Button onClick={()=>props.toggleViewModalVisible(false)}>关闭</Button>
-                        </Col>
-                    </Row>
-                }
+                footer={null}
                 title={props.title}>
                 <Spin spinning={!loaded}>
                     <Row gutter={24} style={{marginBottom: 10}}>

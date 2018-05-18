@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
-import { Modal, message } from "antd";
+import { message } from "antd";
 import { SearchTable, TableTotal } from "compoments";
 import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import PopModal from "./popModal";
@@ -127,48 +127,6 @@ const searchFields = disabled => {
     ];
 };
 const getColumns = context => [
-    {
-        title: "操作",
-        key: "actions",
-        render: (text, record) => (
-            <span>
-                {
-                    parseInt(context.state.dataStatus, 0) === 1 && (
-                        <span
-                            style={pointerStyle}
-                            onClick={() => {
-                                const type = parseInt(record.sourceType, 0);
-                                if (type !== 1) {
-                                    Modal.warning({
-                                        title: "友情提示",
-                                        content: "只能修改手工新增的数据"
-                                    });
-                                    return false;
-                                }
-
-                                context.setState(
-                                    {
-                                        modalConfig: {
-                                            type: "edit",
-                                            id: record.id
-                                        }
-                                    },
-                                    () => {
-                                        context.toggleModalVisible(true);
-                                    }
-                                );
-                            }}
-                        >
-                                    编辑
-                                </span>
-                    )
-                }
-        </span>
-        ),
-        fixed: "left",
-        width: "70px",
-        className:'text-center'
-    },
     {
         title: "纳税主体",
         dataIndex: "mainName",
@@ -364,15 +322,8 @@ class SalesInvoiceCollection extends Component {
             filters={}
         } = this.state;
         const { search } = this.props.location;
-            // {mainId,billingDate} = filters;
         let disabled = !!search,
-        submitDefaultValue = {...filters,taxMonth:filters.billingDate};
-        // const disabled1 = dataSource.length===0 || !!(
-        //     mainId &&
-        //     billingDate &&
-        //     (statusParam && parseInt(statusParam.status, 0) === 1)
-        // );
-        // const disabled2 = dataSource.length===0 || (statusParam && parseInt(statusParam.status, 0) === 2);
+            params = {...filters,taxMonth:filters.billingDate};
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -402,7 +353,9 @@ class SalesInvoiceCollection extends Component {
                         title: "销项发票采集列表",
                         extra: (
                             <div>
-                                {listMainResultStatus(statusParam)}
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
                                 {
                                     composeBotton([{
                                         type:'fileExport',
@@ -419,12 +372,12 @@ class SalesInvoiceCollection extends Component {
                                     },{
                                         type:'submit',
                                         url:'/output/invoice/collection/submit',
-                                        params:{...submitDefaultValue},
+                                        params,
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/output/invoice/collection/revoke',
-                                        params:{...submitDefaultValue},
+                                        params,
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
@@ -451,6 +404,7 @@ class SalesInvoiceCollection extends Component {
                     refreshTable={this.refreshTable}
                     visible={visible}
                     modalConfig={modalConfig}
+                    statusParam={statusParam}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </SearchTable>

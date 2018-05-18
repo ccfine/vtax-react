@@ -436,7 +436,7 @@ class PopModal extends Component {
                                             onChange: e => {
                                                 setFieldsValue({
                                                     invoiceDetailNum:
-                                                        e.target.value
+                                                    e.target.value
                                                 });
                                             }
                                         }
@@ -463,13 +463,13 @@ class PopModal extends Component {
                                         fieldDecoratorOptions: {
                                             initialValue: shouldShowDefaultData
                                                 ? moment(
-                                                      `${
-                                                          initData[
-                                                              "billingDate"
-                                                          ]
-                                                      }`,
-                                                      "YYYY-MM-DD"
-                                                  )
+                                                    `${
+                                                        initData[
+                                                            "billingDate"
+                                                            ]
+                                                        }`,
+                                                    "YYYY-MM-DD"
+                                                )
                                                 : undefined,
                                             rules: [
                                                 {
@@ -585,8 +585,8 @@ class PopModal extends Component {
                                             initialValue: initData["amount"]
                                                 ? disabled
                                                     ? `${fMoney(
-                                                          initData["amount"]
-                                                      )}`
+                                                        initData["amount"]
+                                                    )}`
                                                     : `${initData["amount"]}`
                                                 : undefined,
                                             rules: [
@@ -616,7 +616,7 @@ class PopModal extends Component {
                                                         ),
                                                         totalAmount: fMoney(
                                                             parseFloat(value) +
-                                                                taxAmount
+                                                            taxAmount
                                                         )
                                                     });
                                                 }
@@ -645,8 +645,8 @@ class PopModal extends Component {
                                         fieldDecoratorOptions: {
                                             initialValue: initData["taxAmount"]
                                                 ? `${fMoney(
-                                                      initData["taxAmount"]
-                                                  )}`
+                                                    initData["taxAmount"]
+                                                )}`
                                                 : undefined,
                                             rules: [
                                                 regRules.input_length_20,
@@ -667,9 +667,9 @@ class PopModal extends Component {
                                         formItemStyle,
                                         fieldDecoratorOptions: {
                                             initialValue:
-                                                fMoney(
-                                                    initData["totalAmount"]
-                                                ) || undefined
+                                            fMoney(
+                                                initData["totalAmount"]
+                                            ) || undefined
                                         },
                                         componentProps: {
                                             disabled: true

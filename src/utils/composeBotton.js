@@ -21,7 +21,7 @@ const getResetOptions = (item, statusParam) => {
         ...item,
         url:item.url,
         filters:item.item,
-        disabled: isDisabled(statusParam) || true,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         style: { marginRight: 5 }
     };
@@ -32,7 +32,7 @@ const getSubmitOptions = (item, statusParam) => {
     return {
         ...item,
         url: item.url,
-        disabled: isDisabled(statusParam) || true,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
         type: 1
@@ -44,7 +44,7 @@ const getRevokeOptions = (item, statusParam) => {
     return {
         ...item,
         url: item.url,
-        disabled: !isDisabled(statusParam) || true,
+        disabled: !isDisabled(statusParam),
         onSuccess: item.onSuccess,
         initialValue: item.params || item.initialValue,
         type: 2
@@ -56,7 +56,7 @@ const getFileImportOptions = (item, statusParam)=>{
     return {
         title:"导入",
         url: item.url,
-        disabled: isDisabled(statusParam) || true,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         fields: item.fields,
         ...item,

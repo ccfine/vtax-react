@@ -23,40 +23,40 @@ const columns = [
         width:180,
     }, {
         title: '项目分期代码',
-        dataIndex: 'invoiceTypeName',
+        dataIndex: 'stagesNum',
         width:180,
     },{
-        title: '项目分期',
-        dataIndex: 'invoiceCode',
+        title: '项目分期名称',
+        dataIndex: 'stagesName',
         width:180,
     },{
-        title: '凭证号日期',
-        dataIndex: 'invoiceNum',
+        title: '凭证日期',
+        dataIndex: 'voucherDate',
         width:180,
     },{
         title: '凭证号',
-        dataIndex: 'billingDate',
+        dataIndex: 'voucherNum ',
         width:100,
     },{
         title: '凭证摘要',
-        dataIndex: 'authMonth',
+        dataIndex: 'voucherAbstract',
         width:70,
     },{
         title: '借方科目名称',
-        dataIndex: 'authDate',
+        dataIndex: 'debitSubjectName',
         width:100,
     },{
         title: '借方科目代码',
-        dataIndex: 'sellerName',
+        dataIndex: 'debitSubjectCode',
         width:180,
     },{
         title: '借方金额',
-        dataIndex: 'amount',
+        dataIndex: 'debitAmount',
         width:100,
         render:text=>fMoney(text),
     },{
         title: '扣税凭证类型',
-        dataIndex: 'sellerTaxNum',
+        dataIndex: 'voucherType',
         width:180,
     }
 ];
