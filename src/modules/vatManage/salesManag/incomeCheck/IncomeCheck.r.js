@@ -74,11 +74,6 @@ const columns2= [
         title: '交易期间 ',
         dataIndex: 'transactionDate',
     },{
-        title: '人民币成交总价',
-        dataIndex: 'totalPrice',
-        render:text=>fMoney(text),
-        className: "table-money"
-    },{
         title: '税率',
         dataIndex: 'taxRate',
         render: text => (text ? `${text}%` : text),
@@ -264,7 +259,6 @@ class IncomeCheck extends Component {
                 </Card>
                 <Card title="房间交易信息"
                       extra={<div>
-                          <span style={{marginRight:20,color:'#FF9700'}}>人民币成交总价合计：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
                           <span style={{marginRight:20,color:'#FF9700'}}>税额总价合计：{fMoney(totalSource2 ? totalSource2.allTaxAmount : 0.00)}</span>
                           <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalPrice : 0.00)}</span>
                       </div>}

@@ -29,6 +29,52 @@ const formItemStyle = {
         }
     }
 }
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:17
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    },
+    {
+        label:'交易月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:17
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择交易月份'
+                }
+            ]
+        }
+    },
+]
 const getColumns = context => [
     {
         title: '操作',
@@ -153,7 +199,6 @@ class RoomTransactionFile extends Component{
         searchFieldsValues:{
 
         },
-        hasData:false,
         totalSource:undefined
     }
     componentDidMount(){
@@ -199,7 +244,7 @@ class RoomTransactionFile extends Component{
             })
     }
     render(){
-        const {tableUpDateKey,dataStatus,totalSource,hasData,searchFieldsValues={}} = this.state;
+        const {tableUpDateKey,dataStatus,totalSource,searchFieldsValues={}} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -336,7 +381,6 @@ class RoomTransactionFile extends Component{
                 tableOption={{
                     onSuccess:(params,data)=>{
                         this.setState({
-                            hasData:data.length !==0,
                             searchFieldsValues:params,
                         },()=>{
                             this.state.searchFieldsValues.transactionDate && this.state.searchFieldsValues.mainId && this.fetchResultStatus()
@@ -351,58 +395,12 @@ class RoomTransactionFile extends Component{
                     url: '/output/room/files/list',
                     key:tableUpDateKey,
                     extra: <div>
-                        {hasData &&
-                                    listMainResultStatus(dataStatus)}
+                        {
+                            listMainResultStatus(dataStatus)
+                        }
                     <FileImportModal
                         url="/output/room/files/upload"
-                        fields={
-                            [
-                                {
-                                    label:'纳税主体',
-                                    fieldName:'mainId',
-                                    type:'taxMain',
-                                    span:24,
-                                    formItemStyle:{
-                                        labelCol:{
-                                            span:6
-                                        },
-                                        wrapperCol:{
-                                            span:17
-                                        }
-                                    },
-                                    fieldDecoratorOptions:{
-                                        rules:[
-                                            {
-                                                required:true,
-                                                message:'请选择纳税主体'
-                                            }
-                                        ]
-                                    },
-                                },
-                                {
-                                    label:'交易月份',
-                                    fieldName:'transactionDate',
-                                    type:'monthPicker',
-                                    span:24,
-                                    formItemStyle:{
-                                        labelCol:{
-                                            span:6
-                                        },
-                                        wrapperCol:{
-                                            span:17
-                                        }
-                                    },
-                                    fieldDecoratorOptions:{
-                                        rules:[
-                                            {
-                                                required:true,
-                                                message:'请选择交易月份'
-                                            }
-                                        ]
-                                    }
-                                },
-                            ]
-                        }
+                        fields={fields}
                         onSuccess={()=>{
                             this.refreshTable()
                         }}

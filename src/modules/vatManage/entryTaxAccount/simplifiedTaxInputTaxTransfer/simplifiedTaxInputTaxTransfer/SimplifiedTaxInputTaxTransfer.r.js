@@ -144,7 +144,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                             }
                             <SubmitOrRecall disabled={disabled2} type={1} url="/account/incomeSimpleOut/controller/submit" onSuccess={this.refreshTable} />
                             <SubmitOrRecall disabled={!disabled1} type={2} url="/account/incomeSimpleOut/controller/revoke" onSuccess={this.refreshTable} />
-
                         </div>,
                     },
                     /*scroll:{

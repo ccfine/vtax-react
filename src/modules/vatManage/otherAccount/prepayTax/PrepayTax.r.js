@@ -224,7 +224,7 @@ class PrepayTax extends Component{
                     cardProps: {
                         title: "预缴税款台账",
                     },
-                    pageSize:100,
+                    pageSize:10,
                     columns:getColumns(this),
                     url:'/account/prepaytax/prepayTaxList',
                     extra:<div>

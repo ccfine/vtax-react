@@ -2,9 +2,10 @@
  * Created by liuliyuan on 2018/5/17.
  */
 import React, { Component } from 'react'
-import {Button,Icon,message,Modal} from 'antd'
+import {message} from 'antd'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import ButtonReset from 'compoments/buttonReset'
 import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -146,26 +147,6 @@ class tab1 extends Component{
             searchTableLoading:b
         })
     }
-    handleReset=()=>{
-        Modal.confirm({
-            title: '友情提醒',
-            content: '确定要重算吗',
-            onOk : ()=> {
-                request.put('/account/othertax/deducted/main/reset',this.state.filters)
-                    .then(({data}) => {
-                        if(data.code===200){
-                            message.success('重算成功!');
-                            this.refreshTable();
-                        }else{
-                            message.error(`重算失败:${data.msg}`)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                    })
-            }
-        })
-    }
     fetchResultStatus=()=>{
         request.get('/account/othertax/deducted/main/listMain',{params:this.state.filters}).then(({data}) => {
             if (data.code === 200) {
@@ -228,14 +209,7 @@ class tab1 extends Component{
                             }
                             {
                                 JSON.stringify(filters) !== "{}" && <span>
-                                    <Button
-                                        size='small'
-                                        style={{marginRight:5}}
-                                        disabled={disabled1}
-                                        onClick={this.handleReset}>
-                                        <Icon type="retweet" />
-                                        重算
-                                    </Button>
+                                    <ButtonReset style={{marginRight:5}} disabled={disabled1} filters={filters} url="/account/othertax/deducted/main/reset" onSuccess={this.refreshTable} />
                                     <SubmitOrRecall disabled={disabled1} type={1} url="/account/othertax/deducted/main/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
                                     <SubmitOrRecall disabled={!disabled1} type={2} url="/account/othertax/deducted/main/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
                                 </span>

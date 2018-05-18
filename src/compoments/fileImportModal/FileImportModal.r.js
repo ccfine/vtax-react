@@ -37,7 +37,8 @@ class FileImportModal extends Component{
             if (!err) {
                 this.toggleLoading(true);
                 const formData = new FormData();
-                values.files = values.files[0];
+                //TODO: files 被封装过了 取 originFileObj里面的信息传给后台 bug https://github.com/ant-design/ant-design/issues/10319
+                values.files = values.files[0].originFileObj;
                 for(let key in values){
                     if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
                         //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
