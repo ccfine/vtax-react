@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-17 11:13:18
+ * @Last Modified time: 2018-05-18 11:23:44
  */
 import React, { Component } from "react";
-import { SearchTable } from "compoments";
+import { SearchTable,FileImportModal , FileExport} from "compoments";
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
@@ -40,6 +40,32 @@ const searchFields = (getFieldValue)=>[
         }
     }
 ];
+
+const importFeilds = [
+    {
+        label: "纳税主体",
+        type: "taxMain",
+        fieldName: "mainId",
+        span: 24,
+        formItemStyle: {
+            labelCol: {
+                span: 6
+            },
+            wrapperCol: {
+                span: 17
+            }
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择纳税主体"
+                }
+            ]
+        }
+    }
+];
+
 const getColumns = context => [
     {
         title: (
@@ -163,7 +189,23 @@ export default class AvailableArea extends Component {
                     },
                     scroll: {
                         x: "120%"
-                    }
+                    },
+                    extra:(
+                        <span>
+                            <FileImportModal
+                                url="/interAvailableBuildingAreaInformation/upload"
+                                title="导入"
+                                fields={importFeilds}
+                                style={{ marginRight: 5 }}
+                                onSuccess={this.update}
+                            />
+                            <FileExport
+                                url="interAvailableBuildingAreaInformation/download"
+                                title="下载导入模板"
+                                size="small"
+                            />
+                        </span>
+                    )
                 }}
             />
         );
