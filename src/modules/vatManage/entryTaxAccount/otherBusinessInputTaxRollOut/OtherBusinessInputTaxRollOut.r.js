@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:30:57
+ * @Last Modified time: 2018-05-19 18:04:41
  */
 import React, { Component } from "react";
 import { Icon, message, Modal } from "antd";
@@ -54,7 +54,7 @@ const getColumns = context => [
                                 onOk: () => {
                                     context.deleteRecord(record.id, () => {
                                         modalRef && modalRef.destroy();
-                                        context.update();
+                                        context.refreshTable();
                                     });
                                 },
                                 onCancel() {
@@ -292,7 +292,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         this.hideModal();
                     }}
                     id={this.state.opid}
-                    update={this.update}
+                    update={this.refreshTable}
                 />
             </div>
         );

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:08:58
+ * @Last Modified time: 2018-05-19 17:28:20
  */
 import React, { Component } from "react";
 import { Icon, message, Modal } from "antd";
@@ -55,7 +55,7 @@ const getColumns = context => [
                                 onOk: () => {
                                     context.deleteRecord(record.id, () => {
                                         modalRef && modalRef.destroy();
-                                        context.update();
+                                        context.refreshTable();
                                     });
                                 },
                                 onCancel() {
@@ -138,7 +138,7 @@ class UnBilledSalesNotEstate extends Component {
     }
     deleteRecord = (id, cb) => {
         request
-            .delete(`/accountNotInvoiceUnsaleRealty/delete/${id}`)
+            .delete(`/account/notInvoiceUnSale/realty/delete/${id}`)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success("删除成功", 4);
@@ -156,7 +156,7 @@ class UnBilledSalesNotEstate extends Component {
         let params = { ...values };
         params.authMonth = moment(params.authMonth).format("YYYY-MM");
         request
-            .get("/accountNotInvoiceUnsaleRealty/listMain", { params: params })
+            .get("/account/notInvoiceUnSale/realty/listMain", { params: params })
             .then(({ data }) => {
                 if (data.code === 200) {
                     if (data.data) {
@@ -271,7 +271,7 @@ class UnBilledSalesNotEstate extends Component {
                     doNotFetchDidMount={!search}
                     tableOption={{
                         key: this.state.updateKey,
-                        url: "/accountNotInvoiceUnsaleRealty/list",
+                        url: "/account/notInvoiceUnSale/realty/list",
                         pagination: true,
                         columns: getColumns(this),
                         rowKey: "id",
@@ -297,17 +297,17 @@ class UnBilledSalesNotEstate extends Component {
                                             }
                                         },{
                                             type:'reset',
-                                            url:'/accountNotInvoiceUnsaleRealty/reset',
+                                            url:'/account/notInvoiceUnSale/realty/reset',
                                             params:filters,
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'submit',
-                                            url:'/accountNotInvoiceUnsaleRealty/submit',
+                                            url:'/account/notInvoiceUnSale/realty/submit',
                                             params:filters,
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
-                                            url:'/accountNotInvoiceUnsaleRealty/revoke',
+                                            url:'/account/notInvoiceUnSale/realty/revoke',
                                             params:filters,
                                             onSuccess:this.refreshTable,
                                         }],statusParam)

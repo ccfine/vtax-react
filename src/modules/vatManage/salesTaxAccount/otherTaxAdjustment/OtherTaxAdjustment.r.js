@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:45:20
+ * @Last Modified time: 2018-05-19 17:37:12
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -92,7 +92,7 @@ const getColumns = context => [
                   onOk:()=>{
                       context.deleteRecord(record.id,()=>{
                           modalRef && modalRef.destroy();
-                          context.update()
+                          context.refreshTable()
                       })
                   },
                   onCancel() {
@@ -198,7 +198,7 @@ class OtherTaxAdjustment extends Component {
   hideModal() {
     this.setState({ visible: false });
   }
-  update = () => {
+  refreshTable = () => {
     this.setState({ updateKey: Date.now() });
   };
   deleteRecord = (id,cb) => {
@@ -223,13 +223,17 @@ class OtherTaxAdjustment extends Component {
           if (data.data) {
             this.setState({ statusParam: data.data});
           }
+        }else{
+          message.error(data.msg,4)
         }
+      }).catch(err=>{
+        message.error(err.message,4)
       });
   };
   componentDidMount() {
     const { search } = this.props.location;
     if (!!search) {
-      this.update();
+      this.refreshTable();
     }
   }
   render() {
@@ -249,6 +253,10 @@ class OtherTaxAdjustment extends Component {
             columns: getColumns(this),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",
+            onSuccess:(params)=>{
+              this.setState({ filters: params });
+              this.updateStatus(params);
+            },
             cardProps: {
               title: "其他涉税调整台账",
               extra: (
@@ -278,10 +286,6 @@ class OtherTaxAdjustment extends Component {
                   }
                 </div>
               )
-            },
-            onSuccess:(params)=>{
-              this.setState({ filters: params });
-              this.updateStatus(params);
             }
           }}
         />
@@ -292,7 +296,7 @@ class OtherTaxAdjustment extends Component {
             this.hideModal();
           }}
           id={this.state.opid}
-          update={this.update}
+          update={this.refreshTable}
         />
       </div>
     );
