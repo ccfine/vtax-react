@@ -3,9 +3,7 @@
  */
 import React, { Component } from 'react'
 import {message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import ButtonReset from 'compoments/buttonReset'
+import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -183,7 +181,6 @@ class tab1 extends Component{
     }
     render(){
         const {updateKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -208,11 +205,24 @@ class tab1 extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                JSON.stringify(filters) !== "{}" && <span>
-                                    <ButtonReset style={{marginRight:5}} disabled={disabled1} filters={filters} url="/account/othertax/deducted/main/reset" onSuccess={this.refreshTable} />
-                                    <SubmitOrRecall disabled={disabled1} type={1} url="/account/othertax/deducted/main/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
-                                    <SubmitOrRecall disabled={!disabled1} type={2} url="/account/othertax/deducted/main/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
-                                </span>
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type:'reset',
+                                    url:'/account/othertax/deducted/main/reset',
+                                    params:filters,
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'submit',
+                                    url:'/account/othertax/deducted/main/submit',
+                                    params:filters,
+                                    monthFieldName:'authMonth',
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/othertax/deducted/main/revoke',
+                                    params:filters,
+                                    monthFieldName:'authMonth',
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
                             }
                             <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                         </div>,

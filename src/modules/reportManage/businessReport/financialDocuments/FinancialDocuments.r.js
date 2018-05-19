@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam} from 'utils'
+import {fMoney,getUrlParam,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -13,6 +13,52 @@ const formItemStyle={
         span:16
     }
 }
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:15
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:15
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: '请选择认证月份'
+                }
+            ]
+        },
+    }
+]
 const searchFields = (disabled) => {
     return [
         {
@@ -165,6 +211,7 @@ const columns=[
 export default class FinancialDocuments extends Component{
     state={
         updateKey:Date.now(),
+        filters:{}
     }
     refreshTable = ()=>{
         this.setState({
@@ -179,7 +226,7 @@ export default class FinancialDocuments extends Component{
     }
 
     render(){
-        const {updateKey} = this.state;
+        const {updateKey,filters} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -191,10 +238,27 @@ export default class FinancialDocuments extends Component{
                     key:updateKey,
                     pageSize:20,
                     columns:columns,
-                    cardProps:{
-                        title:'财务凭证'
-                    },
                     url:'/income/financeDetails/controller/voucherList',
+                    onSuccess: (params) => {
+                        this.setState({
+                            filters: params,
+                        });
+                    },
+                    cardProps: {
+                        title: "财务凭证列表",
+                        extra: (
+                            <div>
+                                {
+                                    JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                        type:'fileImport',
+                                        url:'/income/financeDetails/controller/upload',
+                                        onSuccess:this.refreshTable,
+                                        fields:fields
+                                    }])
+                                }
+                            </div>
+                        )
+                    },
                 }}
             />
 

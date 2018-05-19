@@ -5,10 +5,9 @@
  *
  */
 import React,{Component} from 'react'
-import {Button,Icon,message,Form,Modal} from 'antd'
+import {message,Form} from 'antd'
 import {SearchTable} from 'compoments'
-import {request,getUrlParam,fMoney} from 'utils'
-import SubmitOrRecallMutex from 'compoments/buttonModalWithForm/SubmitOrRecallMutex.r'
+import {request,getUrlParam,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import EditableCell from './EditableCell.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -103,35 +102,17 @@ const getColumns = getFieldDecorator => [
         className:'table-money'
     }
 ];
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 class TaxCalculation extends Component{
     state={
         tableKey:Date.now(),
         searchTableLoading:false,
-        searchFieldsValues:{
-
-        },
-        resultFieldsValues:{
-
-        },
+        filters:{},
         //tableUrl:'/account/prepaytax/list',
         tableUrl:'/account/taxCalculation/list',
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
-        submitDate:'',
-
-        hasData:false
+        statusParam:{},
     }
     refreshTable = ()=>{
         this.setState({
@@ -143,42 +124,6 @@ class TaxCalculation extends Component{
             searchTableLoading
         })
     }
-    recount = ()=>{
-        Modal.confirm({
-            title: '友情提醒',
-            content: '确定要重算吗',
-            onOk : ()=> {
-                this.toggleSearchTableLoading(true)
-                request.put('/account/taxCalculation/reset',this.state.resultFieldsValues
-                )
-                    .then(({data}) => {
-                        this.toggleSearchTableLoading(false)
-                        if(data.code===200){
-                            message.success('重算成功!');
-                            this.setState({
-                                tableKey:Date.now()
-                            })
-                        }else{
-                            message.error(`重算失败:${data.msg}`)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                        this.toggleSearchTableLoading(false)
-                    })
-            },
-            onCancel() {
-
-            },
-        })
-    }
-    handleClickActions = action => ()=>{
-        if(action ==='recount'){
-            this.recount()
-            return false;
-        }
-    }
-
 
     save = e =>{
         e && e.preventDefault()
@@ -187,8 +132,8 @@ class TaxCalculation extends Component{
             if(!err){
                 request.post('/account/taxCalculation/save',{
                     data:values,
-                    mainId:this.state.searchFieldsValues.mainId,
-                    authMonth:this.state.searchFieldsValues.authMonth
+                    mainId:this.state.filters.mainId,
+                    authMonth:this.state.filters.authMonth
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -214,13 +159,12 @@ class TaxCalculation extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/account/taxCalculation/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
+                        statusParam:data.data,
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -231,8 +175,7 @@ class TaxCalculation extends Component{
             })
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,resultFieldsValues,hasData} = this.state;
-        const {mainId,authMonth} = resultFieldsValues;
+        const {searchTableLoading,tableKey,statusParam,tableUrl,filters} = this.state;
         const {getFieldDecorator} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
@@ -245,26 +188,6 @@ class TaxCalculation extends Component{
                     cardProps:{
                         className:''
                     },
-                    onFieldsChange:values=>{
-                        if(JSON.stringify(values) === "{}"){
-                            this.setState({
-                                searchFieldsValues:{
-                                    mainId:undefined,
-                                    authMonth:undefined
-                                }
-                            })
-                        }else if(values.mainId || values.authMonth){
-                            if(values.authMonth){
-                                values.authMonth = values.authMonth.format('YYYY-MM')
-                            }
-                            this.setState(prevState=>({
-                                searchFieldsValues:{
-                                    ...prevState.searchFieldsValues,
-                                    ...values
-                                }
-                            }))
-                        }
-                    }
                 }}
                 //doNotFetchDidMount={true}
                 spinning={searchTableLoading}
@@ -273,11 +196,9 @@ class TaxCalculation extends Component{
                     onRow:record=>({
                         onDoubleClick:()=>{console.log(record)}
                     }),
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0,
-                            resultFieldsValues:params,
+                            filters:params,
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -287,35 +208,33 @@ class TaxCalculation extends Component{
                     url:tableUrl,
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
-                        <Button
-                            size="small"
-                            style={{marginRight:5}}
-                            disabled={parseInt(dataStatus,0)!==1}
-                            onClick={this.save}><Icon type="save" />保存</Button>
-                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
-                            <Icon type="retweet" />
-                            重算
-                        </Button>
-                        <SubmitOrRecallMutex
-                          paramsType="object"
-                          buttonSize="small"
-                          restoreStr="revoke"//撤销接口命名不一致添加属性
-                          url="/account/taxCalculation"
-                          refreshTable={this.refreshTable}
-                          toggleSearchTableLoading={this.toggleSearchTableLoading}
-                          hasParam={mainId && hasData && authMonth}
-                          dataStatus={dataStatus}
-                          searchFieldsValues={this.state.resultFieldsValues}
-                        />
+                        {
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'save',
+                                text:'保存',
+                                icon:'save',
+                                onClick:()=>this.save()
+                            },{
+                                type:'reset',
+                                url:'/account/taxCalculation/reset',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'submit',
+                                url:'/account/taxCalculation/submit',
+                                params:filters,
+                                monthFieldName:'authMonth',
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/account/taxCalculation/revoke',
+                                params:filters,
+                                monthFieldName:'authMonth',
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
+                        }
                     </div>
                 }}
             >

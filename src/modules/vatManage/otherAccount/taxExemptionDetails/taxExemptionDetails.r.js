@@ -7,10 +7,9 @@
  */
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import {Button,Icon,Modal,message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import {Icon,Modal,message} from 'antd'
+import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import PopModal from "./popModal";
 import moment from 'moment';
 const searchFields =(disabled)=> [
@@ -259,25 +258,27 @@ class TaxExemptionDetails extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" && <span>
-                                    <Button
-                                        size="small"
-                                        style={{marginRight:5}}
-                                        disabled={disabled1}
-                                        onClick={() => {
-                                            this.setState({
-                                                visible: true,
-                                                action: "add",
-                                                opid: undefined
-                                            });
-                                        }}>
-                                <Icon type="plus" />新增
-                                </Button>
-                                <SubmitOrRecall disabled={disabled1} type={1} url="/account/other/reduceTaxDetail/submit" onSuccess={this.refreshTable} />
-                                <SubmitOrRecall disabled={!disabled1} type={2} url="/account/other/reduceTaxDetail/revoke" onSuccess={this.refreshTable} />
-                            </span>
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'add',
+                                onClick: ()=>{
+                                    this.setState({
+                                        visible: true,
+                                        action: "add",
+                                        opid: undefined
+                                    });
+                                }
+                            },{
+                                type:'submit',
+                                url:'/account/other/reduceTaxDetail/submit',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/account/other/reduceTaxDetail/revoke',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
                         }
-
                         <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                     </div>,
                     onTotalSource: (totalSource) => {

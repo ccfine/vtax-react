@@ -258,15 +258,17 @@ class ShouldDeduct extends React.Component {
 					},
 					extra: (
 						<div>
-							{composeBotton([
-								{
-									type: 'reset',
-									url:
-										'/account/landPrice/deductedDetails/reset',
-									params: { ...submitIntialValue },
-									onSuccess: this.refreshTable
-								}
-							])}
+							{
+								composeBotton([
+									{
+										type: 'reset',
+										url:
+											'/account/landPrice/deductedDetails/reset',
+										params: { ...submitIntialValue },
+										onSuccess: this.refreshTable
+									}
+								])
+							}
 						</div>
 					),
 					scroll: {

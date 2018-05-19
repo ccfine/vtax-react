@@ -5,8 +5,7 @@ import React, { Component } from 'react'
 import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,listMainResultStatus} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -63,8 +62,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
-        searchFieldsValues:{},
-        dataSource:[],
+        filters:{},
         /**
          *修改状态和时间
          * */
@@ -77,7 +75,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/account/incomeSimpleOut/controller/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
@@ -106,10 +104,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         }
     }
     render(){
-        const {tableKey,visibleView,voucherNum,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
         return(
             <SearchTable
                 style={{
@@ -131,7 +126,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                     url:'/account/incomeSimpleOut/controller/allSimpleTaxList',
                     onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -140,20 +135,26 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         title: "简易计税进项税额转出列表",
                         extra:<div>
                             {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
+                                listMainResultStatus(statusParam)
                             }
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/account/incomeSimpleOut/controller/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/incomeSimpleOut/controller/revoke" onSuccess={this.refreshTable} />
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/incomeSimpleOut/controller/submit',
+                                    params:filters,
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/incomeSimpleOut/controller/revoke',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
                         </div>,
                     },
                     /*scroll:{
                      x:'180%'
                      },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
-                    },
                 }}
             >
                 <ViewDocumentDetails

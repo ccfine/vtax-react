@@ -45,7 +45,6 @@ const fields = [
 ]
 
 const getSearchFields = disabled => {
-    console.log('mainId：',getUrlParam("mainId"))
     return [
     {
         label: "纳税主体",
@@ -343,15 +342,7 @@ class InvoiceCollection extends Component {
     }
 
     render() {
-        const {
-                tableUpDateKey,
-                filters,
-                selectedRowKeys,
-                visible,
-                modalConfig,
-                statusParam,
-                totalSource
-            } = this.state,
+        const { tableUpDateKey, filters, selectedRowKeys, visible, modalConfig, statusParam, totalSource } = this.state,
             // (字段名字不一致)这里有些不合理
             defaultValues = { ...filters, taxMonth: filters.authMonth };
         
@@ -386,7 +377,9 @@ class InvoiceCollection extends Component {
                         scroll: { x: "110%" },
                         extra: (
                             <div>
-                                {listMainResultStatus(statusParam)}
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
                                 <Button
                                     size="small"
                                     onClick={() => this.showModal("view")}
@@ -398,14 +391,17 @@ class InvoiceCollection extends Component {
                                 </Button>
                                 {
                                     composeBotton([{
+                                        type:'fileExport',
+                                        url:'income/invoice/collection/download',
+                                        onSuccess:this.refreshTable
+                                    }])
+                                }
+                                {
+                                    JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields
-                                    },{
-                                        type:'fileExport',
-                                        url:'income/invoice/collection/download',
-                                        onSuccess:this.refreshTable
                                     },{
                                         type:'submit',
                                         url:'/income/invoice/collection/submit',
