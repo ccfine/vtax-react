@@ -4,10 +4,8 @@
 import React, { Component } from 'react'
 import {message} from 'antd'
 import { withRouter } from 'react-router'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
+import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
-import ButtonMarkModal from 'compoments/buttonMarkModal'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 import moment from 'moment';
@@ -196,10 +194,7 @@ class LandPriceManage extends Component{
         tableKey:Date.now(),
         visible:false,
         voucherNum:undefined,
-        searchFieldsValues:{
-
-        },
-        dataSource:[],
+        filters:{},
         selectedRowKeys:[],
         /**
          *修改状态和时间
@@ -208,7 +203,7 @@ class LandPriceManage extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/land/price/manage/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
@@ -242,10 +237,9 @@ class LandPriceManage extends Component{
         }
     }
     render(){
-        const {visible,tableKey,searchFieldsValues,selectedRowKeys,voucherNum,dataSource,statusParam} = this.state;
+        const {visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -262,7 +256,7 @@ class LandPriceManage extends Component{
                     url:'/land/price/manage/list',
                     onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                             selectedRowKeys:[],
                         },()=>{
                             this.fetchResultStatus()
@@ -277,33 +271,35 @@ class LandPriceManage extends Component{
                         title: "其他可抵扣进项税明细",
                         extra:<div>
                             {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
+                                listMainResultStatus(statusParam)
                             }
-
-                            <ButtonMarkModal
-                                style={{marginRight:5}}
-                                formOptions={{
-                                    disabled: !selectedRowKeys.length>0 || disabled1,
-                                    filters: searchFieldsValues,
-                                    selectedRowKeys: selectedRowKeys,
-                                    url:"/land/price/manage/deductionFlag",
-                                    fields: markFieldsData,
-                                    onSuccess: this.refreshTable,
-                                }}
-                            />
-                            <SubmitOrRecall disabled={disabled1} type={1} url="/land/price/manage/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/land/price/manage/revoke" onSuccess={this.refreshTable} />
-
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type:'mark',
+                                    formOptions:{
+                                        filters: filters,
+                                        selectedRowKeys: selectedRowKeys,
+                                        url:"/land/price/manage/deductionFlag",
+                                        fields: markFieldsData,
+                                        onSuccess: this.refreshTable,
+                                    }
+                                },{
+                                    type:'submit',
+                                    url:'/land/price/manage/submit',
+                                    params:filters,
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/land/price/manage/revoke',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
                         </div>,
                     },
                     /*scroll:{
                      x:'180%'
                      },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
-                    },
                 }}
             >
                 <ViewDocumentDetails

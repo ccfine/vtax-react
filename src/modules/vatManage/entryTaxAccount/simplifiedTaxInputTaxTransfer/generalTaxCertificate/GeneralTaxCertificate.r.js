@@ -4,10 +4,8 @@
 import React, { Component } from 'react'
 import {message} from 'antd'
 import { withRouter } from 'react-router'
-import {request,fMoney,listMainResultStatus} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -100,8 +98,7 @@ class GeneralTaxCertificate extends Component{
         visible:false,
         tableKey:Date.now(),
         voucherNum:undefined,
-        searchFieldsValues:{},
-        dataSource:[],
+        filters:{},
         selectedRowKeys:[],
         /**
          *修改状态和时间
@@ -115,7 +112,7 @@ class GeneralTaxCertificate extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/account/incomeSimpleOut/controller/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
@@ -144,8 +141,7 @@ class GeneralTaxCertificate extends Component{
         }
     }
     render(){
-        const {visible,voucherNum,tableKey,searchFieldsValues,selectedRowKeys,dataSource,statusParam} = this.state;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {visible,voucherNum,tableKey,filters,selectedRowKeys,statusParam} = this.state;
         return(
             <SearchTable
                 style={{
@@ -167,7 +163,7 @@ class GeneralTaxCertificate extends Component{
                     url:'/account/incomeSimpleOut/controller/commonlyTaxList',
                     onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                             selectedRowKeys:[],
                         },()=>{
                             this.fetchResultStatus()
@@ -182,33 +178,35 @@ class GeneralTaxCertificate extends Component{
                         title: "一般计税列表",
                         extra:<div>
                             {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
+                                listMainResultStatus(statusParam)
                             }
-
-                            <ButtonMarkModal
-                                style={{marginRight:5}}
-                                formOptions={{
-                                    disabled: !selectedRowKeys.length>0 || disabled1,
-                                    filters: searchFieldsValues,
-                                    selectedRowKeys: selectedRowKeys,
-                                    url:"/account/incomeSimpleOut/controller/commonlyFlag",
-                                    fields: markFieldsData,
-                                    onSuccess: this.refreshTable,
-                                }}
-                            />
-                            <SubmitOrRecall disabled={disabled1} type={1} url="/account/incomeSimpleOut/controller/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/incomeSimpleOut/controller/revoke" onSuccess={this.refreshTable} />
-
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type:'mark',
+                                    formOptions:{
+                                        filters: filters,
+                                        selectedRowKeys: selectedRowKeys,
+                                        url:"/account/incomeSimpleOut/controller/commonlyFlag",
+                                        fields: markFieldsData,
+                                        onSuccess: this.refreshTable,
+                                    }
+                                },{
+                                    type:'submit',
+                                    url:'/account/incomeSimpleOut/controller/submit',
+                                    params:filters,
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/incomeSimpleOut/controller/revoke',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
                         </div>,
                     },
                     /*scroll:{
                      x:'180%'
                      },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
-                    },
                 }}
             >
                 <ViewDocumentDetails

@@ -313,17 +313,9 @@ class SalesInvoiceCollection extends Component {
         }
     }
     render() {
-        const {
-            visible,
-            modalConfig,
-            tableKey,
-            totalSource,
-            statusParam,
-            filters={}
-        } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam, filters={} } = this.state;
         const { search } = this.props.location;
-        let disabled = !!search,
-            params = {...filters,taxMonth:filters.billingDate};
+        let disabled = !!search;
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -361,7 +353,7 @@ class SalesInvoiceCollection extends Component {
                                         type:'fileExport',
                                         url:'output/invoice/collection/download',
                                         onSuccess:this.refreshTable
-                                    }],statusParam)
+                                    }])
                                 }
                                 {
                                     JSON.stringify(filters) !== "{}" &&  composeBotton([{
@@ -372,12 +364,12 @@ class SalesInvoiceCollection extends Component {
                                     },{
                                         type:'submit',
                                         url:'/output/invoice/collection/submit',
-                                        params,
+                                        params:filters,
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/output/invoice/collection/revoke',
-                                        params,
+                                        params:filters,
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }

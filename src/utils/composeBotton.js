@@ -9,10 +9,27 @@ import React from "react";
 import ButtonReset from 'compoments/buttonReset'
 import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
+import ButtonMarkModal from 'compoments/buttonMarkModal'
+import ButtonConsistent from 'compoments/buttonConsistent'
 import {FileExport,FileImportModal} from 'compoments';
 //1：暂存 2：提交
 // 判断当前状态是否提交
 const isDisabled = (statusParam = {})=> parseInt(statusParam.status, 0) === 2;
+const formatJson = (param) => {
+    if(("authMonth" in param)){
+        param['taxMonth'] = param['authMonth'];
+    }
+    return param
+}
+
+//新增
+const getConsistentOptions = (item, statusParam) => {
+    return {
+        ...item,
+        disabled: isDisabled(statusParam),
+        style: item.style || {marginRight:5},
+    };
+};
 
 // 重算参数
 const getResetOptions = (item, statusParam) => {
@@ -20,7 +37,7 @@ const getResetOptions = (item, statusParam) => {
     return {
         ...item,
         url:item.url,
-        filters:item.item,
+        filters:formatJson(item.params),
         disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         style: { marginRight: 5 }
@@ -34,7 +51,7 @@ const getSubmitOptions = (item, statusParam) => {
         url: item.url,
         disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
-        initialValue: item.params || item.initialValue,
+        initialValue: formatJson(item.params) || item.initialValue,
         type: 1
     };
 };
@@ -46,7 +63,7 @@ const getRevokeOptions = (item, statusParam) => {
         url: item.url,
         disabled: !isDisabled(statusParam),
         onSuccess: item.onSuccess,
-        initialValue: item.params || item.initialValue,
+        initialValue: formatJson(item.params) || item.initialValue,
         type: 2
     };
 };
@@ -60,7 +77,7 @@ const getFileImportOptions = (item, statusParam)=>{
         onSuccess: item.onSuccess,
         fields: item.fields,
         ...item,
-        style:item.style || item.setButtonStyle|| {marginRight:5},
+        style:item.style || item.setButtonStyle || {marginRight:5},
     };
 }
 
@@ -76,22 +93,49 @@ const getFileExportOptions = (item)=>{
     };
 };
 
+
+//标记
+const getMarkOptions = (item,statusParam) =>{
+
+    /*if(isDisabled(statusParam)){
+        item.formOptions.disabled = isDisabled(statusParam)
+    }else{
+        item.formOptions.disabled = !item.formOptions.selectedRowKeys.length>0
+    }*/
+    return {
+        ...item,
+        formOptions:{
+            ...item.formOptions,
+            disabled: isDisabled(statusParam) ? isDisabled(statusParam) : !item.formOptions.selectedRowKeys.length>0,
+        },
+        style:item.style || item.setButtonStyle || {marginRight:5},
+    };
+}
+
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
-const composeBotton = (buttons = [], ...params) => {
+const composeBotton = (buttons = [], params) => {
     return buttons.map(item => {
         let component = undefined;
+        if(item.type === 'add' || item.type === 'save'){
+            item.type = 'consistent'
+        }
         switch (item.type) {
+            case "consistent":
+                component = (
+                    <ButtonConsistent {...getConsistentOptions(item, params)} />
+                );
+                break;
             case "reset":
                 component = (
-                    <ButtonReset {...getResetOptions(item, ...params)} />
+                    <ButtonReset {...getResetOptions(item, params)} />
                 );
                 break;
             case "submit":
                 component = (
                     <SubmitOrRecall
                         type={1}
-                        {...getSubmitOptions(item, ...params)}
+                        {...getSubmitOptions(item, params)}
                     />
                 );
                 break;
@@ -99,20 +143,25 @@ const composeBotton = (buttons = [], ...params) => {
                 component = (
                     <SubmitOrRecall
                         type={2}
-                        {...getRevokeOptions(item, ...params)}
+                        {...getRevokeOptions(item, params)}
                     />
                 );
                 break;
             case "fileImport":
                 component = (
                     <FileImportModal
-                        {...getFileImportOptions(item, ...params)}
+                        {...getFileImportOptions(item, params)}
                     />
                 );
                 break;
             case "fileExport":
                 component = (
-                    <FileExport {...getFileExportOptions(item, ...params)} />
+                    <FileExport {...getFileExportOptions(item, params)} />
+                );
+                break;
+            case "mark":
+                component = (
+                    <ButtonMarkModal {...getMarkOptions(item, params)} />
                 );
                 break;
             default:

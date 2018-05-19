@@ -8,8 +8,7 @@ import React,{Component} from 'react'
 import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
-import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
 const pointerStyle = {
@@ -199,7 +198,6 @@ class PrepayTax extends Component{
     }
     render(){
         const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters} = this.state;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -232,10 +230,17 @@ class PrepayTax extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" && <span>
-                                <SubmitOrRecall disabled={disabled1} type={1} url="/account/prepaytax/submit" onSuccess={this.refreshTable} />
-                                <SubmitOrRecall disabled={!disabled1} type={2} url="/account/prepaytax/revoke" onSuccess={this.refreshTable} />
-                            </span>
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'submit',
+                                url:'/account/prepaytax/submit',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/account/prepaytax/revoke',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
                         }
                     </div>,
                     /*scroll:{

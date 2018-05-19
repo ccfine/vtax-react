@@ -6,7 +6,7 @@ import {Button,Modal,Form,Row,message,Icon} from 'antd';
 import PropTypes from 'prop-types'
 import {request,getFields} from 'utils'
 
-class ButtomMarkeModal extends Component{
+class ButtonMarkeModal extends Component{
     static propTypes={
         buttonOptions:PropTypes.shape({
             text:PropTypes.string,
@@ -114,4 +114,4 @@ class ButtomMarkeModal extends Component{
         )
     }
 }
-export default Form.create()(ButtomMarkeModal)
+export default Form.create()(ButtonMarkeModal)

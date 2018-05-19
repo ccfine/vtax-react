@@ -5,8 +5,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,listMainResultStatus,toPercent} from 'utils'
+import {request,fMoney,listMainResultStatus,toPercent,composeBotton} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体名称',
@@ -142,8 +141,7 @@ const columns = context =>[
 class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
-        searchFieldsValues:{},
-        dataSource:[],
+        filters:{},
         /**
          *修改状态和时间
          * */
@@ -151,7 +149,7 @@ class FixedAssetsInputTaxDetails extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/account/income/estate/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
@@ -180,10 +178,7 @@ class FixedAssetsInputTaxDetails extends Component{
         }
     }
     render(){
-        const {tableKey,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {tableKey,filters,statusParam} = this.state;
         return(
             <SearchTable
                 style={{
@@ -205,7 +200,7 @@ class FixedAssetsInputTaxDetails extends Component{
                     url:'/account/income/estate/fixedList',
                     onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -214,21 +209,26 @@ class FixedAssetsInputTaxDetails extends Component{
                         title: "固定资产进项税额明细",
                         extra:<div>
                             {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
+                                listMainResultStatus(statusParam)
                             }
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/account/income/estate/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/income/estate/revoke" onSuccess={this.refreshTable} />
-
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/income/estate/submit',
+                                    params:filters,
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/income/estate/revoke',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
                         </div>,
                     },
                     /*scroll:{
                      x:'180%'
                      },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
-                    },
                 }}
             />
         )
