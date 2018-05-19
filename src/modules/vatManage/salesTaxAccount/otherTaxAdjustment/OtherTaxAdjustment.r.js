@@ -2,17 +2,18 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-04-19 11:52:33
+ * @Last Modified time: 2018-05-19 16:45:20
  */
 import React, { Component } from "react";
-import { Button, Modal, message, Icon } from "antd";
+import { Modal, message } from "antd";
 import { SearchTable } from "compoments";
 import PopModal from "./popModal";
 import {
   request,
   fMoney,
   getUrlParam,
-  listMainResultStatus
+  listMainResultStatus,
+  composeBotton
 } from "../../../../utils";
 import { withRouter } from "react-router";
 import moment from "moment";
@@ -39,7 +40,7 @@ const searchFields = disabled => {
     },
     {
       label: "调整日期",
-      fieldName: "adjustDate",
+      fieldName: "authMonth",
       type: "monthPicker",
       span: 8,
       componentProps: {
@@ -192,10 +193,7 @@ class OtherTaxAdjustment extends Component {
     action: "add",
     updateKey: Date.now(),
     filters: undefined,
-    status: undefined,
-    submitLoading: false,
-    revokeLoading: false,
-    dataSource: []
+    statusParam: {},
   };
   hideModal() {
     this.setState({ visible: false });
@@ -217,57 +215,16 @@ class OtherTaxAdjustment extends Component {
               message.error(err.message);
           });
   }
-  updateStatus = (values = this.state.filters) => {
-    this.setState({ filters: values });
+  updateStatus = (values) => {
     request
       .get("/account/output/othertax/main/listMain", { params: values })
       .then(({ data }) => {
         if (data.code === 200) {
-          let status = {};
           if (data.data) {
-            status.status = data.data.status;
-            status.lastModifiedDate = data.data.lastModifiedDate;
-            this.setState({ status: status, filters: values });
+            this.setState({ statusParam: data.data});
           }
         }
       });
-  };
-  commonSubmit = (url, params, action, messageInfo) => {
-    this.setState({ [`${action}Loading`]: true });
-    request
-      .post(url, params)
-      .then(({ data }) => {
-        if (data.code === 200) {
-          message.success(messageInfo, 4);
-          this.setState({ [`${action}Loading`]: false });
-          this.updateStatus(params);
-        } else {
-          message.error(data.msg, 4);
-          this.setState({ [`${action}Loading`]: false });
-        }
-      })
-      .catch(err => {
-        message.error(err.message);
-        this.setState({ [`${action}Loading`]: false });
-      });
-  };
-  submit = () => {
-    let params = { ...this.state.filters };
-    this.commonSubmit(
-      "/account/output/othertax/main/submit",
-      params,
-      "submit",
-      "提交成功"
-    );
-  };
-  revoke = () => {
-    let params = { ...this.state.filters };
-    this.commonSubmit(
-      "/account/output/othertax/main/restore",
-      params,
-      "revoke",
-      "撤回提交成功"
-    );
   };
   componentDidMount() {
     const { search } = this.props.location;
@@ -278,12 +235,7 @@ class OtherTaxAdjustment extends Component {
   render() {
     const { search } = this.props.location;
     let disabled = !!search;
-    let { filters, status, dataSource } = this.state,
-      buttonDisabled =
-        !filters || !(dataSource && dataSource.length && dataSource.length > 0),
-      isSubmit = status && status.status === 2;
-    let columns = getColumns(this);
-    isSubmit && columns.shift();
+    let { filters={}, statusParam } = this.state;
     return (
       <div>
         <SearchTable
@@ -291,64 +243,45 @@ class OtherTaxAdjustment extends Component {
           searchOption={{
             fields: searchFields(disabled)
           }}
-          backCondition={values => {
-            let params = { mainId: values.mainId, taxMonth: values.adjustDate };
-            this.setState({ filters: params });
-            this.updateStatus(params);
-          }}
           tableOption={{
             scroll: { x: "150%" },
             pageSize: 10,
-            columns: columns,
+            columns: getColumns(this),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",
             cardProps: {
               title: "其他涉税调整台账",
               extra: (
                 <div>
-                  {dataSource.length > 0 && listMainResultStatus(status)}
-                  <Button
-                    size="small"
-                    style={{ marginRight: 5 }}
-                    disabled={isSubmit}
-                    onClick={() => {
-                      this.setState({
-                        visible: true,
-                        action: "add",
-                        opid: undefined
-                      });
-                    }}
-                  >
-                    <Icon type="plus" />新增
-                  </Button>
-                  <Button
-                    size="small"
-                    style={{ marginRight: 5 }}
-                    disabled={buttonDisabled || isSubmit}
-                    onClick={this.submit}
-                    loading={this.state.submitLoading}
-                  >
-                    <Icon type="check" />
-                    提交
-                  </Button>
-                  <Button
-                    size="small"
-                    style={{ marginRight: 5 }}
-                    disabled={buttonDisabled || !isSubmit}
-                    onClick={this.revoke}
-                    loading={this.state.revokeLoading}
-                  >
-                    <Icon type="rollback" />
-                    撤回提交
-                  </Button>
+                  {listMainResultStatus(statusParam)}
+                  {
+                      JSON.stringify(filters) !== "{}" && composeBotton([{
+                          type:'add',
+                          onClick: () => {
+                            this.setState({
+                              visible: true,
+                              action: "add",
+                              opid: undefined
+                            });
+                          }
+                      },{
+                          type:'submit',
+                          url:'/account/output/othertax/main/submit',
+                          params:filters,
+                          onSuccess:this.refreshTable
+                      },{
+                          type:'revoke',
+                          url:'/account/output/othertax/main/restore',
+                          params:filters,
+                          onSuccess:this.refreshTable,
+                      }],statusParam)
+                  }
                 </div>
               )
             },
-            onDataChange: data => {
-              this.setState({
-                buttonDisabled: false,
-                dataSource: data
-              });
+            onSuccess:(params)=>{
+              this.setState({ filters: params });
+              this.updateStatus(params);
             }
           }}
         />

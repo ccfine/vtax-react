@@ -2,22 +2,12 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney,getUrlParam,request} from 'utils'
-import {SearchTable,FileExport,TableTotal} from 'compoments'
+import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
+import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
 import {message} from 'antd';
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -60,7 +50,7 @@ const searchFields=(disabled)=> {
         {
             label: '开票月份',
             type: 'monthPicker',
-            fieldName: 'billingDate',
+            fieldName: 'authMonth',
             span:6,
             componentProps:{
                 disabled,
@@ -118,7 +108,7 @@ const getColumns = context =>[
         key: 'actions',
         fixed:true,
         width:'60px',
-        render: (text, record) => parseInt(context.state.dataStatus,0) === 1 ? (
+        render: (text, record) => parseInt(context.state.statusParam,0) === 1 ? (
             <span style={{
                 color:'#1890ff',
                 cursor:'pointer'
@@ -251,17 +241,15 @@ class UnmatchedData extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
-        searchFieldsValues:{
+        filters:{
 
         },
         selectedData:{},
-        hasData:false,
 
         /**
-         *修改状态和时间
+         *修改状态
          * */
-        dataStatus:'',
-        submitDate:'',
+        statusParam:'',
         totalSource:undefined,
     }
     toggleModalVisible=visible=>{
@@ -271,13 +259,12 @@ class UnmatchedData extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/output/invoice/collection/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
+                        statusParam:data.data
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -299,7 +286,7 @@ class UnmatchedData extends Component{
         }
     }
     render(){
-        const {visible,tableKey,searchFieldsValues,selectedData,hasData,submitDate,dataStatus,totalSource} = this.state;
+        const {visible,tableKey,filters,selectedData,statusParam,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -310,11 +297,6 @@ class UnmatchedData extends Component{
                 }}
                 searchOption={{
                     fields:searchFields(disabled),
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
                     cardProps:{
                         style:{
                             borderTop:0
@@ -329,33 +311,24 @@ class UnmatchedData extends Component{
                     url:'/output/invoice/marry/unmatched/list',
                     onSuccess:(params,data)=>{
                         this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0
+                            filters:params
                         },()=>{
                             this.fetchResultStatus()
                         })
                     },
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
-                        <FileExport
-                            url={`output/invoice/marry/unmatched/export`}
-                            title="导出未匹配发票"
-                            size="small"
-                            setButtonStyle={{marginRight:5}}
-                            disabled={!hasData}
-                            params={
-                                searchFieldsValues
-                            }
-                        />
+                        {
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'fileExport',
+                                url:'output/invoice/marry/unmatched/export',
+                                params:filters,
+                                title:'导出未匹配发票',
+                                onSuccess:this.refreshTable
+                            }],statusParam)
+                        }
                         <TableTotal type={2} totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {

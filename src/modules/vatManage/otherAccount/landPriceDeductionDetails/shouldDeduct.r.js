@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 18:29:36
+ * @Last Modified time: 2018-05-19 16:30:25
  */
 import React from 'react';
 import {message} from 'antd'
@@ -149,7 +149,7 @@ class ShouldDeduct extends React.Component{
         searchFieldsValues:{
 
         },
-        statusParams:undefined,
+        statusParam:undefined,
 
         dataSource:undefined,
     }
@@ -188,7 +188,7 @@ class ShouldDeduct extends React.Component{
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        statusParams:data.data,
+                        statusParam:data.data,
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -199,7 +199,7 @@ class ShouldDeduct extends React.Component{
             })
     }
     render(){
-        const {tableKey,searchFieldsValues={},doNotFetchDidMount,statusParams={}} = this.state;
+        const {tableKey,searchFieldsValues={},doNotFetchDidMount,statusParam={}} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         let submitIntialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.month}
@@ -235,7 +235,7 @@ class ShouldDeduct extends React.Component{
                     },
                     extra:<div>
                         {
-                            listMainResultStatus(statusParams)
+                            listMainResultStatus(statusParam)
                         }
                         {
                             composeBotton([{
@@ -248,7 +248,7 @@ class ShouldDeduct extends React.Component{
                                 url:'/account/output/notInvoiceSale/realty/revoke',
                                 params:{...submitIntialValue},
                                 onSuccess:this.refreshTable,
-                            }],statusParams)
+                            }],statusParam)
                         }
                     </div>,
                     scroll:{

@@ -7,7 +7,6 @@ import {Button,Icon,message} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
-// import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
@@ -51,7 +50,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
         },
         {
             label:'查询期间',
-            fieldName:'month',
+            fieldName:'authMonth',
             type:'monthPicker',
             span:6,
             formItemStyle,
@@ -212,17 +211,15 @@ class unBilledSalesEstate extends Component{
         visible:false,
         doNotFetchDidMount:true,
         searchTableLoading:false,
-        searchFieldsValues:{
+        filters:{
 
         },
         resultFieldsValues:{
 
         },
-        hasData:false,
 
-        statusParams:undefined,
+        statusParam:undefined,
 
-        dataSource:undefined,
         totalSource:undefined,
     }
     toggleSearchTableLoading = searchTableLoading =>{
@@ -257,15 +254,12 @@ class unBilledSalesEstate extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/account/output/notInvoiceSale/realty/listMain',{
-            params:{
-                ...this.state.searchFieldsValues,
-                authMonth:this.state.searchFieldsValues.month
-            }
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        statusParams:data.data,
+                        statusParam:data.data,
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -275,38 +269,10 @@ class unBilledSalesEstate extends Component{
                 message.error(err.message)
             })
     }
-    // recount = ()=>{
-    //     const { mainId,month:authMonth }  = this.state.resultFieldsValues;
-
-    //     Modal.confirm({
-    //         title: '友情提醒',
-    //         content: '确定要重算吗',
-    //         onOk : ()=> {
-    //             this.toggleSearchTableLoading(true)
-    //             request.put('/account/output/notInvoiceSale/realty/reset',{mainId, authMonth}
-    //             )
-    //                 .then(({data}) => {
-    //                     this.toggleSearchTableLoading(false)
-    //                     if(data.code===200){
-    //                         message.success('重算成功!');
-    //                         this.refreshTable()
-    //                     }else{
-    //                         message.error(`重算失败:${data.msg}`)
-    //                     }
-    //                 })
-    //                 .catch(err => {
-    //                     message.error(err.message)
-    //                     this.toggleSearchTableLoading(false)
-    //                 })
-    //         }
-    //     })
-    // }
     render(){
-        const {tableKey,visible,searchFieldsValues={},doNotFetchDidMount,statusParams={},searchTableLoading,totalSource} = this.state;
+        const {tableKey,visible,filters={},doNotFetchDidMount,statusParam={},searchTableLoading,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
-        // const isSubmit = parseInt(statusParams.status,0)===2;
-        let submitIntialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.month}
         return(
             <SearchTable
                 doNotFetchDidMount={doNotFetchDidMount}
@@ -329,8 +295,7 @@ class unBilledSalesEstate extends Component{
                     url:'/account/output/notInvoiceSale/realty/list',
                     onSuccess:(params,data)=>{
                         this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0,
+                            filters:params,
                             resultFieldsValues:params,
                         },()=>{
                             this.fetchResultStatus()
@@ -338,34 +303,31 @@ class unBilledSalesEstate extends Component{
                     },
                     extra:<div>
                         {
-                            listMainResultStatus(statusParams)
+                            listMainResultStatus(statusParam)
                         }
-                        <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         {
-                            composeBotton([{
+                            JSON.stringify(filters) !=='{}' && <Button size="small" style={{marginRight:5}} disabled={!filters.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
+                        }
+                        {
+                            JSON.stringify(filters) !=='{}' && composeBotton([
+                            {
                                 type:'reset',
                                 url:'/account/output/notInvoiceSale/realty/reset',
-                                params:{...submitIntialValue,authMonth:submitIntialValue.taxMonth},
+                                params:filters,
                                 onSuccess:this.refreshTable,
                                 userPermissions:[],
                             },{
                                 type:'submit',
                                 url:'/account/output/notInvoiceSale/realty/submit',
-                                params:{...submitIntialValue},
+                                params:filters,
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/output/notInvoiceSale/realty/revoke',
-                                params:{...submitIntialValue},
+                                params:filters,
                                 onSuccess:this.refreshTable,
-                            }],statusParams)
+                            }],statusParam)
                         }
-                        {/* <Button onClick={this.recount} disabled={isSubmit} size='small' style={{marginRight:5}}>
-                            <Icon type="retweet" />
-                            重算
-                        </Button>
-                        <SubmitOrRecall disabled={!hasData || isSubmit} type={1} url="/account/output/notInvoiceSale/realty/submit" onSuccess={this.refreshTable} initialValue={submitIntialValue}/>
-                        <SubmitOrRecall disabled={!(hasData && isSubmit)} type={2} url="/account/output/notInvoiceSale/realty/revoke" onSuccess={this.refreshTable} initialValue={submitIntialValue}/> */}
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {
@@ -412,7 +374,7 @@ class unBilledSalesEstate extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="汇总信息" params={searchFieldsValues} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="汇总信息" params={filters} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

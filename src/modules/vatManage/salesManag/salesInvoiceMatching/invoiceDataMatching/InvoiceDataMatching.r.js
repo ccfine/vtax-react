@@ -3,21 +3,10 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {request,fMoney,getUrlParam} from 'utils'
-import {SearchTable,FileExport,TableTotal} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -59,7 +48,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
         },
         {
             label:'开票月份',
-            fieldName:'billingDate',
+            fieldName:'authMonth',
             type:'monthPicker',
             span:6,
             componentProps:{
@@ -170,9 +159,9 @@ const getColumns = context => [
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:parseInt(context.state.dataStatus,0) === 1 ? '60px' : '40px',
+        width:parseInt(context.state.statusParam,0) === 1 ? '60px' : '40px',
         render: (text, record) => {
-            return parseInt(context.state.dataStatus,0)===1 && (
+            return parseInt(context.state.statusParam,0)===1 && (
                     <span style={{
                         color:'#f5222d',
                         cursor:'pointer'
@@ -332,16 +321,14 @@ const getColumns = context => [
 class InvoiceDataMatching extends Component{
     state={
         tableKey:Date.now(),
-        searchFieldsValues:{
+        filters:{
         },
         matching:false,
-        hasData:false,
 
         /**
-         *修改状态和时间
+         *修改状态
          * */
-        dataStatus:'',
-        submitDate:'',
+        statusParam:'',
         totalSource:undefined,
     }
     refreshTable = ()=>{
@@ -351,13 +338,12 @@ class InvoiceDataMatching extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/output/invoice/marry/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
+                        statusParam:data.data
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -409,7 +395,7 @@ class InvoiceDataMatching extends Component{
         }
     }
     render(){
-        const {tableKey,searchFieldsValues,matching,hasData,submitDate,dataStatus,totalSource} = this.state;
+        const {tableKey,filters,matching,statusParam,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -434,8 +420,7 @@ class InvoiceDataMatching extends Component{
                     columns:getColumns(this),
                     onSuccess:(params,data)=>{
                         this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0
+                            filters:params
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -443,14 +428,7 @@ class InvoiceDataMatching extends Component{
                     url:'/output/invoice/marry/already/list',
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
                         <Button
                             onClick={this.matchData}
@@ -459,20 +437,25 @@ class InvoiceDataMatching extends Component{
                             <Icon type="copy" />
                             数据匹配
                         </Button>
-                        <FileExport
-                            url={`output/invoice/marry/already/export`}
-                            title="导出匹配列表"
-                            size="small"
-                            disabled={!hasData}
-                            setButtonStyle={{
-                                marginRight:5
-                            }}
-                            params={
-                                searchFieldsValues
-                            }
-                        />
-                        <SubmitOrRecall type={1} url="/output/invoice/marry/submit" onSuccess={this.refreshTable} />
-                        <SubmitOrRecall type={2} url="/output/invoice/marry/revoke" onSuccess={this.refreshTable} />
+                        {
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'fileExport',
+                                url:'output/invoice/marry/already/export',
+                                params:filters,
+                                title:'导出匹配列表',
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'submit',
+                                url:'/output/invoice/marry/submit',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'output/invoice/marry/revoke',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
+                        }
                         <TableTotal type={2} totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {
