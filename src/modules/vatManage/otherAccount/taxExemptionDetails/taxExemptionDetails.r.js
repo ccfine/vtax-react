@@ -8,7 +8,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import {Icon,Modal,message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import PopModal from "./popModal";
 import moment from 'moment';
@@ -200,16 +200,11 @@ class TaxExemptionDetails extends Component{
     };
 
     fetchResultStatus=()=>{
-        request.get('/account/other/reduceTaxDetail/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                })
-            }
-        })
-            .catch(err => {
-                message.error(err.message)
+        requestResultStatus('/account/other/reduceTaxDetail/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
+        })
     }
     componentDidMount(){
         const {search} = this.props.location;

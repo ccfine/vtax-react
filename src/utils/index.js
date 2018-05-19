@@ -223,6 +223,48 @@ const listMainResultStatus = (statusParam) =>{
     </div>
 }
 
+//设置select值名不同
+const setFormat = data =>{
+    return data.map(item=>{
+        return{
+            //...item,
+            value:item.id,
+            text:item.name
+        }
+    })
+}
+
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        if(typeof data[key] !== 'undefined' && data[key] !== ''){
+            str += `${key}=${data[key]}&`
+        }
+    }
+    return str;
+}
+const getResultStatus = (url,filters) => {
+    return new Promise(function (resolve, reject) {
+        request.get(url,{
+                params:filters
+            })
+            .then(({data}) => {
+                if(data.code===200){
+                    resolve(data.data)
+                }else{
+                    reject(`列表主信息查询失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    })
+}
+const requestResultStatus = async (url,filters,callback)=>{
+    let result = await getResultStatus(url,filters);
+    callback(result)
+}
+
 export {
     regRules,
     request,
@@ -240,4 +282,7 @@ export {
     fromPercent,
     listMainResultStatus,
     composeBotton,
+    setFormat,
+    parseJsonToParams,
+    requestResultStatus,
 }

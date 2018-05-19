@@ -2,8 +2,7 @@
  * Created by liuliyuan on 2018/5/17.
  */
 import React, { Component } from 'react'
-import {message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,requestResultStatus,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -145,18 +144,11 @@ class tab1 extends Component{
             searchTableLoading:b
         })
     }
-    fetchResultStatus=()=>{
-        request.get('/account/othertax/deducted/main/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data,
-                })
-            }else{
-                message.error(`列表主信息查询失败:${data.msg}`)
-            }
-        })
-        .catch(err => {
-            message.error(err.message)
+    fetchResultStatus = ()=>{
+        requestResultStatus('/account/othertax/deducted/main/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
     }
     componentDidMount(){

@@ -5,8 +5,17 @@
  */
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
-import {SearchTable,TableTotal} from 'compoments'
+import {SearchTable} from 'compoments'
 import {fMoney} from 'utils'
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        if(typeof data[key] !== 'undefined' && data[key] !== ''){
+            str += `${key}=${data[key]}&`
+        }
+    }
+    return str;
+}
 const searchFields = [
     {
         label:'凭证号',
@@ -20,44 +29,45 @@ const columns = [
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-        width:180,
+        //width:180,
     }, {
         title: '项目分期代码',
         dataIndex: 'stagesNum',
-        width:180,
+        //width:180,
     },{
         title: '项目分期名称',
         dataIndex: 'stagesName',
-        width:180,
+        //width:180,
     },{
         title: '凭证日期',
         dataIndex: 'voucherDate',
-        width:180,
+        //width:180,
     },{
         title: '凭证号',
-        dataIndex: 'voucherNum ',
-        width:100,
+        dataIndex: 'voucherNum',
+        //width:100,
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:70,
+        //width:70,
     },{
         title: '借方科目名称',
         dataIndex: 'debitSubjectName',
-        width:100,
+        //width:100,
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
-        width:180,
+        //width:180,
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
-        width:100,
+        //width:100,
         render:text=>fMoney(text),
+        className: "table-money"
     },{
         title: '扣税凭证类型',
         dataIndex: 'voucherType',
-        width:180,
+        //width:180,
     }
 ];
 
@@ -80,13 +90,17 @@ export default class VoucherPopModal extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,totalSource} = this.state;
+        const {searchTableLoading,tableKey} = this.state;
         const props = this.props;
+        const filters = {
+            ...props.filters,
+            ...props.params
+        }
         return(
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
-                onCancel={()=>props.toggleModalVisible(false)}
+                onCancel={()=>props.toggleModalVoucherVisible(false)}
                 width={900}
                 style={{ top: 50 ,maxWidth:'80%'}}
                 visible={props.visible}
@@ -94,34 +108,26 @@ export default class VoucherPopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
+                            <Button onClick={()=>props.toggleModalVoucherVisible(false)}>取消</Button>
                         </Col>
                     </Row>
                 }
                 title={props.title}>
                     <SearchTable
                         searchOption={{
-                            fields:searchFields,
+                            fields:searchFields
                         }}
                         doNotFetchDidMount={true}
                         spinning={searchTableLoading}
                         tableOption={{
                             key:tableKey,
                             cardProps: {
-                                title: "预缴税款台账",
+                                title: "凭证信息列表",
                             },
                             pageSize:10,
                             columns:columns,
-                            url:'/income/invoice/collection/list',
-                            scroll:{ x: '210%'},
-                            extra:<div>
-                                <TableTotal totalSource={totalSource} />
-                            </div>,
-                            onTotalSource: (totalSource) => {
-                                this.setState({
-                                    totalSource
-                                })
-                            },
+                            url:`/account/income/taxDetail/taxDetailVoucherList?${parseJsonToParams(filters)}`,
+                            scroll:{ x: '140%'},
                         }}
                     />
             </Modal>

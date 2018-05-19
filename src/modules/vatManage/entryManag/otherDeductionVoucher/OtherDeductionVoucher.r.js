@@ -2,9 +2,8 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import {message} from 'antd'
 import { withRouter } from 'react-router'
-import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,getUrlParam,requestDict,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
@@ -21,7 +20,17 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields=(disabled)=> {
+//设置select值名不同
+const setFormat=data=>{
+        return data.map(item=>{
+            return{
+                //...item,
+                value:item.id,
+                text:item.name
+            }
+        })
+    }
+const searchFields=(context,disabled)=> {
     return [
         {
             label:'纳税主体',
@@ -62,56 +71,22 @@ const searchFields=(disabled)=> {
             }
         }, {
             label:'标记类型',
-            fieldName:'flag',
+            fieldName:'sysDictId',
             span:6,
             formItemStyle,
             type:'select',
-            options:[  //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
-                {
-                    text:'海关进口增值税专用缴款书',
-                    value:'1'
-                },{
-                    text:'农产品收购发票或者销售发票',
-                    value:'2'
-                },{
-                    text:'代扣代缴收缴款凭证',
-                    value:'3'
-                },{
-                    text:'其他',
-                    value:'4'
-                },{
-                    text:'无标记',
-                    value:'0'
-                }
-            ]
+            options:context.state.sysDictIdList
         },
     ]
 }
-const markFieldsData = [
+const markFieldsData = context => [
     {
-        label:'标记类型',
-        fieldName:'flag',
-        type:'select',
-        notShowAll:true,
-        span:'22',
-        options:[  //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
-            {
-                text:'海关进口增值税专用缴款书',
-                value:'1'
-            },{
-                text:'农产品收购发票或者销售发票',
-                value:'2'
-            },{
-                text:'代扣代缴收缴款凭证',
-                value:'3'
-            },{
-                text:'其他',
-                value:'4'
-            },{
-                text:'无标记',
-                value:'0'
-            }
-        ],
+        label: '标记类型',
+        fieldName: 'sysDictId',
+        type: 'select',
+        notShowAll: true,
+        span: '22',
+        options: context.state.sysDictIdList
     }
 ]
 const columns = context =>[
@@ -205,32 +180,8 @@ const columns = context =>[
         )
     },{
         title: '标记',
-        dataIndex: 'flag',
+        dataIndex: 'sysDictName',
         width:'75px',
-        render: text => {
-            //1-海关进口增值税专用缴款书;2-农产品收购发票或者销售发票;3-代扣代缴收缴款凭证;4-其他;0-无标记；不传则所有状态
-            let t = '';
-            switch (parseInt(text,0)){
-                case 1:
-                    t=<span style={{color:'#b7eb8f'}}>海关进口增值税专用缴款书</span>;
-                    break;
-                case 2:
-                    t=<span style={{color: '#f5222d'}}>农产品收购发票或者销售发票</span>;
-                    break;
-                case 3:
-                    t=<span style={{color: "#f50"}}>代扣代缴收缴款凭证</span>;
-                    break;
-                case 4:
-                    t=<span style={{color: "#91d5ff"}}>其他</span>;
-                    break;
-                case 0:
-                    t=null;
-                    break;
-                default:
-                //no default
-            }
-            return t
-        }
     }
 ];
 class SalesInvoiceCollection extends Component{
@@ -245,23 +196,15 @@ class SalesInvoiceCollection extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        //他可抵扣进项税明细标记: 取数据字典JXFPLX 无ID则无标记
+        sysDictIdList:[],
     }
     fetchResultStatus = ()=>{
-        request.get('/income/financeDetails/controller/listMain',{
-            params:this.state.filters
+        requestResultStatus('/income/financeDetails/controller/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     toggleViewModalVisible=visible=>{
         this.setState({
@@ -280,6 +223,13 @@ class SalesInvoiceCollection extends Component{
         if(!!search){
             this.refreshTable()
         }
+
+        //纳税申报
+        requestDict('JXFPLX',result=>{
+            this.setState({
+                sysDictIdList : setFormat(result)
+            })
+        });
     }
     render(){
         const {visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
@@ -289,7 +239,7 @@ class SalesInvoiceCollection extends Component{
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(this,disabled),
                 }}
                 tableOption={{
                     key:tableKey,
@@ -322,7 +272,7 @@ class SalesInvoiceCollection extends Component{
                                         filters: filters,
                                         selectedRowKeys: selectedRowKeys,
                                         url:"/income/financeDetails/controller/upFlag",
-                                        fields: markFieldsData,
+                                        fields: markFieldsData(this),
                                         onSuccess: this.refreshTable,
                                     }
                                 },{

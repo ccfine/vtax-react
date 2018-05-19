@@ -4,15 +4,12 @@
  * description  :
  */
 import React, { Component } from "react";
-import { Layout, Form, Button, Icon, Modal, message } from "antd";
+import { Layout, Form,Modal } from "antd";
 import { TableTotal, SearchTable } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
+import { requestResultStatus, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import { withRouter } from "react-router";
 import moment from "moment";
 import PopModal from "./popModal";
-const buttonStyle = {
-    marginRight: 5
-};
 const fields = [
     {
         label:'纳税主体',
@@ -317,24 +314,13 @@ class InvoiceCollection extends Component {
             });
         }
     };
-    updateStatus = () => {
-        request
-            .get("/income/invoice/collection/listMain", {
-                params: this.state.filters
+    fetchResultStatus = ()=>{
+        requestResultStatus('/income/invoice/collection/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    this.setState({
-                        statusParam: data.data
-                    });
-                } else {
-                    message.error(`列表主信息查询失败:${data.msg}`);
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-            });
-    };
+        })
+    }
     componentWillReceiveProps(nextProps) {
         if (this.props.taxSubjectId !== nextProps.taxSubjectId) {
             this.initData();
@@ -342,10 +328,7 @@ class InvoiceCollection extends Component {
     }
 
     render() {
-        const { tableUpDateKey, filters, selectedRowKeys, visible, modalConfig, statusParam, totalSource } = this.state,
-            // (字段名字不一致)这里有些不合理
-            defaultValues = { ...filters, taxMonth: filters.authMonth };
-        
+        const { tableUpDateKey, filters, selectedRowKeys, visible, modalConfig, statusParam, totalSource } = this.state;
         const { search } = this.props.location;
         let disabled = !!(search && search.filters);
         return (
@@ -356,10 +339,11 @@ class InvoiceCollection extends Component {
                         fields: getSearchFields(disabled)
                     }}
                     backCondition={values => {
-                        this.setState({ filters: values },
-                            () => {
-                                this.updateStatus();
-                            });
+                        this.setState({
+                                filters: values
+                            },() => {
+                                this.fetchResultStatus();
+                        });
                     }}
                     tableOption={{
                         columns: this.columns,
@@ -380,15 +364,6 @@ class InvoiceCollection extends Component {
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                <Button
-                                    size="small"
-                                    onClick={() => this.showModal("view")}
-                                    disabled={!selectedRowKeys}
-                                    style={buttonStyle}
-                                >
-                                    <Icon type="search" />
-                                    查看
-                                </Button>
                                 {
                                     composeBotton([{
                                         type:'fileExport',
@@ -398,6 +373,12 @@ class InvoiceCollection extends Component {
                                 }
                                 {
                                     JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                        type:'view',
+                                        text:'查看',
+                                        icon:'search',
+                                        selectedRowKeys:selectedRowKeys || [],
+                                        onClick:()=>this.showModal("view")
+                                    },{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         onSuccess:this.refreshTable,
@@ -405,12 +386,12 @@ class InvoiceCollection extends Component {
                                     },{
                                         type:'submit',
                                         url:'/income/invoice/collection/submit',
-                                        params:{...defaultValues},
+                                        params:filters,
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/income/invoice/collection/revoke',
-                                        params:{...defaultValues},
+                                        params:filters,
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }

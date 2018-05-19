@@ -2,9 +2,8 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import {message} from 'antd'
 import { withRouter } from 'react-router'
-import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
@@ -202,21 +201,11 @@ class LandPriceManage extends Component{
         statusParam:{},
     }
     fetchResultStatus = ()=>{
-        request.get('/land/price/manage/listMain',{
-            params:this.state.filters
+        requestResultStatus('/land/price/manage/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     toggleViewModalVisible=visible=>{
         this.setState({

@@ -6,15 +6,7 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Button,Icon} from 'antd';
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        if(typeof data[key] !== 'undefined' && data[key] !== ''){
-            str += `${key}=${data[key]}&`
-        }
-    }
-    return str;
-}
+import {parseJsonToParams} from "utils";
 class FileExport extends Component{
 
     static propTypes={

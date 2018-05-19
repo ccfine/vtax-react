@@ -2,9 +2,8 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {message} from 'antd'
 import { withRouter } from 'react-router'
-import {request,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
@@ -111,23 +110,12 @@ class GeneralTaxCertificate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/account/incomeSimpleOut/controller/listMain',{
-            params:this.state.filters
+        requestResultStatus('/account/incomeSimpleOut/controller/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
-
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()

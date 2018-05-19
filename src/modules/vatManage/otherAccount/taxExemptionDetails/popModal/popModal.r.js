@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
-import { getFields, request } from "../../../../../utils";
+import { getFields, request, requestDict,setFormat } from "utils";
 import moment from 'moment';
 const formItemLayout = {
     labelCol: {
@@ -21,7 +21,17 @@ class PopModal extends Component {
         formLoading: false,
         record: {},
         visible: false,
+        reduceNameList:[],
+
     };
+    componentDidMount(){
+        //减免税性质代码：从数据字典中取出JMS 根据代码获取和类型
+        requestDict('JMS',result=>{
+            this.setState({
+                reduceNameList : setFormat(result)
+            })
+        });
+    }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
@@ -72,7 +82,11 @@ class PopModal extends Component {
                     values.mainName = values.main.label;
                     values.main = undefined;
                 }
-
+                if(values.reduce){
+                    values.sysDictId = values.reduce.key;
+                    values.reduceName = values.reduce.label;
+                    values.reduce = undefined;
+                }
                 let obj = Object.assign({}, this.state.record, values);
 
                 let result, sucessMsg;
@@ -111,7 +125,7 @@ class PopModal extends Component {
         });
     }
     render() {
-        let { record = {} } = this.state;
+        let { record = {}, reduceNameList} = this.state;
         const form = this.props.form;
         let title='';
         const disabled = this.props.action === "look";
@@ -167,58 +181,33 @@ class PopModal extends Component {
                         <Row>
                             {
                                 getFields(form, [{
-                                    label: '纳税主体',
-                                    fieldName: 'main',
-                                    type: 'taxMain',
-                                    span: '12',
-                                    formItemStyle: formItemLayout,
-                                    fieldDecoratorOptions: {
-                                        initialValue: record.mainId ? { key: record.mainId, label: record.mainName } : undefined,
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: '请选择纳税主体'
-                                            }
-                                        ]
-                                    },
-                                    componentProps: {
-                                        labelInValue: true,
-                                        disabled
-                                    }
-                                }
-                                ])
-                            }
-                        </Row>
-                        <Row>
-                            {
-                                getFields(form, [
-                                    {
-                                        label: '减税性质代码',
-                                        fieldName: 'reduceNum',
-                                        type: 'input',
-                                        span: 12,
+                                        label: '纳税主体',
+                                        fieldName: 'main',
+                                        type: 'taxMain',
+                                        span: '12',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.reduceNum,
+                                            initialValue: record.mainId ? { key: record.mainId, label: record.mainName } : undefined,
                                             rules: [
                                                 {
                                                     required: true,
-                                                    message: '请输入减税性质代码'
+                                                    message: '请选择纳税主体'
                                                 }
                                             ]
                                         },
                                         componentProps: {
+                                            labelInValue: true,
                                             disabled
-                                        },
-                                    },
-                                    {
+                                        }
+                                    },{
                                         label: '减税性质名称',
-                                        fieldName: 'reduceName',
-                                        type: 'input',
+                                        fieldName: 'reduce',
+                                        type: 'select',
                                         span: 12,
+                                        options: reduceNameList,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.reduceName,
+                                            initialValue: record.sysDictId ? { key: record.sysDictId, label: record.reduceName } : undefined,
                                             rules: [
                                                 {
                                                     required: true,
@@ -227,10 +216,10 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
+                                            labelInValue: true,
                                             disabled
                                         },
-
-                                    },
+                                    }
                                 ])
                             }
                         </Row>
