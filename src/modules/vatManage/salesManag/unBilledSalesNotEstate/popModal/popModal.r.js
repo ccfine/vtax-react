@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-15 16:12:23 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-15 17:28:20
+ * @Last Modified time: 2018-05-19 17:27:22
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -53,7 +53,7 @@ class PopModal extends Component {
             if (props.id) {
                 this.setState({ formLoading: true });
                 request
-                    .get(`/accountNotInvoiceUnsaleRealty/find/${props.id}`)
+                    .get(`/account/notInvoiceUnSale/realty/find/${props.id}`)
                     .then(({ data }) => {
                         if (data.code === 200) {
                             this.setState({
@@ -117,13 +117,13 @@ class PopModal extends Component {
                 let result, sucessMsg;
                 if (this.props.action === "modify") {
                     result = request.put(
-                        "/accountNotInvoiceUnsaleRealty/update",
+                        "/account/notInvoiceUnSale/realty/update",
                         obj
                     );
                     sucessMsg = "修改成功";
                 } else if (this.props.action === "add") {
                     result = request.post(
-                        "/accountNotInvoiceUnsaleRealty/add",
+                        "/account/notInvoiceUnSale/realty/add",
                         obj
                     );
                     sucessMsg = "添加成功";

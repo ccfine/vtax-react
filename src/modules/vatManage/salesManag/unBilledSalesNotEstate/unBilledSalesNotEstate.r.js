@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-17 10:35:27
+ * @Last Modified time: 2018-05-19 17:28:20
  */
 import React, { Component } from "react";
-import { Icon, message, Button, Modal } from "antd";
+import { Icon, message, Modal } from "antd";
 // import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import { SearchTable, TableTotal } from "compoments";
 import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
@@ -55,7 +55,7 @@ const getColumns = context => [
                                 onOk: () => {
                                     context.deleteRecord(record.id, () => {
                                         modalRef && modalRef.destroy();
-                                        context.update();
+                                        context.refreshTable();
                                     });
                                 },
                                 onCancel() {
@@ -128,18 +128,17 @@ class UnBilledSalesNotEstate extends Component {
         opid: "", // 当前操作的记录
         readOnly: false,
         updateKey: Date.now(),
-        status: undefined,
-        filter: undefined,
+        statusParam: {},
+        filters: undefined,
         submitLoading: false,
-        revokeLoading: false,
-        dataSource: []
+        revokeLoading: false
     };
     hideModal() {
         this.setState({ visible: false });
     }
     deleteRecord = (id, cb) => {
         request
-            .delete(`/accountNotInvoiceUnsaleRealty/delete/${id}`)
+            .delete(`/account/notInvoiceUnSale/realty/delete/${id}`)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success("删除成功", 4);
@@ -153,18 +152,15 @@ class UnBilledSalesNotEstate extends Component {
             });
     };
     updateStatus = (values) => {
-        this.setState({ filter: values });
+        this.setState({ filters: values });
         let params = { ...values };
         params.authMonth = moment(params.authMonth).format("YYYY-MM");
         request
-            .get("/accountNotInvoiceUnsaleRealty/listMain", { params: params })
+            .get("/account/notInvoiceUnSale/realty/listMain", { params: params })
             .then(({ data }) => {
                 if (data.code === 200) {
-                    let status = {};
                     if (data.data) {
-                        status.status = data.data.status;
-                        status.lastModifiedDate = data.data.lastModifiedDate;
-                        this.setState({ status: status, filter: values });
+                        this.setState({ statusParam: data.data, filters: values });
                     }
                 }else{
                     message.error(data.msg,4);
@@ -210,7 +206,7 @@ class UnBilledSalesNotEstate extends Component {
                 },
                 {
                     label: `期间`,
-                    fieldName: "month",
+                    fieldName: "authMonth",
                     type: "monthPicker",
                     span,
                     formItemStyle,
@@ -266,11 +262,7 @@ class UnBilledSalesNotEstate extends Component {
                 }
             ];
         };
-        let { filter, status } = this.state,
-            // buttonDisabled =
-            //     !filter ||
-            //     !(dataSource && dataSource.length && dataSource.length > 0),
-            isSubmit = status && status.status === 2;
+        let { filters={}, statusParam } = this.state;
 
         return (
             <div>
@@ -279,17 +271,10 @@ class UnBilledSalesNotEstate extends Component {
                     doNotFetchDidMount={!search}
                     tableOption={{
                         key: this.state.updateKey,
-                        url: "/accountNotInvoiceUnsaleRealty/list",
+                        url: "/account/notInvoiceUnSale/realty/list",
                         pagination: true,
                         columns: getColumns(this),
                         rowKey: "id",
-                        onDataChange: data => {
-                            let hasData = data && data.length > 0;
-                            this.setState({
-                                buttonDisabled: !hasData,
-                                dataSource: data
-                            });
-                        },
                         onTotalSource: totalSource => {
                             this.setState({
                                 totalSource
@@ -299,53 +284,34 @@ class UnBilledSalesNotEstate extends Component {
                             title: "未开票销售台账-非地产",
                             extra: (
                                 <div>
-                                    {listMainResultStatus(status)}
-                                    <Button
-                                        size="small"
-                                        style={{ marginRight: 5 }}
-                                        disabled={isSubmit}
-                                        onClick={() => {
-                                            this.setState({
-                                                visible: true,
-                                                action: "add",
-                                                opid: undefined
-                                            });
-                                        }}
-                                    >
-                                        <Icon type="plus" />新增
-                                    </Button>
+                                    {listMainResultStatus(statusParam)}
                                     {
-                                        composeBotton([{
+                                        JSON.stringify(filters) !== "{}" && composeBotton([{
+                                            type:'add',
+                                            onClick: () => {
+                                                this.setState({
+                                                    visible: true,
+                                                    action: "add",
+                                                    opid: undefined
+                                                });
+                                            }
+                                        },{
                                             type:'reset',
-                                            url:'/accountNotInvoiceUnsaleRealty/reset',
-                                            params:{...filter,authMonth:filter && filter.month},
+                                            url:'/account/notInvoiceUnSale/realty/reset',
+                                            params:filters,
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'submit',
-                                            url:'/accountNotInvoiceUnsaleRealty/submit',
-                                            params:{...filter,taxMonth:filter && filter.month},
+                                            url:'/account/notInvoiceUnSale/realty/submit',
+                                            params:filters,
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
-                                            url:'/accountNotInvoiceUnsaleRealty/revoke',
-                                            params:{...filter,taxMonth:filter && filter.month},
+                                            url:'/account/notInvoiceUnSale/realty/revoke',
+                                            params:filters,
                                             onSuccess:this.refreshTable,
-                                        }],status)
+                                        }],statusParam)
                                     }
-                                    {/* <SubmitOrRecall
-                                        type={1}
-                                        disabled={buttonDisabled || isSubmit}
-                                        url="/accountNotInvoiceUnsaleRealty/submit"
-                                        onSuccess={this.refreshTable}
-                                        initialValue={{...filter,taxMonth:filter && filter.month}}
-                                    />
-                                    <SubmitOrRecall
-                                        type={2}
-                                        disabled={buttonDisabled || !isSubmit}
-                                        url="/accountNotInvoiceUnsaleRealty/revoke"
-                                        onSuccess={this.refreshTable}
-                                        initialValue={{...filter,taxMonth:filter && filter.month}}
-                                    /> */}
                                     <TableTotal
                                         type={3}
                                         totalSource={totalSource}

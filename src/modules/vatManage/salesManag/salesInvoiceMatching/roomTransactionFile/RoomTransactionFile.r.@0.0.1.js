@@ -1,15 +1,14 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-14 15:06:45
+ * @Last Modified time: 2018-05-19 16:05:42
  *
  */
 import React,{Component} from 'react'
 import {Form,Modal,message} from 'antd'
-import {FileExport,FileImportModal,TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
+import {TableTotal,SearchTable} from 'compoments'
+import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import { withRouter } from 'react-router'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -80,7 +79,7 @@ const getColumns = context => [
         title: '操作',
         key: 'actions',
         render: (text, record) => {
-            return parseInt(context.state.dataStatus,0) === 1 ? (
+            return parseInt(context.state.statusParam,0) === 1 ? (
                 <span style={{
                     color:'#f5222d',
                     cursor:'pointer'
@@ -194,9 +193,9 @@ class RoomTransactionFile extends Component{
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
+        statusParam:'',
 
-        searchFieldsValues:{
+        filters:{
 
         },
         totalSource:undefined
@@ -228,12 +227,12 @@ class RoomTransactionFile extends Component{
     }
     fetchResultStatus = ()=>{
         request.get('/output/room/files/listMain',{
-            params:this.state.searchFieldsValues
+            params:this.state.filters
         })
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        dataStatus:data.data
+                        statusParam:data.data
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -244,12 +243,10 @@ class RoomTransactionFile extends Component{
             })
     }
     render(){
-        const {tableUpDateKey,dataStatus,totalSource,searchFieldsValues={}} = this.state;
+        const {tableUpDateKey,statusParam,totalSource,filters={}} = this.state;
         const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
-        const submitIntitialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.transactionDate};
-
         const searchFeilds = [
             {
                 label:'纳税主体',
@@ -272,7 +269,7 @@ class RoomTransactionFile extends Component{
             },
             {
                 label:'交易月份',
-                fieldName:'transactionDate',
+                fieldName:'authMonth',
                 type:'monthPicker',
                 formItemStyle,
                 span:6,
@@ -381,9 +378,9 @@ class RoomTransactionFile extends Component{
                 tableOption={{
                     onSuccess:(params,data)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                         },()=>{
-                            this.state.searchFieldsValues.transactionDate && this.state.searchFieldsValues.mainId && this.fetchResultStatus()
+                            this.fetchResultStatus()
                         })
                     },
                     onTotalSource: (totalSource) => {
@@ -396,46 +393,54 @@ class RoomTransactionFile extends Component{
                     key:tableUpDateKey,
                     extra: <div>
                         {
-                            listMainResultStatus(dataStatus)
+                            listMainResultStatus(statusParam)
                         }
-                    <FileImportModal
-                        url="/output/room/files/upload"
-                        fields={fields}
-                        onSuccess={()=>{
-                            this.refreshTable()
-                        }}
-                        style={{marginRight:5}} />
-                    <FileExport
-                        url='output/room/files/download'
-                        title="下载导入模板"
-                        size="small"
-                        setButtonStyle={{marginRight:5}}
-                    />
-                    <SubmitOrRecall type={1} url="/output/room/files/submit" onSuccess={this.refreshTable} initialValue={submitIntitialValue}/>
-                    <SubmitOrRecall type={2} url="/output/room/files/revoke" onSuccess={this.refreshTable} initialValue={submitIntitialValue}/>
-                    <TableTotal type={3} totalSource={totalSource} data={
-                        [
-                            {
-                                title:'本页合计',
-                                total:[
-                                    {title: '本页总价', dataIndex: 'pageTotalPrice'},
-                                ],
+                        {
+                            composeBotton([{
+                                type:'fileExport',
+                                url:'output/room/files/download',
+                                onSuccess:this.refreshTable
+                            }],statusParam)
+                        }
+                        {
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'fileImport',
+                                url:'/output/room/files/upload',
+                                onSuccess:this.refreshTable,
+                                fields:fields
                             },{
-                                title:'总计',
-                                total:[
-                                    {title: '全部总价', dataIndex: 'allTotalPrice'},
-                                ],
-                            }
-                        ]
-                    } />
+                                type:'submit',
+                                url:'/output/room/files/submit',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/output/room/files/revoke',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
+                        }
+                        <TableTotal type={3} totalSource={totalSource} data={[
+                                {
+                                    title:'本页合计',
+                                    total:[
+                                        {title: '本页总价', dataIndex: 'pageTotalPrice'},
+                                    ],
+                                },{
+                                    title:'总计',
+                                    total:[
+                                        {title: '全部总价', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]} />
 
                 </div>,
                     cardProps: {
                         title: ''
                     },
-                    scroll:{
-                        x:'100%'
-                    }
+                    // scroll:{
+                    //     x:'100%'
+                    // }
                 }}
             >
             </SearchTable>

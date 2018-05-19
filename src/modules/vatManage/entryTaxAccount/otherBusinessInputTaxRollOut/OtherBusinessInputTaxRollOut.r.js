@@ -2,16 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-15 10:38:41
+ * @Last Modified time: 2018-05-19 18:04:41
  */
 import React, { Component } from "react";
-import { Icon, message, Button, Modal } from "antd";
-import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
-import {
-    SearchTable,
-    TableTotal
-} from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
+import { Icon, message, Modal } from "antd";
+import {SearchTable,TableTotal} from "compoments";
+import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
 import PopModal from "./popModal";
@@ -58,7 +54,7 @@ const getColumns = context => [
                                 onOk: () => {
                                     context.deleteRecord(record.id, () => {
                                         modalRef && modalRef.destroy();
-                                        context.update();
+                                        context.refreshTable();
                                     });
                                 },
                                 onCancel() {
@@ -124,12 +120,8 @@ class OtherBusinessInputTaxRollOut extends Component {
         opid: "", // 当前操作的记录
         readOnly: false,
         updateKey: Date.now(),
-        status: undefined,
-        filter: undefined,
-        // buttonDisabled:true,
-        submitLoading: false,
-        revokeLoading: false,
-        dataSource: []
+        statusParam: undefined,
+        filters: {},
     };
     hideModal() {
         this.setState({ visible: false });
@@ -149,10 +141,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                 message.error(err.message);
             });
     };
-    update = () => {
-        this.setState({ updateKey: Date.now() });
-    };
-    updateStatus = (values = this.state.filter) => {
+    updateStatus = (values) => {
         this.setState({ filter: values });
         let params = { ...values };
         params.authMonth = moment(params.authMonth).format("YYYY-MM");
@@ -160,43 +149,17 @@ class OtherBusinessInputTaxRollOut extends Component {
             .get("/account/income/taxout/listMain", { params: params })
             .then(({ data }) => {
                 if (data.code === 200) {
-                    let status = {};
                     if (data.data) {
-                        status.status = data.data.status;
-                        status.lastModifiedDate = data.data.lastModifiedDate;
-                        this.setState({ status: status, filter: values });
+                        this.setState({ statusParam: data.data, filter: values });
                     }
                 }
-            });
-    };
-    commonSubmit = (url, params, action, messageInfo) => {
-        this.setState({ [`${action}Loading`]: true });
-        request
-            .post(url, params)
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    message.success(messageInfo, 4);
-                    this.setState({ [`${action}Loading`]: false });
-                    this.updateStatus();
-                } else {
-                    message.error(data.msg, 4);
-                    this.setState({ [`${action}Loading`]: false });
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-                this.setState({ [`${action}Loading`]: false });
             });
     };
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-    filterChange = values => {
-        this.setState({ updateKey: Date.now(), filters: values });
-        this.updateStatus(values);
-    };
     render() {
-        const { dataSource, totalSource } = this.state;
+        const { totalSource } = this.state;
         const { search } = this.props.location;
         let disabled = !!search;
         const getFields = (title, span, formItemStyle, record = {}) => [
@@ -246,15 +209,7 @@ class OtherBusinessInputTaxRollOut extends Component {
             }
         ];
 
-        let { filter, status } = this.state,
-            buttonDisabled =
-                !filter ||
-                !(dataSource && dataSource.length && dataSource.length > 0),
-            isSubmit = status && status.status === 2;
-
-        // 查询参数
-        let params = { ...filter };
-        params.authMonth = moment(params.authMonth).format("YYYY-MM");
+        let { filters, statusParam } = this.state;
         return (
             <div>
                 <SearchTable
@@ -266,12 +221,11 @@ class OtherBusinessInputTaxRollOut extends Component {
                         pagination: true,
                         columns: getColumns(this),
                         rowKey: "id",
-                        onDataChange: data => {
-                            let hasData = data && data.length > 0;
-                            this.setState({
-                                buttonDisabled: !hasData,
-                                dataSource: data
-                            });
+                        onSuccess:params=>{
+                          this.setState({
+                              filters:params
+                          });  
+                          this.updateStatus(params);
                         },
                         onTotalSource: totalSource => {
                             this.setState({
@@ -282,38 +236,31 @@ class OtherBusinessInputTaxRollOut extends Component {
                             title: "其他业务进项税额转出台账",
                             extra: (
                                 <div>
-                                    {dataSource.length > 0 &&
-                                        listMainResultStatus(status)}
-                                    <Button
-                                        size="small"
-                                        style={{ marginRight: 5 }}
-                                        disabled={isSubmit}
-                                        onClick={() => {
+                                    {listMainResultStatus(statusParam)}
+                                    {
+                                        JSON.stringify(filters) !== "{}" && composeBotton([{
+                                            type:'add',
+                                            onClick: () => {
                                             this.setState({
                                                 visible: true,
                                                 action: "add",
                                                 opid: undefined
                                             });
-                                        }}
-                                    >
-                                        <Icon type="plus" />新增
-                                    </Button>
-                                    <SubmitOrRecall
-                                        type={1}
-                                        disabled={buttonDisabled || isSubmit}
-                                        url="/account/income/taxout/submit"
-                                        onSuccess={this.refreshTable}
-                                        monthFieldName="authMonth"
-                                        initialValue={filter}
-                                    />
-                                    <SubmitOrRecall
-                                        type={2}
-                                        disabled={buttonDisabled || !isSubmit}
-                                        url="/account/income/taxout/revoke"
-                                        onSuccess={this.refreshTable}
-                                        monthFieldName="authMonth"
-                                        initialValue={filter}
-                                    />
+                                            }
+                                        },{
+                                            type:'submit',
+                                            url:'/account/income/taxout/submit',
+                                            monthFieldName:"authMonth",
+                                            params:filters,
+                                            onSuccess:this.refreshTable
+                                        },{
+                                            type:'revoke',
+                                            monthFieldName:"authMonth",
+                                            url:'/account/income/taxout/revoke',
+                                            params:filters,
+                                            onSuccess:this.refreshTable,
+                                        }],statusParam)
+                                    }
                                     <TableTotal
                                         type={3}
                                         totalSource={totalSource}
@@ -345,7 +292,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         this.hideModal();
                     }}
                     id={this.state.opid}
-                    update={this.update}
+                    update={this.refreshTable}
                 />
             </div>
         );

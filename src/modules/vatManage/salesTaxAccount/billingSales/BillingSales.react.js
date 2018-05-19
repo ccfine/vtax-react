@@ -5,10 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
-import {FileExport,SynchronizeTable} from 'compoments'
-import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import ButtonReset from 'compoments/buttonReset'
+import {SynchronizeTable} from 'compoments'
+import {getFields,fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -268,7 +266,6 @@ class BillingSales extends Component {
     }
     render(){
         const {tableUpDateKey,filters,dataSource,notDataSource,visible,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -337,21 +334,33 @@ class BillingSales extends Component {
                               listMainResultStatus(statusParam)
                           }
                           {
-                              JSON.stringify(filters) !== "{}" && <span>
-                                  <FileExport
-                                      url={`account/output/billingSale/export`}
-                                      title='导出'
-                                      setButtonStyle={{marginRight:5}}
-                                      disabled={disabled1}
-                                      params={{
-                                          isEstate:1,
-                                          ...filters
-                                      }}
-                                  />
-                                <ButtonReset style={{marginRight:5}} disabled={disabled1} filters={filters} url="/account/output/billingSale/reset" onSuccess={this.refreshTable} />
-                                <SubmitOrRecall disabled={disabled1} type={1} url="/account/output/billingSale/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
-                                <SubmitOrRecall disabled={!disabled1} type={2} url="/account/output/billingSale/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
-                            </span>
+                              JSON.stringify(filters) !== "{}" && composeBotton([{
+                                type:'fileExport',
+                                url:'account/output/billingSale/export',
+                                title:'导出',
+                                params:{
+                                    isEstate:1,
+                                    ...filters
+                                },
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'reset',
+                                url:'/account/output/billingSale/reset',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'submit',
+                                url:'/account/output/billingSale/submit',
+                                params:filters,
+                                monthFieldName:'authMonth',
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/account/output/billingSale/revoke',
+                                params:filters,
+                                monthFieldName:'authMonth',
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
                           }
                       </div>
                       }
@@ -372,18 +381,16 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-非地产"
                       extra={<div>
                           {
-                              JSON.stringify(filters) !== "{}" && <span>
-                                  <FileExport
-                                      url={`account/output/billingSale/export`}
-                                      title='导出'
-                                      setButtonStyle={{marginRight:5}}
-                                      disabled={disabled1 || !(notDataSource && notDataSource.length>0)}
-                                      params={{
-                                          isEstate:0,
-                                          ...filters
-                                      }}
-                                  />
-                            </span>
+                              JSON.stringify(filters) !== "{}" && composeBotton([{
+                                type:'fileExport',
+                                url:'account/output/billingSale/export',
+                                title:'导出',
+                                params:{
+                                    isEstate:0,
+                                    ...filters
+                                },
+                                onSuccess:this.refreshTable
+                            }])
                           }
                       </div>}
                       style={{marginTop:10}}>

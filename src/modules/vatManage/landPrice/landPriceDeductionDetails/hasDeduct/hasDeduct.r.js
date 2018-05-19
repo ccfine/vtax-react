@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 15:33:21
+ * @Last Modified time: 2018-05-19 16:40:13
  */
 import React from 'react'
 import {message} from 'antd'
@@ -175,12 +175,10 @@ class HasDeduct extends React.Component{
     state={
         tableKey:Date.now(),
         doNotFetchDidMount:true,
-        searchFieldsValues:{
+        filters:{
 
         },
-        statusParams:undefined,
-
-        dataSource:undefined,
+        statusParam:undefined,
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -210,13 +208,13 @@ class HasDeduct extends React.Component{
     fetchResultStatus = ()=>{
         request.get('/account/landPrice/deductedDetails/listMain',{
             params:{
-                ...this.state.searchFieldsValues
+                ...this.state.filters
             }
         })
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        statusParams:data.data,
+                        statusParam:data.data,
                     })
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
@@ -227,10 +225,9 @@ class HasDeduct extends React.Component{
             })
     }
     render(){
-        const {tableKey,searchFieldsValues={},doNotFetchDidMount,statusParams={}} = this.state;
+        const {tableKey,filters={},doNotFetchDidMount,statusParam={}} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
-        let submitIntialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.month}
         return(
             <SearchTable
                 style={{
@@ -256,39 +253,36 @@ class HasDeduct extends React.Component{
                     url:'/account/landPrice/deductedDetails/list',
                     onSuccess:(params,data)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                         },()=>{
                             this.fetchResultStatus()
                         })
                     },
                     extra:<div>
                         {
-                            listMainResultStatus(statusParams)
+                            listMainResultStatus(statusParam)
                         }
                         {
-                            composeBotton([{
+                            JSON.stringify(filters) !=='{}' && composeBotton([{
                                 type:'reset',
                                 url:'/account/landPrice/deductedDetails/reset',
-                                params:{...submitIntialValue},
+                                params:filters,
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/landPrice/deductedDetails/submit',
-                                params:{...submitIntialValue},
+                                params:filters,
                                 monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/landPrice/deductedDetails/revoke',
-                                params:{...submitIntialValue},
+                                params:filters,
                                 monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable,
-                            }],statusParams)
+                            }],statusParam)
                         }
                     </div>,
-                    scroll:{
-                        x:'100%'
-                    },
                 }}
             >
             </SearchTable>

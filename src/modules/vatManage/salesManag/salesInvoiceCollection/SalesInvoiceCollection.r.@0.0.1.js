@@ -71,7 +71,7 @@ const searchFields = disabled => {
             type: "monthPicker",
             formItemStyle,
             span: 6,
-            fieldName: "billingDate",
+            fieldName: "authMonth",
             componentProps: {
                 disabled
             },
@@ -261,12 +261,10 @@ class SalesInvoiceCollection extends Component {
         },
         tableKey: Date.now(),
         filters: {},
-        dataSource: [],
         /**
          *修改状态和时间
          * */
         statusParam: {},
-        hasData: false,
         totalSource: undefined
     };
     fetchResultStatus = () => {
@@ -333,8 +331,7 @@ class SalesInvoiceCollection extends Component {
                     onSuccess: (params, data) => {
                         this.setState(
                             {
-                                filters: params,
-                                hasData: data.length !== 0
+                                filters: params
                             },
                             () => {
                                 this.fetchResultStatus();
@@ -380,11 +377,6 @@ class SalesInvoiceCollection extends Component {
                     /*scroll:{
                         x:'180%'
                     },*/
-                    onDataChange: dataSource => {
-                        this.setState({
-                            dataSource
-                        });
-                    },
                     onTotalSource: totalSource => {
                         this.setState({
                             totalSource

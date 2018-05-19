@@ -2,12 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 17:45:24
+ * @Last Modified time: 2018-05-19 16:22:40
  */
 import React,{Component} from 'react'
 import {Tabs} from 'antd'
-import HasDeduct from './hasDeduct.r'
-import ShouldDeduct from './shouldDeduct.r'
+import HasDeduct from './hasDeduct'
+import ShouldDeduct from './shouldDeduct'
 const TabPane = Tabs.TabPane;
 
 export default class DeductProjectSummary extends Component {
