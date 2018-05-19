@@ -4,11 +4,9 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {SearchTable,TableTotal} from 'compoments'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import {requestResultStatus,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import VoucherPopModal from './voucherPopModal'
 import moment from 'moment';
@@ -83,51 +81,49 @@ const getColumns = context => [
     },{
         title: '凭据份数',
         dataIndex: 'num',
-        render:(text,record)=>(
-            <span>
-                {
-                    record.invoiceType
-                        ?
-                        <span title="查看发票信息详情" onClick={()=>{
-                                const params= {
-                                    mainId:record.mainId,
-                                    invoiceType:record.sysDictId,
-                                }
-                                context.setState({
-                                    params:params
-                                },()=>{
+        render:(text,record)=>{
+            if(parseInt(text,0) > 0 ){
+                return (
+                    <span>
+                        {
+                            record.invoiceType
+                                ?
+                                <span title="查看发票信息详情" onClick={()=>{
                                     context.toggleModalVisible(true)
-                                })
-                            }} style={pointerStyle}>
-                                {text}
-                        </span>
-                        :
-                        <span title="查看凭证信息详情" onClick={()=>{
-                                const params= {
-                                    mainId:record.mainId,
-                                    flag :record.flag,
-                                }
-                                context.setState({
-                                    params:params
-                                },()=>{
-                                    context.toggleModalVoucherVisible(true)
-                                })
-                            }} style={pointerStyle}>
-                            {text}
-                        </span>
-                }
-            </span>
+                                }} style={pointerStyle}>
+                                    {text}
+                                </span>
+                                :
+                                <span title="查看凭证信息详情" onClick={()=>{
+                                    const params= {
+                                        sysDictId:record.sysDictId,
+                                    }
+                                    context.setState({
+                                        params:params
+                                    },()=>{
+                                        context.toggleModalVoucherVisible(true)
+                                    })
+                                }} style={pointerStyle}>
+                                    {text}
+                                </span>
+                        }
+                    </span>
+                )
+            }else{
+                return text
+            }
+        }
 
-
-        )
     },{
         title: '金额',
         dataIndex: 'amount',
         render:text=>fMoney(text),
+        className: "table-money"
     },{
         title: '税额',
         dataIndex: 'taxAmount',
         render:text=>fMoney(text),
+        className: "table-money"
 
     }
 ];
@@ -162,21 +158,11 @@ class InputTaxDetails extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/account/income/taxDetail/listMain',{
-            params:this.state.filters
+        requestResultStatus('/account/income/taxDetail/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     componentDidMount(){
         const {search} = this.props.location;
@@ -186,7 +172,6 @@ class InputTaxDetails extends Component{
     }
     render(){
         const {searchTableLoading,tableKey,visible,voucherVisible,params,statusParam,filters,totalSource} = this.state;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -224,10 +209,17 @@ class InputTaxDetails extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" && <span>
-                                <SubmitOrRecall disabled={disabled1} type={1} url="/account/income/taxDetail/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
-                                <SubmitOrRecall disabled={!disabled1} type={2} url="/account/income/taxDetail/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
-                            </span>
+                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'submit',
+                                url:'/account/income/taxDetail/submit',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/account/income/taxDetail/revoke',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
@@ -241,15 +233,11 @@ class InputTaxDetails extends Component{
                             ]
                         } />
                     </div>,
-                    /*scroll:{
-                     x:'1400px',
-                     },*/
                 }}
             >
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}
-                    params={params}
                     filters={filters}
                     toggleModalVisible={this.toggleModalVisible}
                 />

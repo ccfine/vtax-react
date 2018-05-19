@@ -5,10 +5,9 @@
  *
  */
 import React,{Component} from 'react'
-import {message} from 'antd'
 import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
-import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
 const pointerStyle = {
@@ -180,21 +179,11 @@ class PrepayTax extends Component{
         }
     }
     fetchResultStatus = ()=>{
-        request.get('/account/prepaytax/listMain',{
-            params:this.state.filters
+        requestResultStatus('/account/prepaytax/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     render(){
         const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters} = this.state;
@@ -243,9 +232,6 @@ class PrepayTax extends Component{
                             }],statusParam)
                         }
                     </div>,
-                    /*scroll:{
-                        x:'1400px',
-                    },*/
                 }}
             >
                 <ViewDocumentDetails

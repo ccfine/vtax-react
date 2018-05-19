@@ -24,11 +24,19 @@ const formatJson = (param) => {
 
 //新增
 const getConsistentOptions = (item, statusParam) => {
-    return {
-        ...item,
-        disabled: isDisabled(statusParam),
-        style: item.style || {marginRight:5},
-    };
+    if(("selectedRowKeys" in item)){
+        return {
+            ...item,
+            disabled: isDisabled(statusParam) ? isDisabled(statusParam) : !item.selectedRowKeys.length>0,
+            style: item.style || {marginRight:5},
+        };
+    }else{
+        return {
+            ...item,
+            disabled: isDisabled(statusParam),
+            style: item.style || {marginRight:5},
+        };
+    }
 };
 
 // 重算参数
@@ -117,7 +125,7 @@ const getMarkOptions = (item,statusParam) =>{
 const composeBotton = (buttons = [], params) => {
     return buttons.map(item => {
         let component = undefined;
-        if(item.type === 'add' || item.type === 'save'){
+        if(item.type === 'add' || item.type === 'save' || item.type ==='view'){
             item.type = 'consistent'
         }
         switch (item.type) {

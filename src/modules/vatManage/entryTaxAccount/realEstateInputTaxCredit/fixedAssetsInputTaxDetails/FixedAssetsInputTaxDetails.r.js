@@ -3,9 +3,8 @@
  */
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,toPercent,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,listMainResultStatus,toPercent,composeBotton} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体名称',
@@ -148,23 +147,12 @@ class FixedAssetsInputTaxDetails extends Component{
         statusParam:{},
     }
     fetchResultStatus = ()=>{
-        request.get('/account/income/estate/listMain',{
-            params:this.state.filters
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
-
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()

@@ -296,8 +296,7 @@ class PopModal extends Component{
                                         },
                                         componentProps:{
                                             disabled
-                                        }
-                                    }, {
+                                        }}, {
                                         label: '申报周期',
                                         fieldName: 'cycle',
                                         type: 'select',
@@ -315,6 +314,7 @@ class PopModal extends Component{
                                         componentProps: {
                                             disabled
                                         }
+
                                     }, {
                                         label: '所属期',
                                         fieldName: 'period',

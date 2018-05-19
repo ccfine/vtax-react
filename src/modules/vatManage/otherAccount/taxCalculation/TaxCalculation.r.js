@@ -7,11 +7,11 @@
 import React,{Component} from 'react'
 import {message,Form} from 'antd'
 import {SearchTable} from 'compoments'
-import {request,getUrlParam,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {request,getUrlParam,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import EditableCell from './EditableCell.r'
 import { withRouter } from 'react-router'
 import moment from 'moment';
-const searchFields =(disabled)=>(getFieldValue)=> {
+const searchFields =(disabled)=>{
     return [
         {
             label:'纳税主体',
@@ -158,21 +158,11 @@ class TaxCalculation extends Component{
         }
     }
     fetchResultStatus = ()=>{
-        request.get('/account/taxCalculation/listMain',{
-            params:this.state.filters
+        requestResultStatus('/account/taxCalculation/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     render(){
         const {searchTableLoading,tableKey,statusParam,tableUrl,filters} = this.state;
