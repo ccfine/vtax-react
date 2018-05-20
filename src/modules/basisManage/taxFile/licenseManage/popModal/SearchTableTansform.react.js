@@ -104,7 +104,7 @@ class SearchTable extends Component{
                                         <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                                         </Col>)
                                     }
-                                    <Col style={{paddingTop:5}} span={actionOption.span||2} offset={(searchOption && searchOption.fields)?6:(actionOption.span?(24-actionOption.span):22)}>
+                                    <Col style={{paddingTop:5,textAlign:'right',paddingRight:'10px'}} span={actionOption.span||4} offset={(searchOption && searchOption.fields)?4:(actionOption.span?(24-actionOption.span):20)}>
                                         {actionOption.body}
                                     </Col>
                                 </Row>
@@ -114,7 +114,7 @@ class SearchTable extends Component{
                 }
                 <Card
                       extra={tableOption.extra || null}
-                      style={{marginTop:10}}
+                      style={{marginTop:10,border:'none'}}
                       {...tableOption.cardProps}
                 >
                     <AsyncTable url={tableOption.url}
