@@ -125,7 +125,7 @@ const getMarkOptions = (item,statusParam) =>{
 const composeBotton = (buttons = [], params) => {
     return buttons.map((item, i) => {
         let component = undefined;
-        if(item.type === 'add' || item.type === 'save' || item.type ==='view'){
+        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel'){
             item.type = 'consistent'
         }
         switch (item.type) {
