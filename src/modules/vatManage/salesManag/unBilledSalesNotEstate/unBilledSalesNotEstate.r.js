@@ -2,13 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 17:28:20
+ * @Last Modified time: 2018-05-20 12:38:06
  */
 import React, { Component } from "react";
 import { Icon, message, Modal } from "antd";
-// import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import { SearchTable, TableTotal } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
+import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
 import { withRouter } from "react-router";
 import PopModal from "./popModal";
@@ -20,17 +19,7 @@ const getColumns = context => [
             return (
                 <span className="table-operate">
                     <a
-                        onClick={() => {
-                            context.setState({
-                                visible: true,
-                                action: "look",
-                                opid: record.id
-                            });
-                        }}
-                    >
-                        <Icon type="search" />
-                    </a>
-                    <a
+                        title="编辑"
                         onClick={() => {
                             context.setState({
                                 visible: true,
@@ -42,6 +31,7 @@ const getColumns = context => [
                         <Icon type="edit" />
                     </a>
                     <a
+                        title="删除"
                         style={{
                             color: "#f5222d"
                         }}
@@ -70,12 +60,23 @@ const getColumns = context => [
             );
         },
         fixed: "left",
-        width: "75px",
+        width: "50px",
         dataIndex: "action"
     },
     {
         title: "纳税主体",
-        dataIndex: "mainName"
+        dataIndex: "mainName",
+        render:(text,record)=>{
+            return <a title="查看" onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: "look",
+                        opid: record.id
+                    });
+                }} >
+                {text}
+            </a>
+        }
     },
     {
         title: "项目名称",
@@ -153,21 +154,11 @@ class UnBilledSalesNotEstate extends Component {
     };
     updateStatus = (values) => {
         this.setState({ filters: values });
-        let params = { ...values };
-        params.authMonth = moment(params.authMonth).format("YYYY-MM");
-        request
-            .get("/account/notInvoiceUnSale/realty/listMain", { params: params })
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    if (data.data) {
-                        this.setState({ statusParam: data.data, filters: values });
-                    }
-                }else{
-                    message.error(data.msg,4);
-                }
-            }).catch(err=>{
-                message.error(err.message,4);
-            });
+        requestResultStatus('/account/notInvoiceUnSale/realty/listMain',values,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
     };
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
@@ -267,7 +258,6 @@ class UnBilledSalesNotEstate extends Component {
         return (
             <div>
                 <SearchTable
-                    backCondition={this.updateStatus}
                     doNotFetchDidMount={!search}
                     tableOption={{
                         key: this.state.updateKey,
@@ -280,6 +270,7 @@ class UnBilledSalesNotEstate extends Component {
                                 totalSource
                             });
                         },
+                        onSuccess:this.updateStatus,
                         cardProps: {
                             title: "未开票销售台账-非地产",
                             extra: (

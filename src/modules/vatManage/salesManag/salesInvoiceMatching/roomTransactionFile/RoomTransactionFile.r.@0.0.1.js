@@ -1,13 +1,13 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:05:42
+ * @Last Modified time: 2018-05-20 15:20:50
  *
  */
 import React,{Component} from 'react'
-import {Form,Modal,message} from 'antd'
+import {Modal,message,Icon} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
@@ -78,9 +78,11 @@ const getColumns = context => [
     {
         title: '操作',
         key: 'actions',
+        className:'text-center',
+        width:50,
         render: (text, record) => {
-            return parseInt(context.state.statusParam,0) === 1 ? (
-                <span style={{
+            return parseInt(context.state.statusParam.status,0) === 1 ? (
+                <span title='删除' style={{
                     color:'#f5222d',
                     cursor:'pointer'
                 }} onClick={()=>{
@@ -115,7 +117,7 @@ const getColumns = context => [
                         },
                     });
                 }}>
-                删除
+                <Icon type='delete'/>
             </span>
             ) : ''
         }
@@ -226,28 +228,17 @@ class RoomTransactionFile extends Component{
             })
     }
     fetchResultStatus = ()=>{
-        request.get('/output/room/files/listMain',{
-            params:this.state.filters
+        requestResultStatus('/output/room/files/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     render(){
         const {tableUpDateKey,statusParam,totalSource,filters={}} = this.state;
-        const {getFieldValue} = this.props.form;
         const {search} = this.props.location;
         let disabled = !!search;
-        const searchFeilds = [
+        const searchFeilds = (getFieldValue)=>[
             {
                 label:'纳税主体',
                 fieldName:'mainId',
@@ -448,4 +439,4 @@ class RoomTransactionFile extends Component{
     }
 }
 
-export default Form.create()(withRouter(RoomTransactionFile))
+export default withRouter(RoomTransactionFile)

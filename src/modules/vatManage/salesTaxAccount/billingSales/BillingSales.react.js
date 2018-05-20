@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
 import {SynchronizeTable} from 'compoments'
-import {getFields,fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {getFields,fMoney,request,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -247,16 +247,11 @@ class BillingSales extends Component {
     }
 
     updateStatus=()=>{
-        request.get('/account/output/billingSale/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data
-                })
-            }
-        })
-            .catch(err => {
-                message.error(err.message)
+        requestResultStatus('/account/output/billingSale/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
+        })
     }
     componentDidMount(){
         const {search} = this.props.location;

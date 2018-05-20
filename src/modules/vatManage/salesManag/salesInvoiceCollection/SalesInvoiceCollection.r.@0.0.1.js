@@ -2,9 +2,8 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
-import { message } from "antd";
 import { SearchTable, TableTotal } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
+import { fMoney, getUrlParam, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import PopModal from "./popModal";
 import { withRouter } from "react-router";
 import moment from "moment";
@@ -268,22 +267,11 @@ class SalesInvoiceCollection extends Component {
         totalSource: undefined
     };
     fetchResultStatus = () => {
-        request
-            .get("/output/invoice/collection/listMain", {
-                params: this.state.filters
+        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    this.setState({
-                        statusParam: data.data
-                    });
-                } else {
-                    message.error(`列表主信息查询失败:${data.msg}`);
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-            });
+        })
     };
     toggleModalVisible = visible => {
         this.setState({

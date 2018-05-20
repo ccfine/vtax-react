@@ -1,13 +1,12 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:04:27
+ * @Last Modified time: 2018-05-20 12:16:41
  *
  */
 import React, { Component } from 'react'
-import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import {message} from 'antd'
 import ManualMatchRoomModal from './addDataModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -206,21 +205,11 @@ class NeedNotMatchInvoices extends Component{
         }
     }
     fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.filters
+        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     render(){
         const {visible,tableKey,statusParam,totalSource,filters} = this.state;

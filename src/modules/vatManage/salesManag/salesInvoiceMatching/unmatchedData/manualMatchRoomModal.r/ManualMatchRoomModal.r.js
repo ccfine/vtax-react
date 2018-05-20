@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React,{Component} from 'react';
-import {Button,Modal,Row,Col,message,Card,Input} from 'antd';
+import {Button,Modal,Row,Col,message,Card,Input,Icon} from 'antd';
 import {request,fMoney} from '../../../../../../utils'
 import {SearchTable} from 'compoments'
 const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
@@ -70,10 +70,10 @@ const getColumns = context => [
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:'60px',
+        width:'50px',
         className:'text-center',
         render: (text, record) => (
-            <span style={{
+            <span title='匹配' style={{
                 color:'#1890ff',
                 cursor:'pointer'
             }} onClick={()=>{
@@ -91,7 +91,7 @@ const getColumns = context => [
                     },
                 });
             }}>
-                匹配
+                <Icon type="check-circle-o" />
             </span>
         )
     },

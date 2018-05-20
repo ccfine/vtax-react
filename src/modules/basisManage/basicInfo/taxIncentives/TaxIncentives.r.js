@@ -4,8 +4,9 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {Button,Icon} from 'antd'
+import {Icon} from 'antd'
 import PopModal from './PopModal.r'
+import {composeBotton} from 'utils'
 const searchFields = [
     {
         label:'纳税主体',
@@ -13,10 +14,6 @@ const searchFields = [
         fieldName:'mainId',
     }
 ]
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
 const getColumns = context=> [
     {
         title:'操作',
@@ -24,42 +21,39 @@ const getColumns = context=> [
         render:(text,record)=>{
             return (
                 <div>
-                <span style={pointerStyle} onClick={()=>{
-                    context.setState({
-                        modalConfig:{
-                            type:'edit',
-                            id:record.id
-                        }
-                    },()=>{
-                        context.toggleModalVisible(true)
-                    })
-                }}>编辑</span>
-                    <span style={{
-                        ...pointerStyle,
-                        marginLeft:5
-                    }} onClick={()=>{
+                    <a title='编辑' onClick={()=>{
                         context.setState({
                             modalConfig:{
-                                type:'view',
+                                type:'edit',
                                 id:record.id
                             }
                         },()=>{
                             context.toggleModalVisible(true)
                         })
-                    }}>
-                            查看
-                        </span>
+                    }}><Icon type="edit" /></a>
                 </div>
             )
 
         },
         fixed:'left',
-        width:'70px',
+        width:'50px',
         className:'text-center'
     },
     {
         title: '纳税主体',
         dataIndex: 'mainName',
+        render:(text,record)=><a title='编辑' onClick={()=>{
+            context.setState({
+                modalConfig:{
+                    type:'view',
+                    id:record.id
+                }
+            },()=>{
+                context.toggleModalVisible(true)
+            })
+        }}>
+                {text}
+            </a>
     }, {
         title: '涉及税(费)种',
         dataIndex: 'taxType',
@@ -158,10 +152,12 @@ export default class TaxIncentives extends Component{
                     url:'/tax/preferences/list',
                     extra:(
                         <div>
-                            <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="plus" />
-                                新增
-                            </Button>
+                            {
+                                composeBotton([{
+                                    type:'add',
+                                    onClick:()=>this.showModal('add')
+                                }])
+                            }
                         </div>
                     )
                 }}
