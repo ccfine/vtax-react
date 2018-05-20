@@ -11,24 +11,17 @@ import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from
 import moment from "moment";
 import { withRouter } from "react-router";
 import PopModal from "./popModal";
-const getColumns = context => [
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
+};
+const getColumns = (context,disabled1) => [
     {
         title: "操作",
         className:'text-center',
         render(text, record, index) {
-            return (
+            return disabled1 && (
                 <span className="table-operate">
-                    <a
-                        onClick={() => {
-                            context.setState({
-                                visible: true,
-                                action: "look",
-                                opid: record.id
-                            });
-                        }}
-                    >
-                        <Icon type="search" />
-                    </a>
                     <a
                         onClick={() => {
                             context.setState({
@@ -74,7 +67,25 @@ const getColumns = context => [
     },
     {
         title: "纳税主体",
-        dataIndex: "mainName"
+        dataIndex: "mainName",
+        render: (text, record) => (
+            <span
+                title="查看详情"
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: "look",
+                        opid: record.id
+                    });
+                }}
+            >
+                {text}
+            </span>
+        ),
     },
     {
         title: "应税项目",
@@ -210,6 +221,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         ];
 
         let { filters, statusParam } = this.state;
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         return (
             <div>
                 <SearchTable
@@ -219,7 +231,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         key: this.state.updateKey,
                         url: "/account/income/taxout/list",
                         pagination: true,
-                        columns: getColumns(this),
+                        columns: getColumns(this,disabled1),
                         rowKey: "id",
                         onSuccess:params=>{
                           this.setState({

@@ -123,7 +123,7 @@ const getMarkOptions = (item,statusParam) =>{
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const composeBotton = (buttons = [], params) => {
-    return buttons.map(item => {
+    return buttons.map((item, i) => {
         let component = undefined;
         if(item.type === 'add' || item.type === 'save' || item.type ==='view'){
             item.type = 'consistent'
@@ -175,11 +175,10 @@ const composeBotton = (buttons = [], params) => {
             default:
                 break;
         }
-
         return (
             component && (
                 <PermissibleRender
-                    key={item.key || item.type}
+                    key={i}
                     userPermissions={item.userPermissions || []}>
                     {component}
                 </PermissibleRender>

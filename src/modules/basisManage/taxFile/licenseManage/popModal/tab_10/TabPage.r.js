@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Modal,message,Card,Icon} from 'antd'
+import {Modal,message,Card,Icon,Tooltip} from 'antd'
 import PopModal from './popModal'
-import {request} from 'utils'
+import {request,composeBotton} from 'utils'
 import PartTwo from './TabPage2.r'
 const getSearchFields = projectId => [
     {
@@ -22,15 +22,15 @@ const getSearchFields = projectId => [
 const getColumns = context=> [
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
+        render:(text, record, index)=>(
+            <span>
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
-                }}>编辑</a>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'look',opid:record.id});
-                }}>查看</a>
+                }}>
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
+                </a>
                 <span style={{
                     color:'#f5222d',
                     cursor:'pointer'
@@ -50,18 +50,31 @@ const getColumns = context=> [
                         },
                     });
                 }}>
-                    删除
+                    <Tooltip placement="top" title="删除">
+                        <Icon type="delete" />
+                    </Tooltip>
                 </span>
-                </span>
-            );
-        },
+            </span>
+        ),
         fixed:'left',
         width:'100px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center',
     },
     {
         title: '权证名称 ',
         dataIndex: 'warrantName',
+        render:(text,record)=>(
+            <a
+                onClick={() => {
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}
+            >
+                <Tooltip placement="top" title="查看">
+                    {text}
+                </Tooltip>
+            </a>
+        )
     }, {
         title: '权证号',
         dataIndex: 'warrantNum',
@@ -150,52 +163,60 @@ export default class TabPage extends Component{
         const {projectId} = this.props;
         return(
             <div style={{padding:"0 15px"}}>
-            <Card title="大产证">
-            <SearchTable
-                searchOption={{
-                    fields:getSearchFields(projectId),
-                    cardProps:{
-                        title:'',
-                        bordered:false,
-                        extra:null,
-                        bodyStyle:{padding:"0px"},
-                    }
-                }}
-                actionOption={{
-                    body:(<Button size='small' onClick={()=>{
-                        this.setState({visible:true,action:'add',opid:undefined});
-                    }}><Icon type="plus" />新增</Button>)
-                }}
-                tableOption={{
-                    columns:getColumns(this),
-                    url:`/card/house/ownership/list/${props.projectId}`,
-                    scroll:{x:'200%'},
-                    key:this.state.updateKey,
-                    cardProps:{
-                        bordered:false,
-                        bodyStyle:{marginLeft:'-2px',padding:'10px'}
-                    },
-                    rowSelection:{
-                        selectedRowKeys:this.state.selectedRowKeys,
-                        type:'radio',
-                        onChange:selectedRowKeys=>{
-                            this.setState({selectedRowKeys,titleCertificateId:(selectedRowKeys&&selectedRowKeys.length>0)?selectedRowKeys[0]:undefined});
-                        }
-                    }
-                }}
-            >
-            </SearchTable>
-            </Card>
-               <PopModal 
-                projectid={props.projectId}
-                id={this.state.opid}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal>
+                <Card title="大产证">
+                    <SearchTable
+                        searchOption={{
+                            fields:getSearchFields(projectId),
+                            cardProps:{
+                                title:'',
+                                bordered:false,
+                                extra:null,
+                                bodyStyle:{padding:"0px"},
+                            }
+                        }}
+                        actionOption={{
+                            body:(
+                                <span>
+                                    {
+                                        composeBotton([{
+                                            type:'add',
+                                            onClick:()=>{
+                                                this.setState({visible:true,action:'add',opid:undefined});
+                                            }
+                                        }])
+                                    }
+                                </span>
+                            )
+                        }}
+                        tableOption={{
+                            columns:getColumns(this),
+                            url:`/card/house/ownership/list/${props.projectId}`,
+                            scroll:{x:'200%'},
+                            key:this.state.updateKey,
+                            cardProps:{
+                                bordered:false,
+                                bodyStyle:{marginLeft:'-2px',padding:'10px'}
+                            },
+                            rowSelection:{
+                                selectedRowKeys:this.state.selectedRowKeys,
+                                type:'radio',
+                                onChange:selectedRowKeys=>{
+                                    this.setState({selectedRowKeys,titleCertificateId:(selectedRowKeys&&selectedRowKeys.length>0)?selectedRowKeys[0]:undefined});
+                                }
+                            }
+                        }}
+                    />
+                </Card>
+               <PopModal
+                    projectid={props.projectId}
+                    id={this.state.opid}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
                 {this.state.titleCertificateId && <PartTwo titleCertificateId={this.state.titleCertificateId} updateKey={this.state.updateKey}/>}
-                
+
             </div>
         )
     }

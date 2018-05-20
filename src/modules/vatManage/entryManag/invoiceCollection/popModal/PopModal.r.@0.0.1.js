@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
-import {request,regRules,fMoney,requestDict,getFields} from '../../../../../utils'
+import {request,regRules,fMoney,requestDict,getFields,setFormat} from 'utils'
 import {SynchronizeTable} from 'compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
@@ -157,7 +157,7 @@ class PopModal extends Component{
     getRegistrationType=()=>{
         requestDict('JXFPLX',result=>{
             this.setState({
-                invoiceTypeItem:this.setFormat(result)
+                invoiceTypeItem:setFormat(result)
             })
         })
     }
@@ -165,7 +165,7 @@ class PopModal extends Component{
     getIncomeStructureType=()=>{
         requestDict('JXJGFL',result=>{
             this.setState({
-                incomeStructureTypeItem:this.setFormat(result)
+                incomeStructureTypeItem:setFormat(result)
             })
         })
     }
@@ -234,34 +234,6 @@ class PopModal extends Component{
                 });
             });
     }
-
-    checkeDetailsDateId = (data)=>{
-        return data.map((item)=>{
-            return {
-                amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
-                goodsServicesName:item.goodsServicesName,
-                parentId:item.parentId,
-                qty:item.qty,
-                specificationModel:item.specificationModel,
-                taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
-                taxRate:item.taxRate,
-                totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                unit:item.unit,
-                unitPrice:parseFloat(`${item.unitPrice}`),
-                id: (item.id.indexOf('t') > -1) ? null : item.id
-            }
-        })
-    }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
     componentDidMount(){
         this.getRegistrationType()
         this.getIncomeStructureType()
@@ -278,13 +250,12 @@ class PopModal extends Component{
                 detailsDate:[],
             })
         }
+
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            if(nextProps.selectedRowKeys.length>0){
-                this.fetch(nextProps.selectedRowKeys[0])
-            }
+            this.fetch(nextProps.modalConfig.id, nextProps)
         }
     }
     mounted=true

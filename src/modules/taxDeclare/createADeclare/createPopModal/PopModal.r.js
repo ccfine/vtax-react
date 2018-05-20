@@ -8,22 +8,20 @@ import moment from 'moment';
 import {connect} from 'react-redux'
 import {Button,Modal,Form,Row,Col,Card,message} from 'antd';
 import {SearchTable} from 'compoments'
-import {request,requestDict,getFields} from 'utils'
+import {request,requestDict,getFields,setFormat} from 'utils'
 
-const searchFields = (getFieldValue,setFieldsValue)=> {
-    return [
-        {
-            label: '纳税主体',
-            fieldName: 'mainId',
-            type: 'taxMain',
-            span: 12,
-            componentProps:{
-            },
-            fieldDecoratorOptions: {
-            },
+const searchFields = [
+    {
+        label: '纳税主体',
+        fieldName: 'mainId',
+        type: 'taxMain',
+        span: 12,
+        componentProps:{
         },
-    ]
-}
+        fieldDecoratorOptions: {
+        },
+    },
+]
 const getColumns = context=> [
     {
         title: '纳税主体',
@@ -60,7 +58,6 @@ class PopModal extends Component{
     }
     state={
         tableKey:Date.now(),
-
         taxDeclaration:[],
         taxModality:[],
         isProcess:[],
@@ -74,19 +71,19 @@ class PopModal extends Component{
         //获取纳税申报对应的数据字典
         requestDict('NSSB',result=>{
             this.setState({
-                taxDeclaration :this.setFormat(result)
+                taxDeclaration :setFormat(result)
             })
         });
         //获取纳税形式对应的数据字典
         requestDict('NSXS',result=>{
             this.setState({
-                taxModality :this.setFormat(result)
+                taxModality :setFormat(result)
             })
         });
         //获取所属流程对应的数据字典
         requestDict('SSLC',result=>{
             this.setState({
-                isProcess :this.setFormat(result)
+                isProcess :setFormat(result)
             })
         });
 
@@ -100,16 +97,6 @@ class PopModal extends Component{
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
-        })
-    }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
         })
     }
     handleSubmit = (e) => {
@@ -243,12 +230,10 @@ class PopModal extends Component{
                 width={900}
                 visible={props.visible}
                 footer={
-                    <Row>
+                    type !== 'view' && <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            {
-                                type !== 'view' && <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                            }
+                            <Button type="primary" onClick={this.handleSubmit}>确定</Button>
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                         </Col>
                     </Row>

@@ -2,9 +2,13 @@
  * Created by liuliyuan on 2018/5/14.
  */
 import React, { Component } from 'react';
-import {Button,Icon,message,Modal} from 'antd'
+import {Icon,message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
 import {request} from 'utils'
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
+};
 const formItemStyle={
     labelCol:{
         span:8
@@ -60,6 +64,58 @@ const searchFields = [
 ]
 const getColumns =(context)=>[
     {
+        title: "操作",
+        className:'text-center',
+        render:(text,record)=>{
+            let status = parseInt(record.status,0);
+            console.log(record.status)
+            if( status < 5  && status !== -1){
+                return (
+                    <span
+                        title="完成"
+                        style={{
+                            ...pointerStyle,
+                            marginLeft: 5
+                        }}
+                        onClick={() => context.handelComplete()}
+                    >
+                        <Icon title="完成" type="check" />
+                    </span>
+                )
+            }
+            if(status < 6 && status !== -1){
+                return (
+                    <span
+                        title="归档"
+                        style={{
+                            ...pointerStyle,
+                            marginLeft: 5
+                        }}
+                        onClick={() => context.handelArchiving()}
+                    >
+                        <Icon title="归档" type="check" />
+                    </span>
+                )
+            }
+            if(status < 6  && status !== -1){
+                return (
+                    <span
+                        title="流程终止"
+                        style={{
+                            ...pointerStyle,
+                            marginLeft: 5
+                        }}
+                        onClick={() => context.handelProcessStop()}
+                    >
+                        <Icon title="流程终止" type="exception" />
+                    </span>
+                )
+            }
+        },
+        fixed: "left",
+        width: "75px",
+        dataIndex: "action"
+    },{
         title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
@@ -140,8 +196,6 @@ const getColumns =(context)=>[
 export default class DeclareHandle extends Component{
     state={
         updateKey:Date.now(),
-        selectedRowKeys:undefined,
-        selectedRows:[],
     }
     refreshTable = ()=>{
         this.setState({
@@ -237,7 +291,7 @@ export default class DeclareHandle extends Component{
     }
 
     render(){
-        const {updateKey,selectedRowKeys,selectedRows} = this.state;
+        const {updateKey} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -256,45 +310,6 @@ export default class DeclareHandle extends Component{
                         title:'列表信息'
                     },
                     url:'/tax/decConduct/decList',
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        console.log(selectedRowKeys,selectedRows);
-                        this.setState({
-                            selectedRowKeys:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    onSuccess:()=>{
-                        this.setState({
-                            selectedRowKeys:undefined,
-                            selectedRows:[],
-                        })
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
-                    extra: <div>
-                        <Button size='small' style={{marginRight:5}}
-                                onClick={this.handelComplete}
-                                disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===4)}
-                        >
-                            <Icon type="check" />
-                            完成
-                        </Button>
-                        <Button size='small' style={{marginRight:5}}
-                                onClick={this.handelArchiving}
-                                disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===5)}
-                        >
-                            <Icon type="folder-open" />
-                            归档
-                        </Button>
-                        <Button size='small' type="danger" style={{marginRight:5}}
-                                onClick={this.handelProcessStop}
-                                disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===-1)}
-                        >
-                            <Icon type="exception" />
-                            流程终止
-                        </Button>
-                    </div>,
                 }}
             >
             </SearchTable>

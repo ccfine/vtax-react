@@ -3,21 +3,21 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Modal,message,Icon} from 'antd'
+import {Modal,message,Icon,Tooltip} from 'antd'
 import PopModal from './popModal'
-import {request} from '../../../../../../utils'
+import {request,composeBotton} from 'utils'
 const getColumns = context=>[
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
+        render:(text, record, index)=>(
+            <span>
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
-                }}>编辑</a>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'look',opid:record.id});
-                }}>查看</a>
+                }}>
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
+                </a>
                 <span style={{
                     color:'#f5222d',
                     cursor:'pointer'
@@ -37,18 +37,31 @@ const getColumns = context=>[
                         },
                     });
                 }}>
-                    删除
+                    <Tooltip placement="top" title="删除">
+                        <Icon type="delete" />
+                    </Tooltip>
                 </span>
-                </span>
-            );
-        },
+            </span>
+        ),
         fixed:'left',
         width:'100px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center',
     },
     {
         title: '建设用地规划许可证',
         dataIndex: 'licenseKey',
+        render:(text,record)=>(
+            <a
+                onClick={() => {
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}
+            >
+                <Tooltip placement="top" title="查看">
+                    {text}
+                </Tooltip>
+            </a>
+        )
     }, {
         title: '用地位置',
         dataIndex: 'position',
@@ -106,12 +119,20 @@ export default class TabPage extends Component{
     render(){
         const props = this.props;
         return(
-            <div style={{padding:"0 15px"}}>
             <SearchTable
                 actionOption={{
-                    body:(<Button size='small' onClick={()=>{
-                        this.setState({visible:true,action:'add',opid:undefined});
-                    }}><Icon type="plus" />新增</Button>)
+                    body:(
+                        <span>
+                            {
+                                composeBotton([{
+                                    type:'add',
+                                    onClick:()=>{
+                                        this.setState({visible:true,action:'add',opid:undefined});
+                                    }
+                                }])
+                            }
+                        </span>
+                    )
                 }}
                 searchOption={undefined}
                 tableOption={{
@@ -120,19 +141,20 @@ export default class TabPage extends Component{
                     scroll:{x:'100%'},
                     key:this.state.updateKey,
                     cardProps:{
-                        bordered:false
+                        bordered:false,
+                        style:{marginTop:"0px"}
                     }
                 }}
             >
+                <PopModal
+                    projectid={props.projectId}
+                    id={this.state.opid}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
             </SearchTable>
-             <PopModal 
-                projectid={props.projectId}
-                id={this.state.opid}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal> 
-            </div>)
+        )
     }
 }

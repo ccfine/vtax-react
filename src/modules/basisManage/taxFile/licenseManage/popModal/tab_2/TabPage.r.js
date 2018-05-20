@@ -2,23 +2,25 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
+import {Icon,Tooltip} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
 const getColumns = context=>[
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
+        render:(text, record, index)=>(
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',oprecord:record});
-                }}>编辑</a>
-                </span>
-            );
-        },
+                }}>
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
+                </a>
+        ),
         fixed:'left',
         width:'45px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center',
     },
     {
         title: '项目分期代码',
@@ -53,7 +55,6 @@ export default class TabPage extends Component{
     render(){
         const props = this.props;
         return(
-            <div style={{margin:'0 15px'}}>
             <SearchTable
                 searchOption={null}
                 tableOption={{
@@ -67,16 +68,14 @@ export default class TabPage extends Component{
                     }
                 }}
             >
+                <PopModal
+                    record={this.state.oprecord}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
             </SearchTable>
-            
-            <PopModal 
-                record={this.state.oprecord}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal>
-            </div>
         )
     }
 }

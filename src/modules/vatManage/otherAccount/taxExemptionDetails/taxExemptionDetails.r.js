@@ -12,6 +12,10 @@ import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton,requestRes
 import {SearchTable,TableTotal} from 'compoments'
 import PopModal from "./popModal";
 import moment from 'moment';
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
+};
 const searchFields =(disabled)=> [
     {
         label:'纳税主体',
@@ -62,9 +66,8 @@ const getColumns = (context,disabled1) => [
     {
         title: '操作',
         render(text, record, index) {
-            return (<span>
-                {
-                    disabled1 && <span>
+            return disabled1 && (
+                    <span>
                         <a style={{margin:"0 5px" }} onClick={() => {
                             context.setState({ visible: true, action: 'modify', opid: record.id });
                         }}><Icon type="edit" /></a>
@@ -89,13 +92,8 @@ const getColumns = (context,disabled1) => [
                         >
                             <Icon type="delete" />
                         </a>
-                    </span>
-                }
-
-                <a onClick={() => {
-                    context.setState({ visible: true, action: 'look', opid: record.id });
-                }}><Icon type="search" /></a>
-            </span>)
+                </span>
+            )
         },
         fixed: 'left',
         width: '75px',
@@ -104,6 +102,24 @@ const getColumns = (context,disabled1) => [
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',
+        render: (text, record) => (
+            <span
+                title="查看详情"
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: 'look',
+                        opid: record.id
+                    });
+                }}
+            >
+                {text}
+            </span>
+        ),
     }, {
         title: '减税性质代码',
         dataIndex: 'reduceNum',
