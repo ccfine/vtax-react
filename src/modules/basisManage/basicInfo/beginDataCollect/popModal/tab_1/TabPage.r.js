@@ -136,18 +136,9 @@ class TabPage extends Component{
         const {getFieldDecorator} = this.props.form;
         return(
                 <SearchTable
-                    actionOption={undefined}
-                    searchOption={undefined}
-                    spinning={searchTableLoading}
-                    tableOption={{
-                        key:tableKey,
-                        onRow:record=>({
-                            onDoubleClick:()=>{console.log(record)}
-                        }),
-                        pagination:false,
-                        columns:getColumns(getFieldDecorator),
-                        url:tableUrl,
-                        extra:<div>
+                    actionOption={{
+                        body:(
+                            <span>
                             {
                                 composeBotton([{
                                     type:'save',
@@ -161,7 +152,23 @@ class TabPage extends Component{
                                     onClick:()=>this.cancel()
                                 }])
                             }
-                        </div>
+                        </span>
+                        )
+                    }}
+                    searchOption={undefined}
+                    spinning={searchTableLoading}
+                    tableOption={{
+                        key:tableKey,
+                        cardProps:{
+                            bordered:false,
+                            style:{marginTop:"0px"}
+                        },
+                        onRow:record=>({
+                            onDoubleClick:()=>{console.log(record)}
+                        }),
+                        pagination:false,
+                        columns:getColumns(getFieldDecorator),
+                        url:tableUrl,
                     }}
                 />
         )
