@@ -8,6 +8,7 @@ import {wrapPage} from 'compoments'
 import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
+import BeginDataCollect from './beginDataCollect'
 import strategies from 'config/routingAuthority.config'
 
 
@@ -45,6 +46,16 @@ const BasicInfo_Routes = [
             backgroundColor:'#9FD360'
         },
         authorityInfo:basicInfo['declareParameter'].options,
+        exact:true,
+    },{
+        path:`${PATHS}/beginDataCollect`,
+        component:wrapPage('期初数据采集',BeginDataCollect),
+        name:'期初数据采集',
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['beginDataCollect'].options,
         exact:true,
     },{
         path:`${PATHS}`,

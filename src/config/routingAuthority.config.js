@@ -43,7 +43,10 @@ const strategies = {
             declareParameter:{
                 options:[],
             },
-
+            //期初数据采集
+            beginDataCollect:{
+                options:[],
+            },
         },
 
         //税务档案

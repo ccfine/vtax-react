@@ -42,7 +42,7 @@ const getColumns = context=> [
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-        render:(text,record)=><a title='编辑' onClick={()=>{
+        render:(text,record)=><a title='查看详情' onClick={()=>{
             context.setState({
                 modalConfig:{
                     type:'view',
@@ -119,7 +119,6 @@ export default class TaxIncentives extends Component{
             type:''
         },
         tableKey:Date.now(),
-        hasData:false,
     }
     toggleModalVisible=visible=>{
         this.setState({
