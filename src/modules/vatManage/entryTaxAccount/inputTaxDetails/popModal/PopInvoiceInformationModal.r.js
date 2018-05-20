@@ -6,16 +6,8 @@
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney} from 'utils'
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        if(typeof data[key] !== 'undefined' && data[key] !== ''){
-            str += `${key}=${data[key]}&`
-        }
-    }
-    return str;
-}
+import {fMoney,parseJsonToParams} from 'utils'
+
 const searchFields = [
     {
         label:'发票号码',

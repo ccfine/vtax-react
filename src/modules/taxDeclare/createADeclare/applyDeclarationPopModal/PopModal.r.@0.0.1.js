@@ -7,8 +7,8 @@ import React, { Component } from "react";
 import {Icon, Modal, Row, Col, Steps, List, Card, message} from "antd";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { composeMenus, request } from "utils";
-import routes from "../../../../modules/routes";
+import { composeMenus, request,parseJsonToParams } from "utils";
+import routes from "modules/routes";
 import data from "./data";
 import "./styles.less";
 
@@ -52,13 +52,6 @@ const steps = [
         //icon:<Icon type="form" />,
     }
 ];
-const parseJsonToParams = data => {
-    let str = "";
-    for (let key in data) {
-        str += `${key}=${data[key]}&`;
-    }
-    return str;
-};
 
 export default class ApplyDeclarationPopModal extends Component {
     static propTypes = {

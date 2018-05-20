@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import {Row,Card,message} from 'antd'
 import moment from 'moment';
-import {request,getFields,regRules,requestDict} from 'utils'
+import {request,getFields,regRules,requestDict,setFormat} from 'utils'
 import './styles.less'
 
 class BasicInfo extends Component {
@@ -20,22 +20,12 @@ class BasicInfo extends Component {
         maximumLimit:[],
         selectOptions:[],
     }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
 
     //注册类型:取基础资料DJZCLX
     getRegistrationType=()=>{
         requestDict('DJZCLX',result=>{
             this.setState({
-                registrationType:this.setFormat(result)
+                registrationType:setFormat(result)
             })
         })
     }
@@ -43,7 +33,7 @@ class BasicInfo extends Component {
     getTaxpayerQualification=()=>{
         requestDict('NSRLX',result=>{
             this.setState({
-                taxpayerQualification:this.setFormat(result)
+                taxpayerQualification:setFormat(result)
             })
         })
     }
@@ -51,7 +41,7 @@ class BasicInfo extends Component {
     getMaximumLimit=()=>{
         requestDict('ZZS_ZYFP_ZGXE',result=>{
             this.setState({
-                maximumLimit:this.setFormat(result)
+                maximumLimit:setFormat(result)
             })
         })
     }
