@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import {requestResultStatus,fMoney,getUrlParam,requestDict,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,getUrlParam,requestDict,listMainResultStatus,composeBotton,setFormat} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
@@ -20,16 +20,6 @@ const formItemStyle={
         span:16
     }
 }
-//设置select值名不同
-const setFormat=data=>{
-        return data.map(item=>{
-            return{
-                //...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
 const searchFields=(context,disabled)=> {
     return [
         {

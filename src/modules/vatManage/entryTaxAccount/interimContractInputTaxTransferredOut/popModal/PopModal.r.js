@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Card,Form,Button,Row,Col,Modal,message} from 'antd'
 import {AsyncTable} from 'compoments'
-import {getFields,htmlDecode,request,accDiv} from 'utils'
+import {getFields,htmlDecode,request} from 'utils'
 import {List} from 'immutable'
 // style={{width:'160px',overflow:'hidden',margin:'0 auto'}}
 const EditableCell = ({record, form, column, type,options,componentProps,fieldDecoratorOptions}) => {
@@ -127,14 +127,14 @@ class PopModal extends Component{
                         return {
                             $$dataSource:prevState.$$dataSource.map(item=>{
                                 if(record.stagesId !== item.stagesId){
-                                    const thisTaxScale2 = accDiv(item.buildingArea,sum);
+                                    const thisTaxScale2 = item.buildingArea / sum;
                                     const taxSale2 = parseFloat(thisTaxScale2.toString()).toFixed(4);
                                     return{
                                         ...item,
                                         taxScale:taxSale2
                                     }
                                 }else{
-                                    const thisTaxScale = accDiv(data.data.buildingArea,sum);
+                                    const thisTaxScale = data.data.buildingArea / sum;
                                     const taxSale = parseFloat(thisTaxScale.toString()).toFixed(4);
                                     return {
                                         ...item,

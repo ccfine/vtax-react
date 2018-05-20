@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message,Card} from 'antd';
-import {request,getFields,requestDict} from 'utils'
+import {request,getFields,requestDict,setFormat} from 'utils'
 import {AsyncTable} from 'compoments'
 import moment from 'moment';
 const columns = [
@@ -32,33 +32,23 @@ class PopModal extends Component{
         //subordinatePeriodYear:[], // 所属期-年：当前年至前两年(数据字典NDLB） ,
         taxDeclaration:[], // 纳税申报(数据字典NSSB） ,
     }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
     componentDidMount(){
         //申报周期1年
         requestDict('SBZQ',result=>{
             this.setState({
-                cycle :this.setFormat(result)
+                cycle :setFormat(result)
             })
         });
         //所属期
         /*equestDict('NDLB',result=>{
             this.setState({
-                subordinatePeriodYear :this.setFormat(result)
+                subordinatePeriodYear :setFormat(result)
             })
         });*/
         //纳税申报
         requestDict('NSSB',result=>{
             this.setState({
-                taxDeclaration :this.setFormat(result)
+                taxDeclaration :setFormat(result)
             })
         });
     }

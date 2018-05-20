@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules,requestDict} from '../../../../../utils'
+import {request,getFields,regRules,requestDict,setFormat} from 'utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -108,7 +108,7 @@ class PopModal extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        commonlyTaxRate:this.setFormat(data.data),
+                        commonlyTaxRate:setFormat(data.data),
                     })
                 }else{
                     message.error(data.msg)
@@ -125,7 +125,7 @@ class PopModal extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        simpleTaxRate:this.setFormat(data.data),
+                        simpleTaxRate:setFormat(data.data),
                     })
                 }else{
                     message.error(data.msg)
@@ -135,22 +135,11 @@ class PopModal extends Component{
                 message.error(err.message)
             })
     }
-
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                //...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
     componentDidMount(){
         //业务类型
         requestDict('YWXT',result=>{
             this.setState({
-                businessType :this.setFormat(result)
+                businessType: setFormat(result)
             })
         });
     }

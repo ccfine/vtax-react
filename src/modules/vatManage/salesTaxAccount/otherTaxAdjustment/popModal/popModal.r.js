@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
-import {getFields,request,accMul} from '../../../../../utils'
+import {getFields,request} from 'utils'
 import moment from 'moment'
 import find from 'lodash/find'
 const formItemLayout = {
@@ -85,8 +85,8 @@ class PopModal extends Component{
     }
     autoCalTax = (amount,tax)=>{
         // 计算公式：销售额（不含税）*税率
-        if(!(amount === undefined ||amount === null || tax === undefined || tax === null)){
-            let res = Number(accMul(amount,tax)/100);
+        if(!(amount === undefined || amount === null || tax === undefined || tax === null)){
+            let res = Number((amount * tax)/100);
             if(!isNaN(res)){
                 this.props.form.setFieldsValue({taxAmountWithTax:res.toFixed(2)});
             }
