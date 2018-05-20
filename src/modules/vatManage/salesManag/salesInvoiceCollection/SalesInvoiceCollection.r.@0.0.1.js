@@ -131,6 +131,7 @@ const getColumns = context => [
         dataIndex: "mainName",
         render: (text, record) => (
             <span
+                title='查看'
                 style={{
                     ...pointerStyle,
                     marginLeft: 5
