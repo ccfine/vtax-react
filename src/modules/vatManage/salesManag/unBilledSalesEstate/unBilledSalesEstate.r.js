@@ -3,9 +3,9 @@
  * 确认结转收入
  */
 import React, { Component } from 'react'
-import {Button,Icon,message} from 'antd'
+import {Button,Icon} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -253,21 +253,11 @@ class unBilledSalesEstate extends Component{
         }
     }
     fetchResultStatus = ()=>{
-        request.get('/account/output/notInvoiceSale/realty/listMain',{
-            params:this.state.filters
+        requestResultStatus('/account/output/notInvoiceSale/realty/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     render(){
         const {tableKey,visible,filters={},doNotFetchDidMount,statusParam={},searchTableLoading,totalSource} = this.state;

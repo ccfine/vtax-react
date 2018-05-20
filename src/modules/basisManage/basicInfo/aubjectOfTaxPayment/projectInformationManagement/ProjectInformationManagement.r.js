@@ -41,7 +41,6 @@ const table_2_columns = [{
 }];
 export default class ProjectInformationManagement extends Component{
     state = {
-        visible: false,
         selectedRowKeys:null,
 
         $$table_1_data:List([]),
@@ -49,14 +48,8 @@ export default class ProjectInformationManagement extends Component{
         $$table_2_data:List([]),
 
     }
-    toggleModal = visible => {
-        this.setState({
-            visible
-        });
-        visible && this.initData()
-    }
     componentWillReceiveProps(nextProps){
-        if(this.state.visible){
+        if(nextProps.visible){
             if(this.props.taxSubjectId !== nextProps.taxSubjectId){
                 this.initData()
             }
@@ -134,17 +127,13 @@ export default class ProjectInformationManagement extends Component{
         };
         return(
             <div style={{display:'inline-block',...this.props.style}}>
-                <Button size='small' disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
-                    <Icon type="file-add" />
-                    项目信息管理
-                </Button>
                 <Modal
                     maskClosable={false}
                     destroyOnClose={true}
                     title="项目管理"
-                    visible={this.state.visible}
+                    visible={this.props.visible}
                     width={1000}
-                    onCancel={()=>this.toggleModal(false)}
+                    onCancel={()=>this.props.toggleModal(false)}
                     footer={false}
                     bodyStyle={{
                         padding:10,

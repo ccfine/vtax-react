@@ -4,14 +4,12 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Form,Button,Icon,Modal} from 'antd'
+import {Form,Icon} from 'antd'
 import {SearchTable} from 'compoments'
 import ProjectInformationManagement from './projectInformationManagement'
+import {composeBotton} from 'utils'
 import AddEditModal from './add'
 
-const buttonStyle={
-    marginRight:5
-}
 const searchFields = ()=> {
     return [
         {
@@ -24,12 +22,37 @@ const searchFields = ()=> {
         },
     ]
 }
-const columns = [{
+const getColumns = context=>[
+    {
+      title: "操作",
+      render(text, record, index) {
+        return (
+          <span className="table-operate">
+            <a title="项目信息管理"
+               onClick={()=>context.showModal('project',record)} >
+                <Icon type="file-add" />
+            </a>
+            {
+                parseInt(record.status,10) !== 2 && <a title="编辑"
+                onClick={()=>context.showModal('edit',record)} >
+                    <Icon type="edit" />
+                </a>
+            }
+        </span>
+        );
+      },
+      fixed: "left",
+      width: "50px",
+      dataIndex: "action"
+    },{
     title: '编码',
     dataIndex: 'code',
 }, {
     title: '纳税主体',
     dataIndex: 'name',
+    render:(text,record)=>{
+        return parseInt(record.status,10) < 3 ? <a onClick={()=>context.showModal('view',record)} title="查看">{text}</a>:undefined;
+    }
 },{
     title: '社会信用代码',
     dataIndex: 'taxNum',
@@ -98,6 +121,7 @@ class AubjectOfTaxPayment extends Component {
         modalConfig:{
             type:''
         },
+        projectVisible:false,
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -121,18 +145,21 @@ class AubjectOfTaxPayment extends Component {
             visible
         })
     }
-    showModal=type=>{
-        this.toggleModalVisible(true)
+    toggleProjectVisible=visible=>{
+        this.setState({
+            projectVisible:visible
+        })
+    }
+    showModal=(type,record={})=>{
+        type === 'project' ? this.toggleProjectVisible(true) : this.toggleModalVisible(true)
         this.setState({
             modalConfig:{
                 type,
-                id:this.state.selectedRowKeys
-            }
+                id:record.id
+            },
+            selectedRowKeys:record.id ? [record.id] : [],
+            selectedRows:record.id ? [record] : [],
         })
-        /*if(type === 'add') {
-         this.setSelectedRowKeysAndselectedRows(null, {});
-         }*/
-
     }
     updateTable=()=>{
         this.handleSubmit()
@@ -141,8 +168,7 @@ class AubjectOfTaxPayment extends Component {
         this.updateTable()
     }
     render() {
-        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig} = this.state;
-        const disabled = selectedRows && selectedRows.length > 0;
+        const {tableUpDateKey,selectedRowKeys,selectedRows,visible,modalConfig,projectVisible} = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -152,16 +178,7 @@ class AubjectOfTaxPayment extends Component {
                 tableOption={{
                     key: tableUpDateKey,
                     pageSize:10,
-                    columns:columns,
-                    rowSelection:{
-                        type: 'radio',
-                    } ,
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            selectedRowKeys,
-                            selectedRows,
-                        })
-                    },
+                    columns:getColumns(this),
                     onSuccess:()=>{
                         this.setState({
                             selectedRowKeys:null,
@@ -170,19 +187,13 @@ class AubjectOfTaxPayment extends Component {
                     },
                     url:'/taxsubject/list',
                     extra:<div>
-                        <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <Button size="small" onClick={()=>this.showModal('edit')} disabled={!(disabled && parseInt(selectedRows[0].status,0) !== 2)} style={buttonStyle}>
-                            <Icon type="edit" />
-                            编辑
-                        </Button>
-                        <Button size="small" onClick={()=>this.showModal('view')} disabled={!(disabled && parseInt(selectedRows[0].status,0) < 3)} style={buttonStyle}>
-                            <Icon type="search" />
-                            查看
-                        </Button>
-                        <Button size="small"
+                        {
+                            composeBotton([{
+                                type:'add',
+                                onClick:()=>this.showModal('add')
+                            }])
+                        }
+                        {/* <Button size="small"
                                 disabled={!disabled}
                                 style={buttonStyle}
                                 onClick={()=>{
@@ -197,8 +208,8 @@ class AubjectOfTaxPayment extends Component {
                         >
                             <Icon type="search" />
                             查看历史版本
-                        </Button>
-                        <ProjectInformationManagement disabled={!disabled} taxSubjectId={selectedRowKeys} />
+                        </Button> */}
+                        <ProjectInformationManagement visible={projectVisible} taxSubjectId={selectedRowKeys} toggleModal={this.toggleProjectVisible}/>
                     </div>,
                 }}
             >
@@ -209,8 +220,8 @@ class AubjectOfTaxPayment extends Component {
                     selectedRowKeys={selectedRowKeys}
                     selectedRows={selectedRows}
                     toggleModalVisible={this.toggleModalVisible}
-                    updateTable={this.updateTable.bind(this)}
-                    setSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
+                    updateTable={this.updateTable}
+                    // setSelectedRowKeysAndselectedRowssetSelectedRowKeysAndselectedRows={this.setSelectedRowKeysAndselectedRows}
                 />
             </SearchTable>
         )

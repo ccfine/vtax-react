@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,Modal,message} from 'antd'
-import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
 import moment from 'moment';
@@ -159,10 +159,11 @@ const getColumns = context => [
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:parseInt(context.state.statusParam,0) === 1 ? '60px' : '40px',
+        className:'text-center',
+        width:parseInt(context.state.statusParam.status,0) === 1 ? '50px' : '40px',
         render: (text, record) => {
-            return parseInt(context.state.statusParam,0)===1 && (
-                    <span style={{
+            return parseInt(context.state.statusParam.status,0)===1 && (
+                    <span title='解除匹配' style={{
                         color:'#f5222d',
                         cursor:'pointer'
                     }} onClick={()=>{
@@ -183,7 +184,7 @@ const getColumns = context => [
                             },
                         });
                     }}>
-                解除匹配
+                <Icon type="close-circle-o" />
             </span>
                 )
         }
@@ -337,21 +338,11 @@ class InvoiceDataMatching extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/output/invoice/marry/listMain',{
-            params:this.state.filters
+        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     deleteRecord = (id,cb) => {
         request.delete(`/output/invoice/marry/already/delete/${id}`)

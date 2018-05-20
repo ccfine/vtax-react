@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 17:37:12
+ * @Last Modified time: 2018-05-20 11:26:04
  */
 import React, { Component } from "react";
-import { Modal, message } from "antd";
+import { Modal, message,Icon } from "antd";
 import { SearchTable } from "compoments";
 import PopModal from "./popModal";
 import {
@@ -13,7 +13,7 @@ import {
   fMoney,
   getUrlParam,
   listMainResultStatus,
-  composeBotton
+  composeBotton,requestResultStatus
 } from "../../../../utils";
 import { withRouter } from "react-router";
 import moment from "moment";
@@ -66,9 +66,9 @@ const getColumns = context => [
     title: "操作",
     render(text, record, index) {
       return (
-        <div>
+        <span className="table-operate">
           <a
-            style={{ margin: "0 5px" }}
+            title="编辑"
             onClick={() => {
               context.setState({
                 visible: true,
@@ -77,12 +77,14 @@ const getColumns = context => [
               });
             }}
           >
-            编辑
+              <Icon type="edit" />
           </a>
-          <span style={{
-              color:'#f5222d',
-              cursor:'pointer'
-          }} onClick={()=>{
+          <a
+            title="删除"
+            style={{
+                color: "#f5222d"
+            }}
+            onClick={()=>{
               const modalRef = Modal.confirm({
                   title: '友情提醒',
                   content: '该删除后将不可恢复，是否删除？',
@@ -99,19 +101,31 @@ const getColumns = context => [
                       modalRef.destroy()
                   },
               });
-          }}>
-                删除
-            </span>
-        </div>
+            }}
+          >
+              <Icon type="delete" />
+          </a>
+      </span>
       );
     },
     fixed: "left",
-    width: "75px",
+    width: "50px",
     dataIndex: "action"
   },
   {
     title: "纳税主体",
-    dataIndex: "mainName"
+    dataIndex: "mainName",
+    render:(text,record)=>{
+      return <a title="查看" onClick={() => {
+                context.setState({
+                  visible: true,
+                  action: "look",
+                  opid: record.id
+                });
+              }} >
+              {text}
+            </a>
+    }
   },
   {
     title: "调整日期",
@@ -216,19 +230,11 @@ class OtherTaxAdjustment extends Component {
           });
   }
   updateStatus = (values) => {
-    request
-      .get("/account/output/othertax/main/listMain", { params: values })
-      .then(({ data }) => {
-        if (data.code === 200) {
-          if (data.data) {
-            this.setState({ statusParam: data.data});
-          }
-        }else{
-          message.error(data.msg,4)
-        }
-      }).catch(err=>{
-        message.error(err.message,4)
-      });
+    requestResultStatus('/account/output/othertax/main/listMain',values,result=>{
+      this.setState({
+          statusParam: result,
+      })
+    })
   };
   componentDidMount() {
     const { search } = this.props.location;

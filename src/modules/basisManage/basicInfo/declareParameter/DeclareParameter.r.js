@@ -2,13 +2,11 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Button,Icon} from 'antd'
+import {Icon} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
+import {composeBotton} from 'utils'
 
-const buttonStyle={
-    marginRight:5
-}
 const searchFields = [
     {
         label:'纳税主体',
@@ -42,31 +40,19 @@ const getColumns = (context) => [
         title:'操作',
         key:'actions',
         render:(text,record)=> <div>
-            <a style={{marginRight:"5px"}} onClick={()=>{
-                context.setState({
-                    modalConfig:{
-                        type:'edit',
-                        id:record.id,
-                    },
-                    initData:{...record},
-                },()=>{
-                    context.toggleModalVisible(true)
-                })
-            }}>编辑</a>
-            <a style={{marginRight:"5px"}} onClick={()=>{
-                context.setState({
-                    modalConfig:{
-                        type:'view',
-                        id:record.id,
-                    },
-                    initData:{...record},
-                },()=>{
-                    context.toggleModalVisible(true)
-                })
-            }}>查看</a>
+                <a title='编辑' onClick={()=>{
+                        context.setState({
+                            modalConfig:{
+                                type:'edit',
+                                id:record.id
+                            }
+                        },()=>{
+                            context.toggleModalVisible(true)
+                        })
+                    }}><Icon type="edit" /></a>
         </div>,
         fixed:'left',
-        width:'70px',
+        width:'50px',
         className:'text-center'
     },{
         title: '编码',
@@ -74,6 +60,18 @@ const getColumns = (context) => [
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
+        render:(text,record)=><a title='查看' onClick={()=>{
+            context.setState({
+                modalConfig:{
+                    type:'view',
+                    id:record.id
+                }
+            },()=>{
+                context.toggleModalVisible(true)
+            })
+        }}>
+            {text}
+        </a>
     }, {
         title: '税(费)种',
         dataIndex: 'taxType',
@@ -170,10 +168,12 @@ export default class DeclareParameter extends Component{
                     columns:getColumns(this),
                     url:'/sys/declarationParam/list',
                     extra:<div>
-                        <Button size="small" style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="plus" />
-                            新增
-                        </Button>
+                        {
+                            composeBotton([{
+                                type:'add',
+                                onClick:()=>this.showModal('add')
+                            }])
+                        }
                     </div>
                 }}
             >

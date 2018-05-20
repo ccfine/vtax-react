@@ -2,10 +2,10 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
+import {Icon} from 'antd'
+import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
-import {message} from 'antd';
 import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
@@ -107,9 +107,10 @@ const getColumns = context =>[
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:'60px',
-        render: (text, record) => parseInt(context.state.statusParam,0) === 1 ? (
-            <span style={{
+        className:'text-center',
+        width:'50px',
+        render: (text, record) => parseInt(context.state.statusParam.status,0) === 1 ? (
+            <span title='手工匹配' style={{
                 color:'#1890ff',
                 cursor:'pointer'
             }} onClick={()=>{
@@ -118,7 +119,7 @@ const getColumns = context =>[
                     selectedData:record
                 })
             }}>
-                手工匹配
+                <Icon type="check-circle-o" />
             </span>
         ) : ' '
     },
@@ -258,21 +259,11 @@ class UnmatchedData extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.filters
+        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     refreshTable = ()=>{
         this.setState({

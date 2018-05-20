@@ -5,7 +5,8 @@
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import PopModal from './PopModal.r'
-import { Button, Icon } from 'antd'
+import { Icon } from 'antd'
+import {composeBotton} from 'utils'
 const searchFields = [
     {
         label:'纳税主体',
@@ -13,18 +14,15 @@ const searchFields = [
         fieldName:'mainId',
     }
 ]
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
+
 const getColumns = context => [
     {
         title:'操作',
         key:'actions',
         render:(text,record)=>{
             return (
-                <div>
-                <span style={pointerStyle} onClick={()=>{
+                <div class='table-operate'>
+                <a title='编辑' onClick={()=>{
                     context.setState({
                         modalConfig:{
                             type:'edit',
@@ -33,33 +31,26 @@ const getColumns = context => [
                     },()=>{
                         context.toggleModalVisible(true)
                     })
-                }}>编辑</span>
-                    <span style={{
-                        ...pointerStyle,
-                        marginLeft:5
-                    }} onClick={()=>{
-                        context.setState({
-                            modalConfig:{
-                                type:'view',
-                                id:record.id
-                            }
-                        },()=>{
-                            context.toggleModalVisible(true)
-                        })
-                    }}>
-                            查看
-                        </span>
+                }}><Icon type='edit'/></a>
                 </div>
             )
 
         },
         fixed:'left',
-        width:'70px',
+        width:'50px',
         className:'text-center'
     },
     {
     title: '纳税主体',
     dataIndex: 'mainName',
+    render:(text,record)=><a title='查看' onClick={()=>context.setState({
+        modalConfig:{
+            type:'view',
+            id:record.id
+        }
+    },()=>{
+        context.toggleModalVisible(true)
+    })}>{text}</a>
 }, {
     title: '备案资料类型',
     dataIndex: 'recordType',
@@ -118,11 +109,12 @@ export default class FilingMaterial extends Component{
                     url:'/sys/recordInfo/list',
                     key:tableKey,
                     extra:(
-                        <div>
-                            <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                                <Icon type="plus" />
-                                新增
-                            </Button>
+                        <div>{
+                                composeBotton([{
+                                    type:'add',
+                                    onClick:()=>this.showModal('add') 
+                                }])
+                            }
                         </div>
                     )
                 }}
