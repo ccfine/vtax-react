@@ -6,13 +6,11 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {Icon,Button,Switch,message,Modal} from 'antd'
+import {Modal,Icon,Switch,message,Tooltip,Divider} from 'antd'
 import {SearchTable} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
-import {request,} from 'utils'
-const buttonStyle={
-    marginRight:5
-}
+import {request,composeBotton} from 'utils'
+
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff',
@@ -45,6 +43,7 @@ const searchFields = context => [
         fieldName: "roleName"
     }
 ];
+
 const columns = context => [
     {
         title: '操作',
@@ -53,35 +52,55 @@ const columns = context => [
         className:'text-center',
         render:(text,record)=>(
             <span>
-                <Link title="详情" to={{
-                    pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
-                    state:{
-                        roleName:record.roleName,
-                        isEnabled:record.isEnabled,
-                        remark:record.remark
-                    }
-                }} style={{marginRight:10}}><Icon type="search" /></Link>
+
                 <span title="编辑" onClick={()=>context.showModal('edit',record)} style={pointerStyle}>
-                    <Icon type="edit" />
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
                 </span>
-                <Switch checkedChildren="启" unCheckedChildren="停" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
+                <Divider type="vertical" />
+                <span title="分配权限" onClick={()=>{
+                    context.setState({
+                        permissionId:record.id,
+                        userId:undefined,
+                    },()=>{
+                        context.togglePermissionModalVisible(true)
+                    })
+                }} style={pointerStyle}>
+                    <Tooltip placement="top" title="分配权限">
+                        <Icon type="team" />
+                    </Tooltip>
+                </span>
+                <span title="分配用户" onClick={()=>{
+                    context.setState({
+                        userId:record.id,
+                    },()=>{
+                        context.toggleUserModalVisible(true)
+                    })
+                }} style={pointerStyle}>
+                    <Tooltip placement="top" title="分配用户">
+                        <Icon type="setting" />
+                    </Tooltip>
+                </span>
+                <Divider type="vertical" />
+                <Switch size="small" checkedChildren="启" unCheckedChildren="停" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
             </span>
 
         )
-    /*},{
-        title: '状态',
-        dataIndex:'isEnabled',
-        className:'text-center',
-        width:'10%',
-        render:(text,record)=>{
-            return (
-                <Switch checkedChildren="启用" unCheckedChildren="停用" checked={ parseInt(text,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
-            )
-        }*/
     },{
         title: '角色名称',
         dataIndex:'roleName',
-        width:'15%'
+        width:'15%',
+        render:(text,record)=>(
+            <Link title="详情" to={{
+                pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
+                state:{
+                    roleName:record.roleName,
+                    isEnabled:record.isEnabled,
+                    remark:record.remark
+                }
+            }} style={{marginRight:10}}>{text}</Link>
+        )
     },{
         title: '创建时间',
         dataIndex:'createdDate',
@@ -101,6 +120,8 @@ class RoleManage extends Component{
         visible: false,
         userVisible: false,
         permissionVisible: false,
+        permissionId:undefined,
+        userId:undefined,
         modalConfig: {
             type: ''
         },
@@ -128,13 +149,11 @@ class RoleManage extends Component{
     toggleUserModalVisible=userVisible=>{
         this.setState({
             userVisible,
-            selectedRowKeys:this.state.selectedRowKeys
         })
     }
     togglePermissionModalVisible=permissionVisible=>{
         this.setState({
             permissionVisible,
-            selectedRowKeys:this.state.selectedRowKeys
         })
     }
 
@@ -174,7 +193,7 @@ class RoleManage extends Component{
     }
 
     render(){
-        const {updateKey,selectedRowKeys,visible,userVisible,permissionVisible,modalConfig} = this.state;
+        const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId} = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -191,34 +210,13 @@ class RoleManage extends Component{
                         title: '角色列表',
                         extra:
                             <div>
-                                <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
-                                    <Icon type="plus" />
-                                    新增
-                                </Button>
-                                <Button size="small" disabled={!selectedRowKeys} onClick={()=>this.togglePermissionModalVisible(true)}  style={buttonStyle}>
-                                    <Icon type="edit" />
-                                    分配权限
-                                </Button>
-                                <Button size="small" disabled={!selectedRowKeys} onClick={()=>this.toggleUserModalVisible(true)} style={buttonStyle}>
-                                    <Icon type="edit" />
-                                    分配用户
-                                </Button>
+                                {
+                                    composeBotton([{
+                                        type:'add',
+                                        onClick:()=>this.showModal('add',{})
+                                    }])
+                                }
                             </div>,
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            selectedRowKeys:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    onSuccess:()=>{
-                        this.setState({
-                            selectedRowKeys:undefined,
-                            selectedRows:[],
-                        })
                     },
                 }}
             >
@@ -231,13 +229,13 @@ class RoleManage extends Component{
                 />
                  <PermissionPopModal
                         visible={permissionVisible}
-                        id={selectedRowKeys}
+                        id={permissionId}
                         refreshTable={this.refreshTable}
                         togglePermissionModalVisible={this.togglePermissionModalVisible}
                     />
                  <UserPopModal
                         visible={userVisible}
-                        id={selectedRowKeys}
+                        id={userId}
                         refreshTable={this.refreshTable}
                         toggleUserModalVisible={this.toggleUserModalVisible}
                     />

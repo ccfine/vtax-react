@@ -53,17 +53,6 @@ const getColumns = context => [
         render: (text, record) => {
             return (
                 <span className="table-operate">
-                    <Link
-                        to={{
-                            pathname: `/web/systemManage/userPermissions/userManage/${
-                                context.props.orgId
-                            }-${record.id}`
-                        }}
-                    >
-                        <Tooltip placement="top" title="详情">
-                            <Icon type="search" />
-                        </Tooltip>
-                    </Link>
                     <a
                         onClick={() => {
                             context.setState({createUserLoading:true,createUserVisible:true})
@@ -165,7 +154,20 @@ const getColumns = context => [
     },
     {
         title: "用户名",
-        dataIndex: "username"
+        dataIndex: "username",
+        render:(text,record)=>{
+            return (
+                <Link
+                    to={{
+                        pathname: `/web/systemManage/userPermissions/userManage/${
+                            context.props.orgId
+                            }-${record.id}`
+                    }}
+                >
+                    {text}
+                </Link>
+            )
+        }
     },
     {
         title: "姓名",

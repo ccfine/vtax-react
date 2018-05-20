@@ -4,15 +4,17 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Button,Icon,Modal,message } from 'antd'
+import {Icon,Modal,message,Tooltip } from 'antd'
 import {SearchTable} from 'compoments';
-import {request} from '../../../../utils'
+import {request,composeBotton} from 'utils'
 import PopModal from './popModal'
 const confirm = Modal.confirm;
-const buttonStyle={
-    marginRight:5
-}
 
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff',
+    marginRight:10
+}
 const searchFields = [
     {
         label:'税收分类编码',
@@ -46,6 +48,33 @@ const searchFields = [
 ]
 const getColumns =(context)=>[
     {
+        title: '操作',
+        width:'10%',
+        dataIndex:'action',
+        className:'text-center',
+        render:(text,record)=>(
+            <span>
+                <span title="编辑" onClick={()=>{
+                    context.setState({
+                        modalConfig:{
+                            type:'edit',
+                            id:record.id,
+                        }
+                    },()=>{
+                        context.toggleModalVisible(true)
+                    })
+                }} style={pointerStyle}>
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
+                </span>
+                <span title="删除" onClick={()=>{ context.deleteData(record.id) }} style={pointerStyle}>
+                    a
+                </span>
+            </span>
+
+        )
+    },{
         title: '税收分类编码',
         dataIndex: 'num',
     }, {
@@ -66,9 +95,6 @@ const getColumns =(context)=>[
 export default class TaxClassificationCode extends Component{
     state={
         updateKey:Date.now(),
-
-        selectedRowKeys:null,
-        selectedRows:null,
         visible:false,
         modalConfig:{
             type:''
@@ -84,16 +110,7 @@ export default class TaxClassificationCode extends Component{
             updateKey:Date.now()
         })
     }
-    showModal=type=>{
-        this.toggleModalVisible(true)
-        this.setState({
-            modalConfig:{
-                type,
-                id:this.state.selectedRowKeys
-            }
-        })
-    }
-    deleteData = () => {
+    deleteData = (id) => {
         confirm({
             title: '友情提醒',
             content: '删除后将不可恢复，是否删除？',
@@ -102,7 +119,7 @@ export default class TaxClassificationCode extends Component{
             cancelText: '取消',
             onOk: () => {
                 this.toggleModalVisible(false)
-                request.delete(`/tax/classification/coding/delete/${this.state.selectedRowKeys}`)
+                request.delete(`/tax/classification/coding/delete/${id}`)
                     .then(({data}) => {
                         if (data.code === 200) {
                             message.success('删除成功!');
@@ -121,7 +138,7 @@ export default class TaxClassificationCode extends Component{
         });
     }
     render(){
-        const {updateKey,selectedRowKeys,visible,modalConfig} = this.state;
+        const {updateKey,visible,modalConfig} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -140,35 +157,28 @@ export default class TaxClassificationCode extends Component{
                         title:'税收分类编码列表信息'
                     },
                     columns:getColumns(this),
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            selectedRowKeys:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
                     extra:<div>
-                        <Button size="small" onClick={()=>this.showModal('add')} style={buttonStyle}>
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <Button size="small" onClick={()=>this.showModal('edit')} disabled={!selectedRowKeys} style={buttonStyle}>
-                            <Icon type="edit" />
-                            编辑
-                        </Button>
-                        <Button size="small" style={buttonStyle} onClick={this.deleteData} disabled={!selectedRowKeys} type='danger'>
-                            <Icon type="delete" />
-                            删除
-                        </Button>
+                        {
+                            composeBotton([{
+                                type:'add',
+                                onClick:()=>{
+                                    this.setState({
+                                        modalConfig:{
+                                            type:'add',
+                                            id:undefined,
+                                        }
+                                    },()=>{
+                                        this.toggleModalVisible(true)
+                                    })
+                                }
+                            }])
+                        }
                     </div>
                 }}
             >
                 <PopModal
                     visible={visible}
                     modalConfig={modalConfig}
-                    selectedRowKeys={selectedRowKeys}
                     refreshTable={this.refreshTable}
                     toggleModalVisible={this.toggleModalVisible}
                 />

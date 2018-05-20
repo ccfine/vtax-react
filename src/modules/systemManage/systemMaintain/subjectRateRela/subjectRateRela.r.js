@@ -5,12 +5,11 @@
  * @Last Modified time: 2018-05-11 17:27:34
  */
 import React, { Component } from "react";
-import { Button, Icon, Tooltip } from "antd";
+import { Icon, Tooltip } from "antd";
 import { SearchTable } from "compoments";
+import {composeBotton} from 'utils'
 import PopModal from "./popModal";
-const buttonStyle = {
-    margin: "0 5px"
-};
+
 const searchFields = [
     {
         label: "科目代码",
@@ -24,34 +23,19 @@ const getColumns = context => [
         className:'text-center',
         render(text, record, index) {
             return (
-                <span className="table-operate">
-                    <a
-                        onClick={() => {
-                            context.setState({
-                                visible: true,
-                                action: "look",
-                                opid: record.id
-                            });
-                        }}
-                    >
-                        <Tooltip placement="top" title="查看">
-                            <Icon type="search" />
-                        </Tooltip>
-                    </a>
-                    <a
-                        onClick={() => {
-                            context.setState({
-                                visible: true,
-                                action: "modify",
-                                opid: record.id
-                            });
-                        }}
-                    >
-                        <Tooltip placement="top" title="编辑">
-                            <Icon type="edit" />
-                        </Tooltip>
-                    </a>
-                </span>
+                <a
+                    onClick={() => {
+                        context.setState({
+                            visible: true,
+                            action: "modify",
+                            opid: record.id
+                        });
+                    }}
+                >
+                    <Tooltip placement="top" title="编辑">
+                        <Icon type="edit" />
+                    </Tooltip>
+                </a>
             );
         },
         fixed: "left",
@@ -62,10 +46,27 @@ const getColumns = context => [
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">科目代码</p>
-                <p className="apply-form-list-p2">末级明细科目</p>
+                <p className="apply-form-list-p2">(末级明细科目)</p>
             </div>
         ),
-        dataIndex: "code"
+        dataIndex: "code",
+        render:(text,record)=>{
+            return (
+                <a
+                    onClick={() => {
+                        context.setState({
+                            visible: true,
+                            action: "look",
+                            opid: record.id
+                        });
+                    }}
+                >
+                    <Tooltip placement="top" title="查看">
+                        {text}
+                    </Tooltip>
+                </a>
+            )
+        }
     },
     {
         title: "一级科目",
@@ -75,14 +76,14 @@ const getColumns = context => [
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">二级科目</p>
-                <p className="apply-form-list-p2">对应收入类型</p>
+                <p className="apply-form-list-p2">(对应收入类型)</p>
             </div>
         ),
-        dataIndex: "name"
+        dataIndex: "name",
     },
     {
         title: "税目",
-        dataIndex: "taxItem"
+        dataIndex: "taxItem",
     },
     {
         title: "税率",
@@ -130,19 +131,18 @@ export default class SubjectRateRela extends Component {
                     key: updateKey,
                     extra: (
                         <div>
-                            <Button
-                                size="small"
-                                style={buttonStyle}
-                                onClick={() => {
-                                    this.setState({
-                                        visible: true,
-                                        action: "add",
-                                        opid: undefined
-                                    });
-                                }}
-                            >
-                                <Icon type="plus" />新增
-                            </Button>
+                            {
+                                composeBotton([{
+                                    type:'add',
+                                    onClick:()=>{
+                                        this.setState({
+                                            visible: true,
+                                            action: "add",
+                                            opid: undefined
+                                        });
+                                    }
+                                }])
+                            }
                         </div>
                     ),
                     cardProps: {

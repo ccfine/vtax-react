@@ -2,12 +2,10 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import { Button,Icon } from 'antd'
+import { Icon, Tooltip } from "antd";
 import { SearchTable } from 'compoments'
+import {composeBotton} from 'utils'
 import PopModal from './popModal'
-const buttonStyle = {
-    margin: '0 5px'
-}
 const searchFields = [
     {
         label: '纳税主体',
@@ -18,14 +16,20 @@ const searchFields = [
 const getColumns = context => [
     {
         title: '操作',
-        render(text, record, index) {
+        render:(text, record)=>{
             return (<span>
-                <a style={{ margin: "0 5px" }} onClick={() => {
-                    context.setState({ visible: true, action: 'modify', opid: record.id });
-                }}>编辑</a>
-                <a style={{ marginRight: "5px" }} onClick={() => {
-                    context.setState({ visible: true, action: 'look', opid: record.id });
-                }}>查看</a>
+                <a style={{ margin: "0 5px" }}
+                   onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: 'modify',
+                        opid: record.id
+                    });
+                }}>
+                    <Tooltip placement="top" title="编辑">
+                        <Icon type="edit" />
+                    </Tooltip>
+                </a>
             </span>)
         },
         fixed: 'left',
@@ -34,6 +38,20 @@ const getColumns = context => [
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',
+        render:(text,record)=>{
+            return (
+                <a style={{ marginRight: "5px" }}
+                   onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: 'look',
+                        opid: record.id
+                    });
+                }}>
+                    {text}
+                </a>
+            )
+        }
     }, {
         title: '档案类型',
         dataIndex: 'fileType',
@@ -71,7 +89,18 @@ export default class OtherFiles extends Component {
                         url: '/other/file/list',
                         key: updateKey,
                         extra: <div>
-                            <Button size='small' style={buttonStyle} onClick={() => { this.setState({ visible: true, action: 'add', opid: undefined }) }}><Icon type="plus" />新增</Button>
+                            {
+                                composeBotton([{
+                                    type:'add',
+                                    onClick:()=>{
+                                        this.setState({
+                                            visible: true,
+                                            action: "add",
+                                            opid: undefined
+                                        });
+                                    }
+                                }])
+                            }
                         </div>,
                         cardProps: {
                             title: '其他档案'

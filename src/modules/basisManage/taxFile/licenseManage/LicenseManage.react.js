@@ -20,8 +20,8 @@ const searchFields = [
 ]
 const getColumns = context =>[
     {
-        title:'操作',
-        key:'actions',
+        title: '纳税主体',
+        dataIndex: 'mainName',
         render:(text,record)=>(
             <span style={pointerStyle} onClick={()=>{
                 context.setState({
@@ -29,14 +29,8 @@ const getColumns = context =>[
                 },()=>{
                     context.toggleModalVisible(true)
                 })
-            }}>查看</span>
+            }}>{text}</span>
         ),
-        fixed:'left',
-        width:'100px',
-    },
-    {
-        title: '纳税主体',
-        dataIndex: 'mainName',
     }, {
         title: '项目代码',
         dataIndex: 'itemNum',

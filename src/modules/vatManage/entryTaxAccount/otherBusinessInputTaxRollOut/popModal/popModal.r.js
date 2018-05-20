@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Form, Button, message, Spin, Row } from "antd";
-import { getFields, request } from "../../../../../utils";
+import { Modal, Form, Button, message, Spin, Row,Col } from "antd";
+import { getFields, request } from "utils";
 import moment from "moment";
 const formItemLayout = {
     labelCol: {
@@ -163,25 +163,21 @@ class PopModal extends Component {
                 style={{ top: "10%" }}
                 bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
                 onCancel={this.hideSelfModal}
-                footer={[
-                    <Button key="back" onClick={this.hideSelfModal}>
-                        取消
-                    </Button>,
-                    readonly ? (
-                        undefined
-                    ) : (
-                        <Button
-                            key="submit"
-                            type="primary"
-                            loading={this.state.loading}
-                            onClick={() => {
-                                this.handleOk();
-                            }}
-                        >
-                            确认
-                        </Button>
-                    )
-                ]}
+                footer={
+                    readonly && <Row>
+                        <Col span={12}></Col>
+                        <Col span={12}>
+                            <Button key="back" onClick={this.hideSelfModal}> 取消 </Button>
+                            <Button key="submit" type="primary" loading={this.state.loading}
+                                onClick={() => {
+                                    this.handleOk();
+                                }}
+                            >
+                                确认
+                            </Button>
+                        </Col>
+                    </Row>
+                }
                 maskClosable={false}
                 destroyOnClose={true}
             >

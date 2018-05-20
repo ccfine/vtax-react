@@ -53,8 +53,8 @@ class PopModal extends Component{
                     values.taxableProjectId = data.key || this.state.initData['taxableProjectId'];
                 }
                 if(type==='edit'){
-                    if(this.props.selectedRowKeys){
-                        values['id'] = this.props.selectedRowKeys;
+                    if(this.props.modalConfig.id){
+                        values['id'] = this.props.modalConfig.id;
                     }
                     this.updateRecord(values)
                 }else if(type==='add'){

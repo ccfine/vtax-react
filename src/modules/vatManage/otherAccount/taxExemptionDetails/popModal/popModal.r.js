@@ -156,11 +156,11 @@ class PopModal extends Component {
                 style={{ top: "10%" }}
                 bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
                 onCancel={this.hideSelfModal}
-                footer={[
-                    <Button key="back" onClick={this.hideSelfModal}>
-                        取消
-                    </Button>,
-                    !disabled && (
+                footer={
+                    !disabled && [
+                        <Button key="back" onClick={this.hideSelfModal}>
+                            取消
+                        </Button>,
                         <Button
                             key="submit"
                             type="primary"
@@ -171,8 +171,8 @@ class PopModal extends Component {
                         >
                             确认
                         </Button>
-                    )
-                ]}
+                    ]
+                }
                 maskClosable={false}
                 destroyOnClose={true}
             >

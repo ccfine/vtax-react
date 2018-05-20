@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col} from 'antd';
-import {regRules,fMoney,getFields} from '../../../../../../utils'
+import {regRules,fMoney,getFields} from 'utils'
 
 class PopModal extends Component{
     static defaultProps={

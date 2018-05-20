@@ -4,17 +4,7 @@
  * description  :
  */
 import React, { Component } from "react";
-import {
-    Button,
-    Icon,
-    Modal,
-    Row,
-    Col,
-    Steps,
-    List,
-    Card,
-    message
-} from "antd";
+import {Icon, Modal, Row, Col, Steps, List, Card, message} from "antd";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { composeMenus, request } from "utils";
@@ -85,7 +75,6 @@ export default class ApplyDeclarationPopModal extends Component {
     };
 
     state = {
-        visible: false,
         loading: false,
         data: [],
         current: 0
@@ -93,11 +82,6 @@ export default class ApplyDeclarationPopModal extends Component {
     toggleLoading = loading => {
         this.setState({
             loading
-        });
-    };
-    toggleVisible = visible => {
-        this.setState({
-            visible
         });
     };
     handleCurrent = current => {
@@ -108,8 +92,8 @@ export default class ApplyDeclarationPopModal extends Component {
             () => {
                 this.fetchDeclarationById({
                     decConduct: current,
-                    mainId: this.props.selectedRows[0].mainId,
-                    authMonth: this.props.selectedRows[0].partTerm
+                    mainId: this.props.record.mainId,
+                    authMonth: this.props.record.partTerm
                 });
             }
         );
@@ -144,25 +128,25 @@ export default class ApplyDeclarationPopModal extends Component {
                                         color: "rgba(0, 0, 0, 0.65)"
                                     }}
                                     to={{
-                                        pathname: item.path, //`${item.path}?mainId=${this.props.selectedRows[0].id}`,
+                                        pathname: item.path, //`${item.path}?mainId=${this.props.record.id}`,
                                         search: `?${parseJsonToParams({
-                                            mainId: this.props.selectedRows[0]
+                                            mainId: this.props.record
                                                 .mainId,
                                             authMonth: this.props
-                                                .selectedRows[0].partTerm,
+                                                .record.partTerm,
                                             authMonthEnd: this.props
-                                                .selectedRows[0]
+                                                .record
                                                 .subordinatePeriodEnd
                                         })}`, //getQueryString('mainId') || undefined
                                         state: {
                                             //在跳转标签的时候值就不存在了
                                             filters: {
                                                 mainId: this.props
-                                                    .selectedRows[0].mainId,
+                                                    .record.mainId,
                                                 authMonth: this.props
-                                                    .selectedRows[0].partTerm,
+                                                    .record.partTerm,
                                                 authMonthEnd: this.props
-                                                    .selectedRows[0]
+                                                    .record
                                                     .subordinatePeriodEnd
                                             } //const {state} = this.props.location;  state && state.filters.mainId || undefined,
                                         }
@@ -258,8 +242,8 @@ export default class ApplyDeclarationPopModal extends Component {
                 ref.destroy();
                 this.fetchDeclarationById({
                     decConduct: this.state.current,
-                    mainId: this.props.selectedRows[0].mainId,
-                    authMonth: this.props.selectedRows[0].partTerm
+                    mainId: this.props.record.mainId,
+                    authMonth: this.props.record.partTerm
                 });
             }
         });
@@ -280,44 +264,33 @@ export default class ApplyDeclarationPopModal extends Component {
             });
     };
     componentWillReceiveProps(nextProps) {
-        if (nextProps.selectedRows.length > 0) {
-            // this.fetchDeclarationById({
-            //     decConduct:this.state.current,
-            //     mainId:nextProps.selectedRows[0].mainId,
-            //     authMonth:nextProps.selectedRows[0].partTerm,
-            // })
+        if(!this.props.visible && nextProps.visible){
+            this.fetchDeclarationById({
+                decConduct:this.state.current,
+                mainId:nextProps.record.mainId,
+                authMonth:nextProps.record.partTerm,
+            })
         }
     }
 
     render() {
         const props = this.props;
-        const { data, visible, loading, current } = this.state;
+        const { data, loading, current } = this.state;
         return (
-            <span style={props.style}>
-                <Button
-                    size={props.size}
-                    type="primary"
-                    disabled={props.disabled}
-                    onClick={() => {
-                        this.toggleVisible(true);
-                    }}
-                >
-                    <Icon type="download" />申报办理
-                </Button>
                 <Modal
                     maskClosable={false}
                     destroyOnClose={true}
                     title={props.title}
-                    visible={visible}
+                    visible={props.visible}
                     confirmLoading={loading}
-                    onCancel={() => this.toggleVisible(false)}
+                    onCancel={() => props.toggleApplyVisible(false)}
                     width={900}
                     style={{ top: 50, maxWidth: "80%" }}
                     footer={
                         <Row>
                             <Col span={12} />
                             <Col span={12}>
-                                <Button
+                                {/*<Button
                                     type="primary"
                                     //onClick={this.handleSubmit}
                                     disabled
@@ -350,10 +323,11 @@ export default class ApplyDeclarationPopModal extends Component {
                                     批量撤回
                                 </Button>
                                 <Button
-                                    onClick={() => this.toggleVisible(false)}
+                                    onClick={() => props.toggleApplyVisible(false)}
                                 >
                                     取消
                                 </Button>
+                                 */}
                             </Col>
                         </Row>
                     }
@@ -377,7 +351,6 @@ export default class ApplyDeclarationPopModal extends Component {
                         </div>
                     </div>
                 </Modal>
-            </span>
         );
     }
 }

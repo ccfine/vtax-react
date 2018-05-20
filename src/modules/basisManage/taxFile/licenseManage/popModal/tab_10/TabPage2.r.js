@@ -3,34 +3,64 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Popconfirm,message,Card,Icon} from 'antd'
+import {Tooltip,Modal,message,Card,Icon} from 'antd'
 import PopModal from './detailModal'
-import {request} from 'utils'
+import {request,composeBotton} from 'utils'
 const getColumns = context=> [
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
+        render:(text, record, index)=>(
+            <span>
                 <a style={{margin:"0 5px"}} onClick={()=>{
                     context.setState({visible:true,action:'modify',opid:record.id});
-                }}>编辑</a>
-                <Popconfirm title="确定要删除吗?" onConfirm={()=>{context.deleteRecord(record)}} onCancel={()=>{}} okText="确认" cancelText="取消">
-                    <a>删除</a>
-                </Popconfirm>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'look',opid:record.id});
-                }}>查看</a>
+                }}>
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
+                </a>
+                <span style={{
+                    color:'#f5222d',
+                    cursor:'pointer'
+                }} onClick={()=>{
+                    const modalRef = Modal.confirm({
+                        title: '友情提醒',
+                        content: '该删除后将不可恢复，是否删除？',
+                        okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
+                        onOk:()=>{
+                            context.deleteRecord(record)
+                            modalRef && modalRef.destroy();
+                        },
+                        onCancel() {
+                            modalRef.destroy()
+                        },
+                    });
+                }}>
+                    <Tooltip placement="top" title="删除">
+                        <Icon type="delete" />
+                    </Tooltip>
                 </span>
-            );
-        },
+            </span>
+        ),
         fixed:'left',
         width:'100px',
-        dataIndex:'action'
-    },
-    {
+        dataIndex:'action',
+        className:'text-center',
+    }, {
         title: '栋号 ',
         dataIndex: 'building',
+        render:(text,record)=>(
+            <a
+                onClick={() => {
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}
+            >
+                <Tooltip placement="top" title="查看">
+                    {text}
+                </Tooltip>
+            </a>
+        )
     }, {
         title: '单元号',
         dataIndex: 'unitNumber',
@@ -89,31 +119,39 @@ export default class TabPage extends Component{
         const props = this.props;
         return(
             <Card title="大产证明细" style={{marginTop:'10px'}}>
-            <SearchTable
-                actionOption={{
-                    body:(<Button size='small' onClick={()=>{
-                        this.setState({visible:true,action:'add',opid:undefined});
-                    }}><Icon type="plus" />新增</Button>)
-                }}
-                tableOption={{
-                    columns:getColumns(this),
-                    url:`/card/house/ownership/detail/list/${props.titleCertificateId}`,
-                    scroll:{x:'100%'},
-                    key:this.state.updateKey,
-                    cardProps:{
-                        bordered:false,
-                    }
-                }}
-            >
-            </SearchTable>
+                <SearchTable
+                    actionOption={{
+                        body:(
+                            <span>
+                                    {
+                                        composeBotton([{
+                                            type:'add',
+                                            onClick:()=>{
+                                                this.setState({visible:true,action:'add',opid:undefined});
+                                            }
+                                        }])
+                                    }
+                                </span>
+                        )
+                    }}
+                    tableOption={{
+                        columns:getColumns(this),
+                        url:`/card/house/ownership/detail/list/${props.titleCertificateId}`,
+                        scroll:{x:'100%'},
+                        key:this.state.updateKey,
+                        cardProps:{
+                            bordered:false,
+                        }
+                    }}
+                />
                <PopModal 
-                titleCertificateId={props.titleCertificateId}
-                id={this.state.opid}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal>
+                    titleCertificateId={props.titleCertificateId}
+                    id={this.state.opid}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
             </Card>
         )
     }
