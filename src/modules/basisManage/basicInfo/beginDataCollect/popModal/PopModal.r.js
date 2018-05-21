@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/20.
  */
 import React,{Component} from 'react';
-import {Modal,Tabs,Row,Col,Button} from 'antd';
+import {Modal,Tabs} from 'antd';
 import Tab1 from './tab_1';
 import Tab2 from './tab_2';
 import Tab3 from './tab_3';
@@ -52,8 +52,8 @@ class PopModal extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log(values)
-                this.props.toggleModalVisible(false);
-                this.props.refreshTable()
+                /*this.props.toggleModalVisible(false);
+                this.props.refreshTable()*/
             }
         })
     }
@@ -90,15 +90,7 @@ class PopModal extends Component{
                 maskClosable={false}
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
-                footer={
-                    type !== 'look' && <Row>
-                        <Col span={12}></Col>
-                        <Col span={12}>
-                            <Button type="primary" onClick={this.handleSubmit}>保存</Button>
-                            <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
-                        </Col>
-                    </Row>
-                }
+                footer={false}
                 width={1920}
                 bodyStyle={{
                     padding:0,
@@ -111,17 +103,17 @@ class PopModal extends Component{
                     top:'5%'
                 }}
                 visible={props.visible}>
-                <Tabs tabPosition={this.state.tabPosition} size="small">
-                    {
-                        tabList.map(ele=>(
-                            <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
-                                {
-                                    getContent(ele.key, this.props.modalConfig.mainId, disabled, this.state.updateKey)
-                                }
-                            </TabPane>
-                        ))
-                    }
-                </Tabs>
+                    <Tabs tabPosition={this.state.tabPosition} size="small">
+                        {
+                            tabList.map(ele=>(
+                                <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
+                                    {
+                                        getContent(ele.key, this.props.modalConfig.mainId, disabled, this.state.updateKey)
+                                    }
+                                </TabPane>
+                            ))
+                        }
+                    </Tabs>
             </Modal>
         )
     }

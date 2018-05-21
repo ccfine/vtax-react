@@ -4,7 +4,7 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Form, Row, Col, Button} from 'antd'
-import {getFields,getUrlParam} from '../../../../utils'
+import {getFields,getUrlParam} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
@@ -110,7 +110,6 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        console.log(this.props.location.search);
         const { grid, url , searchFields, form, composeGrid,scroll} = this.props;
         const { params,updateKey } = this.state;
         return(
