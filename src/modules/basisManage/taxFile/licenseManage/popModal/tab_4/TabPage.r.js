@@ -138,7 +138,6 @@ export default class TabPage extends Component{
                 tableOption={{
                     columns:getColumns(this),
                     url:`/card/build/list/${props.projectId}`,
-                    scroll:{x:'100%'},
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,

@@ -16,7 +16,7 @@ class SheetWithSearchFields extends Component{
     }
     static defaultProps = {
         grid:[],
-        searchFields:[
+        searchFields:(params={})=>[
             {
                 label:'纳税主体',
                 fieldName:'mainId',
@@ -26,7 +26,7 @@ class SheetWithSearchFields extends Component{
                     disabled: !!getUrlParam('mainId'),
                 },
                 fieldDecoratorOptions:{
-                    initialValue: getUrlParam('mainId') || undefined,
+                    initialValue: getUrlParam('mainId') || params.mainId,
                     rules:[
                         {
                             required:true,
@@ -44,7 +44,7 @@ class SheetWithSearchFields extends Component{
                     disabled: !!getUrlParam('authMonth')
                 },
                 fieldDecoratorOptions:{
-                    initialValue: (!!getUrlParam('authMonth') && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                    initialValue: (!!getUrlParam('authMonth') && moment(getUrlParam('authMonth'), 'YYYY-MM')) || (params.taxMonth && moment(params.taxMonth)),
                     //initialValue: moment(getUrlParam('authMonth'), 'YYYY-MM') || undefined,
                     rules:[
                         {
@@ -75,11 +75,6 @@ class SheetWithSearchFields extends Component{
             });
         }
     }
-    toggleLoading = loading =>{
-        this.setState({
-            loading
-        })
-    }
     onSubmit = e =>{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
@@ -102,6 +97,7 @@ class SheetWithSearchFields extends Component{
                     params:values,
                     updateKey:Date.now()
                 })
+                this.props.onParamsChange && this.props.onParamsChange(values);
             }
         })
     }
@@ -110,7 +106,7 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { grid, url , searchFields, form, composeGrid,scroll} = this.props;
+        const { grid, url , searchFields, form, composeGrid,scroll,defaultParams} = this.props;
         const { params,updateKey } = this.state;
         return(
             <div>
@@ -122,7 +118,7 @@ class SheetWithSearchFields extends Component{
                     <Form onSubmit={this.onSubmit}>
                         <Row>
                             {
-                                getFields(form, searchFields)
+                                getFields(form, searchFields(defaultParams))
                             }
                             <Col style={{width:'100%',textAlign:'right'}}>
                                 <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>

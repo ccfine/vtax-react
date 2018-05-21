@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 11:28:26
+ * @Last Modified time: 2018-05-21 10:56:46
  */
 import React, { Component } from "react";
 import { SearchTable, FileImportModal, FileExport } from "compoments";
@@ -244,9 +244,6 @@ export default class fixedAssetCard extends Component {
                     key: updateKey,
                     cardProps: {
                         title: "固定资产卡片"
-                    },
-                    scroll: {
-                        x: "100%"
                     },
                     extra: (
                         <span>

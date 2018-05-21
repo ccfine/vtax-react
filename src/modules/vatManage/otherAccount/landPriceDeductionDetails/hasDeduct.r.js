@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:30:19
+ * @Last Modified time: 2018-05-21 10:57:05
  */
 import React from 'react';
 import {message} from 'antd'
@@ -255,9 +255,6 @@ class HasDeduct extends React.Component{
                             }],statusParam)
                         }
                     </div>,
-                    scroll:{
-                        x:'100%'
-                    },
                 }}
             >
             </SearchTable>

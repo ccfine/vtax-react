@@ -132,12 +132,15 @@ export default class ProjectInformationManagement extends Component{
                     destroyOnClose={true}
                     title="项目管理"
                     visible={this.props.visible}
-                    width={1000}
+                    width={600}
                     onCancel={()=>this.props.toggleModal(false)}
                     footer={false}
+                    style={{ top: '5%' }}
                     bodyStyle={{
                         padding:10,
-                        background:'#EEF0F4'
+                        background:'#EEF0F4',
+                        height:450,
+                        overflowY:'auto',
                     }}
                 >
                     <Card

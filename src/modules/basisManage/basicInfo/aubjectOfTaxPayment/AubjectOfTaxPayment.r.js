@@ -209,7 +209,7 @@ class AubjectOfTaxPayment extends Component {
                             <Icon type="search" />
                             查看历史版本
                         </Button> */}
-                        <ProjectInformationManagement visible={projectVisible} taxSubjectId={selectedRowKeys} toggleModal={this.toggleProjectVisible}/>
+                        <ProjectInformationManagement visible={projectVisible} taxSubjectId={selectedRowKeys} toggleModal={this.toggleProjectVisible} />
                     </div>,
                 }}
             >

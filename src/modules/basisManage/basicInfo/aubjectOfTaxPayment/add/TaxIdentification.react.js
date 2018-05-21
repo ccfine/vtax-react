@@ -141,7 +141,7 @@ class TaxIdentification extends Component {
             ]
 
         return (
-            <div className="basicInfo" style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
+            <div className="basicInfo" style={{height:'350px',overflow:'hidden',overflowY:'auto'}}>
                 {
                     list.map((item,i)=>{
                         return (

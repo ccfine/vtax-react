@@ -164,7 +164,7 @@ class PopModal extends Component {
                 bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
                 onCancel={this.hideSelfModal}
                 footer={
-                    readonly && <Row>
+                    !readonly && <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
                             <Button key="back" onClick={this.hideSelfModal}> 取消 </Button>
