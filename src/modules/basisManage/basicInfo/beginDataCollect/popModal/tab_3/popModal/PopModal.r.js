@@ -133,7 +133,7 @@ class PopModal extends Component {
                                         span: '24',
                                         type: 'input',
                                         fieldName: 'contractNum',
-                                        label: '项目名称',
+                                        label: '减税性质代码和名称',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
                                             initialValue: record.contractNum,

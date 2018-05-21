@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import {Icon} from 'antd'
 import {SearchTable} from 'compoments'
-import {composeBotton} from 'utils'
 import PopModal from './popModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -24,9 +23,9 @@ const getColumns = context =>[
         title:'操作',
         key:'actions',
         render:(text,record)=>(
-            <div>
-                <a title='编辑' onClick={()=>context.showModal('modify',record.id)}><Icon type="edit" /></a>
-            </div>
+            <span>
+                <span title='编辑' onClick={()=>context.showModal('modify',record.id)} style={pointerStyle}><Icon type="edit" /></span>
+            </span>
         ),
         fixed:'left',
         width:'50px',
@@ -84,16 +83,6 @@ export default class BeginDataCollect extends Component{
                     columns:getColumns(this),
                     url:'/card/certificate/list',
                     scroll:{x:'100%'},
-                    extra:(
-                        <div>
-                            {
-                                composeBotton([{
-                                    type:'add',
-                                    onClick:()=>this.showModal('add',undefined)
-                                }])
-                            }
-                        </div>
-                    )
                 }}
             >
                 <PopModal visible={visible} refreshTable={this.refreshTable} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />

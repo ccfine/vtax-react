@@ -46,7 +46,7 @@ const getColumns = context=>[
         dataIndex:'action',
         className:'text-center',
     },{
-        title: '减税性质代码和名称',
+        title: '项目名称',
         dataIndex: 'contractNum',
         render:(text,record)=>(
             <a

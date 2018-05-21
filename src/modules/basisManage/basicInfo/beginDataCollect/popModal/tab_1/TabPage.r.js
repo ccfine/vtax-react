@@ -21,7 +21,7 @@ const getColumns = getFieldDecorator => [
         )
     },{
         title:'栏次',
-        dataIndex:'projectName',
+        dataIndex:'projectNames',
         render:text=>(
             <span dangerouslySetInnerHTML={{
                 __html:text
@@ -55,15 +55,17 @@ const getColumns = getFieldDecorator => [
         className:'table-money',
         children: [{
             title: '期初数',
-            dataIndex: 'generalAmount',
+            dataIndex: 'generalAmounts',
             render:(text,record)=>{
+                text = 0;
                 return record.generalAmountEdit ?
                     <EditableCell fieldName={`generalAmount_${record.id}`} renderValue={text} getFieldDecorator={getFieldDecorator}/> : fMoney(text)
             },
         }, {
             title: '本年累计',
-            dataIndex: 'drawbackPolicyAmount',
+            dataIndex: 'drawbackPolicyAmounts',
             render:(text,record)=>{
+                text = 0;
                 return record.drawbackPolicyAmountEdit ?
                     <EditableCell
                         fieldName={`drawbackPolicyAmount_${record.id}`}
@@ -102,6 +104,7 @@ class TabPage extends Component{
     save = e =>{
         e && e.preventDefault()
         this.toggleSearchTableLoading(true)
+
         this.props.form.validateFields((err, values) => {
             if(!err){
                 request.post('/account/taxCalculation/save',{
