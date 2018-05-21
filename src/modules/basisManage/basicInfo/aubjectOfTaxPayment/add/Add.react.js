@@ -329,7 +329,7 @@ class Add extends Component {
                     destroyOnClose={true}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
-                    style={{ top: 40 }}
+                    style={{ top: '5%' }}
                     visible={visible}
                     footer={
                         <Row>

@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-20 15:20:50
+ * @Last Modified time: 2018-05-21 10:57:15
  *
  */
 import React,{Component} from 'react'
@@ -429,9 +429,6 @@ class RoomTransactionFile extends Component{
                     cardProps: {
                         title: ''
                     },
-                    // scroll:{
-                    //     x:'100%'
-                    // }
                 }}
             >
             </SearchTable>

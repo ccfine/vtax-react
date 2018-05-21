@@ -59,7 +59,6 @@ export default class TabPage extends Component{
                 searchOption={null}
                 tableOption={{
                     columns:getColumns(this),
-                    scroll:{x:'100%'},
                     key:this.state.updateKey,
                     url:`/project/stage/list/${props.projectId}`,
                     cardProps:{

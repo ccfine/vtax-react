@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 16:41:20
+ * @Last Modified time: 2018-05-21 10:56:58
  */
 import React from 'react'
 import { SearchTable } from 'compoments'
@@ -271,9 +271,6 @@ class ShouldDeduct extends React.Component {
 							}
 						</div>
 					),
-					scroll: {
-						x: '100%'
-					}
 				}}
 			/>
 		)

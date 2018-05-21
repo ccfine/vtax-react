@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 18:04:41
+ * @Last Modified time: 2018-05-21 17:30:17
  */
 import React, { Component } from "react";
 import { Icon, message, Modal } from "antd";
@@ -20,7 +20,7 @@ const getColumns = (context,disabled1) => [
         title: "操作",
         className:'text-center',
         render(text, record, index) {
-            return disabled1 && (
+            return !disabled1 && (
                 <span className="table-operate">
                     <a
                         onClick={() => {

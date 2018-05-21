@@ -137,7 +137,6 @@ export default class TabPage extends Component{
                     tableOption={{
                         columns:getColumns(this),
                         url:`/card/house/ownership/detail/list/${props.titleCertificateId}`,
-                        scroll:{x:'100%'},
                         key:this.state.updateKey,
                         cardProps:{
                             bordered:false,

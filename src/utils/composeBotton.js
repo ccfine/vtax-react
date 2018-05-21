@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-16 19:20:53
+ * @Last Modified time: 2018-05-21 15:19:07
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -120,6 +120,20 @@ const getMarkOptions = (item,statusParam) =>{
     };
 }
 
+// 数据匹配参数
+const getMatchOptions = (item,statusParam) =>{
+    return {
+        ...item,
+        url:item.url,
+        filters:formatJson(item.params),
+        disabled: isDisabled(statusParam),
+        onSuccess: item.onSuccess,
+        text:'数据匹配',
+        icon:'copy',
+        style: { marginRight: 5 }
+    };
+}
+
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const composeBotton = (buttons = [], params) => {
@@ -170,6 +184,11 @@ const composeBotton = (buttons = [], params) => {
             case "mark":
                 component = (
                     <ButtonMarkModal {...getMarkOptions(item, params)} />
+                );
+                break;
+            case 'match':
+                component = (
+                    <ButtonReset {...getMatchOptions(item, params)} />
                 );
                 break;
             default:

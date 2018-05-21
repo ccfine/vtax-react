@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/9.
  */
 import React, { Component } from 'react'
-import {Button,Icon,Modal,message} from 'antd'
+import {Icon,Modal,message} from 'antd'
 import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import { withRouter } from 'react-router'
@@ -324,7 +324,6 @@ class InvoiceDataMatching extends Component{
         tableKey:Date.now(),
         filters:{
         },
-        matching:false,
 
         /**
          *修改状态
@@ -356,27 +355,6 @@ class InvoiceDataMatching extends Component{
             })
             .catch(err => {
                 message.error(err.message)
-            })
-    }
-    toggleMatching = matching =>{
-        this.setState({
-            matching
-        })
-    }
-    matchData = ()=>{
-        //数据匹配
-        this.toggleMatching(true);
-        request.get('/output/invoice/marry/already/automatic')
-            .then(({data})=>{
-                this.toggleMatching(false);
-                if(data.code===200){
-                    message.success('数据匹配完毕');
-                    this.refreshTable();
-                }else{
-                    message.error(`数据匹配失败:${data.msg}`)
-                }
-            }).catch(err=>{
-                message.error(`数据匹配失败:${err.message}`)
             })
     }
     componentDidMount(){
@@ -421,15 +399,13 @@ class InvoiceDataMatching extends Component{
                         {
                             listMainResultStatus(statusParam)
                         }
-                        <Button
-                            onClick={this.matchData}
-                            size='small'
-                            style={{marginRight:5}}>
-                            <Icon type="copy" />
-                            数据匹配
-                        </Button>
                         {
                             JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                type:'match',
+                                url:'/output/invoice/marry/already/automatic',
+                                params:filters,
+                                onSuccess:this.refreshTable
+                            },{
                                 type:'fileExport',
                                 url:'output/invoice/marry/already/export',
                                 params:filters,

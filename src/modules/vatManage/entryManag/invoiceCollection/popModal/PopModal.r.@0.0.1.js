@@ -313,7 +313,8 @@ class PopModal extends Component{
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
-                style={{ top: 50 }}
+                style={{ top: '5%' }}
+                bodyStyle={{maxHeight:500,overflowY:'auto'}}
                 visible={props.visible}
                 footer={
                     type !== 'view' && <Row>
@@ -326,7 +327,7 @@ class PopModal extends Component{
                 }
                 title={title}>
                 <Spin spinning={this.state.submitLoading}>
-                    <Form onSubmit={this.handleSubmit} style={{height:'400px',overflowY:'scroll'}}>
+                    <Form onSubmit={this.handleSubmit}>
                         <Card>
                             <Row>
                                 {

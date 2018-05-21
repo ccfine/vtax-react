@@ -86,7 +86,7 @@ class EquityRelation extends Component {
             getCheckboxProps:this.getCheckboxProps
         };
         return (
-                <div style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
+                <div style={{height:'350px',overflow:'hidden',overflowY:'auto'}}>
                     <Card title="查询结果"
                           extra={
 

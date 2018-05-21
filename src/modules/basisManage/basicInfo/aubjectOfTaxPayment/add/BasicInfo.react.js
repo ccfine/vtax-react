@@ -96,7 +96,7 @@ class BasicInfo extends Component {
             }
         }
         return (
-            <div className="basicInfo" style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
+            <div className="basicInfo" style={{height:'350px',overflow:'hidden',overflowY:'auto'}}>
 
                 <Card style={{marginBottom:16}}>
                     <Row>

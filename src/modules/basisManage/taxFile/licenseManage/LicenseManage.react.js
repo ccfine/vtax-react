@@ -66,7 +66,6 @@ export default class LicenseManage extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/card/certificate/list',
-                    scroll:{x:'100%'},
                 }}
             >
                 <PopModal visible={visible} projectId={projectId} toggleModalVisible={this.toggleModalVisible} />
