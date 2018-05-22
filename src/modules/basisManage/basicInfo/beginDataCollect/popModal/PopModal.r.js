@@ -71,9 +71,6 @@ class PopModal extends Component{
         let disabled = false;
         const type = props.modalConfig.type;
         switch (type){
-            case 'add':
-                title = '新增';
-                break;
             case 'modify':
                 title = '编辑';
                 break;
