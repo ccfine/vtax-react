@@ -19,15 +19,9 @@ class SearchTable extends Component{
              * params条件，给table用的
              * */
             filters:{
-                pageSize:20
+                //pageSize:20
             },
-            pagination: {
-                showSizeChanger:true,
-                showQuickJumper:true,
-                pageSize:props.tableOption.pageSize || 10,
-                showTotal:total => `总共 ${total} 条`,
-                pageSizeOptions:['10','20','30','40','50','60','70','80','90','100']
-            },
+
             /**
              * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
              * */
@@ -38,14 +32,8 @@ class SearchTable extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(this.props.tableOption.key !== nextProps.tableOption.key){
-            const currentPager = { ...this.state.pagination };
-            currentPager.current = 1;
             this.setState({
-                pagination: currentPager
-            },()=>{
-                this.setState({
-                    tableUpDateKey:nextProps.tableOption.key,
-                })
+                tableUpDateKey:nextProps.tableOption.key
             })
         }
     }
@@ -83,7 +71,7 @@ class SearchTable extends Component{
         this.updateTable()
     }
     render() {
-        const {tableUpDateKey,filters,expand,pagination} = this.state;
+        const {tableUpDateKey,filters,expand} = this.state;
         const {searchOption,tableOption,children,actionOption} = this.props;
         return(
             <Layout style={{background:'transparent'}} >
@@ -105,12 +93,12 @@ class SearchTable extends Component{
                             <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                                 <Row>
                                     {
-                                        searchOption && searchOption.fields && 
+                                        searchOption && searchOption.fields &&
                                         getFields(this.props.form,searchOption.fields)
                                     }
 
                                     {
-                                        searchOption && searchOption.fields && 
+                                        searchOption && searchOption.fields &&
                                         (<Col span={8}>
                                         <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
                                         <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
@@ -134,7 +122,7 @@ class SearchTable extends Component{
                                 filters={filters}
                                 tableProps={{
                                     rowKey:record=>record.id,
-                                    pagination: tableOption.pagination ? pagination : false,
+                                    pagination:tableOption.pagination || false,
                                     pageSize:tableOption.pageSize || 10,
                                     size:'small',
                                     columns:tableOption.columns,
