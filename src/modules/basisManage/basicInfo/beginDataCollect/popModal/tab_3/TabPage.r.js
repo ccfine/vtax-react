@@ -136,7 +136,8 @@ export default class TabPage extends Component{
                     cardProps:{
                         bordered:false,
                         style:{marginTop:"0px"}
-                    }
+                    },
+                    pagination:true,
                 }}
             >
                 <PopModal
