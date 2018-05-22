@@ -87,17 +87,17 @@ export default class BeginDataCollect extends Component{
         })
     }
     render(){
-        const {visible,modalConfig} = this.state;
+        const {visible,modalConfig,tableKey} = this.state;
         return(
             <SearchTable
                 searchOption={{
                     fields:searchFields
                 }}
                 tableOption={{
+                    key:tableKey,
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/dataCollection/list',
-                    scroll:{x:'100%'},
                 }}
             >
                 <PopModal visible={visible} refreshTable={this.refreshTable} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />

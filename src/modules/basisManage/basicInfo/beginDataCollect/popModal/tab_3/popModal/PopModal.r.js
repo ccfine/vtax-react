@@ -7,7 +7,7 @@ import { getFields, request } from 'utils'
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
-        sm: { span: 8 },
+        sm: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 12 },
@@ -19,16 +19,15 @@ class PopModal extends Component {
     state = {
         loading: false,
         formLoading: false,
-        record: {},
-        submited: false
+        record: {}
     }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/contract/land/find/${props.id}`).then(({ data }) => {
+                request.get(`/taxReliefProjectCollection/find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
-                        this.setState({ formLoading: false, record: data.data, submited: false });
+                        this.setState({ formLoading: false, record: data.data});
                     }
                 })
                     .catch(err => {
@@ -45,7 +44,7 @@ class PopModal extends Component {
         this.props.toggleModalVisible(false);
         // 回归初始状态
         this.props.form.resetFields();
-        this.setState({ record: {}, submited: false });
+        this.setState({ record: {}});
     }
     handleOk() {
         if ((this.props.action !== 'modify' && this.props.action !== 'add') || this.state.formLoading) {
@@ -55,22 +54,22 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                // 提交数据
-                // 处理日期
-                values.signingDate = values.signingDate.format('YYYY-MM-DD');
-
+                if(values.project){
+                    values.name = values.project.label;
+                    values.num = values.project.key;
+                    values.project = undefined;
+                }
                 let obj = Object.assign({}, this.state.record, values);
                 let result,
-                    sucessMsg,
-                    isModify = (this.props.action === "modify" || (this.state.submited && this.props.action === "add"));
+                    sucessMsg;
 
-                if (isModify) {
-                    result = request.put('/contract/land/update', obj);
+                if (this.props.action === "modify") {
+                    result = request.put('/taxReliefProjectCollection/update', obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
                     obj.mainId = this.props.mainId;
-                    result = request.post('/contract/land/add', obj);
-                    sucessMsg = '新增成功，点击【附件信息】进行文件上传';
+                    result = request.post('/taxReliefProjectCollection/add', obj);
+                    sucessMsg = '新增成功';
                 }
 
                 this.setState({ loading: true });
@@ -79,10 +78,7 @@ class PopModal extends Component {
                         message.success(sucessMsg, 4);
                         this.setState({ loading: false, record: data.data, submited: true });
                         this.props.refreshTable();
-                        // 编辑成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
-                        if (isModify) {
-                            this.hideModal();
-                        }
+                        this.hideModal();
                     } else {
                         this.setState({ loading: false });
                         message.error(data.msg, 4);
@@ -97,7 +93,6 @@ class PopModal extends Component {
     }
     render() {
         const readonly = (this.props.action === 'look');
-        const NotModifyWhen = (this.props.action === 'modify');
         let { record = {} } = this.state;
         const form = this.props.form;
         let title = "查看";
@@ -111,12 +106,10 @@ class PopModal extends Component {
                 title={title}
                 visible={this.props.visible}
                 width='500px'
-                style={{top:'5%'}}
+                style={{top:'15%'}}
                 bodyStyle={{ maxHeight: 450, overflow: "auto" }}
                 onCancel={() => { this.hideModal() }}
-                footer={[
-                    record && record.id
-                    &&
+                footer={readonly?null:[
                     <Button key="back" onClick={() => { this.hideModal() }}>取消</Button>,
                     <Button key="submit" type="primary" loading={this.state.loading} onClick={() => { this.handleOk() }}>
                         确认
@@ -130,37 +123,42 @@ class PopModal extends Component {
                         <Row>
                             {
                                 getFields(form, [{
-                                        span: '24',
-                                        type: 'input',
-                                        fieldName: 'contractNum',
-                                        label: '减税性质代码和名称',
-                                        formItemStyle: formItemLayout,
-                                        fieldDecoratorOptions: {
-                                            initialValue: record.contractNum,
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: `请输入合同编号`
-                                                }
-                                            ]
-                                        },
-                                        componentProps: {
-                                            disabled: readonly || NotModifyWhen
-                                        },
+                                    label: "减免税项目",
+                                    fieldName: "project",
+                                    type: "asyncSelect",
+                                    span:24,
+                                    formItemStyle: formItemLayout,
+                                    componentProps: {
+                                        fieldTextName: "name",
+                                        fieldValueName: "code",
+                                        doNotFetchDidMount: false,
+                                        url: `/sys/dict/listBaseInfo/JMS`,
+                                        selectOptions:{
+                                            disabled: readonly,
+                                            labelInValue:true
+                                        }
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue: record.num && {key:record.num,label:record.name},
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: `请输入减免税项目`
+                                            }
+                                        ]
                                     }
-
-                                ])
+                                }])
                             }
                         </Row>
                         <Row>
                             {
                                 getFields(form, [{
                                         span: '24',
-                                        fieldName: 'landPrice',
+                                        fieldName: 'amount',
                                         label: '金额',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.landPrice,
+                                            initialValue: record.amount,
                                             rules: [
                                                 {
                                                     required: true,

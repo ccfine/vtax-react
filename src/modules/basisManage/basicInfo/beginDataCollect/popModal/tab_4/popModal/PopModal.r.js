@@ -7,7 +7,7 @@ import { getFields, request } from 'utils'
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
-        sm: { span: 8 },
+        sm: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 12 },
@@ -19,16 +19,15 @@ class PopModal extends Component {
     state = {
         loading: false,
         formLoading: false,
-        record: {},
-        submited: false
+        record: {}
     }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/contract/land/find/${props.id}`).then(({ data }) => {
+                request.get(`/account/otherTax/deducted/collection/find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
-                        this.setState({ formLoading: false, record: data.data, submited: false });
+                        this.setState({ formLoading: false, record: data.data});
                     }
                 })
                     .catch(err => {
@@ -45,7 +44,7 @@ class PopModal extends Component {
         this.props.toggleModalVisible(false);
         // 回归初始状态
         this.props.form.resetFields();
-        this.setState({ record: {}, submited: false });
+        this.setState({ record: {}});
     }
     handleOk() {
         if ((this.props.action !== 'modify' && this.props.action !== 'add') || this.state.formLoading) {
@@ -56,21 +55,23 @@ class PopModal extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // 提交数据
-                // 处理日期
-                values.signingDate = values.signingDate.format('YYYY-MM-DD');
+                if(values.taxableProject){
+                    values.taxableProjectId =values.taxableProject.key;
+                    values.taxableProjectName = values.taxableProject.label;
+                    values.taxableProject = undefined;
+                }
 
                 let obj = Object.assign({}, this.state.record, values);
                 let result,
-                    sucessMsg,
-                    isModify = (this.props.action === "modify" || (this.state.submited && this.props.action === "add"));
+                    sucessMsg;
 
-                if (isModify) {
-                    result = request.put('/contract/land/update', obj);
+                if (this.props.action === "modify") {
+                    result = request.put('/account/otherTax/deducted/collection/update', obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
                     obj.mainId = this.props.mainId;
-                    result = request.post('/contract/land/add', obj);
-                    sucessMsg = '新增成功，点击【附件信息】进行文件上传';
+                    result = request.post('/account/otherTax/deducted/collection/add', obj);
+                    sucessMsg = '新增成功';
                 }
 
                 this.setState({ loading: true });
@@ -79,10 +80,7 @@ class PopModal extends Component {
                         message.success(sucessMsg, 4);
                         this.setState({ loading: false, record: data.data, submited: true });
                         this.props.refreshTable();
-                        // 编辑成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
-                        if (isModify) {
-                            this.hideModal();
-                        }
+                        this.hideModal();
                     } else {
                         this.setState({ loading: false });
                         message.error(data.msg, 4);
@@ -97,7 +95,6 @@ class PopModal extends Component {
     }
     render() {
         const readonly = (this.props.action === 'look');
-        const NotModifyWhen = (this.props.action === 'modify');
         let { record = {} } = this.state;
         const form = this.props.form;
         let title = "查看";
@@ -111,12 +108,10 @@ class PopModal extends Component {
                 title={title}
                 visible={this.props.visible}
                 width='500px'
-                style={{top:'5%'}}
+                style={{top:'15%'}}
                 bodyStyle={{ maxHeight: 450, overflow: "auto" }}
                 onCancel={() => { this.hideModal() }}
-                footer={[
-                    record && record.id
-                    &&
+                footer={readonly?null:[
                     <Button key="back" onClick={() => { this.hideModal() }}>取消</Button>,
                     <Button key="submit" type="primary" loading={this.state.loading} onClick={() => { this.handleOk() }}>
                         确认
@@ -131,21 +126,21 @@ class PopModal extends Component {
                             {
                                 getFields(form, [{
                                         span: '24',
-                                        type: 'input',
-                                        fieldName: 'contractNum',
-                                        label: '应税项目名称',
+                                        type: "taxableProject",
+                                        fieldName: 'taxableProject',
+                                        label: '应税项目',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.contractNum,
+                                            initialValue: record.taxableProjectId && {key:record.taxableProjectId,label:record.taxableProjectName},
                                             rules: [
                                                 {
                                                     required: true,
-                                                    message: `请输入合同编号`
+                                                    message: `请选择应税项目`
                                                 }
                                             ]
                                         },
                                         componentProps: {
-                                            disabled: readonly || NotModifyWhen
+                                            disabled: readonly
                                         },
                                     }
 
@@ -156,16 +151,26 @@ class PopModal extends Component {
                             {
                                 getFields(form, [{
                                         span: '24',
-                                        type: 'input',
-                                        fieldName: 'parcelNum',
-                                        label: '计税方法',
-                                        formItemStyle: formItemLayout,
-                                        fieldDecoratorOptions: {
-                                            initialValue: record.parcelNum,
-                                            rules: [
+                                        label:'计税方法',
+                                        fieldName:'taxMethod',
+                                        type:'select',
+                                        options:[
+                                            {
+                                                text:'一般计税方法',
+                                                value:'1'
+                                            },
+                                            {
+                                                text:'简易计税方法',
+                                                value:'2'
+                                            }
+                                        ],
+                                        formItemStyle:formItemLayout,
+                                        fieldDecoratorOptions:{
+                                            initialValue:record.taxMethod,
+                                            rules:[
                                                 {
-                                                    required: true,
-                                                    message: `请输入宗地编号`
+                                                    required:true,
+                                                    message:'请选择计税方法'
                                                 }
                                             ]
                                         },
@@ -180,11 +185,11 @@ class PopModal extends Component {
                             {
                                 getFields(form, [{
                                         span: '24',
-                                        fieldName: 'landPrice',
+                                        fieldName: 'amount',
                                         label: '金额',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.landPrice,
+                                            initialValue: record.amount,
                                             rules: [
                                                 {
                                                     required: true,
