@@ -11,7 +11,7 @@ import Tab4 from './tab_4';
 const TabPane = Tabs.TabPane;
 const tabList = [{
     key: 'tab1',
-    tab: '其他项目期初数据'
+    tab: '主表项目期初数据/其他项目期初数据'
 }, {
     key: 'tab2',
     tab: '税额抵减项目期初数据',

@@ -85,7 +85,12 @@ const getColumns = getFieldDecorator => [
         dataIndex:'generalAmount',
         render:(text,record)=>{
             return record.generalAmountEdit ?
-                <EditableCell fieldName={`generalAmount_${record.id}`} renderValue={text} getFieldDecorator={getFieldDecorator}/> : fMoney(text)
+                <EditableCell
+                    fieldName={`generalAmount_${record.id}`}
+                    renderValue={text}
+                    getFieldDecorator={getFieldDecorator}
+                    editAble={record.generalAmountEdit}
+                /> : fMoney(text)
         },
         className:'table-money'
     },
@@ -96,8 +101,10 @@ const getColumns = getFieldDecorator => [
             return record.drawbackPolicyAmountEdit ?
                 <EditableCell
                     fieldName={`drawbackPolicyAmount_${record.id}`}
-                    renderValue={text} getFieldDecorator={getFieldDecorator} editAble={record.drawbackPolicyAmountEdit} />
-                : fMoney(text)
+                    renderValue={text}
+                    getFieldDecorator={getFieldDecorator}
+                    editAble={record.drawbackPolicyAmountEdit}
+                /> : fMoney(text)
         },
         className:'table-money'
     }
