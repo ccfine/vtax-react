@@ -7,33 +7,45 @@ import {request,fMoney,composeBotton} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
 import { withRouter } from 'react-router'
-const getColumns = getFieldDecorator =>[
+const getColumns = (getFieldDecorator,disabled) =>[
     {
         title: '项目名称',
         dataIndex: 'name',
     },{
         title: '金额',
         dataIndex: 'amount',
-        //render:text=>fMoney(text),
         className:'table-money',
         render:(text,record)=>{
-            return record.amount ?
-                <EditableCell fieldName={`amount_${record.id}`} renderValue={text} getFieldDecorator={getFieldDecorator}/> : fMoney(text)
+            return !disabled ?
+                <EditableCell
+                    fieldName={`amount_${record.id}`}
+                    renderValue={text}
+                    getFieldDecorator={getFieldDecorator}
+                    editAble={disabled}
+                /> : fMoney(parseFloat(text))
         },
     }
 ];
 
 class TabPage extends Component{
     state={
-        updateKey:Date.now()
+        updateKey:Date.now(),
+        searchTableLoading:false,
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
         })
     }
+    toggleSearchTableLoading = b =>{
+        this.setState({
+            searchTableLoading:b
+        })
+    }
     cancel = e =>{
         e && e.preventDefault()
+        this.props.form.resetFields();
+        this.refreshTable()
     }
     save = e =>{
         e && e.preventDefault()
@@ -41,10 +53,9 @@ class TabPage extends Component{
 
         this.props.form.validateFields((err, values) => {
             if(!err){
-                request.post('/account/taxCalculation/save',{
-                    data:values,
-                    mainId:this.state.filters.mainId,
-                    authMonth:this.state.filters.authMonth
+                request.post('/tax/credit/items/collection/save',{
+                   ...values,
+                    mainId:this.props.mainId,
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -68,34 +79,39 @@ class TabPage extends Component{
         }
     }
     render(){
+        const {updateKey,searchTableLoading} = this.state;
         const props = this.props;
         const {getFieldDecorator} = this.props.form;
         return(
             <SearchTable
-                actionOption={{
-                    body:(
-                        <span>
-                            {
-                                composeBotton([{
-                                    type:'save',
-                                    text:'保存',
-                                    icon:'save',
-                                    onClick:()=>this.save()
-                                },{
-                                    type:'save',
-                                    text:'取消',
-                                    icon:'logout',
-                                    onClick:()=>this.cancel()
-                                }])
-                            }
-                        </span>
-                    )
-                }}
+                spinning={searchTableLoading}
+                actionOption={
+                    !props.disabled ? {
+                        body:(
+                            <span>
+                                {
+                                    composeBotton([{
+                                        type:'save',
+                                        text:'保存',
+                                        icon:'save',
+                                        onClick:()=>this.save()
+                                    },{
+                                        type:'cancel',
+                                        text:'取消',
+                                        icon:'rollback',
+                                        onClick:()=>this.cancel()
+                                    }])
+                                }
+                            </span>
+                        )
+                    } : null
+                }
                 searchOption={null}
                 tableOption={{
-                    columns:getColumns(getFieldDecorator),
+                    pagination:false,
+                    columns:getColumns(getFieldDecorator,this.props.disabled),
                     url:`/tax/credit/items/collection/list/${props.mainId}`,
-                    key:this.state.updateKey,
+                    key:updateKey,
                     cardProps:{
                         bordered:false,
                         style:{marginTop:"0px"}

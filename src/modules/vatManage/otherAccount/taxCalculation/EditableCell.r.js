@@ -10,7 +10,7 @@ export default class EditableCell extends React.Component {
             <div className="editable-cell-input-wrapper">
                 {
                     getFieldDecorator(`${fieldName}`,{
-                        initialValue:parseFloat(renderValue)
+                        initialValue:renderValue
                     })(
                         <CusFormItem.NumericInput style={{textAlign:'right',backgroundColor: '#E2F6FF'}} />
                     )
