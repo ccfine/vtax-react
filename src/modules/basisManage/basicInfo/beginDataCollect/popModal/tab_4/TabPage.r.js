@@ -6,19 +6,18 @@ import {Modal,message,Icon,Tooltip} from 'antd'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import PopModal from './popModal'
 import {request,fMoney,composeBotton} from 'utils'
-const getColumns = context=>[
-    {
+const getColumns = context=>{
+    let operates = context.props.disabled?[]:[{
         title:'操作',
         render:(text, record, index)=>(
-            <span>
-                <a style={{margin:"0 5px"}} onClick={()=>context.showModal('modify',record.id)}>
+            <span className='table-operate'>
+                <a onClick={()=>context.showModal('modify',record.id)}>
                     <Tooltip placement="top" title="编辑">
                            <Icon type="edit" />
                     </Tooltip>
                 </a>
-                <span style={{
-                    color:'#f5222d',
-                    cursor:'pointer'
+                <a style={{
+                    color:'#f5222d'
                 }} onClick={()=>{
                     const modalRef = Modal.confirm({
                         title: '友情提醒',
@@ -38,16 +37,17 @@ const getColumns = context=>[
                     <Tooltip placement="top" title="删除">
                         <Icon type="delete" />
                     </Tooltip>
-                </span>
+                </a>
             </span>
         ),
         fixed:'left',
-        width:'100px',
+        width:'70px',
         dataIndex:'action',
         className:'text-center',
-    },{
+    }]
+    return [...operates,{
         title: '应税项目名称',
-        dataIndex: 'contractNum',
+        dataIndex: 'taxableProjectName',
         render:(text,record)=>(
             <a
                 onClick={() => context.showModal('look',record.id)}
@@ -59,14 +59,25 @@ const getColumns = context=>[
         )
     }, {
         title: '计税方法',
-        dataIndex: 'parcelNum',
+        dataIndex: 'taxMethod',
+        render:(text)=>{
+            text = parseInt(text,10);
+            if(text===1){
+                return '一般计税方法'
+            }else if(text ===2){
+                return '简易计税方法'
+            }else{
+                return ''
+            }
+        }
     },{
         title: '金额',
-        dataIndex: 'landPrice',
+        dataIndex: 'amount',
         render:text=>fMoney(text),
         className:'table-money'
     }
 ];
+}
 
 export default class TabPage extends Component{
     state={
@@ -83,10 +94,8 @@ export default class TabPage extends Component{
     showModal=(type,opid)=>{
         this.toggleModalVisible(true)
         this.setState({
-            modalConfig:{
-                type:type,
-                opid:opid
-            }
+            action:type,
+            opid
         })
     }
     refreshTable = ()=>{
@@ -95,18 +104,15 @@ export default class TabPage extends Component{
         })
     }
     deleteRecord(record){
-        request.post(`/contract/land/delete/${record.id}`).then(({data}) => {
+        request.delete(`/account/otherTax/deducted/collection/delete/${record.id}`).then(({data}) => {
             if (data.code === 200) {
                 message.success('删除成功', 4);
-                this.setState({updateKey:Date.now()});
+                this.refreshTable();
             } else {
                 message.error(data.msg, 4);
             }
-        })
-            .catch(err => {
+        }).catch(err => {
                 message.error(err.message);
-                this.setState({loading:false});
-                this.hideModal();
             })
     }
     componentWillReceiveProps(props){
@@ -118,7 +124,7 @@ export default class TabPage extends Component{
         const props = this.props;
         return(
             <SearchTable
-                actionOption={{
+                actionOption={props.disabled ? null :{
                     body:(
                         <span>
                             {
@@ -133,7 +139,7 @@ export default class TabPage extends Component{
                 searchOption={undefined}
                 tableOption={{
                     columns:getColumns(this),
-                    url:`/contract/land/list/${props.mainId}`,
+                    url:`/account/otherTax/deducted/collection/list/${props.mainId}`,
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,
@@ -146,8 +152,8 @@ export default class TabPage extends Component{
                     id={this.state.opid}
                     action={this.state.action}
                     visible={this.state.visible}
-                    toggleModalVisible={()=>{this.toggleModalVisible()}}
-                    refreshTable={()=>{this.refreshTable()}}
+                    toggleModalVisible={this.toggleModalVisible}
+                    refreshTable={this.refreshTable}
                 />
             </SearchTable>
 
