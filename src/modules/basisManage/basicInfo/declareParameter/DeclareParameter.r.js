@@ -45,7 +45,8 @@ const getColumns = (context) => [
                             modalConfig:{
                                 type:'edit',
                                 id:record.id
-                            }
+                            },
+                            initData:record
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -65,7 +66,8 @@ const getColumns = (context) => [
                 modalConfig:{
                     type:'view',
                     id:record.id
-                }
+                },
+                initData:record
             },()=>{
                 context.toggleModalVisible(true)
             })

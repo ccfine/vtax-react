@@ -22,7 +22,7 @@ const getColumns = context => ([
     {
         title: '操作',
         render(text, record, index) {
-            return (<span class='table-operate'>
+            return (<span className='table-operate'>
                 <a title='编辑' onClick={() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
                 }}><Icon type='edit'/></a>

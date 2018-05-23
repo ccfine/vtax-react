@@ -21,7 +21,7 @@ const getColumns = context => [
         key:'actions',
         render:(text,record)=>{
             return (
-                <div class='table-operate'>
+                <div className='table-operate'>
                 <a title='编辑' onClick={()=>{
                     context.setState({
                         modalConfig:{

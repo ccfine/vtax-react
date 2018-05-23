@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:15:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-23 11:13:11
+ * @Last Modified time: 2018-05-23 15:17:36
  */
 import React, { Component } from 'react'
 import { Modal, Form,Button, message, Spin, Row } from 'antd'
@@ -76,7 +76,7 @@ class PopModal extends Component {
                     values.stages = undefined;
                 }
 
-                let obj = Object.assign({}, this.state.record, values);
+                let obj = Object.assign({id:this.state.record.id,mainId:this.state.record.mainId}, values);
                 let result,
                     sucessMsg;
 
@@ -93,7 +93,7 @@ class PopModal extends Component {
                 result && result.then(({ data }) => {
                     if (data.code === 200) {
                         message.success(sucessMsg, 4);
-                        this.setState({ loading: false, record: data.data, submited: true });
+                        this.setState({ loading: false, submited: true });
                         this.props.refreshTable();
                         this.hideModal();
                     } else {
@@ -109,15 +109,18 @@ class PopModal extends Component {
         });
     }
     render() {
-        const readonly = (this.props.action === 'look');
+        const readonly = (this.props.action === 'look'),isModify =  (this.props.action === "modify") ;
         let { record = {} } = this.state;
         const form = this.props.form;
         let title = "查看";
         if (this.props.action === "add") {
             title = "新增";
-        } else if (this.props.action === "modify") {
+        } else if (isModify) {
             title = "编辑"
         }
+
+        const eventkey = parseInt((form.getFieldValue('event') && form.getFieldValue('event').key) || record.num,10);
+
         return (
             <Modal
                 title={title}
@@ -175,7 +178,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             labelInValue:true,
-                                            disabled: readonly
+                                            disabled: readonly || isModify
                                         },
                                     }]
                                 )
@@ -183,7 +186,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                getFields(form, [{
+                                (eventkey === 3 || eventkey === 4) && getFields(form, [{
                                     label: "项目名称",
                                     fieldName: "project",
                                     type: "asyncSelect",
@@ -201,7 +204,7 @@ class PopModal extends Component {
                                     componentProps: {
                                         selectOptions:{
                                             labelInValue:true,
-                                            disabled: readonly,
+                                            disabled: readonly || isModify,
                                         },
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
@@ -214,7 +217,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                getFields(form, [{
+                                 (eventkey === 3 || eventkey === 4) && getFields(form, [{
                                     label: "项目分期",
                                     fieldName: "stages",
                                     type: "asyncSelect",
@@ -232,7 +235,7 @@ class PopModal extends Component {
                                     componentProps: {
                                         selectOptions:{
                                             labelInValue:true,
-                                            disabled: readonly,
+                                            disabled: readonly || isModify,
                                         },
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
@@ -245,7 +248,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                getFields(form, [{
+                                (eventkey === 1 || eventkey === 2) && getFields(form, [{
                                         span: '24',
                                         fieldName: 'amount',
                                         label: '期初余额',
@@ -269,7 +272,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                getFields(form, [{
+                                 eventkey === 3 && getFields(form, [{
                                         span: '24',
                                         fieldName: 'landPrice',
                                         label: '累计扣除土地价款',
@@ -293,7 +296,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                getFields(form, [{
+                                eventkey === 4 &&getFields(form, [{
                                         span: '24',
                                         fieldName: 'salesArea',
                                         label: '累计销售土地面积',
