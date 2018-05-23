@@ -184,7 +184,7 @@ const getColumns = context => [
                             },
                         });
                     }}>
-                <Icon type="close-circle-o" />
+                <Icon type="disconnect" />
             </span>
                 )
         }
@@ -210,55 +210,78 @@ const getColumns = context => [
         }
     },
     {
-        title:'购货单位名称',
-        dataIndex:'purchaseName'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">购货单位名称</p>
+                <p className="apply-form-list-p2">货物名称</p>
+            </div>
+        ),
+        dataIndex: "purchaseName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.commodityName}</p>
+            </div>
+        )
     },
     {
-        title:'发票代码',
-        dataIndex:'invoiceCode'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票代码</p>
+                <p className="apply-form-list-p2">发票号码</p>
+            </div>
+        ),
+        dataIndex: "invoiceCode",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.invoiceNum}</p>
+            </div>
+        )
     },
     {
-        title:'发票号码',
-        dataIndex:'invoiceNum'
-    },
-    {
-        title:'发票类型',
-        dataIndex:'invoiceType',
-        render:text=>{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票类型</p>
+                <p className="apply-form-list-p2">开票日期</p>
+            </div>
+        ),
+        dataIndex: "invoiceType",
+        render: (text, record) => {
             if(text==='s'){
                 return '专票'
             }
             if(text==='c'){
                 return '普票'
             }
-            return text;
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.billingDate}</p>
+                </div>
+            )
         }
     },
     {
-        title:'货物名称',
-        dataIndex:'commodityName'
-    },
-    {
-        title:'开票日期',
-        dataIndex:'billingDate',
-        width:'75px'
-    },
-    {
-        title:'金额',
-        dataIndex:'amount',
-        render:text=>fMoney(text),
-        className:'table-money'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">金额</p>
+                <p className="apply-form-list-p2">税额</p>
+            </div>
+        ),
+        dataIndex: "amount",
+        className:'table-money',
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{fMoney(text)}</p>
+                <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
+            </div>
+        )
     },
     {
         title:'税率',
         dataIndex:'taxRate',
         render:text=>text? `${text}%`: text,
-    },
-    {
-        title:'税额',
-        dataIndex:'taxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
     },
     {
         title:'价税合计',
@@ -275,28 +298,49 @@ const getColumns = context => [
         dataIndex:'marryTime'
     },
     {
-        title:'客户名称',
-        dataIndex:'customerName'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">客户名称</p>
+                <p className="apply-form-list-p2">身份证号/纳税识别码</p>
+            </div>
+        ),
+        dataIndex: "customerName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
+            </div>
+        )
     },
     {
-        title:'身份证号/纳税识别码',
-        dataIndex:'taxIdentificationCode'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">楼栋名称</p>
+                <p className="apply-form-list-p2">单元</p>
+            </div>
+        ),
+        dataIndex: "buildingName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.element}</p>
+            </div>
+        )
     },
     {
-        title:'楼栋名称',
-        dataIndex:'buildingName'
-    },
-    {
-        title:'单元',
-        dataIndex:'element'
-    },
-    {
-        title:'房号',
-        dataIndex:'roomNumber'
-    },
-    {
-        title:'房间编码',
-        dataIndex:'roomCode'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">房号</p>
+                <p className="apply-form-list-p2">房间编码</p>
+            </div>
+        ),
+        dataIndex: "roomNumber",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.roomCode}</p>
+            </div>
+        )
     },
     {
         title:'成交总价',
@@ -387,7 +431,7 @@ class InvoiceDataMatching extends Component{
                     key:tableKey,
                     pageSize:10,
                     columns:getColumns(this),
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
                             filters:params
                         },()=>{

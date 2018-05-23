@@ -367,7 +367,7 @@ class RoomTransactionFile extends Component{
                 }}
                 doNotFetchDidMount={true}
                 tableOption={{
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
                             filters:params,
                         },()=>{
@@ -382,6 +382,7 @@ class RoomTransactionFile extends Component{
                     columns:getColumns(this),
                     url: '/output/room/files/list',
                     key:tableUpDateKey,
+
                     extra: <div>
                         {
                             listMainResultStatus(statusParam)

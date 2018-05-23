@@ -157,7 +157,6 @@ const getColumns = context => [
     title: "税率",
     dataIndex: "taxRate",
     render: text => (text ? `${text}%` : text),
-    width: "50px"
   },
   {
     title: "销售额（不含税）",
@@ -176,7 +175,6 @@ const getColumns = context => [
     dataIndex: "deductionAmount",
     render: text => fMoney(text),
     className: "table-money",
-    width: "100px"
   },
   {
     title: "调整原因",

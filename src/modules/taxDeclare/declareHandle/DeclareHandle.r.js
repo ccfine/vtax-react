@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import {Icon,message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
+import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
 import {request} from 'utils'
 const pointerStyle = {
     cursor: "pointer",
@@ -66,51 +67,56 @@ const getColumns =(context)=>[
     {
         title: "操作",
         className:'text-center',
-        render:(text,record)=>{
+        render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
+            let t ='';
             let status = parseInt(record.status,0);
-            console.log(record.status)
-            if( status < 5  && status !== -1){
-                return (
-                    <span
-                        title="完成"
-                        style={{
-                            ...pointerStyle,
-                            marginLeft: 5
-                        }}
-                        onClick={() => context.handelComplete()}
-                    >
-                        <Icon title="完成" type="check" />
-                    </span>
-                )
+            switch (status){
+                case 1: //申报办理
+                    t = <span>
+                            <span title="申报办理" style={{ ...pointerStyle, marginLeft: 5 }}
+                                onClick={() => {
+                                    context.setState({
+                                        record: record
+                                    },() => {
+                                        context.toggleApplyVisible(true);
+                                    });
+                                }}
+                            >
+                                 <Icon title="申报办理" type="form" />
+                            </span>
+                            <span title="申报完成" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelComplete()}>
+                                <Icon title="申报完成" type="check-circle-o" />
+                            </span>
+                            <span title="流程终止" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelProcessStop()} >
+                                <Icon title="流程终止" type="exception" />
+                            </span>
+                        </span>
+                    break
+                case 2: //申报审核
+                    break
+                case 3: //申报审批
+                    break
+                case 4: //申报完成
+                    t = <span>
+                            <span title="申报完成" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelComplete()}>
+                                <Icon title="申报完成" type="check-circle-o" />
+                            </span>
+                            <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelArchiving()} >
+                                <Icon title="申报归档" type="folder" />
+                            </span>
+                        </span>
+                    break
+                case 5: //归档
+                    t = <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelArchiving()} >
+                            <Icon title="申报归档" type="folder" />
+                        </span>
+                    break
+                case -1: //流程终止
+                    break
+                default:
+                    break
             }
-            if(status < 6 && status !== -1){
-                return (
-                    <span
-                        title="归档"
-                        style={{
-                            ...pointerStyle,
-                            marginLeft: 5
-                        }}
-                        onClick={() => context.handelArchiving()}
-                    >
-                        <Icon title="归档" type="check" />
-                    </span>
-                )
-            }
-            if(status < 6  && status !== -1){
-                return (
-                    <span
-                        title="流程终止"
-                        style={{
-                            ...pointerStyle,
-                            marginLeft: 5
-                        }}
-                        onClick={() => context.handelProcessStop()}
-                    >
-                        <Icon title="流程终止" type="exception" />
-                    </span>
-                )
-            }
+            return t;
         },
         fixed: "left",
         width: "75px",
@@ -120,7 +126,6 @@ const getColumns =(context)=>[
         dataIndex: 'status',
         className:'text-center',
         render:text=>{
-            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠;
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
@@ -196,12 +201,20 @@ const getColumns =(context)=>[
 export default class DeclareHandle extends Component{
     state={
         updateKey:Date.now(),
+        record:undefined,
+        applyVisible:false,
+        applyDeclarationModalKey:Date.now()+2,
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now(),
         })
     }
+    toggleApplyVisible = applyVisible => {
+        this.setState({
+            applyVisible
+        });
+    };
     handelComplete=()=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
@@ -291,7 +304,7 @@ export default class DeclareHandle extends Component{
     }
 
     render(){
-        const {updateKey} = this.state;
+        const {updateKey,applyDeclarationModalKey,applyVisible,record} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -312,6 +325,19 @@ export default class DeclareHandle extends Component{
                     url:'/tax/decConduct/decList',
                 }}
             >
+                {
+                    record && <ApplyDeclarationPopModal
+                        key={applyDeclarationModalKey}
+                        visible={applyVisible}
+                        title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
+                        record={record}
+                        onSuccess={()=>{
+                            this.refreshTable()
+                        }}
+                        toggleApplyVisible={this.toggleApplyVisible}
+                        style={{marginRight:5}}
+                    />
+                }
             </SearchTable>
         )
     }
