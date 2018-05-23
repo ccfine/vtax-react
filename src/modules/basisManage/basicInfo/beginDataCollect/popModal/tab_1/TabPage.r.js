@@ -198,7 +198,11 @@ class TabPage extends Component{
                         key:tableKey,
                         cardProps:{
                             bordered:false,
-                            style:{marginTop:"0px"}
+                            style:{
+                                marginTop:0,
+                                maxHeight:400,
+                                overflowY:'auto',
+                            }
                         },
                         onRow:record=>({
                             onDoubleClick:()=>{console.log(record)}

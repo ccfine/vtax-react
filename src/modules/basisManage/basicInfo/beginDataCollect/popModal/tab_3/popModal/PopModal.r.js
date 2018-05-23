@@ -143,7 +143,7 @@ class PopModal extends Component {
                                         rules: [
                                             {
                                                 required: true,
-                                                message: `请输入减免税项目`
+                                                message: `请选择减免税项目`
                                             }
                                         ]
                                     }

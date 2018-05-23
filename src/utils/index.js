@@ -13,8 +13,10 @@ import {BigNumber} from 'bignumber.js'
 import composeBotton from './composeBotton';
 
 const fMoney = (s,n=2)=>{
-    if(s === "" || s === 0 || typeof (s) === 'undefined'){
+    if(s === 0){
         return '0.00';
+    }else if(s === "" || typeof (s) === 'undefined'){
+        return '';
     }
     n = n > 0 && n <= 20 ? n : 2;
     /**添加一下代码 大数字用parseFloat不精确 */
