@@ -256,6 +256,14 @@ class SalesInvoiceCollection extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                composeBotton([{
+                                    type:'fileExport',
+                                    title:'下载模板',
+                                    url:'income/financeDetails/controller/download',
+                                    onSuccess:this.refreshTable
+                                }])
+                            }
+                            {
                                 JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                     type:'mark',
                                     formOptions:{

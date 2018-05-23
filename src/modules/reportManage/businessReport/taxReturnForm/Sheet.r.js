@@ -5,7 +5,7 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import DataSheet from 'react-datasheet';
 import {Spin,message} from 'antd'
-import {request,fMoney} from '../../../../utils'
+import {request,fMoney} from 'utils'
 export default class Sheet extends Component{
     static propTypes={
         grid:PropTypes.array,
@@ -49,7 +49,8 @@ export default class Sheet extends Component{
                         if(deepItem.key === key){
                             return {
                                 ...sheetData[key],
-                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value']
+                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value'],
+                                //readOnly:false
                             };
                         }
                     }
@@ -81,6 +82,7 @@ export default class Sheet extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     let nextData = this.props.composeGrid(this.state.grid,data.data)
+                    console.log(nextData)
                     this.mounted && this.setState({
                         grid:nextData
                     },()=>{
@@ -95,6 +97,19 @@ export default class Sheet extends Component{
                 this.toggleLoading(false);
             })
     }
+    onCellsChanged = (changes) => {
+        const grid = this.state.grid.map(row => [...row])
+        changes.forEach(({cell, row, col, value}) => {
+            //console.log(cell, row, col, value)
+            //获取修改后的返回的一条的数据
+            if (grid[row] && grid[row][col]) {
+                grid[row][col] = {...grid[row][col], value}
+            }
+        })
+        console.log(grid)
+        this.setState({grid})
+    }
+
     mounted=true;
     componentWillUnmount(){
         this.mounted=null;
@@ -117,6 +132,7 @@ export default class Sheet extends Component{
                                 data={grid}
                                 valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}
                                 onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
+                                onCellsChanged={this.onCellsChanged}
                             />
                         </div>
                     </Spin>

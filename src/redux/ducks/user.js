@@ -54,9 +54,12 @@ const initialState = fromJS({
 
     /**是否登录成功*/
     isAuthed:false,
+
+    //给纳税申报用的对象
+    declare:{},
 });
 
-export const {personal, token, isAuthed, orgId, loginType} = createActions({
+export const {personal, token, isAuthed, orgId, loginType, declare} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -78,6 +81,10 @@ export const {personal, token, isAuthed, orgId, loginType} = createActions({
         /**增加*/
         INCREMENT:type => type,
     },
+    DECLARE:{
+        /**增加*/
+        INCREMENT:info => info,
+    }
 })
 
 export default handleActions({
@@ -98,6 +105,9 @@ export default handleActions({
     },
     [loginType.increment]:(state,{payload})=>{
         return state.set('loginType',payload)
+    },
+    [declare.increment]:(state,{payload})=>{
+        return state.set('declare',payload)
     },
 }, initialState)
 
@@ -178,6 +188,15 @@ export const saveOrgId = dispatch => async (id) =>{
 export const saveToken = dispatch => async (data) =>{
     try {
         dispatch(token.increment(data))
+    }catch (err){
+        console.log(err)
+    }
+}
+
+//给纳税申报用的
+export const saveDeclare = dispatch => async (data) =>{
+    try {
+        dispatch(declare.increment(data))
     }catch (err){
         console.log(err)
     }

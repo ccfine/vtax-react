@@ -6,9 +6,11 @@
 import React, { Component } from "react";
 import {Icon, Modal, Row, Col, Steps, List, Card, message} from "antd";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { composeMenus, request,parseJsonToParams } from "utils";
+import {connect} from 'react-redux'
+import {withRouter,Link} from 'react-router-dom';
+import { composeMenus, request, parseJsonToParams } from "utils";
 import routes from "modules/routes";
+import {saveDeclare} from 'redux/ducks/user'
 import data from "./data";
 import "./styles.less";
 
@@ -53,7 +55,7 @@ const steps = [
     }
 ];
 
-export default class ApplyDeclarationPopModal extends Component {
+class ApplyDeclarationPopModal extends Component {
     static propTypes = {
         setButtonStyle: PropTypes.object,
         //title:PropTypes.string,
@@ -123,24 +125,18 @@ export default class ApplyDeclarationPopModal extends Component {
                                     to={{
                                         pathname: item.path, //`${item.path}?mainId=${this.props.record.id}`,
                                         search: `?${parseJsonToParams({
-                                            mainId: this.props.record
-                                                .mainId,
-                                            authMonth: this.props
-                                                .record.partTerm,
-                                            authMonthEnd: this.props
-                                                .record
-                                                .subordinatePeriodEnd
+                                            mainId: this.props.record.mainId,
+                                            authMonth: this.props.record.partTerm,
+                                            authMonthEnd: this.props.record.subordinatePeriodEnd,
+                                            status: this.props.record.status
                                         })}`, //getQueryString('mainId') || undefined
                                         state: {
                                             //在跳转标签的时候值就不存在了
                                             filters: {
-                                                mainId: this.props
-                                                    .record.mainId,
-                                                authMonth: this.props
-                                                    .record.partTerm,
-                                                authMonthEnd: this.props
-                                                    .record
-                                                    .subordinatePeriodEnd
+                                                mainId: this.props.record.mainId,
+                                                authMonth: this.props.record.partTerm,
+                                                authMonthEnd: this.props.record.subordinatePeriodEnd,
+                                                status: this.props.record.status
                                             } //const {state} = this.props.location;  state && state.filters.mainId || undefined,
                                         }
                                     }}
@@ -226,7 +222,13 @@ export default class ApplyDeclarationPopModal extends Component {
     };
 
     LockPageRefresh = () => {
-
+        const { saveDeclare,record } = this.props;
+        saveDeclare({
+                mainId: record.mainId,
+                authMonth: record.partTerm,
+                authMonthEnd: record.subordinatePeriodEnd,
+                status: record.status
+        })
         const ref = Modal.warning({
             title: "友情提醒",
             content: <h2>操作完成后，请刷新当前页面！</h2>,
@@ -235,8 +237,8 @@ export default class ApplyDeclarationPopModal extends Component {
                 ref.destroy();
                 this.fetchDeclarationById({
                     decConduct: this.state.current,
-                    mainId: this.props.record.mainId,
-                    authMonth: this.props.record.partTerm
+                    mainId: record.mainId,
+                    authMonth: record.partTerm
                 });
             }
         });
@@ -347,3 +349,10 @@ export default class ApplyDeclarationPopModal extends Component {
         );
     }
 }
+
+
+export default withRouter(connect(state=>({
+
+}),dispatch=>({
+    saveDeclare:saveDeclare(dispatch),
+}))(ApplyDeclarationPopModal))

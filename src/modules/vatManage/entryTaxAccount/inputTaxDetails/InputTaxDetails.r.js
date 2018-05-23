@@ -5,10 +5,12 @@
  */
 import React,{Component} from 'react'
 import { withRouter } from 'react-router'
+import {Icon,Tooltip} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
 import {requestResultStatus,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import VoucherPopModal from './voucherPopModal'
+import AddPopModal from './addPopModal'
 import moment from 'moment';
 const pointerStyle = {
     cursor:'pointer',
@@ -73,6 +75,25 @@ const searchFields =(disabled)=> {
 }
 const getColumns = context => [
     {
+        title:'操作',
+        render:(text, record)=>(
+            record.voucherType === '前期认证相符且本期申报抵扣' &&  <span onClick={()=>{
+                    context.setState({
+                        addVisible:true,
+                        action:'edit',
+                        record:record
+                    })
+                }} style={pointerStyle}>
+                    <Tooltip placement="top" title="编辑">
+                           <Icon type="edit" />
+                    </Tooltip>
+                </span>
+        ),
+        fixed:'left',
+        width:'50px',
+        dataIndex:'action',
+        className:'text-center',
+    },{
         title: '纳税主体',
         dataIndex: 'mainName',
     }, {
@@ -82,6 +103,9 @@ const getColumns = context => [
         title: '凭据份数',
         dataIndex: 'num',
         render:(text,record)=>{
+            if(record.voucherType === '前期认证相符且本期申报抵扣'){
+                return text
+            }
             if(parseInt(text,0) > 0 ){
                 return (
                     <span>
@@ -140,11 +164,18 @@ class InputTaxDetails extends Component{
         totalSource:undefined,
         visible:false,
         voucherVisible:false,
+        addVisible:false,
+        isAdd:false,
         params:{},
     }
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
+        })
+    }
+    toggleModalAddVisible=addVisible=>{
+        this.setState({
+            addVisible
         })
     }
     toggleModalVisible=visible=>{
@@ -164,6 +195,9 @@ class InputTaxDetails extends Component{
             })
         })
     }
+    formatData=data=>{
+        return data.filter(d=>d.voucherType === '前期认证相符且本期申报抵扣')
+    }
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -171,7 +205,7 @@ class InputTaxDetails extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,visible,voucherVisible,params,statusParam,filters,totalSource} = this.state;
+        const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam,filters,totalSource,record,action,isAdd} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -186,9 +220,10 @@ class InputTaxDetails extends Component{
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
-                    onSuccess:(params)=>{
+                    onSuccess:(params,data)=>{
                         this.setState({
                             filters:params,
+                            isAdd:this.formatData(data).length>0
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -207,6 +242,18 @@ class InputTaxDetails extends Component{
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)
+                        }
+                        {
+                            JSON.stringify(filters) !== "{}" && !isAdd &&  composeBotton([{
+                                type:'add',
+                                onClick:()=>{
+                                    this.setState({
+                                        addVisible:true,
+                                        action:'add',
+                                        record:filters,
+                                    })
+                                }
+                            }],statusParam)
                         }
                         {
                             JSON.stringify(filters) !== "{}" &&  composeBotton([{
@@ -235,6 +282,15 @@ class InputTaxDetails extends Component{
                     </div>,
                 }}
             >
+
+                <AddPopModal
+                    title="新增"
+                    visible={addVisible}
+                    record={record}
+                    action={action}
+                    refreshTable={this.refreshTable}
+                    toggleModalAddVisible={this.toggleModalAddVisible}
+                />
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}

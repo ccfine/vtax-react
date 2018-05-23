@@ -234,7 +234,7 @@ class NeedNotMatchInvoices extends Component{
                     key:tableKey,
                     pageSize:10,
                     columns:columns,
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
                             filters:params
                         },()=>{
@@ -260,8 +260,8 @@ class NeedNotMatchInvoices extends Component{
                         })
                     },
                     scroll:{
-                        x:'180%'
-                    },
+                        x:'150%'
+                    }
                 }}
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />

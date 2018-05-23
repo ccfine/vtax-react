@@ -84,7 +84,7 @@ const getColumns =(context)=>[
         dataIndex: 'status',
         className:'text-center',
         render:(text,record)=>{
-            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠;
+            //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
@@ -108,7 +108,7 @@ const getColumns =(context)=>[
                 default:
                 //no default
             }
-            return <span
+            return t /*<span
                 title="点击进行申报办理"
                 style={{
                     ...pointerStyle,
@@ -123,7 +123,7 @@ const getColumns =(context)=>[
                 }}
             >
                 {t}
-            </span>;
+            </span>;*/
         }
     },{
         title: '纳税主体',
@@ -200,7 +200,6 @@ export default class CreateADeclare extends Component{
         updateKey:Date.now(),
         addPopModalKey:Date.now()+1,
         applyDeclarationModalKey:Date.now()+2,
-        filters:{},
         modalConfig:{
             type:''
         },
@@ -230,16 +229,11 @@ export default class CreateADeclare extends Component{
     };
 
     render(){
-        const {updateKey,addPopModalKey,applyDeclarationModalKey,filters,visible,modalConfig,record,applyVisible} = this.state;
+        const {updateKey,addPopModalKey,applyDeclarationModalKey,visible,modalConfig,record,applyVisible} = this.state;
         return(
                 <SearchTable
                     searchOption={{
                         fields:searchFields(this),
-                        getFieldsValues:values=>{
-                            this.setState({
-                                filters:values
-                            })
-                        },
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -310,7 +304,7 @@ export default class CreateADeclare extends Component{
                                             this.toggleModalVisible(true);
                                         });
                                     }
-                                },{
+                                /*},{
                                     type:'fileExport',
                                     title:'下载附件',
                                     url:'account/income/taxContract/adjustment/download',
@@ -321,6 +315,7 @@ export default class CreateADeclare extends Component{
                                     url:'tax/declaration/export',
                                     params:filters,
                                     onSuccess:this.refreshTable,
+                                 */
                                 }])
                             }
                         </div>,
