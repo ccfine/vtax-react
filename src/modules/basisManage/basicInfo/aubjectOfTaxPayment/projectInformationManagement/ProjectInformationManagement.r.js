@@ -51,22 +51,22 @@ export default class ProjectInformationManagement extends Component{
     componentWillReceiveProps(nextProps){
         if(nextProps.visible){
             if(this.props.taxSubjectId !== nextProps.taxSubjectId){
-                this.initData()
+                this.initData(nextProps.taxSubjectId)
             }
         }
     }
-    initData=()=>{
-        this.fetchTable_1_Data();
+    initData=(taxSubjectId)=>{
+        this.fetchTable_1_Data(taxSubjectId);
         this.setState({
             selectedRowKeys:null,
             $$table_2_data:List([])
         })
     }
-    fetchTable_1_Data = () =>{
+    fetchTable_1_Data = (taxSubjectId) =>{
         this.setState({
             table_1_loaded:false
         })
-        request.get(`/project/list/${this.props.taxSubjectId}`)
+        request.get(`/project/list/${taxSubjectId}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState(prevState=>({
