@@ -2,7 +2,7 @@ import { generateRows } from './sheetUtils'
 
 export default [
     [
-        {value:'（服务、不动产和无形资产扣除项目明细）',readOnly:true,colSpan:7}
+        {value:'增值税纳税申报表附列资料（四）',readOnly:true,colSpan:7}
     ],
     [
         {value:'（税额抵减情况表）',readOnly:true,colSpan:7}

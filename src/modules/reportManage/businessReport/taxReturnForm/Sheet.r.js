@@ -48,6 +48,7 @@ export default class Sheet extends Component{
                     for(let key in sheetData){
                         if(deepItem.key === key){
                             return {
+                                ...deepItem,
                                 ...sheetData[key],
                                 value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value'],
                                 //readOnly:false
@@ -82,7 +83,6 @@ export default class Sheet extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     let nextData = this.props.composeGrid(this.state.grid,data.data)
-                    console.log(nextData)
                     this.mounted && this.setState({
                         grid:nextData
                     },()=>{

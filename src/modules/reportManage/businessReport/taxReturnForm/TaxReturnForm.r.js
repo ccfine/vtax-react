@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import 'react-datasheet/lib/react-datasheet.css';
 import { Tabs } from 'antd';
 import sheet_0 from './sheetData/sheet0'
-import sheet_1 from './sheetData/sheet1'
+import sheet_1 from './sheetData/sheet1.@0.0.1'
 import sheet_2 from './sheetData/sheet2'
 import sheet_3 from './sheetData/sheet3'
 import sheet_4 from './sheetData/sheet4'
@@ -30,12 +30,12 @@ const sheetData = [
         grid:sheet_1,
         url:'/tax/declaration/addendum/one/list',
         scroll:{
-            x:'150%'
+            x:'210%'
         }
     }, {
         tab:'附表二',
         grid:sheet_2,
-        url:'/tax/declaration/addendum/two/list'
+        url:'/tax/declaration/addendum/two/list',
     }, {
         tab:'附表三',
         grid:sheet_3,
@@ -47,7 +47,7 @@ const sheetData = [
     }, {
         tab:'附表五',
         grid:sheet_5,
-        url:'/tax/decConduct/fixedAssets/list'
+        url:'/tax/declaration/addendum/five/list'
     /*}, {
         tab:'固定资产表',
         grid:sheet_6,
@@ -59,7 +59,7 @@ const sheetData = [
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
-        url:'/tax/declaration/reduce/list'
+        url:'/tax/decConduct/prepayTax/list'
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
@@ -97,7 +97,6 @@ class TaxReturnForm extends Component{
                             {
                                 parseInt(activeKey,0) === i ? <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params}/> : ''
                             }
-
                         </TabPane>
                     ))
                 }

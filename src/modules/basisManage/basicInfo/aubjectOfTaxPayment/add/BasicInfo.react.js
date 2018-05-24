@@ -197,12 +197,12 @@ class BasicInfo extends Component {
                                             label:defaultData['industry'] || '',
                                             key:defaultData['industry'] || ''
                                         } : undefined,
-                                        rules:[
+                                        /*rules:[
                                             {
                                                 required:true,
                                                 message:'请选择所属行业'
                                             }
-                                        ]
+                                        ]*/
                                     },
                                     componentProps:{
                                         disabled,
@@ -225,11 +225,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.registrationType,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择注册类型',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'收入规模',
@@ -274,11 +274,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.taxpayerQualification,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择纳税人资质',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'注册日期',
@@ -290,12 +290,12 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:shouldShowDefaultData ? moment(defaultData.registrationDate, dateFormat) : undefined,
-                                        rules: [
+                                        initialValue:(shouldShowDefaultData && defaultData.registrationDate) ? moment(defaultData.registrationDate, dateFormat) : undefined,
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择注册日期',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'开业日期',
@@ -307,12 +307,12 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:shouldShowDefaultData ? moment(defaultData.openingDate, dateFormat) : undefined,
-                                        rules: [
+                                        initialValue:(shouldShowDefaultData && defaultData.openingDate) ? moment(defaultData.openingDate, dateFormat) : undefined,
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择开业日期',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'经营期限',
@@ -326,9 +326,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operatingPeriod,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true, message: '请输入经营期限',
-                                            },{
+                                            },*/{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                                             }
                                         ],
@@ -351,11 +351,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operatingStatus,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择营业状态',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'生产经营地址',
@@ -405,11 +405,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.officePhone,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请输入办公电话',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'开户银行',
@@ -423,9 +423,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.openingBank,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true, message: '请输入开户银行',
-                                            },{
+                                            },*/{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
                                             }
                                         ],
@@ -442,9 +442,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.bankAccount,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true, message: '请输入银行账号',
-                                            },{
+                                            },*/{
                                                 pattern: regRules.number.pattern, message: regRules.number.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
