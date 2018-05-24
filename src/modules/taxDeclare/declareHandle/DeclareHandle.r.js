@@ -76,7 +76,7 @@ const getColumns =(context)=>[
                             <span title="申报办理" style={{ ...pointerStyle, marginLeft: 5 }}
                                 onClick={() => {
                                     context.setState({
-                                        record: record
+                                        record: {...record,decAction:'edit'},
                                     },() => {
                                         context.toggleApplyVisible(true);
                                     });
@@ -84,10 +84,7 @@ const getColumns =(context)=>[
                             >
                                  <Icon title="申报办理" type="form" />
                             </span>
-                            <span title="申报完成" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelComplete()}>
-                                <Icon title="申报完成" type="check-circle-o" />
-                            </span>
-                            <span title="流程终止" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelProcessStop()} >
+                            <span title="流程终止" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelProcessStop(record)} >
                                 <Icon title="流程终止" type="exception" />
                             </span>
                         </span>
@@ -97,17 +94,12 @@ const getColumns =(context)=>[
                 case 3: //申报审批
                     break
                 case 4: //申报完成
-                    t = <span>
-                            <span title="申报完成" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelComplete()}>
-                                <Icon title="申报完成" type="check-circle-o" />
-                            </span>
-                            <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelArchiving()} >
-                                <Icon title="申报归档" type="folder" />
-                            </span>
+                    t = <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelArchiving(record)} >
+                            <Icon title="申报归档" type="folder" />
                         </span>
                     break
                 case 5: //归档
-                    t = <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelArchiving()} >
+                    t = <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }}  onClick={() => context.handelArchiving(record)} >
                             <Icon title="申报归档" type="folder" />
                         </span>
                     break
@@ -116,7 +108,20 @@ const getColumns =(context)=>[
                 default:
                     break
             }
-            return t;
+            return <span>
+                        <span title="查看申报" style={{ ...pointerStyle, marginLeft: 5 }}
+                              onClick={() => {
+                                  context.setState({
+                                      record: {...record,decAction:'look'}
+                                  },() => {
+                                      context.toggleApplyVisible(true);
+                                  });
+                              }}
+                        >
+                            <Icon title="查看申报" type="search" />
+                        </span>
+                        {t}
+                    </span>;
         },
         fixed: "left",
         width: "75px",
@@ -215,34 +220,7 @@ export default class DeclareHandle extends Component{
             applyVisible
         });
     };
-    handelComplete=()=>{
-        const modalRef = Modal.confirm({
-            title: '友情提醒',
-            content: '是否确定流程已完成？',
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk:()=>{
-                modalRef && modalRef.destroy();
-                request.put(`/tax/decConduct/finish/${this.state.selectedRowKeys}`)
-                    .then(({data})=>{
-                        if (data.code === 200) {
-                            message.success('流程完成成功!');
-                            this.refreshTable();
-                        } else {
-                            message.error(data.msg)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                    })
-            },
-            onCancel() {
-                modalRef.destroy()
-            },
-        });
-    }
-    handelArchiving=()=>{
+    handelArchiving=(record)=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '是否确定要归档？',
@@ -251,9 +229,9 @@ export default class DeclareHandle extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                request.put(`/tax/decConduct/record/${this.state.selectedRowKeys}`,{
-                    mainId: this.state.selectedRows[0].mainId,
-                    authMonth:this.state.selectedRows[0].month
+                request.put(`/tax/decConduct/record/${record.id}`,{
+                    mainId: record.mainId,
+                    authMonth:record.month
                 })
                     .then(({data})=>{
                         if (data.code === 200) {
@@ -272,7 +250,7 @@ export default class DeclareHandle extends Component{
             },
         });
     }
-    handelProcessStop=()=>{
+    handelProcessStop=(record)=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '是否确定要流程终止？',
@@ -282,8 +260,8 @@ export default class DeclareHandle extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 request.put('/tax/declaration/stop',{
-                    mainId: this.state.selectedRows[0].mainId,
-                    authMonth:this.state.selectedRows[0].month
+                    mainId: record.mainId,
+                    authMonth:record.month
                 })
                     .then(({data})=>{
                         if (data.code === 200) {

@@ -56,7 +56,7 @@ const initialState = fromJS({
     isAuthed:false,
 
     //给纳税申报用的对象
-    declare:{},
+    declare:null,
 });
 
 export const {personal, token, isAuthed, orgId, loginType, declare} = createActions({

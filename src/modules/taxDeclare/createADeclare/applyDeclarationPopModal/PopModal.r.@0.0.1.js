@@ -8,7 +8,7 @@ import {Icon, Modal, Row, Col, Steps, List, Card, message} from "antd";
 import PropTypes from "prop-types";
 import {connect} from 'react-redux'
 import {withRouter,Link} from 'react-router-dom';
-import { composeMenus, request, parseJsonToParams } from "utils";
+import { composeMenus, request } from "utils";
 import routes from "modules/routes";
 import {saveDeclare} from 'redux/ducks/user'
 import data from "./data";
@@ -124,7 +124,7 @@ class ApplyDeclarationPopModal extends Component {
                                     }}
                                     to={{
                                         pathname: item.path, //`${item.path}?mainId=${this.props.record.id}`,
-                                        search: `?${parseJsonToParams({
+                                        /*search: `?${parseJsonToParams({
                                             mainId: this.props.record.mainId,
                                             authMonth: this.props.record.partTerm,
                                             authMonthEnd: this.props.record.subordinatePeriodEnd,
@@ -138,7 +138,7 @@ class ApplyDeclarationPopModal extends Component {
                                                 authMonthEnd: this.props.record.subordinatePeriodEnd,
                                                 status: this.props.record.status
                                             } //const {state} = this.props.location;  state && state.filters.mainId || undefined,
-                                        }
+                                        }*/
                                     }}
                                     onClick={this.LockPageRefresh}
                                 >
@@ -222,13 +222,7 @@ class ApplyDeclarationPopModal extends Component {
     };
 
     LockPageRefresh = () => {
-        const { saveDeclare,record } = this.props;
-        saveDeclare({
-                mainId: record.mainId,
-                authMonth: record.partTerm,
-                authMonthEnd: record.subordinatePeriodEnd,
-                status: record.status
-        })
+        const { record } = this.props;
         const ref = Modal.warning({
             title: "友情提醒",
             content: <h2>操作完成后，请刷新当前页面！</h2>,
@@ -260,11 +254,20 @@ class ApplyDeclarationPopModal extends Component {
     };
     componentWillReceiveProps(nextProps) {
         if(!this.props.visible && nextProps.visible){
+            const { saveDeclare,record } = nextProps;
+            saveDeclare({
+                mainId: record.mainId,
+                authMonth: record.partTerm,
+                authMonthEnd: record.subordinatePeriodEnd,
+                status: record.status,
+                decAction:record.decAction
+            })
             this.fetchDeclarationById({
                 decConduct:this.state.current,
-                mainId:nextProps.record.mainId,
-                authMonth:nextProps.record.partTerm,
+                mainId:record.mainId,
+                authMonth:record.partTerm,
             })
+
         }
     }
 
@@ -278,54 +281,13 @@ class ApplyDeclarationPopModal extends Component {
                     title={props.title}
                     visible={props.visible}
                     confirmLoading={loading}
-                    onCancel={() => props.toggleApplyVisible(false)}
+                    onCancel={() => {
+                        props.toggleApplyVisible(false)
+                        props.onSuccess && props.onSuccess();
+                    }}
                     width={900}
                     style={{ top: 50, maxWidth: "80%" }}
-                    footer={
-                        <Row>
-                            <Col span={12} />
-                            <Col span={12}>
-                                {/*<Button
-                                    type="primary"
-                                    //onClick={this.handleSubmit}
-                                    disabled
-                                    onClick={() => {
-                                        const ref = Modal.warning({
-                                            content: "研发中...",
-                                            okText: "关闭",
-                                            onOk: () => {
-                                                ref.destroy();
-                                            }
-                                        });
-                                    }}
-                                >
-                                    批量提交
-                                </Button>
-                                <Button
-                                    type="primary"
-                                    disabled
-                                    //onClick={(e)=>this.handleRevoke}
-                                    onClick={() => {
-                                        const ref = Modal.warning({
-                                            content: "研发中...",
-                                            okText: "关闭",
-                                            onOk: () => {
-                                                ref.destroy();
-                                            }
-                                        });
-                                    }}
-                                >
-                                    批量撤回
-                                </Button>
-                                <Button
-                                    onClick={() => props.toggleApplyVisible(false)}
-                                >
-                                    取消
-                                </Button>
-                                 */}
-                            </Col>
-                        </Row>
-                    }
+                    footer={false}
                 >
                     <div className="steps-main">
                         <Steps current={current} size="small">
@@ -349,7 +311,6 @@ class ApplyDeclarationPopModal extends Component {
         );
     }
 }
-
 
 export default withRouter(connect(state=>({
 

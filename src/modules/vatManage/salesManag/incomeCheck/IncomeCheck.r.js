@@ -241,7 +241,7 @@ class IncomeCheck extends Component {
                       style={{marginTop:10}}>
 
 
-                    <AsyncTable url="/income/financeDetails/controller/incomeCheck"
+                    <AsyncTable url="/inter/financial/voucher/incomeCheck"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{

@@ -55,7 +55,7 @@ export default class ViewDocumentDetails extends Component{
 
     fetchReportByVoucherNum = (voucherNum) =>{
         this.toggleLoaded(false)
-        request.get('/income/financeDetails/controller/listByVoucher',{params:{voucherNum}})
+        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherNum}})
             .then(({ data }) => {
                 if (data.code === 200) {
                     this.toggleLoaded(true)
@@ -137,7 +137,7 @@ export default class ViewDocumentDetails extends Component{
                                               scroll:{ x: 800, y: 300 }
                                           }} />
 
-                        {/*<AsyncTable url="/income/financeDetails/controller/listByVoucher"
+                        {/*<AsyncTable url="/inter/financial/voucher/listByVoucher"
                                     updateKey={tableUpDateKey}
                                     filters={{voucherNum:props.voucherNum}}
                                     tableProps={{

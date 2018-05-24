@@ -6,8 +6,8 @@
 import {wrapPage} from 'compoments'
 
 import DataDictionaryMaintain from './dataDictionaryMaintain'
-import TaxReturnsCustom from './taxReturnsCustom'
-import OtherReportsAreCustom from './otherReportsAreCustom'
+/*import TaxReturnsCustom from './taxReturnsCustom'
+import OtherReportsAreCustom from './otherReportsAreCustom'*/
 import TaxClassificationCode from './taxClassificationCode'
 import TaxableItems from './taxableItems'
 import SubjectRateRela from './subjectRateRela'
@@ -19,7 +19,7 @@ const systemMaintain = strategies['systemManage']['systemMaintain'];
 
 const SystemMaintain_Routes = [
     {
-        path:`${PATHS}/taxReturnsCustom`,
+    /*    path:`${PATHS}/taxReturnsCustom`,
         component:wrapPage('纳税申报表自定义',TaxReturnsCustom),
         name:'纳税申报表自定义',
         icon:{
@@ -38,7 +38,7 @@ const SystemMaintain_Routes = [
         },
         authorityInfo:systemMaintain['otherReportsAreCustom'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATHS}/dataDictionaryMaintain`,
         component:wrapPage('数据字典维护',DataDictionaryMaintain),
         name:'数据字典维护',

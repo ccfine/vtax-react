@@ -5,7 +5,7 @@
  */
 import {wrapPage} from 'compoments'
 import LandPriceManage from './landPriceManage'
-import LandArea from './landArea'
+/*import LandArea from './landArea'*/
 import OtherTaxableItemsDeduct from './otherTaxableItemsDeduct'
 import strategies from 'config/routingAuthority.config'
 import LandPriceDeductionDetails from './landPriceDeductionDetails'
@@ -25,7 +25,7 @@ const LandPrice_Routes = [
         },
         authorityInfo:landPrice['landPriceManage'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/LandArea`,
         component:wrapPage('分期可售土地面积',LandArea),
         name:'分期可售土地面积',
@@ -34,7 +34,7 @@ const LandPrice_Routes = [
             backgroundColor:'#904C27'
         },
         authorityInfo:landPrice['LandArea'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/landPriceDeductionDetails`,
         component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
