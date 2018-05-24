@@ -4,6 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
+import {Icon} from 'antd'
 import {SearchTable} from 'compoments';
 import {composeBotton} from 'utils'
 import PopModal from './createPopModal';
@@ -27,33 +28,6 @@ const searchFields =(context) => [
         fieldName:'mainId',
         formItemStyle,
         span:6,
-    /*},{
-        label:'办理进度',
-        type:'select',
-        fieldName:'status',
-        formItemStyle,
-        span:6,
-        options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
-            {
-                text:'申报办理',
-                value:'1'
-            },{
-                text:'申报审核',
-                value:'2'
-            },{
-                text:'申报审批',
-                value:'3'
-            },{
-                text:'申报完成',
-                value:'4'
-            },{
-                text:'归档',
-                value:'5'
-            },{
-                text:'流程终止',
-                value:'-1'
-            }
-        ],*/
     },{
         label:'所属期',
         type:'monthPicker',
@@ -80,6 +54,28 @@ const searchFields =(context) => [
 
 const getColumns =(context)=>[
     {
+        title: "操作",
+        className:'text-center',
+        render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
+            return (
+                <span title="查看申报" style={{ ...pointerStyle, marginLeft: 5 }}
+                      onClick={() => {
+                          context.setState({
+                              record: record
+                          },() => {
+                              context.toggleApplyVisible(true);
+                          });
+                      }}
+                >
+                    <Icon title="查看申报" type="search" />
+                </span>
+            )
+
+        },
+        fixed: "left",
+        width: "50px",
+        dataIndex: "action"
+    },{
         title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
@@ -108,22 +104,7 @@ const getColumns =(context)=>[
                 default:
                 //no default
             }
-            return t /*<span
-                title="点击进行申报办理"
-                style={{
-                    ...pointerStyle,
-                    marginLeft: 5
-                }}
-                onClick={() => {
-                    context.setState({
-                        record: record
-                    },() => {
-                        context.toggleApplyVisible(true);
-                    });
-                }}
-            >
-                {t}
-            </span>;*/
+            return t;
         }
     },{
         title: '纳税主体',
@@ -278,18 +259,6 @@ export default class CreateADeclare extends Component{
                                  }}
                              />*/}
 
-                            {/*{
-                                selectedRows.length>0 &&  <ApplyDeclarationPopModal
-                                    title={`申报处理【${selectedRows[0].mainName}】 申报期间 【${selectedRows[0].subordinatePeriodStart} 至 ${ selectedRows[0].subordinatePeriodEnd}】`}
-                                    disabled={!selectedRowKeys}
-                                    selectedRowKeys={selectedRowKeys}
-                                    selectedRows={selectedRows}
-                                    onSuccess={()=>{
-                                        this.refreshTable()
-                                    }}
-                                    style={{marginRight:5}} />
-                            }*/}
-
                             {
                                 composeBotton([{
                                     type:'add',
@@ -335,10 +304,7 @@ export default class CreateADeclare extends Component{
                             key={applyDeclarationModalKey}
                             visible={applyVisible}
                             title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
-                            record={record}
-                            onSuccess={()=>{
-                                this.refreshTable()
-                            }}
+                            record={{...record,decAction:'look'}}
                             toggleApplyVisible={this.toggleApplyVisible}
                             style={{marginRight:5}}
                         />

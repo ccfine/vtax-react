@@ -5,6 +5,7 @@
  */
 import {wrapPage} from 'compoments'
 import InvoiceCollection from './invoiceCollection'
+import FixedAssetCollection from './fixedAssetCollection'
 import OtherDeductionVoucher from './otherDeductionVoucher'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
@@ -24,9 +25,19 @@ const entryManag = strategies['vatManage']['entryManag'];
 
 const EntryManag_Routes = [
     {
-        path:`${PATH}/invoiceCollection`,
-        component:wrapPage('进项发票采集',InvoiceCollection),
-        name:'进项发票采集',
+        path: `${PATH}/invoiceCollection`,
+        component: wrapPage('进项发票采集', InvoiceCollection),
+        name: '进项发票采集',
+        icon: {
+            url: `${ICON_URL_PATH}invoiceCollection.svg`,
+            backgroundColor: '#73CF2B'
+        },
+        authorityInfo: entryManag['invoiceCollection'].options,
+        exact: true,
+    },{
+        path:`${PATH}/fixedAssetCollection`,
+        component:wrapPage('固定资产信息采集',FixedAssetCollection),
+        name:'固定资产信息采集',
         icon:{
             url:`${ICON_URL_PATH}invoiceCollection.svg`,
             backgroundColor:'#73CF2B'

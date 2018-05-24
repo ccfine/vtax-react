@@ -4,7 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react';
+import {Icon} from 'antd'
 import {SearchTable} from 'compoments';
+import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
+};
 const formItemStyle={
     labelCol:{
         span:8
@@ -72,6 +78,28 @@ const searchFields = [
 ]
 const getColumns =(context)=>[
     {
+        title: "操作",
+        className:'text-center',
+        render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
+            return (
+                <span title="查看申报" style={{ ...pointerStyle, marginLeft: 5 }}
+                      onClick={() => {
+                          context.setState({
+                              record: record
+                          },() => {
+                              context.toggleApplyVisible(true);
+                          });
+                      }}
+                >
+                    <Icon title="查看申报" type="search" />
+                </span>
+            )
+
+        },
+        fixed: "left",
+        width: "50px",
+        dataIndex: "action"
+    },{
         title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
@@ -152,8 +180,17 @@ const getColumns =(context)=>[
 export default class SearchDeclare extends Component{
     state={
         updateKey:Date.now(),
+        applyDeclarationModalKey:Date.now(),
+        applyVisible:false,
+        record:undefined,
     }
+    toggleApplyVisible = applyVisible => {
+        this.setState({
+            applyVisible
+        });
+    };
     render(){
+        const {updateKey,record,applyVisible,applyDeclarationModalKey} = this.state
         return(
             <SearchTable
                 searchOption={{
@@ -165,7 +202,7 @@ export default class SearchDeclare extends Component{
                     }
                 }}
                 tableOption={{
-                    key:this.state.updateKey,
+                    key:updateKey,
                     pageSize:10,
                     columns:getColumns(this),
                     cardProps:{
@@ -174,6 +211,16 @@ export default class SearchDeclare extends Component{
                     url:'/tax/decConduct/queryList',
                 }}
             >
+                {
+                    record && <ApplyDeclarationPopModal
+                        key={applyDeclarationModalKey}
+                        visible={applyVisible}
+                        title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
+                        record={{...record,decAction:'look'}}
+                        toggleApplyVisible={this.toggleApplyVisible}
+                        style={{marginRight:5}}
+                    />
+                }
             </SearchTable>
         )
     }

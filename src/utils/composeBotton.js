@@ -106,10 +106,10 @@ const getFileExportOptions = (item)=>{
 const getMarkOptions = (item,statusParam) =>{
 
     /*if(isDisabled(statusParam)){
-        item.formOptions.disabled = isDisabled(statusParam)
-    }else{
-        item.formOptions.disabled = !item.formOptions.selectedRowKeys.length>0
-    }*/
+     item.formOptions.disabled = isDisabled(statusParam)
+     }else{
+     item.formOptions.disabled = !item.formOptions.selectedRowKeys.length>0
+     }*/
     return {
         ...item,
         formOptions:{

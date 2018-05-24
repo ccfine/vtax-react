@@ -155,7 +155,7 @@ class AubjectOfTaxPayment extends Component {
         this.setState({
             modalConfig:{
                 type,
-                id:record.id
+                id: record.id
             },
             selectedRowKeys:record.id ? [record.id] : [],
             selectedRows:record.id ? [record] : [],

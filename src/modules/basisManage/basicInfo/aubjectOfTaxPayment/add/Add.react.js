@@ -60,11 +60,6 @@ class Add extends Component {
         this.handleSubmit()
     }
 
-    handleCancel = (e) => {
-        this.props.changeVisable(false);
-        this.props.updateTable();
-    }
-
     checkeGqgxId = (data)=>{
         return data.map((item)=>{
             return {
@@ -84,10 +79,10 @@ class Add extends Component {
     }
 
     handleSubmit = (e) => {
-        e && e && e.preventDefault();
+        e && e && e.preventDefault();//编辑成功，关闭当前窗口,刷新父级组件
          this.props.form.validateFieldsAndScroll((err, values) => {
          if (!err) {
-             if(values.jbxx.industry.label && values.jbxx.industry.key){
+             if(values.jbxx.industry && values.jbxx.industry.label && values.jbxx.industry.key){
                  values.jbxx.industry = values.jbxx.industry.key
              }
 
@@ -130,10 +125,11 @@ class Add extends Component {
                    .then(({data}) => {
                        if (data.code === 200) {
                            message.success('新增成功！', 4)
+
                            //编辑成功，关闭当前窗口,刷新父级组件
                            this.props.toggleModalVisible(false);
                            this.props.updateTable();
-                           this.setStatus(2);
+
                            this.mounted && this.setState({
                                submitLoading: false,
                                id:data.data,
@@ -156,36 +152,36 @@ class Add extends Component {
 
             if (type === 'edit') {
 
-               request.put('/taxsubject/update', data
-               )
-                   .then(({data}) => {
+                   request.put('/taxsubject/update', data
+                   )
+                       .then(({data}) => {
 
-                       if (data.code === 200) {
-                           message.success('编辑成功！', 4);
-                           //编辑成功，关闭当前窗口,刷新父级组件
-                           this.props.toggleModalVisible(false);
-                           this.props.updateTable();
-                           this.mounted && this.setState({
-                               submitLoading: false
-                           })
-                       } else {
-                           message.error(data.msg, 4);
-                           this.mounted && this.setState({
-                               submitLoading: false
-                           })
-                       }
-                   })
-                   .catch(err => {
-                       message.error(err.message)
-                       this.mounted && this.setState({
-                           submitLoading: false
+                           if (data.code === 200) {
+                               message.success('编辑成功！', 4);
+                               //编辑成功，关闭当前窗口,刷新父级组件
+                               this.props.toggleModalVisible(false);
+                               this.props.updateTable();
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           } else {
+                               message.error(data.msg, 4);
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           }
                        })
-                   })
-            }
+                       .catch(err => {
+                           message.error(err.message)
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       })
+                }
             }else{
-            if(err.jbxx){
-                this.setState({ activeKey:'1' });
-            }
+                if(err.jbxx){
+                    this.setState({ activeKey:'1' });
+                }
             }
         })
     }
@@ -287,8 +283,8 @@ class Add extends Component {
                 activeKey:'1',
             })
         }
-
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
+
             /**
              * 弹出的时候如果类型不为新增，则异步请求数据
              * */
@@ -334,32 +330,30 @@ class Add extends Component {
                     footer={
                         <Row>
                             <Col span={12}></Col>
-                            {
-                                (type ==='add') &&
-                                <Col span={12}>
-                                    {
-                                        parseInt(status,0) === 1 ?  <Button type="primary" onClick={this.handleSubmit}>保存</Button> : <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button>
-                                    }
-                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                                </Col>
-                            }
-                            {
-                                (type ==='edit') && parseInt(status,0) === 1 &&
-                                <Col span={12}>
-                                    <Button type="primary" onClick={this.handleSubmit}>保存</Button>
-                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                                    <Button type="danger" onClick={this.handleDelete}>删除</Button>
-                                </Col>
-                            }
-                           {
-                                type === 'view' &&
-                               <Col span={12}>
-                               {
-                                   parseInt(status,0) === 1 ? <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button> : <Button type="primary" onClick={()=>this.handleSetStatus('撤销',1)}>撤销</Button>
-                               }
-                               <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                               </Col>
-                            }
+
+                            <Col span={12}>
+                                {
+                                    (type ==='add' || type ==='edit') && <span>
+                                        <Button type="primary" onClick={this.handleSubmit}>保存</Button>
+                                        {
+                                            (type ==='edit') && parseInt(status,0) === 1 &&
+                                            <Button type="danger" onClick={this.handleDelete}>删除</Button>
+                                        }
+                                        <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                                    </span>
+                                }
+                                {
+                                    type === 'view'  && <span>
+                                        {
+                                            parseInt(status,0) === 1
+                                                ?
+                                                <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button>
+                                                :
+                                                <Button type="primary" onClick={()=>this.handleSetStatus('撤销',1)}>撤销</Button>
+                                        }
+                                    </span>
+                                }
+                            </Col>
                         </Row>
                     }
                     title={title}

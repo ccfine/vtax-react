@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from "react";
-import { Layout, Form } from "antd";
+import {Form } from "antd";
 import { TableTotal, SearchTable } from "compoments";
 import { requestResultStatus, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
 import { withRouter } from "react-router";
@@ -319,35 +319,34 @@ class InvoiceCollection extends Component {
             })
         })
     }
-    componentWillReceiveProps(nextProps) {
+    /*componentWillReceiveProps(nextProps) {
         if (this.props.taxSubjectId !== nextProps.taxSubjectId) {
             this.initData();
         }
-    }
+    }*/
 
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam, totalSource } = this.state;
         const { search } = this.props.location;
         let disabled = !!(search && search.filters);
         return (
-            <Layout style={{ background: "transparent" }}>
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
                         fields: getSearchFields(disabled)
-                    }}
-                    backCondition={values => {
-                        this.setState({
-                                filters: values
-                            },() => {
-                                this.fetchResultStatus();
-                        });
                     }}
                     tableOption={{
                         columns: columns(this),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         scroll: { x: "110%" },
+                        onSuccess:(params)=>{
+                            this.setState({
+                                filters:params
+                            },()=>{
+                                this.fetchResultStatus()
+                            })
+                        },
                         extra: (
                             <div>
                                 {
@@ -390,15 +389,15 @@ class InvoiceCollection extends Component {
                             });
                         }
                     }}
-                />
-                <PopModal
-                    visible={visible}
-                    modalConfig={modalConfig}
-                    refreshTable={this.refreshTable}
-                    statusParam={statusParam}
-                    toggleModalVisible={this.toggleModalVisible}
-                />
-            </Layout>
+                >
+                    <PopModal
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        refreshTable={this.refreshTable}
+                        statusParam={statusParam}
+                        toggleModalVisible={this.toggleModalVisible}
+                    />
+                </SearchTable>
         );
     }
 }

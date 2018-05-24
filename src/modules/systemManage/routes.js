@@ -7,18 +7,18 @@ import {wrapPage} from 'compoments'
 
 import Organization from './organization'
 import UserPermissions from './userPermissions'
-import InterfaceManage from './interfaceManage'
+/*import InterfaceManage from './interfaceManage'
 import ProcessManage from './processManage'
-import SystemMonitor from './systemMonitor'
+import SystemMonitor from './systemMonitor'*/
 import SystemMaintain from './systemMaintain'
 import strategies from 'config/routingAuthority.config'
 
 import Organization_Routes from './organization/routes'
 import UserPermissions_Routes from './userPermissions/routes'
 import SystemMaintain_Routes from './systemMaintain/routes'
-import InterfaceManage_Routes from './interfaceManage/routes'
+/*import InterfaceManage_Routes from './interfaceManage/routes'
 import ProcessManage_Routes from './processManage/routes'
-import SystemMonitor_Routes from './systemMonitor/routes'
+import SystemMonitor_Routes from './systemMonitor/routes'*/
 
 const PATH = `/web/systemManage`;
 const systemManage = strategies['systemManage'];
@@ -45,7 +45,7 @@ const SystemManage_Routes = [
         exact:true,
         children:SystemMaintain_Routes,
         authorityInfo:systemManage['systemMaintain'].options,
-    },{
+    /*},{
         path:`${PATH}/interfaceManage`,
         component:wrapPage('接口管理',InterfaceManage),
         name:'接口管理',
@@ -65,7 +65,7 @@ const SystemManage_Routes = [
         name:'系统监控',
         exact:true,
         children:SystemMonitor_Routes,
-        authorityInfo:systemManage['systemMonitor'].options,
+        authorityInfo:systemManage['systemMonitor'].options,*/
     },{
         path:`${PATH}`,
         redirect:true,

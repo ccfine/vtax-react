@@ -1,9 +1,9 @@
 /**
- * Created by liuliyuan on 2018/5/13.
+ * Created by liuliyuan on 2018/5/24.
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,composeBotton} from 'utils'
+import {fMoney,getUrlParam,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -13,52 +13,7 @@ const formItemStyle={
         span:16
     }
 }
-const fields = [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:15
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择纳税主体'
-                }
-            ]
-        },
-    }, {
-        label: '认证月份',
-        fieldName: 'authMonth',
-        type: 'monthPicker',
-        span: 24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:15
-            }
-        },
-        componentProps: {},
-        fieldDecoratorOptions: {
-            rules: [
-                {
-                    required: true,
-                    message: '请选择认证月份'
-                }
-            ]
-        },
-    }
-]
+
 const searchFields = (disabled) => {
     return [
         {
@@ -72,6 +27,12 @@ const searchFields = (disabled) => {
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
             }
         },{
             label:'查询期间',
@@ -85,6 +46,12 @@ const searchFields = (disabled) => {
             },
             fieldDecoratorOptions:{
                 initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择查询期间'
+                    }
+                ]
             },
         }
     ]
@@ -208,14 +175,18 @@ const columns=[
         )
     }
 ];
-export default class FinancialDocuments extends Component{
+export default class FinancialDocumentsCollection extends Component{
     state={
         updateKey:Date.now(),
-        filters:{}
+        filters:{},
+        /**
+         *修改状态和时间
+         * */
+        statusParam: {},
     }
     refreshTable = ()=>{
         this.setState({
-            updateKey:Date.now(),
+            updateKey:Date.now()
         })
     }
     componentDidMount(){
@@ -224,13 +195,20 @@ export default class FinancialDocuments extends Component{
             this.refreshTable()
         }
     }
-
+    fetchResultStatus = ()=>{
+        requestResultStatus('/inter/financial/voucher/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
+    }
     render(){
-        const {updateKey,filters} = this.state;
+        const {updateKey,filters,statusParam} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields(disabled)
                 }}
@@ -238,27 +216,33 @@ export default class FinancialDocuments extends Component{
                     key:updateKey,
                     pageSize:20,
                     columns:columns,
-                    url:'/inter/financial/voucher/voucherList',
-                    onSuccess: (params) => {
+                    url:'/inter/financial/voucher/manageList',
+                    onSuccess:(params)=>{
                         this.setState({
-                            filters: params,
-                        });
+                            filters:params
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
                     },
                     cardProps: {
-                        title: "财务凭证列表",
+                        title: "财务凭证采集",
                         extra: (
                             <div>
                                 {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
                                     JSON.stringify(filters) !== "{}" &&  composeBotton([{
-                                        type: 'fileExport',
-                                        url: 'inter/financial/voucher/download',
-                                        onSuccess: this.refreshTable
+                                        type:'submit',
+                                        url:'/inter/financial/voucher/submit',
+                                        params:filters,
+                                        onSuccess:this.refreshTable
                                     },{
-                                        type:'fileImport',
-                                        url:'/inter/financial/voucher/upload',
+                                        type:'revoke',
+                                        url:'/inter/financial/voucher/revoke',
+                                        params:filters,
                                         onSuccess:this.refreshTable,
-                                        fields:fields
-                                    }])
+                                    }],statusParam)
                                 }
                             </div>
                         )
