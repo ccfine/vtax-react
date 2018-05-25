@@ -221,7 +221,7 @@ const BusinessReport_Routes = [
             url:`${ICON_URL_PATH}invoiceQuery.svg`,
             backgroundColor:'#57C8F2'
         },
-        authorityInfo:businessReport['invoiceQuery'].options,
+        authorityInfo:businessReport['availableArea'].options,
         exact:true,
     },{
         path:`${PATH}`,

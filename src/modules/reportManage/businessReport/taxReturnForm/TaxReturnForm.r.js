@@ -15,7 +15,7 @@ import sheet_6 from './sheetData/sheet6'
 import sheet_7 from './sheetData/sheet7'*/
 import {sheet_8,composeGrid_8} from './sheetData/sheet8'
 
-import sheet_9 from './sheetData/sheet9'
+// import sheet_9 from './sheetData/sheet9'
 import sheet_10 from './sheetData/sheet10'
 import SheetWithSearchFields from './SheetWithSearchFields.r'
 const TabPane = Tabs.TabPane;
@@ -65,14 +65,15 @@ const sheetData = [
         grid:sheet_8,
         url:'/tax/declaration/reduce/list',
         composeGrid:composeGrid_8
-    }, {
-        tab:'营改增税负分析测算明细表',
-        grid:sheet_9,
-        url:'/tax/decConduct/camping/list',
-        scroll:{
-            x:'200%'
-        }
-    }
+    },
+    // {
+    //     tab:'营改增税负分析测算明细表',
+    //     grid:sheet_9,
+    //     url:'/tax/decConduct/camping/list',
+    //     scroll:{
+    //         x:'200%'
+    //     }
+    // }
 ]
 class TaxReturnForm extends Component{
     state={

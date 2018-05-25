@@ -92,7 +92,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}billingSales.svg`,
             backgroundColor:'#7ED530'
         },
-        authorityInfo:salesManag['billingSales'].options,
+        authorityInfo:salesManag['unBilledSalesEstate'].options,
         exact:true,
     },{
         path:`${PATH}/unBilledSalesNotEstate`,
@@ -102,7 +102,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}unbilledAales.svg`,
             backgroundColor:'#F5A544'
         },
-        authorityInfo:salesManag['unBilledSales'].options,
+        authorityInfo:salesManag['unBilledSalesNotEstate'].options,
         exact:true,
     },{
         path:`${PATH}/otherTaxAdjustment`,
@@ -122,7 +122,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
             backgroundColor:'#57C8F2'
         },
-        authorityInfo:salesManag['otherTaxAdjustment'].options,
+        authorityInfo:salesManag['financialDocumentsCollection'].options,
         exact:true,
     },{
         path:`${PATH}`,

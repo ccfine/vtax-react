@@ -42,7 +42,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}invoiceCollection.svg`,
             backgroundColor:'#73CF2B'
         },
-        authorityInfo:entryManag['invoiceCollection'].options,
+        authorityInfo:entryManag['fixedAssetCollection'].options,
         exact:true,
     /*},{
         path:`${PATH}/invoiceMatching`,
