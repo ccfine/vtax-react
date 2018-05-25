@@ -6,7 +6,6 @@ import {connect} from 'react-redux'
 import { SearchTable, TableTotal } from "compoments";
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import PopModal from "./popModal";
-import { withRouter } from "react-router";
 import moment from "moment";
 
 const pointerStyle = {
@@ -340,7 +339,7 @@ class SalesInvoiceCollection extends Component {
                                     }])
                                 }
                                 {
-                                    (declare && declare.decAction==='edit') &&  composeBotton([{
+                                    (declare && declare.decAction==='edit') && composeBotton([{
                                         type:'fileImport',
                                         url:'/output/invoice/collection/upload/',
                                         onSuccess:this.refreshTable,
@@ -382,6 +381,6 @@ class SalesInvoiceCollection extends Component {
         );
     }
 }
-export default withRouter(connect(state=>({
+export default connect(state=>({
     declare:state.user.get('declare')
-}))(SalesInvoiceCollection))
+}))(SalesInvoiceCollection)

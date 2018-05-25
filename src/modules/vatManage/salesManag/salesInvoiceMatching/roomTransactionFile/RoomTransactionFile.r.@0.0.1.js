@@ -6,9 +6,9 @@
  */
 import React,{Component} from 'react'
 import {Modal,message,Icon} from 'antd'
+import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import { withRouter } from 'react-router'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -74,14 +74,127 @@ const fields = [
         }
     },
 ]
-const getColumns = context => [
+const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:6,
+        componentProps:{
+            disabled,
+        },
+        formItemStyle,
+        fieldDecoratorOptions:{
+            initialValue: (disabled && declare.mainId) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    },
+    {
+        label:'交易月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        formItemStyle,
+        span:6,
+        componentProps:{
+            disabled,
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择交易月份'
+                }
+            ]
+        }
+    },
+    {
+        label:'项目名称',
+        fieldName:'projectId',
+        type:'asyncSelect',
+        span:6,
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/project/list/${getFieldValue('mainId')}`,
+        }
+    },
+    {
+        label:'项目分期',
+        fieldName:'stagesId',
+        type:'asyncSelect',
+        span:6,
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('projectId') || false,
+            url:`/project/stages/${getFieldValue('projectId') || ''}`,
+        }
+    },
+    {
+        label:'房号',
+        fieldName:'roomNumber',
+        type:'input',
+        formItemStyle,
+        span:6
+    },
+    {
+        label:'客户名称',
+        fieldName:'customerName',
+        type:'input',
+        formItemStyle,
+        span:6
+    },
+    {
+        label:'发票号码',
+        fieldName:'invoiceNum',
+        type:'input',
+        formItemStyle,
+        span:6
+    },
+    {
+        label:'发票代码',
+        fieldName:'invoiceCode',
+        type:'input',
+        formItemStyle,
+        span:6
+    },
+    {
+        label:'匹配状态',
+        fieldName:'matchingStatus',
+        type:'select',
+        formItemStyle,
+        span:6,
+        options:[
+            {
+                text:'未匹配',
+                value:'0'
+            },
+            {
+                text:'已匹配',
+                value:'1'
+            }
+        ]
+    },
+];
+const getColumns = (context,disabled) => [
     {
         title: '操作',
         key: 'actions',
         className:'text-center',
         width:50,
         render: (text, record) => {
-            return parseInt(context.state.statusParam.status,0) === 1 ? (
+            return (disabled && parseInt(context.state.statusParam.status,0) === 1) ? (
                 <span title='删除' style={{
                     color:'#f5222d',
                     cursor:'pointer'
@@ -119,7 +232,7 @@ const getColumns = context => [
                 }}>
                 <Icon type='delete'/>
             </span>
-            ) : ''
+            ) : null
         }
     },
     {
@@ -203,8 +316,8 @@ class RoomTransactionFile extends Component{
         totalSource:undefined
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
+        const { declare } = this.props;
+        if (!!declare) {
             this.refreshTable();
         }
     }
@@ -236,128 +349,15 @@ class RoomTransactionFile extends Component{
     }
     render(){
         const {tableUpDateKey,statusParam,totalSource,filters={}} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        const searchFeilds = (getFieldValue)=>[
-            {
-                label:'纳税主体',
-                fieldName:'mainId',
-                type:'taxMain',
-                span:6,
-                componentProps:{
-                    disabled,
-                },
-                formItemStyle,
-                fieldDecoratorOptions:{
-                    initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                    rules:[
-                        {
-                            required:true,
-                            message:'请选择纳税主体'
-                        }
-                    ]
-                },
-            },
-            {
-                label:'交易月份',
-                fieldName:'authMonth',
-                type:'monthPicker',
-                formItemStyle,
-                span:6,
-                componentProps:{
-                    disabled,
-                },
-                fieldDecoratorOptions:{
-                    initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                    rules:[
-                        {
-                            required:true,
-                            message:'请选择交易月份'
-                        }
-                    ]
-                }
-            },
-            {
-                label:'项目名称',
-                fieldName:'projectId',
-                type:'asyncSelect',
-                span:6,
-                formItemStyle,
-                componentProps:{
-                    fieldTextName:'itemName',
-                    fieldValueName:'id',
-                    doNotFetchDidMount:true,
-                    fetchAble:getFieldValue('mainId') || false,
-                    url:`/project/list/${getFieldValue('mainId')}`,
-                }
-            },
-            {
-                label:'项目分期',
-                fieldName:'stagesId',
-                type:'asyncSelect',
-                span:6,
-                formItemStyle,
-                componentProps:{
-                    fieldTextName:'itemName',
-                    fieldValueName:'id',
-                    doNotFetchDidMount:true,
-                    fetchAble:getFieldValue('projectId') || false,
-                    url:`/project/stages/${getFieldValue('projectId') || ''}`,
-                }
-            },
-            {
-                label:'房号',
-                fieldName:'roomNumber',
-                type:'input',
-                formItemStyle,
-                span:6
-            },
-            {
-                label:'客户名称',
-                fieldName:'customerName',
-                type:'input',
-                formItemStyle,
-                span:6
-            },
-            {
-                label:'发票号码',
-                fieldName:'invoiceNum',
-                type:'input',
-                formItemStyle,
-                span:6
-            },
-            {
-                label:'发票代码',
-                fieldName:'invoiceCode',
-                type:'input',
-                formItemStyle,
-                span:6
-            },
-            {
-                label:'匹配状态',
-                fieldName:'matchingStatus',
-                type:'select',
-                formItemStyle,
-                span:6,
-                options:[
-                    {
-                        text:'未匹配',
-                        value:'0'
-                    },
-                    {
-                        text:'已匹配',
-                        value:'1'
-                    }
-                ]
-            },
-        ];
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
                 searchOption={{
-                    fields:searchFeilds,
+                    fields:searchFeilds(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -379,7 +379,7 @@ class RoomTransactionFile extends Component{
                             totalSource
                         })
                     },
-                    columns:getColumns(this),
+                    columns:getColumns(this,disabled),
                     url: '/output/room/files/list',
                     key:tableUpDateKey,
 
@@ -395,7 +395,7 @@ class RoomTransactionFile extends Component{
                             }],statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (declare && declare.decAction==='edit') && composeBotton([{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
@@ -437,4 +437,6 @@ class RoomTransactionFile extends Component{
     }
 }
 
-export default withRouter(RoomTransactionFile)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(RoomTransactionFile)

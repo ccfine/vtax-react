@@ -3,10 +3,10 @@
  */
 import React, { Component } from 'react'
 import {Icon} from 'antd'
-import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {connect} from 'react-redux'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
-import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -26,7 +26,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled)=> {
+const searchFields=(disabled,declare)=> {
     return [
         {
             label: '纳税主体',
@@ -38,7 +38,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -57,7 +57,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -102,26 +102,29 @@ const searchFields=(disabled)=> {
         }
     ]
 }
-const getColumns = context =>[
+
+const getColumns = (context,disabled) =>[
      {
         title: '操作',
         key: 'actions',
         fixed:true,
         className:'text-center',
         width:'50px',
-        render: (text, record) => parseInt(context.state.statusParam.status,0) === 1 ? (
-            <span title='手工匹配' style={{
-                color:'#1890ff',
-                cursor:'pointer'
-            }} onClick={()=>{
-                context.setState({
-                    visible:true,
-                    selectedData:record
-                })
-            }}>
-                <Icon type="check-circle-o" />
-            </span>
-        ) : ' '
+        render: (text, record) => {
+            return (disabled && parseInt(context.state.statusParam.status, 0) === 1) ? (
+                    <span title='手工匹配' style={{
+                        color: '#1890ff',
+                        cursor: 'pointer'
+                    }} onClick={() => {
+                        context.setState({
+                            visible: true,
+                            selectedData: record
+                        })
+                    }}>
+                        <Icon type="check-circle-o"/>
+                    </span>
+                ) : null
+        }
     },
     {
         title:'纳税人识别号',
@@ -315,15 +318,15 @@ class UnmatchedData extends Component{
         })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
+        const { declare } = this.props;
+        if (!!declare) {
+            this.refreshTable();
         }
     }
     render(){
         const {visible,tableKey,filters,selectedData,statusParam,totalSource} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -331,7 +334,7 @@ class UnmatchedData extends Component{
                     marginTop:-16
                 }}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -342,7 +345,7 @@ class UnmatchedData extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this),
+                    columns:getColumns(this,disabled),
                     url:'/output/invoice/marry/unmatched/list',
                     onSuccess:(params)=>{
                         this.setState({
@@ -356,7 +359,7 @@ class UnmatchedData extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (declare && declare.decAction==='edit') &&  composeBotton([{
                                 type:'fileExport',
                                 url:'output/invoice/marry/unmatched/export',
                                 params:filters,
@@ -381,4 +384,6 @@ class UnmatchedData extends Component{
         )
     }
 }
-export default withRouter(UnmatchedData)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(UnmatchedData)

@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react'
 import {Icon,Modal,message} from 'antd'
-import {request,fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {connect} from 'react-redux'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -25,7 +25,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
+const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
             label:'纳税主体',
@@ -37,7 +37,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -56,7 +56,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -154,7 +154,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
         }
     ]
 }
-const getColumns = context => [
+const getColumns = (context,disabled) => [
     {
         title: '操作',
         key: 'actions',
@@ -162,7 +162,7 @@ const getColumns = context => [
         className:'text-center',
         width:parseInt(context.state.statusParam.status,0) === 1 ? '50px' : '40px',
         render: (text, record) => {
-            return parseInt(context.state.statusParam.status,0)===1 && (
+            return (disabled && parseInt(context.state.statusParam.status,0)===1) && (
                     <span title='解除匹配' style={{
                         color:'#f5222d',
                         cursor:'pointer'
@@ -192,22 +192,22 @@ const getColumns = context => [
     {
         title:'纳税人识别号',
         dataIndex:'purchaseTaxNum',
-        render:(text,record)=>{
+        /*render:(text,record)=>{
             let color = '#333';
             if(record.taxIdentificationCode !== record.purchaseTaxNum){
-                /**销项发票的纳税识别号与房间交易档案中的纳税识别号出现不完全匹配时，销项发票的纳税识别号标记为红色字体；*/
+                /!**销项发票的纳税识别号与房间交易档案中的纳税识别号出现不完全匹配时，销项发票的纳税识别号标记为红色字体；*!/
                 color = '#f5222d';
             }
             if(record.customerName !== record.purchaseName){
-                /**销项发票的购货单位与房间交易档案中的客户，不一致时，销项发票中的购货单位标记为蓝色字体；*/
+                /!**销项发票的购货单位与房间交易档案中的客户，不一致时，销项发票中的购货单位标记为蓝色字体；*!/
                 color = '#1890ff';
             }
             if(record.totalAmount !== record.totalPrice){
-                /** 销项发票的价税合计与房间交易档案中的成交总价不一致时，销项发票中的价税合计标记为紫色字体；*/
+                /!** 销项发票的价税合计与房间交易档案中的成交总价不一致时，销项发票中的价税合计标记为紫色字体；*!/
                 color = '#6f42c1'
             }
             return <span style={{color}}>{text}</span>
-        }
+        }*/
     },
     {
         title: (
@@ -402,15 +402,15 @@ class InvoiceDataMatching extends Component{
             })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
+        const { declare } = this.props;
+        if (!!declare) {
+            this.refreshTable();
         }
     }
     render(){
         const {tableKey,filters,matching,statusParam,totalSource} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -419,7 +419,7 @@ class InvoiceDataMatching extends Component{
                 }}
                 spinning={matching}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -430,7 +430,7 @@ class InvoiceDataMatching extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this),
+                    columns:getColumns(this,disabled),
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params
@@ -444,7 +444,7 @@ class InvoiceDataMatching extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (declare && declare.decAction==='edit') &&  composeBotton([{
                                 type:'match',
                                 url:'/output/invoice/marry/already/automatic',
                                 params:filters,
@@ -483,4 +483,6 @@ class InvoiceDataMatching extends Component{
         )
     }
 }
-export default withRouter(InvoiceDataMatching)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(InvoiceDataMatching)

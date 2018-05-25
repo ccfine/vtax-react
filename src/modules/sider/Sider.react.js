@@ -9,6 +9,7 @@ import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import checkPermissions from 'compoments/permissible/index'
+import {saveDeclare} from 'redux/ducks/user'
 
 import logo from './images/logo.png'
 import './styles.less'
@@ -105,6 +106,10 @@ class VTaxSider extends Component {
         }
     }
     handleClick = (e) => {
+        //设置saveDeclare默认为初始值 为了判断看用户是从纳税申报进还是路由
+        const { saveDeclare } = this.props;
+        saveDeclare(null)
+
         this.setState({
             selectedPath: e.key,
         });
@@ -171,8 +176,9 @@ class VTaxSider extends Component {
         )
     }
 }
-
 export default withRouter(connect(state=>({
     options:state.user.getIn(['personal','options']),
     type:state.user.getIn(['personal','type'])
+}),dispatch=>({
+    saveDeclare:saveDeclare(dispatch),
 }))(VTaxSider))

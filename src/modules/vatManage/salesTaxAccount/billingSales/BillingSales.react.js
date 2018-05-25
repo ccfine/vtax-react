@@ -5,10 +5,11 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
+import { compose } from 'redux';
+import {connect} from 'react-redux'
 import {SynchronizeTable} from 'compoments'
-import {getFields,fMoney,request,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
-import { withRouter } from 'react-router'
 import moment from 'moment';
 
 const formItemStyle = {
@@ -239,6 +240,7 @@ class BillingSales extends Component {
                 });
             }
         }).catch(err=>{
+            message.error(err)
             this.setState({
                 loaded: true
             });
@@ -254,15 +256,22 @@ class BillingSales extends Component {
         })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.handleSubmit();
+        const { declare } = this.props;
+        if (!!declare) {
+            this.setState({
+                filters:{
+                    mainId:declare.mainId || undefined,
+                    authMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
         }
     }
     render(){
         const {tableUpDateKey,filters,dataSource,notDataSource,visible,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -284,7 +293,7 @@ class BillingSales extends Component {
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                            initialValue: (disabled && declare.mainId) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -302,7 +311,7 @@ class BillingSales extends Component {
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -329,7 +338,7 @@ class BillingSales extends Component {
                               listMainResultStatus(statusParam)
                           }
                           {
-                              JSON.stringify(filters) !== "{}" && composeBotton([{
+                              (declare && declare.decAction==='edit') && composeBotton([{
                                 type:'fileExport',
                                 url:'account/output/billingSale/export',
                                 title:'导出',
@@ -376,7 +385,7 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-非地产"
                       extra={<div>
                           {
-                              JSON.stringify(filters) !== "{}" && composeBotton([{
+                              (declare && declare.decAction==='edit') && composeBotton([{
                                 type:'fileExport',
                                 url:'account/output/billingSale/export',
                                 title:'导出',
@@ -416,4 +425,10 @@ class BillingSales extends Component {
         )
     }
 }
-export default Form.create()(withRouter(BillingSales))
+const enhance = compose(
+    Form.create(),
+    connect( (state) => ({
+        declare:state.user.get('declare')
+    }))
+);
+export default enhance(BillingSales);
