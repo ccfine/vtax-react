@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/23.
  */
 import React,{Component} from 'react';
-import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
+import {Button,Modal,Form,Row,Col,Spin,message,Alert} from 'antd';
 import {request,getFields} from 'utils'
 const formItemStyle = {
     labelCol:{
@@ -203,6 +203,11 @@ class AddPopModal extends Component{
                                     },
                                 ])
                             }
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Alert message="凭证类型： 前期认证相符且本期申报抵扣" type="warning" showIcon />
+                            </Col>
                         </Row>
                     </Form>
                 </Spin>
