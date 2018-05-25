@@ -7,7 +7,7 @@
 import React from 'react';
 import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,request,listMainResultStatus,composeBotton} from 'utils'
 import { withRouter } from 'react-router';
 import moment from 'moment';
 
@@ -146,7 +146,7 @@ class ShouldDeduct extends React.Component{
     state={
         tableKey:Date.now(),
         doNotFetchDidMount:true,
-        searchFieldsValues:{
+        filters:{
 
         },
         statusParam:undefined,
@@ -163,26 +163,11 @@ class ShouldDeduct extends React.Component{
             tableKey:Date.now()
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({
-                doNotFetchDidMount:false
-            },()=>{
-                this.refreshTable()
-            })
-
-        }else{
-            this.setState({
-                doNotFetchDidMount:true
-            })
-        }
-    }
     fetchResultStatus = ()=>{
         request.get('/account/output/notInvoiceSale/realty/listMain',{
             params:{
-                ...this.state.searchFieldsValues,
-                authMonth:this.state.searchFieldsValues.month
+                ...this.state.filters,
+                authMonth:this.state.filters.month
             }
         })
             .then(({data})=>{
@@ -199,25 +184,24 @@ class ShouldDeduct extends React.Component{
             })
     }
     render(){
-        const {tableKey,searchFieldsValues={},doNotFetchDidMount,statusParam={}} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        let submitIntialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.month}
+        const {tableKey,filters={},statusParam={}} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
+        let submitIntialValue = {...filters,taxMonth:filters.month}
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={doNotFetchDidMount}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
                         }
                     }
                 }}
-                // spinning={searchTableLoading}
                 tableOption={{
                     cardProps:{
                         title:'土地价款当期应抵扣'
@@ -226,9 +210,9 @@ class ShouldDeduct extends React.Component{
                     pageSize:10,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/realty/list',
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -238,7 +222,7 @@ class ShouldDeduct extends React.Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            composeBotton([{
+                            (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'submit',
                                 url:'/account/output/notInvoiceSale/realty/submit',
                                 params:{...submitIntialValue},
@@ -257,5 +241,6 @@ class ShouldDeduct extends React.Component{
         )
     }
 }
-
-export default withRouter(ShouldDeduct)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(ShouldDeduct)

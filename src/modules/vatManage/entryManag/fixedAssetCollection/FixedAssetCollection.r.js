@@ -2,8 +2,9 @@
  * Created by liuliyuan on 2018/5/24.
  */
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -14,7 +15,7 @@ const formItemStyle={
     }
 }
 
-const searchFields = (disabled) => {
+const searchFields = (disabled,declare) => {
     return [
         {
             label:'纳税主体',
@@ -26,7 +27,7 @@ const searchFields = (disabled) => {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -45,7 +46,7 @@ const searchFields = (disabled) => {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -196,7 +197,7 @@ const columns=[
         )
     }
 ];
-export default class FinancialDocumentsCollection extends Component{
+ class FixedAssetCollection extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -210,12 +211,6 @@ export default class FinancialDocumentsCollection extends Component{
             updateKey:Date.now()
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     fetchResultStatus = ()=>{
         requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
             this.setState({
@@ -225,13 +220,13 @@ export default class FinancialDocumentsCollection extends Component{
     }
     render(){
         const {updateKey,filters,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields(disabled,declare)
                 }}
                 tableOption={{
                     key:updateKey,
@@ -253,7 +248,7 @@ export default class FinancialDocumentsCollection extends Component{
                                     listMainResultStatus(statusParam)
                                 }
                                 {
-                                    JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'submit',
                                         url:'/fixedAssetCard/submit',
                                         params:filters,
@@ -274,3 +269,6 @@ export default class FinancialDocumentsCollection extends Component{
         )
     }
 }
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(FixedAssetCollection)

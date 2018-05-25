@@ -7,100 +7,7 @@
 import React from 'react'
 import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus,composeBotton} from 'utils'
-import { withRouter } from 'react-router'
-import moment from 'moment'
-
-const formItemStyle = {
-    labelCol:{
-        sm:{
-            span:10,
-        },
-        xl:{
-            span:8
-        }
-    },
-    wrapperCol:{
-        sm:{
-            span:14
-        },
-        xl:{
-            span:16
-        }
-    }
-}
-const searchFields =(disabled)=>(getFieldValue)=> {
-    return [
-        {
-            label:'纳税主体',
-            fieldName:'mainId',
-            type:'taxMain',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
-        },
-        {
-            label:'纳税申报期',
-            fieldName:'authMonth',
-            type:'monthPicker',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                format:'YYYY-MM',
-                disabled:disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税申报期'
-                    }
-                ]
-            },
-        },
-        {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('mainId') || false,
-                url:`/project/list/${getFieldValue('mainId')}`,
-            }
-        },
-        {
-            label:'项目分期',
-            fieldName:'stagesId',
-            type:'asyncSelect',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('projectId') || ''}`,
-            }
-        }
-    ]
-}
-
+import {fMoney,request,listMainResultStatus,composeBotton} from 'utils'
 
 const columns= [
     {
@@ -171,7 +78,7 @@ const columns= [
         className:'table-money',
     }
 ];
-class HasDeduct extends React.Component{
+export default class HasDeduct extends React.Component{
     state={
         tableKey:Date.now(),
         doNotFetchDidMount:true,
@@ -189,21 +96,6 @@ class HasDeduct extends React.Component{
         this.setState({
             tableKey:Date.now()
         })
-    }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({
-                doNotFetchDidMount:false
-            },()=>{
-                this.refreshTable()
-            })
-
-        }else{
-            this.setState({
-                doNotFetchDidMount:true
-            })
-        }
     }
     fetchResultStatus = ()=>{
         request.get('/account/landPrice/deductedDetails/listMain',{
@@ -225,24 +117,23 @@ class HasDeduct extends React.Component{
             })
     }
     render(){
-        const {tableKey,filters={},doNotFetchDidMount,statusParam={}} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {tableKey,filters={},statusParam={}} = this.state;
+        const { declare,searchFields } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={doNotFetchDidMount}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
                         }
                     }
                 }}
-                // spinning={searchTableLoading}
                 tableOption={{
                     cardProps:{
                         title:'土地价款当期实际扣除'
@@ -251,7 +142,7 @@ class HasDeduct extends React.Component{
                     pageSize:10,
                     columns:columns,
                     url:'/account/landPrice/deductedDetails/list',
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
                             filters:params,
                         },()=>{
@@ -263,7 +154,7 @@ class HasDeduct extends React.Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !=='{}' && composeBotton([{
+                            (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'reset',
                                 url:'/account/landPrice/deductedDetails/reset',
                                 params:filters,
@@ -289,5 +180,3 @@ class HasDeduct extends React.Component{
         )
     }
 }
-
-export default withRouter(HasDeduct)

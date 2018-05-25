@@ -401,19 +401,13 @@ class InvoiceDataMatching extends Component{
                 message.error(err.message)
             })
     }
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
     render(){
         const {tableKey,filters,matching,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 style={{
                     marginTop:-16
                 }}
@@ -444,7 +438,7 @@ class InvoiceDataMatching extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            (declare && declare.decAction==='edit') &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'match',
                                 url:'/output/invoice/marry/already/automatic',
                                 params:filters,

@@ -8,10 +8,8 @@ import React from 'react'
 import { SearchTable } from 'compoments'
 import {
 	fMoney,
-	getUrlParam,
     composeBotton
 } from 'utils'
-import { withRouter } from 'react-router'
 import moment from 'moment'
 
 const formItemStyle = {
@@ -242,7 +240,6 @@ class ShouldDeduct extends React.Component {
 						}
 					}
 				}}
-				// spinning={searchTableLoading}
 				tableOption={{
 					cardProps: {
 						title: '土地价款当期应抵扣'
@@ -251,7 +248,7 @@ class ShouldDeduct extends React.Component {
 					pageSize: 10,
 					columns: columns,
 					url: '/account/landPrice/deductedDetails/list',
-					onSuccess: (params, data) => {
+					onSuccess: (params) => {
 						this.setState({
 							searchFieldsValues: params
 						})

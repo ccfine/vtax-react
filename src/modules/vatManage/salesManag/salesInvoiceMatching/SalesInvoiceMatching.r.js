@@ -7,6 +7,7 @@ import RoomTransactionFilePage from './roomTransactionFile'
 import InvoiceDataMatching from './invoiceDataMatching'
 import UnmatcedData from './unmatchedData'
 import NeedNotMatchInvoices from './needNotMatchInvoices'
+import { getUrlParam } from 'utils'
 const TabPane = Tabs.TabPane;
 
 export default class SalesInvoiceMatching extends Component{
@@ -18,6 +19,12 @@ export default class SalesInvoiceMatching extends Component{
             activeKey
         })
     }
+    componentDidMount(){
+        const activeKey = getUrlParam('tab');
+        activeKey && this.setState({activeKey})
+    }
+
+
     render(){
         const {activeKey} = this.state;
         return(
