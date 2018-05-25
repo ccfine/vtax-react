@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
+import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -84,21 +84,16 @@ class SimpleTaxCertificate extends Component{
             tableKey:Date.now()
         })
     }
-
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
         const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:this.props.searchFields,
                     cardProps:{
@@ -126,7 +121,7 @@ class SimpleTaxCertificate extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',
                                     params:filters,
@@ -154,4 +149,7 @@ class SimpleTaxCertificate extends Component{
         )
     }
 }
-export default withRouter(SimpleTaxCertificate)
+
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(SimpleTaxCertificate);

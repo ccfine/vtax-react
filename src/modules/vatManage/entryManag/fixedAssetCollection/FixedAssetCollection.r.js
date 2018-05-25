@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
+import {connect} from 'react-redux'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
@@ -15,7 +16,7 @@ const formItemStyle={
     }
 }
 
-const searchFields = (disabled,declare) => {
+const searchFields =  (disabled,declare) => {
     return [
         {
             label:'纳税主体',
@@ -27,7 +28,7 @@ const searchFields = (disabled,declare) => {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare.mainId) || undefined,
+                initialValue: (disabled && declare['mainId']) || undefined,
                 rules:[
                     {
                         required:true,
@@ -46,7 +47,7 @@ const searchFields = (disabled,declare) => {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,

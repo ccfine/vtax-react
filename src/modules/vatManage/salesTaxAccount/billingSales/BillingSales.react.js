@@ -258,14 +258,7 @@ class BillingSales extends Component {
     componentDidMount(){
         const { declare } = this.props;
         if (!!declare) {
-            this.setState({
-                filters:{
-                    mainId:declare.mainId || undefined,
-                    authMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
-                }
-            },()=>{
-                this.refreshTable()
-            });
+            this.handleSubmit()
         }
     }
     render(){

@@ -2,23 +2,22 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-20 11:26:04
+ * @Last Modified time: 2018-05-25 15:24:03
  */
 import React, { Component } from "react";
 import { Modal, message,Icon } from "antd";
+import {connect} from 'react-redux';
 import { SearchTable } from "compoments";
 import PopModal from "./popModal";
 import {
   request,
   fMoney,
-  getUrlParam,
   listMainResultStatus,
   composeBotton,requestResultStatus
-} from "../../../../utils";
-import { withRouter } from "react-router";
+} from "utils";
 import moment from "moment";
 
-const searchFields = disabled => {
+const searchFields = (disabled,declare) => {
   return [
     {
       label: "纳税主体",
@@ -29,7 +28,7 @@ const searchFields = disabled => {
         disabled
       },
       fieldDecoratorOptions: {
-        initialValue: (disabled && getUrlParam("mainId")) || undefined,
+        initialValue: (disabled && declare["mainId"]) || undefined,
         rules: [
           {
             required: true,
@@ -49,7 +48,7 @@ const searchFields = disabled => {
       },
       fieldDecoratorOptions: {
         initialValue:
-          (disabled && moment(getUrlParam("authMonth"), "YYYY-MM")) ||
+          (declare && moment(declare["authMonth"], "YYYY-MM")) ||
           undefined,
         rules: [
           {
@@ -61,8 +60,8 @@ const searchFields = disabled => {
     }
   ];
 };
-const getColumns = context => [
-  {
+const getColumns = (context,hasOperate) => {
+  let operates = hasOperate?[{
     title: "操作",
     render(text, record, index) {
       return (
@@ -111,7 +110,10 @@ const getColumns = context => [
     fixed: "left",
     width: "50px",
     dataIndex: "action"
-  },
+  }]:[];
+  return [
+    ...operates
+  ,
   {
     title: "纳税主体",
     dataIndex: "mainName",
@@ -197,6 +199,7 @@ const getColumns = context => [
     dataIndex: "adjustDescription"
   }
 ];
+}
 
 class OtherTaxAdjustment extends Component {
   state = {
@@ -234,27 +237,21 @@ class OtherTaxAdjustment extends Component {
       })
     })
   };
-  componentDidMount() {
-    const { search } = this.props.location;
-    if (!!search) {
-      this.refreshTable();
-    }
-  }
   render() {
-    const { search } = this.props.location;
-    let disabled = !!search;
+    const { declare } = this.props;
+    let disabled = !!declare;
     let { filters={}, statusParam } = this.state;
     return (
       <div>
         <SearchTable
-          doNotFetchDidMount={true}
+          doNotFetchDidMount={!disabled}
           searchOption={{
-            fields: searchFields(disabled)
+            fields: searchFields(disabled,declare)
           }}
           tableOption={{
             scroll: { x: "150%" },
             pageSize: 10,
-            columns: getColumns(this),
+            columns: getColumns(this,disabled),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",
             onSuccess:(params)=>{
@@ -267,7 +264,7 @@ class OtherTaxAdjustment extends Component {
                 <div>
                   {listMainResultStatus(statusParam)}
                   {
-                      JSON.stringify(filters) !== "{}" && composeBotton([{
+                      (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',
                           onClick: () => {
                             this.setState({
@@ -306,4 +303,7 @@ class OtherTaxAdjustment extends Component {
     );
   }
 }
-export default withRouter(OtherTaxAdjustment);
+
+export default connect(state=>({
+  declare:state.user.get('declare')
+}))(OtherTaxAdjustment);

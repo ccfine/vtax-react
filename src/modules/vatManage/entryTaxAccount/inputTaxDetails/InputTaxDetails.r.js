@@ -4,10 +4,10 @@
  * description  :
  */
 import React,{Component} from 'react'
-import { withRouter } from 'react-router'
+import {connect} from 'react-redux'
 import {Icon,Tooltip} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {requestResultStatus,fMoney,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import VoucherPopModal from './voucherPopModal'
 import AddPopModal from './addPopModal'
@@ -16,7 +16,7 @@ const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
-const searchFields =(disabled)=> {
+const searchFields =(disabled,declare)=> {
     return [
         {
             label:'纳税主体',
@@ -35,7 +35,7 @@ const searchFields =(disabled)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare['mainId']) || undefined,
                 rules:[
                     {
                         required:true,
@@ -62,7 +62,7 @@ const searchFields =(disabled)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -73,8 +73,8 @@ const searchFields =(disabled)=> {
         },
     ]
 }
-const getColumns = context => [
-    {
+const getColumns = (context,hasOperate) => {
+    let operates = hasOperate?[{
         title:'操作',
         render:(text, record)=>(
             record.voucherType === '前期认证相符且本期申报抵扣' &&  <span onClick={()=>{
@@ -93,7 +93,10 @@ const getColumns = context => [
         width:'50px',
         dataIndex:'action',
         className:'text-center',
-    },{
+    }]:[];
+    return [
+        ...operates
+    ,{
         title: '纳税主体',
         dataIndex: 'mainName',
     }, {
@@ -151,6 +154,7 @@ const getColumns = context => [
 
     }
 ];
+}
 
 class InputTaxDetails extends Component{
     state={
@@ -198,25 +202,19 @@ class InputTaxDetails extends Component{
     formatData=data=>{
         return data.filter(d=>d.voucherType === '前期认证相符且本期申报抵扣')
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
         const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam,filters,totalSource,record,action,isAdd} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         className:''
                     },
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
@@ -237,14 +235,14 @@ class InputTaxDetails extends Component{
                         title: "进项税额明细台账",
                     },
                     pageSize:10,
-                    columns:getColumns(this),
+                    columns:getColumns(this,disabled),
                     url:'/account/income/taxDetail/taxDetailList',
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" && !isAdd &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') && !isAdd &&  composeBotton([{
                                 type:'add',
                                 onClick:()=>{
                                     this.setState({
@@ -256,7 +254,7 @@ class InputTaxDetails extends Component{
                             }],statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'submit',
                                 url:'/account/income/taxDetail/submit',
                                 params:filters,
@@ -308,4 +306,7 @@ class InputTaxDetails extends Component{
         )
     }
 }
-export default withRouter(InputTaxDetails)
+
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(InputTaxDetails);

@@ -2,69 +2,115 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-21 17:30:17
+ * @Last Modified time: 2018-05-25 15:32:18
  */
 import React, { Component } from "react";
+import {connect} from 'react-redux';
 import { Icon, message, Modal } from "antd";
 import {SearchTable,TableTotal} from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
+import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
-import { withRouter } from "react-router";
 import PopModal from "./popModal";
 const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
 };
-const getColumns = (context,disabled1) => [
+const getFields = (disabled,declare) => [
     {
-        title: "操作",
-        className:'text-center',
-        render(text, record, index) {
-            return !disabled1 && (
-                <span className="table-operate">
-                    <a
-                        onClick={() => {
-                            context.setState({
-                                visible: true,
-                                action: "modify",
-                                opid: record.id
-                            });
-                        }}
-                    >
-                        <Icon type="edit" />
-                    </a>
-                    <a
-                        style={{
-                            color: "#f5222d",
-                        }}
-                        onClick={() => {
-                            const modalRef = Modal.confirm({
-                                title: "友情提醒",
-                                content: "该删除后将不可恢复，是否删除？",
-                                okText: "确定",
-                                okType: "danger",
-                                cancelText: "取消",
-                                onOk: () => {
-                                    context.deleteRecord(record.id, () => {
-                                        modalRef && modalRef.destroy();
-                                        context.refreshTable();
-                                    });
-                                },
-                                onCancel() {
-                                    modalRef.destroy();
-                                }
-                            });
-                        }}
-                    >
-                        <Icon type="delete" />
-                    </a>
-                </span>
-            );
+        label: "纳税主体",
+        type: "taxMain",
+        span:8,
+        fieldName: "mainId",
+        componentProps: {
+            disabled
         },
-        fixed: "left",
-        width: "75px",
-        dataIndex: "action"
+        fieldDecoratorOptions: {
+            initialValue:
+                (disabled && declare["mainId"]) || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: "请选择纳税主体"
+                }
+            ]
+        }
     },
+    {
+        label: `查询月份`,
+        fieldName: "authMonth",
+        type: "monthPicker",
+        span:8,
+        componentProps: {
+            format: "YYYY-MM",
+            disabled
+        },
+        fieldDecoratorOptions: {
+            initialValue:
+                (disabled && moment(declare["authMonth"], "YYYY-MM")) ||
+                undefined,
+            rules: [
+                {
+                    required: true,
+                    message: `请选择查询月份`
+                }
+            ]
+        }
+    }
+];
+
+const getColumns = (context,hasOperate) => {
+    let operates = hasOperate?[
+        {
+            title: "操作",
+            className:'text-center',
+            render(text, record, index) {
+                return (<span className="table-operate">
+                        <a
+                            onClick={() => {
+                                context.setState({
+                                    visible: true,
+                                    action: "modify",
+                                    opid: record.id
+                                });
+                            }}
+                        >
+                            <Icon type="edit" />
+                        </a>
+                        <a
+                            style={{
+                                color: "#f5222d",
+                            }}
+                            onClick={() => {
+                                const modalRef = Modal.confirm({
+                                    title: "友情提醒",
+                                    content: "该删除后将不可恢复，是否删除？",
+                                    okText: "确定",
+                                    okType: "danger",
+                                    cancelText: "取消",
+                                    onOk: () => {
+                                        context.deleteRecord(record.id, () => {
+                                            modalRef && modalRef.destroy();
+                                            context.refreshTable();
+                                        });
+                                    },
+                                    onCancel() {
+                                        modalRef.destroy();
+                                    }
+                                });
+                            }}
+                        >
+                            <Icon type="delete" />
+                        </a>
+                    </span>
+                );
+            },
+            fixed: "left",
+            width: "75px",
+            dataIndex: "action"
+        }]:[]
+    return [
+    ...operates
+    ,
     {
         title: "纳税主体",
         dataIndex: "mainName",
@@ -124,6 +170,7 @@ const getColumns = (context,disabled1) => [
         className: "table-money"
     }
 ];
+}
 
 class OtherBusinessInputTaxRollOut extends Component {
     state = {
@@ -153,85 +200,31 @@ class OtherBusinessInputTaxRollOut extends Component {
             });
     };
     updateStatus = (values) => {
-        this.setState({ filter: values });
-        let params = { ...values };
-        params.authMonth = moment(params.authMonth).format("YYYY-MM");
-        request
-            .get("/account/income/taxout/listMain", { params: params })
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    if (data.data) {
-                        this.setState({ statusParam: data.data, filter: values });
-                    }
-                }
-            });
+        requestResultStatus('/account/income/taxout/listMain',values,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
     };
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
     render() {
         const { totalSource } = this.state;
-        const { search } = this.props.location;
-        let disabled = !!search;
-        const getFields = (title, span, formItemStyle, record = {}) => [
-            {
-                label: "纳税主体",
-                type: "taxMain",
-                span,
-                fieldName: "mainId",
-                formItemStyle,
-                componentProps: {
-                    disabled
-                },
-                fieldDecoratorOptions: {
-                    initialValue:
-                        (disabled && getUrlParam("mainId")) || undefined,
-                    rules: [
-                        {
-                            required: true,
-                            message: "请选择纳税主体"
-                        }
-                    ]
-                }
-            },
-            {
-                label: `${title}月份`,
-                fieldName: "authMonth",
-                type: "monthPicker",
-                span,
-                formItemStyle,
-                componentProps: {
-                    format: "YYYY-MM",
-                    disabled
-                },
-                fieldDecoratorOptions: {
-                    initialValue:
-                        (disabled &&
-                            (!!search &&
-                                moment(getUrlParam("authMonth"), "YYYY-MM"))) ||
-                        undefined,
-                    rules: [
-                        {
-                            required: true,
-                            message: `请选择${title}月份`
-                        }
-                    ]
-                }
-            }
-        ];
-
+        const { declare } = this.props;
+        let disabled = !!declare;
+        
         let { filters, statusParam } = this.state;
         const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         return (
             <div>
                 <SearchTable
-                    backCondition={this.updateStatus}
-                    doNotFetchDidMount={!search}
+                    doNotFetchDidMount={!disabled}
                     tableOption={{
                         key: this.state.updateKey,
                         url: "/account/income/taxout/list",
                         pagination: true,
-                        columns: getColumns(this,disabled1),
+                        columns: getColumns(this,!disabled1 && disabled),
                         rowKey: "id",
                         onSuccess:params=>{
                           this.setState({
@@ -250,7 +243,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
-                                        JSON.stringify(filters) !== "{}" && composeBotton([{
+                                         (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
                                             onClick: () => {
                                             this.setState({
@@ -294,7 +287,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         }
                     }}
                     searchOption={{
-                        fields: getFields("查询", 8)
+                        fields: getFields(disabled,declare)
                     }}
                 />
                 <PopModal
@@ -310,4 +303,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         );
     }
 }
-export default withRouter(OtherBusinessInputTaxRollOut);
+
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(OtherBusinessInputTaxRollOut);

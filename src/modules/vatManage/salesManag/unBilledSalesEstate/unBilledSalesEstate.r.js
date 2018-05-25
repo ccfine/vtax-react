@@ -280,7 +280,7 @@ class unBilledSalesEstate extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            (disabled && declare.decAction==='edit') && <Button size="small" style={{marginRight:5}} disabled={!filters.mainId} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
+                            JSON.stringify(filters) !== "{}" && <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         }
                         {
                             (disabled && declare.decAction==='edit') && composeBotton([

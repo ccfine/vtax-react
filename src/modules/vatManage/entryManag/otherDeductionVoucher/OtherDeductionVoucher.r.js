@@ -2,8 +2,8 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
-import {requestResultStatus,fMoney,getUrlParam,requestDict,listMainResultStatus,composeBotton,setFormat} from 'utils'
+import {connect} from 'react-redux'
+import {requestResultStatus,fMoney,requestDict,listMainResultStatus,composeBotton,setFormat} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
@@ -20,7 +20,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields=(context,disabled)=> {
+const searchFields=(context,disabled,declare)=> {
     return [
         {
             label:'纳税主体',
@@ -32,7 +32,7 @@ const searchFields=(context,disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare['mainId']) || undefined,
                 rules:[
                     {
                         required:true,
@@ -51,7 +51,7 @@ const searchFields=(context,disabled)=> {
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -209,11 +209,6 @@ class SalesInvoiceCollection extends Component{
     }
 
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-
         //纳税申报
         requestDict('JXFPLX',result=>{
             this.setState({
@@ -223,13 +218,13 @@ class SalesInvoiceCollection extends Component{
     }
     render(){
         const {visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(this,disabled),
+                    fields:searchFields(this,disabled,declare),
                 }}
                 tableOption={{
                     key:tableKey,
@@ -264,7 +259,7 @@ class SalesInvoiceCollection extends Component{
                                 }])
                             }
                             {
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
                                     formOptions:{
                                         filters: filters,
@@ -301,4 +296,7 @@ class SalesInvoiceCollection extends Component{
         )
     }
 }
-export default withRouter(SalesInvoiceCollection)
+
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(SalesInvoiceCollection);
