@@ -3,11 +3,11 @@
  */
 import React,{Component} from 'react'
 import { Tabs } from 'antd';
+import {connect} from 'react-redux';
 import InputTaxCertificate from './inputTaxCertificate'
 import SimpleTaxCertificate from './simpleTaxCertificate'
 import GeneralTaxCertificate from './generalTaxCertificate'
 import SimplifiedTaxInputTaxTransfer from './simplifiedTaxInputTaxTransfer'
-import {getUrlParam} from 'utils'
 import moment from 'moment';
 const TabPane = Tabs.TabPane;
 
@@ -19,7 +19,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields=(disabled)=> {
+const searchFields=(disabled,declare)=> {
     return [
         {
             label:'纳税主体',
@@ -31,7 +31,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare['mainId']) || undefined,
                 rules:[
                     {
                         required:true,
@@ -50,7 +50,7 @@ const searchFields=(disabled)=> {
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -61,7 +61,7 @@ const searchFields=(disabled)=> {
         }
     ]
 }
-export default class SimpleTaxInputTaxTransferredToTheAccount extends Component{
+class SimpleTaxInputTaxTransferredToTheAccount extends Component{
     state = {
         activeKey:'1'
     }
@@ -72,23 +72,27 @@ export default class SimpleTaxInputTaxTransferredToTheAccount extends Component{
     }
     render(){
         const {activeKey} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
                 <TabPane tab="进项税额" key="1">
-                    <InputTaxCertificate searchFields={searchFields(disabled)} />
+                    <InputTaxCertificate searchFields={searchFields(disabled,declare)} />
                 </TabPane>
                 <TabPane tab="简易计税" key="2">
-                    <SimpleTaxCertificate searchFields={searchFields(disabled)} />
+                    <SimpleTaxCertificate searchFields={searchFields(disabled,declare)} />
                 </TabPane>
                 <TabPane tab="一般计税" key="3">
-                    <GeneralTaxCertificate searchFields={searchFields(disabled)} />
+                    <GeneralTaxCertificate searchFields={searchFields(disabled,declare)} />
                 </TabPane>
                 <TabPane tab="简易计税进项税额转出" key="4">
-                    <SimplifiedTaxInputTaxTransfer searchFields={searchFields(disabled)} />
+                    <SimplifiedTaxInputTaxTransfer searchFields={searchFields(disabled,declare)} />
                 </TabPane>
             </Tabs>
         )
     }
 }
+
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(SimpleTaxInputTaxTransferredToTheAccount);

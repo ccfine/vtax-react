@@ -4,23 +4,23 @@
  * description  :
  */
 import React, { Component } from "react";
-import {Form } from "antd";
+import {connect} from 'react-redux';
 import { TableTotal, SearchTable } from "compoments";
-import { requestResultStatus, fMoney, getUrlParam, listMainResultStatus,composeBotton } from "utils";
-import { withRouter } from "react-router";
+import { requestResultStatus, fMoney, listMainResultStatus,composeBotton } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
 };
-const fields = [
+const getFields = (filters)=>[
     {
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
         span:24,
         fieldDecoratorOptions:{
+            initialValue: (filters && filters["mainId"]) || undefined,
             rules:[
                 {
                     required:true,
@@ -35,6 +35,9 @@ const fields = [
         span: 24,
         componentProps: {},
         fieldDecoratorOptions: {
+            initialValue:
+                (filters && moment(filters["authMonth"], "YYYY-MM")) ||
+                undefined,
             rules: [
                 {
                     required: true,
@@ -45,7 +48,7 @@ const fields = [
     }
 ]
 
-const getSearchFields = disabled => {
+const getSearchFields = (disabled,declare) => {
     return [
             {
                 label: "纳税主体",
@@ -56,7 +59,7 @@ const getSearchFields = disabled => {
                     disabled
                 },
                 fieldDecoratorOptions: {
-                    initialValue: (disabled && getUrlParam("mainId")) || undefined,
+                    initialValue: (disabled && declare["mainId"]) || undefined,
                     rules: [
                         {
                             required: true,
@@ -76,7 +79,7 @@ const getSearchFields = disabled => {
                 },
                 fieldDecoratorOptions: {
                     initialValue:
-                        (disabled && moment(getUrlParam("authMonth"), "YYYY-MM")) ||
+                        (disabled && moment(declare["authMonth"], "YYYY-MM")) ||
                         undefined,
                     rules: [
                         {
@@ -319,21 +322,15 @@ class InvoiceCollection extends Component {
             })
         })
     }
-    /*componentWillReceiveProps(nextProps) {
-        if (this.props.taxSubjectId !== nextProps.taxSubjectId) {
-            this.initData();
-        }
-    }*/
-
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam, totalSource } = this.state;
-        const { search } = this.props.location;
-        let disabled = !!(search && search.filters);
+        const { declare } = this.props;
+        let disabled = !!declare;
         return (
                 <SearchTable
-                    doNotFetchDidMount={true}
+                    doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields: getSearchFields(disabled)
+                        fields: getSearchFields(disabled,declare)
                     }}
                     tableOption={{
                         columns: columns(this),
@@ -360,11 +357,11 @@ class InvoiceCollection extends Component {
                                     }])
                                 }
                                 {
-                                    JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         onSuccess:this.refreshTable,
-                                        fields:fields
+                                        fields:getFields(filters)
                                     },{
                                         type:'submit',
                                         url:'/income/invoice/collection/submit',
@@ -401,4 +398,6 @@ class InvoiceCollection extends Component {
         );
     }
 }
-export default Form.create()(withRouter(InvoiceCollection));
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(InvoiceCollection);

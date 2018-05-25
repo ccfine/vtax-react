@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-20 12:38:06
+ * @Last Modified time: 2018-05-25 16:10:02
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -11,12 +11,82 @@ import { SearchTable, TableTotal } from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
-const getColumns = (context,disabled) => [
-    {
+
+const getFields = (disabled,declare) => getFieldValue => {
+    return [
+        {
+            label: "纳税主体",
+            type: "taxMain",
+            span:6,
+            fieldName: "mainId",
+            componentProps: {
+                disabled
+            },
+            fieldDecoratorOptions: {
+                initialValue: (disabled && declare.mainId) || undefined,
+                rules: [
+                    {
+                        required: true,
+                        message: "请选择纳税主体"
+                    }
+                ]
+            }
+        },
+        {
+            label: '期间',
+            fieldName: "authMonth",
+            type: "monthPicker",
+            span:6,
+            componentProps: {
+                format: "YYYY-MM",
+                disabled
+            },
+            fieldDecoratorOptions: {
+                initialValue:
+                    (disabled && moment(declare.authMonth,"YYYY-MM")) || undefined,
+                rules: [
+                    {
+                        required: true,
+                        message: `请选择查询月份`
+                    }
+                ]
+            }
+        },
+        {
+            label: "项目名称",
+            fieldName: "projectId",
+            type: "asyncSelect",
+            span:6,
+            componentProps: {
+                fieldTextName: "itemName",
+                fieldValueName: "id",
+                doNotFetchDidMount: true,
+                fetchAble: getFieldValue("mainId"),
+                url: `/project/list/${getFieldValue("mainId")}`
+            }
+        },
+        {
+            label: "项目分期",
+            fieldName: "stagesId",
+            type: "asyncSelect",
+            span:6,
+            componentProps: {
+                fieldTextName: "itemName",
+                fieldValueName: "id",
+                doNotFetchDidMount: true,
+                fetchAble: getFieldValue("projectId"),
+                url: `/project/stages/${getFieldValue("projectId") ||
+                    ""}`
+            }
+        }
+    ];
+};
+const getColumns = (context,hasOperate) => {
+    let operates = hasOperate?[{
         title: "操作",
         className: "text-center",
         render(text, record, index) {
-            return disabled && (
+            return (
                 <span className="table-operate">
                     <a
                         title="编辑"
@@ -62,7 +132,10 @@ const getColumns = (context,disabled) => [
         fixed: "left",
         width: "50px",
         dataIndex: "action"
-    },
+    }]:[];
+    return [
+        ...operates
+    ,
     {
         title: "纳税主体",
         dataIndex: "mainName",
@@ -122,6 +195,7 @@ const getColumns = (context,disabled) => [
         className: "table-money"
     }
 ];
+}
 
 class UnBilledSalesNotEstate extends Component {
     state = {
@@ -131,8 +205,6 @@ class UnBilledSalesNotEstate extends Component {
         updateKey: Date.now(),
         statusParam: {},
         filters: undefined,
-        submitLoading: false,
-        revokeLoading: false
     };
     hideModal() {
         this.setState({ visible: false });
@@ -163,106 +235,21 @@ class UnBilledSalesNotEstate extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
     render() {
         const { totalSource } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        const getFields = (
-            context,
-            title,
-            span,
-            formItemStyle,
-            record = {},
-        ) => getFieldValue => {
-            return [
-                {
-                    label: "纳税主体",
-                    type: "taxMain",
-                    span,
-                    fieldName: "mainId",
-                    formItemStyle,
-                    componentProps: {
-                        disabled
-                    },
-                    fieldDecoratorOptions: {
-                        initialValue: (disabled && declare.mainId) || undefined,
-                        rules: [
-                            {
-                                required: true,
-                                message: "请选择纳税主体"
-                            }
-                        ]
-                    }
-                },
-                {
-                    label: '期间',
-                    fieldName: "authMonth",
-                    type: "monthPicker",
-                    span,
-                    formItemStyle,
-                    componentProps: {
-                        format: "YYYY-MM",
-                        disabled
-                    },
-                    fieldDecoratorOptions: {
-                        initialValue:
-                            (disabled && moment(declare.authMonth,"YYYY-MM")) || undefined,
-                        rules: [
-                            {
-                                required: true,
-                                message: `请选择${title}月份`
-                            }
-                        ]
-                    }
-                },
-                {
-                    label: "项目名称",
-                    fieldName: "projectId",
-                    type: "asyncSelect",
-                    span,
-                    formItemStyle,
-                    componentProps: {
-                        fieldTextName: "itemName",
-                        fieldValueName: "id",
-                        doNotFetchDidMount: false,
-                        fetchAble: getFieldValue("mainId"),
-                        url: `/project/list/${getFieldValue("mainId")}`
-                    }
-                },
-                {
-                    label: "项目分期",
-                    fieldName: "stagesId",
-                    type: "asyncSelect",
-                    span,
-                    formItemStyle,
-                    componentProps: {
-                        fieldTextName: "itemName",
-                        fieldValueName: "id",
-                        doNotFetchDidMount: true,
-                        fetchAble: getFieldValue("projectId"),
-                        url: `/project/stages/${getFieldValue("projectId") ||
-                            ""}`
-                    }
-                }
-            ];
-        };
-        let { filters={}, statusParam } = this.state;
+        let { filters={}, statusParam={} } = this.state;
 
         return (
             <div>
                 <SearchTable
-                    doNotFetchDidMount={true}
+                    doNotFetchDidMount={!disabled}
                     tableOption={{
                         key: this.state.updateKey,
                         url: "/account/notInvoiceUnSale/realty/list",
                         pagination: true,
-                        columns: getColumns(this),
+                        columns: getColumns(this,parseInt(statusParam.status,10)!==2 && disabled),
                         rowKey: "id",
                         onTotalSource: totalSource => {
                             this.setState({
@@ -276,7 +263,7 @@ class UnBilledSalesNotEstate extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
-                                        (declare && declare.decAction==='edit') && composeBotton([{
+                                        (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
                                             onClick: () => {
                                                 this.setState({
@@ -350,7 +337,7 @@ class UnBilledSalesNotEstate extends Component {
                         }
                     }}
                     searchOption={{
-                        fields: getFields(this, "查询", 6)
+                        fields: getFields(disabled,declare)
                     }}
                 />
                 <PopModal
