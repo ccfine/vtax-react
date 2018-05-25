@@ -15,13 +15,7 @@ import './styles.less'
 
 // 所有的路由信息--平铺
 const allPlainRoutes = (function() {
-	return composeMenus(routes).filter(item => {
-		if (!item.name || item.path === '/web') {
-			return false
-		} else {
-			return true
-		}
-	})
+	return composeMenus(routes).filter(item => !(!item.name || item.path === '/web'))
 })()
 
 // 将后台数据转换为方便处理的数据
@@ -33,7 +27,7 @@ const transformDeclaration = data => {
 				title: index === 0 ? '数据采集': index === 1? '数据处理': '生成台账',
 				options: ele.map(decla => {
                     //特殊处理下 销项发票数据匹配||房间交易档案采集
-                    let tab=0;
+                    let tab=1;
                     if(decla.name==='房间交易档案采集' || (decla.name==='销项发票数据匹配' && ++tab) ){
                         let route = allPlainRoutes.find(
                             ele => ele.name === '销项发票匹配'
@@ -196,22 +190,32 @@ class ApplyDeclarationPopModal extends Component {
 		)
 	}
 
-	LockPageRefresh = () => {
-		const { record } = this.props
-		const ref = Modal.warning({
-			title: '友情提醒',
-			content: <h2>操作完成后，请刷新当前页面！</h2>,
-			okText: '刷新',
-			onOk: () => {
-				ref.destroy()
-				this.fetchDeclarationById({
-					decConduct: this.state.current,
-					mainId: record.mainId,
-					authMonth: record.partTerm
-				})
-			}
-		})
-	}
+    LockPageRefresh = () => {
+        const { saveDeclare, record } = this.props;
+		saveDeclare({
+            mainId: record.mainId,
+            authMonth: record.partTerm,
+            authMonthEnd: record.subordinatePeriodEnd,
+            status: record.status,
+            decAction: record.decAction
+        })
+
+        const ref = Modal.warning({
+            title: '友情提醒',
+            content: <h2>操作完成后，请刷新当前页面！</h2>,
+            okText: '刷新',
+            onOk: () => {
+                ref.destroy()
+                this.fetchDeclarationById({
+                    decConduct: this.state.current,
+                    mainId: record.mainId,
+                    authMonth: record.partTerm
+                })
+            }
+        })
+    }
+
+
 
 	fetchDeclarationById = data => {
         this.toggleLoading(true)
@@ -235,14 +239,14 @@ class ApplyDeclarationPopModal extends Component {
 	}
 	componentWillReceiveProps(nextProps) {
 		if (!this.props.visible && nextProps.visible) {
-			const { saveDeclare, record } = nextProps
-			saveDeclare({
-				mainId: record.mainId,
-				authMonth: record.partTerm,
-				authMonthEnd: record.subordinatePeriodEnd,
-				status: record.status,
-				decAction: record.decAction
-			})
+            const { saveDeclare, record } = nextProps;
+            saveDeclare({
+                mainId: record.mainId,
+                authMonth: record.partTerm,
+                authMonthEnd: record.subordinatePeriodEnd,
+                status: record.status,
+                decAction: record.decAction
+            })
 			this.fetchDeclarationById({
 				decConduct: this.state.current,
 				mainId: record.mainId,

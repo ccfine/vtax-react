@@ -236,17 +236,15 @@ class UnBilledSalesNotEstate extends Component {
         this.setState({ updateKey: Date.now() });
     };
     render() {
-        const { totalSource } = this.state;
+        let { updateKey, filters={}, statusParam,totalSource } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        let { filters={}, statusParam={} } = this.state;
-
         return (
             <div>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     tableOption={{
-                        key: this.state.updateKey,
+                        key: updateKey,
                         url: "/account/notInvoiceUnSale/realty/list",
                         pagination: true,
                         columns: getColumns(this,parseInt(statusParam.status,10)!==2 && disabled),

@@ -2,6 +2,7 @@
  * Created by liuliyuan on 2018/5/24.
  */
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
 import {connect} from 'react-redux'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
@@ -197,7 +198,7 @@ const columns=[
         )
     }
 ];
-class FinancialDocumentsCollection extends Component{
+ class FixedAssetCollection extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -210,12 +211,6 @@ class FinancialDocumentsCollection extends Component{
         this.setState({
             updateKey:Date.now()
         })
-    }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
@@ -254,7 +249,7 @@ class FinancialDocumentsCollection extends Component{
                                     listMainResultStatus(statusParam)
                                 }
                                 {
-                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'submit',
                                         url:'/fixedAssetCard/submit',
                                         params:filters,
@@ -277,4 +272,4 @@ class FinancialDocumentsCollection extends Component{
 }
 export default connect(state=>({
     declare:state.user.get('declare')
-  }))(FinancialDocumentsCollection);
+}))(FixedAssetCollection)

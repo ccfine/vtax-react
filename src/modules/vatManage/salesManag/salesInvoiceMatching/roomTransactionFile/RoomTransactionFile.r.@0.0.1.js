@@ -28,7 +28,7 @@ const formItemStyle = {
         }
     }
 }
-const fields = [
+const fields = (disabled,declare)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -43,6 +43,7 @@ const fields = [
             }
         },
         fieldDecoratorOptions:{
+            initialValue: (disabled && declare.mainId) || undefined,
             rules:[
                 {
                     required:true,
@@ -65,6 +66,7 @@ const fields = [
             }
         },
         fieldDecoratorOptions:{
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -310,17 +312,10 @@ class RoomTransactionFile extends Component{
          * */
         statusParam:'',
 
-        filters:{
-
-        },
+        filters:{},
         totalSource:undefined
     }
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
+
     refreshTable = ()=>{
         this.setState({
             tableUpDateKey:Date.now()
@@ -365,7 +360,7 @@ class RoomTransactionFile extends Component{
                         className:''
                     }
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 tableOption={{
                     onSuccess:(params)=>{
                         this.setState({
@@ -395,11 +390,11 @@ class RoomTransactionFile extends Component{
                             }],statusParam)
                         }
                         {
-                            (declare && declare.decAction==='edit') && composeBotton([{
+                            (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
-                                fields:fields
+                                fields:fields(disabled,declare)
                             },{
                                 type:'submit',
                                 url:'/output/room/files/submit',

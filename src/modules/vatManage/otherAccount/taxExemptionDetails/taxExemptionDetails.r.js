@@ -6,9 +6,9 @@
  *
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
+import {connect} from 'react-redux'
 import {Icon,Modal,message} from 'antd'
-import {fMoney,request,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import PopModal from "./popModal";
 import moment from 'moment';
@@ -16,7 +16,7 @@ const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
 };
-const searchFields =(disabled)=> [
+const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -26,7 +26,7 @@ const searchFields =(disabled)=> [
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+            initialValue: (disabled && declare.mainId) || undefined,
             rules:[
                 {
                     required:true,
@@ -44,7 +44,7 @@ const searchFields =(disabled)=> [
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -62,38 +62,43 @@ const searchFields =(disabled)=> [
         }
     },
 ]
-const getColumns = (context,disabled1) => [
+const getColumns = (context,disabled,declare) => [
     {
         title: '操作',
         render(text, record, index) {
-            return disabled1 && (
-                    <span>
-                        <a style={{margin:"0 5px" }} onClick={() => {
-                            context.setState({ visible: true, action: 'modify', opid: record.id });
-                        }}><Icon type="edit" /></a>
-                        <a style={{ margin:"0 5px",color: "#f5222d" }}  onClick={() => {
-                            const modalRef = Modal.confirm({
-                                title: "友情提醒",
-                                content: "该删除后将不可恢复，是否删除？",
-                                okText: "确定",
-                                okType: "danger",
-                                cancelText: "取消",
-                                onOk: () => {
-                                    context.deleteRecord(record.id, () => {
-                                        modalRef && modalRef.destroy();
-                                        context.refreshTable();
+
+            if(disabled && declare.decAction==='edit'){
+                if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 2){
+                    return (
+                            <span>
+                                <a style={{margin:"0 5px" }} onClick={() => {
+                                    context.setState({ visible: true, action: 'modify', opid: record.id });
+                                }}><Icon type="edit" /></a>
+                                <a style={{ margin:"0 5px",color: "#f5222d" }}  onClick={() => {
+                                    const modalRef = Modal.confirm({
+                                        title: "友情提醒",
+                                        content: "该删除后将不可恢复，是否删除？",
+                                        okText: "确定",
+                                        okType: "danger",
+                                        cancelText: "取消",
+                                        onOk: () => {
+                                            context.deleteRecord(record.id, () => {
+                                                modalRef && modalRef.destroy();
+                                                context.refreshTable();
+                                            });
+                                        },
+                                        onCancel() {
+                                            modalRef.destroy();
+                                        }
                                     });
-                                },
-                                onCancel() {
-                                    modalRef.destroy();
-                                }
-                            });
-                        }}
-                        >
-                            <Icon type="delete" />
-                        </a>
-                </span>
-            )
+                                }}
+                                >
+                                    <Icon type="delete" />
+                                </a>
+                        </span>
+                        )
+                }
+            }
         },
         fixed: 'left',
         width: '75px',
@@ -222,30 +227,16 @@ class TaxExemptionDetails extends Component{
             })
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({
-                filters:{
-                    mainId:getUrlParam('mainId') || undefined,
-                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
-                }
-            },()=>{
-                this.refreshTable()
-            });
-        }
-    }
     render(){
         const {visible,action,opid,tableKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
-        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
-        const {search} = this.props.location;
-        let disabled= !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 spinning={searchTableLoading}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -255,7 +246,7 @@ class TaxExemptionDetails extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this,!disabled1),
+                    columns:getColumns(this,disabled,declare),
                     url:'/account/other/reduceTaxDetail/list',
                     onSuccess:(params)=>{
                         this.setState({
@@ -269,7 +260,7 @@ class TaxExemptionDetails extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'add',
                                 onClick: ()=>{
                                     this.setState({
@@ -310,5 +301,6 @@ class TaxExemptionDetails extends Component{
         )
     }
 }
-
-export default withRouter(TaxExemptionDetails)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(TaxExemptionDetails)

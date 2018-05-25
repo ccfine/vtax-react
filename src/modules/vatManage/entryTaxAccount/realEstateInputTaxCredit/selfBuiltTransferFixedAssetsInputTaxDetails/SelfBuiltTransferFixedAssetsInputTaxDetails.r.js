@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -57,7 +56,7 @@ const columns = context =>[
         className: "table-money"
     }
 ];
-class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
+export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
         visibleView:false,
@@ -86,22 +85,18 @@ class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
         })
     }
 
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
         const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const { declare,searchFields } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:this.props.searchFields,
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -127,7 +122,7 @@ class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
                                     url:'/account/income/estate/submit',
                                     params:filters,
@@ -155,4 +150,3 @@ class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
         )
     }
 }
-export default withRouter(SelfBuiltTransferFixedAssetsInputTaxDetails)

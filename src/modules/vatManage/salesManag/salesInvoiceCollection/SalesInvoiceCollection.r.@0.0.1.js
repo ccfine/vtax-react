@@ -20,7 +20,7 @@ const formItemStyle = {
         span: 16
     }
 };
-const fields=[
+const fields = (disabled,declare)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -31,10 +31,11 @@ const fields=[
                 span:6
             },
             wrapperCol:{
-                span:11
+                span:17
             }
         },
         fieldDecoratorOptions:{
+            initialValue: (disabled && declare.mainId) || undefined,
             rules:[
                 {
                     required:true,
@@ -42,8 +43,9 @@ const fields=[
                 }
             ]
         },
-    }
-];
+    },
+]
+
 const searchFields = (disabled,declare) => {
     return [
         {
@@ -292,20 +294,13 @@ class SalesInvoiceCollection extends Component {
             tableKey: Date.now()
         });
     };
-
-    componentDidMount() {
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
     render() {
         const { visible, modalConfig, tableKey, totalSource, statusParam, filters={} } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields: searchFields(disabled,declare),
                     cardProps: {
@@ -339,11 +334,11 @@ class SalesInvoiceCollection extends Component {
                                     }])
                                 }
                                 {
-                                    (declare && declare.decAction==='edit') && composeBotton([{
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'fileImport',
                                         url:'/output/invoice/collection/upload/',
                                         onSuccess:this.refreshTable,
-                                        fields:fields
+                                        fields:fields(disabled,declare),
                                     },{
                                         type:'submit',
                                         url:'/output/invoice/collection/submit',
