@@ -317,19 +317,13 @@ class UnmatchedData extends Component{
             tableKey:Date.now()
         })
     }
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
     render(){
         const {visible,tableKey,filters,selectedData,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 style={{
                     marginTop:-16
                 }}
@@ -359,7 +353,7 @@ class UnmatchedData extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            (declare && declare.decAction==='edit') &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'fileExport',
                                 url:'output/invoice/marry/unmatched/export',
                                 params:filters,

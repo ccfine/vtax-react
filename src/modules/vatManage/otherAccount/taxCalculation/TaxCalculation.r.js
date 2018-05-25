@@ -5,13 +5,14 @@
  *
  */
 import React,{Component} from 'react'
+import { compose } from 'redux';
+import {connect} from 'react-redux'
 import {message,Form} from 'antd'
 import {SearchTable} from 'compoments'
-import {request,getUrlParam,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import EditableCell from './EditableCell.r'
-import { withRouter } from 'react-router'
 import moment from 'moment';
-const searchFields =(disabled)=>{
+const searchFields =(disabled,declare)=>{
     return [
         {
             label:'纳税主体',
@@ -30,7 +31,7 @@ const searchFields =(disabled)=>{
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -57,7 +58,7 @@ const searchFields =(disabled)=>{
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -68,7 +69,7 @@ const searchFields =(disabled)=>{
         }
     ]
 }
-const getColumns = getFieldDecorator => [
+const getColumns = (getFieldDecorator,disabled) => [
     {
         title:'项目名称',
         dataIndex:'projectName',
@@ -84,7 +85,7 @@ const getColumns = getFieldDecorator => [
         title:'一般货物及劳务和应税服务',
         dataIndex:'generalAmount',
         render:(text,record)=>{
-            return record.generalAmountEdit ?
+            return disabled && record.generalAmountEdit ?
                 <EditableCell
                     fieldName={`generalAmount_${record.id}`}
                     renderValue={text}
@@ -98,7 +99,7 @@ const getColumns = getFieldDecorator => [
         title:'即征即退货物及劳务和应税服务',
         dataIndex:'drawbackPolicyAmount',
         render:(text,record)=>{
-            return record.drawbackPolicyAmountEdit ?
+            return disabled && record.drawbackPolicyAmountEdit ?
                 <EditableCell
                     fieldName={`drawbackPolicyAmount_${record.id}`}
                     renderValue={text}
@@ -158,12 +159,6 @@ class TaxCalculation extends Component{
             }
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/taxCalculation/listMain',this.state.filters,result=>{
             this.setState({
@@ -174,19 +169,18 @@ class TaxCalculation extends Component{
     render(){
         const {searchTableLoading,tableKey,statusParam,tableUrl,filters} = this.state;
         const {getFieldDecorator} = this.props.form;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
         <div>
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         className:''
                     },
                 }}
-                //doNotFetchDidMount={true}
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
@@ -208,7 +202,7 @@ class TaxCalculation extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'save',
                                 text:'保存',
                                 icon:'save',
@@ -241,4 +235,10 @@ class TaxCalculation extends Component{
         )
     }
 }
-export default Form.create()(withRouter(TaxCalculation))
+const enhance = compose(
+    Form.create(),
+    connect( (state) => ({
+        declare:state.user.get('declare')
+    }))
+);
+export default enhance(TaxCalculation);

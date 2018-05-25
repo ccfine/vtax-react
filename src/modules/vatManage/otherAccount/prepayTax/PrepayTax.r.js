@@ -5,16 +5,16 @@
  *
  */
 import React,{Component} from 'react'
-import { withRouter } from 'react-router'
+import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
-const searchFields =(disabled)=> {
+const searchFields =(disabled,declare)=> {
     return [
         {
             label:'纳税主体',
@@ -33,7 +33,7 @@ const searchFields =(disabled)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -60,7 +60,7 @@ const searchFields =(disabled)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -172,12 +172,6 @@ class PrepayTax extends Component{
             visibleView
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/prepaytax/listMain',this.state.filters,result=>{
             this.setState({
@@ -187,17 +181,17 @@ class PrepayTax extends Component{
     }
     render(){
         const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         className:''
                     },
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
@@ -219,7 +213,7 @@ class PrepayTax extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'submit',
                                 url:'/account/prepaytax/submit',
                                 params:filters,
@@ -243,4 +237,6 @@ class PrepayTax extends Component{
         )
     }
 }
-export default withRouter(PrepayTax)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(PrepayTax)

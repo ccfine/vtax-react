@@ -6,105 +6,8 @@
  */
 import React from 'react'
 import { SearchTable } from 'compoments'
-import {
-	fMoney,
-	getUrlParam,
-    composeBotton
-} from 'utils'
-import { withRouter } from 'react-router'
-import moment from 'moment'
+import { fMoney, composeBotton} from 'utils'
 
-const formItemStyle = {
-	labelCol: {
-		sm: {
-			span: 10
-		},
-		xl: {
-			span: 8
-		}
-	},
-	wrapperCol: {
-		sm: {
-			span: 14
-		},
-		xl: {
-			span: 16
-		}
-	}
-}
-const searchFields = disabled => getFieldValue => {
-	return [
-		{
-			label: '纳税主体',
-			fieldName: 'mainId',
-			type: 'taxMain',
-			span: 6,
-			formItemStyle,
-			componentProps: {
-				disabled
-			},
-			fieldDecoratorOptions: {
-				initialValue: (disabled && getUrlParam('mainId')) || undefined,
-				rules: [
-					{
-						required: true,
-						message: '请选择纳税主体'
-					}
-				]
-			}
-		},
-		{
-			label: '纳税申报期',
-			fieldName: 'authMonth',
-			type: 'monthPicker',
-			span: 6,
-			formItemStyle,
-			componentProps: {
-				format: 'YYYY-MM',
-				disabled: disabled
-			},
-			fieldDecoratorOptions: {
-				initialValue:
-					(disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) ||
-					undefined,
-				rules: [
-					{
-						required: true,
-						message: '请选择纳税申报期'
-					}
-				]
-			}
-		},
-		{
-			label: '项目名称',
-			fieldName: 'projectId',
-			type: 'asyncSelect',
-			span: 6,
-			formItemStyle,
-			componentProps: {
-				fieldTextName: 'itemName',
-				fieldValueName: 'id',
-				doNotFetchDidMount: true,
-				fetchAble: getFieldValue('mainId') || false,
-				url: `/project/list/${getFieldValue('mainId')}`
-			}
-		},
-		{
-			label: '项目分期',
-			fieldName: 'stagesId',
-			type: 'asyncSelect',
-			span: 6,
-			formItemStyle,
-			componentProps: {
-				fieldTextName: 'itemName',
-				fieldValueName: 'id',
-				doNotFetchDidMount: true,
-				fetchAble: getFieldValue('projectId') || false,
-				url: `/project/stages/${getFieldValue('projectId') || ''}`
-			}
-		}
-	]
-}
 
 const columns = [
 	{
@@ -180,7 +83,7 @@ const columns = [
 		className: 'table-money'
 	}
 ]
-class ShouldDeduct extends React.Component {
+export default class ShouldDeduct extends React.Component {
 	state = {
 		tableKey: Date.now(),
 		doNotFetchDidMount: true,
@@ -196,46 +99,24 @@ class ShouldDeduct extends React.Component {
 			tableKey: Date.now()
 		})
 	}
-	componentDidMount() {
-		const { search } = this.props.location
-		if (!!search) {
-			this.setState(
-				{
-					doNotFetchDidMount: false
-				},
-				() => {
-					this.refreshTable()
-				}
-			)
-		} else {
-			this.setState({
-				doNotFetchDidMount: true
-			})
-		}
-	}
 	render() {
-		const {
-			tableKey,
-			filters = {},
-			doNotFetchDidMount
-		} = this.state
-		const { search } = this.props.location
-		let disabled = !!search
+		const { tableKey, filters = {}, } = this.state
+        const { declare,searchFields } = this.props;
+        let disabled = !!declare;
 		return (
 			<SearchTable
 				style={{
 					marginTop: -16
 				}}
-				doNotFetchDidMount={doNotFetchDidMount}
+				doNotFetchDidMount={!disabled}
 				searchOption={{
-					fields: searchFields(disabled),
+					fields: searchFields,
 					cardProps: {
 						style: {
 							borderTop: 0
 						}
 					}
 				}}
-				// spinning={searchTableLoading}
 				tableOption={{
 					cardProps: {
 						title: '土地价款当期应抵扣'
@@ -244,22 +125,24 @@ class ShouldDeduct extends React.Component {
 					pageSize: 10,
 					columns: columns,
 					url: '/account/landPrice/deductedDetails/list',
-					onSuccess: (params, data) => {
+					onSuccess: (params) => {
 						this.setState({
 							filters: params
 						})
 					},
 					extra: (
 						<div>
-							{JSON.stringify(filters) !=='{}' && composeBotton([
-								{
-									type: 'reset',
-									url:
-										'/account/landPrice/deductedDetails/reset',
-									params:filters,
-									onSuccess: this.refreshTable
-								}
-							])}
+							{
+								(disabled && declare.decAction==='edit') && composeBotton([
+									{
+										type: 'reset',
+										url:
+											'/account/landPrice/deductedDetails/reset',
+										params:filters,
+										onSuccess: this.refreshTable
+									}
+								])
+							}
 						</div>
 					)
 				}}
@@ -267,5 +150,3 @@ class ShouldDeduct extends React.Component {
 		)
 	}
 }
-
-export default withRouter(ShouldDeduct)

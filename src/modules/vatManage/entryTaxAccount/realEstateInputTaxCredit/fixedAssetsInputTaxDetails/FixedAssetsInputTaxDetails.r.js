@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,toPercent,composeBotton} from 'utils'
 const columns = context =>[
@@ -137,7 +136,7 @@ const columns = context =>[
         dataIndex: "deductedPeriod"
     }
 ];
-class FixedAssetsInputTaxDetails extends Component{
+export default class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
         filters:{},
@@ -158,23 +157,18 @@ class FixedAssetsInputTaxDetails extends Component{
             tableKey:Date.now()
         })
     }
-
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
         const {tableKey,filters,statusParam} = this.state;
+        const { declare,searchFields } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:this.props.searchFields,
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -200,7 +194,7 @@ class FixedAssetsInputTaxDetails extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
                                     url:'/account/income/estate/submit',
                                     params:filters,
@@ -222,4 +216,3 @@ class FixedAssetsInputTaxDetails extends Component{
         )
     }
 }
-export default withRouter(FixedAssetsInputTaxDetails)

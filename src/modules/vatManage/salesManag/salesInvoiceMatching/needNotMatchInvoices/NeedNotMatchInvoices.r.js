@@ -198,12 +198,6 @@ class NeedNotMatchInvoices extends Component{
             tableKey:Date.now()
         })
     }
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
     fetchResultStatus = ()=>{
         requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
             this.setState({
@@ -220,7 +214,7 @@ class NeedNotMatchInvoices extends Component{
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields(disabled,declare),
                     cardProps:{
@@ -247,7 +241,7 @@ class NeedNotMatchInvoices extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            (declare && declare.decAction==='edit') && composeBotton([{
+                            (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
                                 onClick: ()=>this.toggleModalVisible(true)
                             }],statusParam)

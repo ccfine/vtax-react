@@ -2,11 +2,11 @@
  * Created by liuliyuan on 2018/5/17.
  */
 import React, { Component } from 'react'
-import {fMoney,requestResultStatus,getUrlParam,listMainResultStatus,composeBotton} from 'utils'
+import {connect} from 'react-redux'
+import {fMoney,requestResultStatus,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import { withRouter } from 'react-router'
 import moment from 'moment';
-const searchFields =(disabled)=> [
+const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -16,7 +16,7 @@ const searchFields =(disabled)=> [
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+            initialValue: (disabled && declare.mainId) || undefined,
             rules:[
                 {
                     required:true,
@@ -34,7 +34,7 @@ const searchFields =(disabled)=> [
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
             rules:[
                 {
                     required:true,
@@ -151,19 +151,6 @@ class tab1 extends Component{
             })
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({
-                filters:{
-                    mainId:getUrlParam('mainId') || undefined,
-                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
-                }
-            },()=>{
-                this.refreshTable()
-            });
-        }
-    }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
             this.setState({
@@ -173,14 +160,14 @@ class tab1 extends Component{
     }
     render(){
         const {updateKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
                 <SearchTable
                     spinning={searchTableLoading}
-                    doNotFetchDidMount={true}
+                    doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields:searchFields(disabled),
+                        fields:searchFields(disabled,declare),
                     }}
                     tableOption={{
                         key:updateKey,
@@ -197,7 +184,7 @@ class tab1 extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'reset',
                                     url:'/account/othertax/deducted/main/reset',
                                     params:filters,
@@ -235,4 +222,6 @@ class tab1 extends Component{
         )
     }
 }
-export default withRouter(tab1)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(tab1)

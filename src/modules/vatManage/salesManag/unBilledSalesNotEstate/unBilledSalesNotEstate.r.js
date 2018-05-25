@@ -163,12 +163,6 @@ class UnBilledSalesNotEstate extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.refreshTable();
-        }
-    }
     render() {
         const { totalSource } = this.state;
         const { declare } = this.props;
@@ -252,14 +246,14 @@ class UnBilledSalesNotEstate extends Component {
                 }
             ];
         };
-        let { filters={}, statusParam } = this.state;
+        let { updateKey, filters={}, statusParam } = this.state;
 
         return (
             <div>
                 <SearchTable
-                    doNotFetchDidMount={true}
+                    doNotFetchDidMount={!disabled}
                     tableOption={{
-                        key: this.state.updateKey,
+                        key: updateKey,
                         url: "/account/notInvoiceUnSale/realty/list",
                         pagination: true,
                         columns: getColumns(this),
@@ -276,7 +270,7 @@ class UnBilledSalesNotEstate extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
-                                        (declare && declare.decAction==='edit') && composeBotton([{
+                                        (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
                                             onClick: () => {
                                                 this.setState({

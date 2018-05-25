@@ -338,7 +338,7 @@ class BillingSales extends Component {
                               listMainResultStatus(statusParam)
                           }
                           {
-                              (declare && declare.decAction==='edit') && composeBotton([{
+                              (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'fileExport',
                                 url:'account/output/billingSale/export',
                                 title:'导出',
@@ -385,7 +385,7 @@ class BillingSales extends Component {
                 <Card title="开票销售统计表-非地产"
                       extra={<div>
                           {
-                              (declare && declare.decAction==='edit') && composeBotton([{
+                              (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'fileExport',
                                 url:'account/output/billingSale/export',
                                 title:'导出',

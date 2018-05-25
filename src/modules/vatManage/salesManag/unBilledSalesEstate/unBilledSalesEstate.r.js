@@ -209,7 +209,6 @@ class unBilledSalesEstate extends Component{
     state={
         tableKey:Date.now(),
         visible:false,
-        doNotFetchDidMount:true,
         searchTableLoading:false,
         filters:{
 
@@ -237,21 +236,6 @@ class unBilledSalesEstate extends Component{
             tableKey:Date.now()
         })
     }
-    componentDidMount(){
-        const { declare } = this.props;
-        if (!!declare) {
-            this.setState({
-                doNotFetchDidMount:false
-            },()=>{
-                this.refreshTable()
-            })
-
-        }else{
-            this.setState({
-                doNotFetchDidMount:true
-            })
-        }
-    }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/output/notInvoiceSale/realty/listMain',this.state.filters,result=>{
             this.setState({
@@ -260,12 +244,12 @@ class unBilledSalesEstate extends Component{
         })
     }
     render(){
-        const {tableKey,visible,filters={},doNotFetchDidMount,statusParam={},searchTableLoading,totalSource} = this.state;
+        const {tableKey,visible,filters={},statusParam={},searchTableLoading,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={doNotFetchDidMount}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields(disabled,declare),
                     cardProps:{
@@ -296,10 +280,10 @@ class unBilledSalesEstate extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            (declare && declare.decAction==='edit') && <Button size="small" style={{marginRight:5}} disabled={!filters.mainId} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
+                            (disabled && declare.decAction==='edit') && <Button size="small" style={{marginRight:5}} disabled={!filters.mainId} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         }
                         {
-                            (declare && declare.decAction==='edit') && composeBotton([
+                            (disabled && declare.decAction==='edit') && composeBotton([
                             {
                                 type:'reset',
                                 url:'/account/output/notInvoiceSale/realty/reset',
