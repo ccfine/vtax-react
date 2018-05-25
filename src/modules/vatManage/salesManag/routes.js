@@ -106,8 +106,8 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/otherTaxAdjustment`,
-        component:wrapPage('其他涉税调整台账',OtherTaxAdjustment),
-        name:'其他涉税调整台账',
+        component:wrapPage('其它涉税调整台账',OtherTaxAdjustment),
+        name:'其它涉税调整台账',
         icon:{
             url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
             backgroundColor:'#57C8F2'
