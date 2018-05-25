@@ -77,6 +77,7 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}subjectRateRela.svg`,
             backgroundColor:'#6CCCCA'
         },
+        authorityInfo:systemMaintain['subjectRateRela'].options,
         exact:true,
     },{
         path:`${PATHS}`,

@@ -43,7 +43,7 @@ const LandPrice_Routes = [
             url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
             backgroundColor:'#9A572C'
         },
-        authorityInfo:landPrice['LandArea'].options,
+        authorityInfo:landPrice['landPriceDeductionDetails'].options,
         exact:true,
     },{
         path:`${PATH}/otherTaxableItemsDeduct`,
