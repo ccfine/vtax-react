@@ -5,18 +5,18 @@
  * @Last Modified time: 2018-05-20 12:38:06
  */
 import React, { Component } from "react";
+import {connect} from 'react-redux'
 import { Icon, message, Modal } from "antd";
 import { SearchTable, TableTotal } from "compoments";
-import { request, fMoney, getUrlParam, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
+import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
-import { withRouter } from "react-router";
 import PopModal from "./popModal";
-const getColumns = context => [
+const getColumns = (context,disabled) => [
     {
         title: "操作",
         className: "text-center",
         render(text, record, index) {
-            return (
+            return disabled && (
                 <span className="table-operate">
                     <a
                         title="编辑"
@@ -163,16 +163,22 @@ class UnBilledSalesNotEstate extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
+    componentDidMount(){
+        const { declare } = this.props;
+        if (!!declare) {
+            this.refreshTable();
+        }
+    }
     render() {
         const { totalSource } = this.state;
-        const { search } = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         const getFields = (
             context,
             title,
             span,
             formItemStyle,
-            record = {}
+            record = {},
         ) => getFieldValue => {
             return [
                 {
@@ -185,8 +191,7 @@ class UnBilledSalesNotEstate extends Component {
                         disabled
                     },
                     fieldDecoratorOptions: {
-                        initialValue:
-                            (disabled && getUrlParam("mainId")) || undefined,
+                        initialValue: (disabled && declare.mainId) || undefined,
                         rules: [
                             {
                                 required: true,
@@ -196,7 +201,7 @@ class UnBilledSalesNotEstate extends Component {
                     }
                 },
                 {
-                    label: `期间`,
+                    label: '期间',
                     fieldName: "authMonth",
                     type: "monthPicker",
                     span,
@@ -207,13 +212,7 @@ class UnBilledSalesNotEstate extends Component {
                     },
                     fieldDecoratorOptions: {
                         initialValue:
-                            (disabled &&
-                                (!!search &&
-                                    moment(
-                                        getUrlParam("authMonth"),
-                                        "YYYY-MM"
-                                    ))) ||
-                            undefined,
+                            (disabled && moment(declare.authMonth,"YYYY-MM")) || undefined,
                         rules: [
                             {
                                 required: true,
@@ -258,7 +257,7 @@ class UnBilledSalesNotEstate extends Component {
         return (
             <div>
                 <SearchTable
-                    doNotFetchDidMount={!search}
+                    doNotFetchDidMount={true}
                     tableOption={{
                         key: this.state.updateKey,
                         url: "/account/notInvoiceUnSale/realty/list",
@@ -277,7 +276,7 @@ class UnBilledSalesNotEstate extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
-                                        JSON.stringify(filters) !== "{}" && composeBotton([{
+                                        (declare && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
                                             onClick: () => {
                                                 this.setState({
@@ -367,4 +366,6 @@ class UnBilledSalesNotEstate extends Component {
         );
     }
 }
-export default withRouter(UnBilledSalesNotEstate);
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(UnBilledSalesNotEstate)

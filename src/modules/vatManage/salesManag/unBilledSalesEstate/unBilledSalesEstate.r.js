@@ -4,10 +4,10 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
+import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
-import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -27,7 +27,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields =(disabled)=>(getFieldValue)=> {
+const searchFields =(disabled,declare)=>(getFieldValue)=> {
     return [
         {
             label:'纳税主体',
@@ -39,7 +39,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -59,7 +59,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
                 disabled:disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -238,8 +238,8 @@ class unBilledSalesEstate extends Component{
         })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
+        const { declare } = this.props;
+        if (!!declare) {
             this.setState({
                 doNotFetchDidMount:false
             },()=>{
@@ -261,13 +261,13 @@ class unBilledSalesEstate extends Component{
     }
     render(){
         const {tableKey,visible,filters={},doNotFetchDidMount,statusParam={},searchTableLoading,totalSource} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 doNotFetchDidMount={doNotFetchDidMount}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -283,7 +283,7 @@ class unBilledSalesEstate extends Component{
                     pageSize:10,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/realty/list',
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
                             filters:params,
                             resultFieldsValues:params,
@@ -296,10 +296,10 @@ class unBilledSalesEstate extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !=='{}' && <Button size="small" style={{marginRight:5}} disabled={!filters.mainId} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
+                            (declare && declare.decAction==='edit') && <Button size="small" style={{marginRight:5}} disabled={!filters.mainId} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         }
                         {
-                            JSON.stringify(filters) !=='{}' && composeBotton([
+                            (declare && declare.decAction==='edit') && composeBotton([
                             {
                                 type:'reset',
                                 url:'/account/output/notInvoiceSale/realty/reset',
@@ -369,4 +369,6 @@ class unBilledSalesEstate extends Component{
         )
     }
 }
-export default withRouter(unBilledSalesEstate)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(unBilledSalesEstate)

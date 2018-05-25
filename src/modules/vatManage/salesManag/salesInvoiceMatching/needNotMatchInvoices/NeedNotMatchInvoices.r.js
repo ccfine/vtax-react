@@ -5,10 +5,10 @@
  *
  */
 import React, { Component } from 'react'
-import {fMoney,getUrlParam,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {connect} from 'react-redux'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './addDataModal'
-import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -28,7 +28,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled)=> {
+const searchFields=(disabled,declare)=> {
     return [
         {
             label: '纳税主体',
@@ -40,7 +40,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -59,7 +59,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -199,9 +199,9 @@ class NeedNotMatchInvoices extends Component{
         })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
+        const { declare } = this.props;
+        if (!!declare) {
+            this.refreshTable();
         }
     }
     fetchResultStatus = ()=>{
@@ -212,9 +212,9 @@ class NeedNotMatchInvoices extends Component{
         })
     }
     render(){
-        const {visible,tableKey,statusParam,totalSource,filters} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {visible,tableKey,statusParam,totalSource} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
@@ -222,7 +222,7 @@ class NeedNotMatchInvoices extends Component{
                 }}
                 doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -247,7 +247,7 @@ class NeedNotMatchInvoices extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" && composeBotton([{
+                            (declare && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
                                 onClick: ()=>this.toggleModalVisible(true)
                             }],statusParam)
@@ -269,4 +269,6 @@ class NeedNotMatchInvoices extends Component{
         )
     }
 }
-export default withRouter(NeedNotMatchInvoices)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(NeedNotMatchInvoices)
