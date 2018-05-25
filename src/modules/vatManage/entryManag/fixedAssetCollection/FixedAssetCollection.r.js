@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import {connect} from 'react-redux'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
