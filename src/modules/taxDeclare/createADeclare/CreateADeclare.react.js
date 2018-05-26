@@ -109,7 +109,7 @@ const getColumns =(context)=>[
         dataIndex: 'mainName',
         render: (text, record) => (
             <span
-                title="查看申报详情"
+                title="查看详情"
                 style={{
                     ...pointerStyle,
                     marginLeft: 5
@@ -224,7 +224,7 @@ export default class CreateADeclare extends Component{
                         pageSize:10,
                         columns:getColumns(this),
                         cardProps:{
-                            title:'列表信息'
+                            title:'创建申报'
                         },
                         url:'/tax/declaration/list',
                         extra: <div>

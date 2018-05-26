@@ -197,6 +197,9 @@ class TaxCalculation extends Component{
                     pagination:false,
                     columns:getColumns(getFieldDecorator),
                     url:tableUrl,
+                    cardProps:{
+                        title:'税款计算台账'
+                    },
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)
@@ -204,25 +207,29 @@ class TaxCalculation extends Component{
                         {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'save',
-                                text:'保存',
                                 icon:'save',
+                                text:'保存',
+                                userPermissions:[],
                                 onClick:()=>this.save()
                             },{
                                 type:'reset',
                                 url:'/account/taxCalculation/reset',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/taxCalculation/submit',
                                 params:filters,
                                 monthFieldName:'authMonth',
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/taxCalculation/revoke',
                                 params:filters,
                                 monthFieldName:'authMonth',
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

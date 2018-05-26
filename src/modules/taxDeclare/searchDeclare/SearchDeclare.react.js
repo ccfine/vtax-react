@@ -200,7 +200,7 @@ export default class SearchDeclare extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     cardProps:{
-                        title:'列表信息'
+                        title:'查询申报'
                     },
                     url:'/tax/decConduct/queryList',
                 }}

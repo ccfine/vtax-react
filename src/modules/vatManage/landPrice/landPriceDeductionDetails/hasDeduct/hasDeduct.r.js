@@ -136,7 +136,7 @@ export default class HasDeduct extends React.Component{
                 }}
                 tableOption={{
                     cardProps:{
-                        title:'土地价款当期实际扣除'
+                        title: <span><label className="tab-breadcrumb">土地价款扣除明细台账 / </label>土地价款当期实际扣除</span>,
                     },
                     key:tableKey,
                     pageSize:10,
@@ -158,18 +158,19 @@ export default class HasDeduct extends React.Component{
                                 type:'reset',
                                 url:'/account/landPrice/deductedDetails/reset',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/landPrice/deductedDetails/submit',
                                 params:filters,
-                                // monthFieldName:'authMonth',
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/landPrice/deductedDetails/revoke',
                                 params:filters,
-                                // monthFieldName:'authMonth',
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

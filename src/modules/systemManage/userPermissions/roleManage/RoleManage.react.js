@@ -6,16 +6,11 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {Modal,Icon,Switch,message,Tooltip,Divider} from 'antd'
+import {Modal,message,Divider} from 'antd'
 import {SearchTable} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
 import {request,composeBotton} from 'utils'
 
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff',
-    marginRight:10
-}
 const searchFields = context => [
     {
         label: "组织",
@@ -52,38 +47,53 @@ const columns = context => [
         className:'text-center',
         render:(text,record)=>(
             <span>
-
-                <span title="编辑" onClick={()=>context.showModal('edit',record)} style={pointerStyle}>
-                    <Tooltip placement="top" title="编辑">
-                           <Icon type="edit" />
-                    </Tooltip>
-                </span>
+                {
+                    composeBotton([{
+                        type: 'action',
+                        icon: 'edit',
+                        title: '编辑',
+                        userPermissions:[],
+                        onSuccess: () => { context.showModal('edit',record) }
+                    }])
+                }
                 <Divider type="vertical" />
-                <span title="分配权限" onClick={()=>{
-                    context.setState({
-                        permissionId:record.id,
-                        userId:undefined,
-                    },()=>{
-                        context.togglePermissionModalVisible(true)
-                    })
-                }} style={pointerStyle}>
-                    <Tooltip placement="top" title="分配权限">
-                        <Icon type="team" />
-                    </Tooltip>
-                </span>
-                <span title="分配用户" onClick={()=>{
-                    context.setState({
-                        userId:record.id,
-                    },()=>{
-                        context.toggleUserModalVisible(true)
-                    })
-                }} style={pointerStyle}>
-                    <Tooltip placement="top" title="分配用户">
-                        <Icon type="setting" />
-                    </Tooltip>
-                </span>
+                {
+                    composeBotton([{
+                        type: 'action',
+                        icon: 'team',
+                        title: '分配权限',
+                        userPermissions:[],
+                        onSuccess: () => {
+                            context.setState({
+                                permissionId:record.id,
+                                userId:undefined,
+                            },()=>{
+                                context.togglePermissionModalVisible(true)
+                            })
+                        }
+                    },{
+                        type: 'action',
+                        icon: 'setting',
+                        title: '分配用户',
+                        userPermissions:[],
+                        onSuccess: () => {
+                            context.setState({
+                                userId:record.id,
+                            },()=>{
+                                context.toggleUserModalVisible(true)
+                            })
+                        }
+                    }])
+                }
                 <Divider type="vertical" />
-                <Switch size="small" checkedChildren="启" unCheckedChildren="停" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
+                {
+                    composeBotton([{
+                        type:'switch',
+                        userPermissions:[],
+                        checked: parseInt(record.isEnabled,0) === 1,
+                        onSuccess:()=>{ context.handleChange(record.id) }
+                    }])
+                }
             </span>
 
         )
@@ -92,7 +102,7 @@ const columns = context => [
         dataIndex:'roleName',
         width:'15%',
         render:(text,record)=>(
-            <Link title="详情" to={{
+            <Link title="查看详情" to={{
                 pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
                 state:{
                     roleName:record.roleName,
@@ -158,10 +168,7 @@ class RoleManage extends Component{
     }
 
     //选中多少条数据 - 禁用
-    handleChange = (checked,id) => {
-        /*const param = {
-            isEnabled:checked === true ? '1' : '2',
-        }*/
+    handleChange = (id) => (checked) => {
         const t = checked === true ? '启用' : '禁用'
         const modalRef = Modal.confirm({
             title: '友情提醒',
@@ -207,12 +214,13 @@ class RoleManage extends Component{
                     columns: columns(this),
                     url: '/sysRole/list',
                     cardProps: {
-                        title: '角色列表',
+                        title: '角色管理',
                         extra:
                             <div>
                                 {
                                     composeBotton([{
                                         type:'add',
+                                        userPermissions:[],
                                         onClick:()=>this.showModal('add',{})
                                     }])
                                 }
@@ -232,13 +240,13 @@ class RoleManage extends Component{
                         id={permissionId}
                         refreshTable={this.refreshTable}
                         togglePermissionModalVisible={this.togglePermissionModalVisible}
-                    />
+                 />
                  <UserPopModal
                         visible={userVisible}
                         id={userId}
                         refreshTable={this.refreshTable}
                         toggleUserModalVisible={this.toggleUserModalVisible}
-                    />
+                 />
 
             </SearchTable>
 

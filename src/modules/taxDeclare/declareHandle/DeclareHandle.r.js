@@ -309,7 +309,7 @@ class DeclareHandle extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     cardProps:{
-                        title:'列表信息'
+                        title:'申报办理'
                     },
                     url:'/tax/decConduct/decList',
                 }}

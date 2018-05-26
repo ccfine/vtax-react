@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-05-11 17:27:34
  */
 import React, { Component } from "react";
-import { Icon, Tooltip } from "antd";
+import {connect} from 'react-redux'
 import { SearchTable } from "compoments";
 import {composeBotton} from 'utils'
 import PopModal from "./popModal";
@@ -17,26 +17,24 @@ const searchFields = [
         fieldName: "code"
     }
 ];
-const getColumns = context => [
+const getColumns = (context) => [
     {
         title: "操作",
         className:'text-center',
         render(text, record, index) {
-            return (
-                <a
-                    onClick={() => {
+            return composeBotton([{
+                    type: 'action',
+                    icon: 'edit',
+                    title: '编辑',
+                    userPermissions:[],
+                    onSuccess: () => {
                         context.setState({
                             visible: true,
                             action: "modify",
                             opid: record.id
                         });
-                    }}
-                >
-                    <Tooltip placement="top" title="编辑">
-                        <Icon type="edit" />
-                    </Tooltip>
-                </a>
-            );
+                    }
+                }])
         },
         fixed: "left",
         width: "75px",
@@ -52,7 +50,7 @@ const getColumns = context => [
         dataIndex: "code",
         render:(text,record)=>{
             return (
-                <a
+                <a  title="查看详情"
                     onClick={() => {
                         context.setState({
                             visible: true,
@@ -61,9 +59,7 @@ const getColumns = context => [
                         });
                     }}
                 >
-                    <Tooltip placement="top" title="查看">
-                        {text}
-                    </Tooltip>
+                    {text}
                 </a>
             )
         }
@@ -105,7 +101,7 @@ const getColumns = context => [
     }
 ];
 
-export default class SubjectRateRela extends Component {
+class SubjectRateRela extends Component {
     state = {
         updateKey: Date.now(),
         visible: false,
@@ -134,6 +130,7 @@ export default class SubjectRateRela extends Component {
                             {
                                 composeBotton([{
                                     type:'add',
+                                    userPermissions:[],
                                     onClick:()=>{
                                         this.setState({
                                             visible: true,
@@ -166,3 +163,6 @@ export default class SubjectRateRela extends Component {
         );
     }
 }
+export default (connect(state=>({
+    declare:state.user.get('declare')
+}))(SubjectRateRela))

@@ -4,15 +4,16 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Icon,Modal,message,Tooltip } from 'antd'
+import {connect} from 'react-redux'
+import {Modal,message } from 'antd'
 import {SearchTable} from 'compoments';
 import {request,composeBotton} from 'utils'
 import PopModal from './popModal'
 const confirm = Modal.confirm;
 
-const pointerStyle = {
+const pointerStyleDelete = {
     cursor:'pointer',
-    color:'#1890ff',
+    color:'red',
     marginRight:10
 }
 const searchFields = [
@@ -54,25 +55,32 @@ const getColumns =(context)=>[
         className:'text-center',
         render:(text,record)=>(
             <span>
-                <span title="编辑" onClick={()=>{
-                    context.setState({
-                        modalConfig:{
-                            type:'edit',
-                            id:record.id,
+                {
+                    composeBotton([{
+                        type: 'action',
+                        icon: 'edit',
+                        title: '编辑',
+                        userPermissions:[],
+                        onSuccess: () => {
+                            context.setState({
+                                modalConfig: {
+                                    type: 'edit',
+                                    id: record.id,
+                                }
+                            }, () => {
+                                context.toggleModalVisible(true)
+                            })
                         }
-                    },()=>{
-                        context.toggleModalVisible(true)
-                    })
-                }} style={pointerStyle}>
-                    <Tooltip placement="top" title="编辑">
-                           <Icon type="edit" />
-                    </Tooltip>
-                </span>
-                <span title="删除" onClick={()=>{ context.deleteData(record.id) }} style={pointerStyle}>
-                    a
-                </span>
+                    },{
+                        type:'action',
+                        icon:'delete',
+                        title:'删除',
+                        style:pointerStyleDelete,
+                        userPermissions:[],
+                        onSuccess:()=>{ context.deleteData(record.id) }
+                    }])
+                }
             </span>
-
         )
     },{
         title: '税收分类编码',
@@ -92,7 +100,7 @@ const getColumns =(context)=>[
     }
 ];
 
-export default class TaxClassificationCode extends Component{
+class TaxClassificationCode extends Component{
     state={
         updateKey:Date.now(),
         visible:false,
@@ -154,13 +162,14 @@ export default class TaxClassificationCode extends Component{
                     pageSize:10,
                     url:'/tax/classification/coding/list',
                     cardProps:{
-                        title:'税收分类编码列表信息'
+                        title:'税收分类编码'
                     },
                     columns:getColumns(this),
                     extra:<div>
                         {
                             composeBotton([{
                                 type:'add',
+                                userPermissions:[],
                                 onClick:()=>{
                                     this.setState({
                                         modalConfig:{
@@ -186,3 +195,6 @@ export default class TaxClassificationCode extends Component{
         )
     }
 }
+export default (connect(state=>({
+    declare:state.user.get('declare')
+}))(TaxClassificationCode))

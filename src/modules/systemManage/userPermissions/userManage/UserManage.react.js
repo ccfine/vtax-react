@@ -5,12 +5,17 @@
  * @Last Modified time: 2018-05-26 14:21:30
  */
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Button, Icon, Divider, Tooltip, Modal, message, Switch } from "antd";
-import { request } from "utils";
+import { Divider, Modal, message } from "antd";
+import { request,composeBotton } from "utils";
 import { SearchTable } from "compoments";
 import PopModal, { RoleModal, PermissionModal } from "./popModal";
-import { connect } from "react-redux";
+const pointerStyleDelete = {
+    cursor:'pointer',
+    color:'red',
+    marginRight:10
+}
 const getSearchFields = context => [
     {
         label: "组织",
@@ -52,102 +57,97 @@ const getColumns = context => [
         className: "text-center",
         render: (text, record) => {
             return (
-                <span className="table-operate">
-                    <a
-                        onClick={() => {
-                            context.setState({createUserLoading:true,createUserVisible:true})
-                            context
-                                .fetchUser(`/sysUser/find/${record.id}`)
-                                .then(data => {
+                <span>
+                    {
+                        composeBotton([{
+                            type: 'action',
+                            icon: 'edit',
+                            title: '编辑',
+                            userPermissions:[],
+                            onSuccess: () => {
+                                context.setState({createUserLoading:true,createUserVisible:true})
+                                context.fetchUser(`/sysUser/find/${record.id}`).then(data => {
                                     data &&
-                                        context.setState({
-                                            createUserVisible: true,
-                                            createModalType: "edit",
-                                            createUserDefault: data,
-                                            createUserKey: Date.now()
-                                        });
-                                    
+                                    context.setState({
+                                        createUserVisible: true,
+                                        createModalType: "edit",
+                                        createUserDefault: data,
+                                        createUserKey: Date.now()
+                                    });
+
                                     context.setState({createUserLoading:false})
                                 });
-                        }}
-                    >
-                        <Tooltip placement="top" title="编辑">
-                            <Icon type="edit" />
-                        </Tooltip>
-                    </a>
-                    <a
-                        onClick={() => {
-                            context.handleDelete(record.id,record.isEnabled);
-                        }}
-                    >
-                        <Tooltip placement="top" title="删除">
-                            <Icon type="delete" />
-                        </Tooltip>
-                    </a>
+                            }
+                        },{
+                            type:'action',
+                            icon:'delete',
+                            title:'删除',
+                            style:pointerStyleDelete,
+                            userPermissions:[],
+                            onSuccess:()=>{ context.handleDelete(record.id,record.isEnabled) }
+                        }])
+                    }
                     <Divider type="vertical" />
-                    <a
-                        onClick={() => {
-                            context.setState({roleLoading:true,roleModalVisible:true})
-                            context
-                                .fetchUser(
-                                    `/sysRole/queryRoleByUserId/${
-                                        context.state.searchValues["orgId"]
-                                    }/${record.id}`
-                                )
-                                .then(data => {
-                                    data &&
+                    {
+                        composeBotton([{
+                            type: 'action',
+                            icon: 'team',
+                            title: '角色分配',
+                            userPermissions:[],
+                            onSuccess: () => {
+                                context.setState({roleLoading:true,roleModalVisible:true})
+                                context.fetchUser(
+                                        `/sysRole/queryRoleByUserId/${
+                                            context.state.searchValues["orgId"]
+                                            }/${record.id}`
+                                    ).then(data => {
+                                        data &&
                                         context.setState({
                                             roleAssignUserId: record.id,
                                             roleModalKey: Date.now(),
                                             roleModalVisible: true,
                                             roleModalDefault: data
                                         });
-                                    
-                                    context.setState({roleLoading:false})
-                                });
-                        }}
-                    >
-                        <Tooltip placement="top" title="角色分配">
-                            <Icon type="team" />
-                        </Tooltip>
-                    </a>
-                    <a
-                        onClick={() => {
-                            context.setState({permissionLoading:true,permissionVisible:true})
-                            context
-                                .fetchUser(
-                                    `/sysUser/queryUserPermissions/${
-                                        context.state.searchValues["orgId"]
-                                    }/${record.id}`
-                                )
-                                .then(data => {
-                                    data &&
+
+                                        context.setState({roleLoading:false})
+                                    });
+                            }
+                        },{
+                            type: 'action',
+                            icon: 'setting',
+                            title: '权限配置',
+                            userPermissions:[],
+                            onSuccess: () => {
+                                context.setState({permissionLoading:true,permissionVisible:true})
+                                context.fetchUser(
+                                        `/sysUser/queryUserPermissions/${
+                                            context.state.searchValues["orgId"]
+                                            }/${record.id}`
+                                    ).then(data => {
+                                        data &&
                                         context.setState({
                                             permissionKey: Date.now(),
                                             permissionVisible: true,
                                             permissionDefault: data,
                                             permissionUserId: record.id
                                         });
-                                    
-                                    context.setState({permissionLoading:false})
-                                });
-                        }}
-                    >
-                        <Tooltip placement="top" title="权限配置">
-                            <Icon type="setting" />
-                        </Tooltip>
-                    </a>
+
+                                        context.setState({permissionLoading:false})
+                                    });
+                            }
+                        }])
+                    }
                     <Divider type="vertical" />
-                    <Switch
-                        checkedChildren="启"
-                        unCheckedChildren="停"
-                        size="small"
-                        onChange={context.handleState(record.id)}
-                        checked={
-                            parseInt(record.isEnabled, 0) === 1 ? true : false
-                        }
-                    />
+                    {
+                        composeBotton([{
+                            type:'switch',
+                            userPermissions:[],
+                            checked: parseInt(record.isEnabled, 0) === 1,
+                            onSuccess:()=>{ context.handleState(record.id) }
+                        }])
+                    }
                 </span>
+
             );
         },
         width: 240
@@ -158,6 +158,7 @@ const getColumns = context => [
         render:(text,record)=>{
             return (
                 <Link
+                    title="查看详情"
                     to={{
                         pathname: `/web/systemManage/userPermissions/userManage/${
                             context.props.orgId
@@ -310,22 +311,22 @@ class UserManage extends Component {
                     columns: getColumns(this),
                     url: "/sysUser/list",
                     cardProps: {
-                        title: "用户列表",
+                        title: "用户管理",
                         extra: (
                             <div>
-                                <Button
-                                    size="small"
-                                    style={{ marginRight: 5 }}
-                                    onClick={() => {
-                                        this.setState({
-                                            createUserVisible: true,
-                                            createModalType: "create",
-                                            createUserDefault: undefined
-                                        });
-                                    }}
-                                >
-                                    <Icon type="plus" />新增
-                                </Button>
+                                {
+                                    composeBotton([{
+                                        type:'add',
+                                        userPermissions:[],
+                                        onClick:()=>{
+                                            this.setState({
+                                                createUserVisible: true,
+                                                createModalType: "create",
+                                                createUserDefault: undefined
+                                            });
+                                        }
+                                    }])
+                                }
                             </div>
                         )
                     }

@@ -176,7 +176,7 @@ class tab1 extends Component{
                         scroll:{x:'120%'},
                         columns:columns,
                         cardProps:{
-                            title:'其他应税项目扣除台账列表'
+                            title:'其他应税项目扣除台账'
                         },
                         url:'/account/othertax/deducted/list',
                         extra: <div>
@@ -188,18 +188,19 @@ class tab1 extends Component{
                                     type:'reset',
                                     url:'/account/othertax/deducted/main/reset',
                                     params:filters,
+                                    userPermissions:[],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'submit',
                                     url:'/account/othertax/deducted/main/submit',
                                     params:filters,
-                                    // monthFieldName:'authMonth',
+                                    userPermissions:[],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
                                     url:'/account/othertax/deducted/main/revoke',
                                     params:filters,
-                                    // monthFieldName:'authMonth',
+                                    userPermissions:[],
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }

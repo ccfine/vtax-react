@@ -13,6 +13,7 @@ import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ButtonConsistent from 'compoments/buttonConsistent'
 import {FileExport,FileImportModal} from 'compoments';
 import ButtonTableAction from 'compoments/buttonTableAction'
+import ButtonSwitch from 'compoments/buttonSwitch'
 //1：暂存 2：提交
 // 判断当前状态是否提交
 const isDisabled = (statusParam = {})=> parseInt(statusParam.status, 0) === 2;
@@ -146,14 +147,22 @@ const getActionOptions = (item)=>{
     };
 };
 
-
+//switch
+const getSwitchOptions = (item) =>{
+    return {
+        ...item,
+        checked:item.checked,
+        onSuccess: item.onSuccess,
+        style:item.style || item.setButtonStyle || {marginRight:5},
+    };
+}
 
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const composeBotton = (buttons = [], params) => {
     return buttons.map((item, i) => {
         let component = undefined;
-        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel'){
+        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel' || item.type === 'edit' || item.type === 'delete' || item.type === 'retweet' ){
             item.type = 'consistent'
         }
 
@@ -211,10 +220,15 @@ const composeBotton = (buttons = [], params) => {
                     <ButtonTableAction {...getActionOptions(item)} />
                 );
                 break;
+            case 'switch':
+                component = (
+                    <ButtonSwitch {...getSwitchOptions(item)} />
+                )
+                break;
             default:
                 break;
         }
-        return item.userPermissions ? (
+        return typeof (item.userPermissions) !== undefined ? (
             component && (
                 <PermissibleRender
                     key={i}

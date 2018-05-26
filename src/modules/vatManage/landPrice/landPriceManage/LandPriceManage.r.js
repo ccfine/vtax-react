@@ -244,13 +244,13 @@ class LandPriceManage extends Component{
                             this.fetchResultStatus()
                         })
                     },
-                    onRowSelect:(selectedRowKeys)=>{
+                    onRowSelect:(disabled && declare.decAction==='edit') ? (selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    } : undefined,
                     cardProps: {
-                        title: "其他可抵扣进项税明细",
+                        title: "土地价款管理",
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
@@ -258,6 +258,7 @@ class LandPriceManage extends Component{
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
+                                    userPermissions:[],
                                     formOptions:{
                                         filters: filters,
                                         selectedRowKeys: selectedRowKeys,
@@ -269,11 +270,13 @@ class LandPriceManage extends Component{
                                     type:'submit',
                                     url:'/land/price/manage/submit',
                                     params:filters,
+                                    userPermissions:[],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
                                     url:'/land/price/manage/revoke',
                                     params:filters,
+                                    userPermissions:[],
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }
