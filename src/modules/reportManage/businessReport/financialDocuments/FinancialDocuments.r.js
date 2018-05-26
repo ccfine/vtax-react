@@ -24,7 +24,7 @@ const fields = [
                 span:6
             },
             wrapperCol:{
-                span:15
+                span:14
             }
         },
         fieldDecoratorOptions:{
@@ -45,7 +45,7 @@ const fields = [
                 span:6
             },
             wrapperCol:{
-                span:15
+                span:14
             }
         },
         componentProps: {},
