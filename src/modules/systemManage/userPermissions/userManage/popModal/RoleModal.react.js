@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-12 10:28:56
+ * @Last Modified time: 2018-05-26 15:17:57
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox } from "antd";
@@ -61,7 +61,7 @@ class RoleModal extends React.Component {
                             submitLoading: false
                         });
                         if (data.code === 200) {
-                            message.success("权限分配成功", 4);
+                            message.success("角色分配成功", 4);
 
                             //新建成功，关闭当前窗口,刷新父级组件
                             this.props.toggleModalVisible(false);
@@ -133,6 +133,10 @@ class RoleModal extends React.Component {
                 confirmLoading={
                     this.state.charLoaded && this.state.submitLoading
                 }
+                bodyStyle={{
+                    maxHeight: 360,
+                    overflowY: "auto"
+                }}
                 width="700px"
             >
                 <Spin spinning={!this.state.charLoaded || loading}>
@@ -158,12 +162,9 @@ class RoleModal extends React.Component {
                             initialValue: defaultFields.map(
                                 item => item.roleId
                             ),
-                            rules: [
-                                {
-                                    required: true,
-                                    message: "请选择角色"
-                                }
-                            ]
+                            onChange:(values)=>{
+                                this.setState({checkAll:this.isAllCheck(values)})
+                            }
                         })(
                             <Checkbox.Group style={{ width: "100%" }}>
                                 <div

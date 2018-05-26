@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 14:10:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-12 10:30:19
+ * @Last Modified time: 2018-05-26 11:44:46
  */
 import React from "react";
 import { Form, Row, Col, Checkbox, Spin } from "antd";
@@ -15,31 +15,6 @@ class PermissionFeilds extends React.Component {
         allPermission: [],
         permissionLoading: false
     };
-    /*不要在这里获取数据，父组件更新一次，这里从新创建一次，没创建一次这个数据从新获取一次，可能原因：Form.create */
-    // state = {
-    //     allPermission: [],
-    //     allPermissionLoading: false
-    // };
-    // fetchAllPermission() {
-    //     this.setState({ allPermissionLoading: true });
-    //     request
-    //         .get("/permissions")
-    //         .then(({ data }) => {
-    //             if (data.code === 200) {
-    //                 this.setState({
-    //                     allPermission: data.data,
-    //                     allPermissionLoading: false
-    //                 });
-    //             } else {
-    //                 message.error(data.msg, 4);
-    //                 this.setState({ allPermissionLoading: false });
-    //             }
-    //         })
-    //         .catch(err => {
-    //             message.error(err.message, 4);
-    //             this.setState({ allPermissionLoading: false });
-    //         });
-    // }
     onCheckAllChange = item => e => {
         const { setFieldsValue } = this.props.form;
 
@@ -81,11 +56,16 @@ class PermissionFeilds extends React.Component {
             }
         }
     };
+    initCheckAllDisabled=(data)=>{
+        return data.every(item => {
+            return this.props.disabledPermission.indexOf(item.permissionId) > -1;
+        });
+    }
     checkDisabled = permissionId => {
         return this.props.disabledPermission.indexOf(permissionId) > -1;
     };
-    initCheckboxAll = data => {
-        return data.every(item => {
+    initCheckboxAll = (data) => {
+        return data.length>0 && data.every(item => {
             return this.props.checkedPermission.indexOf(item.permissionId) > -1;
         });
     };
@@ -119,18 +99,12 @@ class PermissionFeilds extends React.Component {
                                         {editAble && (
                                             <FormItem>
                                                 {getFieldDecorator(`allCode${i}`,{
-                                                    initialValue: this.initCheckboxAll(
-                                                        item.permissionVOs
-                                                    )
+                                                    valuePropName: 'checked',
+                                                    initialValue: this.initCheckboxAll(item.permissionVOs),
+                                                    onChange:this.onCheckAllChange(item)
                                                 })(
                                                     <Checkbox
-                                                        defaultChecked={this.initCheckboxAll(
-                                                            item.permissionVOs
-                                                        )}
-                                                        onChange={this.onCheckAllChange(
-                                                            item
-                                                        )}
-                                                    >
+                                                        disabled={this.initCheckAllDisabled(item.permissionVOs)}>
                                                         全选
                                                     </Checkbox>)}
                                             </FormItem>
@@ -157,11 +131,8 @@ class PermissionFeilds extends React.Component {
                                                             <Checkbox
                                                                 disabled={
                                                                     !editAble ||
-                                                                    this.checkDisabled(
-                                                                        fieldItem.permissionId
-                                                                    )
-                                                                }
-                                                            >
+                                                                    this.checkDisabled(fieldItem.permissionId)
+                                                                }>
                                                                 {
                                                                     fieldItem.actionName
                                                                 }

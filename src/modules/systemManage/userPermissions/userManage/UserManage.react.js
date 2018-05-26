@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-12 10:27:59
+ * @Last Modified time: 2018-05-26 14:21:30
  */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
@@ -185,48 +185,7 @@ const getColumns = context => [
         title: "角色",
         dataIndex: "roleNames",
         width: "40%"
-        /*render: (text, record) => (
-            <div>
-                {record.roles.map((item, i) => (
-                    <span key={i} style={{ color: "#108ee9" }}>
-                        {item.roleName}
-                    </span>
-                ))}
-            </div>
-        )*/
     }
-    // {
-    //     title: "状态",
-    //     dataIndex: "isEnabled",
-    //     className: "text-center",
-    //     render: (text, record) => {
-    //         return (
-    //             <Switch
-    //                 checkedChildren="启"
-    //                 unCheckedChildren="停"
-    //                 size="small"
-    //                 onChange={context.handleState(record.id)}
-    //                 checked={parseInt(text, 0) === 1 ? true : false}
-    //             />
-    //         );
-    //         //1:启用;2:停用;3:删除; ,
-    //         // let t = "";
-    //         // switch (parseInt(text, 0)) {
-    //         //     case 1:
-    //         //         t = <span style={{ color: "#008000" }}>启用</span>;
-    //         //         break;
-    //         //     case 2:
-    //         //         t = <span style={{ color: "#FF0000" }}>停用</span>;
-    //         //         break;
-    //         //     case 3:
-    //         //         t = <span style={{ color: "#f5222d" }}>删除</span>;
-    //         //         break;
-    //         //     default:
-    //         //no default
-    //         // }
-    //         // return t;
-    //     }
-    // }
 ];
 
 class UserManage extends Component {
