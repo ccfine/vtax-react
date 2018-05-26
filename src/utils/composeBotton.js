@@ -12,6 +12,7 @@ import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ButtonConsistent from 'compoments/buttonConsistent'
 import {FileExport,FileImportModal} from 'compoments';
+import ButtonTableAction from 'compoments/buttonTableAction'
 //1：暂存 2：提交
 // 判断当前状态是否提交
 const isDisabled = (statusParam = {})=> parseInt(statusParam.status, 0) === 2;
@@ -134,6 +135,19 @@ const getMatchOptions = (item,statusParam) =>{
     };
 }
 
+//table表格里面的操作 action
+const getActionOptions = (item)=>{
+    return {
+        ...item,
+        title:item.title,
+        icon: item.icon,
+        onSuccess: item.onSuccess,
+        style:item.style || item.setButtonStyle || {marginRight:5},
+    };
+};
+
+
+
 //buttons 参数形式
 // [{type:'re',url:'',params:'',buttonOptions,PermissibleRender}]
 const composeBotton = (buttons = [], params) => {
@@ -142,6 +156,7 @@ const composeBotton = (buttons = [], params) => {
         if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel'){
             item.type = 'consistent'
         }
+
         switch (item.type) {
             case "consistent":
                 component = (
@@ -178,7 +193,7 @@ const composeBotton = (buttons = [], params) => {
                 break;
             case "fileExport":
                 component = (
-                    <FileExport {...getFileExportOptions(item, params)} />
+                    <FileExport {...getFileExportOptions(item)} />
                 );
                 break;
             case "mark":
@@ -191,10 +206,15 @@ const composeBotton = (buttons = [], params) => {
                     <ButtonReset {...getMatchOptions(item, params)} />
                 );
                 break;
+            case 'action':
+                component = (
+                    <ButtonTableAction {...getActionOptions(item)} />
+                );
+                break;
             default:
                 break;
         }
-        return (
+        return item.userPermissions ? (
             component && (
                 <PermissibleRender
                     key={i}
@@ -202,7 +222,8 @@ const composeBotton = (buttons = [], params) => {
                     {component}
                 </PermissibleRender>
             )
-        );
+        ) : <span key={i}>{component}</span>
+
     });
 };
 

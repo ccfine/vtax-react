@@ -8,7 +8,7 @@ import LoadAble from 'react-loadable'
 import {LoadingPage} from 'compoments'
 import { Layout, Card, Col, Row,Menu,Icon,Dropdown } from 'antd'
 /*import ImageGallery from 'react-image-gallery';*/
-import { pieOption, barOption, lineOption, scatterOption, mapOption, radarOption, candlestickOption } from './optionConfig/options'
+import { pieOption, barOption, lineOption, scatterOption, radarOption, candlestickOption } from './optionConfig/options'
 
 import banner1 from './images/banner1.jpg'
 import banner2 from './images/banner2.jpg'
@@ -29,10 +29,6 @@ const AsyncLineReact = LoadAble({
 });
 const AsyncScatterReact = LoadAble({
     loader: () => import('./echartsTest/ScatterReact'),//散点图组件
-    loading: LoadingPage,
-});
-const AsyncMapReact = LoadAble({
-    loader: () => import('./echartsTest/MapReact'),//地图组件
     loading: LoadingPage,
 });
 const AsyncRadarReact = LoadAble({
@@ -255,21 +251,6 @@ class Home extends Component {
                                 }
                             >
                                 <AsyncScatterReact option={scatterOption} />
-                            </Card>
-                            <br/>
-                            <Card
-                                title="地图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncMapReact option={mapOption} height="558px" />
                             </Card>
                             <br/>
                             <Card

@@ -4,8 +4,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import intersection from 'lodash/intersection'; //取出各数组中全等的元素，使用SameValueZero方式平等比较。
-import difference from 'lodash/difference'; //只要array中比[values]中多出的值，都会返回，不管个数出现了几次
+import intersection from 'lodash/intersection'; //取数组的交集 _.initial([1, 2, 3]); => [1, 2]
+import difference from 'lodash/difference'; // _.difference([3, 2, 1], [4, 2]);  => [3, 1]
 
 /**
  * 普通组件

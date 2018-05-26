@@ -4,7 +4,6 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Icon} from 'antd'
 import {SearchTable} from 'compoments';
 import {composeBotton} from 'utils'
 import PopModal from './createPopModal';
@@ -57,19 +56,18 @@ const getColumns =(context)=>[
         title: "操作",
         className:'text-center',
         render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
-            return (
-                <span title="查看申报" style={{ ...pointerStyle, marginLeft: 5 }}
-                      onClick={() => {
-                          context.setState({
-                              record: record
-                          },() => {
-                              context.toggleApplyVisible(true);
-                          });
-                      }}
-                >
-                    <Icon title="查看申报" type="search" />
-                </span>
-            )
+            return composeBotton([{
+                        type:'action',
+                        icon:'search',
+                        title:'查看申报',
+                        onSuccess:()=>{
+                            context.setState({
+                                record: record
+                            },() => {
+                                context.toggleApplyVisible(true);
+                            });
+                        }
+                    }])
 
         },
         fixed: "left",
@@ -263,6 +261,7 @@ export default class CreateADeclare extends Component{
                                 composeBotton([{
                                     type:'add',
                                     text:'创建申报',
+                                    userPermissions:[],
                                     onClick: ()=>{
                                         this.setState({
                                             modalConfig: {
