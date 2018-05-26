@@ -234,7 +234,7 @@ class IncomeCheck extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card title="财务收入数据"
+                <Card title={<span><label className="tab-breadcrumb">收入检查 / </label>财务收入数据</span>}
                       extra={<div>
                             <span style={{color:'#FF9700'}}>
                                 收入合计：{fMoney(totalSource ? totalSource.allAmount : 0.00)}
@@ -259,7 +259,7 @@ class IncomeCheck extends Component {
                                 }} />
 
                 </Card>
-                <Card title="房间交易信息"
+                <Card title={<span><label className="tab-breadcrumb">收入检查 / </label>房间交易信息</span>}
                       extra={<div>
                           <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalAmount : 0.00)}</span>
                       </div>}

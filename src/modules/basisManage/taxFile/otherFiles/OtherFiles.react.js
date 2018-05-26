@@ -2,7 +2,6 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import { Icon, Tooltip } from "antd";
 import { SearchTable } from 'compoments'
 import {composeBotton} from 'utils'
 import PopModal from './popModal'
@@ -16,22 +15,17 @@ const searchFields = [
 const getColumns = context => [
     {
         title: '操作',
-        render:(text, record)=>{
-            return (<span>
-                <a style={{ margin: "0 5px" }}
-                   onClick={() => {
-                    context.setState({
-                        visible: true,
-                        action: 'modify',
-                        opid: record.id
-                    });
-                }}>
-                    <Tooltip placement="top" title="编辑">
-                        <Icon type="edit" />
-                    </Tooltip>
-                </a>
-            </span>)
-        },
+        render:(text, record)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.setState({
+                visible: true,
+                action: 'modify',
+                opid: record.id
+            })
+        }]),
         fixed: 'left',
         width: '70px',
         dataIndex: 'action'
@@ -40,7 +34,7 @@ const getColumns = context => [
         dataIndex: 'mainName',
         render:(text,record)=>{
             return (
-                <a style={{ marginRight: "5px" }}
+                <a  title="查看详情" style={{ marginRight: "5px" }}
                    onClick={() => {
                     context.setState({
                         visible: true,
@@ -92,6 +86,7 @@ export default class OtherFiles extends Component {
                             {
                                 composeBotton([{
                                     type:'add',
+                                    userPermissions:[],
                                     onClick:()=>{
                                         this.setState({
                                             visible: true,

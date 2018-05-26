@@ -1,11 +1,11 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 15:08:03
+ * @Last Modified time: 2018-05-26 20:03:41
  *
  */
 import React,{Component} from 'react'
-import {Modal,message,Icon} from 'antd'
+import {Modal,message} from 'antd'
 import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
@@ -196,11 +196,12 @@ const getColumns = (context,disabled) => [
         className:'text-center',
         width:50,
         render: (text, record) => {
-            return (disabled && parseInt(context.state.statusParam.status,0) === 1) ? (
-                <span title='删除' style={{
-                    color:'#f5222d',
-                    cursor:'pointer'
-                }} onClick={()=>{
+            return (disabled && parseInt(context.state.statusParam.status,0) === 1) ? composeBotton([{
+                type:'action',
+                title:'删除',
+                Icon:'delete',
+                style:{color:'#f5222d'},
+                onSuccess:()=>{
                     if(parseInt(record.matchingStatus,0) ===1){
                         const errorModalRef = Modal.warning({
                             title: '友情提醒',
@@ -231,10 +232,8 @@ const getColumns = (context,disabled) => [
                             modalRef.destroy()
                         },
                     });
-                }}>
-                <Icon type='delete'/>
-            </span>
-            ) : null
+                }
+            }]) : null
         }
     },
     {
@@ -394,16 +393,19 @@ class RoomTransactionFile extends Component{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
+                                userPermissions:[],
                                 fields:fields(disabled,declare)
                             },{
                                 type:'submit',
                                 url:'/output/room/files/submit',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/output/room/files/revoke',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }
@@ -423,7 +425,7 @@ class RoomTransactionFile extends Component{
 
                 </div>,
                     cardProps: {
-                        title: ''
+                        title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                 }}
             >

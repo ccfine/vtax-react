@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Modal,message,Card,Icon,Tooltip} from 'antd'
+import {Modal,message,Card} from 'antd'
 import PopModal from './popModal'
 import {request,composeBotton} from 'utils'
 import PartTwo from './TabPage2.r'
@@ -22,40 +22,35 @@ const getSearchFields = projectId => [
 const getColumns = context=> [
     {
         title:'操作',
-        render:(text, record, index)=>(
-            <span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'modify',opid:record.id});
-                }}>
-                    <Tooltip placement="top" title="编辑">
-                           <Icon type="edit" />
-                    </Tooltip>
-                </a>
-                <span style={{
-                    color:'#f5222d',
-                    cursor:'pointer'
-                }} onClick={()=>{
-                    const modalRef = Modal.confirm({
-                        title: '友情提醒',
-                        content: '该删除后将不可恢复，是否删除？',
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk:()=>{
-                            context.deleteRecord(record)
-                            modalRef && modalRef.destroy();
-                        },
-                        onCancel() {
-                            modalRef.destroy()
-                        },
-                    });
-                }}>
-                    <Tooltip placement="top" title="删除">
-                        <Icon type="delete" />
-                    </Tooltip>
-                </span>
-            </span>
-        ),
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.setState({visible:true,action:'modify',opid:record.id})
+        },{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            userPermissions:[],
+            style:{color:'#f5222d'},
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
         fixed:'left',
         width:'100px',
         dataIndex:'action',
@@ -65,14 +60,12 @@ const getColumns = context=> [
         title: '权证名称 ',
         dataIndex: 'warrantName',
         render:(text,record)=>(
-            <a
+            <a title="查看详情"
                 onClick={() => {
                     context.setState({visible:true,action:'look',opid:record.id});
                 }}
             >
-                <Tooltip placement="top" title="查看">
-                    {text}
-                </Tooltip>
+                {text}
             </a>
         )
     }, {
@@ -180,6 +173,7 @@ export default class TabPage extends Component{
                                     {
                                         composeBotton([{
                                             type:'add',
+                                            userPermissions:[],
                                             onClick:()=>{
                                                 this.setState({visible:true,action:'add',opid:undefined});
                                             }

@@ -2,7 +2,6 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Icon} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
 import {composeBotton} from 'utils'
@@ -39,19 +38,23 @@ const getColumns = (context) => [
     {
         title:'操作',
         key:'actions',
-        render:(text,record)=> <div>
-                <a title='编辑' onClick={()=>{
-                        context.setState({
-                            modalConfig:{
-                                type:'edit',
-                                id:record.id
-                            },
-                            initData:record
-                        },()=>{
-                            context.toggleModalVisible(true)
-                        })
-                    }}><Icon type="edit" /></a>
-        </div>,
+        render:(text,record)=> composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>{
+                context.setState({
+                    modalConfig:{
+                        type:'edit',
+                        id:record.id
+                    },
+                    initData:record
+                },()=>{
+                    context.toggleModalVisible(true)
+                })
+            }
+            }]),
         fixed:'left',
         width:'50px',
         className:'text-center'
@@ -61,7 +64,7 @@ const getColumns = (context) => [
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
-        render:(text,record)=><a title='查看' onClick={()=>{
+        render:(text,record)=><a title='查看详情' onClick={()=>{
             context.setState({
                 modalConfig:{
                     type:'view',
@@ -176,7 +179,10 @@ export default class DeclareParameter extends Component{
                                 onClick:()=>this.showModal('add')
                             }])
                         }
-                    </div>
+                    </div>,
+                    cardProps:{
+                        title:'申报参数',
+                    },
                 }}
             >
                 <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} initData={initData} />

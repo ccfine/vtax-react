@@ -5,7 +5,6 @@
  */
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
-import {Icon,Tooltip} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'
@@ -77,17 +76,17 @@ const getColumns = (context,hasOperate) => {
     let operates = hasOperate?[{
         title:'操作',
         render:(text, record)=>(
-            record.voucherType === '前期认证相符且本期申报抵扣' &&  <span onClick={()=>{
-                    context.setState({
-                        addVisible:true,
-                        action:'edit',
-                        record:record
-                    })
-                }} style={pointerStyle}>
-                    <Tooltip placement="top" title="编辑">
-                           <Icon type="edit" />
-                    </Tooltip>
-                </span>
+            record.voucherType === '前期认证相符且本期申报抵扣' &&  composeBotton([{
+                type:'action',
+                title:'编辑',
+                icon:'edit',
+                userPermissions:[],
+                onSuccess:()=>context.setState({
+                    addVisible:true,
+                    action:'edit',
+                    record:record
+                })
+            }])
         ),
         fixed:'left',
         width:'50px',
@@ -244,6 +243,7 @@ class InputTaxDetails extends Component{
                         {
                             (disabled && declare.decAction==='edit') && !isAdd &&  composeBotton([{
                                 type:'add',
+                                userPermissions:[],
                                 onClick:()=>{
                                     this.setState({
                                         addVisible:true,
@@ -258,11 +258,13 @@ class InputTaxDetails extends Component{
                                 type:'submit',
                                 url:'/account/income/taxDetail/submit',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/income/taxDetail/revoke',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

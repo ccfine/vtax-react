@@ -2,11 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-25 18:37:14
+ * @Last Modified time: 2018-05-26 20:04:31
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
-import { Icon, message, Modal } from "antd";
+import { message, Modal } from "antd";
 import {SearchTable,TableTotal} from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
@@ -64,45 +64,43 @@ const getColumns = (context,hasOperate) => {
             title: "操作",
             className:'text-center',
             render(text, record, index) {
-                return (<span className="table-operate">
-                        <a
-                            onClick={() => {
-                                context.setState({
-                                    visible: true,
-                                    action: "modify",
-                                    opid: record.id
+                return composeBotton([{
+                    type:'action',
+                    title:'编辑',
+                    icon:'edit',
+                    userPermissions:[],
+                    onSuccess:() => {
+                        context.setState({
+                            visible: true,
+                            action: "modify",
+                            opid: record.id
+                        })
+                    }
+                },{
+                    type:'action',
+                    title:'删除',
+                    icon:'delete',
+                    userPermissions:[],
+                    style:{color: "#f5222d"},
+                    onSuccess:() => {
+                        const modalRef = Modal.confirm({
+                            title: "友情提醒",
+                            content: "该删除后将不可恢复，是否删除？",
+                            okText: "确定",
+                            okType: "danger",
+                            cancelText: "取消",
+                            onOk: () => {
+                                context.deleteRecord(record.id, () => {
+                                    modalRef && modalRef.destroy();
+                                    context.refreshTable();
                                 });
-                            }}
-                        >
-                            <Icon type="edit" />
-                        </a>
-                        <a
-                            style={{
-                                color: "#f5222d",
-                            }}
-                            onClick={() => {
-                                const modalRef = Modal.confirm({
-                                    title: "友情提醒",
-                                    content: "该删除后将不可恢复，是否删除？",
-                                    okText: "确定",
-                                    okType: "danger",
-                                    cancelText: "取消",
-                                    onOk: () => {
-                                        context.deleteRecord(record.id, () => {
-                                            modalRef && modalRef.destroy();
-                                            context.refreshTable();
-                                        });
-                                    },
-                                    onCancel() {
-                                        modalRef.destroy();
-                                    }
-                                });
-                            }}
-                        >
-                            <Icon type="delete" />
-                        </a>
-                    </span>
-                );
+                            },
+                            onCancel() {
+                                modalRef.destroy();
+                            }
+                        });
+                    }
+                }])
             },
             fixed: "left",
             width: "75px",
@@ -245,6 +243,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                     {
                                          (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
+                                            userPermissions:[],
                                             onClick: () => {
                                             this.setState({
                                                 visible: true,
@@ -257,12 +256,14 @@ class OtherBusinessInputTaxRollOut extends Component {
                                             url:'/account/income/taxout/submit',
                                             // monthFieldName:"authMonth",
                                             params:filters,
+                                            userPermissions:[],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
                                             // monthFieldName:"authMonth",
                                             url:'/account/income/taxout/revoke',
                                             params:filters,
+                                            userPermissions:[],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                     }

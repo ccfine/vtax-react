@@ -325,7 +325,7 @@ class BillingSales extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card title="开票销售统计表-房地产"
+                <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-房地产</span>}
                       extra={<div>
                           {
                               listMainResultStatus(statusParam)
@@ -375,7 +375,7 @@ class BillingSales extends Component {
                         }} />
 
                 </Card>
-                <Card title="开票销售统计表-非地产"
+                <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-非地产</span>}
                       extra={<div>
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{

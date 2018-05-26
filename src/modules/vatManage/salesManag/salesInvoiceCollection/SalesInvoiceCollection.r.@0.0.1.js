@@ -131,9 +131,8 @@ const getColumns = context => [
     {
         title: "纳税主体",
         dataIndex: "mainName",
-        render: (text, record) => (
-            <span
-                title='查看'
+        render: (text, record) => (<span
+                title='查看详情'
                 style={{
                     ...pointerStyle,
                     marginLeft: 5
@@ -320,7 +319,7 @@ class SalesInvoiceCollection extends Component {
                         });
                     },
                     cardProps: {
-                        title: "销项发票采集列表",
+                        title: "销项发票采集",
                         extra: (
                             <div>
                                 {

@@ -115,7 +115,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         })
                     },
                     cardProps: {
-                        title: "简易计税进项税额转出列表",
+                        title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>简易计税进项税额转出列表</span>,
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
@@ -125,12 +125,14 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',
                                     params:filters,
-                                    onSuccess:this.refreshTable
+                                    onSuccess:this.refreshTable,
+                                    userPermissions:[],
                                 },{
                                     type:'revoke',
                                     url:'/account/incomeSimpleOut/controller/revoke',
                                     params:filters,
                                     onSuccess:this.refreshTable,
+                                    userPermissions:[],
                                 }],statusParam)
                             }
                         </div>,

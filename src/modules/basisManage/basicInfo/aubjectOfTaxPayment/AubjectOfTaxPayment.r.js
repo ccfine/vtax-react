@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Form,Icon} from 'antd'
+import {Form } from 'antd'
 import {SearchTable} from 'compoments'
 import ProjectInformationManagement from './projectInformationManagement'
 import {composeBotton} from 'utils'
@@ -26,20 +26,21 @@ const getColumns = context=>[
     {
       title: "操作",
       render(text, record, index) {
-        return (
-          <span className="table-operate">
-            <a title="项目信息管理"
-               onClick={()=>context.showModal('project',record)} >
-                <Icon type="file-add" />
-            </a>
-            {
-                parseInt(record.status,10) !== 2 && <a title="编辑"
-                onClick={()=>context.showModal('edit',record)} >
-                    <Icon type="edit" />
-                </a>
-            }
-        </span>
-        );
+          let operates = [{
+            type:'action',
+            title:'项目信息管理',
+            icon:'file-add',
+            userPermissions:[],
+            onSuccess:()=>context.showModal('project',record)
+        }];
+        parseInt(record.status,10) !== 2 && operates.push({
+                type:'action',
+                title:'编辑',
+                icon:'edit',
+                userPermissions:[],
+                onSuccess:()=>context.showModal('edit',record)
+        })
+        return composeBotton(operates);
       },
       fixed: "left",
       width: "50px",
@@ -51,7 +52,7 @@ const getColumns = context=>[
     title: '纳税主体',
     dataIndex: 'name',
     render:(text,record)=>{
-        return parseInt(record.status,10) < 3 ? <a onClick={()=>context.showModal('view',record)} title="查看">{text}</a>:undefined;
+        return parseInt(record.status,10) < 3 ? <a title="查看详情" onClick={()=>context.showModal('view',record)}>{text}</a>:undefined;
     }
 },{
     title: '社会信用代码',
@@ -186,10 +187,14 @@ class AubjectOfTaxPayment extends Component {
                         })
                     },
                     url:'/taxsubject/list',
+                    cardProps:{
+                        title:'纳税主体',
+                    },
                     extra:<div>
                         {
                             composeBotton([{
                                 type:'add',
+                                userPermissions:[],
                                 onClick:()=>this.showModal('add')
                             }])
                         }
