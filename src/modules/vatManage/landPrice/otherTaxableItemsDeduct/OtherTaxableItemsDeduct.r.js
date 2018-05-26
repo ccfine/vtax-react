@@ -193,13 +193,13 @@ class tab1 extends Component{
                                     type:'submit',
                                     url:'/account/othertax/deducted/main/submit',
                                     params:filters,
-                                    monthFieldName:'authMonth',
+                                    // monthFieldName:'authMonth',
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
                                     url:'/account/othertax/deducted/main/revoke',
                                     params:filters,
-                                    monthFieldName:'authMonth',
+                                    // monthFieldName:'authMonth',
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }

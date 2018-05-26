@@ -349,13 +349,13 @@ class BillingSales extends Component {
                                 type:'submit',
                                 url:'/account/output/billingSale/submit',
                                 params:filters,
-                                monthFieldName:'authMonth',
+                                // monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/output/billingSale/revoke',
                                 params:filters,
-                                monthFieldName:'authMonth',
+                                // monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                           }

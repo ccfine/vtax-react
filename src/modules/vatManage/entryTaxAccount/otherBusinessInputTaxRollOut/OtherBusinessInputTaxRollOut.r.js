@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-25 15:32:18
+ * @Last Modified time: 2018-05-25 18:37:14
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -255,12 +255,12 @@ class OtherBusinessInputTaxRollOut extends Component {
                                         },{
                                             type:'submit',
                                             url:'/account/income/taxout/submit',
-                                            monthFieldName:"authMonth",
+                                            // monthFieldName:"authMonth",
                                             params:filters,
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
-                                            monthFieldName:"authMonth",
+                                            // monthFieldName:"authMonth",
                                             url:'/account/income/taxout/revoke',
                                             params:filters,
                                             onSuccess:this.refreshTable,

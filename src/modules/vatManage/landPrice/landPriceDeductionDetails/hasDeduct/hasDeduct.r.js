@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:40:13
+ * @Last Modified time: 2018-05-26 10:21:03
  */
 import React from 'react'
 import {message} from 'antd'
@@ -163,13 +163,13 @@ export default class HasDeduct extends React.Component{
                                 type:'submit',
                                 url:'/account/landPrice/deductedDetails/submit',
                                 params:filters,
-                                monthFieldName:'authMonth',
+                                // monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/landPrice/deductedDetails/revoke',
                                 params:filters,
-                                monthFieldName:'authMonth',
+                                // monthFieldName:'authMonth',
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }
