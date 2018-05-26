@@ -1,4 +1,4 @@
 /**
  * Created by liuliyuan on 2018/5/26.
  */
-export {default} from './ButtonTableAction.r'
+export {default} from './ButtonSwitch.r'

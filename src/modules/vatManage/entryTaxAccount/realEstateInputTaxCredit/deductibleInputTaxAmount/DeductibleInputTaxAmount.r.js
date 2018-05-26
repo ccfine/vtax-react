@@ -117,7 +117,7 @@ export default class DeductibleInputTaxAmount extends Component{
                             })
                         },
                         cardProps: {
-                            title: "待抵扣进项税额",
+                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>待抵扣进项税额</span>,
                             extra:<div>
                                 {
                                     listMainResultStatus(statusParam)
@@ -127,11 +127,13 @@ export default class DeductibleInputTaxAmount extends Component{
                                         type:'submit',
                                         url:'/account/income/estate/submit',
                                         params:filters,
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/account/income/estate/revoke',
                                         params:filters,
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }

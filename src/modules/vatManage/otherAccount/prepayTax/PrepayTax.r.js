@@ -217,11 +217,13 @@ class PrepayTax extends Component{
                                 type:'submit',
                                 url:'/account/prepaytax/submit',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/prepaytax/revoke',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

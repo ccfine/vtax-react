@@ -291,6 +291,9 @@ export default class PrePaidHousingSales extends Component{
                     pageSize:10,
                     columns:columns,
                     url:'/account/salehouse/list',
+                    cardProps:{
+                        title:'售房预缴查询'
+                    },
                     extra: <div>
                         <TableTotal type={3} totalSource={totalSource} data={
                             [

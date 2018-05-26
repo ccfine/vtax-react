@@ -4,14 +4,11 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Form,Button,Icon,Modal,message} from 'antd';
+import {Form,Modal,message} from 'antd';
 import {TreeTable} from 'compoments'
 import PopModal from './popModal'
-import {request} from '../../../../utils'
+import {request,composeBotton} from 'utils'
 
-const buttonStyle={
-    marginRight:5
-}
 const searchFields = [
     {
         label:'组织机构名称',
@@ -196,23 +193,43 @@ class OrganizationalStructureMaintenance extends Component {
                     }
                 }}
                 cardTableOption={{
+                    cardProps:{
+                        title:'组织架构维护',
+                    },
                     extra:<div>
-                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('edit')}>
-                            <Icon type="edit" />
-                            编辑
-                        </Button>
-                        <Button size="small" style={buttonStyle} disabled={!id} type='danger' onClick={this.deleteData}>
-                            <Icon type="delete" />
-                            删除
-                        </Button>
-                        <Button size="small" style={buttonStyle} disabled={!id} type='danger' onClick={this.disabledData}>
-                            <Icon type="retweet" />
-                            禁用/启用
-                        </Button>
+                        {
+                            id && composeBotton([{
+                                type: 'add',
+                                userPermissions: [],
+                                onClick: () => {
+                                    this.showModal('add')
+                                }
+                            },{
+                                type:'edit',
+                                icon:'edit',
+                                text:'编辑',
+                                userPermissions:[],
+                                onClick:()=>{
+                                    this.showModal('edit')
+                                }
+                            },{
+                                type:'delete',
+                                icon:'delete',
+                                text:'删除',
+                                userPermissions:[],
+                                onClick:()=>{
+                                    this.deleteData()
+                                }
+                            },{
+                                type:'retweet',
+                                icon:'retweet',
+                                text:'禁用/启用',
+                                userPermissions:[],
+                                onClick:()=>{
+                                    this.disabledData()
+                                }
+                            }])
+                        }
                     </div>
                 }}
                 treeCardOption={{

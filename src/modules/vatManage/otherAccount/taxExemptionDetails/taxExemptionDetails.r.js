@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {Icon,Modal,message} from 'antd'
+import {Modal,message} from 'antd'
 import {fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import PopModal from "./popModal";
@@ -16,6 +16,10 @@ const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
 };
+const pointerStyleDelete = {
+    cursor:'pointer',
+    color:'red',
+}
 const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
@@ -70,11 +74,21 @@ const getColumns = (context,disabled,declare) => [
             if(disabled && declare.decAction==='edit'){
                 if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 2){
                     return (
-                            <span>
-                                <a style={{margin:"0 5px" }} onClick={() => {
-                                    context.setState({ visible: true, action: 'modify', opid: record.id });
-                                }}><Icon type="edit" /></a>
-                                <a style={{ margin:"0 5px",color: "#f5222d" }}  onClick={() => {
+                            composeBotton([{
+                                type: 'action',
+                                icon: 'edit',
+                                title: '查看申报',
+                                userPermissions:[],
+                                onSuccess: () => {
+                                    context.setState({visible: true, action: 'modify', opid: record.id});
+                                }
+                            },{
+                                type:'action',
+                                icon:'delete',
+                                title:'查看申报',
+                                style:pointerStyleDelete,
+                                userPermissions:[],
+                                onSuccess:()=>{
                                     const modalRef = Modal.confirm({
                                         title: "友情提醒",
                                         content: "该删除后将不可恢复，是否删除？",
@@ -91,11 +105,8 @@ const getColumns = (context,disabled,declare) => [
                                             modalRef.destroy();
                                         }
                                     });
-                                }}
-                                >
-                                    <Icon type="delete" />
-                                </a>
-                        </span>
+                                }
+                            }])
                         )
                 }
             }
@@ -255,6 +266,9 @@ class TaxExemptionDetails extends Component{
                             this.fetchResultStatus()
                         })
                     },
+                    cardProps:{
+                        title:'减免税明细台账'
+                    },
                     extra: <div>
                         {
                             listMainResultStatus(statusParam)
@@ -262,6 +276,7 @@ class TaxExemptionDetails extends Component{
                         {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'add',
+                                userPermissions:[],
                                 onClick: ()=>{
                                     this.setState({
                                         visible: true,
@@ -273,11 +288,13 @@ class TaxExemptionDetails extends Component{
                                 type:'submit',
                                 url:'/account/other/reduceTaxDetail/submit',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/other/reduceTaxDetail/revoke',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

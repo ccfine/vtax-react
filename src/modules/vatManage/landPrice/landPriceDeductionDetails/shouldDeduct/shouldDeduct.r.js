@@ -119,7 +119,7 @@ export default class ShouldDeduct extends React.Component {
 				}}
 				tableOption={{
 					cardProps: {
-						title: '土地价款当期应抵扣'
+						title: <span><label className="tab-breadcrumb">土地价款扣除明细台账 / </label>土地价款当期应抵扣</span>,
 					},
 					key: tableKey,
 					pageSize: 10,
@@ -136,9 +136,9 @@ export default class ShouldDeduct extends React.Component {
 								(disabled && declare.decAction==='edit') && composeBotton([
 									{
 										type: 'reset',
-										url:
-											'/account/landPrice/deductedDetails/reset',
+										url:'/account/landPrice/deductedDetails/reset',
 										params:filters,
+                                        userPermissions:[],
 										onSuccess: this.refreshTable
 									}
 								])

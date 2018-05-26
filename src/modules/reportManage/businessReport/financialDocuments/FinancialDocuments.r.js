@@ -245,7 +245,7 @@ export default class FinancialDocuments extends Component{
                         });
                     },
                     cardProps: {
-                        title: "财务凭证列表",
+                        title: "财务凭证",
                         extra: (
                             <div>
                                 {
