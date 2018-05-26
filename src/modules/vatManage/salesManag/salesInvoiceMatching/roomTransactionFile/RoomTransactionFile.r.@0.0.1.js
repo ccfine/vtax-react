@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-21 10:57:15
+ * @Last Modified time: 2018-05-26 15:08:03
  *
  */
 import React,{Component} from 'react'
@@ -39,7 +39,7 @@ const fields = (disabled,declare)=> [
                 span:6
             },
             wrapperCol:{
-                span:17
+                span:14
             }
         },
         fieldDecoratorOptions:{
@@ -62,7 +62,7 @@ const fields = (disabled,declare)=> [
                 span:6
             },
             wrapperCol:{
-                span:17
+                span:14
             }
         },
         fieldDecoratorOptions:{

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-12 12:25:57
+ * @Last Modified time: 2018-05-26 15:24:09
  */
 import React, { Component } from "react";
 import { Form, Modal, message, Spin } from "antd";
@@ -39,7 +39,7 @@ class PermissionModal extends Component {
                 this.setState({ permissionLoading: false });
             });
     }
-    handleSubmit = rolePermissions => e => {
+    handleSubmit = (rolePermissions,userPermissions) => e => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
@@ -50,13 +50,9 @@ class PermissionModal extends Component {
                         params.push(item);
                 }
 
-                // 筛选剔除角色权限
+                // 筛选剔除角色权限，但如果原本用户权限就存在就不剔除
                 params = params.filter(ele => {
-                    if (rolePermissions.indexOf(ele) === -1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return rolePermissions.indexOf(ele) === -1 || userPermissions.indexOf(ele)>-1;
                 });
 
                 this.setState({ submitLoading: true });
@@ -103,13 +99,16 @@ class PermissionModal extends Component {
                 destroyOnClose={true}
                 title="权限配置"
                 visible={this.props.visible}
-                onOk={this.handleSubmit(rolePermissions)}
+                onOk={this.handleSubmit(rolePermissions,userPermissions)}
                 onCancel={this.handleCancel}
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
                 width="900px"
+                style={{
+                    top:'5%'
+                }}
                 bodyStyle={{
-                    maxHeight: 400,
+                    maxHeight: 420,
                     overflowY: "auto"
                 }}
             >

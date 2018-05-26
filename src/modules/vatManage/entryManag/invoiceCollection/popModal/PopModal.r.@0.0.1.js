@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
-import {request,regRules,fMoney,requestDict,getFields,setFormat} from 'utils'
+import {request,regRules,fMoney,getFields} from 'utils'
 import {SynchronizeTable} from 'compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
@@ -43,9 +43,6 @@ class PopModal extends Component{
         modalConfig:{
             type:''
         },
-
-        invoiceTypeItem:[], //发票类型
-        incomeStructureTypeItem:[], //进项结构分类
     }
 
     columns = [{
@@ -152,23 +149,6 @@ class PopModal extends Component{
             });
         }
     }
-
-    //注册类型:发票类型
-    getRegistrationType=()=>{
-        requestDict('JXFPLX',result=>{
-            this.setState({
-                invoiceTypeItem:setFormat(result)
-            })
-        })
-    }
-    //注册类型:进项结构分类
-    getIncomeStructureType=()=>{
-        requestDict('JXJGFL',result=>{
-            this.setState({
-                incomeStructureTypeItem:setFormat(result)
-            })
-        })
-    }
     setDetailsDate=detailsDate=>{
         this.setState({
             detailsDate
@@ -234,12 +214,7 @@ class PopModal extends Component{
                 });
             });
     }
-    componentDidMount(){
-        this.getRegistrationType()
-        this.getIncomeStructureType()
-    }
     componentWillReceiveProps(nextProps){
-        //console.log(nextProps)
         if(!nextProps.visible){
             /**
              * 关闭的时候清空表单
@@ -363,7 +338,7 @@ class PopModal extends Component{
                                                 rules:[
                                                     {
                                                         required:true,
-                                                        message:'请输入发票号码'
+                                                        message:'请输入应税项目'
                                                     }
                                                 ]
                                             }
@@ -399,17 +374,17 @@ class PopModal extends Component{
                                                 rules:[
                                                     {
                                                         required:true,
-                                                        message:'请输入发票号码'
+                                                        message:'请输入项目名称s'
                                                     }
                                                 ]
                                             }
                                         },{
                                             label:'进项结构分类',
                                             fieldName:'incomeInvoiceCollectionDO.incomeStructureType',
-                                            type:'select',
+                                            type:'input',
                                             span:12,
                                             formItemStyle,
-                                            options:this.state.incomeStructureTypeItem,
+                                            //options:this.state.incomeStructureTypeItem,
                                             componentProps: {
                                                 disabled
                                             },
@@ -427,7 +402,10 @@ class PopModal extends Component{
                                             type:'select',
                                             span:12,
                                             formItemStyle,
-                                            options:this.state.invoiceTypeItem,
+                                            options:[
+                                                {value:'s',text:'增值税专用发票'},
+                                                {value:'c',text:'增值税普通发票'}
+                                            ],
                                             componentProps: {
                                                 disabled
                                             },

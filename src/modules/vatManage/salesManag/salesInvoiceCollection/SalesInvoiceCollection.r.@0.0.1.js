@@ -31,7 +31,7 @@ const fields = (disabled,declare)=> [
                 span:6
             },
             wrapperCol:{
-                span:17
+                span:14
             }
         },
         fieldDecoratorOptions:{

@@ -19,6 +19,14 @@ const getFields = (filters)=>[
         fieldName:'mainId',
         type:'taxMain',
         span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
         fieldDecoratorOptions:{
             initialValue: (filters && filters["mainId"]) || undefined,
             rules:[
@@ -33,6 +41,14 @@ const getFields = (filters)=>[
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
         componentProps: {},
         fieldDecoratorOptions: {
             initialValue:
