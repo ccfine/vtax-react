@@ -2,7 +2,6 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Icon } from 'antd'
 import { SearchTable } from 'compoments'
 import { fMoney,composeBotton } from 'utils'
 import PopModal from './popModal'
@@ -22,11 +21,15 @@ const getColumns = context => ([
     {
         title: '操作',
         render(text, record, index) {
-            return (<span className='table-operate'>
-                <a title='编辑' onClick={() => {
+            return composeBotton([{
+                type:'action',
+                title:'编辑',
+                userPermissions:[],
+                onSuccess:() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
-                }}><Icon type='edit'/></a>
-            </span>)
+                },
+                icon:'edit'
+            }])
         },
         fixed: 'left',
         width: 50,
@@ -38,7 +41,7 @@ const getColumns = context => ([
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',
-        render:(text,record)=><a  title='查看' onClick={() => {
+        render:(text,record)=><a title='查看详情' onClick={() => {
             context.setState({ visible: true, action: 'look', opid: record.id });
         }}>{text}</a>
     }, {
@@ -110,6 +113,7 @@ export default class InspectionReport extends Component {
                         {
                             composeBotton([{
                                 type:'add',
+                                userPermissions:[],
                                 onClick:() => { this.setState({ visible: true, action: 'add', opid: undefined }) }
                             }])
                         }

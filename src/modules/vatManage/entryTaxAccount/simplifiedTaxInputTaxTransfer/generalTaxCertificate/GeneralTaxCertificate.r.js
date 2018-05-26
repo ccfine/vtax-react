@@ -158,7 +158,7 @@ class GeneralTaxCertificate extends Component{
                         })
                     },
                     cardProps: {
-                        title: "一般计税列表",
+                        title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>一般计税列表</span>,
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
@@ -172,17 +172,20 @@ class GeneralTaxCertificate extends Component{
                                         url:"/account/incomeSimpleOut/controller/commonlyFlag",
                                         fields: markFieldsData,
                                         onSuccess: this.refreshTable,
+                                        userPermissions:[],
                                     }
                                 },{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',
                                     params:filters,
-                                    onSuccess:this.refreshTable
+                                    onSuccess:this.refreshTable,
+                                    userPermissions:[],
                                 },{
                                     type:'revoke',
                                     url:'/account/incomeSimpleOut/controller/revoke',
                                     params:filters,
                                     onSuccess:this.refreshTable,
+                                    userPermissions:[],
                                 }],statusParam)
                             }
                         </div>,

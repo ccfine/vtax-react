@@ -267,17 +267,20 @@ class SalesInvoiceCollection extends Component{
                                         url:"/income/financeDetails/controller/upFlag",
                                         fields: markFieldsData(this),
                                         onSuccess: this.refreshTable,
+                                        userPermissions:[],
                                     }
                                 },{
                                     type:'submit',
                                     url:'/income/financeDetails/controller/submit',
                                     params:filters,
-                                    onSuccess:this.refreshTable
+                                    onSuccess:this.refreshTable,
+                                    userPermissions:[],
                                 },{
                                     type:'revoke',
                                     url:'/income/financeDetails/controller/revoke',
                                     params:filters,
                                     onSuccess:this.refreshTable,
+                                    userPermissions:[],
                                 }],statusParam)
                             }
                         </div>,

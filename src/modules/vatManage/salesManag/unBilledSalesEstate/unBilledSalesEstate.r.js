@@ -294,12 +294,14 @@ class unBilledSalesEstate extends Component{
                                 type:'submit',
                                 url:'/account/output/notInvoiceSale/realty/submit',
                                 params:filters,
-                                onSuccess:this.refreshTable
+                                onSuccess:this.refreshTable,
+                                userPermissions:[],
                             },{
                                 type:'revoke',
                                 url:'/account/output/notInvoiceSale/realty/revoke',
                                 params:filters,
                                 onSuccess:this.refreshTable,
+                                userPermissions:[],
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={

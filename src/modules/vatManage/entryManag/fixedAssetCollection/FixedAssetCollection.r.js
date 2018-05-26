@@ -252,11 +252,13 @@ const columns=[
                                         type:'submit',
                                         url:'/fixedAssetCard/submit',
                                         params:filters,
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/fixedAssetCard/revoke',
                                         params:filters,
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }

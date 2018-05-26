@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/9.
  */
 import React, { Component } from 'react'
-import {Icon,Modal,message} from 'antd'
+import {Modal,message} from 'antd'
 import {connect} from 'react-redux'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
@@ -162,31 +162,30 @@ const getColumns = (context,disabled) => [
         className:'text-center',
         width:parseInt(context.state.statusParam.status,0) === 1 ? '50px' : '40px',
         render: (text, record) => {
-            return (disabled && parseInt(context.state.statusParam.status,0)===1) && (
-                    <span title='解除匹配' style={{
-                        color:'#f5222d',
-                        cursor:'pointer'
-                    }} onClick={()=>{
-                        const modalRef = Modal.confirm({
-                            title: '友情提醒',
-                            content: '是否要解除匹配？',
-                            okText: '确定',
-                            okType: 'danger',
-                            cancelText: '取消',
-                            onOk:()=>{
-                                context.deleteRecord(record.id,()=>{
-                                    modalRef && modalRef.destroy();
-                                    context.refreshTable()
-                                })
-                            },
-                            onCancel() {
-                                modalRef.destroy()
-                            },
-                        });
-                    }}>
-                <Icon type="disconnect" />
-            </span>
-                )
+            return (disabled && parseInt(context.state.statusParam.status,0)===1) && composeBotton([{
+                type:'action',
+                title:'解除匹配',
+                icon:'disconnect',
+                style:{color:'#f5222d'},
+                userPermissions:[],
+                onSuccess:()=>{
+                    const modalRef = Modal.confirm({
+                        title: '友情提醒',
+                        content: '是否要解除匹配？',
+                        okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
+                        onOk:()=>{
+                            context.deleteRecord(record.id,()=>{
+                                modalRef && modalRef.destroy();
+                                context.refreshTable()
+                            })
+                        },
+                        onCancel() {
+                            modalRef.destroy()
+                        },
+                    });
+                }}])
         }
     },
     {
@@ -442,22 +441,26 @@ class InvoiceDataMatching extends Component{
                                 type:'match',
                                 url:'/output/invoice/marry/already/automatic',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'fileExport',
                                 url:'output/invoice/marry/already/export',
                                 params:filters,
                                 title:'导出匹配列表',
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/output/invoice/marry/submit',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'output/invoice/marry/revoke',
                                 params:filters,
+                                userPermissions:[],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }
@@ -470,7 +473,10 @@ class InvoiceDataMatching extends Component{
                     },
                     scroll:{
                         x:'180%'
-                    }
+                    },
+                    cardProps:{
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,
+                    },
                 }}
             >
             </SearchTable>

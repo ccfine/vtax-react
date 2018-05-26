@@ -2,9 +2,9 @@
  * Created by liuliyuan on 2018/5/20.
  */
 import React, { Component } from 'react'
-import {Icon} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
+import {composeBotton} from 'utils';
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff',
@@ -22,20 +22,20 @@ const getColumns = context =>[
     {
         title:'操作',
         key:'actions',
-        render:(text,record)=>(
-            <span>
-                <span title='编辑' onClick={()=>context.showModal('modify',record.mainId)} style={pointerStyle}><Icon type="edit" /></span>
-            </span>
-        ),
+        render:(text,record)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.showModal('modify',record.mainId)
+        }]),
         fixed:'left',
         width:'50px',
         className:'text-center'
     },{
         title: '纳税主体名称',
         dataIndex: 'mainName',
-        render:(text,record)=>(
-            <span style={pointerStyle} onClick={()=>context.showModal('look',record.mainId)}>{text}</span>
-        ),
+        render:(text,record)=>(<span title='查看详情' style={pointerStyle} onClick={()=>context.showModal('look',record.mainId)}>{text}</span>),
     }, {
         title: '统一社会信用代码或纳税人识别号',
         dataIndex: 'itemNum',
@@ -97,7 +97,10 @@ export default class BeginDataCollect extends Component{
                     key:tableKey,
                     pageSize:10,
                     columns:getColumns(this),
-                    url:'/dataCollection/list',
+                    url:'/dataCollection/list', 
+                    cardProps:{
+                        title:'期初数据采集',
+                    },
                 }}
             >
                 <PopModal visible={visible} refreshTable={this.refreshTable} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />

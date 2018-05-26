@@ -2,21 +2,19 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Icon,Tooltip} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
+import {composeBotton} from 'utils';
 const getColumns = context=>[
     {
         title:'操作',
-        render:(text, record, index)=>(
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'modify',oprecord:record});
-                }}>
-                    <Tooltip placement="top" title="编辑">
-                           <Icon type="edit" />
-                    </Tooltip>
-                </a>
-        ),
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.setState({visible:true,action:'modify',oprecord:record})
+        }]),
         fixed:'left',
         width:'45px',
         dataIndex:'action',

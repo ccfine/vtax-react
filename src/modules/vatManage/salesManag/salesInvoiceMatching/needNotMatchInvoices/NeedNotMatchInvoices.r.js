@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-20 12:16:41
+ * @Last Modified time: 2018-05-26 19:27:13
  *
  */
 import React, { Component } from 'react'
@@ -243,6 +243,7 @@ class NeedNotMatchInvoices extends Component{
                         {
                             (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
+                                userPermissions:[],
                                 onClick: ()=>this.toggleModalVisible(true)
                             }],statusParam)
                         }
@@ -255,7 +256,10 @@ class NeedNotMatchInvoices extends Component{
                     },
                     scroll:{
                         x:'150%'
-                    }
+                    },
+                    cardProps:{
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
+                    },
                 }}
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />

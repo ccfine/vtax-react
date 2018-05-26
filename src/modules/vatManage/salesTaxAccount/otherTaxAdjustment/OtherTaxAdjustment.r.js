@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-25 15:24:03
+ * @Last Modified time: 2018-05-26 20:03:13
  */
 import React, { Component } from "react";
-import { Modal, message,Icon } from "antd";
+import { Modal, message } from "antd";
 import {connect} from 'react-redux';
 import { SearchTable } from "compoments";
 import PopModal from "./popModal";
@@ -64,48 +64,41 @@ const getColumns = (context,hasOperate) => {
   let operates = hasOperate?[{
     title: "操作",
     render(text, record, index) {
-      return (
-        <span className="table-operate">
-          <a
-            title="编辑"
-            onClick={() => {
-              context.setState({
-                visible: true,
-                action: "modify",
-                opid: record.id
-              });
-            }}
-          >
-              <Icon type="edit" />
-          </a>
-          <a
-            title="删除"
-            style={{
-                color: "#f5222d"
-            }}
-            onClick={()=>{
-              const modalRef = Modal.confirm({
-                  title: '友情提醒',
-                  content: '该删除后将不可恢复，是否删除？',
-                  okText: '确定',
-                  okType: 'danger',
-                  cancelText: '取消',
-                  onOk:()=>{
-                      context.deleteRecord(record.id,()=>{
-                          modalRef && modalRef.destroy();
-                          context.refreshTable()
-                      })
-                  },
-                  onCancel() {
-                      modalRef.destroy()
-                  },
-              });
-            }}
-          >
-              <Icon type="delete" />
-          </a>
-      </span>
-      );
+        return composeBotton([{
+          type:'action',
+          icon:'edit',
+          title:'编辑',
+          userPermissions:[],
+          onSuccess:()=>context.setState({
+            visible: true,
+            action: "modify",
+            opid: record.id
+          })
+      },{
+          type:'action',
+          icon:'delete',
+          title:'删除',
+          style:{color: "#f5222d"},
+          userPermissions:[],
+          onSuccess:() => {
+            const modalRef = Modal.confirm({
+                title: '友情提醒',
+                content: '该删除后将不可恢复，是否删除？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk:()=>{
+                    context.deleteRecord(record.id,()=>{
+                        modalRef && modalRef.destroy();
+                        context.refreshTable()
+                    })
+                },
+                onCancel() {
+                    modalRef.destroy()
+                },
+            });
+          }
+      }])
     },
     fixed: "left",
     width: "50px",
@@ -118,7 +111,7 @@ const getColumns = (context,hasOperate) => {
     title: "纳税主体",
     dataIndex: "mainName",
     render:(text,record)=>{
-      return <a title="查看" onClick={() => {
+      return <a title='查看详情' onClick={() => {
                 context.setState({
                   visible: true,
                   action: "look",
@@ -266,6 +259,7 @@ class OtherTaxAdjustment extends Component {
                   {
                       (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',
+                          userPermissions:[],
                           onClick: () => {
                             this.setState({
                               visible: true,
@@ -277,11 +271,13 @@ class OtherTaxAdjustment extends Component {
                           type:'submit',
                           url:'/account/output/othertax/main/submit',
                           params:filters,
+                          userPermissions:[],
                           onSuccess:this.refreshTable
                       },{
                           type:'revoke',
                           url:'/account/output/othertax/main/restore',
                           params:filters,
+                          userPermissions:[],
                           onSuccess:this.refreshTable,
                       }],statusParam)
                   }

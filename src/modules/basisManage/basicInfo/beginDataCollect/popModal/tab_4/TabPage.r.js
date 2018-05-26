@@ -2,44 +2,42 @@
  * Created by liuliyuan on 2018/5/20.
  */
 import React, { Component } from 'react'
-import {Modal,message,Icon,Tooltip} from 'antd'
+import {Modal,message} from 'antd'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import PopModal from './popModal'
 import {request,fMoney,composeBotton} from 'utils'
 const getColumns = context=>{
     let operates = context.props.disabled?[]:[{
         title:'操作',
-        render:(text, record, index)=>(
-            <span className='table-operate'>
-                <a onClick={()=>context.showModal('modify',record.id)}>
-                    <Tooltip placement="top" title="编辑">
-                           <Icon type="edit" />
-                    </Tooltip>
-                </a>
-                <a style={{
-                    color:'#f5222d'
-                }} onClick={()=>{
-                    const modalRef = Modal.confirm({
-                        title: '友情提醒',
-                        content: '该删除后将不可恢复，是否删除？',
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk:()=>{
-                            context.deleteRecord(record)
-                            modalRef && modalRef.destroy();
-                        },
-                        onCancel() {
-                            modalRef.destroy()
-                        },
-                    });
-                }}>
-                    <Tooltip placement="top" title="删除">
-                        <Icon type="delete" />
-                    </Tooltip>
-                </a>
-            </span>
-        ),
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.showModal('modify',record.id)
+        },{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:[],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
         fixed:'left',
         width:'70px',
         dataIndex:'action',
@@ -49,12 +47,9 @@ const getColumns = context=>{
         title: '应税项目名称',
         dataIndex: 'taxableProjectName',
         render:(text,record)=>(
-            <a
-                onClick={() => context.showModal('look',record.id)}
-            >
-                <Tooltip placement="top" title="查看">
-                    {text}
-                </Tooltip>
+            <a title="查看详情"
+                onClick={() => context.showModal('look',record.id)}>
+                {text}
             </a>
         )
     }, {
@@ -130,6 +125,7 @@ export default class TabPage extends Component{
                             {
                                 composeBotton([{
                                     type:'add',
+                                    userPermissions:[],
                                     onClick:()=>this.showModal('add',undefined)
                                 }])
                             }

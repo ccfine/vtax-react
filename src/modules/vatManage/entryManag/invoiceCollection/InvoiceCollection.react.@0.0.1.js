@@ -376,17 +376,20 @@ class InvoiceCollection extends Component {
                                     (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable,
                                         fields:getFields(filters)
                                     },{
                                         type:'submit',
                                         url:'/income/invoice/collection/submit',
                                         params:filters,
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/income/invoice/collection/revoke',
                                         params:filters,
+                                        userPermissions:[],
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }

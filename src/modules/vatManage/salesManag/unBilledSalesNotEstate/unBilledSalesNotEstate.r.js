@@ -2,11 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-25 16:10:02
+ * @Last Modified time: 2018-05-26 20:04:51
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
-import { Icon, message, Modal } from "antd";
+import { message, Modal } from "antd";
 import { SearchTable, TableTotal } from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
@@ -86,48 +86,43 @@ const getColumns = (context,hasOperate) => {
         title: "操作",
         className: "text-center",
         render(text, record, index) {
-            return (
-                <span className="table-operate">
-                    <a
-                        title="编辑"
-                        onClick={() => {
-                            context.setState({
-                                visible: true,
-                                action: "modify",
-                                opid: record.id
+            return composeBotton([{
+                type:'action',
+                icon:'edit',
+                title:'编辑',
+                userPermissions:[],
+                onSuccess:() => {
+                    context.setState({
+                        visible: true,
+                        action: "modify",
+                        opid: record.id
+                    });
+                }
+            },{
+                type:'action',
+                icon:'delete',
+                title:'删除',
+                style:{color: "#f5222d"},
+                userPermissions:[],
+                onSuccess:() => {
+                    const modalRef = Modal.confirm({
+                        title: "友情提醒",
+                        content: "该删除后将不可恢复，是否删除？",
+                        okText: "确定",
+                        okType: "danger",
+                        cancelText: "取消",
+                        onOk: () => {
+                            context.deleteRecord(record.id, () => {
+                                modalRef && modalRef.destroy();
+                                context.refreshTable();
                             });
-                        }}
-                    >
-                        <Icon type="edit" />
-                    </a>
-                    <a
-                        title="删除"
-                        style={{
-                            color: "#f5222d"
-                        }}
-                        onClick={() => {
-                            const modalRef = Modal.confirm({
-                                title: "友情提醒",
-                                content: "该删除后将不可恢复，是否删除？",
-                                okText: "确定",
-                                okType: "danger",
-                                cancelText: "取消",
-                                onOk: () => {
-                                    context.deleteRecord(record.id, () => {
-                                        modalRef && modalRef.destroy();
-                                        context.refreshTable();
-                                    });
-                                },
-                                onCancel() {
-                                    modalRef.destroy();
-                                }
-                            });
-                        }}
-                    >
-                        <Icon type="delete" />
-                    </a>
-                </span>
-            );
+                        },
+                        onCancel() {
+                            modalRef.destroy();
+                        }
+                    })
+                }
+            }])
         },
         fixed: "left",
         width: "50px",
@@ -140,7 +135,7 @@ const getColumns = (context,hasOperate) => {
         title: "纳税主体",
         dataIndex: "mainName",
         render:(text,record)=>{
-            return <a title="查看" onClick={() => {
+            return <a title='查看详情' onClick={() => {
                     context.setState({
                         visible: true,
                         action: "look",
@@ -263,6 +258,7 @@ class UnBilledSalesNotEstate extends Component {
                                     {
                                         (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
+                                            userPermissions:[],
                                             onClick: () => {
                                                 this.setState({
                                                     visible: true,
@@ -274,16 +270,19 @@ class UnBilledSalesNotEstate extends Component {
                                             type:'reset',
                                             url:'/account/notInvoiceUnSale/realty/reset',
                                             params:filters,
+                                            userPermissions:[],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'submit',
                                             url:'/account/notInvoiceUnSale/realty/submit',
                                             params:filters,
+                                            userPermissions:[],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
                                             url:'/account/notInvoiceUnSale/realty/revoke',
                                             params:filters,
+                                            userPermissions:[],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                     }

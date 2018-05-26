@@ -4,7 +4,6 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {Icon} from 'antd'
 import PopModal from './PopModal.r'
 import {composeBotton} from 'utils'
 const searchFields = [
@@ -19,21 +18,22 @@ const getColumns = context=> [
         title:'操作',
         key:'actions',
         render:(text,record)=>{
-            return (
-                <div>
-                    <a title='编辑' onClick={()=>{
-                        context.setState({
-                            modalConfig:{
-                                type:'edit',
-                                id:record.id
-                            }
-                        },()=>{
-                            context.toggleModalVisible(true)
-                        })
-                    }}><Icon type="edit" /></a>
-                </div>
-            )
-
+            return composeBotton([{
+                type:'action',
+                title:'编辑',
+                icon:'edit',
+                userPermissions:[],
+                onSuccess:()=>{
+                    context.setState({
+                        modalConfig:{
+                            type:'edit',
+                            id:record.id
+                        }
+                    },()=>{
+                        context.toggleModalVisible(true)
+                    })
+                }
+        }])
         },
         fixed:'left',
         width:'50px',
@@ -154,11 +154,15 @@ export default class TaxIncentives extends Component{
                             {
                                 composeBotton([{
                                     type:'add',
+                                    userPermissions:[],
                                     onClick:()=>this.showModal('add')
                                 }])
                             }
                         </div>
-                    )
+                    ),
+                    cardProps:{
+                        title:'税收优惠',
+                    },
                 }}
             >
                 <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
