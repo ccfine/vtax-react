@@ -106,7 +106,6 @@ export default class Sheet extends Component{
                 grid[row][col] = {...grid[row][col], value}
             }
         })
-        console.log(grid)
         this.setState({grid})
     }
 
@@ -120,7 +119,7 @@ export default class Sheet extends Component{
         const xBool = !!scroll.x,
             yBool = !!scroll.y;
         return(
-            <div style={{backgroundColor:'#fff',padding:10,overflow:'hidden'}}>
+            <div style={{backgroundColor:'#fff',overflow:'hidden'}}>
                 <div style={{overflowX:xBool ? 'scroll':'visible',overflowY:yBool ? 'scroll':'visible'}}>
                     <Spin spinning={loading}>
                         <div style={{

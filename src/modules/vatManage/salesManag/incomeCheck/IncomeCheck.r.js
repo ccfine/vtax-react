@@ -261,8 +261,7 @@ class IncomeCheck extends Component {
                 </Card>
                 <Card title="房间交易信息"
                       extra={<div>
-                          <span style={{marginRight:20,color:'#FF9700'}}>税额总价合计：{fMoney(totalSource2 ? totalSource2.allTaxAmount : 0.00)}</span>
-                          <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalPrice : 0.00)}</span>
+                          <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalAmount : 0.00)}</span>
                       </div>}
                       style={{marginTop:10}}>
 
@@ -283,9 +282,9 @@ class IncomeCheck extends Component {
 
                     <div>
                         <span style={{marginRight:20,color:'#FF9700'}}>财务收入金额：{fMoney(totalSource ? totalSource.allAmount : 0.00)}</span>
-                        <span style={{marginRight:20,color:'#FF9700'}}>营销系统收入：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
+                        <span style={{marginRight:20,color:'#FF9700'}}>营销系统收入：{fMoney(totalSource2 ? totalSource2.allTotalAmount : 0.00)}</span>
                         <span style={{color:'red'}}>收入差异金额：{
-                            fMoney(parseFloat(totalSource && totalSource.allAmount) - parseFloat(totalSource2 && totalSource2.allAmount) || 0.00)
+                            fMoney(parseFloat(totalSource && totalSource.allAmount) - parseFloat(totalSource2 && totalSource2.allTotalAmount) || 0.00)
                         }</span>
                     </div>
                 </Card>

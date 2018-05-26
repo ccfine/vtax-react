@@ -24,7 +24,8 @@ const sheetData = [
     {
         tab:'主表',
         grid:sheet_0,
-        url:'/tax/decConduct/main/list'
+        url:'/tax/decConduct/main/list',
+        action:true
     }, {
         tab:'附表一',
         grid:sheet_1,

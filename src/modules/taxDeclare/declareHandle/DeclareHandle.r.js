@@ -2,14 +2,11 @@
  * Created by liuliyuan on 2018/5/14.
  */
 import React, { Component } from 'react';
-import {Icon,message,Modal} from 'antd'
+import {connect} from 'react-redux'
+import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
-import {request} from 'utils'
-const pointerStyle = {
-    cursor: "pointer",
-    color: "#1890ff"
-};
+import {request,composeBotton} from 'utils'
 const formItemStyle={
     labelCol:{
         span:8
@@ -68,58 +65,72 @@ const getColumns =(context)=>[
         title: "操作",
         className:'text-center',
         render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
-            let t ='';
+            let t = undefined;
             let status = parseInt(record.status,0);
             switch (status){
                 case 1: //申报办理
-                    t = <span>
-                            <span title="申报办理" style={{ ...pointerStyle, marginLeft: 5 }}
-                                onClick={() => {
+                    t = composeBotton([{
+                                type:'action',
+                                icon:'form',
+                                title:'申报办理',
+                                userPermissions:[],
+                                onSuccess:()=>{
                                     context.setState({
                                         record: {...record,decAction:'edit'},
                                     },() => {
                                         context.toggleApplyVisible(true);
                                     });
-                                }}
-                            >
-                                 <Icon title="申报办理" type="form" />
-                            </span>
-                            <span title="流程终止" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelProcessStop(record)} >
-                                <Icon title="流程终止" type="exception" />
-                            </span>
-                        </span>
+                                }
+                            },{
+                                type:'action',
+                                icon:'exception',
+                                title:'流程终止',
+                                userPermissions:[],
+                                onSuccess:()=>{ context.handelProcessStop(record) }
+                            }])
                     break
                 case 2: //申报审核
                     break
                 case 3: //申报审批
                     break
                 case 4: //申报完成
-                    t = <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }} onClick={() => context.handelArchiving(record)} >
-                            <Icon title="申报归档" type="folder" />
-                        </span>
+                    t = composeBotton([{
+                            type:'action',
+                            icon:'folder',
+                            title:'申报归档',
+                            userPermissions:[],
+                            onSuccess:()=>{ context.handelArchiving(record) }
+                        }])
                     break
                 case 5: //归档
-                    t = <span title="申报归档" style={{ ...pointerStyle, marginLeft: 5 }}  onClick={() => context.handelArchiving(record)} >
-                            <Icon title="申报归档" type="folder" />
-                        </span>
+                    t = composeBotton([{
+                            type:'action',
+                            icon:'folder',
+                            title:'申报归档',
+                            userPermissions:[],
+                            onSuccess:()=>{ context.handelArchiving(record) }
+                        }])
                     break
                 case -1: //流程终止
                     break
                 default:
-                    break
+                    /*break*/
             }
             return <span>
-                        <span title="查看申报" style={{ ...pointerStyle, marginLeft: 5 }}
-                              onClick={() => {
-                                  context.setState({
-                                      record: {...record,decAction:'look'}
-                                  },() => {
-                                      context.toggleApplyVisible(true);
-                                  });
-                              }}
-                        >
-                            <Icon title="查看申报" type="search" />
-                        </span>
+                        {
+                            composeBotton([{
+                                type:'action',
+                                icon:'search',
+                                title:'查看申报',
+                                onSuccess:()=>{
+                                    context.setState({
+                                        record: {...record,decAction:'look'}
+                                    },() => {
+                                        context.toggleApplyVisible(true);
+                                    });
+                                }
+                            }])
+                        }
                         {t}
                     </span>;
         },
@@ -203,7 +214,7 @@ const getColumns =(context)=>[
     }
 ];
 
-export default class DeclareHandle extends Component{
+class DeclareHandle extends Component{
     state={
         updateKey:Date.now(),
         record:undefined,
@@ -320,3 +331,6 @@ export default class DeclareHandle extends Component{
         )
     }
 }
+export default connect(state=>({
+    options:state.user.getIn(['personal','options']),
+}))(DeclareHandle)

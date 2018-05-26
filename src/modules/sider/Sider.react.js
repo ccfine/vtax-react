@@ -9,6 +9,7 @@ import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import checkPermissions from 'compoments/permissible/index'
+import intersection from 'lodash/intersection'; //取数组的交集 _.initial([1, 2, 3]); => [1, 2]
 import {saveDeclare} from 'redux/ducks/user'
 
 import logo from './images/logo.png'
@@ -107,8 +108,8 @@ class VTaxSider extends Component {
     }
     handleClick = (e) => {
         //设置saveDeclare默认为初始值 为了判断看用户是从纳税申报进还是路由
-        const { saveDeclare } = this.props;
-        saveDeclare(null)
+        const { saveDeclare, options } = this.props;
+        intersection(['1005001','1005000'], options).length>0 && saveDeclare(null)
 
         this.setState({
             selectedPath: e.key,
@@ -178,7 +179,7 @@ class VTaxSider extends Component {
 }
 export default withRouter(connect(state=>({
     options:state.user.getIn(['personal','options']),
-    type:state.user.getIn(['personal','type'])
+    type:state.user.getIn(['personal','type']),
 }),dispatch=>({
     saveDeclare:saveDeclare(dispatch),
 }))(VTaxSider))

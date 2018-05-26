@@ -3,8 +3,9 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Form, Row, Col, Button} from 'antd'
-import {getFields,getUrlParam} from 'utils'
+import {connect} from 'react-redux'
+import {Form, Row, Col, Button,Card} from 'antd'
+import {getFields,composeBotton} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
@@ -12,21 +13,22 @@ class SheetWithSearchFields extends Component{
     static propTypes={
         grid:PropTypes.array,
         url:PropTypes.string,
-        composeGrid:PropTypes.func
+        composeGrid:PropTypes.func,
+        action:PropTypes.bool,
     }
     static defaultProps = {
         grid:[],
-        searchFields:(params={})=>[
+        searchFields:(params={},disabled,declare)=>[
             {
                 label:'纳税主体',
                 fieldName:'mainId',
                 type:'taxMain',
                 span:8,
                 componentProps:{
-                    disabled: !!getUrlParam('mainId'),
+                    disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: getUrlParam('mainId') || params.mainId,
+                    initialValue: (disabled && declare.mainId) || params.mainId,
                     rules:[
                         {
                             required:true,
@@ -41,10 +43,11 @@ class SheetWithSearchFields extends Component{
                 span:8,
                 type:'monthPicker',
                 componentProps:{
-                    disabled: !!getUrlParam('authMonth')
+                    disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: (!!getUrlParam('authMonth') && moment(getUrlParam('authMonth'), 'YYYY-MM')) || (params.taxMonth && moment(params.taxMonth)),
+
+                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (params.taxMonth && moment(params.taxMonth)),
                     //initialValue: moment(getUrlParam('authMonth'), 'YYYY-MM') || undefined,
                     rules:[
                         {
@@ -60,18 +63,21 @@ class SheetWithSearchFields extends Component{
         params:{},
         updateKey:Date.now()
     }
+    refreshTable = ()=>{
+        this.setState({
+            updateKey:Date.now()
+        })
+    }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
+        const { declare } = this.props;
+        if (!!declare) {
             this.setState({
                 params:{
-                    mainId:getUrlParam('mainId') || undefined,
-                    taxMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                    mainId:declare.mainId || undefined,
+                    taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
-                this.setState({
-                    updateKey:Date.now()
-                })
+                this.refreshTable()
             });
         }
     }
@@ -106,7 +112,8 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { grid, url , searchFields, form, composeGrid,scroll,defaultParams} = this.props;
+        const { grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action} = this.props;
+        let disabled = !!declare;
         const { params,updateKey } = this.state;
         return(
             <div>
@@ -118,7 +125,7 @@ class SheetWithSearchFields extends Component{
                     <Form onSubmit={this.onSubmit}>
                         <Row>
                             {
-                                getFields(form, searchFields(defaultParams))
+                                getFields(form, searchFields(defaultParams,disabled,declare))
                             }
                             <Col style={{width:'100%',textAlign:'right'}}>
                                 <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
@@ -133,9 +140,31 @@ class SheetWithSearchFields extends Component{
 
                     </Form>
                 </div>
-                <Sheet scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey}/>
+                <Card
+                    extra={
+                        action ? (disabled && declare.decAction==='edit') && composeBotton([{
+                            type:'submit',
+                            url:'/tax/decConduct/main/submit',
+                            params:params,
+                            onSuccess:this.refreshTable
+                        },{
+                            type:'revoke',
+                            url:'/tax/decConduct/main/revoke',
+                            params:params,
+                            onSuccess:this.refreshTable,
+                        }])
+                            : null
+                    }
+                    bodyStyle={{
+                        padding:10
+                    }}
+                >
+                    <Sheet scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey}/>
+                </Card>
             </div>
         )
     }
 }
-export default Form.create()(withRouter(SheetWithSearchFields))
+export default Form.create()(withRouter(connect(state=>({
+    declare:state.user.get('declare')
+}))(SheetWithSearchFields)))
