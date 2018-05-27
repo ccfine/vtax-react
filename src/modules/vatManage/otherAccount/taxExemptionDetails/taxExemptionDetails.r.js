@@ -77,7 +77,7 @@ const getColumns = (context,disabled,declare) => [
                             composeBotton([{
                                 type: 'action',
                                 icon: 'edit',
-                                title: '修改',
+                                title: '编辑',
                                 userPermissions:[],
                                 onSuccess: () => {
                                     context.setState({visible: true, action: 'modify', opid: record.id});
