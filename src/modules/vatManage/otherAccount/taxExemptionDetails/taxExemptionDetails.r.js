@@ -77,7 +77,7 @@ const getColumns = (context,disabled,declare) => [
                             composeBotton([{
                                 type: 'action',
                                 icon: 'edit',
-                                title: '查看申报',
+                                title: '修改',
                                 userPermissions:[],
                                 onSuccess: () => {
                                     context.setState({visible: true, action: 'modify', opid: record.id});
@@ -85,7 +85,7 @@ const getColumns = (context,disabled,declare) => [
                             },{
                                 type:'action',
                                 icon:'delete',
-                                title:'查看申报',
+                                title:'删除',
                                 style:pointerStyleDelete,
                                 userPermissions:[],
                                 onSuccess:()=>{
@@ -245,7 +245,7 @@ class TaxExemptionDetails extends Component{
         return(
             <SearchTable
                 spinning={searchTableLoading}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields(disabled,declare),
                     cardProps:{
