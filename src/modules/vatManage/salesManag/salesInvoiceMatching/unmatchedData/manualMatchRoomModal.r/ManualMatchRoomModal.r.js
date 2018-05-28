@@ -260,10 +260,13 @@ class ManualMatchRoomModal extends Component{
                 width={1000}
                 destroyOnClose={true}
                 bodyStyle={{
-                    backgroundColor:'#fafafa'
+                    backgroundColor:'#fafafa',
+                    maxHeight:420,
+                    overflowY:'auto',
                 }}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    top:'5%',
                 }}
                 visible={props.visible}
                 footer={

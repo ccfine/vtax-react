@@ -1,12 +1,13 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 19:27:13
+ * @Last Modified time: 2018-05-28 19:17:07
  *
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {Modal,message,Button,Icon} from 'antd'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './addDataModal'
 import moment from 'moment';
@@ -178,6 +179,8 @@ class NeedNotMatchInvoices extends Component{
         filters:{
 
         },
+        selectedRowKeys:[],
+        revokeLoading:false,
 
         searchTableLoading:false,
 
@@ -205,8 +208,36 @@ class NeedNotMatchInvoices extends Component{
             })
         })
     }
+    backOutData = () =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要撤销选中的数据？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.setState({revokeLoading:true})
+                request.put('/output/invoice/marry/unwanted/revoke',this.state.selectedRowKeys).then(({data})=>{
+                    this.setState({revokeLoading:false})
+                    if(data.code===200){
+                        message.success('撤销成功！');
+                        this.refreshTable();
+                    }else{
+                        message.error(`撤销失败:${data.msg}`)
+                    }
+                }).catch(err=>{
+                    message.error(err.message)
+                    this.setState({revokeLoading:false})
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+
+    }
     render(){
-        const {visible,tableKey,statusParam,totalSource} = this.state;
+        const {visible,tableKey,statusParam,totalSource,selectedRowKeys} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -239,14 +270,14 @@ class NeedNotMatchInvoices extends Component{
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)
-                        }
-                        {
+                        }{
                             (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
                                 userPermissions:[],
                                 onClick: ()=>this.toggleModalVisible(true)
                             }],statusParam)
                         }
+                        {(disabled && declare.decAction==='edit') && <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>}
                         <TableTotal totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {
@@ -259,6 +290,11 @@ class NeedNotMatchInvoices extends Component{
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
+                    },
+                    onRowSelect:(selectedRowKeys)=>{
+                        this.setState({
+                            selectedRowKeys
+                        })
                     },
                 }}
             >
