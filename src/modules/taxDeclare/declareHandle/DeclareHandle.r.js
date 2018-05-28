@@ -95,11 +95,25 @@ const getColumns =(context)=>[
                     break
                 case 4: //申报完成
                     t = composeBotton([{
+                            type: 'action',
+                            icon: 'folder',
+                            title: '申报归档',
+                            userPermissions: [],
+                            onSuccess: () => {
+                                context.handelArchiving(record)
+                            }
+                        },{
                             type:'action',
-                            icon:'folder',
-                            title:'申报归档',
+                            icon:'rollback',
+                            title:'申报撤回',
                             userPermissions:[],
-                            onSuccess:()=>{ context.handelArchiving(record) }
+                            onSuccess:()=>{
+                                context.setState({
+                                    record: {...record,decAction:'edit'},
+                                },() => {
+                                    context.toggleApplyVisible(true);
+                                });
+                            }
                         }])
                     break
                 case 5: //归档
