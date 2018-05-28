@@ -205,7 +205,7 @@ class InputTaxDetails extends Component{
         const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam={},filters,totalSource,record,action,isAdd} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            notSubmit = parseInt(statusParam.status,10)!==2;
+            notSubmit = parseInt(statusParam.status,10)===1;
         return(
             <SearchTable
                 searchOption={{

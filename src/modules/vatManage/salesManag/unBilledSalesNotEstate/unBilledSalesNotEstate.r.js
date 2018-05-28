@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 15:40:37
+ * @Last Modified time: 2018-05-28 18:09:03
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -234,7 +234,7 @@ class UnBilledSalesNotEstate extends Component {
         let { updateKey, filters={}, statusParam={},totalSource } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            noSubmit = parseInt(statusParam.status,10)!==2;
+            noSubmit = parseInt(statusParam.status,10)===1;
         return (
             <div>
                 <SearchTable

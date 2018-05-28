@@ -5,8 +5,9 @@
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
+import {Modal,message} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
-import { requestResultStatus, fMoney, listMainResultStatus,composeBotton } from "utils";
+import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 const pointerStyle = {
@@ -116,8 +117,38 @@ const getSearchFields = (disabled,declare) => {
         ]
 };
 
-const columns = context => [
-    {
+const columns = (context,hasOperate) => {
+    let operates = hasOperate?[{
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:[],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    }]:[];
+    return [...operates,{
         title: "纳税主体",
         dataIndex: "mainName",
         render: (text, record) => (
@@ -288,6 +319,7 @@ const columns = context => [
         }
     }
 ];
+}
 
 class InvoiceCollection extends Component {
     state = {
@@ -338,8 +370,20 @@ class InvoiceCollection extends Component {
             })
         })
     }
+    deleteRecord(record){
+        request.delete(`/income/invoice/collection/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     render() {
-        const { tableUpDateKey, filters, visible, modalConfig, statusParam, totalSource } = this.state;
+        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
@@ -349,7 +393,7 @@ class InvoiceCollection extends Component {
                         fields: getSearchFields(disabled,declare)
                     }}
                     tableOption={{
-                        columns: columns(this),
+                        columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         scroll: { x: "110%" },

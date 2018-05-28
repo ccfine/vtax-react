@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 15:40:51
+ * @Last Modified time: 2018-05-28 18:08:48
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -234,7 +234,7 @@ class OtherTaxAdjustment extends Component {
     const { declare } = this.props;
     let disabled = !!declare;
     let { filters={}, statusParam = {} } = this.state;
-    let noSubmit = parseInt(statusParam.status,10)!==2;
+    let noSubmit = parseInt(statusParam.status,10)===1;
     return (
       <div>
         <SearchTable
