@@ -122,7 +122,7 @@ export default class DeductibleInputTaxAmount extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {
+                                {/*
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'submit',
                                         url:'/account/income/estate/submit',
@@ -136,7 +136,7 @@ export default class DeductibleInputTaxAmount extends Component{
                                         userPermissions:[],
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
-                                }
+                                */}
                             </div>,
                         },
                         /*scroll:{

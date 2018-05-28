@@ -193,7 +193,7 @@ export default class FixedAssetsInputTaxDetails extends Component{
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {
+                            {/*
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
                                     url:'/account/income/estate/submit',
@@ -207,7 +207,7 @@ export default class FixedAssetsInputTaxDetails extends Component{
                                     userPermissions:[],
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
-                            }
+                            */}
                         </div>,
                     },
                     /*scroll:{

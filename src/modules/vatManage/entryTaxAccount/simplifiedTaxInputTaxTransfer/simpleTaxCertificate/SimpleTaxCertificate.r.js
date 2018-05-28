@@ -120,7 +120,7 @@ class SimpleTaxCertificate extends Component{
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {
+                            {/*
                                  (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',
@@ -134,7 +134,7 @@ class SimpleTaxCertificate extends Component{
                                     onSuccess:this.refreshTable,
                                     userPermissions:[],
                                 }],statusParam)
-                            }
+                            */}
                         </div>,
                     },
                     /*scroll:{

@@ -121,7 +121,7 @@ class InputTaxCertificate extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {
+                                {/*
                                     (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'submit',
                                         url:'/account/incomeSimpleOut/controller/submit',
@@ -135,7 +135,7 @@ class InputTaxCertificate extends Component{
                                         onSuccess:this.refreshTable,
                                         userPermissions:[],
                                     }],statusParam)
-                                }
+                                */}
                             </div>,
                         },
                         /*scroll:{
