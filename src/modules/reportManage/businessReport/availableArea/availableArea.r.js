@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 11:23:44
+ * @Last Modified time: 2018-05-28 09:52:00
  */
 import React, { Component } from "react";
 import { SearchTable,FileImportModal , FileExport} from "compoments";
@@ -152,7 +152,7 @@ const getColumns = context => [
             </div>
         )
     },
-    {
+    /*{
         title: "扩展字段1",
         dataIndex: "ext1"
     },
@@ -163,7 +163,7 @@ const getColumns = context => [
     {
         title: "扩展字段3",
         dataIndex: "ext3"
-    }
+    }*/
 ];
 
 export default class AvailableArea extends Component {

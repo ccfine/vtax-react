@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-21 10:56:46
+ * @Last Modified time: 2018-05-28 09:52:57
  */
 import React, { Component } from "react";
 import { SearchTable, FileImportModal, FileExport } from "compoments";
@@ -210,7 +210,7 @@ const getColumns = context => [
         title: "待抵扣期间",
         dataIndex: "deductedPeriod"
     },
-    {
+    /*{
         title: "扩展字段1",
         dataIndex: "ext1"
     },
@@ -221,7 +221,7 @@ const getColumns = context => [
     {
         title: "扩展字段3",
         dataIndex: "ext3"
-    }
+    }*/
 ];
 
 export default class fixedAssetCard extends Component {
