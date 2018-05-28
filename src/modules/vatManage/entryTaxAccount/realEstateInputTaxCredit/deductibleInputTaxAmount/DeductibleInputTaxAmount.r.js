@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,listMainResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 const pointerStyle = {
@@ -87,7 +87,7 @@ export default class DeductibleInputTaxAmount extends Component{
     }
 
     render(){
-        const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const {tableKey,visibleView,voucherNum,statusParam} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 20:04:31
+ * @Last Modified time: 2018-05-28 15:40:28
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -222,7 +222,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         key: this.state.updateKey,
                         url: "/account/income/taxout/list",
                         pagination: true,
-                        columns: getColumns(this,!disabled1 && disabled),
+                        columns: getColumns(this,!disabled1 && disabled && declare.decAction==='edit'),
                         rowKey: "id",
                         onSuccess:params=>{
                           this.setState({

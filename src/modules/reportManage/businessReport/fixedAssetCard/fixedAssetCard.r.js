@@ -2,11 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 09:52:57
+ * @Last Modified time: 2018-05-28 14:41:45
  */
 import React, { Component } from "react";
-import { SearchTable, FileImportModal, FileExport } from "compoments";
-import { fMoney } from "utils";
+import {Modal,message} from 'antd';
+import { SearchTable} from "compoments";
+import { fMoney,composeBotton,request } from "utils";
 const searchFields = [
     {
         label: "纳税主体",
@@ -68,6 +69,36 @@ const importFeilds = [
 ];
 
 const getColumns = context => [
+    {
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:[],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    },
     {
         title: (
             <div className="apply-form-list-th">
@@ -226,13 +257,27 @@ const getColumns = context => [
 
 export default class fixedAssetCard extends Component {
     state = {
-        updateKey: Date.now()
+        updateKey: Date.now(),
+        filters:undefined,
     };
     update = () => {
         this.setState({ updateKey: Date.now() });
     };
+    
+    deleteRecord(record){
+        request.delete(`/fixedAssetCard/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.update();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     render() {
-        let { updateKey } = this.state;
+        let { updateKey,filters } = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -245,20 +290,23 @@ export default class fixedAssetCard extends Component {
                     cardProps: {
                         title: "固定资产卡片"
                     },
+                    onSuccess:(filters)=>{
+                        this.setState(filters)
+                    },
                     extra: (
                         <span>
-                            <FileImportModal
-                                url="/fixedAssetCard/upload"
-                                title="导入"
-                                fields={importFeilds}
-                                style={{ marginRight: 5 }}
-                                onSuccess={this.update}
-                            />
-                            <FileExport
-                                url="fixedAssetCard/download"
-                                title="下载导入模板"
-                                size="small"
-                            />
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type: 'fileExport',
+                                    url: 'fixedAssetCard/download',
+                                },{
+                                    type:'fileImport',
+                                    url:'/fixedAssetCard/upload',
+                                    onSuccess:this.update,
+                                    userPermissions:[],
+                                    fields:importFeilds
+                                }])
+                            }
                         </span>
                     )
                 }}
