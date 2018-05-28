@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 19:17:07
+ * @Last Modified time: 2018-05-28 19:37:03
  *
  */
 import React, { Component } from 'react'
@@ -237,7 +237,7 @@ class NeedNotMatchInvoices extends Component{
 
     }
     render(){
-        const {visible,tableKey,statusParam,totalSource,selectedRowKeys} = this.state;
+        const {visible,tableKey,statusParam,totalSource,selectedRowKeys,revokeLoading} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -277,7 +277,7 @@ class NeedNotMatchInvoices extends Component{
                                 onClick: ()=>this.toggleModalVisible(true)
                             }],statusParam)
                         }
-                        {(disabled && declare.decAction==='edit') && <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>}
+                        {(disabled && declare.decAction==='edit') && <Button size="small" loading={revokeLoading} onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>}
                         <TableTotal totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {
