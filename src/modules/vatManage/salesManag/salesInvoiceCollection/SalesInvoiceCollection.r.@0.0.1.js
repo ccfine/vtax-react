@@ -4,7 +4,8 @@
 import React, { Component } from "react";
 import {connect} from 'react-redux'
 import { SearchTable, TableTotal } from "compoments";
-import { fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
+import {Modal,message} from 'antd';
+import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
 
@@ -127,33 +128,42 @@ const searchFields = (disabled,declare) => {
         }
     ];
 };
-const getColumns = context => [
-    {
+const getColumns = (context,hasOperate) => {
+    let operates = hasOperate?[{
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:[],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    }]:[];
+    return [
+        ...operates
+    ,{
         title: "纳税主体",
         dataIndex: "mainName",
-        render: (text, record) => (<span
-                title='查看详情'
-                style={{
-                    ...pointerStyle,
-                    marginLeft: 5
-                }}
-                onClick={() => {
-                    context.setState(
-                        {
-                            modalConfig: {
-                                type: "view",
-                                id: record.id
-                            }
-                        },
-                        () => {
-                            context.toggleModalVisible(true);
-                        }
-                    );
-                }}
-            >
-                {text}
-            </span>
-        ),
     },
     {
         title: (
@@ -195,7 +205,26 @@ const getColumns = context => [
         dataIndex: "invoiceNum",
         render: (text, record) => (
             <div>
-                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p1">
+                    <span title='查看详情'
+                    style={{
+                        ...pointerStyle,
+                        marginLeft: 5
+                    }}
+                    onClick={() => {
+                        context.setState(
+                            {
+                                modalConfig: {
+                                    type: "view",
+                                    id: record.id
+                                }
+                            },
+                            () => {
+                                context.toggleModalVisible(true);
+                            }
+                        );
+                    }}>{text}</span>
+                </p>
                 <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
             </div>
         )
@@ -254,6 +283,7 @@ const getColumns = context => [
         }
     }
 ];
+}
 class SalesInvoiceCollection extends Component {
     state = {
         visible: false,
@@ -275,6 +305,18 @@ class SalesInvoiceCollection extends Component {
             })
         })
     };
+    deleteRecord(record){
+        request.delete(`/output/invoice/collection/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     toggleModalVisible = visible => {
         this.setState({
             visible
@@ -294,7 +336,7 @@ class SalesInvoiceCollection extends Component {
         });
     };
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam, filters={} } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={} } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
@@ -309,7 +351,7 @@ class SalesInvoiceCollection extends Component {
                 tableOption={{
                     key: tableKey,
                     pageSize: 10,
-                    columns: getColumns(this),
+                    columns: getColumns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                     url: "/output/invoice/collection/list",
                     onSuccess: (params) => {
                         this.setState({

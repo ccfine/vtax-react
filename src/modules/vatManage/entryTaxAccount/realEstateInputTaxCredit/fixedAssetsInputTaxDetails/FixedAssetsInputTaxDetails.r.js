@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,toPercent,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,listMainResultStatus,toPercent} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体名称',
@@ -158,7 +158,7 @@ export default class FixedAssetsInputTaxDetails extends Component{
         })
     }
     render(){
-        const {tableKey,filters,statusParam} = this.state;
+        const {tableKey,statusParam} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -193,7 +193,7 @@ export default class FixedAssetsInputTaxDetails extends Component{
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {
+                            {/*
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
                                     url:'/account/income/estate/submit',
@@ -207,7 +207,7 @@ export default class FixedAssetsInputTaxDetails extends Component{
                                     userPermissions:[],
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
-                            }
+                            */}
                         </div>,
                     },
                     /*scroll:{

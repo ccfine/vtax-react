@@ -2,10 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-18 11:23:44
+ * @Last Modified time: 2018-05-28 14:40:25
  */
 import React, { Component } from "react";
-import { SearchTable,FileImportModal , FileExport} from "compoments";
+import { SearchTable} from "compoments";
+import {composeBotton,request} from 'utils';
+import {Modal,message} from 'antd';
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
@@ -66,7 +68,36 @@ const importFeilds = [
     }
 ];
 
-const getColumns = context => [
+const getColumns = context => [{
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:[],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    },
     {
         title: (
             <div className="apply-form-list-th">
@@ -152,7 +183,7 @@ const getColumns = context => [
             </div>
         )
     },
-    {
+    /*{
         title: "扩展字段1",
         dataIndex: "ext1"
     },
@@ -163,18 +194,30 @@ const getColumns = context => [
     {
         title: "扩展字段3",
         dataIndex: "ext3"
-    }
+    }*/
 ];
 
 export default class AvailableArea extends Component {
     state = {
         updateKey: Date.now()
-    };
+    }
     update = () => {
         this.setState({ updateKey: Date.now() });
-    };
+    }
+    deleteRecord(record){
+        request.delete(`/interAvailableBuildingAreaInformation/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.update();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     render() {
-        let { updateKey } = this.state;
+        let { updateKey,filters } = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -190,20 +233,23 @@ export default class AvailableArea extends Component {
                     scroll: {
                         x: "120%"
                     },
+                    onSuccess:filters=>{
+                        this.setState({filters})
+                    },
                     extra:(
                         <span>
-                            <FileImportModal
-                                url="/interAvailableBuildingAreaInformation/upload"
-                                title="导入"
-                                fields={importFeilds}
-                                style={{ marginRight: 5 }}
-                                onSuccess={this.update}
-                            />
-                            <FileExport
-                                url="interAvailableBuildingAreaInformation/download"
-                                title="下载导入模板"
-                                size="small"
-                            />
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type: 'fileExport',
+                                    url: 'interAvailableBuildingAreaInformation/download',
+                                },{
+                                    type:'fileImport',
+                                    url:'/interAvailableBuildingAreaInformation/upload',
+                                    onSuccess:this.update,
+                                    userPermissions:[],
+                                    fields:importFeilds
+                                }])
+                            }
                         </span>
                     )
                 }}

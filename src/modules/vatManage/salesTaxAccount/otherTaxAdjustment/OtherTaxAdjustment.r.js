@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 17:52:53 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 20:03:13
+ * @Last Modified time: 2018-05-28 18:08:48
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -233,7 +233,8 @@ class OtherTaxAdjustment extends Component {
   render() {
     const { declare } = this.props;
     let disabled = !!declare;
-    let { filters={}, statusParam } = this.state;
+    let { filters={}, statusParam = {} } = this.state;
+    let noSubmit = parseInt(statusParam.status,10)===1;
     return (
       <div>
         <SearchTable
@@ -244,7 +245,7 @@ class OtherTaxAdjustment extends Component {
           tableOption={{
             scroll: { x: "150%" },
             pageSize: 10,
-            columns: getColumns(this,disabled),
+            columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",
             onSuccess:(params)=>{

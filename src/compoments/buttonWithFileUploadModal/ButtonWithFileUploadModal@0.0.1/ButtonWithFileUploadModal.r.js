@@ -12,7 +12,7 @@ const transformData = data =>{
             name: item.originalFileName,
             status: 'done',
             response: 'success', // custom error message to show
-            url: 'http://www.baidu.com/xxx.png',
+            url: `${window.baseURL}sys/file/download/${item.id}`,
         }
     })
 }
@@ -143,7 +143,9 @@ class ButtonWithFileUploadModal extends Component{
                </Button>
                 <Modal title='附件' visible={visible} maskClosable={false} destroyOnClose={true} onCancel={()=>this.toggleVisible(false)} footer={null}>
                     <Spin spinning={!loaded}>
-                    <Upload {...uploadProps}>
+                    <Upload {...uploadProps} showUploadList={{
+                        showRemoveIcon:!readOnly
+                    }}>
                         {
                             !readOnly && (
                                 <Button size='small'>

@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,listMainResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -86,7 +86,7 @@ class InputTaxCertificate extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const {tableKey,visibleView,voucherNum,statusParam} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -121,7 +121,7 @@ class InputTaxCertificate extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {
+                                {/*
                                     (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'submit',
                                         url:'/account/incomeSimpleOut/controller/submit',
@@ -135,7 +135,7 @@ class InputTaxCertificate extends Component{
                                         onSuccess:this.refreshTable,
                                         userPermissions:[],
                                     }],statusParam)
-                                }
+                                */}
                             </div>,
                         },
                         /*scroll:{

@@ -202,9 +202,10 @@ class InputTaxDetails extends Component{
         return data.filter(d=>d.voucherType === '前期认证相符且本期申报抵扣')
     }
     render(){
-        const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam,filters,totalSource,record,action,isAdd} = this.state;
+        const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam={},filters,totalSource,record,action,isAdd} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            notSubmit = parseInt(statusParam.status,10)===1;
         return(
             <SearchTable
                 searchOption={{
@@ -234,7 +235,7 @@ class InputTaxDetails extends Component{
                         title: "进项税额明细台账",
                     },
                     pageSize:10,
-                    columns:getColumns(this,disabled),
+                    columns:getColumns(this,disabled && declare.decAction==='edit' && notSubmit),
                     url:'/account/income/taxDetail/taxDetailList',
                     extra:<div>
                         {

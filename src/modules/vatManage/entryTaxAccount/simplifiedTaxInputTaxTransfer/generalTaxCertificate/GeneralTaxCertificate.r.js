@@ -174,7 +174,7 @@ class GeneralTaxCertificate extends Component{
                                         onSuccess: this.refreshTable,
                                         userPermissions:[],
                                     }
-                                },{
+                                }/*,{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',
                                     params:filters,
@@ -186,7 +186,7 @@ class GeneralTaxCertificate extends Component{
                                     params:filters,
                                     onSuccess:this.refreshTable,
                                     userPermissions:[],
-                                }],statusParam)
+                                }*/],statusParam)
                             }
                         </div>,
                     },

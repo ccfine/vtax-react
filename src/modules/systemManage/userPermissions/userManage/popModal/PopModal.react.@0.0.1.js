@@ -197,7 +197,7 @@ class PopModal extends Component {
                                     componentProps: {
                                         fieldTextName: "orgName",
                                         fieldValueName: "orgId",
-                                        url: `/org/user_belong_organizations`,
+                                        url: `/org/getOrganizations`,
                                         selectOptions: {
                                             mode: "multiple"
                                         }

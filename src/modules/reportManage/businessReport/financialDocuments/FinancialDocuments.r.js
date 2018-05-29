@@ -3,8 +3,8 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam,composeBotton} from 'utils'
-import moment from 'moment';
+import {Modal,message} from 'antd'
+import {fMoney,composeBotton,request} from 'utils'
 const formItemStyle={
     labelCol:{
         span:8
@@ -59,20 +59,13 @@ const fields = [
         },
     }
 ]
-const searchFields = (disabled) => {
-    return [
+const searchFields =[
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:8,
             formItemStyle,
-            componentProps:{
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-            }
         },{
             label:'查询期间',
             fieldName:'authMonth',
@@ -81,15 +74,40 @@ const searchFields = (disabled) => {
             span:8,
             componentProps:{
                 format:'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-            },
+            }
         }
     ]
-}
-const columns=[
+const getColumns = context =>[
+    {
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:[],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    },
     {
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">纳税主体名称</p>
@@ -218,26 +236,29 @@ export default class FinancialDocuments extends Component{
             updateKey:Date.now(),
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
+    deleteRecord(record){
+        request.delete(`/inter/financial/voucher/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
     }
-
     render(){
         const {updateKey,filters} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields
                 }}
                 tableOption={{
                     key:updateKey,
                     pageSize:20,
-                    columns:columns,
+                    columns:getColumns(this),
                     url:'/inter/financial/voucher/voucherList',
                     onSuccess: (params) => {
                         this.setState({
@@ -252,12 +273,13 @@ export default class FinancialDocuments extends Component{
                                     JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                         type: 'fileExport',
                                         url: 'inter/financial/voucher/download',
-                                        onSuccess: this.refreshTable
+                                        onSuccess: this.refreshTable,
                                     },{
                                         type:'fileImport',
                                         url:'/inter/financial/voucher/upload',
                                         onSuccess:this.refreshTable,
-                                        fields:fields
+                                        fields:fields,
+                                        userPermissions:[],
                                     }])
                                 }
                             </div>

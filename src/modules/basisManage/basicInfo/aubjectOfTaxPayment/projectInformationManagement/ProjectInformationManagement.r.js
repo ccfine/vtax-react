@@ -146,7 +146,7 @@ export default class ProjectInformationManagement extends Component{
                     <Card
                         extra={
                             <div>
-                                <AutoFileUpload url={`project/upload/${this.props.taxSubjectId}`} fetchTable_1_Data={this.fetchTable_1_Data} />
+                                <AutoFileUpload url={`project/upload/${this.props.taxSubjectId}`} fetchTable_1_Data={()=>this.fetchTable_1_Data(this.props.taxSubjectId)} />
                                 <FileExport
                                     url='project/download'
                                     title="模板下载"

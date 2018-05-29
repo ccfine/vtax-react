@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-07 14:19:47
+ * @Last Modified time: 2018-05-28 16:08:09
  *
  */
 import React, { Component } from 'react'
@@ -72,7 +72,7 @@ const getColumns = (context,disabled,declare) => [
         render(text, record, index) {
 
             if(disabled && declare.decAction==='edit'){
-                if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 2){
+                if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) !== 2){
                     return (
                             composeBotton([{
                                 type: 'action',
