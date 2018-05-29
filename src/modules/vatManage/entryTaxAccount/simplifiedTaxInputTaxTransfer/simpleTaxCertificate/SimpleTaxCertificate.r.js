@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus} from 'utils'
+import {fMoney} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -61,22 +61,10 @@ class SimpleTaxCertificate extends Component{
         tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
-        filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
             visibleView
-        })
-    }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/account/incomeSimpleOut/controller/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
         })
     }
     refreshTable = ()=>{
@@ -85,7 +73,7 @@ class SimpleTaxCertificate extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherNum,statusParam} = this.state;
+        const {tableKey,visibleView,voucherNum} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -107,35 +95,8 @@ class SimpleTaxCertificate extends Component{
                     pageSize:20,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/simpleTaxList',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>简易计税列表</span>,
-                        extra:<div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
-                            {/*
-                                 (disabled && declare.decAction==='edit') && composeBotton([{
-                                    type:'submit',
-                                    url:'/account/incomeSimpleOut/controller/submit',
-                                    params:filters,
-                                    onSuccess:this.refreshTable,
-                                    userPermissions:[],
-                                },{
-                                    type:'revoke',
-                                    url:'/account/incomeSimpleOut/controller/revoke',
-                                    params:filters,
-                                    onSuccess:this.refreshTable,
-                                    userPermissions:[],
-                                }],statusParam)
-                            */}
-                        </div>,
                     },
                     /*scroll:{
                      x:'180%'

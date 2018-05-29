@@ -143,7 +143,9 @@ const getColumns = context => [
                             type:'switch',
                             userPermissions:[],
                             checked: parseInt(record.isEnabled, 0) === 1,
-                            onSuccess:()=>{ context.handleState(record.id) }
+                            onSuccess:(checked)=>{
+                                context.handleChange(checked,record.id)
+                            }
                         }])
                     }
                 </span>
@@ -233,7 +235,11 @@ class UserManage extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-    handleState = id => checked => {
+    //选中多少条数据 - 禁用
+    handleChange = (checked,id) => {
+        /*const param = {
+         isEnabled:checked === true ? '1' : '2',
+         }*/
         const t = checked === true ? "启用" : "禁用";
         const modalRef = Modal.confirm({
             title: "友情提醒",
@@ -261,7 +267,9 @@ class UserManage extends Component {
                 modalRef.destroy();
             }
         });
-    };
+
+    }
+
     handleDelete = (id,isEnabled) => {
         if(parseInt(isEnabled, 0) === 1){
             message.error('请禁用后，再删除');

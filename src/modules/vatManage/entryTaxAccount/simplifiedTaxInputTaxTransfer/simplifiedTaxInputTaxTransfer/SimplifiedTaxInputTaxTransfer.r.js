@@ -125,13 +125,19 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',
                                     params:filters,
-                                    onSuccess:this.refreshTable,
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
                                     userPermissions:[],
                                 },{
                                     type:'revoke',
                                     url:'/account/incomeSimpleOut/controller/revoke',
                                     params:filters,
-                                    onSuccess:this.refreshTable,
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
                                     userPermissions:[],
                                 }],statusParam)
                             }

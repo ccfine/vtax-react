@@ -29,7 +29,7 @@ const searchFields = (getFieldValue)=>[
     },
     {
         label: "项目分期",
-        fieldName: "stagesId",
+        fieldName: "stageId",
         type: "asyncSelect",
         span:6,
         componentProps: {
@@ -37,8 +37,7 @@ const searchFields = (getFieldValue)=>[
             fieldValueName: "id",
             doNotFetchDidMount: true,
             fetchAble: getFieldValue("projectId"),
-            url: `/project/stages/${getFieldValue("projectId") ||
-                ""}`
+            url: `/project/stages/${getFieldValue("projectId") || ""}`
         }
     }
 ];

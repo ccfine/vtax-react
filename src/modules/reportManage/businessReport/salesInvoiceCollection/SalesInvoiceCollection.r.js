@@ -180,8 +180,17 @@ const columns=[
         dataIndex: 'taxRate',
         render:text=>text? `${text}%`: text,
     },{
-        title: '应税项目名称',
-        dataIndex: 'taxableProjectName'
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">应税项目名称</p>
+            <p className="apply-form-list-p2">应税项目编码</p>
+        </div>,
+        dataIndex: 'taxableProjectName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.taxableProjectNum}</p>
+            </div>
+        )
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',

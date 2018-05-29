@@ -192,7 +192,6 @@ export const saveToken = dispatch => async (data) =>{
         console.log(err)
     }
 }
-
 //给纳税申报用的
 export const saveDeclare = dispatch => async (data) =>{
     try {
@@ -201,3 +200,5 @@ export const saveDeclare = dispatch => async (data) =>{
         console.log(err)
     }
 }
+
+

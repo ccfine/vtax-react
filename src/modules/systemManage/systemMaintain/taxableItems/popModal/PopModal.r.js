@@ -235,30 +235,20 @@ class PopModal extends Component{
                                         fieldName:'commonlyTaxRate',
                                         type:'select',
                                         span:'12',
+                                        notShowAll:true,
                                         options:this.state.commonlyTaxRateList,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commonlyTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入一般计税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'简易计税税率',
                                         fieldName:'simpleTaxRate',
                                         type:'select',
                                         span:'12',
+                                        notShowAll:true,
                                         options:this.state.simpleTaxRateList,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入简易计税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'填报说明',

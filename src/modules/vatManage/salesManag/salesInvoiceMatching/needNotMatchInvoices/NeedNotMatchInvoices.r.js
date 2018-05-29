@@ -70,14 +70,6 @@ const searchFields=(disabled,declare)=> {
             }
         },
         {
-            label: '货物名称',
-            type: 'input',
-            span:6,
-            fieldName: 'commodityName',
-            formItemStyle,
-            fieldDecoratorOptions: {}
-        },
-        {
             label: '购货单位名称',
             type: 'input',
             span:6,
@@ -140,10 +132,6 @@ const columns = [
         }
     },
     {
-        title:'货物名称',
-        dataIndex:'commodityName'
-    },
-    {
         title:'开票日期',
         dataIndex:'billingDate',
         width:'75px'
@@ -156,7 +144,9 @@ const columns = [
     },
     {
         title:'税率',
-        dataIndex:'taxRate'
+        dataIndex:'taxRate',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'税额',

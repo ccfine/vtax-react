@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
@@ -161,9 +161,6 @@ class GeneralTaxCertificate extends Component{
                         title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>一般计税列表</span>,
                         extra:<div>
                             {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'mark',
                                     formOptions:{
@@ -171,22 +168,12 @@ class GeneralTaxCertificate extends Component{
                                         selectedRowKeys: selectedRowKeys,
                                         url:"/account/incomeSimpleOut/controller/commonlyFlag",
                                         fields: markFieldsData,
-                                        onSuccess: this.refreshTable,
+                                        onSuccess:()=>{
+                                            this.refreshTable()
+                                        },
                                         userPermissions:[],
                                     }
-                                }/*,{
-                                    type:'submit',
-                                    url:'/account/incomeSimpleOut/controller/submit',
-                                    params:filters,
-                                    onSuccess:this.refreshTable,
-                                    userPermissions:[],
-                                },{
-                                    type:'revoke',
-                                    url:'/account/incomeSimpleOut/controller/revoke',
-                                    params:filters,
-                                    onSuccess:this.refreshTable,
-                                    userPermissions:[],
-                                }*/],statusParam)
+                                }],statusParam)
                             }
                         </div>,
                     },

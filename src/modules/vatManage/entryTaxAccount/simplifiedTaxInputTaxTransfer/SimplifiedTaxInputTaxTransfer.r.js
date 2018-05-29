@@ -63,19 +63,27 @@ const searchFields=(disabled,declare)=> {
 }
 class SimpleTaxInputTaxTransferredToTheAccount extends Component{
     state = {
-        activeKey:'1'
+        activeKey:'1',
+        tabsKey:Date.now()
     }
     onTabChange = activeKey =>{
         this.setState({
-            activeKey
+            activeKey,
+        },()=>{
+            this.refreshTabs()
+        })
+    }
+    refreshTabs = ()=>{
+        this.setState({
+            tabsKey:Date.now()
         })
     }
     render(){
-        const {activeKey} = this.state;
+        const {tabsKey,activeKey} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
+            <Tabs key={tabsKey}  onChange={this.onTabChange} type="card" activeKey={activeKey}>
                 <TabPane tab="进项税额" key="1">
                     <InputTaxCertificate searchFields={searchFields(disabled,declare)} />
                 </TabPane>
@@ -86,7 +94,7 @@ class SimpleTaxInputTaxTransferredToTheAccount extends Component{
                     <GeneralTaxCertificate searchFields={searchFields(disabled,declare)} />
                 </TabPane>
                 <TabPane tab="简易计税进项税额转出" key="4">
-                    <SimplifiedTaxInputTaxTransfer searchFields={searchFields(disabled,declare)} />
+                    <SimplifiedTaxInputTaxTransfer searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
             </Tabs>
         )

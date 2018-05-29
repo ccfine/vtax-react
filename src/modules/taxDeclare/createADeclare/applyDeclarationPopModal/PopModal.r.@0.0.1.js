@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import { Icon, Modal, Row, Col, Steps, List, Card, message,Spin } from 'antd'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { composeMenus, request } from 'utils'
 import routes from 'modules/routes'
 import { saveDeclare } from 'redux/ducks/user'
@@ -104,7 +104,8 @@ class ApplyDeclarationPopModal extends Component {
 	state = {
 		loading: false,
 		data: [],
-		current: 0
+		current: 0,
+        path:'',
 	}
 	toggleLoading = loading => {
 		this.setState({
@@ -130,18 +131,15 @@ class ApplyDeclarationPopModal extends Component {
 					<List.Item>
 						<Card>
 							{item.path ? (
-								<Link
-									target="_blank"
-									style={{
-										color: 'rgba(0, 0, 0, 0.65)'
-									}}
-									to={{
-										pathname: item.path
-									}}
-									onClick={this.LockPageRefresh}>
-									{item.name}
-									{getStatuText(item.status)}
-								</Link>
+								<a href='###'
+								   onClick={e => {
+                                       e && e.preventDefault();
+                                       this.LockPageRefresh(item.path)
+                                   }}
+									>
+                                    {item.name}
+                                    {getStatuText(item.status)}
+								</a>
 							) : (
 								<span
 									style={{
@@ -189,30 +187,35 @@ class ApplyDeclarationPopModal extends Component {
 			</Row>
 		)
 	}
-
-    LockPageRefresh = () => {
-        const { saveDeclare, record } = this.props;
-		saveDeclare({
+    LockPageRefresh = path => {
+        const { saveDeclare, record} = this.props;
+        saveDeclare({
             mainId: record.mainId,
             authMonth: record.partTerm,
             authMonthEnd: record.subordinatePeriodEnd,
             status: record.status,
             decAction: record.decAction
         })
+		setTimeout(()=>{
+        	window.open(`${window.location.origin}${path}`)
+        	//window.open(`${window.baseURL}${path}`)
+            //console.log(window.location.origin, window.baseURL)
+            const ref = Modal.warning({
+                title: '友情提醒',
+                content: <h2>操作完成后，请刷新当前页面！</h2>,
+                okText: '刷新',
+                onOk: () => {
+                    ref.destroy()
+                    const { record } = this.props;
+                    this.fetchDeclarationById({
+                        decConduct: this.state.current,
+                        mainId: record.mainId,
+                        authMonth: record.partTerm
+                    })
+                }
+            })
+        },100)
 
-        const ref = Modal.warning({
-            title: '友情提醒',
-            content: <h2>操作完成后，请刷新当前页面！</h2>,
-            okText: '刷新',
-            onOk: () => {
-                ref.destroy()
-                this.fetchDeclarationById({
-                    decConduct: this.state.current,
-                    mainId: record.mainId,
-                    authMonth: record.partTerm
-                })
-            }
-        })
     }
 
 
@@ -229,7 +232,7 @@ class ApplyDeclarationPopModal extends Component {
                         data: transformDeclaration(data.data)
                     })
                 }
-                
+
                 this.toggleLoading(false)
 			})
 			.catch(err => {
@@ -238,15 +241,9 @@ class ApplyDeclarationPopModal extends Component {
 			})
 	}
 	componentWillReceiveProps(nextProps) {
+
 		if (!this.props.visible && nextProps.visible) {
-            const { saveDeclare, record } = nextProps;
-            saveDeclare({
-                mainId: record.mainId,
-                authMonth: record.partTerm,
-                authMonthEnd: record.subordinatePeriodEnd,
-                status: record.status,
-                decAction: record.decAction
-            })
+            const { record } = nextProps;
 			this.fetchDeclarationById({
 				decConduct: this.state.current,
 				mainId: record.mainId,
@@ -299,7 +296,9 @@ class ApplyDeclarationPopModal extends Component {
 
 export default withRouter(
 	connect(
-		state => ({}),
+		state => ({
+            declare:state.user.get('declare')
+		}),
 		dispatch => ({
 			saveDeclare: saveDeclare(dispatch)
 		})
