@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 14:10:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 11:44:46
+ * @Last Modified time: 2018-05-29 09:46:46
  */
 import React from "react";
 import { Form, Row, Col, Checkbox, Spin } from "antd";
@@ -89,13 +89,14 @@ class PermissionFeilds extends React.Component {
                                         style={{
                                             textAlign: "right",
                                             lineHeight: "32px",
-                                            paddingRight: 15
+                                            paddingRight: 15,
+                                            color: 'rgba(0, 0, 0, 0.85)',
                                         }}
-                                        span={4}
+                                        span={6}
                                     >
                                         {item.moduleName}:
                                     </Col>
-                                    <Col span={20}>
+                                    <Col span={18}>
                                         {editAble && (
                                             <FormItem>
                                                 {getFieldDecorator(`allCode${i}`,{

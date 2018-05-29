@@ -138,6 +138,17 @@ class UserDetail extends Component {
                     <Row gutter={16}>
                         <Col>
                             <Col span={24}>
+                                <p>
+                                    备注：<span style={{ color: "#333" }}>
+                                        {userData.remark}
+                                    </span>
+                                </p>
+                            </Col>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col>
+                            <Col span={24}>
                                 <div>
                                     权限：
                                     <span style={{ color: "#333" }}>
@@ -156,17 +167,6 @@ class UserDetail extends Component {
                                         </Form>
                                     </span>
                                 </div>
-                            </Col>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col>
-                            <Col span={24}>
-                                <p>
-                                    备注：<span style={{ color: "#333" }}>
-                                        {userData.remark}
-                                    </span>
-                                </p>
                             </Col>
                         </Col>
                     </Row>
