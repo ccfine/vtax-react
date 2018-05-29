@@ -76,7 +76,7 @@ const markFieldsData = context => [
         type: 'select',
         notShowAll: true,
         span: '22',
-        options: context.state.sysDictIdList
+        options: context.state.sysDictIdList.concat({value:'0', text:'无'})
     }
 ]
 const columns = context =>[
@@ -249,14 +249,6 @@ class SalesInvoiceCollection extends Component{
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
-                            }
-                            {
-                                composeBotton([{
-                                    type:'fileExport',
-                                    title:'下载模板',
-                                    url:'income/financeDetails/controller/download',
-                                    onSuccess:this.refreshTable
-                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{

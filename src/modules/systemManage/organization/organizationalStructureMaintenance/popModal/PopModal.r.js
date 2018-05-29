@@ -259,7 +259,11 @@ class PopModal extends Component{
                                         span: '12',
                                         fieldDecoratorOptions: {
                                             initialValue: type==='add' ?
-                                                ((parseInt(props.selectedNodes && props.selectedNodes.orgLevel, 0)+1) || (parseInt(initData['orgLevel'], 0)+1) )
+                                                (
+                                                    isNaN(parseInt(props.selectedNodes && props.selectedNodes.orgLevel, 0)+1) ? 1 : parseInt(props.selectedNodes && props.selectedNodes.orgLevel, 0)+1
+                                                    ||
+                                                    (parseInt(initData['orgLevel'], 0)+1)
+                                                )
                                                 :
                                                 ((props.selectedNodes && props.selectedNodes.orgLevel) || initData['orgLevel']),
                                             rules: [

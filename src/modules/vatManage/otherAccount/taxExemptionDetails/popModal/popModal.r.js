@@ -331,7 +331,7 @@ class PopModal extends Component {
                                             disabled
                                         },
                                     }, {
-                                        label: '进项税额是否认证抵扣',
+                                        label: '是否已认证',
                                         fieldName: 'incomeTaxAuth',
                                         type: 'checkbox',
                                         span: 12,

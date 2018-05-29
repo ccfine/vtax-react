@@ -5,7 +5,7 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Form, Row, Col, Button,Card} from 'antd'
-import {getFields,composeBotton,requestResultStatus} from 'utils'
+import {getFields,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
@@ -126,9 +126,9 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,statusParam} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action} = this.props;
         let disabled = !!declare;
-        const { params,updateKey } = this.state;
+        const { params,updateKey,statusParam } = this.state;
         return(
             <div>
                 <div style={{
@@ -156,20 +156,27 @@ class SheetWithSearchFields extends Component{
                 </div>
                 <Card
                     extra={
-                        action ? (disabled && declare.decAction==='edit') && composeBotton([{
-                            type:'submit',
-                            url:'/tax/decConduct/main/submit',
-                            params:params,
-                            userPermissions:[],
-                            onSuccess:this.refreshTable
-                        },{
-                            type:'revoke',
-                            url:'/tax/decConduct/main/revoke',
-                            params:params,
-                            userPermissions:[],
-                            onSuccess:this.refreshTable,
-                        }],statusParam)
-                            : null
+                        <div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
+                                action ? (disabled && declare.decAction==='edit') && composeBotton([{
+                                    type:'submit',
+                                    url:'/tax/decConduct/main/submit',
+                                    params:params,
+                                    userPermissions:[],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/tax/decConduct/main/revoke',
+                                    params:params,
+                                    userPermissions:[],
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                                : null
+                            }
+                        </div>
                     }
                     title={<span><label className="tab-breadcrumb">纳税申报表 / </label>{tab}</span>}
                     bodyStyle={{

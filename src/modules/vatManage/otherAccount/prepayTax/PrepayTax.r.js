@@ -134,8 +134,8 @@ const getColumns = context => [
     }, {
         title:'预缴税率',
         dataIndex:'taxRate',
-        render:text=>fMoney(text),
-        className:'table-money'
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     }, {
         title:'预缴税款',
         dataIndex:'prepayAmount',

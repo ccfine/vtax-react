@@ -91,7 +91,9 @@ const columns = context => [
                         type:'switch',
                         userPermissions:[],
                         checked: parseInt(record.isEnabled,0) === 1,
-                        onSuccess:()=>{ context.handleChange(record.id) }
+                        onSuccess:(checked)=>{
+                            context.handleChange(checked,record.id)
+                        }
                     }])
                 }
             </span>
@@ -168,7 +170,10 @@ class RoleManage extends Component{
     }
 
     //选中多少条数据 - 禁用
-    handleChange = (id) => (checked) => {
+    handleChange = (checked,id) => {
+        /*const param = {
+         isEnabled:checked === true ? '1' : '2',
+         }*/
         const t = checked === true ? '启用' : '禁用'
         const modalRef = Modal.confirm({
             title: '友情提醒',

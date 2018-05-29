@@ -222,6 +222,16 @@ class PopModal extends Component {
                                         labelInValue: true,
                                         disabled: readonly
                                     }
+                                },{
+                                    ...setComItem(
+                                        record.month && moment(record.month),
+                                        readonly,
+                                        true,
+                                        "请选择期间"
+                                    ),
+                                    label: "期间",
+                                    fieldName: "month",
+                                    type: "monthPicker"
                                 }
                             ])}
                         </Row>
@@ -382,21 +392,6 @@ class PopModal extends Component {
                                     label: "价税合计",
                                     fieldName: "totalAmount",
                                     type: "numeric"
-                                }
-                            ])}
-                        </Row>
-                        <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.month && moment(record.month),
-                                        readonly,
-                                        true,
-                                        "请选择期间"
-                                    ),
-                                    label: "期间",
-                                    fieldName: "month",
-                                    type: "monthPicker"
                                 }
                             ])}
                         </Row>

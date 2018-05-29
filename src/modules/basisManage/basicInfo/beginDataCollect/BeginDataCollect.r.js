@@ -38,7 +38,7 @@ const getColumns = context =>[
         render:(text,record)=>(<span title='查看详情' style={pointerStyle} onClick={()=>context.showModal('look',record.mainId)}>{text}</span>),
     }, {
         title: '统一社会信用代码或纳税人识别号',
-        dataIndex: 'itemNum',
+        dataIndex: 'taxNum',
     },{
         title: '是否已处理',
         dataIndex: 'finish',

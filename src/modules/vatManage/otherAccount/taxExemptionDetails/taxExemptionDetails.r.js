@@ -70,9 +70,8 @@ const getColumns = (context,disabled,declare) => [
     {
         title: '操作',
         render(text, record, index) {
-
             if(disabled && declare.decAction==='edit'){
-                if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 2){
+                if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                     return (
                             composeBotton([{
                                 type: 'action',

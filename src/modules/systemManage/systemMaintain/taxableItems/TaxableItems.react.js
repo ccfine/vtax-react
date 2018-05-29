@@ -122,6 +122,7 @@ class TaxableItems extends Component {
     }
     render() {
         const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,filters} = this.state;
+
         return (
             <TreeTable
                 spinning={searchTableLoading}
@@ -160,7 +161,10 @@ class TaxableItems extends Component {
                                 onClick:()=>{
                                     this.showModal('edit')
                                 }
-                            },{
+                            }])
+                        }
+                        {
+                            (id && parseInt(id,0)!==-1) && composeBotton([{
                                 type:'delete',
                                 icon:'delete',
                                 text:'删除',
@@ -201,10 +205,9 @@ class TaxableItems extends Component {
                     },
                     url:'/taxable/project/list',
                     clearSelectedRowAfterFetch:false,
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
+                    onRowSelect:(selectedRowKeys)=>{
                         this.setState({
                             id:selectedRowKeys[0],
-                            selectedRows,
                         })
                     },
                     rowSelection:{
