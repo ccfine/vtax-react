@@ -48,6 +48,7 @@ const columns = context => [
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
+                            isEstate:1,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -74,6 +75,7 @@ const columns = context => [
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
+                            isEstate:1,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -130,6 +132,7 @@ const notColumns = context =>[
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
+                            isEstate:0,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -156,6 +159,7 @@ const notColumns = context =>[
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
+                            isEstate:0,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -187,6 +191,7 @@ class BillingSales extends Component {
         visible:false,
         loaded:true,
         sysTaxRateId:undefined,
+        isEstate:undefined,
         invoiceType:undefined,
         statusParam:{},
         dataSource:[],
@@ -262,7 +267,7 @@ class BillingSales extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,dataSource,notDataSource,visible,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
+        const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,invoiceType,statusParam,loaded} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -410,7 +415,7 @@ class BillingSales extends Component {
                     filters={{
                         ...filters,
                         invoiceType,
-                        taxRateId:sysTaxRateId
+                        isEstate,
                     }}
                     toggleModalVisible={this.toggleModalVisible}
                 />

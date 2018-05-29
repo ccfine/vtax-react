@@ -180,6 +180,10 @@ class PopModal extends Component{
                 style={{
                     maxWidth:'90%'
                 }}
+                bodyStyle={{
+                    maxHeight: 420,
+                    overflowY: "auto"
+                }}
                 visible={visible}
                 footer={
                     <Row>
@@ -194,12 +198,6 @@ class PopModal extends Component{
                 <Spin spinning={loaded}>
                     <Form layout="inline" onSubmit={this.handleSubmit}>
                         <Row>
-                        <div style={{
-                            width:'100%',
-                            // backgroundColor:'#F8F8F8',
-                            padding:'20px 0',
-                            margin:'20px 0'
-                        }}>
                             {
                                 data.map((item,i)=>{
                                     return (
@@ -246,7 +244,6 @@ class PopModal extends Component{
                                     )
                                 })
                             }
-                            </div>
                         </Row>
                     </Form>
                 </Spin>

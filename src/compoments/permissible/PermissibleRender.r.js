@@ -46,6 +46,7 @@ class PermissibleRender extends Component {
 
     render() {
         const { children, userPermissions, options, renderOtherwise } = this.props;
+
         //当权限是管理员的时候直接放行
         if(parseInt(this.props.type,0)!==1){
             return children;

@@ -28,7 +28,7 @@ const routes = [
         icon:'user',
         exact:true,
         permissions:true,
-        authorityInfo:strategies['home'].options,
+        //authorityInfo:strategies['home'].options,
     },{
         path:`${PATH}/basisManage`,
         name:'基础管理',
