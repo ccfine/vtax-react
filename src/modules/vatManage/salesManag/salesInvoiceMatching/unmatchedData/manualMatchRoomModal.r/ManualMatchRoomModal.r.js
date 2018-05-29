@@ -3,9 +3,9 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Row,Col,message,Card,Input,Icon} from 'antd';
-import {request,fMoney} from '../../../../../../utils'
+import {request,fMoney} from 'utils'
 import {SearchTable} from 'compoments'
-const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
+const searchFields = selectedData=> (getFieldValue)=> {
     return [
         {
             label:'项目名称',
@@ -15,7 +15,7 @@ const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
-                doNotFetchDidMount:true,
+                doNotFetchDidMount:false,
                 fetchAble:selectedData['mainId'] || false,
                 url:`/project/list/${selectedData['mainId']}`,
             }
@@ -140,6 +140,7 @@ class ManualMatchRoomModal extends Component{
     toggleLoaded = loaded => this.setState({loaded})
 
     componentWillReceiveProps(nextProps){
+        console.log('componentWillReceiveProps',nextProps.selectedData)
         if(nextProps.visible && this.props.selectedData['id']){
             this.setState({
                 tableKey:Date.now()
@@ -317,7 +318,7 @@ class ManualMatchRoomModal extends Component{
                     tableOption={{
                         pageSize:10,
                         columns:getColumns(this),
-                        url:'/output/invoice/marry/manual/list',
+                        url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}`,
                     }}
                 >
                 </SearchTable>
