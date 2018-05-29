@@ -150,28 +150,7 @@ const columns = (context,hasOperate) => {
     }]:[];
     return [...operates,{
         title: "纳税主体",
-        dataIndex: "mainName",
-        render: (text, record) => (
-            <span
-                title="查看详情"
-                style={{
-                    ...pointerStyle,
-                    marginLeft: 5
-                }}
-                onClick={() => {
-                    context.setState({
-                        modalConfig: {
-                            type: "view",
-                            id: record.id
-                        }
-                    },() => {
-                        context.toggleModalVisible(true);
-                    });
-                }}
-            >
-                {text}
-            </span>
-        ),
+        dataIndex: "mainName"
     }, {
         title: "数据来源",
         dataIndex: "sourceType",
@@ -229,7 +208,25 @@ const columns = (context,hasOperate) => {
         dataIndex: "invoiceNum",
         render: (text, record) => (
             <div>
-                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p1"><span
+                title="查看详情"
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState({
+                        modalConfig: {
+                            type: "view",
+                            id: record.id
+                        }
+                    },() => {
+                        context.toggleModalVisible(true);
+                    });
+                }}
+            >
+                {text}
+            </span></p>
                 <p className="apply-form-list-p2">{record.billingDate}</p>
             </div>
         )
