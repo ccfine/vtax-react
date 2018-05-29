@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 19:37:03
+ * @Last Modified time: 2018-05-29 11:49:36
  *
  */
 import React, { Component } from 'react'
@@ -291,11 +291,11 @@ class NeedNotMatchInvoices extends Component{
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
                     },
-                    onRowSelect:(selectedRowKeys)=>{
+                    onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    }:undefined,
                 }}
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
