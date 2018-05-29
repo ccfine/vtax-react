@@ -463,6 +463,8 @@ const strategies = {
     }
 }
 
+export const getLookPermissible = [];
+
 export const getOptions = ( oneLevelMenu, twoLevelMenu ) => {
     if ( strategies[oneLevelMenu] && strategies[oneLevelMenu][twoLevelMenu] ) {
         return strategies[oneLevelMenu][twoLevelMenu].options || [];
