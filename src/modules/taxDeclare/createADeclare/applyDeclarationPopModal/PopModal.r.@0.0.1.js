@@ -96,10 +96,12 @@ const steps = [
 
 class ApplyDeclarationPopModal extends Component {
 	static propTypes = {
-		onSuccess: PropTypes.func
+		onSuccess: PropTypes.func,
+		url:PropTypes.string,
 	}
 	static defaultProps = {
-		title: '申报办理'
+		title: '申报办理',
+		url:'/tax/decConduct/list',
 	}
 	state = {
 		loading: false,
@@ -220,10 +222,10 @@ class ApplyDeclarationPopModal extends Component {
 
 
 
-	fetchDeclarationById = data => {
+	fetchDeclarationById = (data,url=this.props.url) => {
         this.toggleLoading(true)
 		request
-			.get('/tax/decConduct/list', {
+			.get(url, {
 				params: data
 			})
 			.then(({ data }) => {
@@ -248,7 +250,7 @@ class ApplyDeclarationPopModal extends Component {
 				decConduct: this.state.current,
 				mainId: record.mainId,
 				authMonth: record.partTerm
-			})
+			},nextProps.url)
 		}
 	}
 
