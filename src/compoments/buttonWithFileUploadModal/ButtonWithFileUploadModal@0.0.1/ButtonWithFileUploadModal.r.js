@@ -12,7 +12,7 @@ const transformData = data =>{
             name: item.originalFileName,
             status: 'done',
             response: 'success', // custom error message to show
-            url: 'http://www.baidu.com/xxx.png',
+            url: `${window.baseURL}sys/file/download/${item.id}`,
         }
     })
 }
