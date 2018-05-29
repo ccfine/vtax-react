@@ -240,7 +240,8 @@ class PopModal extends Component {
                                         },
                                         formItemStyle,
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -259,7 +260,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -278,7 +280,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -307,6 +310,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled,
+                                            placeholder:disabled?' ':undefined,
                                             onSelect: value => {
                                                 let rateValue = getFieldValue(
                                                     "taxClassificationCoding"
@@ -380,7 +384,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -393,7 +398,8 @@ class PopModal extends Component {
                                         },
                                         formItemStyle,
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -413,7 +419,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -434,6 +441,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled,
+                                            placeholder:disabled?' ':undefined,
                                             onChange: e => {
                                                 setFieldsValue({
                                                     invoiceDetailNum:
@@ -453,7 +461,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -481,7 +490,8 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             format: "YYYY-MM-DD",
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -502,7 +512,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -522,7 +533,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -535,7 +547,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_50]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -548,7 +561,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -561,7 +575,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -574,7 +589,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -600,6 +616,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled,
+                                            placeholder:disabled?' ':undefined,
                                             onChange: value => {
                                                 if (taxRateValue && value) {
                                                     /**
@@ -635,7 +652,8 @@ class PopModal extends Component {
                                                 : undefined
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -658,7 +676,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -673,7 +692,8 @@ class PopModal extends Component {
                                             ) || undefined
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -694,7 +714,8 @@ class PopModal extends Component {
                                             }
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -707,7 +728,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -720,7 +742,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -733,7 +756,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     }
                                 ])}

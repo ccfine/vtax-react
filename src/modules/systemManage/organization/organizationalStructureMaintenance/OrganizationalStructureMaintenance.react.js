@@ -36,7 +36,7 @@ const columns =[
         dataIndex: 'address',
     },{
         title: '本级序号',
-        dataIndex: 'description1',
+        dataIndex: 'orgLevel',
     }, {
         title: '状态',
         dataIndex: 'isEnabled',

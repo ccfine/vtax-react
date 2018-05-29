@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 20:03:41
+ * @Last Modified time: 2018-05-28 15:48:39
  *
  */
 import React,{Component} from 'react'
@@ -373,7 +373,7 @@ class RoomTransactionFile extends Component{
                             totalSource
                         })
                     },
-                    columns:getColumns(this,disabled),
+                    columns:getColumns(this,(disabled && declare.decAction==='edit')),
                     url: '/output/room/files/list',
                     key:tableUpDateKey,
 

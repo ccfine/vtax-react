@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 20:04:51
+ * @Last Modified time: 2018-05-28 18:09:03
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -231,9 +231,10 @@ class UnBilledSalesNotEstate extends Component {
         this.setState({ updateKey: Date.now() });
     };
     render() {
-        let { updateKey, filters={}, statusParam,totalSource } = this.state;
+        let { updateKey, filters={}, statusParam={},totalSource } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            noSubmit = parseInt(statusParam.status,10)===1;
         return (
             <div>
                 <SearchTable
@@ -242,7 +243,7 @@ class UnBilledSalesNotEstate extends Component {
                         key: updateKey,
                         url: "/account/notInvoiceUnSale/realty/list",
                         pagination: true,
-                        columns: getColumns(this,parseInt(statusParam.status,10)!==2 && disabled),
+                        columns: getColumns(this, noSubmit && disabled && declare.decAction==='edit'),
                         rowKey: "id",
                         onTotalSource: totalSource => {
                             this.setState({
