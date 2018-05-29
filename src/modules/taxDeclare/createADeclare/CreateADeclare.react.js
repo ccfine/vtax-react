@@ -60,6 +60,7 @@ const getColumns =(context)=>[
                         type:'action',
                         icon:'search',
                         title:'查看申报',
+                        userPermissions:['1075003'],
                         onSuccess:()=>{
                             context.setState({
                                 record: record
@@ -261,7 +262,7 @@ export default class CreateADeclare extends Component{
                                 composeBotton([{
                                     type:'add',
                                     text:'创建申报',
-                                    userPermissions:[],
+                                    userPermissions:['1071003'],
                                     onClick: ()=>{
                                         this.setState({
                                             modalConfig: {
@@ -306,6 +307,7 @@ export default class CreateADeclare extends Component{
                             record={{...record,decAction:'look'}}
                             toggleApplyVisible={this.toggleApplyVisible}
                             style={{marginRight:5}}
+                            url={'/tax/declaration/find'}
                         />
                     }
 
