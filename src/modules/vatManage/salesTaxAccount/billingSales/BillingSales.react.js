@@ -349,18 +349,19 @@ class BillingSales extends Component {
                                 type:'reset',
                                 url:'/account/output/billingSale/reset',
                                 params:filters,
+                                userPermissions:['1221009'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/output/billingSale/submit',
                                 params:filters,
-                                // monthFieldName:'authMonth',
+                                userPermissions:['1221010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/output/billingSale/revoke',
                                 params:filters,
-                                // monthFieldName:'authMonth',
+                                userPermissions:['1221011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                           }

@@ -129,7 +129,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                                         //this.refreshTable();
                                         this.props.refreshTabs()
                                     },
-                                    userPermissions:[],
+                                    userPermissions:['1391010'],
                                 },{
                                     type:'revoke',
                                     url:'/account/incomeSimpleOut/controller/revoke',
@@ -138,7 +138,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                                         //this.refreshTable();
                                         this.props.refreshTabs()
                                     },
-                                    userPermissions:[],
+                                    userPermissions:['1391011'],
                                 }],statusParam)
                             }
                         </div>,

@@ -136,7 +136,7 @@ const getColumns = (context,hasOperate) => {
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1061008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -369,16 +369,19 @@ class SalesInvoiceCollection extends Component {
                                         url:'/output/invoice/collection/upload/',
                                         onSuccess:this.refreshTable,
                                         fields:fields(disabled,declare),
+                                        userPermissions:['1061005'],
                                     },{
                                         type:'submit',
                                         url:'/output/invoice/collection/submit',
                                         params:filters,
-                                        onSuccess:this.refreshTable
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1061010'],
                                     },{
                                         type:'revoke',
                                         url:'/output/invoice/collection/revoke',
                                         params:filters,
                                         onSuccess:this.refreshTable,
+                                        userPermissions:['1061011'],
                                     }],statusParam)
                                 }
                                 <TableTotal totalSource={totalSource} />

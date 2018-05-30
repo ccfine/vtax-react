@@ -2,6 +2,16 @@
  * Created by liuliyuan on 2018/4/28.
  */
 
+// public static final int ACTION_PAGE = 1002;  查看
+// public static final int ACTION_CREATE = 1003;  新增
+// public static final int ACTION_UPDATE = 1004;  修改
+// public static final int ACTION_UPLOAD = 1005;  导入
+// public static final int ACTION_DOWNLOAD = 1006;  下载
+// public static final int ACTION_EXPORT = 1007;  导出
+// public static final int ACTION_DELETE = 1008;  删除
+// public static final int ACTION_RESET = 1009;  撤回
+// public static final int ACTION_SUBMIT = 1010;  提交
+// public static final int ACTION_REVOKE = 1011;  撤回
 
 const strategies = {
 
@@ -73,13 +83,7 @@ const strategies = {
 
     /**
      * 模块： 增值税管理
-     * 导航：销项发票采集---销项发票匹配---收入检查---开票销售台账---未开票销售台账-地产---未开票销售台账-非地产---其它涉税调整台账---财务凭证采集
-     进项发票采集---固定资产信息采集---进项税额明细台账---其他扣税凭证---其他业务进项税额转出台账---简易计税进项税额转出台账---不动产进项税额抵扣台账
-     土地价款---土地价款扣除明细台账---其他应税项目扣除台账
-     预缴税款台账---减免税明细台账---税款计算台账
-     * 权限： 销项发票采集 --- 更新:1061004 撤回:1061011 提交:1061010 新增:1061003 导入:1061005 删除:1061008 查看:1061001 导出:1061007 列表:1061002 下载模板:1061006
      */
-
     'vatManage':{
 
         //销项管理
@@ -88,29 +92,31 @@ const strategies = {
             //销项发票采集
             salesInvoiceCollection:{
                 options:[
-                    '1005001',
-                    '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'
+                    //查看-1061002,导入-1061005,删除-1061008,提交-1061010,撤回-1061011
+                    '1061002','1061005','1061008','1061010','1061011'
                 ],
             },
 
             //销项发票匹配
             salesInvoiceMatching:{
                 options:[
-                    '1005001',
+                    //查看-1211002,提交-1211010,撤回-1211010
+                    //'1211002','1211010','1211010'
                 ],
             },
 
             //收入检查
             incomeCheck:{
                 options:[
-                    '1005001',
+
                 ],
             },
 
             //开票销售台账
             billingSales:{
                 options:[
-                    '1005001',
+                    //查看-1221002,导出-1221007,重算-1221009,提交-1221010,撤回-1221011
+                    '1221002','1221007','1221009','1221010','1221011'
                 ],
             },
 
@@ -150,48 +156,53 @@ const strategies = {
             //进项发票采集
             invoiceCollection:{
                 options:[
-                    '1005001',
+                    //查看-1491002,导入-1491005,删除-1491008,提交-1491010,撤回-1491011
+                    '1491002','1491005','1491008','1491010','1491011'
                 ],
             },
 
             //固定资产信息采集
             fixedAssetCollection:{
                 options:[
-                    '1005001',
+                    //先不管
                 ],
             },
 
             //进项税额明细台账
             inputTaxDetails:{
                 options:[
-                    '1005001',
+                    //查看-1381002,增加-1381003,修改-1381004,提交-1381010,撤回-1381011
+                    '1381002','1381003','1381004','1381010','1381011'
                 ],
             },
 
             //其他扣税凭证
             otherDeductionVoucher:{
                 options:[
-                    '1005001',
+                    //查看-1521002,提交-1521010,撤回-1521011,数据标记-1525000
+                    '1521002','1521010','1521011','1525000'
                 ],
             },
 
             //其他业务进项税额转出台账
             otherBusinessInputTaxRollOut:{
                 options:[
-                    '1005001',
+                    //查看-1401002,增加-1401003,修改-1401004,删除-1401008,提交-1401010,撤回-1401011
+                    '1401002','1401003','1401004','1401008','1401010','1401011'
                 ],
             },
             //简易计税进项税额转出台账
             simplifiedTaxInputTaxTransfer:{
                 options:[
-                    '1005001',
+                    //查看-1391002,提交-1391010,撤回-1391011
+                    '1391002','1391010','1391011'
                 ],
             },
             //不动产进项税额抵扣台账
             realEstateInputTaxCredit:{
                 options:[
-                    //查看-1251002,提交-1251010,撤回-1251011, 待抵扣进项税额数据来源-1255000, 固定资产进项税额明细界-1255001, 自建转自用固定资产进项税额明细-1255002
-                    '1251002','1251010','1251011','1255000','1255001','1255002'
+                    //查看-1251002,提交-1251010,撤回-1251011,一般标记为简易-1395004
+                    '1251002','1251010','1251011','1395004'
                 ],
             },
 
@@ -255,22 +266,23 @@ const strategies = {
     'taxDeclare':{
         //创建申报
         createADeclare:{
+            //创建申报  查看-'1071002'  创建纳税申报-'1071003'
             options:[
-                "1071002","1071003","1075003"
+                "1071002","1071003"
             ],
         },
 
         //申报办理
         declareHandle:{
             options:[
-                '1005002',
+
             ],
         },
 
         //查询申报
         searchDeclare:{
             options:[
-                '1005002',
+
             ],
         },
 
@@ -379,12 +391,6 @@ const strategies = {
         }
     }
 }
-/**
- *
- * 不动产进项税额抵扣台账-1251002-查看,
- * @type {[*]}
- */
-export const getLookPermissible = ['1251002'];
 
 export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
     let nArr = [];
@@ -398,9 +404,16 @@ export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
 export const getParentOptions = (oneLevelMenu) =>{
     let nArr = [];
     let oArr = strategies[oneLevelMenu];
-    for(let key in oArr){
-        for(let nKey in oArr[key]){
-            nArr = nArr.concat(oArr[key][nKey].options)
+    //当只有二级的情况
+    if(oneLevelMenu === 'taxDeclare'){
+        for(let key in oArr){
+            nArr = nArr.concat(oArr[key].options)
+        }
+    }else{
+        for(let key in oArr){
+            for(let nKey in oArr[key]){
+                nArr = nArr.concat(oArr[key][nKey].options)
+            }
         }
     }
     return nArr;
