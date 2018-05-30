@@ -80,7 +80,7 @@ const getColumns = (context,hasOperate) => {
                 type:'action',
                 title:'编辑',
                 icon:'edit',
-                userPermissions:[],
+                userPermissions:['1381004'],
                 onSuccess:()=>context.setState({
                     addVisible:true,
                     action:'edit',
@@ -244,7 +244,7 @@ class InputTaxDetails extends Component{
                         {
                             (disabled && declare.decAction==='edit') && !isAdd &&  composeBotton([{
                                 type:'add',
-                                userPermissions:[],
+                                userPermissions:['1381003'],
                                 onClick:()=>{
                                     this.setState({
                                         addVisible:true,
@@ -259,13 +259,13 @@ class InputTaxDetails extends Component{
                                 type:'submit',
                                 url:'/account/income/taxDetail/submit',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1381010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/income/taxDetail/revoke',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1381011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

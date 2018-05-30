@@ -125,7 +125,7 @@ const columns = (context,hasOperate) => {
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1491008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -417,20 +417,20 @@ class InvoiceCollection extends Component {
                                     (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
-                                        userPermissions:[],
+                                        userPermissions:['1491005'],
                                         onSuccess:this.refreshTable,
                                         fields:getFields(filters)
                                     },{
                                         type:'submit',
                                         url:'/income/invoice/collection/submit',
                                         params:filters,
-                                        userPermissions:[],
+                                        userPermissions:['1491010'],
                                         onSuccess:this.refreshTable
                                     },{
                                         type:'revoke',
                                         url:'/income/invoice/collection/revoke',
                                         params:filters,
-                                        userPermissions:[],
+                                        userPermissions:['1491011'],
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
