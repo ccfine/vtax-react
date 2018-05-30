@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-29 11:49:36
+ * @Last Modified time: 2018-05-29 20:55:50
  *
  */
 import React, { Component } from 'react'
@@ -192,7 +192,7 @@ class NeedNotMatchInvoices extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })

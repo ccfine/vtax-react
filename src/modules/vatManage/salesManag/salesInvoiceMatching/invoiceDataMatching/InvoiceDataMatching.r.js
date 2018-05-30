@@ -226,15 +226,15 @@ const getColumns = (context,disabled) => [
     {
         title: (
             <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票代码</p>
-                <p className="apply-form-list-p2">发票号码</p>
+                <p className="apply-form-list-p1">发票号码</p>
+                <p className="apply-form-list-p2">发票代码</p>
             </div>
         ),
-        dataIndex: "invoiceCode",
+        dataIndex: "invoiceNum",
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceNum}</p>
+                <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
         )
     },

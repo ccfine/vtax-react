@@ -60,10 +60,7 @@ const columns=[
             </div>
         )
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">发票类型</p>
-            <p className="apply-form-list-p2">发票明细号</p>
-        </div>,
+        title: '发票类型',
         dataIndex: 'invoiceType',
         render: (text,record) => {
             let invoiceTypeText ='';
@@ -73,12 +70,7 @@ const columns=[
             if(text==='c'){
                 invoiceTypeText = '普票'
             }
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{invoiceTypeText}</p>
-                    <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
-                </div>
-            )
+            return invoiceTypeText;
         }
     },{
         title: <div className="apply-form-list-th">

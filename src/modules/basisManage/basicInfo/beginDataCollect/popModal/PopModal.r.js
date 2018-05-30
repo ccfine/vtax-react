@@ -91,7 +91,10 @@ class PopModal extends Component{
                 title={title}
                 maskClosable={false}
                 destroyOnClose={true}
-                onCancel={()=>props.toggleModalVisible(false)}
+                onCancel={()=>{
+                    props.toggleModalVisible(false)
+                    disabled || props.refreshTable();
+                }}
                 footer={false}
                 width={1920}
                 bodyStyle={{

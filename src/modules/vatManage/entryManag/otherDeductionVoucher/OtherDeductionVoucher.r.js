@@ -239,11 +239,11 @@ class SalesInvoiceCollection extends Component{
                             this.fetchResultStatus()
                         })
                     },
-                    onRowSelect:(selectedRowKeys)=>{
+                    onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    }:undefined,
                     cardProps: {
                         title: "其他扣税凭证",
                         extra:<div>

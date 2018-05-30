@@ -168,7 +168,7 @@ class PopModal extends Component{
             onCancel={this.hideSelfModal}
             footer={[
                 <Button key="back" onClick={this.hideSelfModal}>取消</Button>,
-                <Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
+                readonly?null:<Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
                   确认
                 </Button>,
               ]}

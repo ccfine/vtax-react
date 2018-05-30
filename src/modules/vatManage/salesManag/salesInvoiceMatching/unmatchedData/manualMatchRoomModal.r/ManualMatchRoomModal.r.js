@@ -140,7 +140,6 @@ class ManualMatchRoomModal extends Component{
     toggleLoaded = loaded => this.setState({loaded})
 
     componentWillReceiveProps(nextProps){
-        console.log('componentWillReceiveProps',nextProps.selectedData)
         if(nextProps.visible && this.props.selectedData['id']){
             this.setState({
                 tableKey:Date.now()

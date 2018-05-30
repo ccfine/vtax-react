@@ -451,21 +451,6 @@ class PopModal extends Component {
                                         }
                                     },
                                     {
-                                        label: "发票明细号",
-                                        fieldName: "invoiceDetailNum",
-                                        type: "input",
-                                        formItemStyle,
-                                        fieldDecoratorOptions: {
-                                            initialValue:
-                                                initData["invoiceDetailNum"],
-                                            rules: [regRules.input_length_20]
-                                        },
-                                        componentProps: {
-                                            disabled: true,
-                                            placeholder:disabled?' ':undefined,
-                                        }
-                                    },
-                                    {
                                         label: "开票日期",
                                         fieldName: "billingDate",
                                         type: "datePicker",

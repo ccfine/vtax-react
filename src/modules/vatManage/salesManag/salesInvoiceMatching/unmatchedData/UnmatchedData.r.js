@@ -66,14 +66,6 @@ const searchFields=(disabled,declare)=> {
             }
         },
         {
-            label: '货物名称',
-            type: 'input',
-            fieldName: 'commodityName',
-            span:6,
-            formItemStyle,
-            fieldDecoratorOptions: {}
-        },
-        {
             label: '购货单位名称',
             type: 'input',
             fieldName: 'purchaseName',
@@ -130,19 +122,8 @@ const getColumns = (context,disabled) =>[
         dataIndex:'purchaseTaxNum'
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">购货单位名称</p>
-                <p className="apply-form-list-p2">货物名称</p>
-            </div>
-        ),
+        title: '购货单位名称',
         dataIndex: "purchaseName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.commodityName}</p>
-            </div>
-        )
     },
     {
         title: (
@@ -168,15 +149,16 @@ const getColumns = (context,disabled) =>[
         ),
         dataIndex: "invoiceType",
         render: (text, record) => {
+            let typeText = '';
             if(text==='s'){
-                return '专票'
+                typeText = '专票'
             }
             if(text==='c'){
-                return '普票'
+                typeText = '普票'
             }
             return (
                 <div>
-                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p1">{typeText}</p>
                     <p className="apply-form-list-p2">{record.billingDate}</p>
                 </div>
             )
@@ -305,7 +287,7 @@ class UnmatchedData extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
