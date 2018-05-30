@@ -295,14 +295,14 @@ class InputTaxDetails extends Component{
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}
-                    filters={filters}
+                    filters={{mainId:filters.mainId,authMonth:filters.authMonth}}
                     toggleModalVisible={this.toggleModalVisible}
                 />
                 <VoucherPopModal
                     title="凭证信息"
                     visible={voucherVisible}
                     params={params}
-                    filters={filters}
+                    filters={{mainId:filters.mainId,authMonth:filters.authMonth}}
                     toggleModalVoucherVisible={this.toggleModalVoucherVisible}
                 />
             </SearchTable>

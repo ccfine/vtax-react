@@ -62,19 +62,27 @@ const searchFields=(disabled,declare)=> {
 }
 class RealEstateInputTaxCredit extends Component{
     state = {
-        activeKey:'1'
+        activeKey:'1',
+        tabsKey:Date.now()
     }
     onTabChange = activeKey =>{
         this.setState({
             activeKey
+        },()=>{
+            this.refreshTabs()
+        })
+    }
+    refreshTabs = ()=>{
+        this.setState({
+            tabsKey:Date.now()
         })
     }
     render(){
-        const {activeKey} = this.state;
+        const {tabsKey,activeKey} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
+            <Tabs key={tabsKey} onChange={this.onTabChange} type="card" activeKey={activeKey}>
                 <TabPane tab="固定资产进项税额明细" key="1">
                     <FixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} />
                 </TabPane>
@@ -82,7 +90,7 @@ class RealEstateInputTaxCredit extends Component{
                     <DeductibleInputTaxAmount declare={declare} searchFields={searchFields(disabled,declare)} />
                 </TabPane>
                 <TabPane tab="自建转自用固定资产进项税额明细" key="3">
-                    <SelfBuiltTransferFixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} />
+                    <SelfBuiltTransferFixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
             </Tabs>
         )

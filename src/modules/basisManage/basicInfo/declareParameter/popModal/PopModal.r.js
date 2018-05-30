@@ -388,6 +388,7 @@ class PopModal extends Component{
                                     tableProps={{
                                         rowKey:record=>record.id,
                                         pagination:true,
+                                        pageSize:10,
                                         size:'small',
                                         columns:columns,
                                         onRowSelect:type === 'add' ? (selectedRowKeys,selectedRows)=>{

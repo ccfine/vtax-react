@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,toPercent} from 'utils'
+import {fMoney,toPercent} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体名称',
@@ -139,26 +139,9 @@ const columns = context =>[
 export default class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
-        filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
-    }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
-        })
-    }
-    refreshTable = ()=>{
-        this.setState({
-            tableKey:Date.now()
-        })
     }
     render(){
-        const {tableKey,statusParam} = this.state;
+        const {tableKey} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -180,35 +163,8 @@ export default class FixedAssetsInputTaxDetails extends Component{
                     pageSize:20,
                     columns:columns(this),
                     url:'/account/income/estate/fixedList',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
-                        extra:<div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
-                            {/*
-                                (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'submit',
-                                    url:'/account/income/estate/submit',
-                                    params:filters,
-                                    userPermissions:[],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'revoke',
-                                    url:'/account/income/estate/revoke',
-                                    params:filters,
-                                    userPermissions:[],
-                                    onSuccess:this.refreshTable,
-                                }],statusParam)
-                            */}
-                        </div>,
                     },
                     /*scroll:{
                      x:'180%'

@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
-import {SearchTable,TableTotal,FileExport} from 'compoments'
+import {SearchTable} from 'compoments'
 import {fMoney} from 'utils'
 const searchFields = [
     {
@@ -70,7 +70,6 @@ const columns = [
 export default class PopInvoiceInformationModal extends Component{
     state={
         tableKey:Date.now(),
-        totalSource:{},
     }
     refreshTable = ()=>{
         this.setState({
@@ -87,7 +86,7 @@ export default class PopInvoiceInformationModal extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,totalSource,filters} = this.state;
+        const {searchTableLoading,tableKey,filters} = this.state;
         const props = this.props;
         return(
             <Modal
@@ -127,7 +126,7 @@ export default class PopInvoiceInformationModal extends Component{
                             })
                         },
                         scroll:{ x: '160%', y: 200 },
-                        extra:<div>
+                        /*extra:<div>
                             <FileExport
                                 url='account/output/billingSale/detail/export'
                                 title='导出'
@@ -143,7 +142,7 @@ export default class PopInvoiceInformationModal extends Component{
                             this.setState({
                                 totalSource
                             })
-                        },
+                        },*/
                     }}
 
                 />

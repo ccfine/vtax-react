@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-05-26 15:24:09
  */
 import React, { Component } from "react";
-import { Form, Modal, message, Spin } from "antd";
+import { Form, Modal, message, Spin,Alert,Row,Col } from "antd";
 import { request } from "utils";
 import PermissionFeilds from "../../permissionDetail";
 
@@ -97,7 +97,6 @@ class PermissionModal extends Component {
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
-                title="权限配置"
                 visible={this.props.visible}
                 onOk={this.handleSubmit(rolePermissions,userPermissions)}
                 onCancel={this.handleCancel}
@@ -111,6 +110,16 @@ class PermissionModal extends Component {
                     maxHeight: 420,
                     overflowY: "auto"
                 }}
+                title={
+                    <Row>
+                        <Col span={4} style={{padding:'8px 0'}}>
+                            权限配置
+                        </Col>
+                        <Col span={16}>
+                            <Alert style={{color: 'red'}} message="每个模块权限必须分配查看权限才能访问，否则页面不能访问！" type="warning" showIcon />
+                        </Col>
+                    </Row>
+                }
             >
                 <Spin spinning={wrapperLoading}>
                     <Form layout="inline">

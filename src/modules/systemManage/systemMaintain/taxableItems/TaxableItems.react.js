@@ -16,7 +16,7 @@ const searchFields = [
         label:'应税项目名称',
         fieldName:'name',
         type:'input',
-        span:6,
+        span:8,
     }
 ]
 

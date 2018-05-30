@@ -108,7 +108,7 @@ const getFields = (form,fieldsData=[]) =>{
         }
 
         if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect' || type==='monthRangePicker'){
-            return <Col key={i} span={item['span'] || 8}>
+            return <Col key={i} span={item['span'] || 8} className={ item['className'] || ''}>
                 <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} decoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
             </Col>
         }else if(type==='select'){
@@ -125,7 +125,6 @@ const getFields = (form,fieldsData=[]) =>{
                     initialValue = isShowAll ? undefined : '';
                     optionsData = isShowAll ? item.options : newData;
             }
-
             return (
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
