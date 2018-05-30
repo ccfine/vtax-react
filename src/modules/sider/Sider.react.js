@@ -150,7 +150,7 @@ class VTaxSider extends Component {
         }
     }
     render() {
-
+    console.log(this.props.options)
         return (
             <Sider
                 trigger={null}

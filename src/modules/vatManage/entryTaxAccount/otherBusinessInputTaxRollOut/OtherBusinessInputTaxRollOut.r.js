@@ -68,7 +68,7 @@ const getColumns = (context,hasOperate) => {
                     type:'action',
                     title:'编辑',
                     icon:'edit',
-                    userPermissions:[],
+                    userPermissions:['1401004'],
                     onSuccess:() => {
                         context.setState({
                             visible: true,
@@ -80,7 +80,7 @@ const getColumns = (context,hasOperate) => {
                     type:'action',
                     title:'删除',
                     icon:'delete',
-                    userPermissions:[],
+                    userPermissions:['1401008'],
                     style:{color: "#f5222d"},
                     onSuccess:() => {
                         const modalRef = Modal.confirm({
@@ -243,7 +243,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                     {
                                          (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
-                                            userPermissions:[],
+                                            userPermissions:['1401003'],
                                             onClick: () => {
                                             this.setState({
                                                 visible: true,
@@ -256,14 +256,14 @@ class OtherBusinessInputTaxRollOut extends Component {
                                             url:'/account/income/taxout/submit',
                                             // monthFieldName:"authMonth",
                                             params:filters,
-                                            userPermissions:[],
+                                            userPermissions:['1401010'],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
                                             // monthFieldName:"authMonth",
                                             url:'/account/income/taxout/revoke',
                                             params:filters,
-                                            userPermissions:[],
+                                            userPermissions:['1401011'],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                     }
