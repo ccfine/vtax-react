@@ -25,7 +25,7 @@ export default class ButtonTableAction extends Component{
                 }} >
                     <Tooltip placement="top" title={title}>
                             {
-                                icon && <Icon type={icon} />
+                                icon && <Icon style={{ fontSize: 16 }} type={icon} />
                             }
                     </Tooltip>
 

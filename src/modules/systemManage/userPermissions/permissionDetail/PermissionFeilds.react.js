@@ -1,6 +1,6 @@
 /*
- * @Author: liuchunxiu 
- * @Date: 2018-05-09 14:10:18 
+ * @Author: liuchunxiu
+ * @Date: 2018-05-09 14:10:18
  * @Last Modified by: liuchunxiu
  * @Last Modified time: 2018-05-29 09:46:46
  */
@@ -37,24 +37,39 @@ class PermissionFeilds extends React.Component {
             });
         }
     };
-    checkAllChecked = (allCode, code) => e => {
+    checkAllChecked = (allCode, code, index) => e => {
+        //所有的查看后四位数字都是1002
         const { allPermission=[] } = this.props;
         const { setFieldsValue, getFieldValue } = this.props.form;
         setFieldsValue({
             [code]: e.target.checked
         });
-        for (let i = 0; i < allPermission.length; i++) {
-            if (`allCode${i}` === allCode) {
-                let arr = [];
-                allPermission[i].permissionVOs.forEach(item => {
-                    arr.push(getFieldValue(item.permissionId));
-                });
-                setFieldsValue({
-                    [allCode]: arr.filter(item => !item).length === 0
-                });
-                break;
-            }
+
+        if (`allCode${index}` === allCode) {
+            let arr = [];
+            allPermission[index].permissionVOs.forEach(item=>{
+                arr.push(getFieldValue(item.permissionId));
+            })
+            setFieldsValue({
+                [allCode]: arr.filter(item => !item).length === 0
+            });
         }
+
+        //后期优化 - 实现只要选择了查看以外的权限就必须给查看权限
+        /*let arr = [];
+        allPermission[index].permissionVOs.forEach(item=>{
+            arr.push(getFieldValue(item.permissionId));
+            if(e.target.checked && parseInt(item.permissionId.slice(-4), 0) === 1002){
+                setFieldsValue({
+                    [item.permissionId]: e.target.checked
+                });
+            }
+        })
+        if (`allCode${index}` === allCode) {
+            setFieldsValue({
+                [allCode]: arr.filter(item => !item).length === 0
+            });
+        }*/
     };
     initCheckAllDisabled=(data)=>{
         return data.every(item => {
@@ -78,7 +93,7 @@ class PermissionFeilds extends React.Component {
                 <div
                     style={{
                         width: "100%",
-                        minHeight:200                        
+                        minHeight:200
                     }}
                 >
                     <Spin spinning={permissionLoading}>
@@ -125,7 +140,8 @@ class PermissionFeilds extends React.Component {
                                                                     "checked",
                                                                 onChange: this.checkAllChecked(
                                                                     `allCode${i}`,
-                                                                    fieldItem.permissionId
+                                                                    fieldItem.permissionId,
+                                                                    i
                                                                 )
                                                             }
                                                         )(

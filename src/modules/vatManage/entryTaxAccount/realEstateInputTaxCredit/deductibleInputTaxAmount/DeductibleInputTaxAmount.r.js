@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus} from 'utils'
+import {fMoney} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 const pointerStyle = {
@@ -62,24 +62,13 @@ export default class DeductibleInputTaxAmount extends Component{
         tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
-        filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
             visibleView
         })
     }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
-        })
-    }
+
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
@@ -87,7 +76,7 @@ export default class DeductibleInputTaxAmount extends Component{
     }
 
     render(){
-        const {tableKey,visibleView,voucherNum,statusParam} = this.state;
+        const {tableKey,visibleView,voucherNum} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -109,35 +98,8 @@ export default class DeductibleInputTaxAmount extends Component{
                         pageSize:20,
                         columns:columns(this),
                         url:'/account/income/estate/stayDedList',
-                        onSuccess:(params)=>{
-                            this.setState({
-                                filters:params,
-                            },()=>{
-                                this.fetchResultStatus()
-                            })
-                        },
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>待抵扣进项税额</span>,
-                            extra:<div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {/*
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'submit',
-                                        url:'/account/income/estate/submit',
-                                        params:filters,
-                                        userPermissions:[],
-                                        onSuccess:this.refreshTable
-                                    },{
-                                        type:'revoke',
-                                        url:'/account/income/estate/revoke',
-                                        params:filters,
-                                        userPermissions:[],
-                                        onSuccess:this.refreshTable,
-                                    }],statusParam)
-                                */}
-                            </div>,
                         },
                         /*scroll:{
                          x:'180%'

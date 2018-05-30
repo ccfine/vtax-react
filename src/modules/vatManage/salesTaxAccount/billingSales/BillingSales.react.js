@@ -337,7 +337,7 @@ class BillingSales extends Component {
                           }
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
-                                type:'fileExport',
+                                /*type:'fileExport',
                                 url:'account/output/billingSale/export',
                                 title:'导出',
                                 params:{
@@ -345,7 +345,7 @@ class BillingSales extends Component {
                                     ...filters
                                 },
                                 onSuccess:this.refreshTable
-                            },{
+                            },{*/
                                 type:'reset',
                                 url:'/account/output/billingSale/reset',
                                 params:filters,
@@ -381,7 +381,7 @@ class BillingSales extends Component {
 
                 </Card>
                 <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-非地产</span>}
-                      extra={<div>
+                      /*extra={<div>
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'fileExport',
@@ -394,7 +394,7 @@ class BillingSales extends Component {
                                 onSuccess:this.refreshTable
                             }])
                           }
-                      </div>}
+                      </div>}*/
                       style={{marginTop:10}}>
 
                     <SynchronizeTable
