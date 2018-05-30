@@ -172,11 +172,11 @@ const getColumns = (context,hasOperate) => {
                 <p className="apply-form-list-p2">项目编码</p>
             </div>
         ),
-        dataIndex: "projectNum",
+        dataIndex: "projectName",
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projecName}</p>
+                <p className="apply-form-list-p2">{record.projectNum}</p>
             </div>
         )
     },
