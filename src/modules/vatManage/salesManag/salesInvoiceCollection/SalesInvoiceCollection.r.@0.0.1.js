@@ -172,44 +172,29 @@ const getColumns = (context,hasOperate) => {
                 <p className="apply-form-list-p2">项目编码</p>
             </div>
         ),
-        dataIndex: "projectNum",
+        dataIndex: "projectName",
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projecName}</p>
+                <p className="apply-form-list-p2">{record.projectNum}</p>
             </div>
         )
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">发票代码</p>
-            </div>
-        ),
+        title: '发票类型',
         dataIndex: "invoiceType",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceCode}</p>
-            </div>
-        )
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票号码</p>
-                <p className="apply-form-list-p2">发票明细号</p>
-            </div>
-        ),
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">发票号码</p>
+            <p className="apply-form-list-p2">发票代码</p>
+        </div>,
         dataIndex: "invoiceNum",
         render: (text, record) => (
             <div>
-                <p className="apply-form-list-p1">
-                    <span title='查看详情'
+                <p className="apply-form-list-p1"><span title='查看详情'
                     style={{
-                        ...pointerStyle,
-                        marginLeft: 5
+                        ...pointerStyle
                     }}
                     onClick={() => {
                         context.setState(
@@ -223,9 +208,8 @@ const getColumns = (context,hasOperate) => {
                                 context.toggleModalVisible(true);
                             }
                         );
-                    }}>{text}</span>
-                </p>
-                <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
+                }}>{text}</span></p>
+                <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
         )
     },
@@ -260,6 +244,11 @@ const getColumns = (context,hasOperate) => {
         dataIndex: "taxAmount",
         render: text => fMoney(text),
         className: "table-money"
+    },
+    {
+        title: "税率",
+        dataIndex: "taxRate",
+        render: text => text?`${text}%`:text
     },
     {
         title: "价税合计",

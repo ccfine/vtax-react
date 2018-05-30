@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 14:21:30
+ * @Last Modified time: 2018-05-30 12:04:51
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -56,6 +56,7 @@ const getColumns = context => [
         dataIndex: "action",
         className: "text-center",
         render: (text, record) => {
+            let notAdmin = parseInt(record.type,10) !== 8192;
             return (
                 <span>
                     {
@@ -78,7 +79,10 @@ const getColumns = context => [
                                     context.setState({createUserLoading:false})
                                 });
                             }
-                        },{
+                        }])
+                    }
+                    {
+                        notAdmin && composeBotton([{
                             type:'action',
                             icon:'delete',
                             title:'删除',
@@ -87,9 +91,9 @@ const getColumns = context => [
                             onSuccess:()=>{ context.handleDelete(record.id,record.isEnabled) }
                         }])
                     }
-                    <Divider type="vertical" />
+                    {notAdmin && <Divider type="vertical" />}
                     {
-                        composeBotton([{
+                        notAdmin && composeBotton([{
                             type: 'action',
                             icon: 'team',
                             title: '角色分配',
@@ -137,9 +141,9 @@ const getColumns = context => [
                             }
                         }])
                     }
-                    <Divider type="vertical" />
+                    {notAdmin && <Divider type="vertical" />}
                     {
-                        composeBotton([{
+                        notAdmin && composeBotton([{
                             type:'switch',
                             userPermissions:[],
                             checked: parseInt(record.isEnabled, 0) === 1,

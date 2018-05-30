@@ -55,7 +55,7 @@ export default class ProjectInformationManagement extends Component{
             }
         }
     }
-    initData=(taxSubjectId)=>{
+    initData=(taxSubjectId = this.props.taxSubjectId)=>{
         this.fetchTable_1_Data(taxSubjectId);
         this.setState({
             selectedRowKeys:null,
