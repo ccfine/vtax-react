@@ -267,7 +267,7 @@ class BillingSales extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,invoiceType,statusParam,loaded} = this.state;
+        const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -414,6 +414,7 @@ class BillingSales extends Component {
                     visible={visible}
                     filters={{
                         ...filters,
+                        sysTaxRateId,
                         invoiceType,
                         isEstate,
                     }}

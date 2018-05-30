@@ -64,7 +64,6 @@ const getColumns = context => [
                             type: 'action',
                             icon: 'edit',
                             title: '编辑',
-                            userPermissions:[],
                             onSuccess: () => {
                                 context.setState({createUserLoading:true,createUserVisible:true})
                                 context.fetchUser(`/sysUser/find/${record.id}`).then(data => {
@@ -87,7 +86,6 @@ const getColumns = context => [
                             icon:'delete',
                             title:'删除',
                             style:pointerStyleDelete,
-                            userPermissions:[],
                             onSuccess:()=>{ context.handleDelete(record.id,record.isEnabled) }
                         }])
                     }
@@ -97,7 +95,6 @@ const getColumns = context => [
                             type: 'action',
                             icon: 'team',
                             title: '角色分配',
-                            userPermissions:[],
                             onSuccess: () => {
                                 context.setState({roleLoading:true,roleModalVisible:true})
                                 context.fetchUser(
@@ -120,7 +117,6 @@ const getColumns = context => [
                             type: 'action',
                             icon: 'setting',
                             title: '权限配置',
-                            userPermissions:[],
                             onSuccess: () => {
                                 context.setState({permissionLoading:true,permissionVisible:true})
                                 context.fetchUser(
@@ -145,7 +141,6 @@ const getColumns = context => [
                     {
                         notAdmin && composeBotton([{
                             type:'switch',
-                            userPermissions:[],
                             checked: parseInt(record.isEnabled, 0) === 1,
                             onSuccess:(checked)=>{
                                 context.handleChange(checked,record.id)
@@ -329,7 +324,6 @@ class UserManage extends Component {
                                 {
                                     composeBotton([{
                                         type:'add',
-                                        userPermissions:[],
                                         onClick:()=>{
                                             this.setState({
                                                 createUserVisible: true,

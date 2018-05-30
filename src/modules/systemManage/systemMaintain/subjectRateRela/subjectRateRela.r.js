@@ -26,7 +26,6 @@ const getColumns = (context) => [
                     type: 'action',
                     icon: 'edit',
                     title: '编辑',
-                    userPermissions:[],
                     onSuccess: () => {
                         context.setState({
                             visible: true,
@@ -130,7 +129,6 @@ class SubjectRateRela extends Component {
                             {
                                 composeBotton([{
                                     type:'add',
-                                    userPermissions:[],
                                     onClick:()=>{
                                         this.setState({
                                             visible: true,

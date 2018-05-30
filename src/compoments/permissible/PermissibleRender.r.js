@@ -47,8 +47,8 @@ class PermissibleRender extends Component {
     render() {
         const { children, userPermissions, options, renderOtherwise } = this.props;
 
-        //当权限是管理员的时候直接放行
-        if(parseInt(this.props.type,0)!==1){
+        //TODO：当权限是管理员的时候直接放行  type 只有两种权限 1：普通用户 8192：管理员
+        if(parseInt(this.props.type,0) === 8192 ){
             return children;
         }else{
             if (!children || !userPermissions || !options) {

@@ -46,9 +46,11 @@ class VTaxSider extends Component {
             if (!item.name  || item.path === '/web' ) {
                 return null;
             }
-
+            //系统管理员 ： 8192  如果是管理员用户直接给系统管理员权限
+            if(parseInt(this.props.type, 0) !== 8192 && item.name === '系统管理'){
+                return null;
+            }
             if (item.permissions && item.children && item.children.some(child => child.name)) {
-
                 const componentSbu = (
                     <SubMenu
                         title={
@@ -65,7 +67,7 @@ class VTaxSider extends Component {
                     </SubMenu>
                 )
 
-                //当权限是管理员的时候直接放行
+                //当权限是普通用户的时候直接放行  普通用户： 1
                 if(parseInt(this.props.type, 0) ===1){
                     return checkPermissions(item, this.props.options) &&  componentSbu
                 }

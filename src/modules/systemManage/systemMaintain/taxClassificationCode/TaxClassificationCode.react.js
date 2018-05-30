@@ -60,7 +60,6 @@ const getColumns =(context)=>[
                         type: 'action',
                         icon: 'edit',
                         title: '编辑',
-                        userPermissions:[],
                         onSuccess: () => {
                             context.setState({
                                 modalConfig: {
@@ -76,7 +75,6 @@ const getColumns =(context)=>[
                         icon:'delete',
                         title:'删除',
                         style:pointerStyleDelete,
-                        userPermissions:[],
                         onSuccess:()=>{ context.deleteData(record.id) }
                     }])
                 }
@@ -169,7 +167,6 @@ class TaxClassificationCode extends Component{
                         {
                             composeBotton([{
                                 type:'add',
-                                userPermissions:[],
                                 onClick:()=>{
                                     this.setState({
                                         modalConfig:{

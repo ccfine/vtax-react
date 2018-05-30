@@ -200,7 +200,6 @@ class OrganizationalStructureMaintenance extends Component {
                         {
                             id && composeBotton([{
                                 type: 'add',
-                                userPermissions: [],
                                 onClick: () => {
                                     this.showModal('add')
                                 }
@@ -208,7 +207,6 @@ class OrganizationalStructureMaintenance extends Component {
                                 type:'edit',
                                 icon:'edit',
                                 text:'编辑',
-                                userPermissions:[],
                                 onClick:()=>{
                                     this.showModal('edit')
                                 }
@@ -216,7 +214,6 @@ class OrganizationalStructureMaintenance extends Component {
                                 type:'delete',
                                 icon:'delete',
                                 text:'删除',
-                                userPermissions:[],
                                 onClick:()=>{
                                     this.deleteData()
                                 }
@@ -224,7 +221,6 @@ class OrganizationalStructureMaintenance extends Component {
                                 type:'retweet',
                                 icon:'retweet',
                                 text:'禁用/启用',
-                                userPermissions:[],
                                 onClick:()=>{
                                     this.disabledData()
                                 }

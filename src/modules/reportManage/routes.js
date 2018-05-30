@@ -10,11 +10,9 @@ import ManageAnalysisReport from './manageAnalysisReport'
 import ManageAnalysisReport_Routes from './manageAnalysisReport/routes'
  * */
 import BusinessReport_Routes from './businessReport/routes'
-import strategies from 'config/routingAuthority.config'
+import { getChildOptions } from 'config/routingAuthority.config'
 
 const PATH = `/web/reportManage`;
-const reportManage = strategies['reportManage'];
-
 const ReportManage_Routes = [
     {
         path:`${PATH}/businessReport`,
@@ -22,7 +20,7 @@ const ReportManage_Routes = [
         name:'业务报表',
         exact:true,
         children:BusinessReport_Routes,
-        authorityInfo:reportManage['businessReport'].options
+        authorityInfo:getChildOptions('reportManage','businessReport')
     /*},{
         path:`${PATH}/manageAnalysisReport`,
         component:wrapPage('管理分析报表',ManageAnalysisReport),
