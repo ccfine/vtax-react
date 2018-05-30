@@ -11,7 +11,6 @@ import UserPermissions from './userPermissions'
 import ProcessManage from './processManage'
 import SystemMonitor from './systemMonitor'*/
 import SystemMaintain from './systemMaintain'
-import strategies from 'config/routingAuthority.config'
 
 import Organization_Routes from './organization/routes'
 import UserPermissions_Routes from './userPermissions/routes'
@@ -21,7 +20,6 @@ import ProcessManage_Routes from './processManage/routes'
 import SystemMonitor_Routes from './systemMonitor/routes'*/
 
 const PATH = `/web/systemManage`;
-const systemManage = strategies['systemManage'];
 
 const SystemManage_Routes = [
     {
@@ -30,21 +28,18 @@ const SystemManage_Routes = [
         name:'组织架构',
         exact:true,
         children:Organization_Routes,
-        authorityInfo:systemManage['organization'].options,
     },{
         path:`${PATH}/userPermissions`,
         component:wrapPage('用户权限',UserPermissions),
         name:'用户权限',
         exact:true,
         children:UserPermissions_Routes,
-        authorityInfo:systemManage['userPermissions'].options,
     },{
         path:`${PATH}/systemMaintain`,
         component:wrapPage('系统维护',SystemMaintain),
         name:'系统维护',
         exact:true,
         children:SystemMaintain_Routes,
-        authorityInfo:systemManage['systemMaintain'].options,
     /*},{
         path:`${PATH}/interfaceManage`,
         component:wrapPage('接口管理',InterfaceManage),

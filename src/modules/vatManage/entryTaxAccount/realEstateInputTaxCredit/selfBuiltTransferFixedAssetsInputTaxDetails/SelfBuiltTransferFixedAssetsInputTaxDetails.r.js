@@ -126,7 +126,7 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                                     type:'submit',
                                     url:'/account/income/estate/submit',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1251010'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
                                         this.props.refreshTabs()
@@ -135,7 +135,7 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                                     type:'revoke',
                                     url:'/account/income/estate/revoke',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1251011'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
                                         this.props.refreshTabs()

@@ -19,60 +19,52 @@ const strategies = {
      * 导航： 纳税主体---税收优惠---申报参数---期初数据采集
      稽查报告---备案资料---证照管理---其他档案
      */
-
     'basisManage':{
-
-        //基础管理
-        options:[],
 
         //基础信息
         basicInfo:{
 
-            options:[],
-
             //纳税主体
             aubjectOfTaxPayment:{
-                options:[],
+                options:['0'],
             },
 
             //税收优惠
             taxIncentives:{
-                options:[],
+                options:['1'],
             },
 
             //申报参数
             declareParameter:{
-                options:[],
+                options:['2'],
             },
             //期初数据采集
             beginDataCollect:{
-                options:[],
+                options:['3'],
             },
         },
 
         //税务档案
         taxFile:{
 
-            options:[],
-
             //稽查报告
             inspectionReport:{
-                options:[],
+                options:['4'],
             },
 
             //备案资料
             filingMaterial:{
-                options:[],
+                options:['5'],
             },
 
             //证照管理
             licenseManage:{
-                options:[],
+                options:['6'],
             },
 
             //其他档案
             otherFiles:{
-                options:[],
+                options:['7'],
             },
 
         },
@@ -90,19 +82,8 @@ const strategies = {
 
     'vatManage':{
 
-        //增值税管理
-        options:[
-            '1005001',
-            '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'  //销项发票采集
-        ],
-
         //销项管理
         salesManag:{
-
-            options:[
-                '1005001',
-                '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006' //销项发票采集
-            ],
 
             //销项发票采集
             salesInvoiceCollection:{
@@ -166,10 +147,6 @@ const strategies = {
         //进项管理
         entryManag:{
 
-            options:[
-                '1005001',
-            ],
-
             //进项发票采集
             invoiceCollection:{
                 options:[
@@ -213,7 +190,8 @@ const strategies = {
             //不动产进项税额抵扣台账
             realEstateInputTaxCredit:{
                 options:[
-                    '1005001',
+                    //查看-1251002,提交-1251010,撤回-1251011, 待抵扣进项税额数据来源-1255000, 固定资产进项税额明细界-1255001, 自建转自用固定资产进项税额明细-1255002
+                    '1251002','1251010','1251011','1255000','1255001','1255002'
                 ],
             },
 
@@ -221,11 +199,6 @@ const strategies = {
 
         //土地价款
         landPrice:{
-
-            options:[
-                '1005001',
-            ],
-
             //土地价款管理
             landPriceManage:{
                 options:[
@@ -248,11 +221,6 @@ const strategies = {
 
         //其它台账
         otherAccount:{
-
-            options:[
-                '1005001',
-            ],
-
             //预缴税款台账
             prepayTax:{
                 options:[
@@ -285,12 +253,6 @@ const strategies = {
      */
 
     'taxDeclare':{
-
-        //增值税管理
-        options:[
-            "1071002","1071003","1075003"
-        ],
-
         //创建申报
         createADeclare:{
             options:[
@@ -321,17 +283,8 @@ const strategies = {
 
     'reportManage':{
 
-        //增值税管理
-        options:[
-            '1005000',
-        ],
-
         //业务报表
         businessReport:{
-
-            options:[
-                '1005000',
-            ],
 
             //房间交易档案
             roomTransactionFile:{
@@ -393,15 +346,8 @@ const strategies = {
      */
 
     'systemManage':{
-
-        //增值税管理
-        options:[],
-
         //组织架构
         organization:{
-
-            options:[],
-
             //组织架构维护
             organizationalStructureMaintenance:{
                 options:[],
@@ -410,9 +356,6 @@ const strategies = {
 
         //用户权限
         userPermissions:{
-
-            options:[],
-
             //角色管理
             roleManage:{
                 options:[],
@@ -433,43 +376,34 @@ const strategies = {
                 options:[],
             },
 
-        },
-
-        //系统维护
-        systemMaintain:{
-
-            options:[],
-
-            //数据字典维护
-            dataDictionaryMaintain:{
-                options:[],
-            },
-
-            //税收分类编码
-            taxClassificationCode:{
-                options:[],
-            },
-
-            //应税项目
-            taxableItems:{
-                options:[],
-            },
-
-            //主营业收入科目税率对应表
-            subjectRateRela:{
-                options:[],
-            }
-        },
+        }
     }
 }
+/**
+ *
+ * 不动产进项税额抵扣台账-1251002-查看,
+ * @type {[*]}
+ */
+export const getLookPermissible = ['1251002'];
 
-export const getLookPermissible = [];
-
-export const getOptions = ( oneLevelMenu, twoLevelMenu ) => {
-    if ( strategies[oneLevelMenu] && strategies[oneLevelMenu][twoLevelMenu] ) {
-        return strategies[oneLevelMenu][twoLevelMenu].options || [];
+export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
+    let nArr = [];
+    let oArr = strategies[oneLevelMenu][twoLevelMenu];
+    for(let key in oArr){
+        nArr = nArr.concat(oArr[key].options)
     }
-    return [];
+    return nArr;
 };
+
+export const getParentOptions = (oneLevelMenu) =>{
+    let nArr = [];
+    let oArr = strategies[oneLevelMenu];
+    for(let key in oArr){
+        for(let nKey in oArr[key]){
+            nArr = nArr.concat(oArr[key][nKey].options)
+        }
+    }
+    return nArr;
+}
 
 export default strategies;

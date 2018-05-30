@@ -155,7 +155,6 @@ class DataDictionaryMaintain extends Component {
                                 type:'edit',
                                 icon:'edit',
                                 text:'编辑',
-                                userPermissions:[],
                                 onClick:()=>{
                                     this.showModal('edit')
                                 }
@@ -163,7 +162,6 @@ class DataDictionaryMaintain extends Component {
                                 type:'delete',
                                 icon:'delete',
                                 text:'删除',
-                                userPermissions:[],
                                 onClick:()=>{
                                     this.deleteData()
                                 }

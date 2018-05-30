@@ -52,7 +52,6 @@ const columns = context => [
                         type: 'action',
                         icon: 'edit',
                         title: '编辑',
-                        userPermissions:[],
                         onSuccess: () => { context.showModal('edit',record) }
                     }])
                 }
@@ -62,7 +61,6 @@ const columns = context => [
                         type: 'action',
                         icon: 'team',
                         title: '分配权限',
-                        userPermissions:[],
                         onSuccess: () => {
                             context.setState({
                                 permissionId:record.id,
@@ -75,7 +73,6 @@ const columns = context => [
                         type: 'action',
                         icon: 'setting',
                         title: '分配用户',
-                        userPermissions:[],
                         onSuccess: () => {
                             context.setState({
                                 userId:record.id,
@@ -89,7 +86,6 @@ const columns = context => [
                 {
                     composeBotton([{
                         type:'switch',
-                        userPermissions:[],
                         checked: parseInt(record.isEnabled,0) === 1,
                         onSuccess:(checked)=>{
                             context.handleChange(checked,record.id)
@@ -225,7 +221,6 @@ class RoleManage extends Component{
                                 {
                                     composeBotton([{
                                         type:'add',
-                                        userPermissions:[],
                                         onClick:()=>this.showModal('add',{})
                                     }])
                                 }

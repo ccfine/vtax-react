@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
+import {fMoney,parseJsonToParams} from 'utils'
 const searchFields = [
     {
         label:'发票号码',
@@ -74,7 +74,6 @@ export default class PopInvoiceInformationModal extends Component{
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now(),
-            filters:{},
         })
     }
     componentWillReceiveProps(nextProps){
@@ -86,8 +85,12 @@ export default class PopInvoiceInformationModal extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,filters} = this.state;
+        const {searchTableLoading,tableKey} = this.state;
         const props = this.props;
+        const filters = {
+            ...props.filters,
+            ...props.params
+        }
         return(
             <Modal
                 maskClosable={false}
@@ -108,10 +111,6 @@ export default class PopInvoiceInformationModal extends Component{
                 <SearchTable
                     searchOption={{
                         fields:searchFields,
-                        filters:{
-                            ...props.filters,
-                            ...filters
-                        }
                     }}
                     doNotFetchDidMount={true}
                     spinning={searchTableLoading}
@@ -119,7 +118,7 @@ export default class PopInvoiceInformationModal extends Component{
                         key:tableKey,
                         pageSize:10,
                         columns:columns,
-                        url:'/account/output/billingSale/detail/list',
+                        url:`/account/output/billingSale/detail/list?${parseJsonToParams(filters)}`,
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params
