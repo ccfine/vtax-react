@@ -60,7 +60,7 @@ const getColumns =(context)=>[
                         type:'action',
                         icon:'search',
                         title:'查看申报',
-                        userPermissions:['1075003'],
+                        userPermissions:['1071002'],
                         onSuccess:()=>{
                             context.setState({
                                 record: record

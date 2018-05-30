@@ -280,7 +280,7 @@ export default class IncomingInvoiceCollection extends Component{
                     cardProps:{
                         title:'进项发票采集'
                     },
-                    url:'/income/invoice/collection/inter/list',
+                    url:'/income/invoice/collection/report/list',
                     scroll:{ x: '120%' },
                 }}
             />

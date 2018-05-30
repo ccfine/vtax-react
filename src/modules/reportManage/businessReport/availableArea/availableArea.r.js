@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 14:40:25
+ * @Last Modified time: 2018-05-30 19:34:51
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -22,7 +22,7 @@ const searchFields = (getFieldValue)=>[
         componentProps: {
             fieldTextName: "itemName",
             fieldValueName: "id",
-            doNotFetchDidMount: false,
+            doNotFetchDidMount: true,
             fetchAble: getFieldValue("mainId"),
             url: `/project/list/${getFieldValue("mainId")}`
         }
@@ -74,7 +74,7 @@ const getColumns = context => [{
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1531008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -182,18 +182,6 @@ const getColumns = context => [{
             </div>
         )
     },
-    /*{
-        title: "扩展字段1",
-        dataIndex: "ext1"
-    },
-    {
-        title: "扩展字段2",
-        dataIndex: "ext2"
-    },
-    {
-        title: "扩展字段3",
-        dataIndex: "ext3"
-    }*/
 ];
 
 export default class AvailableArea extends Component {
@@ -245,7 +233,7 @@ export default class AvailableArea extends Component {
                                     type:'fileImport',
                                     url:'/interAvailableBuildingAreaInformation/upload',
                                     onSuccess:this.update,
-                                    userPermissions:[],
+                                    userPermissions:['1531005'],
                                     fields:importFeilds
                                 }])
                             }

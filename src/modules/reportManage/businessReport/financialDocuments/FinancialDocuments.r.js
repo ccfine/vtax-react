@@ -85,7 +85,7 @@ const getColumns = context =>[
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1891008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -237,7 +237,7 @@ export default class FinancialDocuments extends Component{
         })
     }
     deleteRecord(record){
-        request.delete(`/inter/financial/voucher/delete/${record.id}`).then(({data}) => {
+        request.delete(`/inter/financial/voucher/report/delete/${record.id}`).then(({data}) => {
             if (data.code === 200) {
                 message.success('删除成功', 4);
                 this.refreshTable();
@@ -249,7 +249,7 @@ export default class FinancialDocuments extends Component{
             })
     }
     render(){
-        const {updateKey,filters} = this.state;
+        const {updateKey} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -259,7 +259,7 @@ export default class FinancialDocuments extends Component{
                     key:updateKey,
                     pageSize:20,
                     columns:getColumns(this),
-                    url:'/inter/financial/voucher/voucherList',
+                    url:'/inter/financial/voucher/report/list',
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,
@@ -270,16 +270,16 @@ export default class FinancialDocuments extends Component{
                         extra: (
                             <div>
                                 {
-                                    JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    composeBotton([{
                                         type: 'fileExport',
-                                        url: 'inter/financial/voucher/download',
+                                        url: 'inter/financial/voucher/report/download',
                                         onSuccess: this.refreshTable,
                                     },{
                                         type:'fileImport',
-                                        url:'/inter/financial/voucher/upload',
+                                        url:'/inter/financial/voucher/report/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields,
-                                        userPermissions:[],
+                                        userPermissions:['1891005'],
                                     }])
                                 }
                             </div>
