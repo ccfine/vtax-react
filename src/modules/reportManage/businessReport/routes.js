@@ -6,7 +6,7 @@
 /*import React from 'react'*/
 import {wrapPage} from 'compoments'
 import RoomTransactionFile from './roomTransactionFile'
-import PrePaidSalesQuery from './prePaidHousingSales'
+//import PrePaidSalesQuery from './prePaidHousingSales'
 import TaxReturnForm from './taxReturnForm'
 import FixedAssetCard from './fixedAssetCard'
 import FinancialDocuments from './financialDocuments'
@@ -63,7 +63,7 @@ const BusinessReport_Routes = [
         },
         authorityInfo:businessReport['roomTransactionFile'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/prePaidSalesQuery`,
         component:wrapPage('售房预缴查询',PrePaidSalesQuery),
         name:'售房预缴查询',

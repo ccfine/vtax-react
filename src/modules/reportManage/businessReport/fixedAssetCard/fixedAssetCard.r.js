@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 14:41:45
+ * @Last Modified time: 2018-05-30 19:06:08
  */
 import React, { Component } from "react";
 import {Modal,message} from 'antd';
@@ -76,7 +76,7 @@ const getColumns = context => [
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1871008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -240,19 +240,7 @@ const getColumns = context => [
     {
         title: "待抵扣期间",
         dataIndex: "deductedPeriod"
-    },
-    /*{
-        title: "扩展字段1",
-        dataIndex: "ext1"
-    },
-    {
-        title: "扩展字段2",
-        dataIndex: "ext2"
-    },
-    {
-        title: "扩展字段3",
-        dataIndex: "ext3"
-    }*/
+    }
 ];
 
 export default class fixedAssetCard extends Component {
@@ -265,7 +253,7 @@ export default class fixedAssetCard extends Component {
     };
     
     deleteRecord(record){
-        request.delete(`/fixedAssetCard/delete/${record.id}`).then(({data}) => {
+        request.delete(`/fixedAssetCard/report/delete/${record.id}`).then(({data}) => {
             if (data.code === 200) {
                 message.success('删除成功', 4);
                 this.update();
@@ -277,7 +265,7 @@ export default class fixedAssetCard extends Component {
             })
     }
     render() {
-        let { updateKey,filters } = this.state;
+        let { updateKey } = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -285,7 +273,7 @@ export default class fixedAssetCard extends Component {
                 }}
                 tableOption={{
                     columns: getColumns(this),
-                    url: "/fixedAssetCard/list",
+                    url: "/fixedAssetCard/report/list",
                     key: updateKey,
                     cardProps: {
                         title: "固定资产卡片"
@@ -296,14 +284,14 @@ export default class fixedAssetCard extends Component {
                     extra: (
                         <span>
                             {
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                composeBotton([{
                                     type: 'fileExport',
-                                    url: 'fixedAssetCard/download',
+                                    url: 'fixedAssetCard/report/download',
                                 },{
                                     type:'fileImport',
-                                    url:'/fixedAssetCard/upload',
+                                    url:'/fixedAssetCard/report/upload',
                                     onSuccess:this.update,
-                                    userPermissions:[],
+                                    userPermissions:['1875002'],
                                     fields:importFeilds
                                 }])
                             }

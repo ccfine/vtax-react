@@ -270,7 +270,7 @@ class RoomTransactionFile extends Component{
                     cardProps:{
                         title:'房间交易档案'
                     },
-                    url:'/output/room/files/inter/list',
+                    url:'/output/room/files/report/list',
                     scroll:{ x: '120%' },
                 }}
             >

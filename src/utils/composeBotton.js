@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-21 15:19:07
+ * @Last Modified time: 2018-05-30 19:02:03
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -228,7 +228,7 @@ const composeBotton = (buttons = [], params) => {
             default:
                 break;
         }
-        return typeof (item.userPermissions) !== undefined ? (
+        return typeof (item.userPermissions) !== 'undefined' ? (
             component && (
                 <PermissibleRender
                     key={i}

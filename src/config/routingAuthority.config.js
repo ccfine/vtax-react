@@ -253,10 +253,10 @@ const strategies = {
      */
 
     'taxDeclare':{
-        //创建申报
+        //创建申报  查看-'1071002'  创建纳税申报-'1071003'
         createADeclare:{
             options:[
-                "1071002","1071003","1075003"
+                "1071002","1071003"
             ],
         },
 
@@ -286,55 +286,48 @@ const strategies = {
         //业务报表
         businessReport:{
 
-            //房间交易档案
+            //房间交易档案报表  查看-'1861002'
             roomTransactionFile:{
                 options:[
-                    '1005000',
+                    '1861002',
                 ],
             },
 
-            //售房预缴查询
-            prePaidSalesQuery:{
-                options:[
-                    '1005000',
-                ],
-            },
-
-            //纳税申报表
+            //纳税申报表  查看-'1911002'  主表-提交-'1911010'  主表-撤回-'1911011'
             taxReturn:{
                 options:[
-                    '1005000',
+                    '1911002','1911010','1911011'
                 ],
             },
 
-            //固定资产卡片
+            //固定资产卡片报表  查看-'1871002'  删除-'1871008'  导入固定资产卡片信息-'1875002'
             fixedAssetCard:{
                 options:[
-                    '1005000',
+                    '1871002','1871008','1875002'
                 ],
             },
-            //财务凭证
+            //财务凭证报表  查看-'1891002'  导入-'1891005'  删除-'1891008'
             financialDocuments:{
                 options:[
-                    '1005000',
+                    '1891002','1891005','1891008'
                 ],
             },
-            //进项发票采集
+            //进项发票采集报表  查看-'1881002'
             incomingInvoiceCollection:{
                 options:[
-                    '1005000',
+                    '1881002',
                 ],
             },
-            //销项发票采集
+            //销项发票采集报表  查看-'1901002'
             salesInvoiceCollection:{
                 options:[
-                    '1005000',
+                    '1901002',
                 ],
             },
-            //可售面积
+            //可售面积报表  查看-'1531002'  导入-'1531005'  删除-'1531008'
             availableArea:{
                 options:[
-                    '1005000',
+                    '1531002','1531005','1531008'
                 ],
             },
         },
@@ -384,7 +377,7 @@ const strategies = {
  * 不动产进项税额抵扣台账-1251002-查看,
  * @type {[*]}
  */
-export const getLookPermissible = ['1251002'];
+export const getLookPermissible = ['1251002','1151002','1401002','1271002','1281002','1131002','1521002','1201002','1311002','1321002','1301002','1161002','1591002','1071002','1711002','1601002','1531002','1431002','1821002','1511002','1871002','1241002','1481002','1451002','1261002','1141002','1541002','1841002','1831002','1181002','1461002','1471002','1441002','1221002','1411002','1421002','1551002','1861002','1691002','1121002','1351002','1361002','1081002','1111002','1091002','1371002','1101002','1171002','1571002','1391002','1051002','1851002','1781002','1801002','1791002','1771002','1761002','1751002','1291002','1811002','1191002','1231002','1891002','1501002','1491002','1881002','1381002','1211002','1061002','1901002','1581002','1741002','1561002','1331002'];
 
 export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
     let nArr = [];
@@ -398,9 +391,16 @@ export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
 export const getParentOptions = (oneLevelMenu) =>{
     let nArr = [];
     let oArr = strategies[oneLevelMenu];
-    for(let key in oArr){
-        for(let nKey in oArr[key]){
-            nArr = nArr.concat(oArr[key][nKey].options)
+    if(oneLevelMenu === 'taxDeclare'){
+        for(let key in oArr){
+            nArr = nArr.concat(oArr[key].options)
+        }
+    }else{
+        for(let key in oArr){
+            console.log(oArr[key])
+            for(let nKey in oArr[key]){
+                nArr = nArr.concat(oArr[key][nKey].options)
+            }
         }
     }
     return nArr;

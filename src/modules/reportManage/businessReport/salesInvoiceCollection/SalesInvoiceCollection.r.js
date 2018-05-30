@@ -241,7 +241,7 @@ export default class SalesInvoiceCollection extends Component{
                     cardProps:{
                         title:'销项发票采集'
                     },
-                    url:'/output/invoice/collection/inter/list',
+                    url:'/output/invoice/collection/report/list',
                     scroll:{ x: '120%' },
                 }}
             />

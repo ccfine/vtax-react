@@ -66,7 +66,7 @@ export default class ProjectInformationManagement extends Component{
         this.setState({
             table_1_loaded:false
         })
-        request.get(`/project/list/${taxSubjectId}`)
+        request.get(`/taxsubject/projectList/${taxSubjectId}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState(prevState=>({
@@ -88,7 +88,7 @@ export default class ProjectInformationManagement extends Component{
             });
     }
     fetchTable_2_Data = projectId =>{
-        request.get(`/project/stages/${projectId}`)
+        request.get(`/taxsubject/stages/${projectId}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState(prevState=>({
