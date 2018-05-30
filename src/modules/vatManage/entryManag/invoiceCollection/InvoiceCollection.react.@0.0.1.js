@@ -166,7 +166,7 @@ const columns = (context,hasOperate) => {
         }
     }, {
         title: "应税项目",
-        dataIndex: "projectNum"
+        dataIndex: "taxableProject"
     },
     {
         title: (
