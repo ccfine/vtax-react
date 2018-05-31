@@ -13,14 +13,14 @@ const getColumns = context=>{
             type:'action',
             title:'编辑',
             icon:'edit',
-            userPermissions:[],
+            userPermissions:['1121004'],
             onSuccess:()=>context.showModal('modify',record.id)
         },{
             type:'action',
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1121008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -126,7 +126,7 @@ export default class TabPage extends Component{
                                 composeBotton([{
                                     type:'add',
                                     icon:'plus',
-                                    userPermissions:[],
+                                    userPermissions:['1121003'],
                                     onClick:()=>this.showModal('add',undefined)
                                 }])
                             }

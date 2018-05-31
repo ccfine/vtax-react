@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message,Card} from 'antd';
-import {request,getFields,requestDict,setFormat} from 'utils'
+import {request,getFields,requestDict,setFormat,composeBotton} from 'utils'
 import {AsyncTable} from 'compoments'
 import moment from 'moment';
 const columns = [
@@ -233,9 +233,14 @@ class PopModal extends Component{
                             }
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                             {
-                                type === 'edit' && <Button type='danger' onClick={this.deleteRecord}>
-                                    删除
-                                </Button>
+                                type === 'edit' && composeBotton([{
+                                    type:'delete',
+                                    btnType:'danger',
+                                    size:'default',
+                                    text:'删除',
+                                    userPermissions:['1111008'],
+                                    onClick:()=>this.deleteRecord()
+                                }])
                             }
 
                         </Col>

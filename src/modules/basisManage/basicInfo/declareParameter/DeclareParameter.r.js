@@ -42,7 +42,7 @@ const getColumns = (context) => [
             type:'action',
             title:'编辑',
             icon:'edit',
-            userPermissions:[],
+            userPermissions:['1111004'],
             onSuccess:()=>{
                 context.setState({
                     modalConfig:{
@@ -177,6 +177,7 @@ export default class DeclareParameter extends Component{
                             composeBotton([{
                                 type:'add',
                                 icon:'plus',
+                                userPermissions:['1111003'],
                                 onClick:()=>this.showModal('add')
                             }])
                         }
