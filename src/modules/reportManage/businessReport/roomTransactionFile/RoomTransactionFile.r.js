@@ -80,7 +80,7 @@ const columns = [
                 </div>
             );
         }
-    }, {
+    /*}, {
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">发票号码</p>
@@ -133,7 +133,7 @@ const columns = [
                     <p className="apply-form-list-p2">{invoiceStatusText}</p>
                 </div>
             )
-        }
+        }*/
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -239,9 +239,6 @@ const columns = [
         dataIndex:'invoiced',
         render:text=>fMoney(text),
         className:'table-money'
-    }, {
-        title:'组织ID',
-        dataIndex:'orgId'
     }, {
         title:' 款项名称',
         dataIndex:'priceType'

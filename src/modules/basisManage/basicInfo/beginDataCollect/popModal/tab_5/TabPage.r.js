@@ -130,6 +130,7 @@ export default class TabPage extends Component{
                             {
                                 composeBotton([{
                                     type:'add',
+                                    icon:'plus',
                                     userPermissions:[],
                                     onClick:()=>this.showModal('add',undefined)
                                 }])

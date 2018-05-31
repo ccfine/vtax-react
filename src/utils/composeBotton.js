@@ -225,6 +225,9 @@ const composeBotton = (buttons = [], params) => {
                     <ButtonSwitch {...getSwitchOptions(item)} />
                 )
                 break;
+            case 'self':
+                component = item.component
+                break;
             default:
                 break;
         }

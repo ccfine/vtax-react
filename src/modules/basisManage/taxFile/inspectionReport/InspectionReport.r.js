@@ -113,6 +113,7 @@ export default class InspectionReport extends Component {
                         {
                             composeBotton([{
                                 type:'add',
+                                icon:'plus',
                                 userPermissions:[],
                                 onClick:() => { this.setState({ visible: true, action: 'add', opid: undefined }) }
                             }])

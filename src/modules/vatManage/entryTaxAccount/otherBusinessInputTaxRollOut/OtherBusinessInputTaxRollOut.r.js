@@ -243,6 +243,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                     {
                                          (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
+                                            icon:'plus',
                                             userPermissions:['1401003'],
                                             onClick: () => {
                                             this.setState({

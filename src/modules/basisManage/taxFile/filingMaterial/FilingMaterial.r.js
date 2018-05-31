@@ -112,6 +112,7 @@ export default class FilingMaterial extends Component{
                         <div>{
                                 composeBotton([{
                                     type:'add',
+                                    icon:'plus',
                                     userPermissions:[],
                                     onClick:()=>this.showModal('add') 
                                 }])

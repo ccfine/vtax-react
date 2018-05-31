@@ -1,6 +1,6 @@
 /*
- * @Author: liuchunxiu 
- * @Date: 2018-04-04 17:52:53 
+ * @Author: liuchunxiu
+ * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
  * @Last Modified time: 2018-05-31 12:01:34
  */
@@ -260,6 +260,7 @@ class OtherTaxAdjustment extends Component {
                   {
                       (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',
+                          icon:'plus',
                           userPermissions:['1311003'],
                           onClick: () => {
                             this.setState({

@@ -178,7 +178,7 @@ const getColumns = (context,disabled) => [
                         onOk:()=>{
                             context.deleteRecord(record.id,()=>{
                                 modalRef && modalRef.destroy();
-                                context.refreshTable()
+                                context.props.refreshTabs()
                             })
                         },
                         onCancel() {
@@ -209,19 +209,8 @@ const getColumns = (context,disabled) => [
         }*/
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">购货单位名称</p>
-                <p className="apply-form-list-p2">货物名称</p>
-            </div>
-        ),
-        dataIndex: "purchaseName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.commodityName}</p>
-            </div>
-        )
+        title:'购货单位名称',
+        dataIndex:'purchaseName',
     },
     {
         title: (
@@ -247,15 +236,16 @@ const getColumns = (context,disabled) => [
         ),
         dataIndex: "invoiceType",
         render: (text, record) => {
+            let txt = '';
             if(text==='s'){
-                return '专票'
+                txt = '专票'
             }
             if(text==='c'){
-                return '普票'
+                txt = '普票'
             }
             return (
                 <div>
-                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p1">{txt}</p>
                     <p className="apply-form-list-p2">{record.billingDate}</p>
                 </div>
             )
@@ -288,10 +278,6 @@ const getColumns = (context,disabled) => [
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
         className:'table-money'
-    },
-    {
-        title:'规格型号',
-        dataIndex:'specificationModel'
     },
     {
         title:'匹配时间',
@@ -443,26 +429,33 @@ class InvoiceDataMatching extends Component{
                                 url:'/output/invoice/marry/already/automatic',
                                 params:filters,
                                 userPermissions:['1215002'],
-                                onSuccess:this.refreshTable
-                            },{
+                                onSuccess:()=>{
+                                    this.props.refreshTabs()
+                                }
+                            /*},{
                                 type:'fileExport',
                                 url:'output/invoice/marry/already/export',
                                 params:filters,
                                 title:'导出匹配列表',
                                 userPermissions:['1215004'],
                                 onSuccess:this.refreshTable
+                              */
                             },{
                                 type:'submit',
                                 url:'/output/invoice/marry/submit',
                                 params:filters,
                                 userPermissions:['1215000'],
-                                onSuccess:this.refreshTable
+                                onSuccess:()=>{
+                                    this.props.refreshTabs()
+                                }
                             },{
                                 type:'revoke',
                                 url:'output/invoice/marry/revoke',
                                 params:filters,
                                 userPermissions:['1215001'],
-                                onSuccess:this.refreshTable,
+                                onSuccess:()=>{
+                                    this.props.refreshTabs()
+                                }
                             }],statusParam)
                         }
                         <TableTotal type={2} totalSource={totalSource} />
@@ -473,7 +466,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x:'180%'
+                        x:'140%'
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,

@@ -168,6 +168,7 @@ export default class TabPage extends Component{
                             {
                                 composeBotton([{
                                     type:'add',
+                                    icon:'plus',
                                     userPermissions:[],
                                     onClick:()=>{
                                         this.setState({visible:true,action:'add',opid:undefined});

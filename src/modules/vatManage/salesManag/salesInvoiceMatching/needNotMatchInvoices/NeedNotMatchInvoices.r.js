@@ -212,7 +212,7 @@ class NeedNotMatchInvoices extends Component{
                     //this.setState({revokeLoading:false})
                     if(data.code===200){
                         message.success('撤销成功！');
-                        this.refreshTable();
+                        this.props.refreshTabs();
                     }else{
                         message.error(`撤销失败:${data.msg}`)
                     }
@@ -264,6 +264,7 @@ class NeedNotMatchInvoices extends Component{
                         }{
                             (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
+                                icon:'plus',
                                 userPermissions:['1215009'],
                                 onClick: ()=>this.toggleModalVisible(true)
                             },{
@@ -273,7 +274,6 @@ class NeedNotMatchInvoices extends Component{
                                 icon:'rollback',
                                 text:'撤销',
                                 selectedRowKeys
-
                             }],statusParam)
                         }
                         {/* {(disabled && declare.decAction==='edit') && <Button size="small" loading={revokeLoading} onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>} */}

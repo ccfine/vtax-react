@@ -167,6 +167,7 @@ class TaxClassificationCode extends Component{
                         {
                             composeBotton([{
                                 type:'add',
+                                icon:'plus',
                                 onClick:()=>{
                                     this.setState({
                                         modalConfig:{

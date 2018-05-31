@@ -259,6 +259,7 @@ class UnBilledSalesNotEstate extends Component {
                                     {
                                         (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
+                                            icon:'plus',
                                             userPermissions:['1361003'],
                                             onClick: () => {
                                                 this.setState({

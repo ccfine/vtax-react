@@ -324,6 +324,7 @@ class UserManage extends Component {
                                 {
                                     composeBotton([{
                                         type:'add',
+                                        icon:'plus',
                                         onClick:()=>{
                                             this.setState({
                                                 createUserVisible: true,

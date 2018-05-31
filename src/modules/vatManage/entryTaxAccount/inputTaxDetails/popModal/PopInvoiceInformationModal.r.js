@@ -21,7 +21,7 @@ const columns = [
     {
         title: '数据来源',
         dataIndex: 'sourceType',
-        //width:100,
+        width:80,
         render:text=>{
             text = parseInt(text,0)
             if(text===1){
@@ -35,11 +35,11 @@ const columns = [
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
-        //width:180,
+        width:180,
     }, {
         title: '发票类型',
         dataIndex: 'invoiceType',
-        //width:180,
+        width:180,
         render:text=>{
             if(text==='s'){
                 return '专票'
@@ -52,46 +52,46 @@ const columns = [
     },{
         title: '发票代码',
         dataIndex: 'invoiceCode',
-        //width:180,
+        width:180,
     },{
         title: '发票号码',
         dataIndex: 'invoiceNum',
-        //width:180,
+        width:180,
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
-        //width:100,
+        width:100,
     },{
         title: '认证月份',
         dataIndex: 'authMonth',
-        //width:70,
+        width:70,
     },{
         title: '认证时间',
         dataIndex: 'authDate',
-        //width:100,
+        width:100,
     },{
         title: '销售单位名称',
         dataIndex: 'sellerName',
-        //width:180,
+        width:180,
     },{
         title: '纳税人识别号',
         dataIndex: 'sellerTaxNum',
-        //width:180,
+        width:180,
     },{
         title: '金额',
         dataIndex: 'amount',
-        //width:100,
+        width:100,
         render:text=>fMoney(text),
     },{
         title: '税额',
         dataIndex: 'taxAmount',
-        //width:100,
+        width:100,
         render:text=>fMoney(text),
 
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
-        //width:150,
+        width:150,
         render:text=>fMoney(text),
     }
 ];
@@ -147,7 +147,7 @@ export default class PopInvoiceInformationModal extends Component{
                             pageSize:10,
                             columns:columns,
                             url:`/income/invoice/collection/detailList?${parseJsonToParams(props.filters)}`,
-                            scroll:{ x: '140%', y: 200},
+                            scroll:{ x: '200%', y: 300},
                         }}
                     />
             </Modal>
