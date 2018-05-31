@@ -2,11 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 14:57:31
+ * @Last Modified time: 2018-05-31 17:09:07
  */
 import React from 'react'
 import { SearchTable } from 'compoments'
-import { fMoney, composeBotton} from 'utils'
+import { fMoney, composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 
 
 const columns = [
@@ -88,6 +88,7 @@ export default class ShouldDeduct extends React.Component {
 		tableKey: Date.now(),
 		doNotFetchDidMount: true,
 		filters: {},
+		statusParam:{}
 	}
 	toggleModalVisible = visible => {
 		this.setState({
@@ -99,8 +100,15 @@ export default class ShouldDeduct extends React.Component {
 			tableKey: Date.now()
 		})
 	}
+	fetchResultStatus = ()=>{
+        requestResultStatus('/account/landPrice/deductedDetails/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
+    }
 	render() {
-		const { tableKey, filters = {}, } = this.state
+		const { tableKey, filters = {}, statusParam={}} = this.state
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
 		return (
@@ -128,10 +136,15 @@ export default class ShouldDeduct extends React.Component {
 					onSuccess: (params) => {
 						this.setState({
 							filters: params
-						})
+						},()=>{
+                            this.fetchResultStatus()
+                        })
 					},
 					extra: (
 						<div>
+							{
+                            	listMainResultStatus(statusParam)
+                        	}
 							{
 								(disabled && declare.decAction==='edit') && composeBotton([
 									{
@@ -141,7 +154,7 @@ export default class ShouldDeduct extends React.Component {
                                         userPermissions:['1261009'],
 										onSuccess: this.refreshTable
 									}
-								])
+								],statusParam)
 							}
 						</div>
 					)
