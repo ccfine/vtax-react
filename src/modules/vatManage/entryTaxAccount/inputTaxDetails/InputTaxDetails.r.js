@@ -244,6 +244,7 @@ class InputTaxDetails extends Component{
                         {
                             (disabled && declare.decAction==='edit') && !isAdd &&  composeBotton([{
                                 type:'add',
+                                icon:'plus',
                                 userPermissions:['1381003'],
                                 onClick:()=>{
                                     this.setState({

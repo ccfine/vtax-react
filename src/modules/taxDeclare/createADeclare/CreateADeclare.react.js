@@ -261,6 +261,7 @@ export default class CreateADeclare extends Component{
                             {
                                 composeBotton([{
                                     type:'add',
+                                    icon:'plus',
                                     text:'创建申报',
                                     userPermissions:['1071003'],
                                     onClick: ()=>{

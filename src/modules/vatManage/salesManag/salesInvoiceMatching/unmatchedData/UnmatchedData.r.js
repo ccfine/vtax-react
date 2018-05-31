@@ -193,10 +193,6 @@ const getColumns = (context,disabled) =>[
         className:'table-money'
     },
     {
-        title:'规格型号',
-        dataIndex:'specificationModel'
-    },
-    {
         title:'匹配时间',
         dataIndex:'marryTime'
     },
@@ -270,9 +266,7 @@ class UnmatchedData extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
-        filters:{
-
-        },
+        /*filters:{},*/
         selectedData:{},
 
         /**
@@ -299,7 +293,7 @@ class UnmatchedData extends Component{
         })
     }
     render(){
-        const {visible,tableKey,filters,selectedData,statusParam,totalSource} = this.state;
+        const {visible,tableKey,selectedData,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -333,7 +327,7 @@ class UnmatchedData extends Component{
                         {
                             listMainResultStatus(statusParam)
                         }
-                        {
+                        {/*{
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'fileExport',
                                 url:'output/invoice/marry/unmatched/export',
@@ -342,7 +336,7 @@ class UnmatchedData extends Component{
                                 userPermissions:[],
                                 onSuccess:this.refreshTable
                             }],statusParam)
-                        }
+                        }*/}
                         <TableTotal type={2} totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {
@@ -358,7 +352,7 @@ class UnmatchedData extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

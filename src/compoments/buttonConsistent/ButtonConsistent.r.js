@@ -11,18 +11,21 @@ export default class ButtonAdd extends Component{
         text: PropTypes.string,
         icon: PropTypes.string,
         onClick: PropTypes.func,
+        btnType: PropTypes.string,
     }
     static defaultProps={
+        size:'small',
         text:'新增',
-        icon:'plus'
+        icon:undefined,
+        btnType:'primary'
     }
 
     render(){
         const props = this.props;
-        const {text, icon, disabled, onClick} = props;
+        const {size, text, icon, disabled, btnType, onClick} = props;
         return(
             <span style={props.style}>
-                <Button size='small' disabled={disabled} onClick={()=>{
+                <Button size={size} type={btnType} disabled={disabled} onClick={()=>{
                     onClick && onClick()
                 }}>
                    {

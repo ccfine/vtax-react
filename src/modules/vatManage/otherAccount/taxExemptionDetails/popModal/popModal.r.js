@@ -331,7 +331,7 @@ class PopModal extends Component {
                                             disabled
                                         },
                                     }, {
-                                        label: '是否已认证',
+                                        label: '已认证',
                                         fieldName: 'incomeTaxAuth',
                                         type: 'checkbox',
                                         span: 12,
@@ -339,12 +339,6 @@ class PopModal extends Component {
                                         fieldDecoratorOptions: {
                                             initialValue: parseInt(record.incomeTaxAuth,0) === 1,
                                             valuePropName: 'checked',
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: '请输入税额'
-                                                }
-                                            ]
                                         },
                                         componentProps: {
                                             disabled,

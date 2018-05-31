@@ -82,11 +82,11 @@ const getColumns = context => [
                 <p className="apply-form-list-p2">项目分期代码</p>
             </div>
         ),
-        dataIndex: 'projectName',
+        dataIndex: 'stagesName',
         render:(text,record)=>(
             <div>
                 <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projectNum}</p>
+                <p className="apply-form-list-p2">{record.stagesNum}</p>
             </div>
         )
     }, {
