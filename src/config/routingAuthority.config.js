@@ -73,9 +73,11 @@ const strategies = {
                 options:['6'],
             },
 
-            //其他档案
+            //其他档案 查看-1201002,新增-1201003,编辑-1201004,删除-1201008,导入-1201005
             otherFiles:{
-                options:['7'],
+                options:[
+                    '1201002','1201003','1201004','1201008','1201005'
+                ],
             },
 
         },
@@ -337,46 +339,10 @@ const strategies = {
             },
         },
     },
-
-    /**
-     * 模块： 系统管理
-     * 导航： 组织架构维护---角色管理---用户管理---数据字典维护---税收分类编码---应税项目---主营业收入科目税率对应表
-     */
-
-    'systemManage':{
-        //组织架构
-        organization:{
-            //组织架构维护
-            organizationalStructureMaintenance:{
-                options:[],
-            },
-        },
-
-        //用户权限
-        userPermissions:{
-            //角色管理
-            roleManage:{
-                options:[],
-            },
-
-            //用户管理
-            userManage:{
-                options:[],
-            },
-
-            //角色管理详情
-            roleManagementDetail:{
-                options:[],
-            },
-
-            //用户管理详情
-            userManagementDetail:{
-                options:[],
-            },
-
-        }
-    }
 }
+
+//菜单权限  纳税申报-'1005000'  增值税管理-'1005001'  报表管理-'1005002'
+export const menuPermissions = ['1005000','1005001','1005002'];
 
 export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
     let nArr = [];
