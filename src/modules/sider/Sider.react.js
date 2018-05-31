@@ -9,8 +9,9 @@ import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import checkPermissions from 'compoments/permissible/index'
-import intersection from 'lodash/intersection'; //取数组的交集 _.initial([1, 2, 3]); => [1, 2]
+/*import intersection from 'lodash/intersection'; //取数组的交集 _.initial([1, 2, 3]); => [1, 2]*/
 import {saveDeclare} from 'redux/ducks/user'
+import {menuPermissions} from 'config/routingAuthority.config'
 
 import logo from './images/logo.png'
 import './styles.less'
@@ -42,13 +43,38 @@ class VTaxSider extends Component {
             return [];
         }
         return menusData.map((item) => {
-            // || item.name === '增值税管理'  对用户隐藏，用户只是在纳税申报的时候引用增值税管理里面的页面
             if (!item.name  || item.path === '/web' ) {
                 return null;
             }
             //系统管理员 ： 8192  如果是管理员用户直接给系统管理员权限
             if(parseInt(this.props.type, 0) !== 8192 && item.name === '系统管理'){
                 return null;
+            }
+
+            //菜单权限  纳税申报-'1005000'  增值税管理-'1005001'  报表管理-'1005002'
+            if(this.props.options && this.props.options.length > -1 && parseInt(this.props.type, 0) !== 8192){
+
+                menuPermissions.forEach((t,i)=>{
+                    switch (i) {
+                        case 0:
+                            if(this.props.options.indexOf(t) < 0 && item.name === '纳税申报'){
+                                return null
+                            }
+                            break;
+                        case 1:
+                            if(this.props.options.indexOf(t) < 0 && item.name === '增值税管理'){
+                                return null
+                            }
+                            break;
+                        case 2:
+                            if(this.props.options.indexOf(t) < 0 && item.name === '报表管理'){
+                                return null
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                })
             }
             if (item.permissions && item.children && item.children.some(child => child.name)) {
                 const componentSbu = (
@@ -110,8 +136,10 @@ class VTaxSider extends Component {
     }
     handleClick = (e) => {
         //设置saveDeclare默认为初始值 为了判断看用户是从纳税申报进还是路由
-        const { saveDeclare, options } = this.props;
-        intersection(['1005001','1005000'], options).length>0 && saveDeclare(null)
+        const { saveDeclare } = this.props;
+        saveDeclare(null)
+        //const { saveDeclare, options } = this.props;
+        //intersection(['1005000','1071002','1081002','1931002'], options).length>0 && saveDeclare(null)
 
         this.setState({
             selectedPath: e.key,
@@ -120,9 +148,9 @@ class VTaxSider extends Component {
     // 根据地址显示左侧的展开和选中导航
     resetSelectedNav = (props)=>{
         let path = props.history.location.pathname,
-        openKeys = [`/${path.split(/\//)[1]}`],
-        url_two = path.split(/\//)[2],
-        url_three = path.split(/\//)[3];
+            openKeys = [`/${path.split(/\//)[1]}`],
+            url_two = path.split(/\//)[2],
+            url_three = path.split(/\//)[3];
 
         if(url_two){
             openKeys=[`${openKeys}/${url_two}`]
@@ -150,7 +178,7 @@ class VTaxSider extends Component {
         }
     }
     render() {
-    console.log(this.props.options)
+        console.log(this.props.options)
         return (
             <Sider
                 trigger={null}

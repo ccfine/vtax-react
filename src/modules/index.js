@@ -4,6 +4,7 @@
  * createTime   : 2017/12/5 14:05
  * description  :
  */
+/*
 import {request} from 'utils'
 
 export default ()=>{
@@ -11,7 +12,7 @@ export default ()=>{
     let str = ``;
 
     let lookStr = [];
-    (data.code === 200) && 
+    (data.code === 200) &&
     data.data.forEach(element => {
         str += element.moduleName;
         let moduleStr = ``;
@@ -31,4 +32,4 @@ export default ()=>{
 request.get('/oauth/flashDb').then(({data})=>{
     console.log('清理成功')
 })
-}
+}*/
