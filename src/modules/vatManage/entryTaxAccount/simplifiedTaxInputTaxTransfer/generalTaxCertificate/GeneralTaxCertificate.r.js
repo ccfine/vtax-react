@@ -132,7 +132,21 @@ class GeneralTaxCertificate extends Component{
                 }}
                 doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:this.props.searchFields,
+                    fields:this.props.searchFields.concat({
+                        label:'标记类型',
+                        fieldName:'commonlyFlag',
+                        type:'select',
+                        span:6,
+                        options:[  //1-标记;0-不标记；不传则所有状态
+                            {
+                                text:'标记',
+                                value:'1'
+                            },{
+                                text:'不标记',
+                                value:'0'
+                            }
+                        ],
+                    }),
                     cardProps:{
                         style:{
                             borderTop:0

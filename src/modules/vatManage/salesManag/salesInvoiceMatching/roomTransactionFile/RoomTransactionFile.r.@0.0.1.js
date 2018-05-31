@@ -158,20 +158,6 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         span:6
     },
     {
-        label:'发票号码',
-        fieldName:'invoiceNum',
-        type:'input',
-        formItemStyle,
-        span:6
-    },
-    {
-        label:'发票代码',
-        fieldName:'invoiceCode',
-        type:'input',
-        formItemStyle,
-        span:6
-    },
-    {
         label:'匹配状态',
         fieldName:'matchingStatus',
         type:'select',
@@ -189,6 +175,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         ]
     },
 ];
+
 const getColumns = (context,disabled) => [
     {
         title: '操作',
@@ -196,105 +183,183 @@ const getColumns = (context,disabled) => [
         className:'text-center',
         width:50,
         render: (text, record) => {
-            return (disabled && parseInt(context.state.statusParam.status,0) === 1) ? composeBotton([{
-                type:'action',
-                title:'删除',
-                Icon:'delete',
-                style:{color:'#f5222d'},
-                onSuccess:()=>{
-                    if(parseInt(record.matchingStatus,0) ===1){
-                        const errorModalRef = Modal.warning({
-                            title: '友情提醒',
-                            content: '只能删除未匹配的数据!',
-                            okText: '确定',
-                            onOk:()=>{
-                                errorModalRef.destroy()
-                            },
-                            onCancel() {
-                                errorModalRef.destroy()
-                            },
-                        });
-                        return false;
-                    }
-                    const modalRef = Modal.confirm({
-                        title: '友情提醒',
-                        content: '该删除后将不可恢复，是否删除？',
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk:()=>{
-                            context.deleteRecord(record.id,()=>{
-                                modalRef && modalRef.destroy();
-                                context.refreshTable()
-                            })
-                        },
-                        onCancel() {
-                            modalRef.destroy()
-                        },
-                    });
-                }
-            }]) : null
+            if(disabled && parseInt(context.state.statusParam.status,0) === 1){
+                return parseInt(record.matchingStatus,0) === 0 && composeBotton([{
+                        type:'action',
+                        title:'删除',
+                        icon:'delete',
+                        style:{color:'#f5222d'},
+                        userPermissions:[],
+                        onSuccess:()=>{
+                            const modalRef = Modal.confirm({
+                                title: '友情提醒',
+                                content: '该删除后将不可恢复，是否删除？',
+                                okText: '确定',
+                                okType: 'danger',
+                                cancelText: '取消',
+                                onOk:()=>{
+                                    context.deleteRecord(record.id,()=>{
+                                        modalRef && modalRef.destroy();
+                                        context.refreshTable()
+                                    })
+                                },
+                                onCancel() {
+                                    modalRef.destroy()
+                                },
+                            });
+                        }}])
+            }
         }
-    },
-    {
-        title:'纳税主体',
-        dataIndex:'mainName'
-    },
-    {
-        title:'客户名称',
-        dataIndex:'customerName'
-    },
-    {
-        title:'身份证号/纳税识别号',
-        dataIndex:'taxIdentificationCode'
-    },
-    {
-        title:'发票号码',
-        dataIndex:'invoiceNum'
-    },
-    {
-        title:'发票代码',
-        dataIndex:'invoiceCode'
-    },
-    {
+    },{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">纳税主体名称</p>
+                <p className="apply-form-list-p2">纳税主体编码</p>
+            </div>
+        ),
+        dataIndex: 'mainName',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.mainCode}</p>
+                </div>
+            );
+        }
+    }, {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">客户名称</p>
+                <p className="apply-form-list-p2">身份证号/纳税识别号</p>
+            </div>
+        ),
+        dataIndex: 'customerName',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
+                </div>
+            );
+        }
+    }, {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">项目名称</p>
+                <p className="apply-form-list-p2">项目编码</p>
+            </div>
+        ),
+        dataIndex: 'projectName',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.projectCode}</p>
+                </div>
+            );
+        }
+    },{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">项目分期名称</p>
+                <p className="apply-form-list-p2">项目分期编码</p>
+            </div>
+        ),
+        dataIndex: 'stagesName',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.stagesCode}</p>
+                </div>
+            );
+        }
+    },{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">交易月份</p>
+                <p className="apply-form-list-p2">交易日期</p>
+            </div>
+        ),
+        dataIndex: 'authMonth',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.transactionDate}</p>
+                </div>
+            );
+        }
+    },{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">房间交付日期</p>
+                <p className="apply-form-list-p2">合同约定交付日期</p>
+            </div>
+        ),
+        dataIndex: 'deliveryDate',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{text}</p>
+                    <p className="apply-form-list-p2">{record.agreeDate}</p>
+                </div>
+            );
+        }
+    },{
         title:'楼栋名称',
         dataIndex:'buildingName'
-    },
-    {
+    },{
         title:'单元',
         dataIndex:'element'
-    },
-    {
+    }, {
         title:'房号',
         dataIndex:'roomNumber'
-    },
-    {
+    }, {
         title:'房间编码',
         dataIndex:'roomCode'
-    },
-    {
-        title:'成交总价',
-        dataIndex:'totalPrice',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
+    },{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">成交总价</p>
+                <p className="apply-form-list-p2">已收款金额</p>
+            </div>
+        ),
+        dataIndex: 'totalPrice',
+        className:'table-money',
+        render: (text, record) => {
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{fMoney(text)}</p>
+                    <p className="apply-form-list-p2">{fMoney(record.receivables)}</p>
+                </div>
+            );
+        }
+    }, {
         title:'房间面积',
-        /**
-         * roomArea 是普通数值型
-         * roomArea2 是字符串四位小数型
-         * */
-        dataIndex:'roomArea2',
-        className:'text-right'
-    },
-    {
+        dataIndex:'roomArea'
+    }, {
         title:'匹配状态',
         dataIndex:'matchingStatus',
-        render:text=>parseInt(text,0) === 0 ?<span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
-    },
-    {
-        title:'交易日期',
-        dataIndex:'transactionDate'
+        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
+    }, {
+        title:'已开票金额',
+        dataIndex:'invoiced',
+        render:text=>fMoney(text),
+        className:'table-money'
+    }, {
+        title:' 款项名称',
+        dataIndex:'priceType'
+    }, {
+        title: "税额",
+        dataIndex: "taxAmount",
+        render:text=>fMoney(text),
+        className:'table-money'
+    }, {
+        title:'价税合计',
+        dataIndex:'sdValorem',
+        render:text=>fMoney(text),
+        className:'table-money'
     },
 ]
 class RoomTransactionFile extends Component{
@@ -410,23 +475,26 @@ class RoomTransactionFile extends Component{
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={[
-                                {
-                                    title:'本页合计',
-                                    total:[
-                                        {title: '本页总价', dataIndex: 'pageTotalPrice'},
-                                    ],
-                                },{
-                                    title:'总计',
-                                    total:[
-                                        {title: '全部总价', dataIndex: 'allTotalPrice'},
-                                    ],
-                                }
-                            ]} />
+                            {
+                                title:'本页合计',
+                                total:[
+                                    {title: '本页总价', dataIndex: 'pageTotalPrice'},
+                                ],
+                            },{
+                                title:'总计',
+                                total:[
+                                    {title: '全部总价', dataIndex: 'allTotalPrice'},
+                                ],
+                            }
+                        ]} />
 
-                </div>,
+                    </div>,
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
+                    /*scroll:{
+                        x:'140%'
+                    },*/
                 }}
             >
             </SearchTable>

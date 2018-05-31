@@ -86,6 +86,7 @@ export default class OtherFiles extends Component {
                             {
                                 composeBotton([{
                                     type:'add',
+                                    icon:'plus',
                                     userPermissions:[],
                                     onClick:()=>{
                                         this.setState({

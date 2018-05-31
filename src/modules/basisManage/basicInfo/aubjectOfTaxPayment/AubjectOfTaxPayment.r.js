@@ -194,6 +194,7 @@ class AubjectOfTaxPayment extends Component {
                         {
                             composeBotton([{
                                 type:'add',
+                                icon:'plus',
                                 userPermissions:[],
                                 onClick:()=>this.showModal('add')
                             }])

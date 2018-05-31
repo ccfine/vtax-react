@@ -129,6 +129,7 @@ class SubjectRateRela extends Component {
                             {
                                 composeBotton([{
                                     type:'add',
+                                    icon:'plus',
                                     onClick:()=>{
                                         this.setState({
                                             visible: true,

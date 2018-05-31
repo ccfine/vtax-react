@@ -176,6 +176,7 @@ export default class DeclareParameter extends Component{
                         {
                             composeBotton([{
                                 type:'add',
+                                icon:'plus',
                                 onClick:()=>this.showModal('add')
                             }])
                         }

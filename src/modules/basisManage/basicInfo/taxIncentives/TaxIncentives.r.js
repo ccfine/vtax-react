@@ -22,7 +22,7 @@ const getColumns = context=> [
                 type:'action',
                 title:'编辑',
                 icon:'edit',
-                userPermissions:[],
+                userPermissions:['1091004'],
                 onSuccess:()=>{
                     context.setState({
                         modalConfig:{
@@ -154,7 +154,8 @@ export default class TaxIncentives extends Component{
                             {
                                 composeBotton([{
                                     type:'add',
-                                    userPermissions:[],
+                                    icon:'plus',
+                                    userPermissions:['1091003'],
                                     onClick:()=>this.showModal('add')
                                 }])
                             }

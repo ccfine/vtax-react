@@ -65,7 +65,7 @@ const searchFields=(context,disabled,declare)=> {
             span:6,
             formItemStyle,
             type:'select',
-            options:context.state.sysDictIdList
+            options:context.state.sysDictIdList.concat({value:'0', text:'无'})
         },
     ]
 }

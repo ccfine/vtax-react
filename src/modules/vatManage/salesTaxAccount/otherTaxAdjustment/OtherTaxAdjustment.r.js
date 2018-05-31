@@ -1,6 +1,6 @@
 /*
- * @Author: liuchunxiu 
- * @Date: 2018-04-04 17:52:53 
+ * @Author: liuchunxiu
+ * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
  * @Last Modified time: 2018-05-28 18:08:48
  */
@@ -68,7 +68,7 @@ const getColumns = (context,hasOperate) => {
           type:'action',
           icon:'edit',
           title:'编辑',
-          userPermissions:[],
+          userPermissions:['1311004'],
           onSuccess:()=>context.setState({
             visible: true,
             action: "modify",
@@ -79,7 +79,7 @@ const getColumns = (context,hasOperate) => {
           icon:'delete',
           title:'删除',
           style:{color: "#f5222d"},
-          userPermissions:[],
+          userPermissions:['1311008'],
           onSuccess:() => {
             const modalRef = Modal.confirm({
                 title: '友情提醒',
@@ -260,7 +260,8 @@ class OtherTaxAdjustment extends Component {
                   {
                       (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',
-                          userPermissions:[],
+                          icon:'plus',
+                          userPermissions:['1311003'],
                           onClick: () => {
                             this.setState({
                               visible: true,
@@ -272,13 +273,13 @@ class OtherTaxAdjustment extends Component {
                           type:'submit',
                           url:'/account/output/othertax/main/submit',
                           params:filters,
-                          userPermissions:[],
+                          userPermissions:['1311010'],
                           onSuccess:this.refreshTable
                       },{
                           type:'revoke',
                           url:'/account/output/othertax/main/restore',
                           params:filters,
-                          userPermissions:[],
+                          userPermissions:['1311011'],
                           onSuccess:this.refreshTable,
                       }],statusParam)
                   }
