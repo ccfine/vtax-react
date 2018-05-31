@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 17:19:41
+ * @Last Modified time: 2018-05-31 18:40:30
  */
 import React from 'react'
 import {SearchTable} from 'compoments'
@@ -38,6 +38,11 @@ const columns= [
     },{
         title: '单方土地成本',
         dataIndex: 'singleLandCost',
+        render:text=>fMoney(text),
+        className:'table-money',
+    },{
+        title: '期初可抵扣土地价款',
+        dataIndex: 'initialDeductibleLandPrice',
         render:text=>fMoney(text),
         className:'table-money',
     },{

@@ -16,7 +16,7 @@ import Sider from './sider'
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
 
-import getPermission from  './index'
+// import getPermission from  './index'
 
 const { Content,Footer } = Layout;
 
@@ -64,9 +64,9 @@ class Web extends Component {
     componentWillReceiveProps(nextProps){
         this.checkLoggedIn(nextProps);
     }
-    componentDidMount(){
-        getPermission()
-    }
+    // componentDidMount(){
+    //     getPermission()
+    // }
 
 
     render() {
