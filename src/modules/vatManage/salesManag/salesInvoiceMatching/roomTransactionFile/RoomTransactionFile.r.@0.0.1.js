@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 15:48:39
+ * @Last Modified time: 2018-05-31 10:47:19
  *
  */
 import React,{Component} from 'react'
@@ -201,6 +201,7 @@ const getColumns = (context,disabled) => [
                 title:'删除',
                 Icon:'delete',
                 style:{color:'#f5222d'},
+                userPermissions:['1215013'],
                 onSuccess:()=>{
                     if(parseInt(record.matchingStatus,0) ===1){
                         const errorModalRef = Modal.warning({
@@ -393,19 +394,19 @@ class RoomTransactionFile extends Component{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
-                                userPermissions:[],
+                                userPermissions:['1215012'],
                                 fields:fields(disabled,declare)
                             },{
                                 type:'submit',
                                 url:'/output/room/files/submit',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1215010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/output/room/files/revoke',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1215011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

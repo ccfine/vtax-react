@@ -73,19 +73,19 @@ const getColumns =(context)=>[
                                 type:'action',
                                 icon:'form',
                                 title:'申报办理',
-                                userPermissions:[],
+                                userPermissions:['1081002'],
                                 onSuccess:()=>{
                                     context.setState({
                                         record: {...record,decAction:'edit'},
                                     },() => {
-                                        context.toggleApplyVisible(true);
+                                        context.toggleApplyVisible(true,'tax/decConduct/list/handle');
                                     });
                                 }
                             },{
                                 type:'action',
                                 icon:'exception',
                                 title:'流程终止',
-                                userPermissions:[],
+                                userPermissions:['1085000'],
                                 onSuccess:()=>{ context.handelProcessStop(record) }
                             }])
                     break
@@ -98,7 +98,7 @@ const getColumns =(context)=>[
                             type: 'action',
                             icon: 'folder',
                             title: '申报归档',
-                            userPermissions: [],
+                            userPermissions: ['1085001'],
                             onSuccess: () => {
                                 context.handelArchiving(record)
                             }
@@ -106,12 +106,12 @@ const getColumns =(context)=>[
                             type:'action',
                             icon:'rollback',
                             title:'申报撤回',
-                            userPermissions:[],
+                            userPermissions:['1085005'],
                             onSuccess:()=>{
                                 context.setState({
                                     record: {...record,decAction:'edit'},
                                 },() => {
-                                    context.toggleApplyVisible(true);
+                                    context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
                                 });
                             }
                         }])
@@ -121,7 +121,7 @@ const getColumns =(context)=>[
                             type:'action',
                             icon:'folder',
                             title:'申报归档',
-                            userPermissions:[],
+                            userPermissions:['1085001'],
                             onSuccess:()=>{ context.handelArchiving(record) }
                         }])
                     break
@@ -140,7 +140,7 @@ const getColumns =(context)=>[
                                     context.setState({
                                         record: {...record,decAction:'look'}
                                     },() => {
-                                        context.toggleApplyVisible(true);
+                                        context.toggleApplyVisible(true,'tax/decConduct/list/find');
                                     });
                                 }
                             }])
@@ -233,6 +233,7 @@ class DeclareHandle extends Component{
         updateKey:Date.now(),
         record:undefined,
         applyVisible:false,
+        applyUrl:undefined,
         applyDeclarationModalKey:Date.now()+2,
     }
     refreshTable = ()=>{
@@ -240,9 +241,10 @@ class DeclareHandle extends Component{
             updateKey:Date.now(),
         })
     }
-    toggleApplyVisible = applyVisible => {
+    toggleApplyVisible = (applyVisible,url) => {
         this.setState({
-            applyVisible
+            applyVisible,
+            applyUrl:url,
         });
     };
     handelArchiving=(record)=>{
@@ -307,7 +309,7 @@ class DeclareHandle extends Component{
     }
 
     render(){
-        const {updateKey,applyDeclarationModalKey,applyVisible,record} = this.state;
+        const {updateKey,applyDeclarationModalKey,applyVisible,record,applyUrl} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -339,6 +341,7 @@ class DeclareHandle extends Component{
                         }}
                         toggleApplyVisible={this.toggleApplyVisible}
                         style={{marginRight:5}}
+                        url={applyUrl}
                     />
                 }
             </SearchTable>

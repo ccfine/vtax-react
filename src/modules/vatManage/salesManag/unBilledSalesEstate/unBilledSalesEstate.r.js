@@ -290,19 +290,19 @@ class unBilledSalesEstate extends Component{
                                 url:'/account/output/notInvoiceSale/realty/reset',
                                 params:filters,
                                 onSuccess:this.refreshTable,
-                                userPermissions:[],
+                                userPermissions:['1351009'],
                             },{
                                 type:'submit',
                                 url:'/account/output/notInvoiceSale/realty/submit',
                                 params:filters,
                                 onSuccess:this.refreshTable,
-                                userPermissions:[],
+                                userPermissions:['1351010'],
                             },{
                                 type:'revoke',
                                 url:'/account/output/notInvoiceSale/realty/revoke',
                                 params:filters,
                                 onSuccess:this.refreshTable,
-                                userPermissions:[],
+                                userPermissions:['1351011'],
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={

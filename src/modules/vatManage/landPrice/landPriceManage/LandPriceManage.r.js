@@ -258,7 +258,7 @@ class LandPriceManage extends Component{
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
-                                    userPermissions:[],
+                                    userPermissions:['1545000'],
                                     formOptions:{
                                         filters: filters,
                                         selectedRowKeys: selectedRowKeys,
@@ -270,13 +270,13 @@ class LandPriceManage extends Component{
                                     type:'submit',
                                     url:'/land/price/manage/submit',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1541010'],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
                                     url:'/land/price/manage/revoke',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1541011'],
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }

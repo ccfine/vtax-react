@@ -134,7 +134,7 @@ export default class ViewDocumentDetails extends Component{
                                               bordered:true,
                                               size:'small',
                                               columns:columns,
-                                              scroll:{ x: 800, y: 300 }
+                                            //   scroll:{ x: 800, y: 300 }
                                           }} />
 
                         {/*<AsyncTable url="/inter/financial/voucher/listByVoucher"

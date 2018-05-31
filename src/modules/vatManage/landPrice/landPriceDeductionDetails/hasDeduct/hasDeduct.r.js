@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 10:21:03
+ * @Last Modified time: 2018-05-31 14:57:53
  */
 import React from 'react'
 import {message} from 'antd'
@@ -158,19 +158,19 @@ export default class HasDeduct extends React.Component{
                                 type:'reset',
                                 url:'/account/landPrice/deductedDetails/reset',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1261009'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/landPrice/deductedDetails/submit',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1261010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/landPrice/deductedDetails/revoke',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1261011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

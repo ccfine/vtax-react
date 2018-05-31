@@ -105,7 +105,7 @@ const getColumns = (context,disabled) =>[
             return (disabled && parseInt(context.state.statusParam.status, 0) === 1) ? composeBotton([{
                 type:'action',
                 title:'手工匹配',
-                userPermissions:[],
+                userPermissions:['1215006'],
                 style:{color: '#1890ff'},
                 icon:'check-circle-o',
                 onSuccess:() => {
@@ -339,7 +339,7 @@ class UnmatchedData extends Component{
                                 url:'output/invoice/marry/unmatched/export',
                                 params:filters,
                                 title:'导出未匹配发票',
-                                userPermissions:[],
+                                userPermissions:['1215005'],
                                 onSuccess:this.refreshTable
                             }],statusParam)
                         }

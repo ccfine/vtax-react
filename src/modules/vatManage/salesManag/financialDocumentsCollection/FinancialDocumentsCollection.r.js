@@ -231,12 +231,14 @@ class FinancialDocumentsCollection extends Component{
                                         type:'submit',
                                         url:'/inter/financial/voucher/submit',
                                         params:filters,
-                                        onSuccess:this.refreshTable
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1231010'],
                                     },{
                                         type:'revoke',
                                         url:'/inter/financial/voucher/revoke',
                                         params:filters,
                                         onSuccess:this.refreshTable,
+                                        userPermissions:['1231011'],
                                     }],statusParam)
                                 }
                             </div>

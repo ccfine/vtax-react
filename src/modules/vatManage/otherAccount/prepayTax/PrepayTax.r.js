@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-07 12:23:47
+ * @Last Modified time: 2018-05-31 15:15:17
  *
  */
 import React,{Component} from 'react'
@@ -217,13 +217,13 @@ class PrepayTax extends Component{
                                 type:'submit',
                                 url:'/account/prepaytax/submit',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1331010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/prepaytax/revoke',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1331011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

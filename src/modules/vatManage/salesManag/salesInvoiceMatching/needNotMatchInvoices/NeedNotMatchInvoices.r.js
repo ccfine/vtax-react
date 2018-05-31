@@ -1,12 +1,12 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-29 20:55:50
+ * @Last Modified time: 2018-05-31 16:09:44
  *
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {Modal,message,Button,Icon} from 'antd'
+import {Modal,message} from 'antd'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './addDataModal'
@@ -170,7 +170,7 @@ class NeedNotMatchInvoices extends Component{
 
         },
         selectedRowKeys:[],
-        revokeLoading:false,
+        // revokeLoading:false,
 
         searchTableLoading:false,
 
@@ -188,7 +188,8 @@ class NeedNotMatchInvoices extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[],
         })
     }
     fetchResultStatus = ()=>{
@@ -206,9 +207,9 @@ class NeedNotMatchInvoices extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                this.setState({revokeLoading:true})
+               // this.setState({revokeLoading:true})
                 request.put('/output/invoice/marry/unwanted/revoke',this.state.selectedRowKeys).then(({data})=>{
-                    this.setState({revokeLoading:false})
+                    //this.setState({revokeLoading:false})
                     if(data.code===200){
                         message.success('撤销成功！');
                         this.refreshTable();
@@ -217,7 +218,7 @@ class NeedNotMatchInvoices extends Component{
                     }
                 }).catch(err=>{
                     message.error(err.message)
-                    this.setState({revokeLoading:false})
+                    //this.setState({revokeLoading:false})
                 })
             },
             onCancel() {
@@ -227,7 +228,7 @@ class NeedNotMatchInvoices extends Component{
 
     }
     render(){
-        const {visible,tableKey,statusParam,totalSource,selectedRowKeys,revokeLoading} = this.state;
+        const {visible,tableKey,statusParam,totalSource,selectedRowKeys} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -263,11 +264,19 @@ class NeedNotMatchInvoices extends Component{
                         }{
                             (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
-                                userPermissions:[],
+                                userPermissions:['1215009'],
                                 onClick: ()=>this.toggleModalVisible(true)
+                            },{
+                                type:'cancel',
+                                userPermissions:['1215008'],
+                                onClick: ()=>this.backOutData(),
+                                icon:'rollback',
+                                text:'撤销',
+                                selectedRowKeys
+
                             }],statusParam)
                         }
-                        {(disabled && declare.decAction==='edit') && <Button size="small" loading={revokeLoading} onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>}
+                        {/* {(disabled && declare.decAction==='edit') && <Button size="small" loading={revokeLoading} onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>} */}
                         <TableTotal totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {

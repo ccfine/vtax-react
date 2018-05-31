@@ -56,7 +56,7 @@ export const composeGrid_8 = (grid,data)=>{
     
     /* 将新的grid拼凑出来 */
     let newGrid = [];
-    newGrid = [grid[0],grid[1],grid[2],grid[3],...reduceRows,grid[5],grid[6],grid[7]];
+    newGrid = [sheet_8[0],sheet_8[1],sheet_8[2],sheet_8[3],...reduceRows,sheet_8[5],sheet_8[6],sheet_8[7]];
     
     /* 调用润彬的方法生成最终显示需要的grid */
     newGrid = dataReander(newGrid,data);
