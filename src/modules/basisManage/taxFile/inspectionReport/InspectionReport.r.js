@@ -24,7 +24,7 @@ const getColumns = context => ([
             return composeBotton([{
                 type:'action',
                 title:'编辑',
-                userPermissions:[],
+                userPermissions:['1171004'],
                 onSuccess:() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
                 },
@@ -114,7 +114,7 @@ export default class InspectionReport extends Component {
                             composeBotton([{
                                 type:'add',
                                 icon:'plus',
-                                userPermissions:[],
+                                userPermissions:['1171003'],
                                 onClick:() => { this.setState({ visible: true, action: 'add', opid: undefined }) }
                             }])
                         }

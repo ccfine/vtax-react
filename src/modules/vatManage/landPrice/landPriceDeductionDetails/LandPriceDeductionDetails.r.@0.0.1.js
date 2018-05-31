@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:22:40
+ * @Last Modified time: 2018-05-31 17:14:28
  */
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
@@ -105,17 +105,22 @@ class DeductProjectSummary extends Component {
             activeKey
         })
     }
+    refreshTabs = ()=>{
+        this.setState({
+            tabsKey:Date.now()
+        })
+    }
     render(){
-        const {activeKey} = this.state;
+        const {activeKey,tabsKey} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-                <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
+                <Tabs key={tabsKey} onChange={this.onTabChange} type="card" activeKey={activeKey}>
                     <TabPane tab="土地价款当期应抵扣" key="1">
-                        <ShouldDeduct declare={declare} searchFields={searchFields(disabled,declare)} />
+                        <ShouldDeduct declare={declare} searchFields={searchFields(disabled,declare)}/>
                     </TabPane>
                     <TabPane tab="土地价款当期实际扣除" key="2">
-                        <HasDeduct declare={declare} searchFields={searchFields(disabled,declare)} />
+                        <HasDeduct declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs}/>
                     </TabPane>
                 </Tabs>
             )

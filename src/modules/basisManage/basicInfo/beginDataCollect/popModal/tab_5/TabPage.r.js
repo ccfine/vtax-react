@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:14:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 20:09:44
+ * @Last Modified time: 2018-05-31 17:51:50
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
@@ -16,14 +16,14 @@ const getColumns = context=>{
             type:'action',
             title:'编辑',
             icon:'edit',
-            userPermissions:[],
+            userPermissions:['1125002'],
             onSuccess:()=>context.showModal('modify',record.id)
         },{
             type:'action',
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:[],
+            userPermissions:['1125003'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -131,7 +131,7 @@ export default class TabPage extends Component{
                                 composeBotton([{
                                     type:'add',
                                     icon:'plus',
-                                    userPermissions:[],
+                                    userPermissions:['1125001'],
                                     onClick:()=>this.showModal('add',undefined)
                                 }])
                             }

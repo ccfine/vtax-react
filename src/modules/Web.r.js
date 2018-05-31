@@ -15,7 +15,7 @@ import Sider from './sider'
 /*import BreadCrumb from './breadcrumb/Breadcrumb'*/
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
-/*import getPermission from  './index'*/
+// import getPermission from  './index'
 
 const { Content,Footer } = Layout;
 
@@ -63,10 +63,10 @@ class Web extends Component {
     componentWillReceiveProps(nextProps){
         this.checkLoggedIn(nextProps);
     }
-    componentDidMount(){
-        //getPermission()
-    }
 
+    // componentDidMount(){
+    //     getPermission()
+    // }
 
     render() {
         const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;

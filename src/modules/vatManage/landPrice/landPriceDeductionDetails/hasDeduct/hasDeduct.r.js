@@ -2,12 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 14:57:53
+ * @Last Modified time: 2018-05-31 18:40:30
  */
 import React from 'react'
-import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import {fMoney,request,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 
 const columns= [
     {
@@ -39,6 +38,11 @@ const columns= [
     },{
         title: '单方土地成本',
         dataIndex: 'singleLandCost',
+        render:text=>fMoney(text),
+        className:'table-money',
+    },{
+        title: '期初可抵扣土地价款',
+        dataIndex: 'initialDeductibleLandPrice',
         render:text=>fMoney(text),
         className:'table-money',
     },{
@@ -97,24 +101,12 @@ export default class HasDeduct extends React.Component{
             tableKey:Date.now()
         })
     }
-    fetchResultStatus = ()=>{
-        request.get('/account/landPrice/deductedDetails/listMain',{
-            params:{
-                ...this.state.filters
-            }
+	fetchResultStatus = ()=>{
+        requestResultStatus('/account/landPrice/deductedDetails/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam:data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     render(){
         const {tableKey,filters={},statusParam={}} = this.state;
@@ -165,13 +157,19 @@ export default class HasDeduct extends React.Component{
                                 url:'/account/landPrice/deductedDetails/submit',
                                 params:filters,
                                 userPermissions:['1261010'],
-                                onSuccess:this.refreshTable
+                                onSuccess:()=>{
+                                    this.refreshTable()
+                                    this.props.refreshTabs()
+                                }
                             },{
                                 type:'revoke',
                                 url:'/account/landPrice/deductedDetails/revoke',
                                 params:filters,
                                 userPermissions:['1261011'],
-                                onSuccess:this.refreshTable,
+                                onSuccess:()=>{
+                                    this.refreshTable()
+                                    this.props.refreshTabs()
+                                }
                             }],statusParam)
                         }
                     </div>,
