@@ -180,7 +180,7 @@ class ManualMatchRoomModal extends Component{
     }
     putDataWithoutMatch = ids =>{
         this.toggleMatching(true)
-        request.put(`/output/invoice/marry/append/determine`,[ids])
+        request.put(`/output/invoice/marry/manual/add`,[ids])
             .then(({data})=>{
                 this.toggleMatching(false)
                 if(data.code===200){

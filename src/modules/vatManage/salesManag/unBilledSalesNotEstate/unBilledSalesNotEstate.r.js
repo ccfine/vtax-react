@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 18:09:03
+ * @Last Modified time: 2018-05-31 11:54:45
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -90,7 +90,7 @@ const getColumns = (context,hasOperate) => {
                 type:'action',
                 icon:'edit',
                 title:'编辑',
-                userPermissions:[],
+                userPermissions:['1361004'],
                 onSuccess:() => {
                     context.setState({
                         visible: true,
@@ -103,7 +103,7 @@ const getColumns = (context,hasOperate) => {
                 icon:'delete',
                 title:'删除',
                 style:{color: "#f5222d"},
-                userPermissions:[],
+                userPermissions:['1361008'],
                 onSuccess:() => {
                     const modalRef = Modal.confirm({
                         title: "友情提醒",
@@ -260,7 +260,7 @@ class UnBilledSalesNotEstate extends Component {
                                         (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'add',
                                             icon:'plus',
-                                            userPermissions:[],
+                                            userPermissions:['1361003'],
                                             onClick: () => {
                                                 this.setState({
                                                     visible: true,
@@ -272,19 +272,19 @@ class UnBilledSalesNotEstate extends Component {
                                             type:'reset',
                                             url:'/account/notInvoiceUnSale/realty/reset',
                                             params:filters,
-                                            userPermissions:[],
+                                            userPermissions:['1361009'],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'submit',
                                             url:'/account/notInvoiceUnSale/realty/submit',
                                             params:filters,
-                                            userPermissions:[],
+                                            userPermissions:['1361010'],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
                                             url:'/account/notInvoiceUnSale/realty/revoke',
                                             params:filters,
-                                            userPermissions:[],
+                                            userPermissions:['1361011'],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                     }

@@ -145,7 +145,7 @@ class tab1 extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/othertax/deducted/main/listMain',this.state.filters,result=>{
+        requestResultStatus('/account/othertax/deducted/listMain',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -186,21 +186,21 @@ class tab1 extends Component{
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'reset',
-                                    url:'/account/othertax/deducted/main/reset',
+                                    url:'/account/othertax/deducted/reset',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1271009'],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'submit',
-                                    url:'/account/othertax/deducted/main/submit',
+                                    url:'/account/othertax/deducted/submit',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1271010'],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
-                                    url:'/account/othertax/deducted/main/revoke',
+                                    url:'/account/othertax/deducted/revoke',
                                     params:filters,
-                                    userPermissions:[],
+                                    userPermissions:['1271011'],
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }

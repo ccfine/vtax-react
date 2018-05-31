@@ -185,7 +185,7 @@ class GeneralTaxCertificate extends Component{
                                         onSuccess:()=>{
                                             this.refreshTable()
                                         },
-                                        userPermissions:['1395004'],
+                                        userPermissions:['1395000'],
                                     }
                                 }],statusParam)
                             }

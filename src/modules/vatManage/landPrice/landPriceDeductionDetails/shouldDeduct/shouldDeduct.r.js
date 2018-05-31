@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 16:40:07
+ * @Last Modified time: 2018-05-31 14:57:31
  */
 import React from 'react'
 import { SearchTable } from 'compoments'
@@ -138,7 +138,7 @@ export default class ShouldDeduct extends React.Component {
 										type: 'reset',
 										url:'/account/landPrice/deductedDetails/reset',
 										params:filters,
-                                        userPermissions:[],
+                                        userPermissions:['1261009'],
 										onSuccess: this.refreshTable
 									}
 								])

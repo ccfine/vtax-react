@@ -167,7 +167,7 @@ const getColumns = (context,disabled) => [
                 title:'解除匹配',
                 icon:'disconnect',
                 style:{color:'#f5222d'},
-                userPermissions:[],
+                userPermissions:['1215003'],
                 onSuccess:()=>{
                     const modalRef = Modal.confirm({
                         title: '友情提醒',
@@ -428,7 +428,7 @@ class InvoiceDataMatching extends Component{
                                 type:'match',
                                 url:'/output/invoice/marry/already/automatic',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1215002'],
                                 onSuccess:()=>{
                                     this.props.refreshTabs()
                                 }
@@ -437,13 +437,14 @@ class InvoiceDataMatching extends Component{
                                 url:'output/invoice/marry/already/export',
                                 params:filters,
                                 title:'导出匹配列表',
-                                userPermissions:[],
-                                onSuccess:this.refreshTable*/
+                                userPermissions:['1215004'],
+                                onSuccess:this.refreshTable
+                              */
                             },{
                                 type:'submit',
                                 url:'/output/invoice/marry/submit',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1215000'],
                                 onSuccess:()=>{
                                     this.props.refreshTabs()
                                 }
@@ -451,7 +452,7 @@ class InvoiceDataMatching extends Component{
                                 type:'revoke',
                                 url:'output/invoice/marry/revoke',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1215001'],
                                 onSuccess:()=>{
                                     this.props.refreshTabs()
                                 }

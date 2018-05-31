@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 18:08:42
+ * @Last Modified time: 2018-05-31 15:31:52
  *
  */
 import React,{Component} from 'react'
@@ -209,27 +209,27 @@ class TaxCalculation extends Component{
                                 type:'save',
                                 icon:'save',
                                 text:'保存',
-                                userPermissions:[],
+                                userPermissions:['1371003'],
                                 onClick:()=>this.save()
                             },{
                                 type:'reset',
                                 url:'/account/taxCalculation/reset',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1371009'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/taxCalculation/submit',
                                 params:filters,
                                 // monthFieldName:'authMonth',
-                                userPermissions:[],
+                                userPermissions:['1371010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/taxCalculation/revoke',
                                 params:filters,
                                 // monthFieldName:'authMonth',
-                                userPermissions:[],
+                                userPermissions:['1371011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

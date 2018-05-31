@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 16:08:09
+ * @Last Modified time: 2018-05-31 15:23:56
  *
  */
 import React, { Component } from 'react'
@@ -77,7 +77,7 @@ const getColumns = (context,disabled,declare) => [
                                 type: 'action',
                                 icon: 'edit',
                                 title: '编辑',
-                                userPermissions:[],
+                                userPermissions:['1301004'],
                                 onSuccess: () => {
                                     context.setState({visible: true, action: 'modify', opid: record.id});
                                 }
@@ -86,7 +86,7 @@ const getColumns = (context,disabled,declare) => [
                                 icon:'delete',
                                 title:'删除',
                                 style:pointerStyleDelete,
-                                userPermissions:[],
+                                userPermissions:['1301008'],
                                 onSuccess:()=>{
                                     const modalRef = Modal.confirm({
                                         title: "友情提醒",
@@ -276,7 +276,7 @@ class TaxExemptionDetails extends Component{
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'add',
                                 icon:'plus',
-                                userPermissions:[],
+                                userPermissions:['1301003'],
                                 onClick: ()=>{
                                     this.setState({
                                         visible: true,
@@ -288,13 +288,13 @@ class TaxExemptionDetails extends Component{
                                 type:'submit',
                                 url:'/account/other/reduceTaxDetail/submit',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1301010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/account/other/reduceTaxDetail/revoke',
                                 params:filters,
-                                userPermissions:[],
+                                userPermissions:['1301011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }

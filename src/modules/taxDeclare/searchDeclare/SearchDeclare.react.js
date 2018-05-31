@@ -202,7 +202,7 @@ export default class SearchDeclare extends Component{
                     cardProps:{
                         title:'查询申报'
                     },
-                    url:'/tax/decConduct/queryList',
+                    url:'/tax/decConduct/query/list',
                 }}
             >
                 {
@@ -213,6 +213,7 @@ export default class SearchDeclare extends Component{
                         record={{...record,decAction:'look'}}
                         toggleApplyVisible={this.toggleApplyVisible}
                         style={{marginRight:5}}
+                        url='tax/decConduct/query/find'
                     />
                 }
             </SearchTable>

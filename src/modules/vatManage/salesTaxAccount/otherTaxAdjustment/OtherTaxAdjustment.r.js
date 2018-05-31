@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 18:08:48
+ * @Last Modified time: 2018-05-31 12:01:34
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -224,7 +224,7 @@ class OtherTaxAdjustment extends Component {
           });
   }
   updateStatus = (values) => {
-    requestResultStatus('/account/output/othertax/main/listMain',values,result=>{
+    requestResultStatus('/account/output/othertax/listMain',values,result=>{
       this.setState({
           statusParam: result,
       })
@@ -271,13 +271,13 @@ class OtherTaxAdjustment extends Component {
                           }
                       },{
                           type:'submit',
-                          url:'/account/output/othertax/main/submit',
+                          url:'/account/output/othertax/submit',
                           params:filters,
                           userPermissions:['1311010'],
                           onSuccess:this.refreshTable
                       },{
                           type:'revoke',
-                          url:'/account/output/othertax/main/restore',
+                          url:'/account/output/othertax/restore',
                           params:filters,
                           userPermissions:['1311011'],
                           onSuccess:this.refreshTable,
