@@ -6,39 +6,12 @@
 import React, { Component } from 'react'
 import LoadAble from 'react-loadable'
 import {LoadingPage} from 'compoments'
-import { Layout, Card, Col, Row,Menu,Icon,Dropdown } from 'antd'
-/*import ImageGallery from 'react-image-gallery';*/
-import { pieOption, barOption, lineOption, scatterOption, radarOption, candlestickOption } from './optionConfig/options'
-
+import { Layout, Card, Col, Row } from 'antd'
 import banner1 from './images/banner1.jpg'
 import banner2 from './images/banner2.jpg'
 import "react-image-gallery/styles/css/image-gallery.css";
+import './index.less'
 
-
-const AsyncPieReact = LoadAble({
-    loader: () => import('./echartsTest/PieReact'),//饼图组件
-    loading: LoadingPage,
-});
-const AsyncBarReact = LoadAble({
-    loader: () => import('./echartsTest/BarReact'),//柱状图组件
-    loading: LoadingPage,
-});
-const AsyncLineReact = LoadAble({
-    loader: () => import('./echartsTest/LineReact'),//折线图组件
-    loading: LoadingPage,
-});
-const AsyncScatterReact = LoadAble({
-    loader: () => import('./echartsTest/ScatterReact'),//散点图组件
-    loading: LoadingPage,
-});
-const AsyncRadarReact = LoadAble({
-    loader: () => import('./echartsTest/RadarReact'),//雷达图组件
-    loading: LoadingPage,
-});
-const AsyncCandlestickReact = LoadAble({
-    loader: () => import('./echartsTest/CandlestickReact'), //k线图组件
-    loading: LoadingPage,
-});
 const AsyncImageGallery = LoadAble({
     loader: () => import('react-image-gallery'), //k线图组件
     loading: LoadingPage,
@@ -112,18 +85,13 @@ class Home extends Component {
     }
 
     render() {
-        const menu = (
-            <Menu>
-                <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="###">1st menu item</a>
-                </Menu.Item>
-                <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="###">2nd menu item</a>
-                </Menu.Item>
-                <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="###">3rd menu item</a>
-                </Menu.Item>
-            </Menu>
+
+        const Info = ({ title, value, bordered }) => (
+            <div className='headerInfo'>
+                <span>{title}</span>
+                <p>{value}</p>
+                {bordered && <em />}
+            </div>
         );
 
         return (
@@ -144,132 +112,20 @@ class Home extends Component {
                         showThumbnails={false}
                         items={this.state.banner}
                     />
-                <div style={{ padding: '24px'}}>
-                    <Row gutter={16} style={{marginBottom:20}}>
-                        <Col span={8}>
-                            <Card
-                                bordered={true}
-                                style={{textAlign:'center'}}
-                            >
-                                待办申报    2
-                            </Card>
-                        </Col>
-                        <Col span={8}>
-                            <Card
-                                bordered={true}
-                                style={{textAlign:'center'}}
-                            >
-                                发票查询
-                            </Card>
-                        </Col>
-                        <Col span={8}>
-                            <Card
-                                bordered={true}
-                                style={{textAlign:'center'}}
-                            >
-                                发票查询
-                            </Card>
-                        </Col>
-                    </Row>
-
-                   <Row gutter={16}>
-                        <Col span={12}>
-                            <Card
-                                title="饼图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncPieReact option={pieOption} />
-                            </Card>
-                            <br/>
-                            <Card
-                                title="柱状图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncBarReact option={barOption} />
-                            </Card>
-                            <br/>
-                            <Card
-                                title="折线图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncLineReact option={lineOption} />
-                            </Card>
-                            <br/>
-                            <Card
-                                title="k线图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncCandlestickReact option={candlestickOption} />
-                            </Card>
-
-
-                        </Col>
-                        <Col span={12}>
-
-                            <Card
-                                title="散点图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncScatterReact option={scatterOption} />
-                            </Card>
-                            <br/>
-                            <Card
-                                title="雷达图"
-                                bordered={true}
-                                type="inner"
-                                extra={
-                                    <Dropdown overlay={menu} placement="bottomRight">
-                                        <a className="ant-dropdown-link" href="/">
-                                            <Icon type="ellipsis" />
-                                        </a>
-                                    </Dropdown>
-                                }
-                            >
-                                <AsyncRadarReact option={radarOption} />
-                            </Card>
-
-                        </Col>
-                    </Row>
+                <div style={{ padding: '24px 0'}}>
+                    <Card bordered={false} style={{ padding:'24px 32px' }}>
+                        <Row>
+                            <Col sm={8} xs={24}>
+                                <Info title="我的待办" value="8个任务" bordered />
+                            </Col>
+                            <Col sm={8} xs={24}>
+                                <Info title="本周任务平均处理时间" value="32分钟" bordered />
+                            </Col>
+                            <Col sm={8} xs={24}>
+                                <Info title="本周完成任务数" value="24个任务" />
+                            </Col>
+                        </Row>
+                    </Card>
                 </div>
 
             </Layout>
