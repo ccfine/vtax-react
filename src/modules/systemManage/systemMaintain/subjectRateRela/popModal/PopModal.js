@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:44 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-11 17:27:56
+ * @Last Modified time: 2018-06-01 11:57:54
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -262,6 +262,9 @@ class PopModal extends Component {
                                             {
                                                 required: true,
                                                 message: "请输入税率"
+                                            },{
+                                                pattern:/^100$|^\d{0,2}$/,
+                                                message:"请输入0~100之间的数字"
                                             }
                                         ]
                                     },
@@ -284,6 +287,9 @@ class PopModal extends Component {
                                             {
                                                 required: true,
                                                 message: "请输入简易征收率"
+                                            },{
+                                                pattern:/^100$|^\d{0,2}$/,
+                                                message:"请输入0~100之间的数字"
                                             }
                                         ]
                                     },

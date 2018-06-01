@@ -98,6 +98,7 @@ class PopModal extends Component {
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
                 width="700px"
+                style={{top:'5%'}}
                 bodyStyle={{
                     height:450,
                     overflowY:'auto',
