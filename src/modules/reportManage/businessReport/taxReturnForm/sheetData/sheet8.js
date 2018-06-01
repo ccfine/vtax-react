@@ -50,7 +50,7 @@ export const sheet_8 = [
 export const composeGrid_8 = (grid,data)=>{
     // data可能没数据
     if(!data){
-        return sheet_8;
+        return [...sheet_8];
     }
 
     let reduceLength = parseInt(data['count'] ? data['count'].value : 0,10),/* 减税项目长度 */
