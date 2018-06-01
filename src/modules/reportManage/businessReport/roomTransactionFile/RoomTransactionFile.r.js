@@ -42,7 +42,7 @@ const searchFields = (getFieldValue)=> [
     },
     {
         label:'交易月份',
-        fieldName:'transactionDate',
+        fieldName:'authMonth',
         type:'monthPicker',
         span:6
     },

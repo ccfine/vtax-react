@@ -10,7 +10,7 @@ import {fMoney,parseJsonToParams} from 'utils'
 const searchFields = [
     {
         label:'凭证号',
-        fieldName:'invoiceNum',
+        fieldName:'voucherNum',
         type:'input',
         span:8,
         componentProps:{ }
