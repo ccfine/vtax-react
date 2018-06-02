@@ -5,14 +5,14 @@ import React from 'react'
 import {CusFormItem} from 'compoments'
 export default class EditableCell extends React.Component {
     render() {
-        const {getFieldDecorator,fieldName,renderValue} = this.props;
+        const {getFieldDecorator,fieldName,renderValue,componentProps} = this.props;
         return (
             <div className="editable-cell-input-wrapper">
                 {
                     getFieldDecorator(`${fieldName}`,{
-                        initialValue:renderValue
+                        initialValue:renderValue,
                     })(
-                        <CusFormItem.NumericInput style={{textAlign:'right',backgroundColor: '#E2F6FF'}} />
+                        <CusFormItem.NumericInput {...componentProps} style={{textAlign:'right',backgroundColor: '#E2F6FF'}} />
                     )
                 }
             </div>

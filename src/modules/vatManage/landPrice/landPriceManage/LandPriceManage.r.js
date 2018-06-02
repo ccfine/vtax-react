@@ -3,9 +3,11 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {message,Form} from 'antd'
+import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
 
 import moment from 'moment';
 const pointerStyle = {
@@ -95,7 +97,7 @@ const markFieldsData = [
         ],
     }
 ]
-const columns = context =>[
+const getColumns = (context,disabled,getFieldDecorator) =>[
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
@@ -151,9 +153,26 @@ const columns = context =>[
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
-        width:'75px',
-        render: text => fMoney(text),
-        className: "table-money"
+        width:'150px',
+        className: "table-money",
+        render:(text,record)=>{
+            if(disabled){
+                return record.debitAmount ? fMoney(parseFloat(text)) : text
+            }else{
+                return ((context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1) && parseInt(record.deductionFlag, 0) === 1) ?
+                    <EditableCell
+                        fieldName={`debitAmount_${record.id}`}
+                        renderValue={text}
+                        getFieldDecorator={getFieldDecorator}
+                        editAble={disabled}
+                        componentProps={{
+                            onBlur:(e)=>context.handleConfirmBlur(e,record)
+                        }}
+
+                    /> : text
+            }
+
+        },
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方辅助核算名称</p>
@@ -189,7 +208,7 @@ const columns = context =>[
 ];
 class LandPriceManage extends Component{
     state={
-
+        searchTableLoading:false,
         tableKey:Date.now(),
         visible:false,
         voucherNum:undefined,
@@ -218,12 +237,45 @@ class LandPriceManage extends Component{
             tableKey:Date.now()
         })
     }
+
+    toggleSearchTableLoading = b =>{
+        this.setState({
+            searchTableLoading:b
+        })
+    }
+
+    handleConfirmBlur = (e,record) => {
+        const value = e.target.value;
+        if(parseInt(value, 0) !== parseInt(record.debitAmount, 0)){
+            request.put('/land/price/manage/update',{
+                debitAmount:value,
+                id:record.id
+            })
+                .then(({data})=>{
+                    this.toggleSearchTableLoading(true)
+                    if(data.code===200){
+                        message.success('保存成功!');
+                        this.toggleSearchTableLoading(false);
+                        this.refreshTable()
+                    }else{
+                        message.error(`保存失败:${data.msg}`)
+                    }
+                })
+                .catch(err => {
+                    message.error(err.message)
+                    this.toggleSearchTableLoading(true)
+                })
+        }
+    }
+
     render(){
-        const {visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
+        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
+        const {getFieldDecorator} = this.props.form;
         return(
             <SearchTable
+                spinning={searchTableLoading}
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields(disabled,declare),
@@ -234,7 +286,7 @@ class LandPriceManage extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:columns(this),
+                    columns:getColumns(this,!disabled,getFieldDecorator),
                     url:'/land/price/manage/list',
                     onSuccess:(params)=>{
                         this.setState({
@@ -267,6 +319,12 @@ class LandPriceManage extends Component{
                                         onSuccess: this.refreshTable,
                                     }
                                 },{
+                                    type:'reset',
+                                    url:'/land/price/manage/reset',
+                                    params:filters,
+                                    userPermissions:['1541009'],
+                                    onSuccess:this.refreshTable
+                                },{
                                     type:'submit',
                                     url:'/land/price/manage/submit',
                                     params:filters,
@@ -296,6 +354,6 @@ class LandPriceManage extends Component{
         )
     }
 }
-export default connect(state=>({
+export default Form.create()(connect(state=>({
     declare:state.user.get('declare')
-}))(LandPriceManage)
+}))(LandPriceManage))

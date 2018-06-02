@@ -10,10 +10,6 @@ import {SearchTable} from 'compoments'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
 const searchFields =(disabled,declare)=> {
     return [
         {
@@ -76,6 +72,9 @@ const getColumns = context => [
         title:'纳税主体名称',
         dataIndex:'mainName',
     },{
+        title:'项目分期名称',
+        dataIndex:'stagesName',
+    /*},{
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">项目分期名称</p>
@@ -125,9 +124,9 @@ const getColumns = context => [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.creditSubjectCode}</p>
             </div>
-        )
+        )*/
     }, {
-        title:'贷方金额',
+        title:'金额',
         dataIndex:'creditAmount',
         render:text=>fMoney(text),
         className:'table-money'

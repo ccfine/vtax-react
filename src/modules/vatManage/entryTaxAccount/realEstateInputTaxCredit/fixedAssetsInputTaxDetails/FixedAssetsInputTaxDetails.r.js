@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,toPercent} from 'utils'
+import {fMoney} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体名称',
@@ -101,8 +101,8 @@ const columns = context =>[
     {
         title: (
             <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">购进税额</p>
-                <p className="apply-form-list-p2">购进税率</p>
+                <p className="apply-form-list-p1">税额</p>
+                <p className="apply-form-list-p2">税率</p>
             </div>
         ),
         dataIndex: "inTax",
@@ -110,7 +110,9 @@ const columns = context =>[
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
-                    {toPercent(record.intaxRate)}
+                    {
+                        record.intaxRate? `${record.intaxRate}%`: record.intaxRate
+                    }
                 </p>
             </div>
         )
