@@ -56,6 +56,7 @@ class Home extends Component {
 
         let isShow = true;
         if(parseInt(this.props.type, 0) === 1){
+
             isShow = !!checkPermissions(authorityInfo, this.props.options)
         }
 
