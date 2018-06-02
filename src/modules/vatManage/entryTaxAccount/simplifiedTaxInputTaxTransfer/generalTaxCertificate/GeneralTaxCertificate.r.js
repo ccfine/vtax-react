@@ -166,11 +166,11 @@ class GeneralTaxCertificate extends Component{
                             this.fetchResultStatus()
                         })
                     },
-                    onRowSelect:(selectedRowKeys)=>{
+                    onRowSelect:parseInt(statusParam.status, 0) === 1 ? (selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    } : undefined,
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>一般计税列表</span>,
                         extra:<div>

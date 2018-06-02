@@ -174,7 +174,9 @@ const columns=[
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
-                    {parseInt(record.intaxRate,10) && record.intaxRate + "%"}
+                    {
+                        record.intaxRate? `${record.intaxRate}%`: record.intaxRate
+                    }
                 </p>
             </div>
         )

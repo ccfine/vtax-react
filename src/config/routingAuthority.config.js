@@ -371,4 +371,11 @@ export const getParentOptions = (oneLevelMenu) =>{
     return nArr;
 }
 
+export const getTowOptions = (oneLevelMenu, twoLevelMenu) =>{
+    if(strategies[oneLevelMenu] && strategies[oneLevelMenu][twoLevelMenu]){
+        return strategies[oneLevelMenu][twoLevelMenu].options || [];
+    }
+    return [];
+}
+
 export default strategies;
