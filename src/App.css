@@ -270,3 +270,8 @@ table.data-grid{
 .tab-breadcrumb{
   color:rgba(0,0,0,.45)
 }
+
+/* 纳税申报表输入框高度设置*/
+.data-grid-container .data-grid .cell > input{
+  height:20px;
+}

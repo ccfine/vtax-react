@@ -103,7 +103,8 @@ export default class Sheet extends Component{
             //console.log(cell, row, col, value)
             //获取修改后的返回的一条的数据
             if (grid[row] && grid[row][col]) {
-                grid[row][col] = {...grid[row][col], value}
+                let newValue = grid[row][col].onChange && grid[row][col].onChange(grid[row][col].value,value,grid,this.props.params)
+                grid[row][col] = {...grid[row][col], value:newValue}
             }
         })
         this.setState({grid})
