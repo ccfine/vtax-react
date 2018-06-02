@@ -33,7 +33,7 @@ class NavRouter extends Component {
 
                 //TODO：当权限是管理员的时候直接放行  type 只有两种权限 1：普通用户 8192：管理员, 普通用户需要校验
                 if(parseInt(this.props.type, 0) === 1){
-                    return checkPermissions(item, this.props.options) && component
+                    return checkPermissions(item.authorityInfo, this.props.options) && component
                 }
                 return component
             }

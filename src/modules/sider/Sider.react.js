@@ -95,7 +95,7 @@ class VTaxSider extends Component {
 
                 //当权限是普通用户的时候直接放行  普通用户： 1
                 if(parseInt(this.props.type, 0) ===1){
-                    return checkPermissions(item, this.props.options) &&  componentSbu
+                    return checkPermissions(item.authorityInfo, this.props.options) &&  componentSbu
                 }
                 return componentSbu
             }
@@ -116,7 +116,7 @@ class VTaxSider extends Component {
 
             //当权限是管理员的时候直接放行
             if(parseInt(this.props.type, 0) ===1){
-                return checkPermissions(item, this.props.options) &&  componentParent
+                return checkPermissions(item.authorityInfo, this.props.options) &&  componentParent
             }
             return  componentParent
 
@@ -178,7 +178,6 @@ class VTaxSider extends Component {
         }
     }
     render() {
-        console.log(this.props.options)
         return (
             <Sider
                 trigger={null}
