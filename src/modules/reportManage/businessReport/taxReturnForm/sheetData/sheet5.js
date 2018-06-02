@@ -1,4 +1,6 @@
-import { generateRows } from './sheetUtils'
+import {BigNumber} from 'bignumber.js'
+
+const numericReg = new RegExp(`^(0|[1-9][0-9]{0,17})(\\.[0-9]{0,2})?$`);
 
 export default [
     [
@@ -22,8 +24,24 @@ export default [
         { value: '4', readOnly: true},
         { value: '5≤1+4', readOnly: true},
         { value:'6=1+2-3+4-5',readOnly:true}
-    ],
-    ...generateRows([
-        []
-    ], 6, 'A')
+    ],[
+        { key: 'A1', value:'--', readOnly: true },
+        { key: 'A2', value:'--', readOnly: true },
+        { key: 'A3', value:'--', readOnly: true},
+        { key: 'A4', value:'--', readOnly: true},
+        { key: 'A5', value:'', readOnly: false,onChange:(oldValue,nextValue,grid,params)=>{
+            //5≤1+4
+            let a1 = grid[4][0].value,
+                a4 = grid[4][3].value;
+            let nonValid = !(numericReg.test(nextValue) && numericReg.test(a1) && numericReg.test(a4));
+                nonValid = nonValid || (new BigNumber(nextValue)).isGreaterThan((new BigNumber(a1).plus(a4)));
+            
+            if(nonValid){
+                return oldValue;
+            }else{
+                return nextValue;
+            }
+        }},
+        { key: 'A6', value:'--', readOnly:true}
+    ]
 ];
