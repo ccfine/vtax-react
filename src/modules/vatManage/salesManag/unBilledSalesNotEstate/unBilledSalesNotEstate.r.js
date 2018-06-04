@@ -132,7 +132,25 @@ const getColumns = (context,hasOperate) => {
         ...operates
     , {
         title: "项目",
-        dataIndex: "taxMethod"
+        dataIndex: "taxMethod",
+        render: (text, row, index) => {
+            let count1 = context.state.dataSource.filter(ele=>ele.taxMethod==='1').length,
+                count2 = context.state.dataSource.filter(ele=>ele.taxMethod==='2').length;
+
+            const obj = {
+                children: text ==='1' ? '一般计税' : '简易计税',
+                props: {}
+            };
+
+            if (index === 0) {
+                obj.props.rowSpan = count1;
+            }else if (index === count1) {
+                obj.props.rowSpan = count2;
+            }else{
+                obj.props.rowSpan = 0;
+            }
+            return obj;
+        }
 
     /*{
         title: "纳税主体",
@@ -194,6 +212,7 @@ class UnBilledSalesNotEstate extends Component {
         readOnly: false,
         updateKey: Date.now(),
         statusParam: {},
+        dataSource:[],
         filters: undefined,
     };
     hideModal() {
@@ -246,6 +265,11 @@ class UnBilledSalesNotEstate extends Component {
                             });
                         },
                         onSuccess:this.updateStatus,
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
+                        },
                         cardProps: {
                             title: "未开票销售台账-非地产",
                             extra: (
