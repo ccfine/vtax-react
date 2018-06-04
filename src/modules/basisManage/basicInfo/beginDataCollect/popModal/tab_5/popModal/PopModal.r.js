@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:15:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-29 21:24:03
+ * @Last Modified time: 2018-06-04 11:45:54
  */
 import React, { Component } from 'react'
 import { Modal, Form,Button, message, Spin, Row } from 'antd'
@@ -153,10 +153,10 @@ class PopModal extends Component {
                                                 text:'附表3-10%税率的项目-期初余额',
                                                 value:1
                                             },
-                                            {
-                                                text:'附表3-5%征收率的项目-期初余额',
-                                                value:2
-                                            },
+                                            // {
+                                            //     text:'附表3-5%征收率的项目-期初余额',
+                                            //     value:2
+                                            // },
                                             {
                                                 text:'累计扣除土地价款',
                                                 value:3
