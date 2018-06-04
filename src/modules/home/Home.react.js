@@ -6,9 +6,9 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import LoadAble from 'react-loadable'
-import {withRouter,Link} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {LoadingPage} from 'compoments'
-import { Layout, Card, Col, Row } from 'antd'
+import { Layout, Card} from 'antd'
 import { getTowOptions } from 'config/routingAuthority.config'
 import checkPermissions from 'compoments/permissible/index'
 import banner1 from './images/banner1.jpg'
@@ -21,6 +21,12 @@ const AsyncImageGallery = LoadAble({
     loader: () => import('react-image-gallery'), //k线图组件
     loading: LoadingPage,
 });
+
+const AsyncDeclareHandle = LoadAble({
+    loader: () => import('modules/taxDeclare/declareHandle'),
+    loading: LoadingPage,
+});
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -45,14 +51,6 @@ class Home extends Component {
         this.mounted = null;
     }
     render() {
-
-        const Info = ({ title, value, bordered }) => (
-            <div className='headerInfo'>
-                <span>{title}</span>
-                <p>{value}</p>
-                {bordered && <em />}
-            </div>
-        );
 
         let isShow = true;
         if(parseInt(this.props.type, 0) === 1){
@@ -80,30 +78,12 @@ class Home extends Component {
                     items={this.state.banner}
                 />
                 {
-                    isShow  &&  <div style={{ padding: '24px 0'}}>
-                        <Card bordered={false} style={{ padding:'24px 32px' }}>
-                            <Row>
-                                <Col sm={24} xs={24}>
-                                    <Link
-                                        title="我的待办"
-                                        to='web/taxDeclare/declareHandle'
-                                    >
-                                        <Info title="我的待办" value="申报办理" />
-                                    </Link>
-
-                                </Col>
-                                {/*<Col sm={8} xs={24}>
-                                 <Info title="本周任务平均处理时间" value="32分钟" bordered />
-                                 </Col>
-                                 <Col sm={8} xs={24}>
-                                 <Info title="本周完成任务数" value="24个任务" />
-                                 </Col>*/}
-                            </Row>
+                    isShow && <div style={{ padding: '24px 0'}}>
+                        <Card style={{ padding:'0' }}>
+                            <AsyncDeclareHandle title="待我办理的申报任务" />
                         </Card>
                     </div>
                 }
-
-
             </Layout>
         )
     }
