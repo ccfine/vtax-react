@@ -53,11 +53,14 @@ const strategies = {
             beginDataCollect:{
                 options:['1121002','1121003','1121004','1121008','1125000','1125001','1125002','1125003','1125004','1125005','1125006','1125007','1125008'],
             },
-
             //财务凭证期初数据
             financialDocumentsBeginData:{
                 options:[]
-            }
+            },
+            //房间交易档案期初数据
+            roomTransactionFile:{
+                options:[]
+            },
         },
 
         //税务档案

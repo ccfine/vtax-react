@@ -40,7 +40,8 @@ const sheetData = [
     }, {
         tab:'附表三',
         grid:sheet_3,
-        url:'/tax/declaration/addendum/three/list'
+        url:'/tax/declaration/addendum/three/list',
+        saveUrl:'/',
     }, {
         tab:'附表四',
         grid:sheet_4,
@@ -48,7 +49,8 @@ const sheetData = [
     }, {
         tab:'附表五',
         grid:sheet_5,
-        url:'/tax/declaration/addendum/five/list'
+        url:'/tax/declaration/addendum/five/list',
+        saveUrl:'/',
     /*}, {
         tab:'固定资产表',
         grid:sheet_6,

@@ -42,7 +42,6 @@ const searchFields = context => [
 const columns = context => [
     {
         title: '操作',
-        width:'10%',
         dataIndex:'action',
         className:'text-center',
         render:(text,record)=>(
@@ -94,11 +93,11 @@ const columns = context => [
                 }
             </span>
 
-        )
+        ),
+        width: 200,
     },{
         title: '角色名称',
         dataIndex:'roleName',
-        width:'15%',
         render:(text,record)=>(
             <Link title="查看详情" to={{
                 pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
@@ -112,11 +111,9 @@ const columns = context => [
     },{
         title: '创建时间',
         dataIndex:'createdDate',
-        width:'15%'
     },{
         title:'备注',
         dataIndex:'remark',
-        width:'60%',
     }];
 
 

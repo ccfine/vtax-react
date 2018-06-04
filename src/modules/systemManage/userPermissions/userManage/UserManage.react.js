@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-01 11:15:14
+ * @Last Modified time: 2018-06-04 11:05:30
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -151,7 +151,7 @@ const getColumns = context => [
 
             );
         },
-        width: 240
+        width: 220
     },
     {
         title: "用户名",

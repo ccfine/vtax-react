@@ -260,6 +260,7 @@ export default class FinancialDocuments extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
+                    scroll:{ x: '120%' },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,
