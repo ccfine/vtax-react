@@ -126,9 +126,9 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
-                let url=''
+                values.taxMonth = values.taxMonth.format('YYYY-MM');
                 this.setState({saveLoding:true})
-                request.put(url,{...values})
+                request.put(this.props.saveUrl,{...values})
                     .then(({data})=>{
                         this.setState({saveLoding:false})
                         if(data.code===200){

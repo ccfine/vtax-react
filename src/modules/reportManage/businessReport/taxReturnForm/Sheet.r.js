@@ -137,7 +137,7 @@ export default class Sheet extends Component{
                                             component:<EditableCell 
                                                 renderValue={di.value} 
                                                 getFieldDecorator={this.props.form.getFieldDecorator}
-                                                fieldName={di.key}
+                                                fieldName={`map.${di.key}`}
                                                 editAble={true}
                                                 getValueFromEvent={(value)=>{
                                                     if(di.onChange){
