@@ -1,5 +1,5 @@
 /**
- * Created by liuliyuan on 2018/5/13.
+ * Created by liuliyuan on 2018/6/4.
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -60,23 +60,23 @@ const fields = [
     }
 ]
 const searchFields =[
-        {
-            label:'纳税主体',
-            fieldName:'mainId',
-            type:'taxMain',
-            span:8,
-            formItemStyle,
-        },{
-            label:'查询期间',
-            fieldName:'authMonth',
-            type:'monthPicker',
-            formItemStyle,
-            span:8,
-            componentProps:{
-                format:'YYYY-MM',
-            }
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:8,
+        formItemStyle,
+    },{
+        label:'查询期间',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        formItemStyle,
+        span:8,
+        componentProps:{
+            format:'YYYY-MM',
         }
-    ]
+    }
+]
 const getColumns = context =>[
     {
         title:'操作',
@@ -85,7 +85,7 @@ const getColumns = context =>[
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:['1891008'],
+            //userPermissions:['1891008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -226,7 +226,7 @@ const getColumns = context =>[
         )
     }
 ];
-export default class FinancialDocuments extends Component{
+export default class FinancialDocumentsBeginData extends Component{
     state={
         updateKey:Date.now(),
         filters:{}
@@ -245,8 +245,8 @@ export default class FinancialDocuments extends Component{
                 message.error(data.msg, 4);
             }
         }).catch(err => {
-                message.error(err.message);
-            })
+            message.error(err.message);
+        })
     }
     render(){
         const {updateKey} = this.state;
@@ -279,7 +279,7 @@ export default class FinancialDocuments extends Component{
                                         url:'/inter/financial/voucher/report/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields,
-                                        userPermissions:['1891005'],
+                                        //userPermissions:['1891005'],
                                     }])
                                 }
                             </div>

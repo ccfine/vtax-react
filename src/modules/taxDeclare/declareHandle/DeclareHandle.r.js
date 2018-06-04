@@ -309,23 +309,19 @@ class DeclareHandle extends Component{
     }
 
     render(){
+        const { title } = this.props;
         const {updateKey,applyDeclarationModalKey,applyVisible,record,applyUrl} = this.state;
         return(
             <SearchTable
                 searchOption={{
                     fields:searchFields,
-                    cardProps:{
-                        style:{
-                            borderTop:0
-                        }
-                    }
                 }}
                 tableOption={{
                     key:updateKey,
                     pageSize:10,
                     columns:getColumns(this),
                     cardProps:{
-                        title:'申报办理'
+                        title: title ? title : '申报办理'
                     },
                     url:'/tax/decConduct/decList',
                 }}

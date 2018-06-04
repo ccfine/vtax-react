@@ -9,6 +9,7 @@ import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
 import BeginDataCollect from './beginDataCollect'
+import FinancialDocumentsBeginData from './financialDocumentsBeginData'
 import strategies from 'config/routingAuthority.config'
 
 
@@ -56,6 +57,16 @@ const BasicInfo_Routes = [
             backgroundColor:'#9FD360'
         },
         authorityInfo:basicInfo['beginDataCollect'].options,
+        exact:true,
+    },{
+        path:`${PATHS}/financialDocumentsBeginData`,
+        component:wrapPage('财务凭证期初数据',FinancialDocumentsBeginData),
+        name:'财务凭证期初数据',
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['financialDocumentsBeginData'].options,
         exact:true,
     },{
         path:`${PATHS}`,

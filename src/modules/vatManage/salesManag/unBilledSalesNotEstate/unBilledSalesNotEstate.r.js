@@ -130,8 +130,11 @@ const getColumns = (context,hasOperate) => {
     }]:[];
     return [
         ...operates
-    ,
-    {
+    , {
+        title: "项目",
+        dataIndex: "taxMethod"
+
+    /*{
         title: "纳税主体",
         dataIndex: "mainName",
         render:(text,record)=>{
@@ -149,41 +152,33 @@ const getColumns = (context,hasOperate) => {
     {
         title: "项目名称",
         dataIndex: "projectName"
-    },
-    {
+    }, {
         title: "项目分期代码",
         dataIndex: "stagesId"
-    },
-    {
+    }, {
         title: "项目分期名称",
         dataIndex: "stagesName"
-    },
-    {
+    }, {
         title: "科目代码",
         dataIndex: "creditSubjectCode"
-    },
-    {
+    }, {
         title: "科目名称",
-        dataIndex: "creditSubjectName"
-    },
-    {
+        dataIndex: "creditSubjectName"*/
+    }, {
+        title: "税率",
+        dataIndex: "taxRate",
+        render: text => `${text}${text ? "%" : ""}`
+    }, {
         title: "金额",
         dataIndex: "creditAmount",
         render: text => fMoney(text),
         className: "table-money"
-    },
-    {
-        title: "税率",
-        dataIndex: "taxRate",
-        render: text => `${text}${text ? "%" : ""}`
-    },
-    {
+    }, {
         title: "税额",
         dataIndex: "taxAmount",
         render: text => fMoney(text),
         className: "table-money"
-    },
-    {
+    }, {
         title: "价税合计",
         dataIndex: "totalAmount",
         render: text => fMoney(text),

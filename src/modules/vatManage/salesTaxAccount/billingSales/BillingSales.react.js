@@ -99,21 +99,22 @@ const notColumns = context =>[
         title: '项目',
         dataIndex: 'taxMethod',
         render: (text, row, index) => {
+            let count1 = context.state.notDataSource.filter(ele=>ele.type==='1').length,
+                count2 = context.state.notDataSource.filter(ele=>ele.type==='2').length,
+                count3 = context.state.notDataSource.filter(ele=>ele.type==='3').length;
+
             const obj = {
                 children: text,
-                props: {},
+                props: {}
             };
+
             if (index === 0) {
-                obj.props.rowSpan = 6;
-            }
-            if (index === 6) {
-                obj.props.rowSpan = 4;
-            }
-            if (index === 10) {
-                obj.props.rowSpan = 1;
-            }
-            // These two are merged into above cell
-            if (index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 7 || index === 8 || index === 9  || index === 11 ) {
+                obj.props.rowSpan = count1;
+            }else if (index === count1) {
+                obj.props.rowSpan = count2;
+            }else if (index === count1 + count2) {
+                obj.props.rowSpan = count3;
+            }else{
                 obj.props.rowSpan = 0;
             }
             return obj;
