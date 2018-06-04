@@ -125,7 +125,12 @@ class PopModal extends Component{
                 onCancel={()=>toggleUserModalVisible(false)}
                 width={800}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    top:'5%',
+                }}
+                bodyStyle={{
+                    maxHeight:450,
+                    overflowY:'auto',
                 }}
                 visible={visible}
                 confirmLoading={this.state.submitLoading}
