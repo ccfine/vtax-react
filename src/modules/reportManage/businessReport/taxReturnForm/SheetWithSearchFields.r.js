@@ -4,8 +4,8 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Form, Row, Col, Button,Card} from 'antd'
-import {getFields,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {Form, Row, Col, Button,Card,message} from 'antd'
+import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
@@ -67,6 +67,7 @@ class SheetWithSearchFields extends Component{
          *修改状态和时间
          * */
         statusParam:'',
+        saveLoding:false,
     }
     refreshTable = ()=>{
         this.setState({
@@ -114,10 +115,32 @@ class SheetWithSearchFields extends Component{
                     }
                 }
                 this.setState({
-                    params:values,
+                    params:{taxMonth:values.taxMonth,mainId:values.mainId},
                     updateKey:Date.now()
                 })
                 this.props.onParamsChange && this.props.onParamsChange(values);
+            }
+        })
+    }
+    save=(e)=>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                let url=''
+                this.setState({saveLoding:true})
+                request.put(url,{...values})
+                    .then(({data})=>{
+                        this.setState({saveLoding:false})
+                        if(data.code===200){
+                            message.success('保存成功!');
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.setState({saveLoding:false})
+                    })
             }
         })
     }
@@ -126,17 +149,18 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam } = this.state;
+        const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
         return(
+            <Form onSubmit={this.onSubmit}>
             <div>
                 <div style={{
                     backgroundColor:'#fff',
                     padding:'10px 10px 0 0',
                     marginBottom:10
                 }}>
-                    <Form onSubmit={this.onSubmit}>
                         <Row>
                             {
                                 getFields(form, searchFields(defaultParams,disabled,declare))
@@ -151,8 +175,6 @@ class SheetWithSearchFields extends Component{
                                 }}>重置</Button>
                             </Col>
                         </Row>
-
-                    </Form>
                 </div>
                 <Card
                     extra={
@@ -176,6 +198,14 @@ class SheetWithSearchFields extends Component{
                                 }],statusParam)
                                 : null
                             }
+                            {
+                                saveUrl && !readOnly && composeBotton([{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    onClick:this.save
+                                }])
+                            }
                         </div>
                     }
                     title={<span><label className="tab-breadcrumb">纳税申报表 / </label>{tab}</span>}
@@ -183,9 +213,12 @@ class SheetWithSearchFields extends Component{
                         padding:10
                     }}
                 >
-                    <Sheet scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey}/>
+                    <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form}/>
                 </Card>
             </div>
+        
+
+        </Form>
         )
     }
 }
