@@ -2,8 +2,35 @@
  * Created by liurunbin on 2018/1/29.
  */
 import React,{Component} from 'react'
+import {Modal} from 'antd'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
+import {fMoney,composeBotton} from 'utils'
+
+const importFeilds = [
+    {
+        label: "纳税主体",
+        type: "taxMain",
+        fieldName: "mainId",
+        span: 24,
+        formItemStyle: {
+            labelCol: {
+                span: 6
+            },
+            wrapperCol: {
+                span: 17
+            }
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择纳税主体"
+                }
+            ]
+        }
+    }
+];
+
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -47,7 +74,37 @@ const searchFields = (getFieldValue)=> [
         span:6
     },
 ]
-const columns = [
+const getColumns = context=>[
+    {
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:['1531008'],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    },
     {
         title: (
             <div className="apply-form-list-th">
@@ -80,60 +137,6 @@ const columns = [
                 </div>
             );
         }
-    /*}, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票号码</p>
-                <p className="apply-form-list-p2">发票代码</p>
-            </div>
-        ),
-        dataIndex: 'invoiceNum',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.invoiceCode}</p>
-                </div>
-            );
-        }
-    },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">发票状态</p>
-            </div>
-        ),
-        dataIndex: 'invoiceType',
-        render: (text,record) => {
-            let invoiceTypeText ='',
-                invoiceStatusText='';
-            if(text==='s'){
-                invoiceTypeText = '专票'
-            }
-            if(text==='c'){
-                invoiceTypeText = '普票'
-            }
-            switch (record.invoiceStatus) {
-                case "0":
-                    invoiceStatusText = "未开票";
-                    break
-                case "1":
-                    invoiceStatusText =  "已完全开票";
-                    break
-                case "2":
-                    invoiceStatusText =  "部分开票";
-                    break
-                default:
-                    invoiceStatusText =  text;
-            }
-
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{invoiceTypeText}</p>
-                    <p className="apply-form-list-p2">{invoiceStatusText}</p>
-                </div>
-            )
-        }*/
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -255,7 +258,11 @@ const columns = [
     },
 ]
 class RoomTransactionFile extends Component{
+    state={
+        filters:undefined
+    }
     render(){
+        let {filters} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -263,12 +270,31 @@ class RoomTransactionFile extends Component{
                 }}
                 tableOption={{
                     pageSize:10,
-                    columns,
+                    columns:getColumns(this),
                     cardProps:{
-                        title:'房间交易档案'
+                        title:'房间交易档案期初数据'
                     },
                     url:'/output/room/files/report/list',
                     scroll:{ x: '120%' },
+                    onSuccess:filters=>{
+                        this.setState({filters})
+                    },
+                    extra:(
+                        <span>
+                            {
+                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
+                                    type: 'fileExport',
+                                    url: 'interAvailableBuildingAreaInformation/download',
+                                },{
+                                    type:'fileImport',
+                                    url:'/interAvailableBuildingAreaInformation/upload',
+                                    onSuccess:this.update,
+                                    userPermissions:['1531005'],
+                                    fields:importFeilds
+                                }])
+                            }
+                        </span>
+                    )
                 }}
             >
             </SearchTable>

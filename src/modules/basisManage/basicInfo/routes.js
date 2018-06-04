@@ -9,6 +9,7 @@ import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
 import BeginDataCollect from './beginDataCollect'
+import RoomTransactionFile from './roomTransactionFile'
 import strategies from 'config/routingAuthority.config'
 
 
@@ -56,6 +57,16 @@ const BasicInfo_Routes = [
             backgroundColor:'#9FD360'
         },
         authorityInfo:basicInfo['beginDataCollect'].options,
+        exact:true,
+    },{
+        path:`${PATHS}/roomTransactionFile`,
+        component:wrapPage('房间交易档案期初数据',RoomTransactionFile),
+        name:'房间交易档案期初数据',
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['roomTransactionFile'].options,
         exact:true,
     },{
         path:`${PATHS}`,

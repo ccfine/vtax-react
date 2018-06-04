@@ -275,13 +275,13 @@ export default class IncomingInvoiceCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns,
                     cardProps:{
                         title:'进项发票采集'
                     },
                     url:'/income/invoice/collection/report/list',
-                    scroll:{ x: '120%' },
+                    scroll:{ x: '150%' },
                 }}
             />
 

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 15:24:09
+ * @Last Modified time: 2018-06-04 11:12:52
  */
 import React, { Component } from "react";
 import { Form, Modal, message, Spin,Alert,Row,Col } from "antd";
@@ -102,12 +102,12 @@ class PermissionModal extends Component {
                 onCancel={this.handleCancel}
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
-                width="900px"
+                width={900}
                 style={{
                     top:'5%'
                 }}
                 bodyStyle={{
-                    maxHeight: 420,
+                    maxHeight: 450,
                     overflowY: "auto"
                 }}
                 title={

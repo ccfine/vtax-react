@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 10:47:19
+ * @Last Modified time: 2018-06-04 11:24:52
  *
  */
 import React,{Component} from 'react'
@@ -492,9 +492,9 @@ class RoomTransactionFile extends Component{
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
-                    /*scroll:{
+                    scroll:{
                         x:'140%'
-                    },*/
+                    },
                 }}
             >
             </SearchTable>

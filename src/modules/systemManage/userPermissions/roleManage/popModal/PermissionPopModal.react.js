@@ -126,13 +126,14 @@ class PopModal extends Component{
                 onOk={this.handleSubmit}
                 onCancel={()=>togglePermissionModalVisible(false)}
                 confirmLoading={submitLoading}
-                width={800}
+                width={900}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    top:'5%',
                 }}
                 bodyStyle={{
-                    maxHeight: 420,
-                    overflowY: "auto"
+                    maxHeight:450,
+                    overflowY:'auto',
                 }}
                 visible={visible}
                 title={

@@ -4,8 +4,10 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import DataSheet from 'react-datasheet';
-import {Spin,message} from 'antd'
+import {Spin, message } from 'antd'
 import {request,fMoney} from 'utils'
+import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
+
 export default class Sheet extends Component{
     static propTypes={
         grid:PropTypes.array,
@@ -42,22 +44,21 @@ export default class Sheet extends Component{
                      *      'B2': {key: 'B2', value: '', expr: ''},
                      *  }
              * */
-
-            return nextData.map( item =>{
-                return item.map( deepItem =>{
-                    for(let key in sheetData){
-                        if(deepItem.key === key){
-                            return {
-                                ...deepItem,
-                                ...sheetData[key],
-                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value'],
-                                //readOnly:false
-                            };
+    
+            return nextData.map(item=>{
+                return item.map(deepItem=>{
+                    if(deepItem.key && sheetData && sheetData[deepItem.key]){
+                        return {
+                            ...deepItem,
+                            ...sheetData[deepItem.key],
+                            value:typeof sheetData[deepItem.key].value === 'number' ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
+                                
                         }
+                    }else{
+                        return {...deepItem};
                     }
-                    return deepItem;
-                });
-            });
+                 })
+             })
         }
     }
     constructor(props){
@@ -97,10 +98,9 @@ export default class Sheet extends Component{
                 this.toggleLoading(false);
             })
     }
-    onCellsChanged = (changes) => {
+    /*onCellsChanged = (changes) => {
         const grid = this.state.grid.map(row => [...row])
         changes.forEach(({cell, row, col, value}) => {
-            //console.log(cell, row, col, value)
             //获取修改后的返回的一条的数据
             if (grid[row] && grid[row][col]) {
                 let newValue = grid[row][col].onChange && grid[row][col].onChange(grid[row][col].value,value,grid,this.props.params)
@@ -108,15 +108,15 @@ export default class Sheet extends Component{
             }
         })
         this.setState({grid})
-    }
+    }*/
 
     mounted=true;
     componentWillUnmount(){
         this.mounted=null;
     }
     render(){
-        const { loading, grid,  } = this.state;
-        const {scroll,overflow} = this.props;
+        const { loading, grid} = this.state;
+        const {scroll,overflow,readOnly} = this.props;
         const xBool = !!scroll.x,
             yBool = !!scroll.y;
         return(
@@ -129,10 +129,45 @@ export default class Sheet extends Component{
                         }}>
                             <DataSheet
                                 overflow={overflow}
-                                data={grid}
+                                data={grid.map((i,row)=>i.map((di,col)=>{
+                                    if(!readOnly && di.key && !di.readOnly){
+                                        return {
+                                            ...di,
+                                            readOnly:false,
+                                            component:<EditableCell 
+                                                renderValue={di.value} 
+                                                getFieldDecorator={this.props.form.getFieldDecorator}
+                                                fieldName={di.key}
+                                                editAble={true}
+                                                getValueFromEvent={(value)=>{
+                                                    if(di.onChange){
+                                                        return di.onChange(this.props.form.getFieldValue(di.key),value,grid)
+                                                    }else{
+                                                        return value
+                                                    }
+                                                }}
+                                                /*
+                                                componentProps={{
+                                                    onChange:(value)=>{
+                                                        console.log('Change',value)
+                                                        let grid = this.state.grid.map(i=>[...i])
+                                                        grid[row][col] = {...grid[row][col],value}
+                                                        this.setState({
+                                                            grid
+                                                        })
+                                                        return '111'
+                                                    }
+                                                }}*/
+                                                />,
+                                            forceComponent:true,
+                                        }
+                                    }else{
+                                        return di;
+                                    }
+                                }))}
                                 valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}
                                 onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
-                                onCellsChanged={this.onCellsChanged}
+                                // onCellsChanged={this.onCellsChanged}
                             />
                         </div>
                     </Spin>

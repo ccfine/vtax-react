@@ -3,8 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam} from 'utils'
-import moment from 'moment';
+import {fMoney} from 'utils'
 const formItemStyle={
     labelCol:{
         span:8
@@ -21,11 +20,8 @@ const searchFields = (disabled) => {
             type:'taxMain',
             span:8,
             formItemStyle,
-            componentProps:{
-                disabled
-            },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: undefined,
             }
         },{
             label:'查询期间',
@@ -35,10 +31,9 @@ const searchFields = (disabled) => {
             span:8,
             componentProps:{
                 format:'YYYY-MM',
-                disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: undefined,
             },
         }
     ]
@@ -219,24 +214,16 @@ export default class SalesInvoiceCollection extends Component{
             updateKey:Date.now(),
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
         const {updateKey} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields()
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns,
                     cardProps:{
                         title:'销项发票采集'

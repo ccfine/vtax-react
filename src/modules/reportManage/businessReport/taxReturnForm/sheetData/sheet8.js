@@ -75,18 +75,18 @@ function dataReander(prevGrid,asyncData){
         ...prevGrid
     ];
     const sheetData = asyncData;
-    return nextData.map( item =>{
-        return item.map( deepItem =>{
-            for(let key in sheetData){
-                if(deepItem.key === key){
-                    return {
-                        ...deepItem,
-                        ...sheetData[key],
-                        value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value']
-                    };
+    return nextData.map(item=>{
+        return item.map(deepItem=>{
+            if(deepItem.key && sheetData && sheetData[deepItem.key]){
+                return {
+                    ...deepItem,
+                    ...sheetData[deepItem.key],
+                    value:typeof sheetData[deepItem.key].value === 'number' ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
+                        
                 }
+            }else{
+                return {...deepItem};
             }
-            return deepItem;
-        });
-    });
+         })
+     })
 }

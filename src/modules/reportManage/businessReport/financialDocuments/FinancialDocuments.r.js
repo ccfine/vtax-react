@@ -257,9 +257,10 @@ export default class FinancialDocuments extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
+                    scroll:{ x: '120%' },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,
