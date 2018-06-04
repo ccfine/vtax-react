@@ -28,10 +28,10 @@ const AsyncDeclareHandle = LoadAble({
 });
 
 class Home extends Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props);
         this.state = {
-            banner : [],
+
         }
     }
 
@@ -49,9 +49,16 @@ class Home extends Component {
     mounted = true;
     componentWillUnmount() {
         this.mounted = null;
-    }
+    }*/
     render() {
 
+        const banner = [{
+            key:'1',
+            original: banner1,
+        },{
+            key:'2',
+            original: banner2,
+        }]
         let isShow = true;
         if(parseInt(this.props.type, 0) === 1){
 
@@ -61,7 +68,6 @@ class Home extends Component {
         return (
             <Layout style={{background:'transparent'}} >
                  <AsyncImageGallery
-                    key={new Date()}
                     infinite={true}
                     autoPlay={true}
                     showBullets={true}
@@ -75,7 +81,7 @@ class Home extends Component {
                     showPlayButton={false}
                     useTranslate3D={false}
                     showThumbnails={false}
-                    items={this.state.banner}
+                    items={banner}
                 />
                 {
                     isShow && <div style={{ padding: '24px 0'}}>
