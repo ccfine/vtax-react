@@ -96,7 +96,12 @@ export default class ViewDocumentDetails extends Component{
                 onCancel={()=>props.toggleViewModalVisible(false)}
                 width={900}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    top:'5%',
+                }}
+                bodyStyle={{
+                    maxHeight:480,
+                    overflowY:'auto',
                 }}
                 visible={props.visible}
                 footer={null}

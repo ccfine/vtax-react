@@ -94,29 +94,30 @@ const searchFields=(disabled,declare)=> {
     ]
 }
 
-const getColumns = (context,disabled) =>[
-     {
+const getColumns = (context,disabled) =>{
+    let operates = (disabled && parseInt(context.state.statusParam.status, 0) === 1)?[{
         title: '操作',
         key: 'actions',
         fixed:true,
         className:'text-center',
         width:'50px',
-        render: (text, record) => {
-            return (disabled && parseInt(context.state.statusParam.status, 0) === 1) ? composeBotton([{
-                type:'action',
-                title:'手工匹配',
-                userPermissions:['1215006'],
-                style:{color: '#1890ff'},
-                icon:'check-circle-o',
-                onSuccess:() => {
-                    context.setState({
-                        visible: true,
-                        selectedData: record
-                    })
-                }
-            }]) : null
-        }
-    },
+        render: (text, record) => composeBotton([{
+            type:'action',
+            title:'手工匹配',
+            userPermissions:['1215006'],
+            style:{color: '#1890ff'},
+            icon:'check-circle-o',
+            onSuccess:() => {
+                context.setState({
+                    visible: true,
+                    selectedData: record
+                })
+            }
+        }])
+    }]:[];
+    return [
+        ...operates
+     ,
     {
         title:'纳税人识别号',
         dataIndex:'purchaseTaxNum'
@@ -262,6 +263,7 @@ const getColumns = (context,disabled) =>[
         }
     },
 ];
+}
 class UnmatchedData extends Component{
     state={
         visible:false,

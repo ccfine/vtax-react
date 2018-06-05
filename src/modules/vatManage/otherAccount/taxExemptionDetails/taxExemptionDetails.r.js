@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 15:23:56
+ * @Last Modified time: 2018-06-05 17:55:50
  *
  */
 import React, { Component } from 'react'
@@ -66,55 +66,50 @@ const searchFields =(disabled,declare)=> [
         }
     },
 ]
-const getColumns = (context,disabled,declare) => [
-    {
+const getColumns = (context,disabled,declare) => {
+    let operates = (disabled && declare.decAction==='edit' && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1) ?[{
         title: '操作',
-        render(text, record, index) {
-            if(disabled && declare.decAction==='edit'){
-                if(context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
-                    return (
-                            composeBotton([{
-                                type: 'action',
-                                icon: 'edit',
-                                title: '编辑',
-                                userPermissions:['1301004'],
-                                onSuccess: () => {
-                                    context.setState({visible: true, action: 'modify', opid: record.id});
-                                }
-                            },{
-                                type:'action',
-                                icon:'delete',
-                                title:'删除',
-                                style:pointerStyleDelete,
-                                userPermissions:['1301008'],
-                                onSuccess:()=>{
-                                    const modalRef = Modal.confirm({
-                                        title: "友情提醒",
-                                        content: "该删除后将不可恢复，是否删除？",
-                                        okText: "确定",
-                                        okType: "danger",
-                                        cancelText: "取消",
-                                        onOk: () => {
-                                            context.deleteRecord(record.id, () => {
-                                                modalRef && modalRef.destroy();
-                                                context.refreshTable();
-                                            });
-                                        },
-                                        onCancel() {
-                                            modalRef.destroy();
-                                        }
-                                    });
-                                }
-                            }])
-                        )
-                }
+        render:(text, record, index) =>composeBotton([{
+            type: 'action',
+            icon: 'edit',
+            title: '编辑',
+            userPermissions:['1301004'],
+            onSuccess: () => {
+                context.setState({visible: true, action: 'modify', opid: record.id});
             }
-        },
+        },{
+            type:'action',
+            icon:'delete',
+            title:'删除',
+            style:pointerStyleDelete,
+            userPermissions:['1301008'],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: "友情提醒",
+                    content: "该删除后将不可恢复，是否删除？",
+                    okText: "确定",
+                    okType: "danger",
+                    cancelText: "取消",
+                    onOk: () => {
+                        context.deleteRecord(record.id, () => {
+                            modalRef && modalRef.destroy();
+                            context.refreshTable();
+                        });
+                    },
+                    onCancel() {
+                        modalRef.destroy();
+                    }
+                });
+            }
+        }]),
         fixed: 'left',
         width: '75px',
         dataIndex: 'action',
         className: "text-center",
-    }, {
+    }]:[];
+    return [
+        ...operates
+    , {
         title: '纳税主体',
         dataIndex: 'mainName',
         render: (text, record) => (
@@ -175,6 +170,7 @@ const getColumns = (context,disabled,declare) => [
         }
     }
 ];
+}
 // 总计数据结构，用于传递至TableTotal中
 const totalData =  [
     {

@@ -154,15 +154,14 @@ const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
         }
     ]
 }
-const getColumns = (context,disabled) => [
-    {
+const getColumns = (context,disabled) => {
+    let operates = (disabled && parseInt(context.state.statusParam.status,0)===1)?[{
         title: '操作',
         key: 'actions',
         fixed:true,
         className:'text-center',
-        width:parseInt(context.state.statusParam.status,0) === 1 ? '50px' : '40px',
-        render: (text, record) => {
-            return (disabled && parseInt(context.state.statusParam.status,0)===1) && composeBotton([{
+        width:50,
+        render: (text, record) => composeBotton([{
                 type:'action',
                 title:'解除匹配',
                 icon:'disconnect',
@@ -186,8 +185,8 @@ const getColumns = (context,disabled) => [
                         },
                     });
                 }}])
-        }
-    },
+    }]:[];
+    return [...operates,
     {
         title:'纳税人识别号',
         dataIndex:'purchaseTaxNum',
@@ -349,6 +348,7 @@ const getColumns = (context,disabled) => [
         }
     },
 ]
+}
 class InvoiceDataMatching extends Component{
     state={
         tableKey:Date.now(),

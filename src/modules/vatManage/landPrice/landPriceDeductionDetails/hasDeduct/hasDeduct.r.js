@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:44:13 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 18:40:30
+ * @Last Modified time: 2018-06-05 17:26:46
  */
 import React from 'react'
 import {SearchTable} from 'compoments'
@@ -140,6 +140,9 @@ export default class HasDeduct extends React.Component{
                         },()=>{
                             this.fetchResultStatus()
                         })
+                    },
+                    scroll:{
+                        x:'140%'
                     },
                     extra:<div>
                         {

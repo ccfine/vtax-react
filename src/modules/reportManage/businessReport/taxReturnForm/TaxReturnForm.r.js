@@ -42,6 +42,7 @@ const sheetData = [
         grid:sheet_3,
         url:'/tax/declaration/addendum/three/list',
         saveUrl:'/tax/declaration/addendum/three/save',
+        savePermission:['1915002'],
     }, {
         tab:'附表四',
         grid:sheet_4,
@@ -51,6 +52,7 @@ const sheetData = [
         grid:sheet_5,
         url:'/tax/declaration/addendum/five/list',
         saveUrl:'/tax/declaration/addendum/five/save',
+        savePermission:['1915004'],
     /*}, {
         tab:'固定资产表',
         grid:sheet_6,

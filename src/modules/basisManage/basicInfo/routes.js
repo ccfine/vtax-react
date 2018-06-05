@@ -9,8 +9,8 @@ import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
 import BeginDataCollect from './beginDataCollect'
-import FinancialDocumentsBeginData from './financialDocumentsBeginData'
-import RoomTransactionFile from './roomTransactionFile'
+/*import FinancialDocumentsBeginData from './financialDocumentsBeginData'
+import RoomTransactionFile from './roomTransactionFile'*/
 import strategies from 'config/routingAuthority.config'
 
 
@@ -59,7 +59,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['beginDataCollect'].options,
         exact:true,
-    },{
+    },/*{
         path:`${PATHS}/financialDocumentsBeginData`,
         component:wrapPage('财务凭证期初数据',FinancialDocumentsBeginData),
         name:'财务凭证期初数据',
@@ -79,7 +79,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['roomTransactionFile'].options,
         exact:true,
-    },{
+    },*/{
         path:`${PATHS}`,
         redirect:true,
         to:`${PATHS}/aubjectOfTaxPayment`,
