@@ -10,7 +10,7 @@ class LoginWithURL extends Component{
     static propTypes={
         login:PropTypes.func.isRequired
     }
-    //url通过token登录
+    //url通过token登录  /loginA?userName=&token=
     loginWithToken(loginToken,userName){
         const {login} = this.props;
         login({

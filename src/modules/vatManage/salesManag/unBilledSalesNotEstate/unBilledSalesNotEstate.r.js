@@ -256,7 +256,7 @@ class UnBilledSalesNotEstate extends Component {
                     tableOption={{
                         key: updateKey,
                         url: "/account/notInvoiceUnSale/realty/list",
-                        pagination: true,
+                        pagination: false,
                         columns: getColumns(this, noSubmit && disabled && declare.decAction==='edit'),
                         rowKey: "id",
                         onTotalSource: totalSource => {
