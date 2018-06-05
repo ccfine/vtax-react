@@ -234,7 +234,7 @@ class InputTaxDetails extends Component{
                     cardProps: {
                         title: "进项税额明细台账",
                     },
-                    pageSize:10,
+                    pagination:false,
                     columns:getColumns(this,disabled && declare.decAction==='edit' && notSubmit),
                     url:'/account/income/taxDetail/taxDetailList',
                     extra:<div>
