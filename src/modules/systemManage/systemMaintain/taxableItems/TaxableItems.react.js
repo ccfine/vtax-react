@@ -74,6 +74,7 @@ class TaxableItems extends Component {
     refreshTable = ()=>{
         this.setState({
             updateTable:Date.now(),
+            id:undefined,
         })
     }
     refreshAll = ()=>{
@@ -185,7 +186,7 @@ class TaxableItems extends Component {
                     url:"/taxable/project/tree",
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
-                            id:selectedNodes.id,
+                            //id:selectedNodes.id,
                             filters:{
                                 id:selectedNodes.id
                             }
