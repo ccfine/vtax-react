@@ -268,7 +268,7 @@ class RoomTransactionFile extends Component{
                         title:'房间交易档案'
                     },
                     url:'/output/room/files/report/list',
-                    scroll:{ x: '120%' },
+                    scroll:{ x: '150%' },
                 }}
             >
             </SearchTable>
