@@ -75,6 +75,7 @@ export default class Sheet extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey !== nextProps.updateKey){
+            nextProps.form.resetFields();
             this.fetchSheetData(nextProps.url,nextProps.params)
         }
     }
@@ -134,30 +135,16 @@ export default class Sheet extends Component{
                                         return {
                                             ...di,
                                             readOnly:false,
-                                            component:<EditableCell 
+                                            component:<EditableCell
                                                 renderValue={di.value} 
                                                 getFieldDecorator={this.props.form.getFieldDecorator}
                                                 fieldName={`map.${di.key}`}
                                                 editAble={true}
-                                                getValueFromEvent={(value)=>{
-                                                    if(di.getValueFromEvent){
-                                                        return di.getValueFromEvent(this.props.form.getFieldValue(di.key),value,grid)
-                                                    }else{
-                                                        return value
-                                                    }
-                                                }}
-                                                componentProps={{
-                                                    onChange:(value)=>{
-                                                        if(di.onChange){
-                                                            return di.onChange(value, this.props.form);
-                                                        }
-                                                    }
-                                                }}
                                                 />,
                                             forceComponent:true,
                                         }
                                     }else{
-                                        return di;
+                                        return {...di,readOnly:true};
                                     }
                                 }))}
                                 valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}

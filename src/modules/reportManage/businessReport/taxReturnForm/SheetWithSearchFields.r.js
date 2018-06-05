@@ -19,7 +19,7 @@ class SheetWithSearchFields extends Component{
     }
     static defaultProps = {
         grid:[],
-        searchFields:(params={},disabled,declare)=>[
+        searchFields:(defaultParams={},disabled,declare)=>[
             {
                 label:'纳税主体',
                 fieldName:'mainId',
@@ -29,7 +29,7 @@ class SheetWithSearchFields extends Component{
                     disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: (disabled && declare.mainId) || params.mainId,
+                    initialValue: (disabled && declare.mainId) || defaultParams.mainId,
                     rules:[
                         {
                             required:true,
@@ -48,8 +48,7 @@ class SheetWithSearchFields extends Component{
                 },
                 fieldDecoratorOptions:{
 
-                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (params.taxMonth && moment(params.taxMonth)),
-                    //initialValue: moment(getUrlParam('authMonth'), 'YYYY-MM') || undefined,
+                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.taxMonth && moment(defaultParams.taxMonth)),
                     rules:[
                         {
                             required:true,
@@ -100,25 +99,12 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
-                for(let key in values){
-                    if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
-                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
-                        values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
-                        values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
-                        values[key] = undefined;
-                    }
-                    if(moment.isMoment(values[key])){
-                        //格式化一下时间 YYYY-MM类型
-                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM');
-                        }
-                    }
-                }
+                values.taxMonth = values.taxMonth.format('YYYY-MM');
                 this.setState({
                     params:{taxMonth:values.taxMonth,mainId:values.mainId},
                     updateKey:Date.now()
                 })
-                this.props.onParamsChange && this.props.onParamsChange(values);
+                this.props.onParamsChange && this.props.onParamsChange({taxMonth:values.taxMonth,mainId:values.mainId});
             }
         })
     }
@@ -128,7 +114,7 @@ class SheetWithSearchFields extends Component{
             if(!err){
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 this.setState({saveLoding:true})
-                request.put(this.props.saveUrl,{...values})
+                request.post(this.props.saveUrl,{...values})
                     .then(({data})=>{
                         this.setState({saveLoding:false})
                         if(data.code===200){
@@ -149,7 +135,7 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,savePermission} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
@@ -203,6 +189,7 @@ class SheetWithSearchFields extends Component{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
+                                    userPermissions:savePermission,
                                     onClick:this.save,
                                     loading:saveLoding
                                 }])

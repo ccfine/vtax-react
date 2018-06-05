@@ -1,7 +1,3 @@
-import {BigNumber} from 'bignumber.js'
-
-const numericReg = new RegExp(`^(0|[1-9][0-9]{0,17})(\\.[0-9]{0,2})?$`);
-
 export default [
     [
         {value:'增值税纳税申报表附列资料（五）',readOnly:true,colSpan:6}
@@ -29,20 +25,7 @@ export default [
         { key: 'A2', value:'--', readOnly: true },
         { key: 'A3', value:'--', readOnly: true},
         { key: 'A4', value:'--', readOnly: true},
-        { key: 'A5', value:'', readOnly: true,getValueFromEvent:(oldValue,nextValue,grid)=>{
-            //console.log('onChange:',oldValue,nextValue,grid)
-            //5≤1+4
-            let a1 = grid[4][0].value,
-                a4 = grid[4][3].value;
-            let nonValid = !(numericReg.test(nextValue) && numericReg.test(a1) && numericReg.test(a4));
-                nonValid = nonValid || (new BigNumber(nextValue)).isGreaterThan((new BigNumber(a1).plus(a4)));
-            
-            if(nonValid){
-                return oldValue;
-            }else{
-                return nextValue;
-            }
-        }},
+        { key: 'A5', value:'', readOnly: true },
         { key: 'A6', value:'--', readOnly:true}
     ]
 ];
