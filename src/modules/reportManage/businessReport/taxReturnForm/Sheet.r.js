@@ -140,24 +140,19 @@ export default class Sheet extends Component{
                                                 fieldName={`map.${di.key}`}
                                                 editAble={true}
                                                 getValueFromEvent={(value)=>{
-                                                    if(di.onChange){
-                                                        return di.onChange(this.props.form.getFieldValue(di.key),value,grid)
+                                                    if(di.getValueFromEvent){
+                                                        return di.getValueFromEvent(this.props.form.getFieldValue(di.key),value,grid)
                                                     }else{
                                                         return value
                                                     }
                                                 }}
-                                                /*
                                                 componentProps={{
                                                     onChange:(value)=>{
-                                                        console.log('Change',value)
-                                                        let grid = this.state.grid.map(i=>[...i])
-                                                        grid[row][col] = {...grid[row][col],value}
-                                                        this.setState({
-                                                            grid
-                                                        })
-                                                        return '111'
+                                                        if(di.onChange){
+                                                            return di.onChange(value, this.props.form);
+                                                        }
                                                     }
-                                                }}*/
+                                                }}
                                                 />,
                                             forceComponent:true,
                                         }

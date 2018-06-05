@@ -29,7 +29,7 @@ export default [
         { key: 'A2', value:'--', readOnly: true },
         { key: 'A3', value:'--', readOnly: true},
         { key: 'A4', value:'--', readOnly: true},
-        { key: 'A5', value:'', readOnly: true,onChange:(oldValue,nextValue,grid)=>{
+        { key: 'A5', value:'', readOnly: true,getValueFromEvent:(oldValue,nextValue,grid)=>{
             //console.log('onChange:',oldValue,nextValue,grid)
             //5≤1+4
             let a1 = grid[4][0].value,

@@ -100,6 +100,7 @@ class TabPage extends Component{
                                         type:'cancel',
                                         text:'取消',
                                         icon:'rollback',
+                                        btnType:'default',
                                         onClick:()=>this.cancel(),
                                         userPermission:['1125005']
                                     }])
