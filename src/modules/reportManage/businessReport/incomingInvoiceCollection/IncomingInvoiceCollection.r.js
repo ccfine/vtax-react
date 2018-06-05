@@ -281,7 +281,7 @@ export default class IncomingInvoiceCollection extends Component{
                         title:'进项发票采集'
                     },
                     url:'/income/invoice/collection/report/list',
-                    scroll:{ x: '150%' },
+                    scroll:{ x: '160%' },
                 }}
             />
 
