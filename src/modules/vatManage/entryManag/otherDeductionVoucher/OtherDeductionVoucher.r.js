@@ -277,9 +277,9 @@ class SalesInvoiceCollection extends Component{
                             }
                         </div>,
                     },
-                    /*scroll:{
-                     x:'180%'
-                     },*/
+                    scroll:{
+                     x:'120%'
+                     },
                 }}
             >
                 <ViewDocumentDetails

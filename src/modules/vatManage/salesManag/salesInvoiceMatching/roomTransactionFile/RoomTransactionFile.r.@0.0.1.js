@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-04 11:24:52
+ * @Last Modified time: 2018-06-05 17:59:31
  *
  */
 import React,{Component} from 'react'
@@ -176,41 +176,40 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     },
 ];
 
-const getColumns = (context,disabled) => [
-    {
+const getColumns = (context,disabled) => {
+    let operates = (disabled && parseInt(context.state.statusParam.status,0) === 1)?[{
         title: '操作',
         key: 'actions',
         className:'text-center',
         width:50,
         render: (text, record) => {
-            if(disabled && parseInt(context.state.statusParam.status,0) === 1){
-                return parseInt(record.matchingStatus,0) === 0 && composeBotton([{
-                        type:'action',
-                        title:'删除',
-                        icon:'delete',
-                        style:{color:'#f5222d'},
-                        userPermissions:['1215013'],
-                        onSuccess:()=>{
-                            const modalRef = Modal.confirm({
-                                title: '友情提醒',
-                                content: '该删除后将不可恢复，是否删除？',
-                                okText: '确定',
-                                okType: 'danger',
-                                cancelText: '取消',
-                                onOk:()=>{
-                                    context.deleteRecord(record.id,()=>{
-                                        modalRef && modalRef.destroy();
-                                        context.refreshTable()
-                                    })
-                                },
-                                onCancel() {
-                                    modalRef.destroy()
-                                },
-                            });
-                        }}])
-            }
+            return parseInt(record.matchingStatus,0) === 0 && composeBotton([{
+                    type:'action',
+                    title:'删除',
+                    icon:'delete',
+                    style:{color:'#f5222d'},
+                    userPermissions:['1215013'],
+                    onSuccess:()=>{
+                        const modalRef = Modal.confirm({
+                            title: '友情提醒',
+                            content: '该删除后将不可恢复，是否删除？',
+                            okText: '确定',
+                            okType: 'danger',
+                            cancelText: '取消',
+                            onOk:()=>{
+                                context.deleteRecord(record.id,()=>{
+                                    modalRef && modalRef.destroy();
+                                    context.refreshTable()
+                                })
+                            },
+                            onCancel() {
+                                modalRef.destroy()
+                            },
+                        });
+                    }}])
         }
-    },{
+    }]:[];
+    return [...operates,{
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">纳税主体名称</p>
@@ -362,6 +361,7 @@ const getColumns = (context,disabled) => [
         className:'table-money'
     },
 ]
+}
 class RoomTransactionFile extends Component{
     state={
         /**
@@ -493,7 +493,7 @@ class RoomTransactionFile extends Component{
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
-                        x:'140%'
+                        x:'150%'
                     },
                 }}
             >
