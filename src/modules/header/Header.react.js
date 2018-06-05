@@ -66,7 +66,7 @@ class WimsHeader extends Component {
                     onClick={this.toggle}
                 />
                 <div style={{display: 'inline-block'}}>
-                    <h1>碧桂园增值税管理系统</h1>
+                    <h1>碧桂园纳税申报系统</h1>
                 </div>
                 <div className='right'>
 
