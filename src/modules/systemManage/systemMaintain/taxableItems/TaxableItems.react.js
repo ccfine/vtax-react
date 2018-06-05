@@ -150,6 +150,7 @@ class TaxableItems extends Component {
                         {
                             id && composeBotton([{
                                 type: 'add',
+                                icon:'plus',
                                 userPermissions: [],
                                 onClick: () => {
                                     this.showModal('add')
@@ -158,6 +159,7 @@ class TaxableItems extends Component {
                                 type:'edit',
                                 icon:'edit',
                                 text:'编辑',
+                                btnType:'default',
                                 onClick:()=>{
                                     this.showModal('edit')
                                 }
@@ -168,6 +170,7 @@ class TaxableItems extends Component {
                                 type:'delete',
                                 icon:'delete',
                                 text:'删除',
+                                btnType:'danger',
                                 onClick:()=>{
                                     this.deleteData()
                                 }

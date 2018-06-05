@@ -201,6 +201,7 @@ class OrganizationalStructureMaintenance extends Component {
                         {
                             id && composeBotton([{
                                 type: 'add',
+                                icon:'plus',
                                 onClick: () => {
                                     this.showModal('add')
                                 }
@@ -208,6 +209,7 @@ class OrganizationalStructureMaintenance extends Component {
                                 type:'edit',
                                 icon:'edit',
                                 text:'编辑',
+                                btnType:'default',
                                 onClick:()=>{
                                     this.showModal('edit')
                                 }
@@ -215,6 +217,7 @@ class OrganizationalStructureMaintenance extends Component {
                                 type:'delete',
                                 icon:'delete',
                                 text:'删除',
+                                btnType:'danger',
                                 onClick:()=>{
                                     this.deleteData()
                                 }
@@ -222,6 +225,7 @@ class OrganizationalStructureMaintenance extends Component {
                                 type:'retweet',
                                 icon:'retweet',
                                 text:'禁用/启用',
+                                btnType:'default',
                                 onClick:()=>{
                                     this.disabledData()
                                 }
