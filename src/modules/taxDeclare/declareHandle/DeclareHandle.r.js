@@ -286,7 +286,7 @@ class DeclareHandle extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                request.put('/tax/declaration/stop',{
+                request.put('/tax/decConduct/stop',{
                     mainId: record.mainId,
                     authMonth:record.month
                 })
