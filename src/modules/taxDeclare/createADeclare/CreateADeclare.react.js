@@ -26,19 +26,19 @@ const searchFields =(context) => [
         type:'taxMain',
         fieldName:'mainId',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'所属期',
         type:'monthPicker',
         fieldName:'partTerm',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
         formItemStyle,
-        span:6,
+        span:8,
         options:[
             {
                 text:'增值税',

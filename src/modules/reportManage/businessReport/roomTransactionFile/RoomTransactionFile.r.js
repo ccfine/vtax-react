@@ -9,7 +9,7 @@ const searchFields = (getFieldValue)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:6,
+        span:8,
         fieldDecoratorOptions:{
 
         },
@@ -18,7 +18,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目名称',
         fieldName:'projectId',
         type:'asyncSelect',
-        span:6,
+        span:8,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -31,7 +31,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
-        span:6,
+        span:8,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -44,7 +44,7 @@ const searchFields = (getFieldValue)=> [
         label:'交易月份',
         fieldName:'authMonth',
         type:'monthPicker',
-        span:6
+        span:8
     },
 ]
 const columns = [
@@ -268,7 +268,7 @@ class RoomTransactionFile extends Component{
                         title:'房间交易档案'
                     },
                     url:'/output/room/files/report/list',
-                    scroll:{ x: '150%' },
+                    scroll:{ x: '180%' },
                 }}
             >
             </SearchTable>

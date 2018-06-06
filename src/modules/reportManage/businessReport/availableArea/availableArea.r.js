@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-30 19:34:51
+ * @Last Modified time: 2018-06-06 11:30:51
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -12,13 +12,13 @@ const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
         type: "taxMain",
-        span:6,
+        span:8,
         fieldName: "mainId"
     },{
         label: "项目名称",
         fieldName: "projectId",
         type: "asyncSelect",
-        span:6,
+        span:8,
         componentProps: {
             fieldTextName: "itemName",
             fieldValueName: "id",
@@ -31,7 +31,7 @@ const searchFields = (getFieldValue)=>[
         label: "项目分期",
         fieldName: "stageId",
         type: "asyncSelect",
-        span:6,
+        span:8,
         componentProps: {
             fieldTextName: "itemName",
             fieldValueName: "id",
@@ -218,7 +218,7 @@ export default class AvailableArea extends Component {
                         title: "可售面积"
                     },
                     scroll: {
-                        x: "120%"
+                        x: "140%"
                     },
                     onSuccess:filters=>{
                         this.setState({filters})

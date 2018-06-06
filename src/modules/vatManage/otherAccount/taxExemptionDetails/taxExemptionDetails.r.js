@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-05 17:55:50
+ * @Last Modified time: 2018-06-06 11:01:21
  *
  */
 import React, { Component } from 'react'
@@ -25,7 +25,7 @@ const searchFields =(disabled,declare)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:6,
+        span:8,
         componentProps:{
             disabled
         },
@@ -42,7 +42,7 @@ const searchFields =(disabled,declare)=> [
         label:'查询期间',
         fieldName:'authMonth',
         type:'monthPicker',
-        span:6,
+        span:8,
         componentProps:{
             format:'YYYY-MM',
             disabled
@@ -60,7 +60,7 @@ const searchFields =(disabled,declare)=> [
         label:'凭证号',
         fieldName:'voucherNum',
         type:'input',
-        span:6,
+        span:8,
         componentProps:{
 
         }

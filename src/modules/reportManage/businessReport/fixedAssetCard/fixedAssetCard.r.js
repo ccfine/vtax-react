@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-30 19:06:08
+ * @Last Modified time: 2018-06-06 11:27:24
  */
 import React, { Component } from "react";
 import {Modal,message} from 'antd';
@@ -283,6 +283,7 @@ export default class fixedAssetCard extends Component {
                     onSuccess:(filters)=>{
                         this.setState(filters)
                     },
+                    scroll:{ x: '140%' },
                     extra: (
                         <span>
                             {

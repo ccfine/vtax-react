@@ -229,7 +229,7 @@ export default class SalesInvoiceCollection extends Component{
                         title:'销项发票采集'
                     },
                     url:'/output/invoice/collection/report/list',
-                    scroll:{ x: '140%' },
+                    scroll:{ x: '180%' },
                 }}
             />
 

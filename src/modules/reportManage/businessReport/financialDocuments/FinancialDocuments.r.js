@@ -163,7 +163,6 @@ const getColumns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:'75px'
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -260,7 +259,7 @@ export default class FinancialDocuments extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
-                    scroll:{ x: '140%' },
+                    scroll:{ x: '180%' },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,

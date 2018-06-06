@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 17:14:28
+ * @Last Modified time: 2018-06-06 11:00:39
  */
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
@@ -28,7 +28,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label: '纳税主体',
             fieldName: 'mainId',
             type: 'taxMain',
-            span: 6,
+            span: 8,
             formItemStyle,
             componentProps: {
                 disabled
@@ -47,7 +47,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label: '纳税申报期',
             fieldName: 'authMonth',
             type: 'monthPicker',
-            span: 6,
+            span: 8,
             formItemStyle,
             componentProps: {
                 format: 'YYYY-MM',
@@ -69,7 +69,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label: '项目名称',
             fieldName: 'projectId',
             type: 'asyncSelect',
-            span: 6,
+            span: 8,
             formItemStyle,
             componentProps: {
                 fieldTextName: 'itemName',
@@ -83,7 +83,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label: '项目分期',
             fieldName: 'stagesId',
             type: 'asyncSelect',
-            span: 6,
+            span: 8,
             formItemStyle,
             componentProps: {
                 fieldTextName: 'itemName',

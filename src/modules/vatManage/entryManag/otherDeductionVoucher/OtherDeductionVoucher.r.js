@@ -26,7 +26,7 @@ const searchFields=(context,disabled,declare)=> {
             label:'纳税主体',
             type:'taxMain',
             fieldName:'mainId',
-            span:6,
+            span:8,
             componentProps:{
                 disabled,
             },
@@ -45,7 +45,7 @@ const searchFields=(context,disabled,declare)=> {
             label:'凭证月份',
             type:'monthPicker',
             formItemStyle,
-            span:6,
+            span:8,
             fieldName:'authMonth',
             componentProps:{
                 disabled,
@@ -62,7 +62,7 @@ const searchFields=(context,disabled,declare)=> {
         }, {
             label:'标记类型',
             fieldName:'sysDictId',
-            span:6,
+            span:8,
             formItemStyle,
             type:'select',
             options:context.state.sysDictIdList.concat({value:'0', text:'无'})

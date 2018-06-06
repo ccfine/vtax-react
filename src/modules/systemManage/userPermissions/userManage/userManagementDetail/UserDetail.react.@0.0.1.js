@@ -43,10 +43,11 @@ class UserDetail extends Component {
         let {
             allPermission,
             checkedPermission,
-            permissionLoading
+            permissionLoading,
+            userLoading
         } = this.props;
         return (
-            <Card title="用户信息" style={{ ...this.props.style }}>
+            <Card title="用户信息" style={{ ...this.props.style }} loading={userLoading}>
                 <div style={{ padding: "30px", color: "#999" }}>
                     <Row gutter={16}>
                         <Col span={6}>
