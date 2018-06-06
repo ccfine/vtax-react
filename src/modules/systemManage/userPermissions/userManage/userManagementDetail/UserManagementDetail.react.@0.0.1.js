@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React, { Component } from "react";
-import { message,Spin } from "antd";
+import { message } from "antd";
 import { request } from "utils";
 import UserDetail from "./UserDetail.react.@0.0.1";
 
