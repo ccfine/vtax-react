@@ -32,8 +32,11 @@ class SelectSearch extends Component {
            }),()=>{
                 //判断权限
                 if(saveOrgId !== this.props.orgId){
-                    this.props.changeRefresh(Date.now());
                     this.props.history.replace('/web');
+                    setTimeout(()=>{
+                        this.props.changeRefresh(Date.now()+1)
+                        //window.location.reload()
+                    },300)
                 }
            })
         });

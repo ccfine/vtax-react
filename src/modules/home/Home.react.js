@@ -28,6 +28,12 @@ const AsyncDeclareHandle = LoadAble({
 });
 
 class Home extends Component {
+
+    state = {
+        declareKey: Date.now(),
+        newOrgId : undefined,
+    }
+
     /*constructor(props) {
         super(props);
         this.state = {
@@ -50,6 +56,7 @@ class Home extends Component {
     componentWillUnmount() {
         this.mounted = null;
     }*/
+
     render() {
 
         const banner = [{
@@ -86,7 +93,7 @@ class Home extends Component {
                 {
                     isShow && <div style={{ padding: '24px 0'}}>
                         <Card style={{ padding:'0' }}>
-                            <AsyncDeclareHandle title="待我办理的申报任务" />
+                            <AsyncDeclareHandle key={this.state.declareKey} title="待我办理的申报任务" />
                         </Card>
                     </div>
                 }

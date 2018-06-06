@@ -133,7 +133,7 @@ class ApplyDeclarationPopModal extends Component {
 					<List.Item>
 						<Card>
 							{item.path ? (
-								<a href='###'
+								<a
 								   onClick={e => {
                                        e && e.preventDefault();
                                        this.LockPageRefresh(item.path)
@@ -189,7 +189,10 @@ class ApplyDeclarationPopModal extends Component {
 			</Row>
 		)
 	}
+
     LockPageRefresh = path => {
+        const location = window.location;
+        const url = location.protocol + "//" + location.host + path;
         const { saveDeclare, record} = this.props;
         saveDeclare({
             mainId: record.mainId,
@@ -199,9 +202,9 @@ class ApplyDeclarationPopModal extends Component {
             decAction: record.decAction
         })
 		setTimeout(()=>{
-        	window.open(`${window.location.origin}${path}`)
-        	//window.open(`${window.baseURL}${path}`)
-            //console.log(window.location.origin, window.baseURL)
+        	//TODO: 给ie10用的 为了防止被浏览器拦截
+            //window.open(url, '_blank').location;
+        	window.open(url)
             const ref = Modal.warning({
                 title: '友情提醒',
                 content: <h2>操作完成后，请刷新当前页面！</h2>,
