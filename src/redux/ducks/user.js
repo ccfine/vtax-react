@@ -138,6 +138,8 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
 
         //url登录直接获得token
         if(type===2){
+
+            console.log(loginToken)
             dispatch(token.increment(loginToken))
             //获取用户信息
             await request.post('/oauth/loginName',{userName:userName})
