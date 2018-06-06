@@ -2,11 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-15 16:12:23 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-19 17:27:22
+ * @Last Modified time: 2018-06-06 17:18:22
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
 import { getFields, request } from "../../../../../utils";
+import {connect} from 'react-redux'
 import moment from 'moment';
 const formItemLayout = {
     labelCol: {
@@ -158,9 +159,8 @@ class PopModal extends Component {
     render() {
         const readonly = this.props.action === "look";
         // const NotModifyWhenEdit = this.props.action === "modify";
-        let { record = {} } = this.state;
-
-        const form = this.props.form;
+        let { record = {} } = this.state,
+            {declare,form} = this.props;
         const { getFieldValue } = form;
         let title = "查看";
         if (this.props.action === "add") {
@@ -210,8 +210,8 @@ class PopModal extends Component {
                                                   key: record.mainId,
                                                   label: record.mainName
                                               }
-                                            : undefined,
-                                        readonly,
+                                            : (declare?{key:declare.mainId}:undefined),
+                                        readonly || !!declare,
                                         true,
                                         "请选择纳税主体"
                                     ),
@@ -220,12 +220,12 @@ class PopModal extends Component {
                                     type: "taxMain",
                                     componentProps: {
                                         labelInValue: true,
-                                        disabled: readonly
+                                        disabled: readonly || !!declare,
                                     }
                                 },{
                                     ...setComItem(
-                                        record.month && moment(record.month),
-                                        readonly,
+                                        (record.month && moment(record.month)) || (declare && declare.authMonth && moment(declare.authMonth)),
+                                        readonly || !!declare,
                                         true,
                                         "请选择期间"
                                     ),
@@ -264,15 +264,12 @@ class PopModal extends Component {
                                         },
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
-                                        doNotFetchDidMount: true,
+                                        doNotFetchDidMount: !declare,
                                         fetchAble:
                                             (getFieldValue("main") &&
                                             getFieldValue("main").key) || (record && record.mainId),
-                                        url: `/project/list/${(getFieldValue(
-                                            "main"
-                                        ) &&
-                                            getFieldValue("main").key) || (record && record.mainId) ||
-                                            ""}`
+                                        url: `/project/list/${(getFieldValue("main") && getFieldValue("main").key) || (record && record.mainId) ||
+                                        (declare && declare.mainId)}`
                                     }
                                 },
                                 {
@@ -353,19 +350,27 @@ class PopModal extends Component {
                                     type: "numeric"
                                 },
                                 {
-                                    ...setComItem(
-                                        record.taxRate,
-                                        readonly,
-                                        true,
-                                        "请输入税率"
-                                    ),
-                                    label: "税率（%）",
-                                    fieldName: "taxRate",
-                                    type: "numeric",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.taxRate,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请输入税率'
+                                            },{
+                                                pattern:/^100$|^\d{0,2}$/,
+                                                message:"请输入0~100之间的数字"
+                                            }
+                                        ]
+                                    },
                                     componentProps: {
                                         disabled: readonly,
                                         placeholder: "请输入税率（单位：%）"
-                                    }
+                                    },
+                                    label: "税率（%）",
+                                    fieldName: "taxRate",
+                                    type: "numeric",
                                 }
                             ])}
                         </Row>
@@ -402,4 +407,6 @@ class PopModal extends Component {
     }
 }
 
-export default Form.create()(PopModal);
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(Form.create()(PopModal));

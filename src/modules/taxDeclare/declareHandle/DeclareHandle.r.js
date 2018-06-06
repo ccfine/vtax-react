@@ -21,13 +21,13 @@ const searchFields = [
         type:'taxMain',
         fieldName:'mainId',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'办理进度',
         type:'select',
         fieldName:'status',
         formItemStyle,
-        span:6,
+        span:8,
         options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             {
                 text:'申报办理',
@@ -42,13 +42,13 @@ const searchFields = [
         type:'monthPicker',
         fieldName:'partTerm',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
         formItemStyle,
-        span:6,
+        span:8,
         options:[
             {
                 text:'增值税',

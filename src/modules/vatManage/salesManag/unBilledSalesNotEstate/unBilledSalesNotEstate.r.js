@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 11:54:45
+ * @Last Modified time: 2018-06-06 14:04:00
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -17,7 +17,7 @@ const getFields = (disabled,declare) => getFieldValue => {
         {
             label: "纳税主体",
             type: "taxMain",
-            span:6,
+            span:8,
             fieldName: "mainId",
             componentProps: {
                 disabled
@@ -36,7 +36,7 @@ const getFields = (disabled,declare) => getFieldValue => {
             label: '期间',
             fieldName: "authMonth",
             type: "monthPicker",
-            span:6,
+            span:8,
             componentProps: {
                 format: "YYYY-MM",
                 disabled

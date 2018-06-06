@@ -136,7 +136,7 @@ class GeneralTaxCertificate extends Component{
                         label:'标记类型',
                         fieldName:'commonlyFlag',
                         type:'select',
-                        span:6,
+                        span:8,
                         options:[  //1-标记;0-不标记；不传则所有状态
                             {
                                 text:'标记',

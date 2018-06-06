@@ -112,20 +112,21 @@ class UserManagementDetail extends Component {
             [orgId] = this.getParams();
 
         return (
-            <Spin spinning={!loaded}>
+            <div>
                 <h2 style={{ margin: "10px 0 5px 16px" }}>
                     {userInfo["realname"]}
                 </h2>
-                {userInfo.id ? (
+                {
                     <UserDetail
                         orgId={orgId}
                         userInfo={userInfo}
                         checkedPermission={checkedPermission}
                         allPermission={allPermission}
                         permissionLoading={permissionLoading}
+                        userLoading = {!loaded}
                     />
-                ) : null}
-            </Spin>
+                }
+            </div>
         );
     }
 }

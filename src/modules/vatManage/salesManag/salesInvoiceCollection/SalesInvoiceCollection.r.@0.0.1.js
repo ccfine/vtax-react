@@ -53,7 +53,7 @@ const searchFields = (disabled,declare) => {
             label: "纳税主体",
             type: "taxMain",
             fieldName: "mainId",
-            span: 6,
+            span: 8,
             componentProps: {
                 disabled
             },
@@ -72,7 +72,7 @@ const searchFields = (disabled,declare) => {
             label: "开票月份",
             type: "monthPicker",
             formItemStyle,
-            span: 6,
+            span: 8,
             fieldName: "authMonth",
             componentProps: {
                 disabled
@@ -93,7 +93,7 @@ const searchFields = (disabled,declare) => {
             label: "发票号码",
             type: "input",
             fieldName: "invoiceNum",
-            span: 6,
+            span: 8,
             formItemStyle,
             fieldDecoratorOptions: {},
             componentProps: {}
@@ -101,7 +101,7 @@ const searchFields = (disabled,declare) => {
         {
             label: "税率",
             type: "numeric",
-            span: 6,
+            span: 8,
             formItemStyle,
             fieldName: "taxRate",
             componentProps: {
@@ -112,7 +112,7 @@ const searchFields = (disabled,declare) => {
         {
             label: "发票类型",
             fieldName: "invoiceType",
-            span: 6,
+            span: 8,
             formItemStyle,
             type: "select",
             options: [
