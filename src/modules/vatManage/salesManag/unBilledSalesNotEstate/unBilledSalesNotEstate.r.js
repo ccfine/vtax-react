@@ -6,7 +6,7 @@
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
-import { message, Modal } from "antd";
+import { message} from "antd";
 import { SearchTable, TableTotal } from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
@@ -51,7 +51,7 @@ const getFields = (disabled,declare) => getFieldValue => {
                     }
                 ]
             }
-        },
+        /*},
         {
             label: "项目名称",
             fieldName: "projectId",
@@ -77,12 +77,12 @@ const getFields = (disabled,declare) => getFieldValue => {
                 fetchAble: getFieldValue("projectId"),
                 url: `/project/stages/${getFieldValue("projectId") ||
                     ""}`
-            }
+            }*/
         }
     ];
 };
 const getColumns = (context,hasOperate) => {
-    let operates = hasOperate?[{
+    /*let operates = hasOperate?[{
         title: "操作",
         className: "text-center",
         render(text, record, index) {
@@ -127,10 +127,10 @@ const getColumns = (context,hasOperate) => {
         fixed: "left",
         width: "50px",
         dataIndex: "action"
-    }]:[];
+    }]:[];*/
     return [
-        ...operates
-    , {
+       /* ...operates
+    , */{
         title: "项目",
         dataIndex: "taxMethod",
         render: (text, row, index) => {
