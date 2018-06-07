@@ -78,7 +78,7 @@ class PopModal extends Component{
                 }else if(type==='add'){
                     const data = {
                         ...values,
-                        orgParentId:this.props.selectedNodes && this.props.selectedNodes.id
+                        orgParentId:this.props.selectedNodes && this.props.selectedNodes.orgId
                     }
                     this.createRecord(data)
                 }
@@ -170,7 +170,7 @@ class PopModal extends Component{
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:(props.selectedNodes && props.selectedNodes.code) || initData['orgParentCode'],
+                                            initialValue:(props.selectedNodes && props.selectedNodes.orgCode) || initData['orgParentCode'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {
@@ -188,7 +188,7 @@ class PopModal extends Component{
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:(props.selectedNodes && props.selectedNodes.name) || initData['orgParentName'],
+                                            initialValue:(props.selectedNodes && props.selectedNodes.orgName) || initData['orgParentName'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {

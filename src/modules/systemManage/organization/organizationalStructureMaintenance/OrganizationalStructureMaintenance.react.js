@@ -266,7 +266,7 @@ class OrganizationalStructureMaintenance extends Component {
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
                             id:selectedRowKeys[0],
-                            selectedRows,
+                            selectedNodes:selectedRows[0],
                         })
                     },
                     rowSelection:{
