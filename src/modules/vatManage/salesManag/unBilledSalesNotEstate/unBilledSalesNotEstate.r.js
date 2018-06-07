@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-06 14:04:00
+ * @Last Modified time: 2018-06-07 20:56:43
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -141,14 +141,16 @@ const getColumns = (context,hasOperate) => {
                 children: text ==='1' ? '一般计税' : '简易计税',
                 props: {}
             };
-
+            // 前提是按 taxMethod：1 2 排序
+            let rowSpan = 0;
             if (index === 0) {
-                obj.props.rowSpan = count1;
-            }else if (index === count1) {
-                obj.props.rowSpan = count2;
-            }else{
-                obj.props.rowSpan = 0;
+                rowSpan = count1;
             }
+            if (index === count1) {
+                rowSpan = count2;
+            }
+            obj.props.rowSpan = rowSpan;
+
             return obj;
         }
 
@@ -255,7 +257,7 @@ class UnBilledSalesNotEstate extends Component {
                     doNotFetchDidMount={!disabled}
                     tableOption={{
                         key: updateKey,
-                        url: "/account/notInvoiceUnSale/realty/list",
+                        url: "/account/notInvoiceUnSale/realty/list?orderByField=taxMethod",
                         pagination: false,
                         columns: getColumns(this, noSubmit && disabled && declare.decAction==='edit'),
                         rowKey: "id",
