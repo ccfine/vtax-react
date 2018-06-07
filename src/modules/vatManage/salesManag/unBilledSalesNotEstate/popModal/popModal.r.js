@@ -2,11 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-15 16:12:23 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-06 17:18:22
+ * @Last Modified time: 2018-06-07 11:53:57
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
-import { getFields, request } from "../../../../../utils";
+import { getFields, request } from "utils";
 import {connect} from 'react-redux'
 import moment from 'moment';
 const formItemLayout = {

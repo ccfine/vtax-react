@@ -101,17 +101,17 @@ const columns = context =>[
     {
         title: (
             <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">税额</p>
-                <p className="apply-form-list-p2">税率</p>
+                <p className="apply-form-list-p1">自建转自用税额</p>
+                <p className="apply-form-list-p2">自建转自用税率</p>
             </div>
         ),
-        dataIndex: "inTax",
+        dataIndex: "selfTaxAmount",
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
                     {
-                        record.intaxRate? `${record.intaxRate}%`: record.intaxRate
+                        record.selfTax && `${record.selfTax}%`
                     }
                 </p>
             </div>
