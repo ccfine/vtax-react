@@ -85,9 +85,9 @@ export default class AsyncSelect extends Component{
             loaded
         })
     }
-    fetch(url){
+    fetch(url,params={}){
         this.toggleLoaded(false)
-        request.get(url || this.props.url)
+        request.get(url || this.props.url,{params})
             .then(({data}) => {
                 if(data.code===200 && this.mounted){
                     this.toggleLoaded(true)
@@ -130,8 +130,23 @@ export default class AsyncSelect extends Component{
                     .catch(err => {
                         message.error(err.message)
                     });
+            }else{
+                this.fetch(undefined,{
+                    name:value,
+                    size:100,
+                })
             }
 
+        }
+    }
+    onChange=(value)=>{
+        const { selectOptions:{ showSearch }, searchType } = this.props;
+        // 当选中某条数据后，查询条件清空，将所有数据获取出来（缺点：如果用户想选择查询出来的数据中的多条就没办法了） 后期调研下searchType!=='itemName'
+        if(showSearch && searchType!=='itemName'){
+            this.fetch(undefined,{
+                name:'',
+                size:100,
+            })
         }
     }
     render(){
@@ -158,6 +173,7 @@ export default class AsyncSelect extends Component{
                         <Select
                             style={{ width: '100%' }}
                             onSearch={this.onSearch}
+                            onChange={this.onChange}
                             placeholder={`请选择${label}`}
                             {...selectOptions}
                         >
