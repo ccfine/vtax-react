@@ -132,7 +132,7 @@ class PopModal extends Component{
                     top:'5%',
                 }}
                 bodyStyle={{
-                    maxHeight:450,
+                    maxHeight:420,
                     overflowY:'auto',
                 }}
                 visible={visible}

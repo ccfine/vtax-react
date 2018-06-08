@@ -52,6 +52,16 @@ const columns = context => [
                         icon: 'edit',
                         title: '编辑',
                         onSuccess: () => { context.showModal('edit',record) }
+                    },{
+                        type:'action',
+                        icon:'delete',
+                        title:'删除',
+                        style:{
+                            cursor:'pointer',
+                            color:'red',
+                            marginRight:10
+                        },
+                        onSuccess:()=>{ context.deleteRole(record.id,record.isEnabled) }
                     }])
                 }
                 <Divider type="vertical" />
@@ -161,6 +171,38 @@ class RoleManage extends Component{
             permissionVisible,
         })
     }
+	deleteRole = (id,isEnabled) => {
+        if(parseInt(isEnabled, 0) === 1){
+            message.error('请禁用后，再删除');
+            return;
+        }
+		const modalRef = Modal.confirm({
+			title: '友情提醒',
+			content: '该删除后将不可恢复，是否删除？',
+			okText: '确定',
+			okType: 'danger',
+			cancelText: '取消',
+			onOk: () => {
+				modalRef && modalRef.destroy()
+				//删除角色
+				request
+					.delete(`/sysRole/delete/${id}`)
+					.then(({ data }) => {
+						if (data.code === 200) {
+							message.success('删除成功')
+						} else {
+							message.error(data.msg)
+						}
+					})
+					.catch(err => {
+						message.error(err.message)
+					})
+			},
+			onCancel() {
+				modalRef.destroy()
+			}
+		})
+	}
 
     //选中多少条数据 - 禁用
     handleChange = (checked,id) => {

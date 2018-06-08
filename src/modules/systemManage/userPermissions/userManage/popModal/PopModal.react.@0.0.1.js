@@ -269,7 +269,8 @@ class PopModal extends Component {
                                             mode: "multiple",
                                             maxTagCount:50, //最多显示多少个 tag
                                             showSearch:true,
-                                            filterOption:false,
+                                            // filterOption:false,
+                                            optionFilterProp:'children',
                                         }
                                     },
                                     fieldDecoratorOptions: {

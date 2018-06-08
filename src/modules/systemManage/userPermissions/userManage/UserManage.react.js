@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-07 14:53:58
+ * @Last Modified time: 2018-06-08 11:02:29
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -28,7 +28,8 @@ const getSearchFields = context => [
             url: `/org/getOrganizations`,
             selectOptions:{
                 showSearch:true,
-                filterOption:false,
+                // filterOption:false,
+                optionFilterProp:'children',
             },
         },
         fieldDecoratorOptions: {
