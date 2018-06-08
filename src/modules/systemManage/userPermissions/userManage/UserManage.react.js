@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-04 11:05:30
+ * @Last Modified time: 2018-06-07 14:53:58
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -26,15 +26,13 @@ const getSearchFields = context => [
             fieldTextName: "orgName",
             fieldValueName: "orgId",
             url: `/org/getOrganizations`,
+            selectOptions:{
+                showSearch:true,
+                filterOption:false,
+            },
         },
         fieldDecoratorOptions: {
             initialValue: context.props.orgId || undefined,
-            rules: [
-                {
-                    required: true,
-                    message: "请选择组织"
-                }
-            ]
         }
     },
     {

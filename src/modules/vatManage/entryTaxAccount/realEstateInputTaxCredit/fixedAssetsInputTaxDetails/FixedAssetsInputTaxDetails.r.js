@@ -111,7 +111,7 @@ const columns = context =>[
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
                     {
-                        record.intaxRate? `${record.intaxRate}%`: record.intaxRate
+                        record.intaxRate && `${record.intaxRate}%`
                     }
                 </p>
             </div>

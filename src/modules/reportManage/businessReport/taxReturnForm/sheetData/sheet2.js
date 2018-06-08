@@ -52,7 +52,7 @@ export default [
         ['上期留抵税额抵减欠税',21],
         ['上期留抵税额退税',22],
         ['其他应作进项税额转出的情形',23],
-    ], 1, 'M',undefined,{colSpan:3}),
+    ], 1, 'N',undefined,{colSpan:3}),
     [
         { value: '三、待抵扣进项税额', readOnly: true,colSpan:5 }
     ],
@@ -75,7 +75,7 @@ export default [
         ['代扣代缴税收缴款凭证',32],
         ['其他',33],
         ['',34],
-    ], 3, 'X',undefined),
+    ], 3, 'Y',undefined),
     [
         { value: '四、其他', readOnly: true,colSpan:5 }
     ],
@@ -89,5 +89,5 @@ export default [
     ...generateRows([
         ['本期认证相符的增值税专用发票',35],
         ['代扣代缴税额',36],
-    ], 3, 'AI',undefined),
+    ], 3, 'AJ',undefined),
 ];

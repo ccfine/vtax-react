@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
 import { getFields, request, requestDict,setFormat } from "utils";
+import {connect} from 'react-redux'
 import moment from 'moment';
 const formItemLayout = {
     labelCol: {
@@ -126,7 +127,7 @@ class PopModal extends Component {
     }
     render() {
         let { record = {}, reduceNameList} = this.state;
-        const form = this.props.form;
+        const {declare,form} = this.props;
         let title='';
         const disabled = this.props.action === "look";
         let shouldShowDefaultData = false;
@@ -187,7 +188,7 @@ class PopModal extends Component {
                                         span: '12',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.mainId ? { key: record.mainId, label: record.mainName } : undefined,
+                                            initialValue: record.mainId ? { key: record.mainId, label: record.mainName } :  (declare?{key:declare.mainId}:undefined),
                                             rules: [
                                                 {
                                                     required: true,
@@ -197,7 +198,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             labelInValue: true,
-                                            disabled
+                                            disabled:disabled || !!declare
                                         }
                                     },{
                                         label: '减税性质名称',
@@ -249,12 +250,19 @@ class PopModal extends Component {
                                         fieldName: 'monthDate',
                                         type: 'datePicker',
                                         componentProps: {
-                                            disabled
+                                            disabled:disabled,
+                                            disabledDate:(current)=>{
+                                                if(declare && declare.authMonth){
+                                                    return current.format('YYYY-MM') !== moment(declare.authMonth).format('YYYY-MM')
+                                                }else{
+                                                    return false;
+                                                }
+                                            }
                                         },
                                         span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: shouldShowDefaultData ? moment(record.monthDate, 'YYYY-MM-DD') : undefined,
+                                            initialValue: shouldShowDefaultData ? moment(record.monthDate, 'YYYY-MM-DD') : (declare && declare.authMonth && moment(declare.authMonth)),
                                             rules: [
                                                 {
                                                     required: true,
@@ -354,4 +362,6 @@ class PopModal extends Component {
     }
 }
 
-export default Form.create()(PopModal);
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(Form.create()(PopModal));
