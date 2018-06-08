@@ -132,6 +132,13 @@ class PopModal extends Component{
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
+                style={{
+                    top:'5%'
+                }}
+                bodyStyle={{
+                    maxHeight:450,
+                    overflowY:'auto',
+                }}
                 visible={props.visible}
                 footer={
                     type !== 'view' && <Row>
