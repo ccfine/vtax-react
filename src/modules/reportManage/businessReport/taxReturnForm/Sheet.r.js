@@ -76,15 +76,15 @@ export default class Sheet extends Component{
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey !== nextProps.updateKey){
             nextProps.form.resetFields();
-            this.fetchSheetData(nextProps.url,nextProps.params)
+            this.fetchSheetData(nextProps)
         }
     }
-    fetchSheetData = (url,params) =>{
+    fetchSheetData = ({url,params,readOnly,composeGrid}) =>{
         this.toggleLoading(true);
         request.get(url,{params})
             .then(({data})=>{
                 if(data.code===200){
-                    let nextData = this.props.composeGrid(this.state.grid,data.data,this.props.readOnly)
+                    let nextData = composeGrid(this.state.grid,data.data,readOnly)
                     this.mounted && this.setState({
                         grid:nextData
                     },()=>{
