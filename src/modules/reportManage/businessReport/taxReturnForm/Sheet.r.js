@@ -24,7 +24,7 @@ export default class Sheet extends Component{
             x:undefined,
             y:undefined
         },
-        composeGrid:(prevGrid,asyncData)=>{
+        composeGrid:(prevGrid,asyncData,readOnly=true)=>{
             /**
              * prevGrid:原数据
              * asyncData:异步获取到的数据
@@ -51,7 +51,7 @@ export default class Sheet extends Component{
                         return {
                             ...deepItem,
                             ...sheetData[deepItem.key],
-                            value:typeof sheetData[deepItem.key].value === 'number' ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
+                            value:(typeof sheetData[deepItem.key].value === 'number' && (readOnly || sheetData[deepItem.key].readOnly)) ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
                                 
                         }
                     }else{
@@ -84,7 +84,7 @@ export default class Sheet extends Component{
         request.get(url,{params})
             .then(({data})=>{
                 if(data.code===200){
-                    let nextData = this.props.composeGrid(this.state.grid,data.data)
+                    let nextData = this.props.composeGrid(this.state.grid,data.data,this.props.readOnly)
                     this.mounted && this.setState({
                         grid:nextData
                     },()=>{
