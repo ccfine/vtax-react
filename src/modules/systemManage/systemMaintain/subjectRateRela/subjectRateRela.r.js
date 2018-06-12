@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:21 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-30 17:23:21
+ * @Last Modified time: 2018-06-11 17:07:56
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -142,7 +142,7 @@ class SubjectRateRela extends Component {
                         </div>
                     ),
                     cardProps: {
-                        title: "主营业务收入科目对应税率表"
+                        title: "科目税率对应表"
                     }
                 }}
             >

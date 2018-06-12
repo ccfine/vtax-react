@@ -66,8 +66,8 @@ const SystemMaintain_Routes = [
     },
     {
         path:`${PATHS}/subjectRateRela`,
-        component:wrapPage('主营业务收入科目对应税率表',SubjectRateRela),
-        name:'主营业务收入科目对应税率表',
+        component:wrapPage('科目税率对应表',SubjectRateRela),
+        name:'科目税率对应表',
         icon:{
             url:`${ICON_URL_PATH}subjectRateRela.svg`,
             backgroundColor:'#6CCCCA'

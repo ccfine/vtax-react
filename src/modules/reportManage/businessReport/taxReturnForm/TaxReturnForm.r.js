@@ -42,17 +42,19 @@ const sheetData = [
         grid:sheet_3,
         url:'/tax/declaration/addendum/three/list',
         saveUrl:'/tax/declaration/addendum/three/save',
-        savePermission:['1915002'],
+        savePermission:['1915003'],
     }, {
         tab:'附表四',
         grid:sheet_4,
-        url:'/tax/declaration/addendum/four/list'
+        url:'/tax/declaration/addendum/four/list',
+        saveUrl:'/tax/declaration/addendum/four/save',
+        savePermission:['1915004'],
     }, {
         tab:'附表五',
         grid:sheet_5,
         url:'/tax/declaration/addendum/five/list',
         saveUrl:'/tax/declaration/addendum/five/save',
-        savePermission:['1915004'],
+        savePermission:['1915005'],
     /*}, {
         tab:'固定资产表',
         grid:sheet_6,
@@ -64,7 +66,9 @@ const sheetData = [
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
-        url:'/tax/decConduct/prepayTax/list'
+        url:'/tax/decConduct/prepayTax/list',
+        saveUrl:'/tax/decConduct/prepayTax/save',
+        savePermission:['1915006'],
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
