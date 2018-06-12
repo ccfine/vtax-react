@@ -2,19 +2,23 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-26 15:17:57
+ * @Last Modified time: 2018-06-12 16:27:54
  */
 import React from "react";
-import { Form, Spin, message, Modal, Checkbox } from "antd";
-import { request } from "utils";
+import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
+import { request,getFields } from "utils";
+const FormItem = Form.Item;
 class RoleModal extends React.Component {
     state = {
         charAllList: [],
-        charLoaded: false,
+        charLoading: false,
         checkAll: undefined,
-        submitLoading: false
+        submitLoading: false,
+        roles:[],
+        roleLoading:false,
     };
     fetchCharList() {
+        this.setState({charLoading: true});
         request
             .get("/sysRole/queryAllRole")
             .then(({ data }) => {
@@ -23,14 +27,44 @@ class RoleModal extends React.Component {
                     this.mounted &&
                         this.setState({
                             charAllList,
-                            charLoaded: true
+                            charLoading: false
                         });
                 } else {
                     message.error(data.msg);
+                    this.setState({charLoaded: false});
                 }
             })
             .catch(err => {
                 message.error(err.message);
+                this.setState({charLoading: false});
+            });
+    }
+    fetchRoleByUserId=(orgId,userId)=>{
+        this.setState({roleLoading: true});
+        request
+            .get(`/sysRole/queryRoleByUserId/${orgId}/${userId}`)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    let roles = [...data.data];
+                    this.mounted &&
+                        this.setState({
+                            roles,
+                            roleLoading: false
+                        });
+                    this.props.form.setFieldsValue({'roleIds':roles.map(item => item.roleId)})
+                    this.setState({
+                        checkAll: this.isAllCheck(
+                            roles.map(item => item.roleId)
+                        )
+                    });
+                } else {
+                    message.error(data.msg);
+                    this.setState({roleLoading: false});
+                }
+            })
+            .catch(err => {
+                message.error(err.message);
+                this.setState({roleLoading: false});
             });
     }
     isAllCheck = roleIds => {
@@ -50,12 +84,11 @@ class RoleModal extends React.Component {
                     submitLoading: true
                 });
                 let params = {
-                    orgId: this.props.orgId,
                     userId: this.props.userId,
                     ...values
                 };
                 request
-                    .post(`/sysUser/assignRole/${this.props.orgId}`, params)
+                    .post(`/sysUser/assignRole/${values.orgId}`, params)
                     .then(({ data }) => {
                         this.setState({
                             submitLoading: false
@@ -64,7 +97,7 @@ class RoleModal extends React.Component {
                             message.success("角色分配成功", 4);
 
                             //新建成功，关闭当前窗口,刷新父级组件
-                            this.props.toggleModalVisible(false);
+                            this.handleCancel();
                             this.props.refreshTable &&
                                 this.props.refreshTable();
                         } else {
@@ -82,8 +115,9 @@ class RoleModal extends React.Component {
         });
     };
     handleCancel = () => {
+        this.props.form.resetFields();
+        this.setState({ checkAll: false,roles:[] });
         this.props.toggleModalVisible(false);
-        this.setState({ checkAll: false });
     };
     onCheckAllChange = e => {
         this.setState({
@@ -94,19 +128,15 @@ class RoleModal extends React.Component {
                 ? this.state.charAllList.map(item => item.roleId)
                 : []
         });
-    };
+    }
     componentWillReceiveProps(nextProps) {
         // 存在数据比较下是否全选
-        if (
-            nextProps.updateKey !== this.props.updateKey &&
-            nextProps.defaultFields &&
-            nextProps.defaultFields.length > 0
-        ) {
-            this.setState({
-                checkAll: this.isAllCheck(
-                    nextProps.defaultFields.map(item => item.roleId)
-                )
-            });
+        if (nextProps.updateKey !== this.props.updateKey) {
+            if(nextProps.orgId){
+                this.fetchRoleByUserId(nextProps.orgId,nextProps.userId)
+            }else{
+                this.setState({roles:[]})
+            }
         }
     }
     componentDidMount() {
@@ -118,8 +148,8 @@ class RoleModal extends React.Component {
     }
     render() {
         const { getFieldDecorator } = this.props.form,
-            { charAllList } = this.state,
-            { defaultFields = [],loading } = this.props;
+            { charAllList ,roles:defaultFields=[],submitLoading,roleLoading,charLoading} = this.state,
+            {userId,orgId} = this.props;
         return (
             <Modal
                 maskClosable={false}
@@ -130,35 +160,64 @@ class RoleModal extends React.Component {
                 onOk={this.handleSubmit}
                 onCancel={this.handleCancel}
                 cancelText="取消"
-                confirmLoading={
-                    this.state.charLoaded && this.state.submitLoading
-                }
-                bodyStyle={{
-                    maxHeight: 360,
-                    overflowY: "auto"
-                }}
+                confirmLoading={submitLoading}
                 width="700px"
             >
-                <Spin spinning={!this.state.charLoaded || loading}>
+                <Spin spinning={roleLoading || charLoading}>
                     <Form
                         onSubmit={this.handleSubmit}
                         style={{ padding: "0 16px" }}
                     >
-                        <div
-                            style={{
-                                borderBottom: "1px solid #E9E9E9",
-                                padding: "5px 0"
-                            }}
+                    <Row>
+                    {
+                        getFields(this.props.form, [{
+                            label: "组织",
+                            fieldName: "orgId",
+                            type: "asyncSelect",
+                            span: 24,
+                            formItemStyle: {
+                                labelCol: {
+                                    span: 2
+                                },
+                                wrapperCol: {
+                                    span: 16
+                                }
+                            },
+                            componentProps: {
+                                fieldTextName: "orgName",
+                                fieldValueName: "orgId",
+                                doNotFetchDidMount:!userId,
+                                fetchAble:userId,
+                                url: `org/queryOrgsByUserId/${userId}`,
+                            },
+                            fieldDecoratorOptions: {
+                                initialValue: orgId,
+                                onChange:(orgId)=>{
+                                    orgId && this.fetchRoleByUserId(orgId,userId)
+                                },
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: "请选择组织"
+                                    }
+                                ]
+                            }
+                        }])
+                    }
+                    </Row>
+                    <div className='fix-ie10-formItem-textArea'>
+                    <FormItem
+                        wrapperCol= {{span:20}}
+                        labelCol= {{span:2}}
+                        label="角色"
                         >
-                            <Checkbox
+                        <Checkbox
                                 onChange={this.onCheckAllChange}
                                 checked={this.state.checkAll}
                             >
                                 {this.state.checkAll ? "取消" : "全选"}
                             </Checkbox>
-                        </div>
-                        <br />
-                        {getFieldDecorator("roleIds", {
+                            {getFieldDecorator("roleIds", {
                             initialValue: defaultFields.map(
                                 item => item.roleId
                             ),
@@ -192,6 +251,8 @@ class RoleModal extends React.Component {
                                 </div>
                             </Checkbox.Group>
                         )}
+                    </FormItem>   
+                    </div>                     
                     </Form>
                 </Spin>
             </Modal>

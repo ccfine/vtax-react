@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-08 11:02:29
+ * @Last Modified time: 2018-06-12 15:16:30
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -95,44 +95,14 @@ const getColumns = context => [
                             icon: 'team',
                             title: '角色分配',
                             onSuccess: () => {
-                                context.setState({roleLoading:true,roleModalVisible:true})
-                                context.fetchUser(
-                                        `/sysRole/queryRoleByUserId/${
-                                            context.state.searchValues["orgId"]
-                                            }/${record.id}`
-                                    ).then(data => {
-                                        data &&
-                                        context.setState({
-                                            roleAssignUserId: record.id,
-                                            roleModalKey: Date.now(),
-                                            roleModalVisible: true,
-                                            roleModalDefault: data
-                                        });
-
-                                        context.setState({roleLoading:false})
-                                    });
+                                context.setState({roleModalKey: Date.now(),roleModalVisible:true,roleAssignUserId:record.id})
                             }
                         },{
                             type: 'action',
                             icon: 'setting',
                             title: '权限配置',
                             onSuccess: () => {
-                                context.setState({permissionLoading:true,permissionVisible:true})
-                                context.fetchUser(
-                                        `/sysUser/queryUserPermissions/${
-                                            context.state.searchValues["orgId"]
-                                            }/${record.id}`
-                                    ).then(data => {
-                                        data &&
-                                        context.setState({
-                                            permissionKey: Date.now(),
-                                            permissionVisible: true,
-                                            permissionDefault: data,
-                                            permissionUserId: record.id
-                                        });
-
-                                        context.setState({permissionLoading:false})
-                                    });
+                                context.setState({permissionVisible:true,permissionKey: Date.now(),permissionUserId: record.id})
                             }
                         }])
                     }
@@ -201,15 +171,15 @@ class UserManage extends Component {
 
         roleModalVisible: false,
         roleModalKey: Date.now() + 2,
-        roleModalDefault: undefined,
+        //roleModalDefault: undefined,
         roleAssignUserId: undefined,
-        roleLoading:false,
+        //roleLoading:false,
 
         permissionVisible: false,
         permissionKey: Date.now() + 3,
-        permissionDefault: undefined,
+        //permissionDefault: undefined,
         permissionId: undefined,
-        permissionLoading:false,
+        //permissionLoading:false,
 
         searchValues: undefined
     };
@@ -357,7 +327,7 @@ class UserManage extends Component {
                         this.state.searchValues &&
                         this.state.searchValues["orgId"]
                     }
-                    defaultFields={this.state.roleModalDefault}
+                    // defaultFields={this.state.roleModalDefault}
                     toggleModalVisible={visible => {
                         this.setState({
                             roleModalVisible: visible,
@@ -367,7 +337,7 @@ class UserManage extends Component {
                     refreshTable={this.refreshTable}
                     visible={this.state.roleModalVisible}
                     updateKey={this.state.roleModalKey}
-                    loading={this.state.roleLoading}
+                    // loading={this.state.roleLoading}
                 />
                 <PermissionModal
                     userId={this.state.permissionUserId}
@@ -375,16 +345,17 @@ class UserManage extends Component {
                         this.state.searchValues &&
                         this.state.searchValues["orgId"]
                     }
-                    defaultFields={this.state.permissionDefault}
+                    // defaultFields={this.state.permissionDefault}
                     toggleModalVisible={visible => {
                         this.setState({
                             permissionVisible: visible,
                             permissionKey: Date.now()
                         });
                     }}
+                    updateKey={this.state.permissionKey}
                     visible={this.state.permissionVisible}
                     editAble={true}
-                    loading={this.state.permissionLoading}
+                    // loading={this.state.permissionLoading}
                 />
             </SearchTable>
         );
