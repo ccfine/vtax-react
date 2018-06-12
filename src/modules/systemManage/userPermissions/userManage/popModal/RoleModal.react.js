@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-12 16:27:54
+ * @Last Modified time: 2018-06-12 19:13:31
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
@@ -115,6 +115,7 @@ class RoleModal extends React.Component {
         });
     };
     handleCancel = () => {
+        this.props.form.setFieldsValue({'roleIds':[]})
         this.props.form.resetFields();
         this.setState({ checkAll: false,roles:[] });
         this.props.toggleModalVisible(false);
