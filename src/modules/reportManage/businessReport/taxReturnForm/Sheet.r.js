@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import DataSheet from 'react-datasheet';
 import {Spin, message } from 'antd'
 import {request,fMoney} from 'utils'
-import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
+import { NumericInputCell } from 'compoments/EditableCell'
 
 export default class Sheet extends Component{
     static propTypes={
@@ -135,8 +135,8 @@ export default class Sheet extends Component{
                                         return {
                                             ...di,
                                             readOnly:false,
-                                            component:<EditableCell
-                                                renderValue={di.value} 
+                                            component:<NumericInputCell
+                                                initialValue={di.value}
                                                 getFieldDecorator={this.props.form.getFieldDecorator}
                                                 fieldName={`map.${di.key}`}
                                                 editAble={true}

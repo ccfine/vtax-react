@@ -7,7 +7,7 @@ import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
-import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
+import { NumericInputCell } from 'compoments/EditableCell'
 
 import moment from 'moment';
 const pointerStyle = {
@@ -160,9 +160,9 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 return record.debitAmount ? fMoney(parseFloat(text)) : text
             }else{
                 return ((context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1) && parseInt(record.deductionFlag, 0) === 1) ?
-                    <EditableCell
+                    <NumericInputCell
                         fieldName={`debitAmount_${record.id}`}
-                        renderValue={text}
+                        initialValue={text}
                         getFieldDecorator={getFieldDecorator}
                         editAble={disabled}
                         componentProps={{

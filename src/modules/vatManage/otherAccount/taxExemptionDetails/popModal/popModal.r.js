@@ -5,7 +5,6 @@ import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
 import { getFields, request, requestDict,setFormat } from "utils";
 import {connect} from 'react-redux'
-import moment from 'moment';
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -130,7 +129,6 @@ class PopModal extends Component {
         const {declare,form} = this.props;
         let title='';
         const disabled = this.props.action === "look";
-        let shouldShowDefaultData = false;
         const type = this.props.action;
         switch (type){
             case 'add':
@@ -138,11 +136,9 @@ class PopModal extends Component {
                 break;
             case 'modify':
                 title = '编辑';
-                shouldShowDefaultData = true;
                 break;
             case 'look':
                 title = '查看';
-                shouldShowDefaultData = true;
                 break;
             default:
                 title = '新增';
@@ -228,47 +224,22 @@ class PopModal extends Component {
                             {
                                 getFields(form, [
                                     {
-                                        label: '凭证号',
-                                        fieldName: 'voucherNum',
+                                        label: '期初余额',
+                                        fieldName: 'initialBalance',
                                         type: 'input',
                                         span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.voucherNum,
+                                            initialValue: record.initialBalance,
                                             rules: [
                                                 {
                                                     required: true,
-                                                    message: '请输入凭证号'
+                                                    message: '请输入期初余额'
                                                 }
                                             ]
                                         },
                                         componentProps: {
                                             disabled
-                                        },
-                                    },{
-                                        label: '日期',
-                                        fieldName: 'monthDate',
-                                        type: 'datePicker',
-                                        componentProps: {
-                                            disabled:disabled,
-                                            disabledDate:(current)=>{
-                                                if(declare && declare.authMonth){
-                                                    return current.format('YYYY-MM') !== moment(declare.authMonth).format('YYYY-MM')
-                                                }else{
-                                                    return false;
-                                                }
-                                            }
-                                        },
-                                        span: 12,
-                                        formItemStyle: formItemLayout,
-                                        fieldDecoratorOptions: {
-                                            initialValue: shouldShowDefaultData ? moment(record.monthDate, 'YYYY-MM-DD') : (declare && declare.authMonth && moment(declare.authMonth)),
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: '请输入日期'
-                                                }
-                                            ]
                                         },
                                     },
                                 ])
@@ -351,10 +322,38 @@ class PopModal extends Component {
                                         componentProps: {
                                             disabled,
                                         },
+
                                     },
                                 ])
                             }
                         </Row>
+                        <Row>
+                            {
+                                getFields(form, [
+                                    {
+                                        label: '本期应抵减税额',
+                                        fieldName: 'currentDeductAmount',
+                                        type: 'input',
+                                        span: 12,
+                                        formItemStyle: formItemLayout,
+                                        fieldDecoratorOptions: {
+                                            initialValue: record.currentDeductAmount,
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: '请输入本期应抵减税额'
+                                                }
+                                            ]
+                                        },
+                                        componentProps: {
+                                            disabled
+                                        },
+                                    },
+                                ])
+                            }
+                        </Row>
+
+
                     </Form>
                 </Spin>
             </Modal>
