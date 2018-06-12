@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:15:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-04 11:45:54
+ * @Last Modified time: 2018-06-12 17:08:19
  */
 import React, { Component } from 'react'
 import { Modal, Form,Button, message, Spin, Row } from 'antd'
@@ -158,17 +158,17 @@ class PopModal extends Component {
                                             //     value:2
                                             // },
                                             {
-                                                text:'累计扣除土地价款',
+                                                text:'期初土地信息',
                                                 value:3
                                             },
-                                            {
+                                            /*{
                                                 text:'累计销售土地面积',
                                                 value:4
                                             },
                                             {
                                                 text:'期初可抵扣土地价款',
                                                 value:5
-                                            }
+                                            }*/
                                         ],
                                         formItemStyle:formItemLayout,
                                         fieldDecoratorOptions:{
@@ -190,7 +190,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                (eventkey === 3 || eventkey === 4 || eventkey === 5) && getFields(form, [{
+                                (eventkey === 3) && getFields(form, [{
                                     label: "项目名称",
                                     fieldName: "project",
                                     type: "asyncSelect",
@@ -221,7 +221,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                 (eventkey === 3 || eventkey === 4 || eventkey === 5) && getFields(form, [{
+                                 (eventkey === 3) && getFields(form, [{
                                     label: "项目分期",
                                     fieldName: "stages",
                                     type: "asyncSelect",
@@ -252,13 +252,13 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                (eventkey === 1 || eventkey === 2 || eventkey === 5) && getFields(form, [{
+                                (eventkey === 1 || eventkey === 3) && getFields(form, [{
                                         span: '24',
                                         fieldName: 'amount',
                                         label: '期初余额',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.amount,
+                                            initialValue: record.amount || 0,
                                             rules: [
                                                 {
                                                     required: true,
@@ -282,7 +282,7 @@ class PopModal extends Component {
                                         label: '累计扣除土地价款',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.landPrice,
+                                            initialValue: record.landPrice|| 0,
                                             rules: [
                                                 {
                                                     required: true,
@@ -300,13 +300,13 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                eventkey === 4 &&getFields(form, [{
+                                eventkey === 3 &&getFields(form, [{
                                         span: '24',
                                         fieldName: 'salesArea',
                                         label: '累计销售土地面积',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.salesArea,
+                                            initialValue: record.salesArea|| 0,
                                             rules: [
                                                 {
                                                     required: true,
