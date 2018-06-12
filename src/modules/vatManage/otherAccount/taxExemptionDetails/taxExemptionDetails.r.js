@@ -7,19 +7,17 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {Modal,message} from 'antd'
+import {Form,message} from 'antd'
 import {fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import PopModal from "./popModal";
 import moment from 'moment';
+import { NumericInputCell,SelectCell } from 'compoments/EditableCell'
 const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
 };
-const pointerStyleDelete = {
-    cursor:'pointer',
-    color:'red',
-}
+
 const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
@@ -56,120 +54,139 @@ const searchFields =(disabled,declare)=> [
                 }
             ]
         },
-    },{
-        label:'凭证号',
-        fieldName:'voucherNum',
-        type:'input',
-        span:8,
-        componentProps:{
-
-        }
     },
 ]
-const getColumns = (context,disabled,declare) => {
-    let operates = (disabled && declare.decAction==='edit' && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1) ?[{
-        title: '操作',
-        render:(text, record, index) =>composeBotton([{
-            type: 'action',
-            icon: 'edit',
-            title: '编辑',
-            userPermissions:['1301004'],
-            onSuccess: () => {
-                context.setState({visible: true, action: 'modify', opid: record.id});
-            }
-        },{
-            type:'action',
-            icon:'delete',
-            title:'删除',
-            style:pointerStyleDelete,
-            userPermissions:['1301008'],
-            onSuccess:()=>{
-                const modalRef = Modal.confirm({
-                    title: "友情提醒",
-                    content: "该删除后将不可恢复，是否删除？",
-                    okText: "确定",
-                    okType: "danger",
-                    cancelText: "取消",
-                    onOk: () => {
-                        context.deleteRecord(record.id, () => {
-                            modalRef && modalRef.destroy();
-                            context.refreshTable();
+const getColumns = (context,getFieldDecorator,disabled) => {
+    return [ {
+            title: '纳税主体',
+            dataIndex: 'mainName',
+            render: (text, record) => (
+                <span
+                    title="查看详情"
+                    style={{
+                        ...pointerStyle,
+                        marginLeft: 5
+                    }}
+                    onClick={() => {
+                        context.setState({
+                            visible: true,
+                            action: 'look',
+                            opid: record.id
                         });
-                    },
-                    onCancel() {
-                        modalRef.destroy();
-                    }
-                });
-            }
-        }]),
-        fixed: 'left',
-        width: '75px',
-        dataIndex: 'action',
-        className: "text-center",
-    }]:[];
-    return [
-        ...operates
-    , {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-        render: (text, record) => (
-            <span
-                title="查看详情"
-                style={{
-                    ...pointerStyle,
-                    marginLeft: 5
-                }}
-                onClick={() => {
-                    context.setState({
-                        visible: true,
-                        action: 'look',
-                        opid: record.id
-                    });
-                }}
-            >
+                    }}
+                >
                 {text}
             </span>
-        ),
-    }, {
-        title: '减税性质代码',
-        dataIndex: 'reduceNum',
-    },{
-        title: '减税性质名称',
-        dataIndex: 'reduceName',
-    },{
-        title: '凭证号',
-        dataIndex: 'voucherNum',
-    },{
-        title: '日期 ',
-        dataIndex: 'monthDate',
-    },{
-        title: '金额',
-        dataIndex: 'amount',
-        render:text=>fMoney(text),
-    },{
-        title: '税额',
-        dataIndex: 'taxAmount',
-        render:text=>fMoney(text),
-    },{
-        title: '减免税金额',
-        dataIndex: 'reduceTaxAmount',
-        render:text=>fMoney(text),
-    },{
-        title: '进项税额是否认证抵扣',
-        dataIndex: 'incomeTaxAuth',
-        render:text=>{
-            //0 否，1 是 ,
-            text = parseInt(text,0);
-            if(text===0){
-                return '否'
-            }
-            if(text ===1){
-                return '是'
-            }
-            return text;
+            ),
+        }, {
+            title: '减税性质代码',
+            dataIndex: 'reduceNum',
+        },{
+            title: '减税性质名称',
+            dataIndex: 'reduceName',
+        },{
+            title: '期初余额',
+            dataIndex: 'initialBalance',
+            render:text=>fMoney(text),
+        },{
+            title:'本期发生额',
+            children:[
+                {
+                    title: '金额',
+                    dataIndex: 'amount',
+                    className:'table-money',
+                    render:(text,record)=>{
+                        if(disabled){
+                            return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
+                                <NumericInputCell
+                                    fieldName={`list[${record.id}].amount`}
+                                    initialValue={text}
+                                    getFieldDecorator={getFieldDecorator}
+                                /> : text
+                        }else{
+                            return record.amount ? fMoney(parseFloat(text)) : text
+                        }
+                    },
+                },
+                {
+                    title:'税额',
+                    dataIndex:'taxAmount',
+                    className:'table-money',
+                    render:(text,record)=>{
+                        if(disabled){
+                            return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
+                                <NumericInputCell
+                                    fieldName={`list[${record.id}].taxAmount`}
+                                    initialValue={text}
+                                    getFieldDecorator={getFieldDecorator}
+                                /> : text
+                        }else{
+                            return record.taxAmount ? fMoney(parseFloat(text)) : text
+                        }
+                    },
+                },
+                {
+                    title:'减免税金额',
+                    dataIndex:'reduceTaxAmount',
+                    className:'table-money',
+                    //render:text=>fMoney(text),
+                    render:(text,record)=>{
+                        if(disabled){
+                            return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
+                                <NumericInputCell
+                                    fieldName={`list[${record.id}].reduceTaxAmount`}
+                                    initialValue={text}
+                                    getFieldDecorator={getFieldDecorator}
+                                    componentProps={{
+                                        disabled:true
+                                    }}
+                                /> : text
+                        }else{
+                            return record.reduceTaxAmount ? fMoney(parseFloat(text)) : text
+                        }
+                    },
+                },
+            ]
+        },{
+            title: '进项税额是否认证抵扣',
+            dataIndex: 'incomeTaxAuth',
+            render:(text,record)=>{
+                if(disabled){
+                    return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
+                        <SelectCell
+                            fieldName={`list[${record.id}].incomeTaxAuth`}
+                            options={[
+                                {
+                                    text:'否',
+                                    value:'0',
+                                },{
+                                    text:'是',
+                                    value:'1',
+                                }
+                            ]}
+                            initialValue={record.incomeTaxAuth.toString()}
+                            getFieldDecorator={getFieldDecorator}
+                            componentProps={{
+                                onChange:(value)=>context.handleConfirmChange(value,record)
+                            }}
+                        /> : text
+                }else{
+                    let txt = parseInt(text,0);
+                    if(text===0){
+                        txt = '否'
+                    }
+                    if(text ===1){
+                        txt = '是'
+                    }
+                    return txt
+                }
+            },
+        },{
+            title: '本期应抵减税额',
+            dataIndex: 'currentDeductAmount',
+            render:text=>fMoney(text),
         }
-    }
-];
+    ];
 }
 // 总计数据结构，用于传递至TableTotal中
 const totalData =  [
@@ -233,10 +250,72 @@ class TaxExemptionDetails extends Component{
             })
         })
     }
+    save = e =>{
+        e && e.preventDefault()
+        this.toggleSearchTableLoading(true)
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                let nArr = [];
+                for(let key in values){
+                    for(let nKey in values[key]){
+                        nArr = nArr.concat(
+                            {
+                                ...values[key][nKey],
+                                id:nKey,
+                            }
+                        )
+                    }
+                }
+                request.post('/account/other/reduceTaxDetail/save',{
+                    list:nArr,
+                    mainId:this.state.filters.mainId,
+                    taxMonth:this.state.filters.authMonth
+                })
+                    .then(({data})=>{
+                        this.toggleSearchTableLoading(false)
+                        if(data.code===200){
+                            message.success(`保存成功！`);
+                            this.props.form.resetFields();
+                            this.refreshTable();
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    message.error(err.message)
+                    this.toggleSearchTableLoading(false)
+                })
+            }
+        })
+    }
+
+    handleConfirmChange = (value,record) => {
+       // 是 -- -减免税金额显示为金额的值  :0 否 1是
+       // 否  减免税金额显示为 金额加税额的合计
+        const {getFieldValue,setFieldsValue} = this.props.form
+        let amount = isNaN(parseFloat(getFieldValue(`list[${record.id}].amount`))) ? 0 : parseFloat(getFieldValue(`list[${record.id}].amount`));
+        let taxAmount = isNaN(parseFloat(getFieldValue(`list[${record.id}].taxAmount`))) ? 0 : parseFloat(getFieldValue(`list[${record.id}].taxAmount`));
+        let sum = amount + taxAmount;
+        let incomeTaxAuth = parseInt(value, 0);
+        if(incomeTaxAuth === 1){
+            setFieldsValue({
+                [`list[${record.id}].reduceTaxAmount`]: amount
+            });
+        }
+        if(incomeTaxAuth === 0){
+            setFieldsValue({
+                [`list[${record.id}].reduceTaxAmount`]: fMoney(sum)
+            });
+        }
+    }
+
     render(){
         const {visible,action,opid,tableKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
+        const {getFieldDecorator} = this.props.form;
         const { declare } = this.props;
         let disabled = !!declare;
+
+
+
         return(
             <SearchTable
                 spinning={searchTableLoading}
@@ -252,11 +331,11 @@ class TaxExemptionDetails extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this,disabled,declare),
+                    columns:getColumns(this,getFieldDecorator,(disabled && declare.decAction==='edit')),
                     url:'/account/other/reduceTaxDetail/list',
                     onSuccess:(params)=>{
                         this.setState({
-                            filters:params,
+                            filters:params
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -270,16 +349,17 @@ class TaxExemptionDetails extends Component{
                         }
                         {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                type:'add',
-                                icon:'plus',
-                                userPermissions:['1301003'],
-                                onClick: ()=>{
-                                    this.setState({
-                                        visible: true,
-                                        action: "add",
-                                        opid: undefined
-                                    });
-                                }
+                                type:'save',
+                                text:'保存',
+                                icon:'save',
+                                userPermission:['1301003'],
+                                onClick:()=>this.save()
+                            },{
+                                type:'reset',
+                                url:'/account/other/reduceTaxDetail/reset',
+                                params:filters,
+                                userPermissions:['1301009'],
+                                onSuccess:this.refreshTable
                             },{
                                 type:'submit',
                                 url:'/account/other/reduceTaxDetail/submit',
@@ -314,6 +394,6 @@ class TaxExemptionDetails extends Component{
         )
     }
 }
-export default connect(state=>({
+export default Form.create()(connect(state=>({
     declare:state.user.get('declare')
-}))(TaxExemptionDetails)
+}))(TaxExemptionDetails))

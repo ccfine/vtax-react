@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import {message,Form} from 'antd'
 import {request,fMoney,composeBotton} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
-import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
+import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
 
 const getColumns = (getFieldDecorator,disabled)=> [
@@ -41,9 +41,9 @@ const getColumns = (getFieldDecorator,disabled)=> [
                     return record.commonInitialEdit ? fMoney(parseFloat(text)) : __html
                 }else{
                     return record.commonInitialEdit ?
-                        <EditableCell
+                        <NumericInputCell
                             fieldName={`commonInitial_${record.id}`}
-                            renderValue={text}
+                            initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             editAble={disabled}
                         /> : __html
@@ -60,9 +60,9 @@ const getColumns = (getFieldDecorator,disabled)=> [
                     return record.commonCountEdit ? fMoney(parseFloat(text)) : __html
                 }else {
                     return record.commonCountEdit ?
-                        <EditableCell
+                        <NumericInputCell
                             fieldName={`commonCount_${record.id}`}
-                            renderValue={text}
+                            initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                         /> : __html
@@ -82,9 +82,9 @@ const getColumns = (getFieldDecorator,disabled)=> [
                     return record.promptlyInitialEdit ? fMoney(parseFloat(text)) : __html
                 }else {
                     return record.promptlyInitialEdit ?
-                        <EditableCell
+                        <NumericInputCell
                             fieldName={`promptlyInitial_${record.id}`}
-                            renderValue={text}
+                            initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                         /> : __html
@@ -100,9 +100,9 @@ const getColumns = (getFieldDecorator,disabled)=> [
                     return record.promptlyCountEdit ? fMoney(parseFloat(text)) : __html
                 }else {
                     return record.promptlyCountEdit ?
-                        <EditableCell
+                        <NumericInputCell
                             fieldName={`promptlyCount_${record.id}`}
-                            renderValue={text}
+                            initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                         /> : __html

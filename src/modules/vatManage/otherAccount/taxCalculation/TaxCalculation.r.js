@@ -10,7 +10,7 @@ import {connect} from 'react-redux'
 import {message,Form} from 'antd'
 import {SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import EditableCell from './EditableCell.r'
+import { NumericInputCell } from 'compoments/EditableCell'
 import moment from 'moment';
 const searchFields =(disabled,declare)=>{
     return [
@@ -86,9 +86,9 @@ const getColumns = (getFieldDecorator,disabled) => [
         dataIndex:'generalAmount',
         render:(text,record)=>{
             return disabled && record.generalAmountEdit ?
-                <EditableCell
+                <NumericInputCell
                     fieldName={`generalAmount_${record.id}`}
-                    renderValue={text}
+                    initialValue={text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.generalAmountEdit}
                 /> : fMoney(text)
@@ -100,9 +100,9 @@ const getColumns = (getFieldDecorator,disabled) => [
         dataIndex:'drawbackPolicyAmount',
         render:(text,record)=>{
             return disabled && record.drawbackPolicyAmountEdit ?
-                <EditableCell
+                <NumericInputCell
                     fieldName={`drawbackPolicyAmount_${record.id}`}
-                    renderValue={text}
+                    initialValue={text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.drawbackPolicyAmountEdit}
                 /> : fMoney(text)

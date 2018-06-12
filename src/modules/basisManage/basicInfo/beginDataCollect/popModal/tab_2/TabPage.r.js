@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {message,Form} from 'antd'
 import {request,fMoney,composeBotton} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
-import EditableCell from 'modules/vatManage/otherAccount/taxCalculation/EditableCell.r'
+import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
 const getColumns = (getFieldDecorator,disabled) =>[
     {
@@ -17,9 +17,9 @@ const getColumns = (getFieldDecorator,disabled) =>[
         className:'table-money',
         render:(text,record)=>{
             return !disabled ?
-                <EditableCell
+                <NumericInputCell
                     fieldName={`amount_${record.id}`}
-                    renderValue={text}
+                    initialValue={text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={disabled}
                 /> : fMoney(parseFloat(text))
