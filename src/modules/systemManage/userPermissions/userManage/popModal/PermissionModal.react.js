@@ -2,21 +2,25 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-04 11:12:52
+ * @Last Modified time: 2018-06-12 16:28:11
  */
 import React, { Component } from "react";
 import { Form, Modal, message, Spin,Alert,Row,Col } from "antd";
-import { request } from "utils";
+import { request,getFields } from "utils";
 import PermissionFeilds from "../../permissionDetail";
 
 class PermissionModal extends Component {
     state = {
         submitLoading: false,
         permissionLoading: true,
-        allPermission: []
+        allPermission: [],
+        userPermissionLoading:false,
+        permissions:{},
     };
     static defaultProps = {};
     handleCancel = e => {
+        this.props.form.resetFields();
+        this.setState({permissions:{}});
         this.props.toggleModalVisible(false);
     };
     fetchAllPermission() {
@@ -39,6 +43,27 @@ class PermissionModal extends Component {
                 this.setState({ permissionLoading: false });
             });
     }
+    fetchPermissionByUserId=(orgId,userId)=>{
+        this.setState({userPermissionLoading: true});
+        request
+            .get(`/sysUser/queryUserPermissions/${orgId}/${userId}`)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    this.mounted &&
+                        this.setState({
+                            permissions:data.data,
+                            userPermissionLoading: false
+                        });
+                } else {
+                    message.error(data.msg);
+                    this.setState({userPermissionLoading: false});
+                }
+            })
+            .catch(err => {
+                message.error(err.message);
+                this.setState({userPermissionLoading: false});
+            });
+    }
     handleSubmit = (rolePermissions,userPermissions) => e => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -46,7 +71,7 @@ class PermissionModal extends Component {
                 let params = [];
                 for (let item in values) {
                     values[item] &&
-                        item.indexOf("allCode") === -1 &&
+                        item.indexOf("allCode") === -1 && item.indexOf("orgId") === -1 && 
                         params.push(item);
                 }
 
@@ -57,14 +82,14 @@ class PermissionModal extends Component {
 
                 this.setState({ submitLoading: true });
                 request
-                    .post(`/sysUser/assignPermission/${this.props.orgId}`, {
+                    .post(`/sysUser/assignPermission/${values.orgId}`, {
                         options: params,
                         id: this.props.userId
                     })
                     .then(({ data }) => {
                         if (data.code === 200) {
                             message.success("权限配置成功");
-                            this.props.toggleModalVisible(false);
+                            this.handleCancel();
                         } else {
                             message.error(data.msg);
                         }
@@ -77,6 +102,15 @@ class PermissionModal extends Component {
             }
         });
     };
+    componentWillReceiveProps(nextProps){
+        if(this.props.updateKey!==nextProps.updateKey){
+            if(nextProps.orgId){
+                this.fetchPermissionByUserId(nextProps.orgId,nextProps.userId)
+            }else{                
+                    this.setState({permissions:{}});
+            }
+        }
+    }
     componentDidMount() {
         this.fetchAllPermission();
     }
@@ -85,13 +119,10 @@ class PermissionModal extends Component {
         this.mounted = null;
     }
     render() {
-        let { rolePermissions = [], userPermissions = [] } = this.props
-                .defaultFields
-                ? this.props.defaultFields
-                : {},
+        let { rolePermissions = [], userPermissions = [] } = this.state.permissions,
             checkedPermission = [...userPermissions, ...rolePermissions],
-            { permissionLoading, allPermission } = this.state,
-            { loading: wrapperLoading } = this.props;
+            { permissionLoading, allPermission,userPermissionLoading } = this.state,
+            { orgId,userId } = this.props;
 
         return (
             <Modal
@@ -121,16 +152,63 @@ class PermissionModal extends Component {
                     </Row>
                 }
             >
-                <Spin spinning={wrapperLoading}>
+                <Spin spinning={userPermissionLoading}>
                     <Form layout="inline">
-                        <PermissionFeilds
-                            form={this.props.form}
-                            editAble={true}
-                            checkedPermission={checkedPermission}
-                            disabledPermission={rolePermissions}
-                            allPermission={allPermission}
-                            permissionLoading={permissionLoading}
-                        />
+                        <Row>
+                        {
+                            getFields(this.props.form, [{
+                                label: "组织",
+                                fieldName: "orgId",
+                                type: "asyncSelect",
+                                span: 24,
+                                formItemStyle: {
+                                    labelCol: {
+                                        span: 2
+                                    },
+                                    wrapperCol: {
+                                        span: 12
+                                    },
+                                    style:{display:'block'}
+                                },
+                                componentProps: {
+                                    fieldTextName: "orgName",
+                                    fieldValueName: "orgId",
+                                    doNotFetchDidMount:!userId,
+                                    fetchAble:userId,
+                                    url: `org/queryOrgsByUserId/${userId}`,
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: orgId,
+                                    onChange:(orgId)=>{
+                                        this.props.form.resetFields();
+                                        orgId && this.fetchPermissionByUserId(orgId,userId)
+                                    },
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: "请选择组织"
+                                        }
+                                    ]
+                                }
+                            }])
+                        }
+                        </Row>
+                        
+                        <Row>
+                            <Col span={2} style={{textAlign:'right',color:'rgba(0, 0, 0, 0.85)'}}>
+                                <label>权限：</label>
+                            </Col>
+                            <Col span={20}>
+                                <PermissionFeilds
+                                    form={this.props.form}
+                                    editAble={true}
+                                    checkedPermission={checkedPermission}
+                                    disabledPermission={rolePermissions}
+                                    allPermission={allPermission}
+                                    permissionLoading={permissionLoading}
+                                />
+                            </Col>
+                        </Row>
                     </Form>
                 </Spin>
             </Modal>
