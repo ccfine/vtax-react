@@ -173,7 +173,7 @@ class tab1 extends Component{
                         key:updateKey,
                         pagination:true,
                         size:'small',
-                        scroll:{x:'120%'},
+                        scroll:{x:1200},
                         columns:columns,
                         cardProps:{
                             title:'其他应税项目扣除台账'

@@ -393,7 +393,7 @@ class InvoiceCollection extends Component {
                         columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: "110%" },
+                        scroll: { x: 1200 },
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params

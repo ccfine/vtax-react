@@ -135,10 +135,6 @@ const columns = context =>[
         title: '凭证类型',
         dataIndex: 'voucherType',
     },{
-        title: '凭证摘要',
-        dataIndex: 'voucherAbstract',
-        width:'75px'
-    },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
             <p className="apply-form-list-p2">借方科目代码</p>
@@ -171,7 +167,9 @@ const columns = context =>[
     },{
         title: '标记',
         dataIndex: 'sysDictName',
-        width:'75px',
+    },{
+        title: '凭证摘要',
+        dataIndex: 'voucherAbstract',
     }
 ];
 class SalesInvoiceCollection extends Component{
@@ -278,7 +276,7 @@ class SalesInvoiceCollection extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:'120%'
+                     x:1800
                      },
                 }}
             >

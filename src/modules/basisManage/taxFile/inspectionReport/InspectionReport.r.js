@@ -123,7 +123,7 @@ export default class InspectionReport extends Component {
                         title: '稽查报告'
                     },
                     scroll:{
-                        x:'130%'
+                        x:1500
                     }
                 }}
             >

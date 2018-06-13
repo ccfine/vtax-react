@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-06 11:30:51
+ * @Last Modified time: 2018-06-13 11:21:11
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -218,7 +218,7 @@ export default class AvailableArea extends Component {
                         title: "可售面积"
                     },
                     scroll: {
-                        x: "140%"
+                        x: 1400
                     },
                     onSuccess:filters=>{
                         this.setState({filters})
