@@ -228,6 +228,9 @@ export default class CreateADeclare extends Component{
                             title:'创建申报'
                         },
                         url:'/tax/declaration/list',
+                        scroll:{
+                            x:1300
+                        },
                         extra: <div>
                             {/*<Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                                 <Icon type="plus" />

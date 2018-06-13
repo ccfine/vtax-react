@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-05 17:59:31
+ * @Last Modified time: 2018-06-13 11:50:57
  *
  */
 import React,{Component} from 'react'
@@ -312,6 +312,9 @@ const getColumns = (context,disabled) => {
         title:'单元',
         dataIndex:'element'
     }, {
+        title:'路址',
+        dataIndex:'htRoomName',
+    }, {
         title:'房号',
         dataIndex:'roomNumber'
     }, {
@@ -493,7 +496,7 @@ class RoomTransactionFile extends Component{
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
-                        x:'150%'
+                        x: 1600
                     },
                 }}
             >

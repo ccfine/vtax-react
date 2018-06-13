@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import 'react-datasheet/lib/react-datasheet.css';
 import { Tabs } from 'antd';
 import sheet_0 from './sheetData/sheet0'
-import sheet_1 from './sheetData/sheet1.@0.0.1'
+import sheet_1 from './sheetData/sheet1'
 import sheet_2 from './sheetData/sheet2'
 import sheet_3 from './sheetData/sheet3'
 import sheet_4 from './sheetData/sheet4'

@@ -133,7 +133,6 @@ export default class AsyncSelect extends Component{
             }else{
                 this.fetch(undefined,{
                     name:value,
-                    size:100,
                 })
             }
 
@@ -143,10 +142,7 @@ export default class AsyncSelect extends Component{
         const { selectOptions:{ showSearch }, searchType } = this.props;
         // 当选中某条数据后，查询条件清空，将所有数据获取出来（缺点：如果用户想选择查询出来的数据中的多条就没办法了） 后期调研下searchType!=='itemName'
         if(showSearch && searchType!=='itemName'){
-            this.fetch(undefined,{
-                name:'',
-                size:100,
-            })
+            this.fetch()
         }
     }
     render(){

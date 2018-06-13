@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-12 19:13:31
+ * @Last Modified time: 2018-06-13 09:39:27
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
@@ -136,7 +136,7 @@ class RoleModal extends React.Component {
             if(nextProps.orgId){
                 this.fetchRoleByUserId(nextProps.orgId,nextProps.userId)
             }else{
-                this.setState({roles:[]})
+                this.setState({roles:[],checkAll: false,})
             }
         }
     }

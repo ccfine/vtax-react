@@ -119,6 +119,7 @@ class SheetWithSearchFields extends Component{
                         this.setState({saveLoding:false})
                         if(data.code===200){
                             message.success('保存成功!');
+                            this.onSubmit();
                         }else{
                             message.error(`保存失败:${data.msg}`)
                         }

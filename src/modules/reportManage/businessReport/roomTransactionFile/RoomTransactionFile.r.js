@@ -205,6 +205,9 @@ const columns = [
         title:'单元',
         dataIndex:'element'
     }, {
+        title:'路址',
+        dataIndex:'htRoomName',
+    }, {
         title:'房号',
         dataIndex:'roomNumber'
     }, {
@@ -268,7 +271,7 @@ class RoomTransactionFile extends Component{
                         title:'房间交易档案'
                     },
                     url:'/output/room/files/report/list',
-                    scroll:{ x: '180%' },
+                    scroll:{ x: 1800 },
                 }}
             >
             </SearchTable>

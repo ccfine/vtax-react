@@ -286,10 +286,7 @@ class DeclareHandle extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                request.put('/tax/decConduct/stop',{
-                    mainId: record.mainId,
-                    authMonth:record.month
-                })
+                request.delete(`/tax/decConduct/stop/${record.id}`)
                     .then(({data})=>{
                         if (data.code === 200) {
                             message.success('流程终止成功!');
@@ -324,6 +321,9 @@ class DeclareHandle extends Component{
                         title: title ? title : '申报办理'
                     },
                     url:'/tax/decConduct/decList',
+                    scroll:{
+                        x:1300
+                    }
                 }}
             >
                 {

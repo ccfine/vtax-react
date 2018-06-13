@@ -466,7 +466,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x:'140%'
+                        x: 1400
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,

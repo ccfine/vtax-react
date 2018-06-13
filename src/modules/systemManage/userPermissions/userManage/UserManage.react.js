@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-12 15:16:30
+ * @Last Modified time: 2018-06-13 16:51:36
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -25,7 +25,7 @@ const getSearchFields = context => [
         componentProps: {
             fieldTextName: "orgName",
             fieldValueName: "orgId",
-            url: `/org/getOrganizations`,
+            url: `/org/getOrganizations?size=500`,
             selectOptions:{
                 showSearch:true,
                 // filterOption:false,

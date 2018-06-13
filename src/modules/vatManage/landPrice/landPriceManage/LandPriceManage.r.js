@@ -135,10 +135,6 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             </span>
         )
     },{
-        title: '凭证摘要',
-        dataIndex: 'voucherAbstract',
-        width:'75px'
-    },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
             <p className="apply-form-list-p2">借方科目代码</p>
@@ -204,6 +200,9 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             }
             return t
         }
+    },{
+        title: '凭证摘要',
+        dataIndex: 'voucherAbstract',
     }
 ];
 class LandPriceManage extends Component{
@@ -340,9 +339,9 @@ class LandPriceManage extends Component{
                             }
                         </div>,
                     },
-                    /*scroll:{
-                     x:'180%'
-                     },*/
+                    scroll:{
+                     x:1600
+                     },
                 }}
             >
                 <ViewDocumentDetails
