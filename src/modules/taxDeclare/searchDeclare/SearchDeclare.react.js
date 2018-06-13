@@ -203,6 +203,9 @@ export default class SearchDeclare extends Component{
                         title:'查询申报'
                     },
                     url:'/tax/decConduct/query/list',
+                    scroll:{
+                        x:1300
+                    }
                 }}
             >
                 {

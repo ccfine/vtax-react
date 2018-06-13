@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row,Col } from "antd";
 import { getFields, request } from "utils";
 import moment from "moment";
+import {connect} from 'react-redux';
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -64,6 +65,14 @@ class PopModal extends Component {
                 this.props.form.resetFields();
                 this.setState({ formLoading: false, record: {}, typelist: [] });
             }
+        }
+    }
+    disabledDate = (value)=>{
+        let {declare} = this.props;
+        if(declare && declare.authMonth){
+            return moment(declare.authMonth).format('YYYY-MM') !== value.format('YYYY-MM');
+        }else{
+            return false;
         }
     }
     hideModal = () => {
@@ -155,6 +164,8 @@ class PopModal extends Component {
         } else if (this.props.action === "modify") {
             title = "编辑";
         }
+
+        let {declare} = this.props;
         return (
             <Modal
                 title={title}
@@ -192,7 +203,7 @@ class PopModal extends Component {
                                                   key: record.mainId,
                                                   label: record.mainName
                                               }
-                                            : undefined,
+                                            : declare && declare.mainId && {key:declare.mainId},
                                         readonly,
                                         true,
                                         "请选择纳税主体"
@@ -202,7 +213,7 @@ class PopModal extends Component {
                                     type: "taxMain",
                                     componentProps: {
                                         labelInValue: true,
-                                        disabled: readonly
+                                        disabled: readonly || !!declare
                                     }
                                 },
                                 {
@@ -320,14 +331,18 @@ class PopModal extends Component {
                                 },
                                 {
                                     ...setComItem(
-                                        record.taxDate && moment(record.taxDate),
+                                        (record.taxDate && moment(record.taxDate)) || (declare && declare.authMonth && moment(declare.authMonth)),
                                         readonly,
                                         true,
                                         "请选择日期"
                                     ),
                                     label: "日期",
                                     fieldName: "taxDate",
-                                    type: "datePicker"
+                                    type: "datePicker",
+                                    componentProps: {
+                                        disabled: readonly,
+                                        disabledDate:this.disabledDate
+                                    }
                                 }
                             ])}
                         </Row>
@@ -353,4 +368,6 @@ class PopModal extends Component {
     }
 }
 
-export default Form.create()(PopModal);
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(Form.create()(PopModal));
