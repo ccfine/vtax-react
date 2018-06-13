@@ -264,7 +264,7 @@ class PopModal extends Component {
                                     componentProps: {
                                         fieldTextName: "orgName",
                                         fieldValueName: "orgId",
-                                        url: `/org/getOrganizations`,
+                                        url: `/org/getOrganizations?size=500`,
                                         selectOptions: {
                                             mode: "multiple",
                                             maxTagCount:50, //最多显示多少个 tag
