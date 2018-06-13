@@ -345,5 +345,5 @@ class DeclareHandle extends Component{
     }
 }
 export default connect(state=>({
-    options:state.user.getIn(['personal','options']),
+    options:state.user.get('options'),
 }))(DeclareHandle)
