@@ -226,6 +226,9 @@ const getColumns = (context,disabled) =>{
                 <p className="apply-form-list-p2">{record.element}</p>
             </div>
         )
+    }, {
+        title:'路址',
+        dataIndex:'htRoomName',
     },
     {
         title: (
