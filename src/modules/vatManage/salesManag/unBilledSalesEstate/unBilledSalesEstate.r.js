@@ -128,6 +128,10 @@ const columns = [
                 className:'text-right',
                 render:text=>text? `${text}%`: text,
             },
+            {
+                title:'合同约定交付日期',
+                dataIndex:'agreeDate'
+            },
         ]
     },
     {

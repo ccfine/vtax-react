@@ -17,6 +17,9 @@ const initialState = fromJS({
         realname:null ,// 真实姓名
         typen:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
         userame:null ,// 用户名
+
+        //给权限用 用户所有权限(查询详情时才加载数据)
+        options:null,
     },
 
        /*
@@ -57,8 +60,6 @@ const initialState = fromJS({
     //给纳税申报用的对象
     declare:null,
 
-    //给权限用 用户所有权限(查询详情时才加载数据)
-    options:null,
 });
 
 export const {personal, token, isAuthed, orgId, loginType, declare, options} = createActions({
@@ -115,9 +116,6 @@ export default handleActions({
     [declare.increment]:(state,{payload})=>{
         return state.set('declare',payload)
     },
-    [options.increment]:(state,{payload})=>{
-        return state.set('options',payload)
-    },
 }, initialState)
 
 export const login = dispatch => async ({userName,password,success,fail,type,loginToken})=>{
@@ -131,8 +129,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                 dispatch(token.increment(data.token))
                 //获取组织信息
                 dispatch(orgId.increment(data.orgId))
-                //获取权限信息
-                dispatch(options.increment(data.options))
                 //获取用户信息
                 dispatch(personal.increment(data))
                 //用户信息获取成功的话
@@ -157,8 +153,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                         dispatch(token.increment(data.token))
                         //获取组织信息
                         dispatch(orgId.increment(data.orgId))
-                        //获取权限信息
-                        dispatch(options.increment(data.options))
                         //获取用户信息
                         dispatch(personal.increment(data))
 
@@ -206,13 +200,6 @@ export const saveToken = dispatch => async (data) =>{
     }
 }
 
-export const saveOptions = dispatch => async (data) =>{
-    try {
-        dispatch(options.increment(data))
-    }catch (err){
-        console.log(err)
-    }
-}
 export const savePersonal = dispatch => async (data) =>{
     try {
         dispatch(personal.increment(data))

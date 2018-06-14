@@ -60,7 +60,7 @@ export default class MonthRangePicker extends Component {
                     ...fieldDecoratorOptions
                 })(
                     <RangePicker
-                        placeholder={['开始日期', '结束日期']}
+                        placeholder={['开始月份', '结束月份']}
                         format="YYYY-MM"
                         mode={mode}
                         onPanelChange={this.handlePanelChange}

@@ -95,6 +95,6 @@ class NavRouter extends Component {
 
 
 export default withRouter(connect(state=>({
-    options:state.user.get('options'),
+    options:state.user.getIn(['personal','options']),
     type:state.user.getIn(['personal','type'])
 }))(NavRouter))

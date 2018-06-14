@@ -102,7 +102,7 @@ class OrganizationalStructureMaintenance extends Component {
     refreshTable = ()=>{
         this.setState({
             updateTable:Date.now(),
-            //id:undefined,
+            id:undefined,
         })
     }
     refreshAll = ()=>{
@@ -245,7 +245,7 @@ class OrganizationalStructureMaintenance extends Component {
                     //isLoadDate:false,
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
-                            selectedNodes,
+                            //selectedNodes,
                             id:selectedNodes.id,
                             filters:{
                                 id:selectedNodes.id
