@@ -73,7 +73,7 @@ class DataDictionaryMaintain extends Component {
     refreshTable = ()=>{
         this.setState({
             updateTable:Date.now(),
-            id:undefined,
+            //id:undefined,
         })
     }
     refreshAll = ()=>{
@@ -184,7 +184,7 @@ class DataDictionaryMaintain extends Component {
                     url:"/sys/dict/tree",
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
-                            //id:selectedNodes.id,
+                            id:selectedNodes.id,
                             filters:{
                                 id:selectedNodes.id
                             }
