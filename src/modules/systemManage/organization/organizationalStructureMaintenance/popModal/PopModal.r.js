@@ -170,7 +170,7 @@ class PopModal extends Component{
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:(props.selectedNodes && props.selectedNodes.orgCode) || initData['orgParentCode'],
+                                            initialValue:(props.selectedNodes && ( props.selectedNodes.orgCode || props.selectedNodes.code)) || initData['orgParentCode'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {
@@ -188,7 +188,7 @@ class PopModal extends Component{
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:(props.selectedNodes && props.selectedNodes.orgName) || initData['orgParentName'],
+                                            initialValue:(props.selectedNodes && (props.selectedNodes.orgName  || props.selectedNodes.name)) || initData['orgParentName'],
                                             rules:[
                                                 regRules.input_length_25,
                                                 {

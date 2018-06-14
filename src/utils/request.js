@@ -9,14 +9,15 @@
  */
 import Axios from 'axios';
 import {message} from 'antd'
-import {logout} from '../redux/ducks/user'
+import { store } from 'redux/store';
+import {logout} from 'redux/ducks/user'
 
 const request = Axios.create({
     baseURL:window.baseURL,
     timeout:20000,
 });
 request.getToken = ()=>{
-    return request.getState().user.get('token') || false
+    return store.getState().user.get('token') || false
 }
 request.testSuccess = (data,success,fail) => {
     if(data.code===200){
@@ -93,7 +94,7 @@ request.interceptors.response.use(function (response) {
                 break
             case 401:
                 // 返回 401 清除token信息并跳转到登录页面
-                request.dispatch && logout(request.dispatch)()
+                store.dispatch && logout(store.dispatch)()
                 error.message = '登录超时,请重新登录'
                 break;
             case 403:

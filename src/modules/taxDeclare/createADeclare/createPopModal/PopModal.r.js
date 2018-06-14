@@ -217,7 +217,7 @@ class PopModal extends Component{
             default :
             //no default
         }
-        const dateFormat = 'YYYY-MM-DD';
+        const dateFormat = 'YYYY/MM/DD';
         let shouldShowDefaultData = false;
         if(type==='edit' || type==='view'){
             shouldShowDefaultData = true;
@@ -326,7 +326,7 @@ class PopModal extends Component{
                                     },{
                                         label:'所属期起止',
                                         fieldName:'subordinatePeriod',
-                                        type:'rangePicker',
+                                        type:'rangePicker',  //月份 monthRangePicker
                                         span:12,
                                         formItemStyle,
                                         componentProps:{
