@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,message} from 'antd'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin} from 'antd'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
