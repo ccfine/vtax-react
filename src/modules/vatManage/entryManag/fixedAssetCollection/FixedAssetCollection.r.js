@@ -72,7 +72,7 @@ const columns=[
     },
     {
         title:'纳税主体代码',
-        dataIndex:'taxSubjectNum',
+        dataIndex:'stageNum',
     },
     {
         title:'固定资产名称',
@@ -120,13 +120,13 @@ const columns=[
     },
     {
         title: "购进税额",
-        dataIndex: "areaCovered",
+        dataIndex: "inTax",
         render:(text)=>fMoney(text)
     },
     {
         title: "购进税率",
-        dataIndex: "areaCovered",
-        render:text=>text&& `${text}%`
+        dataIndex: "intaxRate",
+        render:text=>text && `${text}%`
     },
     {
         title: "当期抵扣的进项税额",
