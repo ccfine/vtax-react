@@ -27,7 +27,7 @@ function fetchTaxMain(value, callback) {
             .then(({data}) => {
                 if(data.code===200 && currentValue === value){
 
-                    const result = data.data.records;
+                    const result = data.data.records || data.data;;
                     const newData = [];
                     result.forEach((r) => {
                         newData.push({
@@ -73,7 +73,7 @@ export default class TaxMain extends Component{
     state={
         mainTaxItems:[]
     }
-    onSearch = (value) => {
+    /*onSearch = (value) => {
         this.props.onSearch && this.props.onSearch(value)
         if(typeof value !== 'undefined' && value !== null){
             fetchTaxMain(value, data => {
@@ -82,7 +82,7 @@ export default class TaxMain extends Component{
                 })
             });
         }
-    }
+    }*/
     componentDidMount(){
         fetchTaxMain('',data => {
             this.mounted && this.setState({
@@ -119,7 +119,7 @@ export default class TaxMain extends Component{
                         showSearch
                         style={{ width: '100%' }}
                         optionFilterProp="children"
-                        onSearch={this.onSearch}
+                        // onSearch={this.onSearch}
                         placeholder="请选择纳税主体"
                         {...componentProps}
                     >
