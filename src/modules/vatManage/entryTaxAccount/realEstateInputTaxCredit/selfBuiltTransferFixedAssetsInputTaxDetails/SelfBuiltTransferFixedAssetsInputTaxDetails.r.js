@@ -5,11 +5,12 @@ import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
-
+/*
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
+
 const columns = context =>[
     {
         title: '纳税主体名称',
@@ -55,7 +56,60 @@ const columns = context =>[
         render: text => fMoney(text),
         className: "table-money"
     }
+];*/
+
+
+const columns = context =>[
+    {
+        title: '纳税主体',
+        dataIndex: 'mainName',
+    },{
+        title: '项目分期',
+        dataIndex: 'stagesName',
+    },{
+        title: '期初',
+        children:[{
+            title: '金额',
+            dataIndex: 'initialAmount',
+        },{
+            title: '税额',
+            dataIndex: 'initialTaxAmount',
+        }]
+    },{
+        title: '本期',
+        children:[{
+            title: '金额',
+            dataIndex: 'currentAmount',
+        },{
+            title: '税额',
+            dataIndex: 'currentTaxAmount',
+        }]
+    },{
+        title: '累计',
+        children:[{
+            title: '金额',
+            dataIndex: 'countAmount',
+        },{
+            title: '税额',
+            dataIndex: 'countTaxAmount',
+        }]
+    },{
+        title: '综合税率',
+        dataIndex: 'taxRate',
+        render: text => text&&`${text}%`
+    },{
+        title: '进项税额',
+        dataIndex: 'incomeTaxAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    },{
+        title: '进项税转出额',
+        dataIndex: 'incomeOutAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    }
 ];
+
 export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
@@ -129,6 +183,14 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                                     userPermissions:['1251010'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                },{
+                                    type: 'reset',
+                                    url:'/account/income/estate/reset',
+                                    params:filters,
+                                    userPermissions:['1251009'],
+                                    onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
                                 },{

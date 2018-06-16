@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
-
+import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+// import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+/*
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -56,12 +56,43 @@ const columns = context =>[
         render: text => fMoney(text),
         className: "table-money"
     }
+];*/
+
+const columns = context =>[
+    {
+        title: '纳税主体',
+        dataIndex: 'mainName',
+    },{
+        title: '项目分期',
+        dataIndex: 'stageName',
+    },{
+        title: '固定资产取得价值',
+        dataIndex: 'gainValue',
+        render: text => fMoney(text),
+        className: "table-money"
+    },{
+        title: '当期凭证待抵扣进项税额',
+        dataIndex: 'deductedVoucherTaxAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    },{
+        title: '当期固定资产待抵扣进项税额',
+        dataIndex: 'deductedFixedTaxAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    },{
+        title: '差异金额',
+        dataIndex: 'difAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    }
 ];
+
 export default class DeductibleInputTaxAmount extends Component{
     state={
         tableKey:Date.now(),
-        visibleView:false,
-        voucherNum:undefined,
+		filters: {},
+		statusParam:{}
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
@@ -74,9 +105,15 @@ export default class DeductibleInputTaxAmount extends Component{
             tableKey:Date.now()
         })
     }
-
+    fetchResultStatus = ()=>{
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
+    }
     render(){
-        const {tableKey,visibleView,voucherNum} = this.state;
+        const {tableKey,statusParam,filters} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -101,16 +138,43 @@ export default class DeductibleInputTaxAmount extends Component{
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>待抵扣进项税额</span>,
                         },
+                        onSuccess: (params) => {
+                            this.setState({
+                                filters: params
+                            },()=>{
+                                this.fetchResultStatus()
+                            })
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit') && composeBotton([
+                                        {
+                                            type: 'reset',
+                                            url:'/account/income/estate/reset',
+                                            params:filters,
+                                            userPermissions:['1251009'],
+                                            onSuccess:()=>{
+                                                this.props.refreshTabs()
+                                            },
+                                        }
+                                    ],statusParam)
+                                }
+                            </div>
+                        ),
                         /*scroll:{
                          x:'180%'
                          },*/
                     }}
                 >
-                    <ViewDocumentDetails
+                    {/* <ViewDocumentDetails
                         title="查看凭证详情"
                         visible={visibleView}
                         voucherNum={voucherNum}
-                        toggleViewModalVisible={this.toggleViewModalVisible} />
+                        toggleViewModalVisible={this.toggleViewModalVisible} /> */}
                 </SearchTable>
         )
     }

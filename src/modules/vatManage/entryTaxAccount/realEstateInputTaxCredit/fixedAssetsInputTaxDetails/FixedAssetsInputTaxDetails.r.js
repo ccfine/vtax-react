@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
+import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 const columns = context =>[
     {
         title:'纳税主体',
@@ -80,9 +80,18 @@ const columns = context =>[
 export default class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
+		filters: {},
+		statusParam:{}
+    }
+    fetchResultStatus = ()=>{
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
     }
     render(){
-        const {tableKey} = this.state;
+        const {tableKey,statusParam,filters} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -107,6 +116,33 @@ export default class FixedAssetsInputTaxDetails extends Component{
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
                     },
+                    onSuccess: (params) => {
+                        this.setState({
+                            filters: params
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
+                    },
+                    extra: (
+                        <div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
+                                (disabled && declare.decAction==='edit') && composeBotton([
+                                    {
+                                        type: 'reset',
+                                        url:'/account/income/estate/reset',
+                                        params:filters,
+                                        userPermissions:['1251009'],
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs()
+                                        },
+                                    }
+                                ],statusParam)
+                            }
+                        </div>
+                    ),
                     scroll:{
                      x:1400
                      },
