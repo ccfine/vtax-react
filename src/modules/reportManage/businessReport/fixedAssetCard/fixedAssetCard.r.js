@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-13 11:10:06
+ * @Last Modified time: 2018-06-16 10:48:11
  */
 import React, { Component } from "react";
 import {Modal,message} from 'antd';
@@ -200,7 +200,7 @@ const getColumns = context => [
         )
     },
     {
-        title: "占地面积",
+        title: "建筑面积",
         dataIndex: "areaCovered"
     },
     {

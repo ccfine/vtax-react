@@ -99,9 +99,9 @@ class InputTaxCertificate extends Component{
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>进项税额列表</span>,
                         },
-                        /*scroll:{
-                         x:'180%'
-                         },*/
+                        scroll:{
+                            x:1500
+                        },
                     }}
                 >
                     <ViewDocumentDetails

@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 15:15:17
+ * @Last Modified time: 2018-06-16 17:47:04
  *
  */
 import React,{Component} from 'react'
@@ -69,72 +69,26 @@ const searchFields =(disabled,declare)=> {
 }
 const getColumns = context => [
     {
-        title:'纳税主体名称',
+        title:'纳税主体',
         dataIndex:'mainName',
     },{
-        title:'项目分期名称',
+        title:'项目分期',
         dataIndex:'stagesName',
-    /*},{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目分期名称</p>
-                <p className="apply-form-list-p2">项目分期代码</p>
-            </div>
-        ),
-        dataIndex: 'stagesName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stagesNum}</p>
-            </div>
-        )
     }, {
-        title:'凭证日期',
-        dataIndex:'voucherDate',
+        title:'金额（不含税）',
+        dataIndex:'withOutAmount',
+        render:text=>fMoney(text),
+        className:'table-money'
     }, {
-        title:'凭证类型',
-        dataIndex:'voucherType',
-    }, {
-        title:'凭证号',
-        dataIndex:'voucherNum',
-        render:(text,record)=>(
-            <span title="查看凭证详情" onClick={()=>{
-                context.setState({
-                    voucherNum:text,
-                },()=>{
-                    context.toggleViewModalVisible(true)
-                })
-            }} style={pointerStyle}>
-                {text}
-            </span>
-        )
-    }, {
-        title:'凭证摘要',
-        dataIndex:'voucherAbstract',
-    }, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">贷方科目名称</p>
-                <p className="apply-form-list-p2">贷方科目代码</p>
-            </div>
-        ),
-        dataIndex: 'creditSubjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.creditSubjectCode}</p>
-            </div>
-        )*/
-    }, {
-        title:'金额',
-        dataIndex:'creditAmount',
+        title:'金额（含税）',
+        dataIndex:'withTaxAmount',
         render:text=>fMoney(text),
         className:'table-money'
     }, {
         title:'预缴税率',
         dataIndex:'taxRate',
         className:'text-right',
-        render:text=>text? `${text}%`: text,
+        render:text=>text && `${text}%`,
     }, {
         title:'预缴税款',
         dataIndex:'prepayAmount',

@@ -84,10 +84,10 @@ class RealEstateInputTaxCredit extends Component{
         return(
             <Tabs key={tabsKey} onChange={this.onTabChange} type="card" activeKey={activeKey}>
                 <TabPane tab="固定资产进项税额明细" key="1">
-                    <FixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} />
+                    <FixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
                 <TabPane tab="待抵扣进项税额" key="2">
-                    <DeductibleInputTaxAmount declare={declare} searchFields={searchFields(disabled,declare)} />
+                    <DeductibleInputTaxAmount declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
                 <TabPane tab="自建转自用固定资产进项税额明细" key="3">
                     <SelfBuiltTransferFixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />

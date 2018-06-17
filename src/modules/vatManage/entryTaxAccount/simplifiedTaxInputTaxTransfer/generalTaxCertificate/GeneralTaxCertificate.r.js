@@ -191,9 +191,9 @@ class GeneralTaxCertificate extends Component{
                             }
                         </div>,
                     },
-                    /*scroll:{
-                     x:'180%'
-                     },*/
+                    scroll:{
+                        x:1500
+                    },
                 }}
             >
                 <ViewDocumentDetails

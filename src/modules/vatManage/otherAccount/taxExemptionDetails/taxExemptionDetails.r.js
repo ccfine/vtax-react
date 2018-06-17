@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-06 11:01:21
+ * @Last Modified time: 2018-06-16 17:25:35
  *
  */
 import React, { Component } from 'react'
@@ -151,8 +151,8 @@ const getColumns = (context,getFieldDecorator,disabled) => {
             title: '进项税额是否认证抵扣',
             dataIndex: 'incomeTaxAuth',
             render:(text,record)=>{
-                if(disabled){
-                    return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
+                if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                    return (
                         <SelectCell
                             fieldName={`list[${record.id}].incomeTaxAuth`}
                             options={[
@@ -169,7 +169,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             componentProps={{
                                 onChange:(value)=>context.handleConfirmChange(value,record)
                             }}
-                        /> : text
+                        />)
                 }else{
                     let txt = parseInt(text,0);
                     if(text===0){
