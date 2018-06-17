@@ -14,13 +14,21 @@ import { saveDeclare } from 'redux/ducks/user'
 import './styles.less'
 
 // 所有的路由信息--平铺
-const allPlainRoutes = (function() {
-	return composeMenus(routes).filter(item => !(!item.name || item.path === '/web'))
-})()
+let allPlainRoutes = null;
 
 // 将后台数据转换为方便处理的数据
 const transformDeclaration = data => {
 	let res = []
+
+	// 所有的路由信息
+	allPlainRoutes = (function() {
+		if(allPlainRoutes){
+			return allPlainRoutes;
+		}else{
+			return composeMenus(routes).filter(item => !(!item.name || item.path === '/web'))
+		}
+	})()
+
 	data.forEach((ele, index) => {
 		if (ele.length > 0) {
 			res.push({
