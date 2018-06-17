@@ -3,9 +3,9 @@
  * createTime   : 2017/12/7 15:38
  * description  :
  */
-import LoadAble from 'react-loadable'
-import {wrapPage,LoadingPage} from 'compoments'
-/*import Home from './home'*/
+//import LoadAble from 'react-loadable'
+import {wrapPage} from 'compoments'
+import Home from './home'
 import TaxDeclare from './taxDeclare'
 import VatManage_Routes from './vatManage'
 import ReportManage_Routes from './reportManage'
@@ -14,16 +14,16 @@ import SystemManage_Routes from './systemManage'
 import Children_Routes from './taxDeclare/children/routes'
 import { getParentOptions } from 'config/routingAuthority.config'
 
-const AsyncHome = LoadAble({
+/*const AsyncHome = LoadAble({
     loader: () => import('./home'),
     loading: LoadingPage,
-});
+});*/
 
 const PATH = '/web';
 const routes = [
     {
         path:`${PATH}`,
-        component:wrapPage('首页',AsyncHome),
+        component:wrapPage('首页',Home),
         name:'首页',
         icon:'user',
         exact:true,
