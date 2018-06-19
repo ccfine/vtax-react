@@ -58,6 +58,11 @@ const columns = context =>[
         render:(text)=>fMoney(text)
     },
     {
+        title: "税率",
+        dataIndex: "intaxRate",
+        render:(text)=>text && `${text}%`,
+    },
+    {
         title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
         render:(text)=>fMoney(text)
