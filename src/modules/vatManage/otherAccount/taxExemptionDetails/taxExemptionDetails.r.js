@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-16 17:25:35
+ * @Last Modified time: 2018-06-19 09:34:41
  *
  */
 import React, { Component } from 'react'
@@ -96,13 +96,12 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     dataIndex: 'amount',
                     className:'table-money',
                     render:(text,record)=>{
-                        if(disabled){
-                            return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
-                                <NumericInputCell
+                        if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                            return <NumericInputCell
                                     fieldName={`list[${record.id}].amount`}
                                     initialValue={text}
                                     getFieldDecorator={getFieldDecorator}
-                                /> : text
+                                />
                         }else{
                             return record.amount ? fMoney(parseFloat(text)) : text
                         }
@@ -113,13 +112,12 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     dataIndex:'taxAmount',
                     className:'table-money',
                     render:(text,record)=>{
-                        if(disabled){
-                            return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
-                                <NumericInputCell
+                        if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                            return <NumericInputCell
                                     fieldName={`list[${record.id}].taxAmount`}
                                     initialValue={text}
                                     getFieldDecorator={getFieldDecorator}
-                                /> : text
+                                />
                         }else{
                             return record.taxAmount ? fMoney(parseFloat(text)) : text
                         }
@@ -131,16 +129,15 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     className:'table-money',
                     //render:text=>fMoney(text),
                     render:(text,record)=>{
-                        if(disabled){
-                            return (context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1)  ?
-                                <NumericInputCell
+                        if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                            return <NumericInputCell
                                     fieldName={`list[${record.id}].reduceTaxAmount`}
                                     initialValue={text}
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
                                         disabled:true
                                     }}
-                                /> : text
+                                />
                         }else{
                             return record.reduceTaxAmount ? fMoney(parseFloat(text)) : text
                         }
@@ -303,7 +300,7 @@ class TaxExemptionDetails extends Component{
         }
         if(incomeTaxAuth === 0){
             setFieldsValue({
-                [`list[${record.id}].reduceTaxAmount`]: fMoney(sum)
+                [`list[${record.id}].reduceTaxAmount`]: sum
             });
         }
     }
@@ -334,6 +331,7 @@ class TaxExemptionDetails extends Component{
                     columns:getColumns(this,getFieldDecorator,(disabled && declare.decAction==='edit')),
                     url:'/account/other/reduceTaxDetail/list',
                     onSuccess:(params)=>{
+                        this.props.form.resetFields();
                         this.setState({
                             filters:params
                         },()=>{
