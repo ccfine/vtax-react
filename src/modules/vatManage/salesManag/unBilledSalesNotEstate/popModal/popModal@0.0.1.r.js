@@ -1,6 +1,6 @@
 /*
- * @Author: liuchunxiu
- * @Date: 2018-05-15 16:12:23
+ * @Author: liuchunxiu 
+ * @Date: 2018-05-15 16:12:23 
  * @Last Modified by: liuchunxiu
  * @Last Modified time: 2018-06-07 11:53:57
  */
@@ -47,54 +47,8 @@ class PopModal extends Component {
         formLoading: false,
         record: {},
         visible: false,
-        typelist: [],
-        creditSubjectList:[],
+        typelist: []
     };
-
-    //查询未开票-非地产的科目列表
-    getLoadUnRealtyList=()=>{
-        request.get('/incomeAndTaxRateCorrespondence/loadUnRealtyList')
-            .then(({data})=>{
-                if(data.code ===200){
-
-                    this.setState({
-                        creditSubjectList:data.data.map(item=>{
-                            return {
-                                ...item,
-                                text: item.name,
-                                value: item.code
-                            }
-                        })
-                    })
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            });
-    }
-    //查询未开票-非地产的科目列表
-    getStagesList=(projectId,stagesId,creditSubjectCode,cb)=>{
-        request.get(`/project/stages/${projectId}`)
-            .then(({data})=>{
-                if(data.code ===200){
-                    let taxMethod = data.data.records.filter(item=>item.id === stagesId)[0].taxMethod;
-                    let nList = this.state.creditSubjectList.filter(item=>item.code === creditSubjectCode)[0];
-                    let taxRate = 0;
-                    if(parseInt(taxMethod, 0) === 1){
-                        taxRate = nList.commonlyTaxRate
-                    } else {
-                        taxRate = nList.simpleTaxRate
-                    }
-                    cb && cb(taxRate)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            });
-    }
-    componentDidMount() {
-        this.getLoadUnRealtyList()
-    }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
@@ -138,59 +92,46 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
-
                 // 提交数据
                 values.month = values.month.format('YYYY-MM');
-                //纳税主体
+                //处理下拉数据
                 if (values.main) {
                     values.mainId = values.main.key;
                     values.mainName = values.main.label;
                     values.main = undefined;
                 }
-                // 项目
+                // 处理应税项目
                 if (values.project) {
                     values.projectId = values.project.key;
                     values.projectName = values.project.label;
                     values.project = undefined;
                 }
-                // 项目分期
+                // 处理转出项目
                 if (values.stages) {
                     values.stagesId = values.stages.key;
                     values.stagesName = values.stages.label;
                     values.stages = undefined;
                 }
-                // 科目
-                if(values.creditSubject){
-                    values.creditSubjectCode = values.creditSubject.key;
-                    values.creditSubjectName = values.creditSubject.label;
-                    values.creditSubject = undefined;
+
+                let obj = Object.assign({}, this.state.record, values);
+
+                let result, sucessMsg;
+                if (this.props.action === "modify") {
+                    result = request.put(
+                        "/account/notInvoiceUnSale/realty/update",
+                        obj
+                    );
+                    sucessMsg = "修改成功";
+                } else if (this.props.action === "add") {
+                    result = request.post(
+                        "/account/notInvoiceUnSale/realty/add",
+                        obj
+                    );
+                    sucessMsg = "添加成功";
                 }
 
-
-               // 当项目分期的taxMethod=2 取 科目税率对应表的simpleTaxRate为税率。 项目分期的taxMethod=1 取 科目税率对应表的commonlyTaxRate为税率。
-
-                this.getStagesList(values.projectId,values.stagesId,values.creditSubjectCode,(taxRate)=>{
-
-                    let obj = Object.assign({}, this.state.record, {...values,taxRate:taxRate});
-                    console.log(obj)
-
-                    let result, sucessMsg;
-                    if (this.props.action === "modify") {
-                        result = request.put(
-                            "/account/notInvoiceUnSale/realty/update",
-                            obj
-                        );
-                        sucessMsg = "修改成功";
-                    } else if (this.props.action === "add") {
-                        result = request.post(
-                            "/account/notInvoiceUnSale/realty/add",
-                            obj
-                        );
-                        sucessMsg = "添加成功";
-                    }
-
-                    this.setState({ loading: true, formLoading: true });
-                    result &&
+                this.setState({ loading: true, formLoading: true });
+                result &&
                     result
                         .then(({ data }) => {
                             if (data.code === 200) {
@@ -212,15 +153,13 @@ class PopModal extends Component {
                                 formLoading: false
                             });
                         });
-                });
-
             }
         });
     }
     render() {
         const readonly = this.props.action === "look";
         // const NotModifyWhenEdit = this.props.action === "modify";
-        let { record = {}, creditSubjectList } = this.state,
+        let { record = {} } = this.state,
             {declare,form} = this.props;
         const { getFieldValue } = form;
         let title = "查看";
@@ -229,6 +168,7 @@ class PopModal extends Component {
         } else if (this.props.action === "modify") {
             title = "编辑";
         }
+
         return (
             <Modal
                 title={title}
@@ -267,9 +207,9 @@ class PopModal extends Component {
                                     ...setComItem(
                                         record.mainId
                                             ? {
-                                            key: record.mainId,
-                                            label: record.mainName
-                                        }
+                                                  key: record.mainId,
+                                                  label: record.mainName
+                                              }
                                             : (declare?{key:declare.mainId}:undefined),
                                         readonly || !!declare,
                                         true,
@@ -301,12 +241,12 @@ class PopModal extends Component {
                                     ...setComItem(
                                         record && record.projectId
                                             ? {
-                                            label:
-                                            record.projectName ||
-                                            "",
-                                            key:
-                                            record.projectId || ""
-                                        }
+                                                  label:
+                                                      record.projectName ||
+                                                      "",
+                                                  key:
+                                                      record.projectId || ""
+                                              }
                                             : undefined,
                                         readonly,
                                         true,
@@ -326,8 +266,8 @@ class PopModal extends Component {
                                         fieldValueName: "id",
                                         doNotFetchDidMount: !declare,
                                         fetchAble:
-                                        (getFieldValue("main") &&
-                                        getFieldValue("main").key) || (record && record.mainId),
+                                            (getFieldValue("main") &&
+                                            getFieldValue("main").key) || (record && record.mainId),
                                         url: `/project/list/${(getFieldValue("main") && getFieldValue("main").key) || (record && record.mainId) ||
                                         (declare && declare.mainId)}`
                                     }
@@ -336,12 +276,12 @@ class PopModal extends Component {
                                     ...setComItem(
                                         record && record.stagesId
                                             ? {
-                                            label:
-                                            record.stagesName ||
-                                            "",
-                                            key:
-                                            record.stagesId || ""
-                                        }
+                                                  label:
+                                                      record.stagesName ||
+                                                      "",
+                                                  key:
+                                                      record.stagesId || ""
+                                              }
                                             : undefined,
                                         readonly,
                                         true,
@@ -361,13 +301,13 @@ class PopModal extends Component {
                                         fieldValueName: "id",
                                         doNotFetchDidMount: true,
                                         fetchAble:
-                                        (getFieldValue("project") &&
-                                        getFieldValue("project").key) || (record && record.projectId),
+                                            (getFieldValue("project") &&
+                                            getFieldValue("project").key) || (record && record.projectId),
                                         url: `/project/stages/${(getFieldValue(
                                             "project"
                                         ) &&
-                                        getFieldValue("project").key) || (record && record.projectId) ||
-                                        ""}`
+                                            getFieldValue("project").key) || (record && record.projectId) ||
+                                            ""}`
                                     }
                                 }
                             ])}
@@ -376,20 +316,29 @@ class PopModal extends Component {
                             {getFields(form, [
                                 {
                                     ...setComItem(
-                                        record.creditSubjectCode ? { key: record.creditSubjectCode, label: record.creditSubjectName } : undefined,
+                                        record.creditSubjectCode,
                                         readonly,
                                         true,
-                                        "请选择科目"
+                                        "请输入科目代码"
                                     ),
-                                    label: "科目",
-                                    fieldName: "creditSubject",
-                                    type: "select",
-                                    options: creditSubjectList,
-                                    componentProps: {
-                                        labelInValue: true,
-                                        disabled:readonly
-                                    },
-                                },{
+                                    label: "科目代码",
+                                    fieldName: "creditSubjectCode"
+                                },
+                                {
+                                    ...setComItem(
+                                        record.creditSubjectName,
+                                        readonly,
+                                        true,
+                                        "请输入科目名称"
+                                    ),
+                                    label: "科目名称",
+                                    fieldName: "creditSubjectName"
+                                }
+                            ])}
+                        </Row>
+                        <Row>
+                            {getFields(form, [
+                                {
                                     ...setComItem(
                                         record.creditAmount,
                                         readonly,
@@ -398,59 +347,59 @@ class PopModal extends Component {
                                     ),
                                     label: "金额",
                                     fieldName: "creditAmount",
-                                    type: "numeric",
+                                    type: "numeric"
                                 },
+                                {
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.taxRate,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请输入税率'
+                                            },{
+                                                pattern:/^100$|^\d{0,2}$/,
+                                                message:"请输入0~100之间的数字"
+                                            }
+                                        ]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly,
+                                        placeholder: "请输入税率（单位：%）"
+                                    },
+                                    label: "税率（%）",
+                                    fieldName: "taxRate",
+                                    type: "numeric",
+                                }
                             ])}
                         </Row>
-                        {
-                            this.props.action === 'look' && <div>
-                                <Row>
-                                    { getFields(form, [
-                                        {
-                                            span: "12",
-                                            formItemStyle: formItemLayout,
-                                            fieldDecoratorOptions: {
-                                                initialValue:record.taxRate,
-                                            },
-                                            componentProps: {
-                                                disabled: true,
-                                                placeholder: "请输入税率（单位：%）"
-                                            },
-                                            label: "税率（%）",
-                                            fieldName: "taxRate",
-                                            type: "numeric",
-                                        },{
-                                            ...setComItem(
-                                                record.taxAmount,
-                                                true,
-                                                false,
-                                                "请输入税额"
-                                            ),
-                                            label: "税额",
-                                            fieldName: "taxAmount",
-                                            type: "numeric"
-                                        },
-                                    ])}
-                                </Row>
-                                <Row>
-                                    { getFields(form, [
-                                        {
-                                            ...setComItem(
-                                                record.totalAmount,
-                                                true,
-                                                false,
-                                                "请输入价税合计"
-                                            ),
-                                            label: "价税合计",
-                                            fieldName: "totalAmount",
-                                            type: "numeric"
-                                        }
-                                    ])}
-                                </Row>
-                            </div>
-
-                        }
-
+                        <Row>
+                            {getFields(form, [
+                                {
+                                    ...setComItem(
+                                        record.taxAmount,
+                                        readonly,
+                                        true,
+                                        "请输入税额"
+                                    ),
+                                    label: "税额",
+                                    fieldName: "taxAmount",
+                                    type: "numeric"
+                                },
+                                {
+                                    ...setComItem(
+                                        record.totalAmount,
+                                        readonly,
+                                        true,
+                                        "请输入价税合计"
+                                    ),
+                                    label: "价税合计",
+                                    fieldName: "totalAmount",
+                                    type: "numeric"
+                                }
+                            ])}
+                        </Row>
                     </Form>
                 </Spin>
             </Modal>
