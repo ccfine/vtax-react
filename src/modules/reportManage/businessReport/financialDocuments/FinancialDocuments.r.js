@@ -272,7 +272,7 @@ export default class FinancialDocuments extends Component{
                                 {
                                     composeBotton([{
                                         type:'fileExport',
-                                        url:'/inter/financial/voucher/report/export',
+                                        url:'inter/financial/voucher/report/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1891002'],

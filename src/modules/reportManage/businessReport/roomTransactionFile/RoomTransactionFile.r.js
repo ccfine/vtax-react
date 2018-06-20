@@ -284,7 +284,7 @@ class RoomTransactionFile extends Component{
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'/output/room/files/report/export',
+                                url:'output/room/files/report/export',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:['1861002'],
