@@ -427,6 +427,15 @@ class InvoiceDataMatching extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'/output/invoice/marry/already/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1211002'],
+                            }])
+                        }
+                        {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'match',
                                 url:'/output/invoice/marry/already/automatic',
@@ -435,14 +444,6 @@ class InvoiceDataMatching extends Component{
                                 onSuccess:()=>{
                                     this.props.refreshTabs()
                                 }
-                            /*},{
-                                type:'fileExport',
-                                url:'output/invoice/marry/already/export',
-                                params:filters,
-                                title:'导出匹配列表',
-                                userPermissions:['1215004'],
-                                onSuccess:this.refreshTable
-                              */
                             },{
                                 type:'submit',
                                 url:'/output/invoice/marry/submit',

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-13 16:51:36
+ * @Last Modified time: 2018-06-20 15:09:37
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { Divider, Modal, message } from "antd";
 import { request,composeBotton } from "utils";
 import { SearchTable } from "compoments";
-import PopModal, { RoleModal, PermissionModal } from "./popModal";
+import PopModal, { RoleModal, PermissionModal,SimplePermissionModal } from "./popModal";
 const pointerStyleDelete = {
     cursor:'pointer',
     color:'red',
@@ -102,7 +102,7 @@ const getColumns = context => [
                             icon: 'setting',
                             title: '权限配置',
                             onSuccess: () => {
-                                context.setState({permissionVisible:true,permissionKey: Date.now(),permissionUserId: record.id})
+                                context.setState({simplePermissionVisible:true,simplePermissionKey: Date.now(),permissionUserId: record.id})
                             }
                         }])
                     }
@@ -177,9 +177,11 @@ class UserManage extends Component {
 
         permissionVisible: false,
         permissionKey: Date.now() + 3,
-        //permissionDefault: undefined,
         permissionId: undefined,
-        //permissionLoading:false,
+        
+        simplePermissionVisible: false,
+        simplePermissionKey: Date.now() + 4,
+        simplePermissionId: undefined,
 
         searchValues: undefined
     };
@@ -339,23 +341,43 @@ class UserManage extends Component {
                     updateKey={this.state.roleModalKey}
                     // loading={this.state.roleLoading}
                 />
+                <SimplePermissionModal
+                    userId={this.state.permissionUserId}
+                    orgId={
+                        this.state.searchValues &&
+                        this.state.searchValues["orgId"]
+                    }
+                    updateKey={this.state.simplePermissionKey}
+                    visible={this.state.simplePermissionVisible}
+                    toggleModalVisible={visible => {
+                        this.setState({
+                            simplePermissionVisible: visible,
+                            simplePermissionKey: Date.now()
+                        });
+                    }}
+                    togglePermissionModalVisible={visible => {
+                        this.setState({
+                            permissionVisible: visible,
+                            permissionKey: Date.now()
+                        });
+                    }}
+                    />
                 <PermissionModal
                     userId={this.state.permissionUserId}
                     orgId={
                         this.state.searchValues &&
                         this.state.searchValues["orgId"]
                     }
-                    // defaultFields={this.state.permissionDefault}
                     toggleModalVisible={visible => {
                         this.setState({
                             permissionVisible: visible,
-                            permissionKey: Date.now()
+                            permissionKey: Date.now(),
+                            simplePermissionKey:Date.now(),
                         });
                     }}
                     updateKey={this.state.permissionKey}
                     visible={this.state.permissionVisible}
                     editAble={true}
-                    // loading={this.state.permissionLoading}
                 />
             </SearchTable>
         );

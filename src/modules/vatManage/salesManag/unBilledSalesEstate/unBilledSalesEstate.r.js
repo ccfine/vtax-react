@@ -288,6 +288,15 @@ class unBilledSalesEstate extends Component{
                             JSON.stringify(filters) !== "{}" && <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         }
                         {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'/account/output/notInvoiceSale/realty/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1351002'],
+                            }])
+                        }
+                        {
                             (disabled && declare.decAction==='edit') && composeBotton([
                             {
                                 type:'reset',

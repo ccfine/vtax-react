@@ -357,6 +357,15 @@ class SalesInvoiceCollection extends Component {
                                     listMainResultStatus(statusParam)
                                 }
                                 {
+                                    JSON.stringify(filters)!=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'output/invoice/collection/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1061002'],
+                                    }])
+                                }
+                                {
                                     composeBotton([{
                                         type:'fileExport',
                                         url:'output/invoice/collection/download',

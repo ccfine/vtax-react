@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-12 16:28:11
+ * @Last Modified time: 2018-06-20 16:30:30
  */
 import React, { Component } from "react";
 import { Form, Modal, message, Spin,Alert,Row,Col } from "antd";
@@ -82,9 +82,10 @@ class PermissionModal extends Component {
 
                 this.setState({ submitLoading: true });
                 request
-                    .post(`/sysUser/assignPermission/${values.orgId}`, {
+                    .post(`/sysUser/assignPermission`, {
                         options: params,
-                        id: this.props.userId
+                        id: this.props.userId,
+                        orgId:values.orgId,
                     })
                     .then(({ data }) => {
                         if (data.code === 200) {
