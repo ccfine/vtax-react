@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import {Row,Card,message} from 'antd'
 import moment from 'moment';
-import {request,getFields,regRules,requestDict,setFormat} from 'utils'
+import {request,getFields,requestDict,setFormat} from 'utils'
 import './styles.less'
 
 class BasicInfo extends Component {

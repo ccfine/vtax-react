@@ -315,7 +315,6 @@ class PopModal extends Component {
                                 },
                                 {
                                     span: "12",
-                                    type: "input",
                                     formItemStyle: formItemLayout,
                                     label: "日期",
                                     fieldName: "taxDate",
