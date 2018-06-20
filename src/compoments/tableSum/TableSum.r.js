@@ -21,18 +21,22 @@ export default class TableSum extends React.Component {
     render() {
         return (
             <Table
+                size="default"
                 columns={this.props.columns}
                 dataSource={this.props.data}
                 scroll={this.props.scroll}
+                {...this.props.tableOneOption}
                 bordered
                 footer={() => (
                     <div>
                         <Table
+                            size="default"
                             columns={this.props.columns}
                             dataSource={this.props.summaryData}
                             pagination={false}
                             showHeader={false}
                             scroll={this.props.scroll}
+                            {...this.props.tableTwoOption}
                             bordered
                         />
                     </div>
