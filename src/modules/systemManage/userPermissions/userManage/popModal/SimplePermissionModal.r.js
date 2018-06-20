@@ -255,14 +255,14 @@ class SimPlePermissionModal extends React.Component{
                         <Button onClick={this.switchSenior} size='small' type='default' style={{width:'100%',marginTop:10}}>高级</Button>
                     </Content>
                     <Footer style={{backgroundColor:'#FFF',paddingBottom:25}}>
-                        <FormItem
+                        {/* <FormItem
                                 wrapperCol={{
                                     span:24
                                 }}>
                             {getFieldDecorator('isAll')(<Checkbox style={{lineHeight:'1.5'}} >
                                 用户所属区域继承本次权限设置
                             </Checkbox>)}
-                        </FormItem>
+                        </FormItem> */}
                         <Button onClick={this.handleOk} loading={submitLoading} size='small' type='primary' style={{width:'100%'}}>确定</Button>
                         <Button onClick={this.handleCancel} size='small' type='default' style={{width:'100%',marginTop:10}}>取消</Button>
                     </Footer>
