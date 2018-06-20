@@ -9,7 +9,7 @@ import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
 import BeginDataCollect from './beginDataCollect'
-import TableSumDisplay from '../../../compoments/tableSum'
+/*import TableSum from '../../../compoments/tableSum'*/
 /*import FinancialDocumentsBeginData from './financialDocumentsBeginData'
 import RoomTransactionFile from './roomTransactionFile'*/
 import strategies from 'config/routingAuthority.config'
@@ -60,9 +60,9 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['beginDataCollect'].options,
         exact:true,
-   /* },{
+    /*},{
         path:`${PATHS}/tableSum`,
-        component:wrapPage('表格合计组件',TableSumDisplay),
+        component:wrapPage('表格合计组件',TableSum),
         name:'表格合计组件',
         icon:{
             url:`${ICON_URL_PATH}declareParameter.svg`,
