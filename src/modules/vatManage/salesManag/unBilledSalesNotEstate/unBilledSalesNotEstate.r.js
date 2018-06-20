@@ -53,7 +53,10 @@ const columns = (context) => [
             obj.props.rowSpan = rowSpan;
 
             return obj;
-        }
+        },
+        footer: (data) => {
+            return <div>Summary: {data.taxMethod}</div>
+        },
     }, {
         title: "税率",
         dataIndex: "taxRate",

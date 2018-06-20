@@ -156,6 +156,14 @@ const requestResultStatus = async (url,filters,callback)=>{
     callback(result)
 }
 
+/**
+ * 判断是否为空
+ * @param val {string} 字符串
+ */
+const isEmpty = val=> {
+    return val === null || val === undefined || val.trim() === ''
+}
+
 export {
     regRules,
     request,
@@ -172,4 +180,5 @@ export {
     setFormat,
     parseJsonToParams,
     requestResultStatus,
+    isEmpty,
 }

@@ -13,6 +13,7 @@ import {SearchTable,TableTotal} from 'compoments'
 import PopModal from "./popModal";
 import moment from 'moment';
 import { NumericInputCell,SelectCell } from 'compoments/EditableCell'
+import { BigNumber } from "bignumber.js";
 const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
@@ -289,9 +290,10 @@ class TaxExemptionDetails extends Component{
        // 是 -- -减免税金额显示为金额的值  :0 否 1是
        // 否  减免税金额显示为 金额加税额的合计
         const {getFieldValue,setFieldsValue} = this.props.form
-        let amount = isNaN(parseFloat(getFieldValue(`list[${record.id}].amount`))) ? 0 : parseFloat(getFieldValue(`list[${record.id}].amount`));
-        let taxAmount = isNaN(parseFloat(getFieldValue(`list[${record.id}].taxAmount`))) ? 0 : parseFloat(getFieldValue(`list[${record.id}].taxAmount`));
-        let sum = amount + taxAmount;
+
+        let amount = new BigNumber(getFieldValue(`list[${record.id}].amount`));
+        let taxAmount = new BigNumber(getFieldValue(`list[${record.id}].taxAmount`));
+        let sum = amount.plus(taxAmount);
         let incomeTaxAuth = parseInt(value, 0);
         if(incomeTaxAuth === 1){
             setFieldsValue({
@@ -310,8 +312,6 @@ class TaxExemptionDetails extends Component{
         const {getFieldDecorator} = this.props.form;
         const { declare } = this.props;
         let disabled = !!declare;
-
-
 
         return(
             <SearchTable

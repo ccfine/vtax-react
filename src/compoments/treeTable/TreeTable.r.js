@@ -176,7 +176,7 @@ class TreeTable extends Component{
                         {...cardTableOption.cardProps}
                     >
                         <Row gutter={24}>
-                            <Col span={6}>
+                            <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[0]) || 6}>
                                 <Card
                                     extra={treeCardOption.extra || null}
                                     //style={{marginTop:10}}
@@ -195,7 +195,7 @@ class TreeTable extends Component{
                                     />
                                 </Card>
                             </Col>
-                            <Col span={18}>
+                            <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[1]) || 18}>
                                 <Card
                                     extra={tableOption.extra || null}
                                     //style={{marginTop:10}}
