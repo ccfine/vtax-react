@@ -97,7 +97,12 @@ class SimPlePermissionModal extends React.Component{
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.updateKey !== this.props.updateKey){
-            nextProps.orgId && this.fetchPermissionByUserId(nextProps)
+            if(nextProps.orgId){
+                this.fetchPermissionByUserId(nextProps)
+            }else{
+                this.props.form.resetFields();
+                this.setState({checkedKeys:[]})
+            }
         }
     }
     onCheck = (checkedKeys) => {
@@ -135,11 +140,10 @@ class SimPlePermissionModal extends React.Component{
             });
     }
     handleCancel=()=>{
-        this.props.toggleModalVisible(false)
-
         // 关闭之前清楚下数据
         this.props.form.resetFields();
         this.setState({checkedKeys:[]})
+        this.props.toggleModalVisible(false)
     }
     handleOk =(e)=>{
         e.preventDefault();
@@ -159,13 +163,14 @@ class SimPlePermissionModal extends React.Component{
                     }
                 }
             })
-
+            
             this.setState({ submitLoading: true });
                 request
-                    .post(`/sysUser/assignPermission/${values.orgId}`, {
+                    .post(`/sysUser/assignPermission`, {
                         options: permissionIds,
+                        id: this.props.userId,
                         //判断下【用户所属区域继承本次权限设置】是否勾选，如果勾选，组织传空
-                        id: values.iaAll?'':this.props.userId
+                        orgId: values.isAll?'':values.orgId,
                     })
                     .then(({ data }) => {
                         if (data.code === 200) {
@@ -255,14 +260,16 @@ class SimPlePermissionModal extends React.Component{
                         <Button onClick={this.switchSenior} size='small' type='default' style={{width:'100%',marginTop:10}}>高级</Button>
                     </Content>
                     <Footer style={{backgroundColor:'#FFF',paddingBottom:25}}>
-                        {/* <FormItem
+                        <FormItem
                                 wrapperCol={{
                                     span:24
                                 }}>
-                            {getFieldDecorator('isAll')(<Checkbox style={{lineHeight:'1.5'}} >
+                            {getFieldDecorator('isAll',{
+                                valuePropName: 'checked',
+                                initialValue: false,})(<Checkbox style={{lineHeight:'1.5'}} >
                                 用户所属区域继承本次权限设置
                             </Checkbox>)}
-                        </FormItem> */}
+                        </FormItem>
                         <Button onClick={this.handleOk} loading={submitLoading} size='small' type='primary' style={{width:'100%'}}>确定</Button>
                         <Button onClick={this.handleCancel} size='small' type='default' style={{width:'100%',marginTop:10}}>取消</Button>
                     </Footer>
