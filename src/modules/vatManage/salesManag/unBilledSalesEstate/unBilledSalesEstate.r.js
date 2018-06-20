@@ -129,8 +129,8 @@ const columns = [
                 render:text=>text? `${text}%`: text,
             },
             {
-                title:'合同约定交付日期',
-                dataIndex:'agreeDate'
+                title:'房间交付日期',
+                dataIndex:'deliveryDate'
             },
         ]
     },

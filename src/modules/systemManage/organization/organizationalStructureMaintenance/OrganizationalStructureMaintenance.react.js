@@ -25,7 +25,7 @@ const columns =[
     },{
         title: '机构名称',
         dataIndex: 'orgName',
-    },{
+   /* },{
         title: '机构简称',
         dataIndex: 'orgShortName',
     },{
@@ -33,7 +33,7 @@ const columns =[
         dataIndex: 'location',
     },{
         title: '经营地址',
-        dataIndex: 'address',
+        dataIndex: 'address',*/
     },{
         title: '本级序号',
         dataIndex: 'orgLevel',
@@ -194,6 +194,7 @@ class OrganizationalStructureMaintenance extends Component {
                     }
                 }}
                 cardTableOption={{
+                    rowCol:[8,16],
                     cardProps:{
                         title:'组织架构维护',
                     },

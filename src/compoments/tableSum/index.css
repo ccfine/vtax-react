@@ -1,0 +1,8 @@
+#container {
+    margin: 24px;
+}
+
+.ant-table-body .ant-table-footer {
+    padding: 0;
+    overflow-x: hidden !important;
+}
