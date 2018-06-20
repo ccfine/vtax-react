@@ -116,11 +116,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入编码',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -137,11 +137,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入纳税主体',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -158,11 +158,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入社会信用代码',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -179,11 +179,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入管理单位公司注册证书营业执照号',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -328,9 +328,9 @@ class BasicInfo extends Component {
                                         rules: [
                                             /*{
                                                 required: true, message: '请输入经营期限',
-                                            },*/{
+                                            },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -381,11 +381,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operatingAddress,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'办公电话',
@@ -425,9 +425,9 @@ class BasicInfo extends Component {
                                         rules: [
                                             /*{
                                                 required: true, message: '请输入开户银行',
-                                            },*/{
+                                            },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -444,11 +444,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             /*{
                                                 required: true, message: '请输入银行账号',
-                                            },*/{
+                                            },{
                                                 pattern: regRules.number.pattern, message: regRules.number.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -463,9 +463,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.legalPerson,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -480,11 +480,11 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.idCard,
                                         rules: [
-                                            {
+                                            /*{
                                                 pattern: regRules.not_chinese.pattern, message: regRules.not_chinese.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -499,9 +499,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.financialOfficer,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -516,9 +516,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operater,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -565,9 +565,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.machineType,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -582,9 +582,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.currencyType,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -611,9 +611,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.receiptCurrencyType,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -672,9 +672,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.nationalTaxAddress,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -721,9 +721,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.localTaxAddress,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
