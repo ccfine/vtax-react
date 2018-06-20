@@ -290,7 +290,7 @@ class unBilledSalesEstate extends Component{
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'/account/output/notInvoiceSale/realty/export',
+                                url:'account/output/notInvoiceSale/realty/export',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:['1351002'],

@@ -200,7 +200,7 @@ const columns=[
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'/fixedAssetCard/export',
+                                        url:'fixedAssetCard/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511002'],

@@ -429,7 +429,7 @@ class InvoiceDataMatching extends Component{
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'/output/invoice/marry/already/export',
+                                url:'output/invoice/marry/already/export',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:['1211002'],
