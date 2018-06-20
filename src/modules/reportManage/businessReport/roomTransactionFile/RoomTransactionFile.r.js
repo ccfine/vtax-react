@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
+import {fMoney,composeBotton} from 'utils'
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -258,7 +258,11 @@ const columns = [
     },
 ]
 class RoomTransactionFile extends Component{
+    state={
+        filters:undefined,
+    }
     render(){
+        const {filters}=this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -267,10 +271,26 @@ class RoomTransactionFile extends Component{
                 tableOption={{
                     pageSize:10,
                     columns,
+                    onSuccess:(params)=>{
+                        this.setState({
+                            filters:params
+                        })
+                    },
                     cardProps:{
                         title:'房间交易档案'
                     },
                     url:'/output/room/files/report/list',
+                    extra:<div>
+                        {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'/output/room/files/report/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1861002'],
+                            }])
+                        }
+                    </div>,
                     scroll:{ x: 1800 },
                 }}
             >

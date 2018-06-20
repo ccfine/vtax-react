@@ -248,7 +248,7 @@ export default class FinancialDocuments extends Component{
             })
     }
     render(){
-        const {updateKey} = this.state;
+        const {updateKey,filters} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -271,6 +271,12 @@ export default class FinancialDocuments extends Component{
                             <div>
                                 {
                                     composeBotton([{
+                                        type:'fileExport',
+                                        url:'/inter/financial/voucher/report/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1891002'],
+                                    },{
                                         type: 'fileExport',
                                         url: 'inter/financial/voucher/report/download',
                                         onSuccess: this.refreshTable,

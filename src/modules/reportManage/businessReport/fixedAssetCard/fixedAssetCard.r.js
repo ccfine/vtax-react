@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-16 10:48:11
+ * @Last Modified time: 2018-06-20 11:46:54
  */
 import React, { Component } from "react";
 import {Modal,message} from 'antd';
@@ -267,7 +267,7 @@ export default class fixedAssetCard extends Component {
             })
     }
     render() {
-        let { updateKey } = this.state;
+        let { updateKey,filters } = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -288,6 +288,12 @@ export default class fixedAssetCard extends Component {
                         <span>
                             {
                                 composeBotton([{
+                                    type:'fileExport',
+                                    url:'/fixedAssetCard/report/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1871002'],
+                                },{
                                     type: 'fileExport',
                                     url: 'fixedAssetCard/report/download',
                                 },{

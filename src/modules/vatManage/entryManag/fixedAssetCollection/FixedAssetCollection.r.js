@@ -198,6 +198,15 @@ const columns=[
                                     listMainResultStatus(statusParam)
                                 }
                                 {
+                                    JSON.stringify(filters)!=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'/fixedAssetCard/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1511002'],
+                                    }])
+                                }
+                                {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'submit',
                                         url:'/fixedAssetCard/submit',
