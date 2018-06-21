@@ -3,8 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam} from 'utils'
-import moment from 'moment';
+import {fMoney} from 'utils'
 const formItemStyle={
     labelCol:{
         span:8
