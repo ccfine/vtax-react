@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:14:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-20 22:35:48
+ * @Last Modified time: 2018-06-21 09:20:25
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
@@ -90,6 +90,7 @@ export default class TabPage extends Component{
                                     text:'删除',
                                     btnType:'danger',
                                     loading:deleteLoading,
+                                    userPermissions:['1125003'],
                                     onClick:()=>{
                                         this.deleteData()
                                     }
