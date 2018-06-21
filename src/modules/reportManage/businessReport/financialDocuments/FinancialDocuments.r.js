@@ -66,6 +66,12 @@ const searchFields =[
             type:'taxMain',
             span:8,
             formItemStyle,
+            fieldDecoratorOptions:{
+                rules:[{
+                    required:true,
+                    message:'请选择纳税主体',
+                }]
+            },
         },{
             label:'查询期间',
             fieldName:'authMonth',
@@ -251,6 +257,7 @@ export default class FinancialDocuments extends Component{
         const {updateKey,filters} = this.state;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields
                 }}
@@ -259,7 +266,7 @@ export default class FinancialDocuments extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
-                    scroll:{ x: 1800 },
+                    scroll:{ x: 2200 },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,
@@ -270,22 +277,25 @@ export default class FinancialDocuments extends Component{
                         extra: (
                             <div>
                                 {
-                                    composeBotton([{
+                                    JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'inter/financial/voucher/report/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1891002'],
                                     },{
-                                        type: 'fileExport',
-                                        url: 'inter/financial/voucher/report/download',
-                                        onSuccess: this.refreshTable,
-                                    },{
                                         type:'fileImport',
                                         url:'/inter/financial/voucher/report/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields,
                                         userPermissions:['1891005'],
+                                    }])
+                                }
+                                {
+                                    composeBotton([{
+                                        type: 'fileExport',
+                                        url: 'inter/financial/voucher/report/download',
+                                        // onSuccess: this.refreshTable,
                                     }])
                                 }
                             </div>

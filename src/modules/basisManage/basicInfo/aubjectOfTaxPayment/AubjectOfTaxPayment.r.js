@@ -26,21 +26,17 @@ const getColumns = context=>[
     {
       title: "操作",
       render(text, record, index) {
-          let operates = [{
+        return composeBotton([{
             type:'action',
             title:'项目信息管理',
             icon:'file-add',
-            userPermissions:[],
             onSuccess:()=>context.showModal('project',record)
-        }];
-        parseInt(record.status,10) !== 2 && operates.push({
-                type:'action',
-                title:'编辑',
-                icon:'edit',
-                userPermissions:[],
-                onSuccess:()=>context.showModal('edit',record)
-        })
-        return composeBotton(operates);
+        },{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            onSuccess:()=>context.showModal('edit',record)
+        }]);
       },
       fixed: "left",
       width: "50px",
@@ -84,7 +80,7 @@ const getColumns = context=>[
 },{
     title: '更新时间',
     dataIndex: 'lastModifiedDate',*/
-},{
+}/*,{
     title: '当前状态',
     dataIndex: 'status',
     render:text=>{
@@ -105,7 +101,7 @@ const getColumns = context=>[
         }
         return t
     },
-}];
+}*/];
 class AubjectOfTaxPayment extends Component {
     state={
         /**
@@ -195,7 +191,6 @@ class AubjectOfTaxPayment extends Component {
                             composeBotton([{
                                 type:'add',
                                 icon:'plus',
-                                userPermissions:[],
                                 onClick:()=>this.showModal('add')
                             }])
                         }

@@ -11,7 +11,10 @@ const searchFields = (getFieldValue)=> [
         type:'taxMain',
         span:8,
         fieldDecoratorOptions:{
-
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
         },
     },
     {
@@ -259,12 +262,13 @@ const columns = [
 ]
 class RoomTransactionFile extends Component{
     state={
-        filters:undefined,
+        filters:{},
     }
     render(){
         const {filters}=this.state;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields
                 }}
