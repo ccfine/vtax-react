@@ -6,12 +6,13 @@
 /*import React from 'react'*/
 import {wrapPage} from 'compoments'
 import RoomTransactionFile from './roomTransactionFile'
-import PrePaidSalesQuery from './prePaidHousingSales'
+//import PrePaidSalesQuery from './prePaidHousingSales'
 import TaxReturnForm from './taxReturnForm'
 import FixedAssetCard from './fixedAssetCard'
 import FinancialDocuments from './financialDocuments'
 import IncomingInvoiceCollection from './incomingInvoiceCollection'
 import SalesInvoiceCollection from './salesInvoiceCollection'
+import AvailableArea from './availableArea'
 
 import strategies from 'config/routingAuthority.config'
 
@@ -62,7 +63,7 @@ const BusinessReport_Routes = [
         },
         authorityInfo:businessReport['roomTransactionFile'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/prePaidSalesQuery`,
         component:wrapPage('售房预缴查询',PrePaidSalesQuery),
         name:'售房预缴查询',
@@ -211,6 +212,16 @@ const BusinessReport_Routes = [
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['salesInvoiceCollection'].options,
+        exact:true,
+    },{
+        path:`${PATH}/availableArea`,
+        component:wrapPage('可售面积',AvailableArea),
+        name:'可售面积',
+        icon:{
+            url:`${ICON_URL_PATH}invoiceQuery.svg`,
+            backgroundColor:'#57C8F2'
+        },
+        authorityInfo:businessReport['availableArea'].options,
         exact:true,
     },{
         path:`${PATH}`,

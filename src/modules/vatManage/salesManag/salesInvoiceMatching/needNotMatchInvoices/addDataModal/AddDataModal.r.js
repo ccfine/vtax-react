@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
- *@Last Modified by: xiaminghua
- *@Last Modified time: 2018-04-28 
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-05-28 19:20:38
  *
  */
 import React,{Component} from 'react';
@@ -184,10 +184,13 @@ class ManualMatchRoomModal extends Component{
                 width={1000}
                 destroyOnClose={true}
                 bodyStyle={{
-                    backgroundColor:'#fafafa'
+                    backgroundColor:'#fafafa',
+                    maxHeight:420,
+                    overflowY:'auto',
                 }}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    top:'5%',
                 }}
                 footer={<div>
                     <Button style={{marginRight:5}} type='primary' onClick={this.addDataWithAsync} disabled={selectedRowKeys.length === 0}>确定</Button>

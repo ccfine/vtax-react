@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, Button, message, Spin, Row } from 'antd'
-import { getFields, request } from 'utils'
+import { getFields, request,composeBotton } from 'utils'
 import {ButtonWithFileUploadModal} from 'compoments'
 import moment from 'moment'
 const formItemLayout = {
@@ -138,17 +138,25 @@ class PopModal extends Component {
         let buttons = [];
 
         record && record.id
-        && buttons.push(<ButtonWithFileUploadModal
-            title="附件信息"
-            style={{
-                marginRight:10
-            }}
-            readOnly = {readonly}
-            size='default'
-            id={record.id}
-            key="fileInfo"
-            uploadUrl={`/other/file/file/upload/${record.id}`}
-        />)
+        && buttons.push(
+            composeBotton([{
+                type:'self',
+                userPermissions:['1091005'],
+                component:(
+                    <ButtonWithFileUploadModal
+                        title="附件信息"
+                        style={{
+                            marginRight:10
+                        }}
+                        readOnly = {readonly}
+                        size='default'
+                        id={record.id}
+                        key="fileInfo"
+                        uploadUrl={`/other/file/file/upload/${record.id}`}
+                    />
+                )
+            }])
+        )
 
         this.props.action !== "look"
         && buttons.push(<Button
@@ -159,12 +167,22 @@ class PopModal extends Component {
         this.props.action !== "look"
         && buttons.push(<Button
             key="back"
+            style={{marginRight:10}}
             onClick={this.hideSelfModal}>取消</Button>)
         this.props.action === "modify"
-        && buttons.push(<Button
-            type="danger"
-            key="delete"
-            onClick={this.showConfirm}>删除</Button>)
+
+        && buttons.push(
+            composeBotton([{
+                type:'delete',
+                btnType:'danger',
+                size:'default',
+                text:'删除',
+                userPermissions:['1091008'],
+                onClick:()=>{
+                    this.showConfirm()
+                }
+            }])
+        )
         this.props.action === "look"
         && buttons.push(<Button
             key="close"

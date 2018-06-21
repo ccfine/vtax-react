@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, Button, message, Spin, Row, Divider } from 'antd'
-import { getFields, request } from 'utils'
+import { getFields, request,composeBotton } from 'utils'
 import {ButtonWithFileUploadModal} from 'compoments'
 import moment from 'moment'
 const formItemLayout = {
@@ -145,18 +145,23 @@ class PopModal extends Component {
         let buttons = [];
 
         record && record.id
-        && buttons.push(<ButtonWithFileUploadModal
-            title="附件信息"
-            style={{
-                marginRight:10
-            }}
-            key="fileInfo" 
-            readOnly = {readonly}
-            size='default'
-            id={record.id}
-            deleteUrl={`/report/delete/file/${record.id}`}
-            uploadUrl={`/report/upload/${record.id}`}
-        />)
+        && buttons.push(composeBotton([{
+            type:'self',
+            userPermissions:['1091005'],
+            component:(
+                <ButtonWithFileUploadModal
+                            title="附件"
+                            style={{
+                                marginRight:10
+                            }}
+                            readOnly={readonly}
+                            size='default'
+                            id={record.id}
+                            deleteUrl={`/report/delete/file/${record.id}`}
+                            uploadUrl={`/report/upload/${record.id}`}
+                        />
+            )
+        }]))
 
         this.props.action !== "look"
         && buttons.push(<Button
@@ -169,10 +174,26 @@ class PopModal extends Component {
             key="back"
             onClick={this.hideSelfModal}>取消</Button>)
         this.props.action === "modify"
-        && buttons.push(<Button
-                type="danger"
-                key="delete"
-                onClick={this.showConfirm}>删除</Button>)
+        && buttons.push(composeBotton([{
+            type:'delete',
+            btnType:'danger',
+            size:'default',
+            text:'删除',
+            userPermissions:['1171008'],
+            onClick:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>this.showConfirm(),
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]))
         this.props.action === "look"
         && buttons.push(<Button
             key="close"
@@ -182,7 +203,8 @@ class PopModal extends Component {
                 title={title}
                 visible={this.props.visible}
                 width='900px'
-                bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
+                style={{top:'5%'}}
+                bodyStyle={{ maxHeight: 450, overflow: "auto" }}
                 onCancel={this.hideSelfModal}
                 footer={buttons}
                 maskClosable={false}

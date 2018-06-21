@@ -98,6 +98,11 @@ class PopModal extends Component {
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
                 width="700px"
+                style={{top:'5%'}}
+                bodyStyle={{
+                    height:450,
+                    overflowY:'auto',
+                }}
             >
                 <Spin spinning={loading}>
                     <Form onSubmit={this.handleSubmit}>
@@ -188,31 +193,7 @@ class PopModal extends Component {
                                             }
                                         ]
                                     }
-                                },
-                                {
-                                    label: "组织",
-                                    fieldName: "orgIds",
-                                    type: "asyncSelect",
-                                    span: 12,
-                                    componentProps: {
-                                        fieldTextName: "orgName",
-                                        fieldValueName: "orgId",
-                                        url: `/org/user_belong_organizations`,
-                                        selectOptions: {
-                                            mode: "multiple"
-                                        }
-                                    },
-                                    fieldDecoratorOptions: {
-                                        initialValue: defaultFields.orgIds,
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: "请选择组织"
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
+                                },{
                                     label: "微信号",
                                     fieldName: "wechat",
                                     type: "input",
@@ -266,7 +247,42 @@ class PopModal extends Component {
                                             }
                                         ]
                                     }
-                                }
+                                },{
+                                    label: "组织",
+                                    fieldName: "orgIds",
+                                    type: "asyncSelect",
+                                    span: 24,
+                                    formItemStyle: {
+                                        labelCol: {
+                                            span: 3
+                                        },
+                                        wrapperCol: {
+                                            span: 21
+                                        }
+                                    },
+                                    className:'fix-ie10-formItem-textArea',
+                                    componentProps: {
+                                        fieldTextName: "orgName",
+                                        fieldValueName: "orgId",
+                                        url: `/org/getOrganizations?size=500`,
+                                        selectOptions: {
+                                            mode: "multiple",
+                                            maxTagCount:50, //最多显示多少个 tag
+                                            showSearch:true,
+                                            // filterOption:false,
+                                            optionFilterProp:'children',
+                                        }
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue: defaultFields.orgIds,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: "请选择组织"
+                                            }
+                                        ]
+                                    }
+                                },
                             ])}
                             {modalType === "create" ? (
                                 <Col span={24}>

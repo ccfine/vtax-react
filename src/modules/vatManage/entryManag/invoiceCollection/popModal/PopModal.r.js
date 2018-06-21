@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
-import {request,regRules,fMoney,requestDict,getFields} from '../../../../../utils'
+import {request,regRules,fMoney,requestDict,getFields,setFormat} from 'utils'
 import {SynchronizeTable} from 'compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
@@ -124,7 +124,7 @@ class PopModal extends Component{
     getRegistrationType=()=>{
         requestDict('JXFPLX',result=>{
             this.setState({
-                invoiceTypeItem:this.setFormat(result)
+                invoiceTypeItem:setFormat(result)
             })
         })
     }
@@ -132,7 +132,7 @@ class PopModal extends Component{
     getIncomeStructureType=()=>{
         requestDict('JXJGFL',result=>{
             this.setState({
-                incomeStructureTypeItem:this.setFormat(result)
+                incomeStructureTypeItem:setFormat(result)
             })
         })
     }
@@ -285,16 +285,6 @@ class PopModal extends Component{
                 unit:item.unit,
                 unitPrice:parseFloat(`${item.unitPrice}`),
                 id: (item.id.indexOf('t') > -1) ? null : item.id
-            }
-        })
-    }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
             }
         })
     }

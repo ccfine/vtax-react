@@ -13,11 +13,13 @@ const initialState = fromJS({
     /**用户个人信息*/
     personal:{
         email:null ,// 邮箱
-        options: null,// 用户所有权限(查询详情时才加载数据)
         phoneNumber:null ,// 手机号码
         realname:null ,// 真实姓名
-        type:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
-        username:null ,// 用户名
+        typen:null ,// [类型]；8192为管理员；8189为组织管理员类型 ；1为普通员工；
+        userame:null ,// 用户名
+
+        //给权限用 用户所有权限(查询详情时才加载数据)
+        options:null,
     },
 
        /*
@@ -54,9 +56,13 @@ const initialState = fromJS({
 
     /**是否登录成功*/
     isAuthed:false,
+
+    //给纳税申报用的对象
+    declare:null,
+
 });
 
-export const {personal, token, isAuthed, orgId, loginType} = createActions({
+export const {personal, token, isAuthed, orgId, loginType, declare, options} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -78,6 +84,14 @@ export const {personal, token, isAuthed, orgId, loginType} = createActions({
         /**增加*/
         INCREMENT:type => type,
     },
+    DECLARE:{
+        /**增加*/
+        INCREMENT:info => info,
+    },
+    OPTIONS:{
+        /**增加*/
+        INCREMENT:info => info,
+    }
 })
 
 export default handleActions({
@@ -98,6 +112,9 @@ export default handleActions({
     },
     [loginType.increment]:(state,{payload})=>{
         return state.set('loginType',payload)
+    },
+    [declare.increment]:(state,{payload})=>{
+        return state.set('declare',payload)
     },
 }, initialState)
 
@@ -182,3 +199,23 @@ export const saveToken = dispatch => async (data) =>{
         console.log(err)
     }
 }
+
+export const savePersonal = dispatch => async (data) =>{
+    try {
+        dispatch(personal.increment(data))
+    }catch (err){
+        console.log(err)
+    }
+}
+
+
+//给纳税申报用的
+export const saveDeclare = dispatch => async (data) =>{
+    try {
+        dispatch(declare.increment(data))
+    }catch (err){
+        console.log(err)
+    }
+}
+
+

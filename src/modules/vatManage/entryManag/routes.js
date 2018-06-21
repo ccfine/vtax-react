@@ -5,15 +5,15 @@
  */
 import {wrapPage} from 'compoments'
 import InvoiceCollection from './invoiceCollection'
-import OtherDeductibleInputTaxDetails from './otherDeductibleInputTaxDetails'
+import FixedAssetCollection from './fixedAssetCollection'
+import OtherDeductionVoucher from './otherDeductionVoucher'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
- import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
- import InvoiceMatching from './invoiceMatching'
- import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
-* */
+import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
+import InvoiceMatching from './invoiceMatching'
+import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
-
+ * */
 import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
 import SimplifiedTaxInputTaxTransfer from '../entryTaxAccount/simplifiedTaxInputTaxTransfer'
 import RealEstateInputTaxCredit from '../entryTaxAccount/realEstateInputTaxCredit'
@@ -25,24 +25,24 @@ const entryManag = strategies['vatManage']['entryManag'];
 
 const EntryManag_Routes = [
     {
-        path:`${PATH}/invoiceCollection`,
-        component:wrapPage('进项发票采集',InvoiceCollection),
-        name:'进项发票采集',
+        path: `${PATH}/invoiceCollection`,
+        component: wrapPage('进项发票采集', InvoiceCollection),
+        name: '进项发票采集',
+        icon: {
+            url: `${ICON_URL_PATH}invoiceCollection.svg`,
+            backgroundColor: '#73CF2B'
+        },
+        authorityInfo: entryManag['invoiceCollection'].options,
+        exact: true,
+    },{
+        path:`${PATH}/fixedAssetCollection`,
+        component:wrapPage('固定资产信息采集',FixedAssetCollection),
+        name:'固定资产信息采集',
         icon:{
             url:`${ICON_URL_PATH}invoiceCollection.svg`,
             backgroundColor:'#73CF2B'
         },
-        authorityInfo:entryManag['invoiceCollection'].options,
-        exact:true,
-    },{
-        path:`${PATH}/otherDeductibleInputTaxDetails`,
-        component:wrapPage('其他可抵扣进项税明细',OtherDeductibleInputTaxDetails),
-        name:'其他可抵扣进项税明细',
-        icon:{
-            url:`${ICON_URL_PATH}invoiceMatching.svg`,
-            backgroundColor:'#4DC1F0'
-        },
-        authorityInfo:entryManag['otherDeductibleInputTaxDetails'].options,
+        authorityInfo:entryManag['fixedAssetCollection'].options,
         exact:true,
     /*},{
         path:`${PATH}/invoiceMatching`,
@@ -64,6 +64,16 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['inputTaxDetails'].options,
         exact:true,
+    },{
+        path:`${PATH}/otherDeductionVoucher`,
+        component:wrapPage('其他扣税凭证',OtherDeductionVoucher),
+        name:'其他扣税凭证',
+        icon:{
+            url:`${ICON_URL_PATH}invoiceMatching.svg`,
+            backgroundColor:'#4DC1F0'
+        },
+        authorityInfo:entryManag['otherDeductionVoucher'].options,
+        exact:true,
   /*},{
         path:`${PATH}/inputTaxStructure`,
         component:wrapPage('进项税额结构台账',InputTaxStructure),
@@ -72,7 +82,7 @@ const EntryManag_Routes = [
             url:`${ICON_URL_PATH}inputTaxStructure.svg`,
             backgroundColor:'#6CCCCA'
         },
-        exact:true,*/
+        exact:true,
     },{
         path:`${PATH}/inputTaxOnFixedAssets`,
         component:wrapPage('固定资产进项税额台账',InputTaxOnFixedAssets),
@@ -83,7 +93,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['inputTaxOnFixedAssets'].options,
         exact:true,
-    /*},{
+    },{
         path:`${PATH}/interimContractInputTaxTransferredOut`,
         component:wrapPage('跨期合同进项税额转出台账',InterimContractInputTaxTransferredOut),
         name:'跨期合同进项税额转出台账',

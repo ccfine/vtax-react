@@ -74,12 +74,26 @@ const columns = [
             <p className="apply-form-list-p2">认证标记</p>
         </div>,
         dataIndex: 'authFlag',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.authStatus}</p>
-            </div>
-        )
+        render:(text,record)=>{
+            let txt = '';
+            switch (text) {
+                case "1":
+                    txt = "需要";
+                    break;
+                case "0":
+                    txt = "不需要";
+                    break;
+                default:
+                    txt = text;
+                    break;
+            }
+            return(
+                <div>
+                    <p className="apply-form-list-p1">{txt}</p>
+                    <p className="apply-form-list-p2">{record.authStatus}</p>
+                </div>
+            )
+        }
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">发票号码</p>
@@ -138,27 +152,13 @@ const columns = [
             </div>
         )
     },{
-        title: '计税方法',
-        dataIndex: 'taxMethod',
-        render:text=>{
-            //1一般计税方法，2简易计税方法 ,
-            text = parseInt(text,0);
-            if(text===1){
-                return '一般计税方法'
-            }
-            if(text ===2){
-                return '简易计税方法'
-            }
-            return text;
-        }
-    },{
         title: '开票日期',
         dataIndex: 'billingDate',
     },{
         title: '购货单位名称',
         dataIndex: 'purchaseName',
     },{
-        title: '销售单位名称',
+        title: '销货单位名称',
         dataIndex: 'sellerName',
     },{
         title: <div className="apply-form-list-th">
@@ -207,20 +207,42 @@ const columns = [
         dataIndex: 'totalAmount',
         render:text=>fMoney(text)
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">收款人</p>
-            <p className="apply-form-list-p2">开票人</p>
-        </div>,
-        dataIndex: 'payee',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.drawer}</p>
-            </div>
-        )
+
+        title: '匹配状态',
+        dataIndex: 'matchingStatus',
+        width:'60px',
+        render:text=>{
+            let txt = '';
+            switch (parseInt(text,0)) {
+                case 0:
+                    txt = "未匹配";
+                    break;
+                case 1:
+                    txt = "已经匹配";
+                    break;
+                case 2:
+                    txt = "无需匹配";
+                    break;
+                default:
+                    txt = text;
+                    break;
+            }
+            return txt
+        }
     },{
-        title: '复核',
-        dataIndex: 'checker'
+        title: '数据来源',
+        dataIndex: 'sourceType',
+        width:'60px',
+        render:text=>{
+            text = parseInt(text,0);
+            if(text===1){
+                return '手工采集'
+            }
+            if(text===2){
+                return '外部导入'
+            }
+            return text
+        }
     },{
         title: '备注',
         dataIndex: 'remark'
@@ -253,13 +275,13 @@ export default class IncomingInvoiceCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns,
                     cardProps:{
                         title:'进项发票采集'
                     },
-                    url:'/output/invoice/collection/inter/list',
-                    scroll:{ x: '120%' },
+                    url:'/income/invoice/collection/report/list',
+                    scroll:{ x: 1800},
                 }}
             />
 

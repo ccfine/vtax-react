@@ -3,8 +3,8 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,getUrlParam} from 'utils'
-import moment from 'moment';
+import {Modal,message} from 'antd'
+import {fMoney,composeBotton,request} from 'utils'
 const formItemStyle={
     labelCol:{
         span:8
@@ -13,20 +13,59 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = (disabled) => {
-    return [
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: '请选择认证月份'
+                }
+            ]
+        },
+    }
+]
+const searchFields =[
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:8,
             formItemStyle,
-            componentProps:{
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-            }
         },{
             label:'查询期间',
             fieldName:'authMonth',
@@ -35,15 +74,40 @@ const searchFields = (disabled) => {
             span:8,
             componentProps:{
                 format:'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-            },
+            }
         }
     ]
-}
-const columns=[
+const getColumns = context =>[
+    {
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:['1891008'],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    },
     {
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">纳税主体名称</p>
@@ -99,7 +163,6 @@ const columns=[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:'75px'
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -165,36 +228,69 @@ const columns=[
 export default class FinancialDocuments extends Component{
     state={
         updateKey:Date.now(),
+        filters:{}
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now(),
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
+    deleteRecord(record){
+        request.delete(`/inter/financial/voucher/report/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
     }
-
     render(){
-        const {updateKey} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {updateKey,filters} = this.state;
         return(
             <SearchTable
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
-                    columns:columns,
-                    cardProps:{
-                        title:'财务凭证'
+                    pageSize:10,
+                    columns:getColumns(this),
+                    url:'/inter/financial/voucher/report/list',
+                    scroll:{ x: 1800 },
+                    onSuccess: (params) => {
+                        this.setState({
+                            filters: params,
+                        });
                     },
-                    url:'/income/financeDetails/controller/voucherList',
+                    cardProps: {
+                        title: "财务凭证",
+                        extra: (
+                            <div>
+                                {
+                                    composeBotton([{
+                                        type:'fileExport',
+                                        url:'inter/financial/voucher/report/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1891002'],
+                                    },{
+                                        type: 'fileExport',
+                                        url: 'inter/financial/voucher/report/download',
+                                        onSuccess: this.refreshTable,
+                                    },{
+                                        type:'fileImport',
+                                        url:'/inter/financial/voucher/report/upload',
+                                        onSuccess:this.refreshTable,
+                                        fields:fields,
+                                        userPermissions:['1891005'],
+                                    }])
+                                }
+                            </div>
+                        )
+                    },
                 }}
             />
 

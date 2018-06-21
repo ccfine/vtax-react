@@ -6,20 +6,18 @@
 import {wrapPage} from 'compoments'
 
 import DataDictionaryMaintain from './dataDictionaryMaintain'
-import TaxReturnsCustom from './taxReturnsCustom'
-import OtherReportsAreCustom from './otherReportsAreCustom'
+/*import TaxReturnsCustom from './taxReturnsCustom'
+import OtherReportsAreCustom from './otherReportsAreCustom'*/
 import TaxClassificationCode from './taxClassificationCode'
 import TaxableItems from './taxableItems'
 import SubjectRateRela from './subjectRateRela'
-import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/';
 const PATHS = '/web/systemManage/systemMaintain';
-const systemMaintain = strategies['systemManage']['systemMaintain'];
 
 const SystemMaintain_Routes = [
     {
-        path:`${PATHS}/taxReturnsCustom`,
+    /*    path:`${PATHS}/taxReturnsCustom`,
         component:wrapPage('纳税申报表自定义',TaxReturnsCustom),
         name:'纳税申报表自定义',
         icon:{
@@ -38,7 +36,7 @@ const SystemMaintain_Routes = [
         },
         authorityInfo:systemMaintain['otherReportsAreCustom'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATHS}/dataDictionaryMaintain`,
         component:wrapPage('数据字典维护',DataDictionaryMaintain),
         name:'数据字典维护',
@@ -46,7 +44,6 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}dataDictionaryMaintain.svg`,
             backgroundColor:'#56C7F3'
         },
-        authorityInfo:systemMaintain['dataDictionaryMaintain'].options,
         exact:true,
     },{
         path:`${PATHS}/taxClassificationCode`,
@@ -56,7 +53,6 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}taxClassificationCode.svg`,
             backgroundColor:'#6CCCCA'
         },
-        authorityInfo:systemMaintain['taxClassificationCode'].options,
         exact:true,
     },{
         path:`${PATHS}/taxableItems`,
@@ -66,13 +62,12 @@ const SystemMaintain_Routes = [
             url:`${ICON_URL_PATH}taxClassificationCode.svg`,
             backgroundColor:'#6CCCCA'
         },
-        authorityInfo:systemMaintain['taxableItems'].options,
         exact:true,
     },
     {
         path:`${PATHS}/subjectRateRela`,
-        component:wrapPage('主营业收入科目税率对应表',SubjectRateRela),
-        name:'主营业收入科目税率对应表',
+        component:wrapPage('科目税率对应表',SubjectRateRela),
+        name:'科目税率对应表',
         icon:{
             url:`${ICON_URL_PATH}subjectRateRela.svg`,
             backgroundColor:'#6CCCCA'

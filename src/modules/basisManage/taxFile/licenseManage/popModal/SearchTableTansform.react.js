@@ -19,7 +19,7 @@ class SearchTable extends Component{
              * params条件，给table用的
              * */
             filters:{
-                pageSize:20
+                //pageSize:20
             },
 
             /**
@@ -93,18 +93,18 @@ class SearchTable extends Component{
                             <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                                 <Row>
                                     {
-                                        searchOption && searchOption.fields && 
+                                        searchOption && searchOption.fields &&
                                         getFields(this.props.form,searchOption.fields)
                                     }
 
                                     {
-                                        searchOption && searchOption.fields && 
+                                        searchOption && searchOption.fields &&
                                         (<Col span={8}>
                                         <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
                                         <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>this.props.form.resetFields()}>重置</Button>
                                         </Col>)
                                     }
-                                    <Col style={{paddingTop:5}} span={actionOption.span||2} offset={(searchOption && searchOption.fields)?6:(actionOption.span?(24-actionOption.span):22)}>
+                                    <Col style={{paddingTop:5,textAlign:'right',paddingRight:'10px'}} span={actionOption.span||4} offset={(searchOption && searchOption.fields)?4:(actionOption.span?(24-actionOption.span):20)}>
                                         {actionOption.body}
                                     </Col>
                                 </Row>
@@ -114,7 +114,7 @@ class SearchTable extends Component{
                 }
                 <Card
                       extra={tableOption.extra || null}
-                      style={{marginTop:10}}
+                      style={{marginTop:10,border:'none'}}
                       {...tableOption.cardProps}
                 >
                     <AsyncTable url={tableOption.url}
@@ -122,7 +122,7 @@ class SearchTable extends Component{
                                 filters={filters}
                                 tableProps={{
                                     rowKey:record=>record.id,
-                                    pagination:true,
+                                    pagination:tableOption.pagination || false,
                                     pageSize:tableOption.pageSize || 10,
                                     size:'small',
                                     columns:tableOption.columns,

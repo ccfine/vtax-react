@@ -2,13 +2,9 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from 'react'
-import {Button, Icon } from 'antd'
 import { SearchTable } from 'compoments'
-import { fMoney } from 'utils'
+import { fMoney,composeBotton } from 'utils'
 import PopModal from './popModal'
-const buttonStyle = {
-    margin: '0 5px'
-}
 const searchFields = [
     {
         label: '纳税主体',
@@ -25,24 +21,29 @@ const getColumns = context => ([
     {
         title: '操作',
         render(text, record, index) {
-            return (<span>
-                <a style={{margin:"0 5px" }} onClick={() => {
+            return composeBotton([{
+                type:'action',
+                title:'编辑',
+                userPermissions:['1171004'],
+                onSuccess:() => {
                     context.setState({ visible: true, action: 'modify', opid: record.id });
-                }}>编辑</a>
-                <a style={{marginRight:5}} onClick={() => {
-                    context.setState({ visible: true, action: 'look', opid: record.id });
-                }}>查看</a>
-            </span>)
+                },
+                icon:'edit'
+            }])
         },
         fixed: 'left',
-        width: '75px',
-        dataIndex: 'action'
+        width: 50,
+        dataIndex: 'action',
+        className:'text-center',
     }, {
         title: '纳税主体编码',
         dataIndex: 'mainCode',
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',
+        render:(text,record)=><a title='查看详情' onClick={() => {
+            context.setState({ visible: true, action: 'look', opid: record.id });
+        }}>{text}</a>
     }, {
         title: '检查组',
         dataIndex: 'checkSets',
@@ -109,13 +110,20 @@ export default class InspectionReport extends Component {
                     url: '/report/list',
                     key:updateKey,
                     extra: <div>
-                        <Button size='small' style={buttonStyle} onClick={() => { this.setState({ visible: true, action: 'add', opid: undefined }) }}><Icon type="plus" />新增</Button>
+                        {
+                            composeBotton([{
+                                type:'add',
+                                icon:'plus',
+                                userPermissions:['1171003'],
+                                onClick:() => { this.setState({ visible: true, action: 'add', opid: undefined }) }
+                            }])
+                        }
                     </div>,
                     cardProps: {
                         title: '稽查报告'
                     },
                     scroll:{
-                        x:'130%'
+                        x:1500
                     }
                 }}
             >

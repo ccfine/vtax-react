@@ -2,22 +2,11 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney,getUrlParam,request} from 'utils'
-import {SearchTable,FileExport,TableTotal} from 'compoments'
+import {connect} from 'react-redux'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
-import {message} from 'antd';
-import { withRouter } from 'react-router'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -36,7 +25,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled)=> {
+const searchFields=(disabled,declare)=> {
     return [
         {
             label: '纳税主体',
@@ -48,7 +37,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -60,14 +49,14 @@ const searchFields=(disabled)=> {
         {
             label: '开票月份',
             type: 'monthPicker',
-            fieldName: 'billingDate',
+            fieldName: 'authMonth',
             span:6,
             componentProps:{
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -75,14 +64,6 @@ const searchFields=(disabled)=> {
                     }
                 ]
             }
-        },
-        {
-            label: '货物名称',
-            type: 'input',
-            fieldName: 'commodityName',
-            span:6,
-            formItemStyle,
-            fieldDecoratorOptions: {}
         },
         {
             label: '购货单位名称',
@@ -112,69 +93,93 @@ const searchFields=(disabled)=> {
         }
     ]
 }
-const getColumns = context =>[
-     {
+
+const getColumns = (context,disabled) =>{
+    let operates = (disabled && parseInt(context.state.statusParam.status, 0) === 1)?[{
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:'60px',
-        render: (text, record) => parseInt(context.state.dataStatus,0) === 1 ? (
-            <span style={{
-                color:'#1890ff',
-                cursor:'pointer'
-            }} onClick={()=>{
+        className:'text-center',
+        width:'50px',
+        render: (text, record) => composeBotton([{
+            type:'action',
+            title:'手工匹配',
+            userPermissions:['1215006'],
+            style:{color: '#1890ff'},
+            icon:'check-circle-o',
+            onSuccess:() => {
                 context.setState({
-                    visible:true,
-                    selectedData:record
+                    visible: true,
+                    selectedData: record
                 })
-            }}>
-                手工匹配
-            </span>
-        ) : ' '
-    },
+            }
+        }])
+    }]:[];
+    return [
+        ...operates
+     ,
     {
         title:'纳税人识别号',
         dataIndex:'purchaseTaxNum'
     },
     {
-        title:'购货单位名称',
-        dataIndex:'purchaseName'
+        title: '购货单位名称',
+        dataIndex: "purchaseName",
     },
     {
-        title:'发票代码',
-        dataIndex:'invoiceCode'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票代码</p>
+                <p className="apply-form-list-p2">发票号码</p>
+            </div>
+        ),
+        dataIndex: "invoiceCode",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.invoiceNum}</p>
+            </div>
+        )
     },
     {
-        title:'发票号码',
-        dataIndex:'invoiceNum'
-    },
-    {
-        title:'发票类型',
-        dataIndex:'invoiceType',
-        render:text=>{
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票类型</p>
+                <p className="apply-form-list-p2">开票日期</p>
+            </div>
+        ),
+        dataIndex: "invoiceType",
+        render: (text, record) => {
+            let typeText = '';
             if(text==='s'){
-                return '专票'
+                typeText = '专票'
             }
             if(text==='c'){
-                return '普票'
+                typeText = '普票'
             }
-            return text;
+            return (
+                <div>
+                    <p className="apply-form-list-p1">{typeText}</p>
+                    <p className="apply-form-list-p2">{record.billingDate}</p>
+                </div>
+            )
         }
     },
     {
-        title:'货物名称',
-        dataIndex:'commodityName'
-    },
-    {
-        title:'开票日期',
-        dataIndex:'billingDate',
-        width:'75px'
-    },
-    {
-        title:'金额',
-        dataIndex:'amount',
-        render:text=>fMoney(text),
-        className:'table-money'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">金额</p>
+                <p className="apply-form-list-p2">税额</p>
+            </div>
+        ),
+        dataIndex: "amount",
+        className:'table-money',
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{fMoney(text)}</p>
+                <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
+            </div>
+        )
     },
     {
         title:'税率',
@@ -183,48 +188,62 @@ const getColumns = context =>[
         className:'text-right'
     },
     {
-        title:'税额',
-        dataIndex:'taxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
         title:'价税合计',
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
         className:'table-money'
     },
     {
-        title:'规格型号',
-        dataIndex:'specificationModel'
-    },
-    {
         title:'匹配时间',
         dataIndex:'marryTime'
     },
     {
-        title:'客户名称',
-        dataIndex:'customerName'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">客户名称</p>
+                <p className="apply-form-list-p2">身份证号/纳税识别码</p>
+            </div>
+        ),
+        dataIndex: "customerName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
+            </div>
+        )
     },
     {
-        title:'身份证号/纳税识别码',
-        dataIndex:'taxIdentificationCode'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">楼栋名称</p>
+                <p className="apply-form-list-p2">单元</p>
+            </div>
+        ),
+        dataIndex: "buildingName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.element}</p>
+            </div>
+        )
+    }, {
+        title:'路址',
+        dataIndex:'htRoomName',
     },
     {
-        title:'楼栋名称',
-        dataIndex:'buildingName'
-    },
-    {
-        title:'单元',
-        dataIndex:'element'
-    },
-    {
-        title:'房号',
-        dataIndex:'roomNumber'
-    },
-    {
-        title:'房间编码',
-        dataIndex:'roomCode'
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">房号</p>
+                <p className="apply-form-list-p2">房间编码</p>
+            </div>
+        ),
+        dataIndex: "roomNumber",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.roomCode}</p>
+            </div>
+        )
     },
     {
         title:'成交总价',
@@ -247,21 +266,18 @@ const getColumns = context =>[
         }
     },
 ];
+}
 class UnmatchedData extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
-        searchFieldsValues:{
-
-        },
+        /*filters:{},*/
         selectedData:{},
-        hasData:false,
 
         /**
-         *修改状态和时间
+         *修改状态
          * */
-        dataStatus:'',
-        submitDate:'',
+        statusParam:'',
         totalSource:undefined,
     }
     toggleModalVisible=visible=>{
@@ -270,51 +286,29 @@ class UnmatchedData extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.searchFieldsValues
+        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
-        const {visible,tableKey,searchFieldsValues,selectedData,hasData,submitDate,dataStatus,totalSource} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {visible,tableKey,selectedData,statusParam,totalSource} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 style={{
                     marginTop:-16
                 }}
                 searchOption={{
-                    fields:searchFields(disabled),
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -325,37 +319,29 @@ class UnmatchedData extends Component{
                 tableOption={{
                     key:tableKey,
                     pageSize:10,
-                    columns:getColumns(this),
+                    columns:getColumns(this,disabled),
                     url:'/output/invoice/marry/unmatched/list',
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0
+                            filters:params
                         },()=>{
                             this.fetchResultStatus()
                         })
                     },
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
-                        <FileExport
-                            url={`output/invoice/marry/unmatched/export`}
-                            title="导出未匹配发票"
-                            size="small"
-                            setButtonStyle={{marginRight:5}}
-                            disabled={!hasData}
-                            params={
-                                searchFieldsValues
-                            }
-                        />
+                        {/*{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                type:'fileExport',
+                                url:'output/invoice/marry/unmatched/export',
+                                params:filters,
+                                title:'导出未匹配发票',
+                                userPermissions:['1215005'],
+                                onSuccess:this.refreshTable
+                            }],statusParam)
+                        }*/}
                         <TableTotal type={2} totalSource={totalSource} />
                     </div>,
                     onTotalSource: (totalSource) => {
@@ -364,13 +350,18 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x:'180%'
-                    }
+                        x:1200
+                    },
+                    cardProps:{
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>未匹配的发票列表</span>,
+                    },
                 }}
             >
-                <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }
 }
-export default withRouter(UnmatchedData)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(UnmatchedData)

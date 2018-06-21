@@ -1,5 +1,5 @@
 /**
- * Created by liurunbin on 2017/12/22.
+ * Created by liuliyuan on 2017/12/22.
  */
 import React,{Component} from 'react'
 import {Icon,Select,Modal,Tree,message} from 'antd'
@@ -188,21 +188,24 @@ class IndustryTree extends Component{
                 width={500}
                 footer={false}
                 style={{
-                    top:'40px',
+                    top:'5%',
+                }}
+                bodyStyle={{
+                    overflowY:'auto',
+                    minHeight:200,
+                    maxHeight:450,
                 }}
                 visible={visible}>
-                    <div style={{overflow:'scroll',height:'500px'}}>
-                        <Tree
-                            showLine
-                            onExpand={this.onExpand}
-                            expandedKeys={expandedKeys}
-                            autoExpandParent={autoExpandParent}
-                            onSelect={this.onSelect}
-                            selectedKeys={selectedKeys}
-                        >
-                                {this.renderTreeNodes(this.state.treeData)}
-                            </Tree>
-                    </div>
+                    <Tree
+                        showLine
+                        onExpand={this.onExpand}
+                        expandedKeys={expandedKeys}
+                        autoExpandParent={autoExpandParent}
+                        onSelect={this.onSelect}
+                        selectedKeys={selectedKeys}
+                    >
+                            {this.renderTreeNodes(this.state.treeData)}
+                        </Tree>
                 </Modal>
         </span>
 

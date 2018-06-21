@@ -3,12 +3,11 @@
  * 确认结转收入
  */
 import React, { Component } from 'react'
-import {Button,Icon,message,Modal} from 'antd'
+import {Button,Icon} from 'antd'
+import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,getUrlParam,request,listMainResultStatus} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import { withRouter } from 'react-router'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -28,19 +27,19 @@ const formItemStyle = {
         }
     }
 }
-const searchFields =(disabled)=>(getFieldValue)=> {
+const searchFields =(disabled,declare)=>(getFieldValue)=> {
     return [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 disabled,
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -51,16 +50,16 @@ const searchFields =(disabled)=>(getFieldValue)=> {
         },
         {
             label:'查询期间',
-            fieldName:'month',
+            fieldName:'authMonth',
             type:'monthPicker',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 format:'YYYY-MM',
                 disabled:disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -73,7 +72,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
@@ -87,7 +86,7 @@ const searchFields =(disabled)=>(getFieldValue)=> {
             label:'项目分期',
             fieldName:'stagesId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
@@ -126,7 +125,12 @@ const columns = [
             {
                 title:'税率',
                 dataIndex:'taxRate',
+                className:'text-right',
                 render:text=>text? `${text}%`: text,
+            },
+            {
+                title:'房间交付日期',
+                dataIndex:'deliveryDate'
             },
         ]
     },
@@ -210,19 +214,16 @@ class unBilledSalesEstate extends Component{
     state={
         tableKey:Date.now(),
         visible:false,
-        doNotFetchDidMount:true,
         searchTableLoading:false,
-        searchFieldsValues:{
+        filters:{
 
         },
         resultFieldsValues:{
 
         },
-        hasData:false,
 
-        statusParams:undefined,
+        statusParam:undefined,
 
-        dataSource:undefined,
         totalSource:undefined,
     }
     toggleSearchTableLoading = searchTableLoading =>{
@@ -240,78 +241,22 @@ class unBilledSalesEstate extends Component{
             tableKey:Date.now()
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({
-                doNotFetchDidMount:false
-            },()=>{
-                this.refreshTable()
-            })
-
-        }else{
-            this.setState({
-                doNotFetchDidMount:true
-            })
-        }
-    }
     fetchResultStatus = ()=>{
-        request.get('/account/output/notInvoiceSale/realty/listMain',{
-            params:{
-                ...this.state.searchFieldsValues,
-                authMonth:this.state.searchFieldsValues.month
-            }
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParams:data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
+        requestResultStatus('/account/output/notInvoiceSale/realty/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
-    recount = ()=>{
-        const { mainId,month:authMonth }  = this.state.resultFieldsValues;
-
-        Modal.confirm({
-            title: '友情提醒',
-            content: '确定要重算吗',
-            onOk : ()=> {
-                this.toggleSearchTableLoading(true)
-                request.put('/account/output/notInvoiceSale/realty/reset',{mainId, authMonth}
-                )
-                    .then(({data}) => {
-                        this.toggleSearchTableLoading(false)
-                        if(data.code===200){
-                            message.success('重算成功!');
-                            this.refreshTable()
-                        }else{
-                            message.error(`重算失败:${data.msg}`)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                        this.toggleSearchTableLoading(false)
-                    })
-            }
         })
     }
     render(){
-        const {tableKey,visible,searchFieldsValues={},hasData,doNotFetchDidMount,statusParams={},searchTableLoading,totalSource} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        const isSubmit = parseInt(statusParams.status,0)===2;
-        let submitIntialValue = {...searchFieldsValues,taxMonth:searchFieldsValues.month}
+        const {tableKey,visible,filters={},statusParam={},searchTableLoading,totalSource} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
-                doNotFetchDidMount={doNotFetchDidMount}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -327,10 +272,9 @@ class unBilledSalesEstate extends Component{
                     pageSize:10,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/realty/list',
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0,
+                            filters:params,
                             resultFieldsValues:params,
                         },()=>{
                             this.fetchResultStatus()
@@ -338,15 +282,42 @@ class unBilledSalesEstate extends Component{
                     },
                     extra:<div>
                         {
-                            hasData && listMainResultStatus(statusParams)
+                            listMainResultStatus(statusParam)
                         }
-                        <Button size="small" style={{marginRight:5}} disabled={!searchFieldsValues.month} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
-                        <Button onClick={this.recount} disabled={isSubmit} size='small' style={{marginRight:5}}>
-                            <Icon type="retweet" />
-                            重算
-                        </Button>
-                        <SubmitOrRecall disabled={!hasData || isSubmit} type={1} url="/account/output/notInvoiceSale/realty/submit" onSuccess={this.refreshTable} initialValue={submitIntialValue}/>
-                        <SubmitOrRecall disabled={!(hasData && isSubmit)} type={2} url="/account/output/notInvoiceSale/realty/revoke" onSuccess={this.refreshTable} initialValue={submitIntialValue}/>
+                        {
+                            JSON.stringify(filters) !== "{}" && <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
+                        }
+                        {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'account/output/notInvoiceSale/realty/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1351002'],
+                            }])
+                        }
+                        {
+                            (disabled && declare.decAction==='edit') && composeBotton([
+                            {
+                                type:'reset',
+                                url:'/account/output/notInvoiceSale/realty/reset',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                                userPermissions:['1351009'],
+                            },{
+                                type:'submit',
+                                url:'/account/output/notInvoiceSale/realty/submit',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                                userPermissions:['1351010'],
+                            },{
+                                type:'revoke',
+                                url:'/account/output/notInvoiceSale/realty/revoke',
+                                params:filters,
+                                onSuccess:this.refreshTable,
+                                userPermissions:['1351011'],
+                            }],statusParam)
+                        }
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {
@@ -393,9 +364,11 @@ class unBilledSalesEstate extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="汇总信息" params={searchFieldsValues} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="汇总信息" params={filters} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }
 }
-export default withRouter(unBilledSalesEstate)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(unBilledSalesEstate)

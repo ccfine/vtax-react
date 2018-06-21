@@ -143,8 +143,12 @@ class TreeTable extends Component{
                                             {/* onSubmit={this.handleSubmit} htmlType="submit" */}
                                             <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary"
                                                     onClick={()=>{
-                                                        this.handleSubmit()
-                                                        this.props.refreshTree();
+                                                        this.setState({
+                                                            filters:{}
+                                                        },()=>{
+                                                            this.handleSubmit()
+                                                            this.props.refreshTree();
+                                                        })
                                                     }}
                                             >查询</Button>
                                             <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
@@ -152,7 +156,7 @@ class TreeTable extends Component{
                                                 this.setState({
                                                     filters : { }
                                                 })
-                                                //this.props.refreshTree();
+                                                // this.props.refreshTree();
                                                 searchOption.onResetFields && searchOption.onResetFields();
 
                                                 //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
@@ -172,7 +176,7 @@ class TreeTable extends Component{
                         {...cardTableOption.cardProps}
                     >
                         <Row gutter={24}>
-                            <Col span={6}>
+                            <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[0]) || 6}>
                                 <Card
                                     extra={treeCardOption.extra || null}
                                     //style={{marginTop:10}}
@@ -191,7 +195,7 @@ class TreeTable extends Component{
                                     />
                                 </Card>
                             </Col>
-                            <Col span={18}>
+                            <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[1]) || 18}>
                                 <Card
                                     extra={tableOption.extra || null}
                                     //style={{marginTop:10}}

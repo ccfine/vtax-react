@@ -4,10 +4,14 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Button,Icon,Badge} from 'antd'
-import {SearchTable,FileExport} from 'compoments';
+import {SearchTable} from 'compoments';
+import {composeBotton} from 'utils'
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
+};
 const formItemStyle={
     labelCol:{
         span:8
@@ -22,46 +26,19 @@ const searchFields =(context) => [
         type:'taxMain',
         fieldName:'mainId',
         formItemStyle,
-        span:6,
-    /*},{
-        label:'办理进度',
-        type:'select',
-        fieldName:'status',
-        formItemStyle,
-        span:6,
-        options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
-            {
-                text:'申报办理',
-                value:'1'
-            },{
-                text:'申报审核',
-                value:'2'
-            },{
-                text:'申报审批',
-                value:'3'
-            },{
-                text:'申报完成',
-                value:'4'
-            },{
-                text:'归档',
-                value:'5'
-            },{
-                text:'流程终止',
-                value:'-1'
-            }
-        ],*/
+        span:8,
     },{
-        label:'所属期起止',
-        type:'rangePicker',
-        fieldName:'subordinatePeriod',
+        label:'所属期',
+        type:'monthPicker',
+        fieldName:'partTerm',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
         formItemStyle,
-        span:6,
+        span:8,
         options:[
             {
                 text:'增值税',
@@ -76,36 +53,82 @@ const searchFields =(context) => [
 
 const getColumns =(context)=>[
     {
+        title: "操作",
+        className:'text-center',
+        render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
+            return composeBotton([{
+                        type:'action',
+                        icon:'search',
+                        title:'查看申报',
+                        userPermissions:['1071002'],
+                        onSuccess:()=>{
+                            context.setState({
+                                record: record
+                            },() => {
+                                context.toggleApplyVisible(true);
+                            });
+                        }
+                    }])
+
+        },
+        fixed: "left",
+        width: "50px",
+        dataIndex: "action"
+    },{
         title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
-        render:text=>{
-            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠;
+        render:(text,record)=>{
+            //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
-                    t=<Badge count='申报办理' style={{ backgroundColor: '#44b973' }} />;
+                    t='申报办理';
                     break;
                 case 2:
-                    t=<Badge count='申报审核' style={{ backgroundColor: '#2783d8' }} />;
+                    t='申报审核';
                     break;
                 case 3:
-                    t=<Badge count='申报审批' style={{ backgroundColor: '#373ac6' }} />;
+                    t='申报审批';
                     break;
                 case 4:
-                    t=<Badge count='申报完成' style={{ backgroundColor: '#1795f6' }} />;
+                    t='申报完成';
                     break;
                 case 5:
-                    t=<Badge count='归档' style={{ backgroundColor: '#7a7e91' }} />;
+                    t='归档';
                     break;
                 case -1:
-                    t=<Badge count='流程终止' style={{ backgroundColor: '#ed2550' }} />;
+                    t='流程终止';
                     break;
                 default:
                 //no default
             }
             return t;
         }
+    },{
+        title: '纳税主体',
+        dataIndex: 'mainName',
+        render: (text, record) => (
+            <span
+                title="查看详情"
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState({
+                        modalConfig: {
+                            type: "view",
+                            id: record.id
+                        }
+                    },() => {
+                        context.toggleModalVisible(true);
+                    });
+                }}
+            >
+                {text}
+            </span>
+        ),
     }, {
         title: '上一步完成时间',
         dataIndex: 'lastModifiedDate',
@@ -115,9 +138,6 @@ const getColumns =(context)=>[
     },{
         title: '组织架构',
         dataIndex: 'orgName',
-    },{
-        title: '纳税主体',
-        dataIndex: 'mainName',
     },{
         title: '所属期',
         dataIndex: 'partTerm',
@@ -155,46 +175,45 @@ const getColumns =(context)=>[
 export default class CreateADeclare extends Component{
     state={
         visible:false, // 控制Modal是否显示
+        applyVisible:false,
+        record:undefined,
         updateKey:Date.now(),
-
-        filters:{},
-        dataSource:[],
-        selectedRowKeys:undefined,
-        selectedRows:[],
+        addPopModalKey:Date.now()+1,
+        applyDeclarationModalKey:Date.now()+2,
         modalConfig:{
             type:''
         },
-    }
-    toggleModalVisible=visible=>{
-        this.setState({
-            visible
-        })
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now(),
         })
     }
-    showModal=type=>{
-        this.toggleModalVisible(true)
+    toggleModalVisible = visible => {
         this.setState({
-            modalConfig:{
-                type,
-                id:this.state.selectedRowKeys
+            visible
+        });
+    };
+    showModal = type => {
+        this.toggleModalVisible(true);
+        this.setState({
+            modalConfig: {
+                type: type
             }
-        })
-    }
+        });
+    };
+    toggleApplyVisible = applyVisible => {
+        this.setState({
+            applyVisible
+        });
+    };
+
     render(){
-        const {updateKey,selectedRowKeys,selectedRows,filters,visible,dataSource,modalConfig} = this.state;
+        const {updateKey,addPopModalKey,applyDeclarationModalKey,visible,modalConfig,record,applyVisible} = this.state;
         return(
                 <SearchTable
                     searchOption={{
                         fields:searchFields(this),
-                        getFieldsValues:values=>{
-                            this.setState({
-                                filters:values
-                            })
-                        },
                         cardProps:{
                             style:{
                                 borderTop:0
@@ -206,27 +225,14 @@ export default class CreateADeclare extends Component{
                         pageSize:10,
                         columns:getColumns(this),
                         cardProps:{
-                            title:'列表信息'
+                            title:'创建申报'
                         },
                         url:'/tax/declaration/list',
-                        onRowSelect:(selectedRowKeys,selectedRows)=>{
-                            console.log(selectedRowKeys,selectedRows);
-                            this.setState({
-                                selectedRowKeys:selectedRowKeys[0],
-                                selectedRows,
-                            })
-                        },
-                        onSuccess:()=>{
-                            this.setState({
-                                selectedRowKeys:undefined,
-                                selectedRows:[],
-                            })
-                        },
-                        rowSelection:{
-                            type:'radio',
+                        scroll:{
+                            x:1300
                         },
                         extra: <div>
-                            <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
+                            {/*<Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
                                 <Icon type="plus" />
                                 创建申报
                             </Button>
@@ -238,50 +244,77 @@ export default class CreateADeclare extends Component{
                                 <Icon type="search" />
                                 查看申报
                             </Button>
+                             <FileExport
+                                 url='account/income/taxContract/adjustment/download'
+                                 title="下载附件"
+                                 size="small"
+                                 setButtonStyle={{marginRight:5}}
+                                 disabled={!selectedRowKeys}
+                             />
+                             <FileExport
+                                 url='tax/declaration/export'
+                                 title='导出'
+                                 setButtonStyle={{marginRight:5}}
+                                 disabled={!dataSource.length>0}
+                                 params={{
+                                 ...filters
+                                 }}
+                             />*/}
+
                             {
-                                selectedRows.length>0 &&  <ApplyDeclarationPopModal
-                                    title={`申报处理【${selectedRows[0].mainName}】 申报期间 【${selectedRows[0].subordinatePeriodStart} 至 ${ selectedRows[0].subordinatePeriodEnd}】`}
-                                    disabled={!selectedRowKeys}
-                                    selectedRowKeys={selectedRowKeys}
-                                    selectedRows={selectedRows}
-                                    onSuccess={()=>{
-                                        this.refreshTable()
-                                    }}
-                                    style={{marginRight:5}} />
+                                composeBotton([{
+                                    type:'add',
+                                    icon:'plus',
+                                    text:'创建申报',
+                                    userPermissions:['1071003'],
+                                    onClick: ()=>{
+                                        this.setState({
+                                            modalConfig: {
+                                                type: "add",
+                                                id: undefined
+                                            }
+                                        },() => {
+                                            this.toggleModalVisible(true);
+                                        });
+                                    }
+                                /*},{
+                                    type:'fileExport',
+                                    title:'下载附件',
+                                    url:'account/income/taxContract/adjustment/download',
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'fileExport',
+                                    title:'导出',
+                                    url:'tax/declaration/export',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                 */
+                                }])
                             }
-                            <FileExport
-                                url='account/income/taxContract/adjustment/download'
-                                title="下载附件"
-                                size="small"
-                                setButtonStyle={{marginRight:5}}
-                                disabled={!selectedRowKeys}
-                            />
-                            <FileExport
-                                url='tax/declaration/export'
-                                title='导出'
-                                setButtonStyle={{marginRight:5}}
-                                disabled={!dataSource.length>0}
-                                params={{
-                                    ...filters
-                                }}
-                            />
                         </div>,
-                        onDataChange:(dataSource)=>{
-                            this.setState({
-                                dataSource
-                            })
-                        }
                     }}
                 >
 
                     <PopModal
+                        key={addPopModalKey}
                         visible={visible}
                         modalConfig={modalConfig}
-                        selectedRowKeys={selectedRowKeys}
-                        selectedRows={selectedRows}
                         refreshTable={this.refreshTable}
                         toggleModalVisible={this.toggleModalVisible}
                     />
+
+                    {
+                        record && <ApplyDeclarationPopModal
+                            key={applyDeclarationModalKey}
+                            visible={applyVisible}
+                            title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
+                            record={{...record,decAction:'look'}}
+                            toggleApplyVisible={this.toggleApplyVisible}
+                            style={{marginRight:5}}
+                            url={'/tax/declaration/find'}
+                        />
+                    }
+
                 </SearchTable>
 
 

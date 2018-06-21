@@ -2,67 +2,15 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {message} from 'antd'
-import { withRouter } from 'react-router'
 import {SearchTable} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
-import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
-import moment from 'moment';
+import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+/*
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
 }
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
-const searchFields=(disabled)=> {
-    return [
-        {
-            label:'纳税主体',
-            type:'taxMain',
-            fieldName:'mainId',
-            span:6,
-            componentProps:{
-                disabled,
-            },
-            formItemStyle,
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
 
-        }, {
-            label:'凭证月份',
-            type:'monthPicker',
-            formItemStyle,
-            span:6,
-            fieldName:'authMonth',
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择凭证月份'
-                    }
-                ]
-            }
-        }
-    ]
-}
 const columns = context =>[
     {
         title: '纳税主体名称',
@@ -108,14 +56,66 @@ const columns = context =>[
         render: text => fMoney(text),
         className: "table-money"
     }
+];*/
+
+
+const columns = context =>[
+    {
+        title: '纳税主体',
+        dataIndex: 'mainName',
+    },{
+        title: '项目分期',
+        dataIndex: 'stagesName',
+    },{
+        title: '期初',
+        children:[{
+            title: '金额',
+            dataIndex: 'initialAmount',
+        },{
+            title: '税额',
+            dataIndex: 'initialTaxAmount',
+        }]
+    },{
+        title: '本期',
+        children:[{
+            title: '金额',
+            dataIndex: 'currentAmount',
+        },{
+            title: '税额',
+            dataIndex: 'currentTaxAmount',
+        }]
+    },{
+        title: '累计',
+        children:[{
+            title: '金额',
+            dataIndex: 'countAmount',
+        },{
+            title: '税额',
+            dataIndex: 'countTaxAmount',
+        }]
+    },{
+        title: '综合税率',
+        dataIndex: 'taxRate',
+        render: text => text&&`${text}%`
+    },{
+        title: '进项税额',
+        dataIndex: 'incomeTaxAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    },{
+        title: '进项税转出额',
+        dataIndex: 'incomeOutAmount',
+        render: text => fMoney(text),
+        className: "table-money"
+    }
 ];
-class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
+
+export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
-        searchFieldsValues:{},
-        dataSource:[],
+        filters:{},
         /**
          *修改状态和时间
          * */
@@ -127,50 +127,30 @@ class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/account/income/estate/listMain',{
-            params:this.state.searchFieldsValues
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
     }
-
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
         })
     }
 
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
-        const {tableKey,visibleView,voucherNum,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const { declare,searchFields } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -184,30 +164,51 @@ class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
                     url:'/account/income/estate/buildList',
                     onSuccess:(params)=>{
                         this.setState({
-                            searchFieldsValues:params,
+                            filters:params,
                         },()=>{
                             this.fetchResultStatus()
                         })
                     },
                     cardProps: {
-                        title: "自建转自用固定资产进项税额明细",
+                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>自建转自用固定资产进项税额明细</span>,
                         extra:<div>
                             {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
+                                listMainResultStatus(statusParam)
                             }
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/account/income/estate/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/income/estate/revoke" onSuccess={this.refreshTable} />
-
+                            {
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/income/estate/submit',
+                                    params:filters,
+                                    userPermissions:['1251010'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                },{
+                                    type: 'reset',
+                                    url:'/account/income/estate/reset',
+                                    params:filters,
+                                    userPermissions:['1251009'],
+                                    onSuccess:()=>{
+                                        this.props.refreshTabs()
+                                    },
+                                },{
+                                    type:'revoke',
+                                    url:'/account/income/estate/revoke',
+                                    params:filters,
+                                    userPermissions:['1251011'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                }],statusParam)
+                            }
                         </div>,
                     },
                     /*scroll:{
                      x:'180%'
                      },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
-                    },
                 }}
             >
                 <ViewDocumentDetails
@@ -219,4 +220,3 @@ class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
         )
     }
 }
-export default withRouter(SelfBuiltTransferFixedAssetsInputTaxDetails)

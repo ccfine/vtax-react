@@ -4,8 +4,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import intersection from 'lodash/intersection'; //取出各数组中全等的元素，使用SameValueZero方式平等比较。
-import difference from 'lodash/difference'; //只要array中比[values]中多出的值，都会返回，不管个数出现了几次
+import intersection from 'lodash/intersection'; //取数组的交集 _.initial([1, 2, 3]); => [1, 2]
+import difference from 'lodash/difference'; // _.difference([3, 2, 1], [4, 2]);  => [3, 1]
 
 /**
  * 普通组件
@@ -46,8 +46,9 @@ class PermissibleRender extends Component {
 
     render() {
         const { children, userPermissions, options, renderOtherwise } = this.props;
-        //当权限是管理员的时候直接放行
-        if(parseInt(this.props.type,0)!==1){
+
+        //TODO：当权限是管理员的时候直接放行  type 只有两种权限 1：普通用户 8192：管理员
+        if(parseInt(this.props.type,0) === 8192 ){
             return children;
         }else{
             if (!children || !userPermissions || !options) {

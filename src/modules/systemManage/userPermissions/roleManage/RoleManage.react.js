@@ -6,18 +6,11 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {Icon,Button,Switch,message,Modal} from 'antd'
+import {Modal,message,Divider} from 'antd'
 import {SearchTable} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
-import {request,} from 'utils'
-const buttonStyle={
-    marginRight:5
-}
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff',
-    marginRight:10
-}
+import {request,composeBotton} from 'utils'
+
 const searchFields = context => [
     {
         label: "组织",
@@ -45,51 +38,92 @@ const searchFields = context => [
         fieldName: "roleName"
     }
 ];
+
 const columns = context => [
     {
         title: '操作',
-        width:'10%',
         dataIndex:'action',
         className:'text-center',
         render:(text,record)=>(
             <span>
-                <Link title="详情" to={{
-                    pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
-                    state:{
-                        roleName:record.roleName,
-                        isEnabled:record.isEnabled,
-                        remark:record.remark
-                    }
-                }} style={{marginRight:10}}><Icon type="search" /></Link>
-                <span title="编辑" onClick={()=>context.showModal('edit',record)} style={pointerStyle}>
-                    <Icon type="edit" />
-                </span>
-                <Switch checkedChildren="启" unCheckedChildren="停" checked={ parseInt(record.isEnabled,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
+                {
+                    composeBotton([{
+                        type: 'action',
+                        icon: 'edit',
+                        title: '编辑',
+                        onSuccess: () => { context.showModal('edit',record) }
+                    },{
+                        type:'action',
+                        icon:'delete',
+                        title:'删除',
+                        style:{
+                            cursor:'pointer',
+                            color:'red',
+                            marginRight:10
+                        },
+                        onSuccess:()=>{ context.deleteRole(record.id,record.isEnabled) }
+                    }])
+                }
+                <Divider type="vertical" />
+                {
+                    composeBotton([{
+                        type: 'action',
+                        icon: 'team',
+                        title: '分配权限',
+                        onSuccess: () => {
+                            context.setState({
+                                permissionId:record.id,
+                                userId:undefined,
+                            },()=>{
+                                context.togglePermissionModalVisible(true)
+                            })
+                        }
+                    },{
+                        type: 'action',
+                        icon: 'setting',
+                        title: '分配用户',
+                        onSuccess: () => {
+                            context.setState({
+                                userId:record.id,
+                            },()=>{
+                                context.toggleUserModalVisible(true)
+                            })
+                        }
+                    }])
+                }
+                <Divider type="vertical" />
+                {
+                    composeBotton([{
+                        type:'switch',
+                        checked: parseInt(record.isEnabled,0) === 1,
+                        onSuccess:(checked)=>{
+                            context.handleChange(checked,record.id)
+                        }
+                    }])
+                }
             </span>
 
-        )
-    /*},{
-        title: '状态',
-        dataIndex:'isEnabled',
-        className:'text-center',
-        width:'10%',
-        render:(text,record)=>{
-            return (
-                <Switch checkedChildren="启用" unCheckedChildren="停用" checked={ parseInt(text,0) === 1 } onChange={(checked)=>context.handleChange(checked,record.id)} />
-            )
-        }*/
+        ),
+        width: 200,
     },{
         title: '角色名称',
         dataIndex:'roleName',
-        width:'15%'
+        render:(text,record)=>(
+            <Link title="查看详情" to={{
+                pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
+                state:{
+                    roleName:record.roleName,
+                    isEnabled:record.isEnabled,
+                    remark:record.remark
+                }
+            }} style={{marginRight:10}}>{text}</Link>
+        )
     },{
         title: '创建时间',
         dataIndex:'createdDate',
-        width:'15%'
     },{
         title:'备注',
         dataIndex:'remark',
-        width:'60%',
     }];
 
 
@@ -101,6 +135,8 @@ class RoleManage extends Component{
         visible: false,
         userVisible: false,
         permissionVisible: false,
+        permissionId:undefined,
+        userId:undefined,
         modalConfig: {
             type: ''
         },
@@ -128,21 +164,51 @@ class RoleManage extends Component{
     toggleUserModalVisible=userVisible=>{
         this.setState({
             userVisible,
-            selectedRowKeys:this.state.selectedRowKeys
         })
     }
     togglePermissionModalVisible=permissionVisible=>{
         this.setState({
             permissionVisible,
-            selectedRowKeys:this.state.selectedRowKeys
         })
     }
+	deleteRole = (id,isEnabled) => {
+        if(parseInt(isEnabled, 0) === 1){
+            message.error('请禁用后，再删除');
+            return;
+        }
+		const modalRef = Modal.confirm({
+			title: '友情提醒',
+			content: '该删除后将不可恢复，是否删除？',
+			okText: '确定',
+			okType: 'danger',
+			cancelText: '取消',
+			onOk: () => {
+				modalRef && modalRef.destroy()
+				//删除角色
+				request
+					.delete(`/sysRole/delete/${id}`)
+					.then(({ data }) => {
+						if (data.code === 200) {
+							message.success('删除成功')
+						} else {
+							message.error(data.msg)
+						}
+					})
+					.catch(err => {
+						message.error(err.message)
+					})
+			},
+			onCancel() {
+				modalRef.destroy()
+			}
+		})
+	}
 
     //选中多少条数据 - 禁用
     handleChange = (checked,id) => {
         /*const param = {
-            isEnabled:checked === true ? '1' : '2',
-        }*/
+         isEnabled:checked === true ? '1' : '2',
+         }*/
         const t = checked === true ? '启用' : '禁用'
         const modalRef = Modal.confirm({
             title: '友情提醒',
@@ -174,7 +240,7 @@ class RoleManage extends Component{
     }
 
     render(){
-        const {updateKey,selectedRowKeys,visible,userVisible,permissionVisible,modalConfig} = this.state;
+        const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId} = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -188,37 +254,17 @@ class RoleManage extends Component{
                     columns: columns(this),
                     url: '/sysRole/list',
                     cardProps: {
-                        title: '角色列表',
+                        title: '角色管理',
                         extra:
                             <div>
-                                <Button size="small" onClick={()=>this.showModal('add',{})} style={buttonStyle}>
-                                    <Icon type="plus" />
-                                    新增
-                                </Button>
-                                <Button size="small" disabled={!selectedRowKeys} onClick={()=>this.togglePermissionModalVisible(true)}  style={buttonStyle}>
-                                    <Icon type="edit" />
-                                    分配权限
-                                </Button>
-                                <Button size="small" disabled={!selectedRowKeys} onClick={()=>this.toggleUserModalVisible(true)} style={buttonStyle}>
-                                    <Icon type="edit" />
-                                    分配用户
-                                </Button>
+                                {
+                                    composeBotton([{
+                                        type:'add',
+                                        icon:'plus',
+                                        onClick:()=>this.showModal('add',{})
+                                    }])
+                                }
                             </div>,
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            selectedRowKeys:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    onSuccess:()=>{
-                        this.setState({
-                            selectedRowKeys:undefined,
-                            selectedRows:[],
-                        })
                     },
                 }}
             >
@@ -231,16 +277,16 @@ class RoleManage extends Component{
                 />
                  <PermissionPopModal
                         visible={permissionVisible}
-                        id={selectedRowKeys}
+                        id={permissionId}
                         refreshTable={this.refreshTable}
                         togglePermissionModalVisible={this.togglePermissionModalVisible}
-                    />
+                 />
                  <UserPopModal
                         visible={userVisible}
-                        id={selectedRowKeys}
+                        id={userId}
                         refreshTable={this.refreshTable}
                         toggleUserModalVisible={this.toggleUserModalVisible}
-                    />
+                 />
 
             </SearchTable>
 

@@ -2,110 +2,27 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
-import {message} from 'antd'
 import {SearchTable} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam,listMainResultStatus,toPercent} from 'utils'
-import moment from 'moment';
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
-const searchFields=(disabled)=> {
-    return [
-        {
-            label:'纳税主体',
-            type:'taxMain',
-            fieldName:'mainId',
-            span:6,
-            componentProps:{
-                disabled,
-            },
-            formItemStyle,
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
-
-        }, {
-            label:'凭证月份',
-            type:'monthPicker',
-            formItemStyle,
-            span:6,
-            fieldName:'authMonth',
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择凭证月份'
-                    }
-                ]
-            }
-        }
-    ]
-}
-
+import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 const columns = context =>[
     {
-        title:'纳税主体名称',
+        title:'纳税主体',
         dataIndex: "taxSubjectName",
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目分期名称</p>
-                <p className="apply-form-list-p2">项目分期代码</p>
-            </div>
-        ),
-        dataIndex: "stageName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stageNum}</p>
-            </div>
-        )
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">固定资产名称</p>
-                <p className="apply-form-list-p2">固定资产编号</p>
-            </div>
-        ),
-        dataIndex: "assetName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.assetNo}</p>
-            </div>
-        )
-    },
-    {
+    },{
+        title:'项目分期名称',
+        dataIndex:'stageName',
+    },{
+        title:'固定资产名称',
+        dataIndex:'assetName',
+    },{
+        title:'固定资产编号',
+        dataIndex:'assetNo',
+    },{
         title: "入账日期",
         dataIndex: "accountDate"
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">取得方式</p>
-                <p className="apply-form-list-p2">取得价值</p>
-            </div>
-        ),
-        dataIndex: "acquisitionMode",
+    },{
+        title:'取得方式',
+        dataIndex:'acquisitionMode',
         render: (text, record) => {
             // 0-外部获取
             // 1-单独新建
@@ -124,128 +41,72 @@ const columns = context =>[
                 default:
                     break;
             }
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{res}</p>
-                    <p className="apply-form-list-p2">
-                        {fMoney(record.gainValue)}
-                    </p>
-                </div>
-            );
+            return res;
         }
+    },{
+        title:'取得价值',
+        dataIndex:'gainValue',
+        render:(text)=>fMoney(text)
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">资产类别</p>
-                <p className="apply-form-list-p2">资产状态</p>
-            </div>
-        ),
-        dataIndex: "assetType",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.assetsState}</p>
-            </div>
-        )
-    },
-    {
-        title: "占地面积",
+        title: "建筑面积",
         dataIndex: "areaCovered"
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">购进税额</p>
-                <p className="apply-form-list-p2">购进税率</p>
-            </div>
-        ),
+        title: "税额",
         dataIndex: "inTax",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">
-                    {toPercent(record.intaxRate)}
-                </p>
-            </div>
-        )
+        render:(text)=>fMoney(text)
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">当期抵扣的进项税额</p>
-                <p className="apply-form-list-p2">待抵扣的进项税额</p>
-            </div>
-        ),
+        title: "税率",
+        dataIndex: "intaxRate",
+        render:(text)=>text && `${text}%`,
+    },
+    {
+        title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">
-                    {fMoney(record.deductedTaxAmount)}
-                </p>
-            </div>
-        )
+        render:(text)=>fMoney(text)
+    },
+    {
+        title: "待抵扣的进项税额",
+        dataIndex: "deductedTaxAmount",
+        render:(text)=>fMoney(text)
     },{
         title: "待抵扣期间",
         dataIndex: "deductedPeriod"
-    }
+    },{
+        title: "资产类别",
+        dataIndex: "assetType"
+    },{
+        title: "资产状态",
+        dataIndex: "assetsState"
+    },
 ];
-class FixedAssetsInputTaxDetails extends Component{
+export default class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
-        searchFieldsValues:{},
-        dataSource:[],
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
+		filters: {},
+		statusParam:{}
     }
     fetchResultStatus = ()=>{
-        request.get('/account/income/estate/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
-
-    refreshTable = ()=>{
-        this.setState({
-            tableKey:Date.now()
         })
-    }
-
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
     }
     render(){
-        const {tableKey,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {tableKey,statusParam,filters} = this.state;
+        const { declare,searchFields } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -257,35 +118,41 @@ class FixedAssetsInputTaxDetails extends Component{
                     pageSize:20,
                     columns:columns(this),
                     url:'/account/income/estate/fixedList',
-                    onSuccess:(params)=>{
+                    cardProps: {
+                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
+                    },
+                    onSuccess: (params) => {
                         this.setState({
-                            searchFieldsValues:params,
+                            filters: params
                         },()=>{
                             this.fetchResultStatus()
                         })
                     },
-                    cardProps: {
-                        title: "固定资产进项税额明细",
-                        extra:<div>
+                    extra: (
+                        <div>
                             {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
+                                listMainResultStatus(statusParam)
                             }
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/account/income/estate/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/income/estate/revoke" onSuccess={this.refreshTable} />
-
-                        </div>,
-                    },
-                    /*scroll:{
-                     x:'180%'
-                     },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
-                    },
+                            {
+                                (disabled && declare.decAction==='edit') && composeBotton([
+                                    {
+                                        type: 'reset',
+                                        url:'/account/income/estate/reset',
+                                        params:filters,
+                                        userPermissions:['1251009'],
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs()
+                                        },
+                                    }
+                                ],statusParam)
+                            }
+                        </div>
+                    ),
+                    scroll:{
+                     x:1400
+                     },
                 }}
             />
         )
     }
 }
-export default withRouter(FixedAssetsInputTaxDetails)

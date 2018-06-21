@@ -7,21 +7,9 @@ import {findDOMNode} from 'react-dom';
 import {withRouter} from 'react-router-dom';
 import * as Enzyme from 'enzyme';
 import * as Adapter from 'enzyme-adapter-react-16';
-import { accDiv } from 'utils'
 import Message from 'modules/header/Message.react'
 
 Enzyme.configure({ adapter: new Adapter() });
-
-describe('测试', function () {
-    it('测试除法函数', function () {
-        expect(accDiv(100,100)).toEqual(1)
-    });
-
-    it('测试组件加载', function () {
-        expect(shallow(<Message />)).toMatchSnapshot();
-    });
-
-});
 
 describe('测试2', function () {
 

@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message,Card} from 'antd';
-import {request,getFields,requestDict} from 'utils'
+import {request,getFields,requestDict,setFormat,composeBotton} from 'utils'
 import {AsyncTable} from 'compoments'
 import moment from 'moment';
 const columns = [
@@ -32,33 +32,23 @@ class PopModal extends Component{
         //subordinatePeriodYear:[], // 所属期-年：当前年至前两年(数据字典NDLB） ,
         taxDeclaration:[], // 纳税申报(数据字典NSSB） ,
     }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
     componentDidMount(){
         //申报周期1年
         requestDict('SBZQ',result=>{
             this.setState({
-                cycle :this.setFormat(result)
+                cycle :setFormat(result)
             })
         });
         //所属期
         /*equestDict('NDLB',result=>{
             this.setState({
-                subordinatePeriodYear :this.setFormat(result)
+                subordinatePeriodYear :setFormat(result)
             })
         });*/
         //纳税申报
         requestDict('NSSB',result=>{
             this.setState({
-                taxDeclaration :this.setFormat(result)
+                taxDeclaration :setFormat(result)
             })
         });
     }
@@ -226,7 +216,12 @@ class PopModal extends Component{
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={800}
                 style={{
+                    top: '5%',
                     maxWidth:'90%'
+                }}
+                bodyStyle={{
+                    maxHeight:450,
+                    overflowY:'auto'
                 }}
                 visible={props.visible}
                 footer={
@@ -238,9 +233,14 @@ class PopModal extends Component{
                             }
                             <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                             {
-                                type === 'edit' && <Button type='danger' onClick={this.deleteRecord}>
-                                    删除
-                                </Button>
+                                type === 'edit' && composeBotton([{
+                                    type:'delete',
+                                    btnType:'danger',
+                                    size:'default',
+                                    text:'删除',
+                                    userPermissions:['1111008'],
+                                    onClick:()=>this.deleteRecord()
+                                }])
                             }
 
                         </Col>
@@ -296,8 +296,7 @@ class PopModal extends Component{
                                         },
                                         componentProps:{
                                             disabled
-                                        }
-                                    }, {
+                                        }}, {
                                         label: '申报周期',
                                         fieldName: 'cycle',
                                         type: 'select',
@@ -315,6 +314,7 @@ class PopModal extends Component{
                                         componentProps: {
                                             disabled
                                         }
+
                                     }, {
                                         label: '所属期',
                                         fieldName: 'period',
@@ -393,6 +393,7 @@ class PopModal extends Component{
                                     tableProps={{
                                         rowKey:record=>record.id,
                                         pagination:true,
+                                        pageSize:10,
                                         size:'small',
                                         columns:columns,
                                         onRowSelect:type === 'add' ? (selectedRowKeys,selectedRows)=>{

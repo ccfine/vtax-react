@@ -16,6 +16,7 @@ import BillingSales from '../salesTaxAccount/billingSales'
 import UnBilledSalesEstate from './unBilledSalesEstate'
 import UnBilledSalesNotEstate from './unBilledSalesNotEstate'
 import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
+import FinancialDocumentsCollection from './financialDocumentsCollection'
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -91,7 +92,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}billingSales.svg`,
             backgroundColor:'#7ED530'
         },
-        authorityInfo:salesManag['billingSales'].options,
+        authorityInfo:salesManag['unBilledSalesEstate'].options,
         exact:true,
     },{
         path:`${PATH}/unBilledSalesNotEstate`,
@@ -101,17 +102,27 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}unbilledAales.svg`,
             backgroundColor:'#F5A544'
         },
-        authorityInfo:salesManag['unBilledSales'].options,
+        authorityInfo:salesManag['unBilledSalesNotEstate'].options,
         exact:true,
     },{
         path:`${PATH}/otherTaxAdjustment`,
-        component:wrapPage('其他涉税调整台账',OtherTaxAdjustment),
-        name:'其他涉税调整台账',
+        component:wrapPage('其它涉税调整台账',OtherTaxAdjustment),
+        name:'其它涉税调整台账',
         icon:{
             url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
             backgroundColor:'#57C8F2'
         },
         authorityInfo:salesManag['otherTaxAdjustment'].options,
+        exact:true,
+    },{
+        path:`${PATH}/financialDocumentsCollection`,
+        component:wrapPage('财务凭证采集',FinancialDocumentsCollection),
+        name:'财务凭证采集',
+        icon:{
+            url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
+            backgroundColor:'#57C8F2'
+        },
+        authorityInfo:salesManag['financialDocumentsCollection'].options,
         exact:true,
     },{
         path:`${PATH}`,

@@ -5,8 +5,10 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button} from 'antd'
+import { compose } from 'redux';
+import {connect} from 'react-redux'
 import {AsyncTable} from 'compoments'
-import {getFields,fMoney,getUrlParam} from 'utils'
+import {getFields,fMoney} from 'utils'
 import moment from 'moment';
 
 const formItemStyle = {
@@ -74,11 +76,6 @@ const columns2= [
         title: '交易期间 ',
         dataIndex: 'transactionDate',
     },{
-        title: '人民币成交总价',
-        dataIndex: 'totalPrice',
-        render:text=>fMoney(text),
-        className: "table-money"
-    },{
         title: '税率',
         dataIndex: 'taxRate',
         render: text => (text ? `${text}%` : text),
@@ -134,12 +131,12 @@ class IncomeCheck extends Component {
     }
 
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
+        const { declare } = this.props;
+        if (!!declare) {
             this.setState({
                 filters:{
-                    mainId:getUrlParam('mainId') || undefined,
-                    authMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                    mainId:declare.mainId || undefined,
+                    authMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
                 this.refreshTable()
@@ -149,8 +146,8 @@ class IncomeCheck extends Component {
     render(){
         const {tableUpDateKey,filters,totalSource,totalSource2} = this.state;
         const {getFieldValue} = this.props.form;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -172,7 +169,7 @@ class IncomeCheck extends Component {
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                            initialValue: (disabled && declare.mainId) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -190,7 +187,7 @@ class IncomeCheck extends Component {
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -237,7 +234,7 @@ class IncomeCheck extends Component {
                         </Row>
                     </Form>
                 </Card>
-                <Card title="财务收入数据"
+                <Card title={<span><label className="tab-breadcrumb">收入检查 / </label>财务收入数据</span>}
                       extra={<div>
                             <span style={{color:'#FF9700'}}>
                                 收入合计：{fMoney(totalSource ? totalSource.allAmount : 0.00)}
@@ -246,7 +243,7 @@ class IncomeCheck extends Component {
                       style={{marginTop:10}}>
 
 
-                    <AsyncTable url="/income/financeDetails/controller/incomeCheck"
+                    <AsyncTable url="/output/income/check/voucher"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -262,15 +259,13 @@ class IncomeCheck extends Component {
                                 }} />
 
                 </Card>
-                <Card title="房间交易信息"
+                <Card title={<span><label className="tab-breadcrumb">收入检查 / </label>房间交易信息</span>}
                       extra={<div>
-                          <span style={{marginRight:20,color:'#FF9700'}}>人民币成交总价合计：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
-                          <span style={{marginRight:20,color:'#FF9700'}}>税额总价合计：{fMoney(totalSource2 ? totalSource2.allTaxAmount : 0.00)}</span>
-                          <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalPrice : 0.00)}</span>
+                          <span style={{color:'#FF9700'}}>价税总价合计：{fMoney(totalSource2 ? totalSource2.allTotalAmount : 0.00)}</span>
                       </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/output/room/files/incomeCheck"
+                    <AsyncTable url="/output/income/check/room"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -287,9 +282,9 @@ class IncomeCheck extends Component {
 
                     <div>
                         <span style={{marginRight:20,color:'#FF9700'}}>财务收入金额：{fMoney(totalSource ? totalSource.allAmount : 0.00)}</span>
-                        <span style={{marginRight:20,color:'#FF9700'}}>营销系统收入：{fMoney(totalSource2 ? totalSource2.allAmount : 0.00)}</span>
+                        <span style={{marginRight:20,color:'#FF9700'}}>营销系统收入：{fMoney(totalSource2 ? totalSource2.allTotalAmount : 0.00)}</span>
                         <span style={{color:'red'}}>收入差异金额：{
-                            fMoney(parseFloat(totalSource && totalSource.allAmount) - parseFloat(totalSource2 && totalSource2.allAmount) || 0.00)
+                            fMoney(parseFloat(totalSource && totalSource.allAmount) - parseFloat(totalSource2 && totalSource2.allTotalAmount) || 0.00)
                         }</span>
                     </div>
                 </Card>
@@ -297,4 +292,10 @@ class IncomeCheck extends Component {
         )
     }
 }
-export default Form.create()(IncomeCheck)
+const enhance = compose(
+    Form.create(),
+    connect( (state) => ({
+        declare:state.user.get('declare')
+    }))
+);
+export default enhance(IncomeCheck);

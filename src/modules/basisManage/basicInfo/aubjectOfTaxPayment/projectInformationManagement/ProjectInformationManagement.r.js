@@ -41,7 +41,6 @@ const table_2_columns = [{
 }];
 export default class ProjectInformationManagement extends Component{
     state = {
-        visible: false,
         selectedRowKeys:null,
 
         $$table_1_data:List([]),
@@ -49,31 +48,25 @@ export default class ProjectInformationManagement extends Component{
         $$table_2_data:List([]),
 
     }
-    toggleModal = visible => {
-        this.setState({
-            visible
-        });
-        visible && this.initData()
-    }
     componentWillReceiveProps(nextProps){
-        if(this.state.visible){
+        if(nextProps.visible){
             if(this.props.taxSubjectId !== nextProps.taxSubjectId){
-                this.initData()
+                this.initData(nextProps.taxSubjectId)
             }
         }
     }
-    initData=()=>{
-        this.fetchTable_1_Data();
+    initData=(taxSubjectId = this.props.taxSubjectId)=>{
+        this.fetchTable_1_Data(taxSubjectId);
         this.setState({
             selectedRowKeys:null,
             $$table_2_data:List([])
         })
     }
-    fetchTable_1_Data = () =>{
+    fetchTable_1_Data = (taxSubjectId) =>{
         this.setState({
             table_1_loaded:false
         })
-        request.get(`/project/list/${this.props.taxSubjectId}`)
+        request.get(`/taxsubject/projectList/${taxSubjectId}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState(prevState=>({
@@ -95,7 +88,7 @@ export default class ProjectInformationManagement extends Component{
             });
     }
     fetchTable_2_Data = projectId =>{
-        request.get(`/project/stages/${projectId}`)
+        request.get(`/taxsubject/stages/${projectId}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.setState(prevState=>({
@@ -134,27 +127,26 @@ export default class ProjectInformationManagement extends Component{
         };
         return(
             <div style={{display:'inline-block',...this.props.style}}>
-                <Button size='small' disabled={this.props.disabled} onClick={()=>this.toggleModal(true)}>
-                    <Icon type="file-add" />
-                    项目信息管理
-                </Button>
                 <Modal
                     maskClosable={false}
                     destroyOnClose={true}
                     title="项目管理"
-                    visible={this.state.visible}
-                    width={1000}
-                    onCancel={()=>this.toggleModal(false)}
+                    visible={this.props.visible}
+                    width={600}
+                    onCancel={()=>this.props.toggleModal(false)}
                     footer={false}
+                    style={{ top: '5%' }}
                     bodyStyle={{
                         padding:10,
-                        background:'#EEF0F4'
+                        background:'#EEF0F4',
+                        height:450,
+                        overflowY:'auto',
                     }}
                 >
                     <Card
                         extra={
                             <div>
-                                <AutoFileUpload url={`project/upload/${this.props.taxSubjectId}`} fetchTable_1_Data={this.fetchTable_1_Data} />
+                                <AutoFileUpload url={`project/upload/${this.props.taxSubjectId}`} fetchTable_1_Data={()=>this.fetchTable_1_Data(this.props.taxSubjectId)} />
                                 <FileExport
                                     url='project/download'
                                     title="模板下载"

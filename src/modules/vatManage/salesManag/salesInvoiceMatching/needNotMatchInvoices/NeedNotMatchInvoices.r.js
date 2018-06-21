@@ -1,26 +1,16 @@
 /**
  * Created by liurunbin on 2018/1/11.
- *@Last Modified by: xiaminghua
- * @Last Modified time: 2018-04-28
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-06-13 11:04:23
  *
  */
 import React, { Component } from 'react'
-import {fMoney,request,getUrlParam} from 'utils'
+import {connect} from 'react-redux'
+import {Modal,message} from 'antd'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import {Button,Icon,message,Modal} from 'antd'
 import ManualMatchRoomModal from './addDataModal'
-import { withRouter } from 'react-router'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -39,7 +29,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled)=> {
+const searchFields=(disabled,declare)=> {
     return [
         {
             label: '纳税主体',
@@ -51,7 +41,7 @@ const searchFields=(disabled)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules:[
                     {
                         required:true,
@@ -64,13 +54,13 @@ const searchFields=(disabled)=> {
             label: '开票日期',
             type: 'monthPicker',
             span:6,
-            fieldName: 'billingDate',
+            fieldName: 'authMonth',
             componentProps:{
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -78,14 +68,6 @@ const searchFields=(disabled)=> {
                     }
                 ]
             }
-        },
-        {
-            label: '货物名称',
-            type: 'input',
-            span:6,
-            fieldName: 'commodityName',
-            formItemStyle,
-            fieldDecoratorOptions: {}
         },
         {
             label: '购货单位名称',
@@ -150,10 +132,6 @@ const columns = [
         }
     },
     {
-        title:'货物名称',
-        dataIndex:'commodityName'
-    },
-    {
         title:'开票日期',
         dataIndex:'billingDate',
         width:'75px'
@@ -166,7 +144,9 @@ const columns = [
     },
     {
         title:'税率',
-        dataIndex:'taxRate'
+        dataIndex:'taxRate',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },
     {
         title:'税额',
@@ -186,18 +166,19 @@ class NeedNotMatchInvoices extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
-        searchFieldsValues:{
+        filters:{
 
         },
         selectedRowKeys:[],
+        // revokeLoading:false,
 
         searchTableLoading:false,
 
         /**
-         *修改状态和时间
+         *修改状态
          * */
-        dataStatus:'',
-        submitDate:'',
+        statusParam:'',
+        
         totalSource:undefined,
     }
     toggleModalVisible=visible=>{
@@ -207,12 +188,15 @@ class NeedNotMatchInvoices extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[],
         })
     }
-    toggleSearchTableLoading = b =>{
-        this.setState({
-            searchTableLoading:b
+    fetchResultStatus = ()=>{
+        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
     }
     backOutData = () =>{
@@ -223,18 +207,18 @@ class NeedNotMatchInvoices extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                this.toggleSearchTableLoading(true)
+               // this.setState({revokeLoading:true})
                 request.put('/output/invoice/marry/unwanted/revoke',this.state.selectedRowKeys).then(({data})=>{
-                    this.toggleSearchTableLoading(false)
+                    //this.setState({revokeLoading:false})
                     if(data.code===200){
                         message.success('撤销成功！');
-                        this.refreshTable();
+                        this.props.refreshTabs();
                     }else{
                         message.error(`撤销失败:${data.msg}`)
                     }
                 }).catch(err=>{
                     message.error(err.message)
-                    this.toggleSearchTableLoading(false)
+                    //this.setState({revokeLoading:false})
                 })
             },
             onCancel() {
@@ -243,48 +227,18 @@ class NeedNotMatchInvoices extends Component{
         });
 
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
-    fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
     render(){
-        const {visible,tableKey,selectedRowKeys,searchTableLoading,submitDate,dataStatus,totalSource} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {visible,tableKey,statusParam,totalSource,selectedRowKeys} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
-                spinning={searchTableLoading}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -296,15 +250,9 @@ class NeedNotMatchInvoices extends Component{
                     key:tableKey,
                     pageSize:10,
                     columns:columns,
-                    onRowSelect:(selectedRowKeys)=>{
+                    onSuccess:(params)=>{
                         this.setState({
-                            selectedRowKeys
-                        })
-                    },
-                    onSuccess:(params,data)=>{
-                        this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0
+                            filters:params
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -312,19 +260,24 @@ class NeedNotMatchInvoices extends Component{
                     url:'/output/invoice/marry/unwanted/list',
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
+                        }{
+                            (disabled && declare.decAction==='edit') && composeBotton([{
+                                type:'add',
+                                icon:'plus',
+                                userPermissions:['1215009'],
+                                onClick: ()=>this.toggleModalVisible(true)
+                            },{
+                                type:'cancel',
+                                userPermissions:['1215008'],
+                                onClick: ()=>this.backOutData(),
+                                icon:'rollback',
+                                text:'撤销',
+                                selectedRowKeys
+                            }],statusParam)
                         }
-                        <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="plus" />新增</Button>
-                        <Button size="small" onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>
+                        {/* {(disabled && declare.decAction==='edit') && <Button size="small" loading={revokeLoading} onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>} */}
                         <TableTotal totalSource={totalSource} />
-
                     </div>,
                     onTotalSource: (totalSource) => {
                         this.setState({
@@ -332,8 +285,16 @@ class NeedNotMatchInvoices extends Component{
                         })
                     },
                     scroll:{
-                        x:'180%'
+                        x:1200
                     },
+                    cardProps:{
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
+                    },
+                    onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
+                        this.setState({
+                            selectedRowKeys
+                        })
+                    }:undefined,
                 }}
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
@@ -341,4 +302,6 @@ class NeedNotMatchInvoices extends Component{
         )
     }
 }
-export default withRouter(NeedNotMatchInvoices)
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(NeedNotMatchInvoices)

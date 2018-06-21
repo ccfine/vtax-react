@@ -6,15 +6,7 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Button,Icon} from 'antd';
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        if(typeof data[key] !== 'undefined' && data[key] !== ''){
-            str += `${key}=${data[key]}&`
-        }
-    }
-    return str;
-}
+import {parseJsonToParams,request} from "utils";
 class FileExport extends Component{
 
     static propTypes={
@@ -34,13 +26,8 @@ class FileExport extends Component{
     }
 
     handleDownload=()=>{
-        const {params,url} = this.props;
-        let nextUrl =`${window.baseURL}${url}`;
-
-        if(params){
-            nextUrl += `?${parseJsonToParams(params)}`;
-        }
-
+        const {params={},url} = this.props;
+        let nextUrl =`${window.baseURL}${url}?${parseJsonToParams({...params,Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`;
         let elemIF = document.createElement("iframe");
         elemIF.src = nextUrl;
         elemIF.style.display = "none";

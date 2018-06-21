@@ -1,0 +1,14 @@
+#container {
+    margin: 24px;
+}
+
+.ant-table-body .ant-table-footer {
+    padding: 0;
+    overflow-x: hidden !important;
+}
+.ant-table-body .ant-table.ant-table-bordered .ant-table-footer {
+    border-top: 1px solid #e8e8e8;
+    border-right: none;
+    border-left: none;
+    border-bottom: none;
+}

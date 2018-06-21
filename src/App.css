@@ -265,3 +265,13 @@ table.data-grid{
 .ant-switch-small.ant-switch .ant-switch-inner{
   font-size: 10px;
 }
+
+/* 设置table 表格有tab标签页的情况 */
+.tab-breadcrumb{
+  color:rgba(0,0,0,.45)
+}
+
+/* 纳税申报表输入框高度设置*/
+.data-grid-container .data-grid .cell > input{
+  height:20px;
+}

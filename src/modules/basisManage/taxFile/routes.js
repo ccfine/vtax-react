@@ -5,7 +5,7 @@
  */
 import {wrapPage} from 'compoments'
 import LicenseManage from './licenseManage'
-import DeclareFile from './declareFile'
+/*import DeclareFile from './declareFile'*/
 import FilingMaterial from './filingMaterial'
 import OtherFiles from './otherFiles'
 import InspectionReport from './inspectionReport'
@@ -17,7 +17,7 @@ const taxFile = strategies['basisManage']['taxFile'];
 
 const TaxFile_Routes = [
     {
-        path:`${PATHS}/declareFile`,
+        /*path:`${PATHS}/declareFile`,
         component:wrapPage('申报档案',DeclareFile),
         name:'申报档案',
         icon:{
@@ -26,7 +26,7 @@ const TaxFile_Routes = [
         },
         authorityInfo:taxFile['declareFile'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATHS}/inspectionReport`,
         component:wrapPage('稽查报告',InspectionReport),
         name:'稽查报告',

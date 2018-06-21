@@ -2,66 +2,13 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
-import {message} from 'antd'
+import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam,listMainResultStatus} from 'utils'
-import ViewDocumentDetails from '../../../entryManag/otherDeductibleInputTaxDetails/viewDocumentDetailsPopModal'
-import moment from 'moment';
+import {fMoney} from 'utils'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
-}
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
-const searchFields=(disabled)=> {
-    return [
-        {
-            label:'纳税主体',
-            type:'taxMain',
-            fieldName:'mainId',
-            span:6,
-            componentProps:{
-                disabled,
-            },
-            formItemStyle,
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
-
-        }, {
-            label:'凭证月份',
-            type:'monthPicker',
-            formItemStyle,
-            span:6,
-            fieldName:'authMonth',
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择凭证月份'
-                    }
-                ]
-            }
-        }
-    ]
 }
 const columns = context =>[
     {
@@ -114,63 +61,29 @@ class SimpleTaxCertificate extends Component{
         tableKey:Date.now(),
         visibleView:false,
         voucherNum:undefined,
-        searchFieldsValues:{},
-        dataSource:[],
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
             visibleView
         })
     }
-    fetchResultStatus = ()=>{
-        request.get('/account/incomeSimpleOut/controller/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        statusParam: data.data,
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
-
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()
         })
     }
-
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
     render(){
-        const {tableKey,visibleView,voucherNum,searchFieldsValues,dataSource,statusParam} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        const {mainId,authMonth} = searchFieldsValues;
-        const disabled1 = !((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
+        const {tableKey,visibleView,voucherNum} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <SearchTable
                 style={{
                     marginTop:-16
                 }}
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:this.props.searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -182,31 +95,11 @@ class SimpleTaxCertificate extends Component{
                     pageSize:20,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/simpleTaxList',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            searchFieldsValues:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps: {
-                        title: "简易计税凭证",
-                        extra:<div>
-                            {
-                                dataSource.length>0 && listMainResultStatus(statusParam)
-                            }
-                            <SubmitOrRecall disabled={disabled2} type={1} url="/account/incomeSimpleOut/controller/submit" onSuccess={this.refreshTable} />
-                            <SubmitOrRecall disabled={!disabled1} type={2} url="/account/incomeSimpleOut/controller/revoke" onSuccess={this.refreshTable} />
-
-                        </div>,
+                        title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>简易计税列表</span>,
                     },
-                    /*scroll:{
-                     x:'180%'
-                     },*/
-                    onDataChange:(dataSource)=>{
-                        this.setState({
-                            dataSource
-                        })
+                    scroll:{
+                        x:1500
                     },
                 }}
             >
@@ -219,4 +112,7 @@ class SimpleTaxCertificate extends Component{
         )
     }
 }
-export default withRouter(SimpleTaxCertificate)
+
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(SimpleTaxCertificate);

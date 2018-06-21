@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules,requestDict} from '../../../../../utils'
+import {request,getFields,regRules,requestDict,setFormat} from 'utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -53,8 +53,8 @@ class PopModal extends Component{
                     values.taxableProjectId = data.key || this.state.initData['taxableProjectId'];
                 }
                 if(type==='edit'){
-                    if(this.props.selectedRowKeys){
-                        values['id'] = this.props.selectedRowKeys;
+                    if(this.props.modalConfig.id){
+                        values['id'] = this.props.modalConfig.id;
                     }
                     this.updateRecord(values)
                 }else if(type==='add'){
@@ -108,7 +108,7 @@ class PopModal extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        commonlyTaxRate:this.setFormat(data.data),
+                        commonlyTaxRate:setFormat(data.data),
                     })
                 }else{
                     message.error(data.msg)
@@ -125,7 +125,7 @@ class PopModal extends Component{
             .then(({data})=>{
                 if(data.code===200){
                     this.setState({
-                        simpleTaxRate:this.setFormat(data.data),
+                        simpleTaxRate:setFormat(data.data),
                     })
                 }else{
                     message.error(data.msg)
@@ -135,22 +135,11 @@ class PopModal extends Component{
                 message.error(err.message)
             })
     }
-
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                //...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
     componentDidMount(){
         //业务类型
         requestDict('YWXT',result=>{
             this.setState({
-                businessType :this.setFormat(result)
+                businessType: setFormat(result)
             })
         });
     }
@@ -324,15 +313,10 @@ class PopModal extends Component{
                                         type:'select',
                                         span:12,
                                         formItemStyle,
+                                        notShowAll:true,
                                         options:this.state.commonlyTaxRate,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commonlyTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择一般增值税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'简易增值税税率',
@@ -340,15 +324,10 @@ class PopModal extends Component{
                                         type:'select',
                                         span:12,
                                         formItemStyle,
+                                        notShowAll:true,
                                         options:this.state.simpleTaxRate,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请选择简易增值税税率'
-                                                }
-                                            ]
                                         },
                                     }
                                 ])

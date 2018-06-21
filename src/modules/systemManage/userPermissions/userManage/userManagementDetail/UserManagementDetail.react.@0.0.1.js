@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React, { Component } from "react";
-import { message,Spin } from "antd";
+import { message } from "antd";
 import { request } from "utils";
 import UserDetail from "./UserDetail.react.@0.0.1";
 
@@ -112,20 +112,21 @@ class UserManagementDetail extends Component {
             [orgId] = this.getParams();
 
         return (
-            <Spin spinning={!loaded}>
+            <div>
                 <h2 style={{ margin: "10px 0 5px 16px" }}>
                     {userInfo["realname"]}
                 </h2>
-                {userInfo.id ? (
+                {
                     <UserDetail
                         orgId={orgId}
                         userInfo={userInfo}
                         checkedPermission={checkedPermission}
                         allPermission={allPermission}
                         permissionLoading={permissionLoading}
+                        userLoading = {!loaded}
                     />
-                ) : null}
-            </Spin>
+                }
+            </div>
         );
     }
 }

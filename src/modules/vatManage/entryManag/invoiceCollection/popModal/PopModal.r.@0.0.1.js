@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
-import {request,regRules,fMoney,requestDict,getFields} from '../../../../../utils'
+import {request,regRules,fMoney,getFields} from 'utils'
 import {SynchronizeTable} from 'compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
@@ -43,9 +43,6 @@ class PopModal extends Component{
         modalConfig:{
             type:''
         },
-
-        invoiceTypeItem:[], //发票类型
-        incomeStructureTypeItem:[], //进项结构分类
     }
 
     columns = [{
@@ -152,23 +149,6 @@ class PopModal extends Component{
             });
         }
     }
-
-    //注册类型:发票类型
-    getRegistrationType=()=>{
-        requestDict('JXFPLX',result=>{
-            this.setState({
-                invoiceTypeItem:this.setFormat(result)
-            })
-        })
-    }
-    //注册类型:进项结构分类
-    getIncomeStructureType=()=>{
-        requestDict('JXJGFL',result=>{
-            this.setState({
-                incomeStructureTypeItem:this.setFormat(result)
-            })
-        })
-    }
     setDetailsDate=detailsDate=>{
         this.setState({
             detailsDate
@@ -234,40 +214,7 @@ class PopModal extends Component{
                 });
             });
     }
-
-    checkeDetailsDateId = (data)=>{
-        return data.map((item)=>{
-            return {
-                amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
-                goodsServicesName:item.goodsServicesName,
-                parentId:item.parentId,
-                qty:item.qty,
-                specificationModel:item.specificationModel,
-                taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
-                taxRate:item.taxRate,
-                totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                unit:item.unit,
-                unitPrice:parseFloat(`${item.unitPrice}`),
-                id: (item.id.indexOf('t') > -1) ? null : item.id
-            }
-        })
-    }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
-    componentDidMount(){
-        this.getRegistrationType()
-        this.getIncomeStructureType()
-    }
     componentWillReceiveProps(nextProps){
-        //console.log(nextProps)
         if(!nextProps.visible){
             /**
              * 关闭的时候清空表单
@@ -278,13 +225,12 @@ class PopModal extends Component{
                 detailsDate:[],
             })
         }
+
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            if(nextProps.selectedRowKeys.length>0){
-                this.fetch(nextProps.selectedRowKeys[0])
-            }
+            this.fetch(nextProps.modalConfig.id, nextProps)
         }
     }
     mounted=true
@@ -342,7 +288,8 @@ class PopModal extends Component{
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
-                style={{ top: 50 }}
+                style={{ top: '5%' }}
+                bodyStyle={{maxHeight:500,overflowY:'auto'}}
                 visible={props.visible}
                 footer={
                     type !== 'view' && <Row>
@@ -355,7 +302,7 @@ class PopModal extends Component{
                 }
                 title={title}>
                 <Spin spinning={this.state.submitLoading}>
-                    <Form onSubmit={this.handleSubmit} style={{height:'400px',overflowY:'scroll'}}>
+                    <Form onSubmit={this.handleSubmit}>
                         <Card>
                             <Row>
                                 {
@@ -367,7 +314,8 @@ class PopModal extends Component{
                                             span: 12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions: {
                                                 initialValue: initData.mainId,
@@ -384,14 +332,15 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.taxableProject,
                                                 rules:[
                                                     {
                                                         required:true,
-                                                        message:'请输入发票号码'
+                                                        message:'请输入应税项目'
                                                     }
                                                 ]
                                             }
@@ -402,7 +351,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.projectNum,
@@ -420,26 +370,28 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.projectName,
                                                 rules:[
                                                     {
                                                         required:true,
-                                                        message:'请输入发票号码'
+                                                        message:'请输入项目名称s'
                                                     }
                                                 ]
                                             }
                                         },{
                                             label:'进项结构分类',
                                             fieldName:'incomeInvoiceCollectionDO.incomeStructureType',
-                                            type:'select',
+                                            type:'input',
                                             span:12,
                                             formItemStyle,
-                                            options:this.state.incomeStructureTypeItem,
+                                            //options:this.state.incomeStructureTypeItem,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.incomeStructureType,
@@ -455,9 +407,13 @@ class PopModal extends Component{
                                             type:'select',
                                             span:12,
                                             formItemStyle,
-                                            options:this.state.invoiceTypeItem,
+                                            options:[
+                                                {value:'s',text:'增值税专用发票'},
+                                                {value:'c',text:'增值税普通发票'}
+                                            ],
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.invoiceType,
@@ -474,7 +430,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.invoiceNum,
@@ -493,7 +450,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.invoiceCode,
@@ -513,7 +471,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:shouldShowDefaultData ? moment(initData.billingDate, dateFormat) : undefined,
@@ -531,7 +490,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:shouldShowDefaultData ? moment(initData.authMonth, dateFormat) : undefined,
@@ -549,7 +509,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:shouldShowDefaultData ? moment(initData.authDate, dateFormat) : undefined,
@@ -567,7 +528,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.sellerName,
@@ -587,7 +549,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.sellerTaxNum,
@@ -607,7 +570,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.address,
@@ -627,7 +591,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.phone,
@@ -647,7 +612,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.bank,
@@ -667,7 +633,8 @@ class PopModal extends Component{
                                             span: 12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions: {
                                                 initialValue: initData.account,
@@ -688,7 +655,7 @@ class PopModal extends Component{
                                             formItemStyle,
                                             componentProps: {
                                                 placeholder:'金额数据来源于发票明细',
-                                                disabled:true,
+                                                disabled:true
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.amount,
@@ -745,7 +712,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps:{
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:this.getAuthStatus(initData.authStatus)
@@ -757,7 +725,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps:{
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:this.getAuthFlag(initData.authFlag)
@@ -776,7 +745,8 @@ class PopModal extends Component{
                                                 }
                                             },
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.remark,

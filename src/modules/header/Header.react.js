@@ -7,8 +7,9 @@ import React,{Component} from 'react'
 import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin} from 'antd'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import Message from './Message.react'
+//import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
+
 import './header.less'
 
 const { Header} = Layout;
@@ -18,6 +19,8 @@ class WimsHeader extends Component {
 
     state = {
         collapsed: false,
+        fetchingNotices:false,
+        data:[],
     };
 
     toggle = () => {
@@ -44,8 +47,9 @@ class WimsHeader extends Component {
             this.props.history.push(`/web/${key}`)
         }
     }
-    render() {
 
+
+    render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
                 <Menu.Item key='admin' disabled>
@@ -66,7 +70,7 @@ class WimsHeader extends Component {
                     onClick={this.toggle}
                 />
                 <div style={{display: 'inline-block'}}>
-                    <h1>碧桂园增值税管理系统</h1>
+                    <h1>碧桂园纳税申报系统</h1>
                 </div>
                 <div className='right'>
 
@@ -74,7 +78,8 @@ class WimsHeader extends Component {
                         {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                     </div>
 
-                    <Message />
+                    {/*<Message />*/}
+
 
                     {this.props.userName ? (
                         <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>

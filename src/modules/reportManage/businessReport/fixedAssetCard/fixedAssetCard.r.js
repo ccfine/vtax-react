@@ -1,9 +1,13 @@
-/**
- * Created by liurunbin on 2018/1/2.
+/*
+ * @Author: liuchunxiu 
+ * @Date: 2018-05-17 10:25:07 
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-06-20 17:58:11
  */
 import React, { Component } from "react";
-import { SearchTable } from "compoments";
-import { fMoney, toPercent } from "utils";
+import {Modal,message} from 'antd';
+import { SearchTable} from "compoments";
+import { fMoney,composeBotton,request } from "utils";
 const searchFields = [
     {
         label: "纳税主体",
@@ -16,7 +20,85 @@ const searchFields = [
         fieldName: "taxMonth"
     }
 ];
+
+const importFeilds = [
+    {
+        label: "纳税主体",
+        type: "taxMain",
+        fieldName: "mainId",
+        span: 24,
+        formItemStyle: {
+            labelCol: {
+                span: 6
+            },
+            wrapperCol: {
+                span: 17
+            }
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择纳税主体"
+                }
+            ]
+        }
+    },
+    {
+        label: "入账月份",
+        type: "monthPicker",
+        fieldName: "accountDate",
+        span: 24,
+        formItemStyle: {
+            labelCol: {
+                span: 6
+            },
+            wrapperCol: {
+                span: 17
+            }
+        },
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: "请选择入账月份"
+                }
+            ]
+        }
+    }
+];
+
 const getColumns = context => [
+    {
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:['1871008'],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    },
     {
         title: (
             <div className="apply-form-list-th">
@@ -118,7 +200,7 @@ const getColumns = context => [
         )
     },
     {
-        title: "占地面积",
+        title: "建筑面积",
         dataIndex: "areaCovered"
     },
     {
@@ -133,7 +215,9 @@ const getColumns = context => [
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">
-                    {toPercent(record.intaxRate)}
+                    {
+                        record.intaxRate? `${record.intaxRate}%`: record.intaxRate
+                    }
                 </p>
             </div>
         )
@@ -158,30 +242,32 @@ const getColumns = context => [
     {
         title: "待抵扣期间",
         dataIndex: "deductedPeriod"
-    },
-    {
-        title: "扩展字段1",
-        dataIndex: "ext1"
-    },
-    {
-        title: "扩展字段2",
-        dataIndex: "ext2"
-    },
-    {
-        title: "扩展字段3",
-        dataIndex: "ext3"
     }
 ];
 
 export default class fixedAssetCard extends Component {
     state = {
-        updateKey: Date.now()
+        updateKey: Date.now(),
+        filters:undefined,
     };
     update = () => {
         this.setState({ updateKey: Date.now() });
     };
+    
+    deleteRecord(record){
+        request.delete(`/fixedAssetCard/report/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.update();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     render() {
-        let { updateKey } = this.state;
+        let { updateKey,filters } = this.state;
         return (
             <SearchTable
                 searchOption={{
@@ -189,14 +275,37 @@ export default class fixedAssetCard extends Component {
                 }}
                 tableOption={{
                     columns: getColumns(this),
-                    url: "/fixedAssetCard/list",
+                    url: "/fixedAssetCard/report/list",
                     key: updateKey,
                     cardProps: {
                         title: "固定资产卡片"
                     },
-                    scroll: {
-                        x: "100%"
-                    }
+                    onSuccess:(filters)=>{
+                        this.setState(filters)
+                    },
+                    scroll:{ x: 1400 },
+                    extra: (
+                        <span>
+                            {
+                                composeBotton([{
+                                    type:'fileExport',
+                                    url:'fixedAssetCard/report/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1871002'],
+                                },{
+                                    type: 'fileExport',
+                                    url: 'fixedAssetCard/report/download',
+                                },{
+                                    type:'fileImport',
+                                    url:'/fixedAssetCard/report/upload',
+                                    onSuccess:this.update,
+                                    userPermissions:['1875002'],
+                                    fields:importFeilds
+                                }])
+                            }
+                        </span>
+                    )
                 }}
             />
         );

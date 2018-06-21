@@ -8,7 +8,7 @@ import { Form,Select,Spin,message } from 'antd'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom';
 import {request} from 'utils'
-import {saveOrgId,saveToken} from '../../redux/ducks/user'
+import {saveOrgId,saveToken,savePersonal} from '../../redux/ducks/user'
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -32,19 +32,23 @@ class SelectSearch extends Component {
            }),()=>{
                 //判断权限
                 if(saveOrgId !== this.props.orgId){
-                    this.props.changeRefresh(Date.now());
                     this.props.history.replace('/web');
+                    setTimeout(()=>{
+                        this.props.changeRefresh(Date.now()+1)
+                        //window.location.reload()
+                    },300)
                 }
            })
         });
     }
 
     renderSwitchGroupSearch=(orgId)=>{
-        const { saveToken } = this.props;
+        const { saveToken,savePersonal } = this.props;
         request.get(`/oauth/switch_group/${orgId}`)
             .then(({data})=>{
                 if(data.code ===200){
                     saveToken(data.data.token)
+                    savePersonal(data.data)
                 }else{
                     message.error(`查询失败:${data.msg}`)
                 }
@@ -124,7 +128,8 @@ const FormSelectSearch =  Form.create()(SelectSearch)
 
 export default withRouter(connect(state=>({
     orgId:state.user.get('orgId')
-}),dispatch=>({
+}),dispatch=>( {
     saveOrgId:saveOrgId(dispatch),
     saveToken:saveToken(dispatch),
+    savePersonal:savePersonal(dispatch)
 }))(FormSelectSearch))

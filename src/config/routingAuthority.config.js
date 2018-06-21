@@ -2,6 +2,16 @@
  * Created by liuliyuan on 2018/4/28.
  */
 
+// public static final int ACTION_PAGE = 1002;  查看
+// public static final int ACTION_CREATE = 1003;  新增
+// public static final int ACTION_UPDATE = 1004;  修改
+// public static final int ACTION_UPLOAD = 1005;  导入
+// public static final int ACTION_DOWNLOAD = 1006;  下载
+// public static final int ACTION_EXPORT = 1007;  导出
+// public static final int ACTION_DELETE = 1008;  删除
+// public static final int ACTION_RESET = 1009;  撤回
+// public static final int ACTION_SUBMIT = 1010;  提交
+// public static final int ACTION_REVOKE = 1011;  撤回
 
 const strategies = {
 
@@ -16,64 +26,66 @@ const strategies = {
 
     /**
      * 模块： 基础管理
-     * 导航： 纳税主体---税收优惠---申报参数---申报档案---稽查报告---备案资料---证照管理---其他档案
+     * 导航： 纳税主体---税收优惠---申报参数---期初数据采集
+     稽查报告---备案资料---证照管理---其他档案
      */
-
     'basisManage':{
-
-        //基础管理
-        options:[],
 
         //基础信息
         basicInfo:{
 
-            options:[],
-
             //纳税主体
             aubjectOfTaxPayment:{
-                options:[],
+                //查看-1051002,
+                options:['1051002'],
             },
 
-            //税收优惠
+            //税收优惠  查看-'1091002'  新增-'1091003'  编辑-'1091004'  上传附件-'1091005'  删除-'1091008'
             taxIncentives:{
-                options:[],
+                options:['1091002','1091003','1091004','1091005','1091008'],
             },
 
-            //申报参数
+            //申报参数  查看-'1111002'  新增-'1111003'  修改-'1111004'  删除-'1111008'
             declareParameter:{
-                options:[],
+                options:['1111002','1111003','1111004','1111008'],
             },
-
+            //期初数据采集  查看-'1121002'  其他应税项目扣除（不含土地价款扣除）期初数据-新增-'1121003'  其他应税项目扣除（不含土地价款扣除）期初数据-编辑-'1121004'  房间交易档案期初已开票金额-导入-'1121005'  其他应税项目扣除（不含土地价款扣除）期初数据-删除-'1121008'  期初数据采集-增加-'1125000'  土地价款期初数据-增加-'1125001'  土地价款期初数据-修改-'1125002'  房间交易档案期初已开票金额-删除-'1125003'  土地价款期初数据-删除-'1125003'  主表项目期初数据/其他项目期初数据-增加-'1125004'  税额抵减项目期初数据-增加-'1125005'  减税项目期初数据-增加-'1125006'  减税项目期初数据-修改-'1125007'  减税项目期初数据-删除-'1125008'
+            beginDataCollect:{
+                options:['1121002','1121003','1121004','1121005','1121008','1125000','1125001','1125002','1125003','1125003','1125004','1125005','1125006','1125007','1125008'],
+            },
+            //财务凭证期初数据
+            financialDocumentsBeginData:{
+                options:[]
+            },
+            //房间交易档案期初数据
+            roomTransactionFile:{
+                options:[]
+            },
         },
 
         //税务档案
         taxFile:{
 
-            options:[],
-
-            //申报档案
-            declareFile:{
-                options:[],
-            },
-
-            //稽查报告
+            //稽查报告  查看-'1171002'  增加-'1171003'  修改-'1171004'  上传附件-'1171005'  删除-'1171008'
             inspectionReport:{
-                options:[],
+                options:['1171002','1171003','1171004','1171005','1171008'],
             },
 
             //备案资料
             filingMaterial:{
-                options:[],
+                options:['5'],
             },
 
             //证照管理
             licenseManage:{
-                options:[],
+                options:['6'],
             },
 
-            //其他档案
+            //其他档案 查看-1201002,新增-1201003,编辑-1201004,删除-1201008,导入-1201005
             otherFiles:{
-                options:[],
+                options:[
+                    '1201002','1201003','1201004','1201008','1201005'
+                ],
             },
 
         },
@@ -82,58 +94,67 @@ const strategies = {
 
     /**
      * 模块： 增值税管理
-     * 权限： 销项发票采集 --- 更新:1061004 撤回:1061011 提交:1061010 新增:1061003 导入:1061005 删除:1061008 查看:1061001 导出:1061007 列表:1061002 下载模板:1061006
      */
-
     'vatManage':{
-
-        //增值税管理
-        options:[
-
-            '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'  //销项发票采集
-        ],
 
         //销项管理
         salesManag:{
 
-            options:[
-
-                '1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006' //销项发票采集
-            ],
-
             //销项发票采集
             salesInvoiceCollection:{
-                options:['1061004','1061011','1061010','1061003','1061005','1061008','1061001','1061007','1061002','1061006'],
+                options:[
+                    //查看-1061002,导入-1061005,删除-1061008,提交-1061010,撤回-1061011
+                    '1061002','1061005','1061008','1061010','1061011'
+                ],
             },
 
-            //销项发票匹配
+            //销项发票匹配  查看-'1211002'  销项发票匹配-提交-'1215000'  销项发票匹配-撤回-'1215001'  销项发票匹配-数据匹配-'1215002'  销项发票匹配-解除匹配-'1215003'  未匹配的发票列表-手工匹配-'1215006'  无需匹配的发票列表-撤销-'1215008'  无需匹配的发票列表--新增-'1215009'  房间交易档案-提交-'1215010'  房间交易档案-撤回-'1215011'  房间交易档案-导入-'1215012'  房间交易档案-删除-'1215013'
             salesInvoiceMatching:{
-                options:[],
+                options:[
+                    '1211002','1215000','1215001','1215002','1215003','1215006','1215008','1215009','1215010','1215011','1215012','1215013'
+                ],
             },
 
-            //营改增前售房
-            campBeforeTheIncreaseInSales:{
-                options:[],
-            },
-
-            //收入检查
+            //收入检查  查看-'1921002'
             incomeCheck:{
-                options:[],
+                options:[
+                    '1921002'
+                ],
             },
 
-            //开票销售台账
+            //开票销售台账  查看-'1221002'  重算-'1221009'  提交-'1221010'  撤回-'1221011'
             billingSales:{
-                options:[],
+                options:[
+                    '1221002','1221009','1221010','1221011'
+                ],
             },
 
-            //未开票销售台账
-            unBilledSales:{
-                options:[],
+            //未开票销售台账-地产  查看-'1351002'  重算-'1351009'  提交-'1351010'  撤回-'1351011'
+            unBilledSalesEstate:{
+                options:[
+                    '1351002','1351009','1351010','1351011'
+                ],
             },
 
-            //其他涉税调整台账
+            //未开票销售台账-非地产  查看-'1361002'  增加-'1361003'  重算-'1361009'  提交-'1361010'  撤回-'1361011'
+            unBilledSalesNotEstate:{
+                options:[
+                    '1361002','1361003','1361009','1361010','1361011'
+                ],
+            },
+
+            //其他涉税调整台账  查看-'1311002'  增加-'1311003'  修改-'1311004'  删除-'1311008'  提交-'1311010'  撤回-'1311011'
             otherTaxAdjustment:{
-                options:[],
+                options:[
+                    '1311002','1311003','1311004','1311008','1311010','1311011'
+                ],
+            },
+
+            //财务凭证采集  查看-'1231002'  提交-'1231010'  撤回-'1231011'
+            financialDocumentsCollection:{
+                options:[
+                    '1231002','1231010','1231011',
+                ],
             },
 
         },
@@ -141,103 +162,99 @@ const strategies = {
         //进项管理
         entryManag:{
 
-            options:[],
-
-            //进项发票采集
+            //进项发票采集  查看-'1491002'  导入-'1491005'  删除-'1491008'  提交-'1491010'  撤回-'1491011'
             invoiceCollection:{
-                options:[],
+                options:[
+                    '1491002','1491005','1491008','1491010','1491011'
+                ],
             },
 
-            //其他可抵扣进项税明细
-            otherDeductibleInputTaxDetails:{
-                options:[],
+            //固定资产信息采集  查看-'1511002'  提交-'1511010'  撤回-'1511011'
+            fixedAssetCollection:{
+                options:[
+                    '1511002','1511010','1511011'
+                ],
             },
 
-            //进项发票匹配 --- 已隐藏
-            /*invoiceMatching:{
-                options:[],
-            },*/
-
-            //进项税额明细台账
+            //进项税额明细台账  查看-'1381002'  增加-'1381003'  修改-'1381004'  提交-'1381010'  撤回-'1381011'
             inputTaxDetails:{
-                options:[],
+                options:[
+                    '1381002','1381003','1381004','1381010','1381011'
+                ],
             },
 
-            //固定资产进项税额台账
-            inputTaxOnFixedAssets:{
-                options:[],
+            //其他扣税凭证  查看-'1521002'  提交-'1521010'  撤回-'1521011'  数据标记-'1525000'
+            otherDeductionVoucher:{
+                options:[
+                    '1521002','1521010','1521011','1525000'
+                ],
             },
 
-            //跨期合同进项税额转出台账
-            interimContractInputTaxTransferredOut:{
-                options:[],
-            },
-
-            //其他业务进项税额转出台账
+            //其他业务进项税额转出台账  查看-'1401002'  增加-'1401003'  修改-'1401004'  删除-'1401008'  提交-'1401010'  撤回-'1401011'
             otherBusinessInputTaxRollOut:{
-                options:[],
+                options:[
+                    '1401002','1401003','1401004','1401008','1401010','1401011'
+                ],
             },
-            //简易计税进项税额转出台账
+            //简易计税进项税额转出台账  查看-'1391002'  提交-'1391010'  撤回-'1391011'  一般计税-标记-'1395000'
             simplifiedTaxInputTaxTransfer:{
-                options:[],
+                options:[
+                    '1391002','1391010','1391011','1395000'
+                ],
             },
-            //不动产进项税额抵扣台账
+            //不动产进项税额抵扣台账  查看-'1251002'  重算-'1251009'  提交-'1251010'  撤回-'1251011'
             realEstateInputTaxCredit:{
-                options:[],
+                options:[
+                    '1251002','1251009','1251010','1251011'
+                ],
             },
 
         },
 
         //土地价款
         landPrice:{
-
-            options:[],
-
-            //土地价款管理
+            //土地价款管理  查看-'1541002'  修改-'1541004'  重算-'1541009'  提交-'1541010'  撤回-'1541011'  标记为可抵扣土地价款-'1545000'
             landPriceManage:{
-                options:[],
+                options:[
+                    '1541002','1541004','1541009','1541010','1541011','1545000'
+                ],
             },
-
+            //土地价款扣除明细台账  查看-'1261002'  重算-'1261009'  提交-'1261010'  撤回-'1261011'  结转-'1265014'
+            landPriceDeductionDetails:{
+                options:[
+                    '1261002','1261009','1261010','1261011','1265014'
+                ],
+            },
+            //其他应税项目扣除台账  查看-'1271002'  重算-'1271009'  提交-'1271010'  撤回-'1271011'
+            otherTaxableItemsDeduct:{
+                options:[
+                    '1271002','1271009','1271010','1271011'
+                ],
+            },
         },
 
         //其它台账
         otherAccount:{
-
-            options:[],
-
-            //售房预缴台账
-            prePaidHousingSales:{
-                options:[],
-            },
-
-            //预缴税款台账
+            //预缴税款台账  查看-'1331002'  提交-'1331010'  撤回-'1331011'
             prepayTax:{
-                options:[],
+                options:[
+                    '1331002','1331010','1331011',
+                ],
             },
 
-            //土地价款扣除明细台账
-            landPriceDeductionDetails:{
-                options:[],
-            },
-
-            //扣除项目汇总台账
-            deductProjectSummary:{
-                options:[],
-            },
-
-            //减免税明细台账
+            //减免税明细台账   修改前：     修改-'1301004'  删除-'1301008'
+            //               修改后：   增加-'1301003' 查看-'1301002'  重算-'1301009'  提交-'1301010'  撤回-'1301011'
             taxExemptionDetails:{
-                options:[],
+                options:[ //'1301004','1301008',
+                    '1301003','1301002','1301009','1301010','1301011'
+                ],
             },
 
-            //营改增税负分析测算台账
-            businessTaxChangeTaxAnalysisNegative:{
-                options:[],
-            },
-
-            //税款计算台账
+            //税款计算台账  查看-'1371002'  保存-'1371003'  重算-'1371009'  提交-'1371010'  撤回-'1371011'
             taxCalculation:{
-                options:[],
+                options:[
+                    '1371002','1371003','1371009','1371010','1371011'
+                ],
             },
 
         },
@@ -247,297 +264,127 @@ const strategies = {
 
     /**
      * 模块： 纳税申报
-     * 导航： 创建申报---查询申报
+     * 导航： 创建申报---申报办理---查询申报
      */
 
     'taxDeclare':{
-
-        //增值税管理
-        options:[],
-
-        //创建申报
+        //创建申报  查看-'1071002'  创建纳税申报-'1071003'
         createADeclare:{
-            options:[],
+            //创建申报  查看-'1071002'  创建纳税申报-'1071003'
+            options:[
+                "1071002","1071003"
+            ],
         },
 
-        //申报办理
+        //申报办理  查看-'1081002'  流程终止-'1085000'  申报归档-'1085001'  申报办理-'1085004'  申报撤回-'1085005'
         declareHandle:{
-            options:[],
+            options:[
+                '1081002','1085000','1085001','1085004','1085005'
+            ],
         },
 
-        //查询申报
+        //查询申报  查看-'1931002'
         searchDeclare:{
-            options:[],
+            options:[
+                '1931002'
+            ],
         },
 
     },
 
     /**
      * 模块： 报表管理
-     * 导航： 增值税一般纳税人申报表---增值税预缴表---房间交易档案---房间档案汇总查询---跨期合同进项税额转出查询---土地价款扣除明细查询---售房预缴查询
-     *       ---纳税主体查询---税收优惠报表---税务档案查询---申报参数查询---发票查询---申报查询---纳税申报表---固定资产卡片---财务凭证---进项发票采集
-     *       ---销项发票采集---纳税结构分析---纳税趋势分析---税负分析
+     * 导航： 房间交易档案---售房预缴查询---纳税申报表---固定资产卡片---财务凭证---进项发票采集---销项发票采集---可售面积
      */
 
     'reportManage':{
 
-        //增值税管理
-        options:[],
-
         //业务报表
         businessReport:{
 
-            options:[],
-
-            //增值税一般纳税人申报表
-            generalTaxpayerVATReturn:{
-                options:[],
-            },
-
-            //增值税预缴表
-            vatPrepaymentForm:{
-                options:[],
-            },
-
-            //房间交易档案
+            //房间交易档案报表  查看-'1861002'
             roomTransactionFile:{
-                options:[],
+                options:[
+                    '1861002',
+                ],
             },
 
-            //房间档案汇总查询
-            roomFileSummaryQuery:{
-                options:[],
-            },
-
-            //跨期合同进项税额转出查询
-            interimContractInputTaxTransferredOutQuery:{
-                options:[],
-            },
-
-            //土地价款扣除明细查询
-            landPriceDeductionDetails:{
-                options:[],
-            },
-
-            //售房预缴查询
-            prePaidSalesQuery:{
-                options:[],
-            },
-
-            //纳税主体查询
-            taxpayersQuery:{
-                options:[],
-            },
-
-            //税收优惠报表
-            taxIncentives:{
-                options:[],
-            },
-
-            //税务档案查询
-            taxFileQuery:{
-                options:[],
-            },
-
-            //申报参数查询
-            declareParametersQuery:{
-                options:[],
-            },
-
-            //发票查询
-            invoiceQuery:{
-                options:[],
-            },
-
-            //申报查询
-            declareQuery:{
-                options:[],
-            },
-
-            //纳税申报表
+            //纳税申报表  查看-'1911002'  主表-提交-'1911010'  主表-撤回-'1911011'  附表3-保存-'1915003'  附表4-保存-'1915004'  附表5-保存-'1915005'  增值税预缴税款表-保存-'1915006'
             taxReturn:{
-                options:[],
+                options:[
+                    '1911002','1911010','1911011','1915003','1915004','1915005','1915006'
+                ],
             },
 
-            //固定资产卡片
+            //固定资产卡片报表  查看-'1871002'  删除-'1871008'  导入固定资产卡片信息-'1875002'
             fixedAssetCard:{
-                options:[],
+                options:[
+                    '1871002','1871008','1875002'
+                ],
             },
-            //财务凭证
+            //财务凭证报表  查看-'1891002'  导入-'1891005'  删除-'1891008'
             financialDocuments:{
-                options:[],
+                options:[
+                    '1891002','1891005','1891008'
+                ],
             },
-            //进项发票采集
+            //进项发票采集报表  查看-'1881002'
             incomingInvoiceCollection:{
-                options:[],
+                options:[
+                    '1881002',
+                ],
             },
-            //销项发票采集
+            //销项发票采集报表  查看-'1901002'
             salesInvoiceCollection:{
-                options:[],
+                options:[
+                    '1901002',
+                ],
+            },
+            //可售面积报表  查看-'1531002'  导入-'1531005'  删除-'1531008'
+            availableArea:{
+                options:[
+                    '1531002','1531005','1531008'
+                ],
             },
         },
-
-        //管理分析报表
-        manageAnalysisReport:{
-
-            options:[],
-
-            //纳税结构分析
-            taxStructureAnalysis:{
-                options:[],
-            },
-
-            //纳税趋势分析
-            taxTrendsAnalysis:{
-                options:[],
-            },
-
-            //税负分析
-            taxAnalysis:{
-                options:[],
-            },
-
-        },
-
     },
-
-    /**
-     * 模块： 系统管理
-     * 导航： 组织架构维护---角色管理---用户管理---用户权限管理---角色管理详情---用户管理详情---纳税申报表自定义---其他报表自定义---数据字典维护
-     *       ---税收分类编码---应税项目---接口维护---流程配置---审批配置---日志监控---系统维护
-     */
-
-    'systemManage':{
-
-        //增值税管理
-        options:[],
-
-        //组织架构
-        organization:{
-
-            options:[],
-
-            //组织架构维护
-            organizationalStructureMaintenance:{
-                options:[],
-            },
-        },
-
-        //用户权限
-        userPermissions:{
-
-            options:[],
-
-            //角色管理
-            roleManage:{
-                options:[],
-            },
-
-            //用户管理
-            userManage:{
-                options:[],
-            },
-
-            //角色管理详情
-            roleManagementDetail:{
-                options:[],
-            },
-
-            //用户管理详情
-            userManagementDetail:{
-                options:[],
-            },
-
-        },
-
-        //系统维护
-        systemMaintain:{
-
-            options:[],
-
-            //纳税申报表自定义
-            taxReturnsCustom:{
-                options:[],
-            },
-
-            //其他报表自定义
-            otherReportsAreCustom:{
-                options:[],
-            },
-
-            //数据字典维护
-            dataDictionaryMaintain:{
-                options:[],
-            },
-
-            //税收分类编码
-            taxClassificationCode:{
-                options:[],
-            },
-
-            //应税项目
-            taxableItems:{
-                options:[],
-            },
-
-        },
-
-        //接口管理
-        interfaceManage:{
-
-            options:[],
-
-            //接口维护
-            interfaceMaintain:{
-                options:[],
-            },
-
-        },
-
-        //流程管理
-        processManage:{
-
-            options:[],
-
-            //流程配置
-            processConfiguration:{
-                options:[],
-            },
-
-            //审批配置
-            approveTheConfiguration:{
-                options:[],
-            },
-        },
-
-        //系统监控
-        systemMonitor:{
-
-            options:[],
-
-            //日志监控
-            logMonitoring:{
-                options:[],
-            },
-
-            //系统维护
-            systemMaintain:{
-                options:[],
-            },
-
-        },
-
-
-
-
-    }
 }
 
-export const getOptions = ( oneLevelMenu, twoLevelMenu ) => {
-    if ( strategies[oneLevelMenu] && strategies[oneLevelMenu][twoLevelMenu] ) {
+//菜单权限  纳税申报-'1005000'  增值税管理-'1005001'  报表管理-'1005002'
+export const menuPermissions = ['1005000','1005001','1005002'];
+
+export const getChildOptions = ( oneLevelMenu, twoLevelMenu ) => {
+    let nArr = [];
+    let oArr = strategies[oneLevelMenu][twoLevelMenu];
+    for(let key in oArr){
+        nArr = nArr.concat(oArr[key].options)
+    }
+    return nArr;
+};
+
+export const getParentOptions = (oneLevelMenu) =>{
+    let nArr = [];
+    let oArr = strategies[oneLevelMenu];
+    //当只有二级的情况
+    if(oneLevelMenu === 'taxDeclare'){
+        for(let key in oArr){
+            nArr = nArr.concat(oArr[key].options)
+        }
+    }else{
+        for(let key in oArr){
+            for(let nKey in oArr[key]){
+                nArr = nArr.concat(oArr[key][nKey].options)
+            }
+        }
+    }
+    return nArr;
+}
+
+export const getTowOptions = (oneLevelMenu, twoLevelMenu) =>{
+    if(strategies[oneLevelMenu] && strategies[oneLevelMenu][twoLevelMenu]){
         return strategies[oneLevelMenu][twoLevelMenu].options || [];
     }
     return [];
-};
+}
 
 export default strategies;

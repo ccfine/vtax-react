@@ -3,13 +3,13 @@
  */
 import React,{Component} from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
+import {fMoney,composeBotton} from 'utils'
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:6,
+        span:8,
         fieldDecoratorOptions:{
 
         },
@@ -18,7 +18,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目名称',
         fieldName:'projectId',
         type:'asyncSelect',
-        span:6,
+        span:8,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -31,7 +31,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
-        span:6,
+        span:8,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -42,9 +42,9 @@ const searchFields = (getFieldValue)=> [
     },
     {
         label:'交易月份',
-        fieldName:'transactionDate',
+        fieldName:'authMonth',
         type:'monthPicker',
-        span:6
+        span:8
     },
 ]
 const columns = [
@@ -80,7 +80,7 @@ const columns = [
                 </div>
             );
         }
-    }, {
+    /*}, {
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">发票号码</p>
@@ -133,7 +133,7 @@ const columns = [
                     <p className="apply-form-list-p2">{invoiceStatusText}</p>
                 </div>
             )
-        }
+        }*/
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -205,6 +205,9 @@ const columns = [
         title:'单元',
         dataIndex:'element'
     }, {
+        title:'路址',
+        dataIndex:'htRoomName',
+    }, {
         title:'房号',
         dataIndex:'roomNumber'
     }, {
@@ -240,9 +243,6 @@ const columns = [
         render:text=>fMoney(text),
         className:'table-money'
     }, {
-        title:'组织ID',
-        dataIndex:'orgId'
-    }, {
         title:' 款项名称',
         dataIndex:'priceType'
     }, {
@@ -258,20 +258,40 @@ const columns = [
     },
 ]
 class RoomTransactionFile extends Component{
+    state={
+        filters:undefined,
+    }
     render(){
+        const {filters}=this.state;
         return(
             <SearchTable
                 searchOption={{
                     fields:searchFields
                 }}
                 tableOption={{
-                    pageSize:20,
+                    pageSize:10,
                     columns,
+                    onSuccess:(params)=>{
+                        this.setState({
+                            filters:params
+                        })
+                    },
                     cardProps:{
                         title:'房间交易档案'
                     },
-                    url:'/output/room/files/inter/list',
-                    scroll:{ x: '120%' },
+                    url:'/output/room/files/report/list',
+                    extra:<div>
+                        {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'output/room/files/report/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1861002'],
+                            }])
+                        }
+                    </div>,
+                    scroll:{ x: 1800 },
                 }}
             >
             </SearchTable>

@@ -1,6 +1,14 @@
+/*
+ * @Author: liuchunxiu
+ * @Date: 2018-05-15 16:12:23
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-06-20 19:46:05
+ */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
-import { getFields, request } from "../../../../../utils";
+import { getFields, request } from "utils";
+import {connect} from 'react-redux'
+import moment from 'moment';
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -11,42 +19,66 @@ const formItemLayout = {
         sm: { span: 16 }
     }
 };
-const setComItem = (
-    initialValue,
-    readonly = false,
-    required = true,
-    message
-) => ({
-    span: "12",
-    type: "input",
-    formItemStyle: formItemLayout,
-    fieldDecoratorOptions: {
-        initialValue,
-        rules: [
-            {
-                required: required,
-                message: message
-            }
-        ]
-    },
-    componentProps: {
-        disabled: readonly
-    }
-});
 class PopModal extends Component {
     state = {
         loading: false,
         formLoading: false,
         record: {},
         visible: false,
-        typelist: []
+        typelist: [],
+        creditSubjectList:[],
     };
+
+    //查询未开票-非地产的科目列表
+    getLoadUnRealtyList=()=>{
+        request.get('/incomeAndTaxRateCorrespondence/loadUnRealtyList')
+            .then(({data})=>{
+                if(data.code ===200){
+
+                    this.setState({
+                        creditSubjectList:data.data.map(item=>{
+                            return {
+                                ...item,
+                                text: item.name,
+                                value: item.code
+                            }
+                        })
+                    })
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            });
+    }
+    //查询未开票-非地产的科目列表
+    getStagesList=(projectId,stagesId,creditSubjectCode,cb)=>{
+        request.get(`/project/stages/${projectId}`)
+            .then(({data})=>{
+                if(data.code ===200){
+                    let taxMethod = data.data.records.filter(item=>item.id === stagesId)[0].taxMethod;
+                    let nList = this.state.creditSubjectList.filter(item=>item.code === creditSubjectCode)[0];
+                    let taxRate = 0;
+                    if(parseInt(taxMethod, 0) === 1){
+                        taxRate = nList.commonlyTaxRate
+                    } else {
+                        taxRate = nList.simpleTaxRate
+                    }
+                    cb && cb(taxRate)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            });
+    }
+    componentDidMount() {
+        this.getLoadUnRealtyList()
+    }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
                 request
-                    .get(`/account/income/taxout/find/${props.id}`)
+                    .get(`/account/notInvoiceUnSale/realty/find/${props.id}`)
                     .then(({ data }) => {
                         if (data.code === 200) {
                             this.setState({
@@ -84,41 +116,59 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
+
                 // 提交数据
-                // 处理日期
-                values.taxDate = values.taxDate.format("YYYY-MM-DD");
-                //处理下拉数据
+                values.month = values.month.format('YYYY-MM');
+                //纳税主体
                 if (values.main) {
                     values.mainId = values.main.key;
                     values.mainName = values.main.label;
                     values.main = undefined;
                 }
-                // 处理应税项目
-                if (values.taxableItem) {
-                    values.taxableItemId = values.taxableItem.key;
-                    values.taxableItemName = values.taxableItem.label;
-                    values.taxableItem = undefined;
+                // 项目
+                if (values.project) {
+                    values.projectId = values.project.key;
+                    values.projectName = values.project.label;
+                    values.project = undefined;
                 }
-                // 处理转出项目
-                if (values.outProject) {
-                    values.outProjectId = values.outProject.key;
-                    values.outProjectName = values.outProject.label;
-                    values.outProject = undefined;
+                // 项目分期
+                if (values.stages) {
+                    values.stagesId = values.stages.key;
+                    values.stagesName = values.stages.label;
+                    values.stages = undefined;
                 }
-
-                let obj = Object.assign({}, this.state.record, values);
-
-                let result, sucessMsg;
-                if (this.props.action === "modify") {
-                    result = request.put("/account/income/taxout/update", obj);
-                    sucessMsg = "修改成功";
-                } else if (this.props.action === "add") {
-                    result = request.post("/account/income/taxout/add", obj);
-                    sucessMsg = "添加成功";
+                // 科目
+                if(values.creditSubject){
+                    values.creditSubjectCode = values.creditSubject.key;
+                    values.creditSubjectName = values.creditSubject.label;
+                    values.creditSubject = undefined;
                 }
 
-                this.setState({ loading: true, formLoading: true });
-                result &&
+
+               // 当项目分期的taxMethod=2 取 科目税率对应表的simpleTaxRate为税率。 项目分期的taxMethod=1 取 科目税率对应表的commonlyTaxRate为税率。
+
+                this.getStagesList(values.projectId,values.stagesId,values.creditSubjectCode,(taxRate)=>{
+
+                    let obj = Object.assign({}, this.state.record, {...values,taxRate:taxRate});
+                    console.log(obj)
+
+                    let result, sucessMsg;
+                    if (this.props.action === "modify") {
+                        result = request.put(
+                            "/account/notInvoiceUnSale/realty/update",
+                            obj
+                        );
+                        sucessMsg = "修改成功";
+                    } else if (this.props.action === "add") {
+                        result = request.post(
+                            "/account/notInvoiceUnSale/realty/add",
+                            obj
+                        );
+                        sucessMsg = "添加成功";
+                    }
+
+                    this.setState({ loading: true, formLoading: true });
+                    result &&
                     result
                         .then(({ data }) => {
                             if (data.code === 200) {
@@ -140,14 +190,17 @@ class PopModal extends Component {
                                 formLoading: false
                             });
                         });
+                });
+
             }
         });
     }
     render() {
         const readonly = this.props.action === "look";
         // const NotModifyWhenEdit = this.props.action === "modify";
-        let { record = {} } = this.state;
-        const form = this.props.form;
+        let { record = {}, creditSubjectList } = this.state,
+            {declare,form} = this.props;
+        const { getFieldValue } = form;
         let title = "查看";
         if (this.props.action === "add") {
             title = "新增";
@@ -189,135 +242,205 @@ class PopModal extends Component {
                         <Row>
                             {getFields(form, [
                                 {
-                                    ...setComItem(
-                                        record.mainId
-                                            ? {
-                                                  key: record.mainId,
-                                                  label: record.mainName
-                                              }
-                                            : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择纳税主体"
-                                    ),
                                     label: "纳税主体",
                                     fieldName: "main",
                                     type: "taxMain",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     componentProps: {
                                         labelInValue: true,
-                                        disabled: readonly
-                                    }
-                                },
-                                {
-                                    ...setComItem(
-                                        record && record.taxableItemId
-                                            ? {
-                                                  label:
-                                                      record.taxableItemName ||
-                                                      "",
-                                                  key:
-                                                      record.taxableItemId || ""
-                                              }
-                                            : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择项目分期"
-                                    ),
-                                    label: "项目分期",
-                                    fieldName: "taxableItem",
-                                    type: "taxableProject",
+                                        disabled: readonly || !!declare,
+                                    },
                                     fieldDecoratorOptions: {
-                                        initialValue:
-                                            record && record.taxableItemId
-                                                ? {
-                                                      label:
-                                                          record.taxableItemName ||
-                                                          "",
-                                                      key:
-                                                          record.taxableItemId ||
-                                                          ""
-                                                  }
-                                                : undefined,
+                                        initialValue:record.mainId? {key: record.mainId,label: record.mainName}: (declare?{key:declare.mainId}:undefined),
                                         rules: [
                                             {
                                                 required: true,
-                                                message: "请选择项目分期"
+                                                message: '请选择纳税主体'
                                             }
                                         ]
+                                    }
+                                },{
+                                    label: "期间",
+                                    fieldName: "month",
+                                    type: "monthPicker",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue:(record.month && moment(record.month)) || (declare && declare.authMonth && moment(declare.authMonth)),
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择期间'
+                                            }
+                                        ]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly || !!declare,
                                     }
                                 }
                             ])}
                         </Row>
                         <Row>
-                            {
-                            getFields(form, [
+                            {getFields(form, [{
+                                    label: "项目",
+                                    fieldName: "project",
+                                    type: "asyncSelect",
+                                    span: 12,
+                                    formItemStyle: formItemLayout,
+                                    componentProps: {
+                                        disabled:readonly,
+                                        selectOptions: {
+                                            disabled:readonly,
+                                            labelInValue: true
+                                        },
+                                        fieldTextName: "itemName",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount: !declare,
+                                        fetchAble:
+                                        (getFieldValue("main") &&
+                                        getFieldValue("main").key) || (record && record.mainId),
+                                        url: `/project/list/${(getFieldValue("main") && getFieldValue("main").key) || (record && record.mainId) ||
+                                        (declare && declare.mainId)}`
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue:record && record.projectId? {label:record.projectName,key:record.projectId} : undefined,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择项目'
+                                            }
+                                        ]
+                                    },
+                                },
                                 {
-                                    ...setComItem(
-                                        record.taxMethod,
-                                        readonly,
-                                        true,
-                                        "请选择科目"
-                                    ),
+                                    label: "项目分期",
+                                    fieldName: "stages",
+                                    type: "asyncSelect",
+                                    span: 12,
+                                    formItemStyle: formItemLayout,
+                                    componentProps: {
+                                        disabled:readonly,
+                                        selectOptions: {
+                                            disabled:readonly,
+                                            labelInValue: true
+                                        },
+                                        fieldTextName: "itemName",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount: true,
+                                        fetchAble:
+                                        (getFieldValue("project") &&
+                                        getFieldValue("project").key) || (record && record.projectId),
+                                        url: `/project/stages/${(getFieldValue(
+                                            "project"
+                                        ) &&
+                                        getFieldValue("project").key) || (record && record.projectId) ||
+                                        ""}`
+                                    },
+                                    fieldDecoratorOptions: {initialValue:record && record.stagesId? {label:record.stagesName,key:record.stagesId }: undefined,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择项目分期'
+                                            }
+                                        ]
+                                    },
+                                }
+                            ])}
+                        </Row>
+                        <Row>
+                            {getFields(form, [{
                                     label: "科目",
-                                    fieldName: "taxMethod",
+                                    fieldName: "creditSubject",
                                     type: "select",
-                                    options: [
-                                        { text: "一般计税方法", value: "1" },
-                                        { text: "简易计税方法", value: "2" }
-                                    ]
-                                }
-                            ])}
-                        </Row>
-                        <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.outTaxAmount,
-                                        readonly,
-                                        true,
-                                        "请输入金额"
-                                    ),
+                                    options: creditSubjectList,
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    componentProps: {
+                                        labelInValue: true,
+                                        disabled:readonly
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.creditSubjectCode ? { key: record.creditSubjectCode, label: record.creditSubjectName } : undefined,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择科目'
+                                            }
+                                        ]
+                                    },
+                                },{
                                     label: "金额",
-                                    fieldName: "outTaxAmount",
-                                    type: "numeric"
-                                },{
-                                    ...setComItem(
-                                        record.outTaxAmount,
-                                        readonly,
-                                        true,
-                                        "请输入税率"
-                                    ),
-                                    label: "税率",
-                                    fieldName: "outTaxAmount",
-                                    type: "numeric"
-                                }
+                                    fieldName: "creditAmount",
+                                    type: "numeric",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.creditAmount,
+                                        rules: [{
+                                                required: true,
+                                                message: '请输入金额'
+                                            }]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly
+                                    }
+                                },
                             ])}
                         </Row>
-                        <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.outTaxAmount,
-                                        readonly,
-                                        true,
-                                        "请输入税额"
-                                    ),
-                                    label: "税额",
-                                    fieldName: "outTaxAmount",
-                                    type: "numeric"
-                                },{
-                                    ...setComItem(
-                                        record.outTaxAmount,
-                                        readonly,
-                                        true,
-                                        "请输入价税合计"
-                                    ),
-                                    label: "价税合计",
-                                    fieldName: "outTaxAmount",
-                                    type: "numeric"
-                                }
-                            ])}
-                        </Row>
+                        {
+                            this.props.action === 'look' && <div>
+                                <Row>
+                                    { getFields(form, [
+                                        {
+                                            span: "12",
+                                            formItemStyle: formItemLayout,
+                                            fieldDecoratorOptions: {
+                                                initialValue:record.taxRate,
+                                            },
+                                            componentProps: {
+                                                disabled: true,
+                                                placeholder: "请输入税率（单位：%）"
+                                            },
+                                            label: "税率（%）",
+                                            fieldName: "taxRate",
+                                            type: "numeric",
+                                        },{
+                                            span: "12",
+                                            formItemStyle: formItemLayout,
+                                            label: "税额",
+                                            fieldName: "taxAmount",
+                                            type: "numeric",
+                                            fieldDecoratorOptions: {
+                                                initialValue:record.taxAmount
+                                            },
+                                            componentProps: {
+                                                disabled: true
+                                            }
+                                        },
+                                    ])}
+                                </Row>
+                                <Row>
+                                    { getFields(form, [
+                                        {
+                                            span: "12",
+                                            formItemStyle: formItemLayout,
+                                            label: "价税合计",
+                                            fieldName: "totalAmount",
+                                            type: "numeric",
+                                            fieldDecoratorOptions: {
+                                                initialValue:record.totalAmount
+                                            },
+                                            componentProps: {
+                                                disabled: true
+                                            }
+                                        }
+                                    ])}
+                                </Row>
+                            </div>
+
+                        }
+
                     </Form>
                 </Spin>
             </Modal>
@@ -325,4 +448,6 @@ class PopModal extends Component {
     }
 }
 
-export default Form.create()(PopModal);
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(Form.create()(PopModal));

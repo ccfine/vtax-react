@@ -2,9 +2,11 @@
  * Created by liuliyuan on 2018/5/14.
  */
 import React, { Component } from 'react';
-import {Button,Icon,message,Modal,Badge} from 'antd'
+import {connect} from 'react-redux'
+import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
-import {request} from 'utils'
+import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
+import {request,composeBotton} from 'utils'
 const formItemStyle={
     labelCol:{
         span:8
@@ -19,13 +21,13 @@ const searchFields = [
         type:'taxMain',
         fieldName:'mainId',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'办理进度',
         type:'select',
         fieldName:'status',
         formItemStyle,
-        span:6,
+        span:8,
         options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             {
                 text:'申报办理',
@@ -36,17 +38,17 @@ const searchFields = [
             }
         ],
     },{
-        label:'所属期起止',
-        type:'rangePicker',
-        fieldName:'subordinatePeriod',
+        label:'所属期',
+        type:'monthPicker',
+        fieldName:'partTerm',
         formItemStyle,
-        span:6,
+        span:8,
     },{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
         formItemStyle,
-        span:6,
+        span:8,
         options:[
             {
                 text:'增值税',
@@ -60,36 +62,124 @@ const searchFields = [
 ]
 const getColumns =(context)=>[
     {
+        title: "操作",
+        className:'text-center',
+        render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
+            let t = undefined;
+            let status = parseInt(record.status,0);
+            switch (status){
+                case 1: //申报办理
+                    t = composeBotton([{
+                                type:'action',
+                                icon:'form',
+                                title:'申报办理',
+                                userPermissions:['1081002'],
+                                onSuccess:()=>{
+                                    context.setState({
+                                        record: {...record,decAction:'edit'},
+                                    },() => {
+                                        context.toggleApplyVisible(true,'tax/decConduct/list/handle');
+                                    });
+                                }
+                            },{
+                                type:'action',
+                                icon:'exception',
+                                title:'流程终止',
+                                userPermissions:['1085000'],
+                                onSuccess:()=>{ context.handelProcessStop(record) }
+                            }])
+                    break
+                case 2: //申报审核
+                    break
+                case 3: //申报审批
+                    break
+                case 4: //申报完成
+                    t = composeBotton([{
+                            type: 'action',
+                            icon: 'folder',
+                            title: '申报归档',
+                            userPermissions: ['1085001'],
+                            onSuccess: () => {
+                                context.handelArchiving(record)
+                            }
+                        },{
+                            type:'action',
+                            icon:'rollback',
+                            title:'申报撤回',
+                            userPermissions:['1085005'],
+                            onSuccess:()=>{
+                                context.setState({
+                                    record: {...record,decAction:'edit'},
+                                },() => {
+                                    context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
+                                });
+                            }
+                        }])
+                    break
+                case 5: //归档
+                    t = composeBotton([{
+                            type:'action',
+                            icon:'folder',
+                            title:'申报归档',
+                            userPermissions:['1085001'],
+                            onSuccess:()=>{ context.handelArchiving(record) }
+                        }])
+                    break
+                case -1: //流程终止
+                    break
+                default:
+                    /*break*/
+            }
+            return <span>
+                        {
+                            composeBotton([{
+                                type:'action',
+                                icon:'search',
+                                title:'查看申报',
+                                onSuccess:()=>{
+                                    context.setState({
+                                        record: {...record,decAction:'look'}
+                                    },() => {
+                                        context.toggleApplyVisible(true,'tax/decConduct/list/find');
+                                    });
+                                }
+                            }])
+                        }
+                        {t}
+                    </span>;
+        },
+        fixed: "left",
+        width: "75px",
+        dataIndex: "action"
+    },{
         title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
         render:text=>{
-            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠; ,
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
-                    t=<Badge count='申报办理' style={{ backgroundColor: '#44b973' }} />;
+                    t=<span style={{ color: '#44b973' }}>申报办理</span>;
                     break;
                 case 2:
-                    t=<Badge count='申报审核' style={{ backgroundColor: '#2783d8' }} />;
+                    t=<span style={{ color: '#2783d8' }}>申报审核</span>;
                     break;
                 case 3:
-                    t=<Badge count='申报审批' style={{ backgroundColor: '#373ac6' }} />;
+                    t=<span style={{ color: '#373ac6' }}>申报审批</span>;
                     break;
                 case 4:
-                    t=<Badge count='申报完成' style={{ backgroundColor: '#1795f6' }} />;
+                    t=<span style={{ color: '#1795f6' }}>申报完成</span>;
                     break;
                 case 5:
-                    t=<Badge count='归档' style={{ backgroundColor: '#7a7e91' }} />;
+                    t=<span style={{ color: '#7a7e91' }}>归档</span>;
                     break;
                 case -1:
-                    t=<Badge count='流程终止' style={{ backgroundColor: '#ed2550' }} />;
+                    t=<span style={{ color: '#ed2550' }}>流程终止</span>;
                     break;
-
                 default:
                 //no default
             }
-            return t
+            return t;
         }
     }, {
         title: '上一步完成时间',
@@ -105,7 +195,7 @@ const getColumns =(context)=>[
         dataIndex: 'mainName',
     },{
         title: '所属期',
-        dataIndex: 'remark',
+        dataIndex: 'partTerm',
     },{
         title: '税（费）种',
         dataIndex: 'taxType',
@@ -134,49 +224,30 @@ const getColumns =(context)=>[
         dataIndex: 'declareBy',
     },{
         title: '申报日期',
-        dataIndex: 'month',
+        dataIndex: 'declarationDate',
     }
 ];
 
-export default class DeclareHandle extends Component{
+class DeclareHandle extends Component{
     state={
         updateKey:Date.now(),
-        selectedRowKeys:undefined,
-        selectedRows:[],
+        record:undefined,
+        applyVisible:false,
+        applyUrl:undefined,
+        applyDeclarationModalKey:Date.now()+2,
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now(),
         })
     }
-    handelComplete=()=>{
-        const modalRef = Modal.confirm({
-            title: '友情提醒',
-            content: '是否确定流程已完成？',
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk:()=>{
-                modalRef && modalRef.destroy();
-                request.put(`/tax/decConduct/finish/${this.state.selectedRowKeys}`)
-                    .then(({data})=>{
-                        if (data.code === 200) {
-                            message.success('流程完成成功!');
-                            this.refreshTable();
-                        } else {
-                            message.error(data.msg)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                    })
-            },
-            onCancel() {
-                modalRef.destroy()
-            },
+    toggleApplyVisible = (applyVisible,url) => {
+        this.setState({
+            applyVisible,
+            applyUrl:url,
         });
-    }
-    handelArchiving=()=>{
+    };
+    handelArchiving=(record)=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '是否确定要归档？',
@@ -185,9 +256,9 @@ export default class DeclareHandle extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                request.put(`/tax/decConduct/record/${this.state.selectedRowKeys}`,{
-                    mainId: this.state.selectedRows[0].mainId,
-                    authMonth:this.state.selectedRows[0].month
+                request.put(`/tax/decConduct/record/${record.id}`,{
+                    mainId: record.mainId,
+                    authMonth:record.month
                 })
                     .then(({data})=>{
                         if (data.code === 200) {
@@ -206,7 +277,7 @@ export default class DeclareHandle extends Component{
             },
         });
     }
-    handelProcessStop=()=>{
+    handelProcessStop=(record)=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '是否确定要流程终止？',
@@ -215,10 +286,7 @@ export default class DeclareHandle extends Component{
             cancelText: '取消',
             onOk:()=>{
                 modalRef && modalRef.destroy();
-                request.put('/tax/declaration/stop',{
-                    mainId: this.state.selectedRows[0].mainId,
-                    authMonth:this.state.selectedRows[0].month
-                })
+                request.delete(`/tax/decConduct/stop/${record.id}`)
                     .then(({data})=>{
                         if (data.code === 200) {
                             message.success('流程终止成功!');
@@ -238,67 +306,44 @@ export default class DeclareHandle extends Component{
     }
 
     render(){
-        const {updateKey,selectedRowKeys,selectedRows} = this.state;
+        const { title } = this.props;
+        const {updateKey,applyDeclarationModalKey,applyVisible,record,applyUrl} = this.state;
         return(
             <SearchTable
                 searchOption={{
                     fields:searchFields,
-                    cardProps:{
-                        style:{
-                            borderTop:0
-                        }
-                    }
                 }}
                 tableOption={{
                     key:updateKey,
                     pageSize:10,
                     columns:getColumns(this),
                     cardProps:{
-                        title:'列表信息'
+                        title: title ? title : '申报办理'
                     },
                     url:'/tax/decConduct/decList',
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        console.log(selectedRowKeys,selectedRows);
-                        this.setState({
-                            selectedRowKeys:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    onSuccess:()=>{
-                        this.setState({
-                            selectedRowKeys:undefined,
-                            selectedRows:[],
-                        })
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
-                    extra: <div>
-                        <Button size='small' style={{marginRight:5}}
-                                onClick={this.handelComplete}
-                                disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===4)}
-                        >
-                            <Icon type="check" />
-                            完成
-                        </Button>
-                        <Button size='small' style={{marginRight:5}}
-                                onClick={this.handelArchiving}
-                                disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===5)}
-                        >
-                            <Icon type="folder-open" />
-                            归档
-                        </Button>
-                        <Button size='small' type="danger" style={{marginRight:5}}
-                                onClick={this.handelProcessStop}
-                                disabled={!selectedRowKeys || (selectedRowKeys && selectedRows.length>0 && parseInt(selectedRows[0].status,0)===-1)}
-                        >
-                            <Icon type="exception" />
-                            流程终止
-                        </Button>
-                    </div>,
+                    scroll:{
+                        x:1300
+                    }
                 }}
             >
+                {
+                    record && <ApplyDeclarationPopModal
+                        key={applyDeclarationModalKey}
+                        visible={applyVisible}
+                        title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
+                        record={record}
+                        onSuccess={()=>{
+                            this.refreshTable()
+                        }}
+                        toggleApplyVisible={this.toggleApplyVisible}
+                        style={{marginRight:5}}
+                        url={applyUrl}
+                    />
+                }
             </SearchTable>
         )
     }
 }
+export default connect(state=>({
+    options:state.user.getIn(['personal','options']),
+}))(DeclareHandle)

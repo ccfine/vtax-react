@@ -43,10 +43,11 @@ class UserDetail extends Component {
         let {
             allPermission,
             checkedPermission,
-            permissionLoading
+            permissionLoading,
+            userLoading
         } = this.props;
         return (
-            <Card title="用户信息" style={{ ...this.props.style }}>
+            <Card title="用户信息" style={{ ...this.props.style }} loading={userLoading}>
                 <div style={{ padding: "30px", color: "#999" }}>
                     <Row gutter={16}>
                         <Col span={6}>
@@ -111,63 +112,52 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col>
-                        <Col />
-                    </Row>
-                    <Row gutter={16}>
-                        <Col>
-                            <Col span={24}>
-                                <p>
-                                    组织：<span style={{ color: "#333" }}>
-                                        {userData.orgNames}
-                                    </span>
-                                </p>
-                            </Col>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col>
-                            <Col span={24}>
-                                <p>
-                                    角色：<span style={{ color: "#333" }}>
-                                        {userData.roleNames}
-                                    </span>
-                                </p>
-                            </Col>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col>
-                            <Col span={24}>
-                                <div>
-                                    权限：
-                                    <span style={{ color: "#333" }}>
-                                        <Form layout="inline">
-                                            <PermissionFeilds
-                                                editAble={false}
-                                                checkedPermission={
-                                                    checkedPermission
-                                                }
-                                                form={this.props.form}
-                                                allPermission={allPermission}
-                                                permissionLoading={
-                                                    permissionLoading
-                                                }
-                                            />
-                                        </Form>
-                                    </span>
-                                </div>
-                            </Col>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col>
-                            <Col span={24}>
+                        <Col span={12}>
                                 <p>
                                     备注：<span style={{ color: "#333" }}>
                                         {userData.remark}
                                     </span>
                                 </p>
-                            </Col>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <p>
+                                组织：<span style={{ color: "#333" }}>
+                                    {userData.orgNames}
+                                </span>
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <p>
+                                角色：<span style={{ color: "#333" }}>
+                                    {userData.roleNames}
+                                </span>
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <div>
+                                权限：
+                                <span style={{ color: "#333" }}>
+                                    <Form layout="inline">
+                                        <PermissionFeilds
+                                            editAble={false}
+                                            checkedPermission={
+                                                checkedPermission
+                                            }
+                                            form={this.props.form}
+                                            allPermission={allPermission}
+                                            permissionLoading={
+                                                permissionLoading
+                                            }
+                                        />
+                                    </Form>
+                                </span>
+                            </div>
                         </Col>
                     </Row>
                 </div>

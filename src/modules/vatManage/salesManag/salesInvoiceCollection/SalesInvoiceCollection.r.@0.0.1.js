@@ -2,13 +2,11 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
-import { Icon, Modal, message } from "antd";
+import {connect} from 'react-redux'
 import { SearchTable, TableTotal } from "compoments";
-import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
-import PermissibleRender from "compoments/permissible/PermissibleRender.r";
-import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
+import {Modal,message} from 'antd';
+import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
-import { withRouter } from "react-router";
 import moment from "moment";
 
 const pointerStyle = {
@@ -23,19 +21,45 @@ const formItemStyle = {
         span: 16
     }
 };
-const searchFields = disabled => {
+const fields = (disabled,declare)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && declare.mainId) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    },
+]
+
+const searchFields = (disabled,declare) => {
     return [
         {
             label: "纳税主体",
             type: "taxMain",
             fieldName: "mainId",
-            span: 6,
+            span: 8,
             componentProps: {
                 disabled
             },
             formItemStyle,
             fieldDecoratorOptions: {
-                initialValue: (disabled && getUrlParam("mainId")) || undefined,
+                initialValue: (disabled && declare.mainId) || undefined,
                 rules: [
                     {
                         required: true,
@@ -48,14 +72,14 @@ const searchFields = disabled => {
             label: "开票月份",
             type: "monthPicker",
             formItemStyle,
-            span: 6,
-            fieldName: "billingDate",
+            span: 8,
+            fieldName: "authMonth",
             componentProps: {
                 disabled
             },
             fieldDecoratorOptions: {
                 initialValue:
-                    (disabled && moment(getUrlParam("authMonth"), "YYYY-MM")) ||
+                    (disabled && moment(declare.authMonth, "YYYY-MM")) ||
                     undefined,
                 rules: [
                     {
@@ -69,23 +93,15 @@ const searchFields = disabled => {
             label: "发票号码",
             type: "input",
             fieldName: "invoiceNum",
-            span: 6,
+            span: 8,
             formItemStyle,
             fieldDecoratorOptions: {},
             componentProps: {}
         },
         {
-            label: "税收分类编码",
-            type: "input",
-            span: 6,
-            formItemStyle,
-            fieldName: "taxClassificationCoding",
-            fieldDecoratorOptions: {}
-        },
-        {
             label: "税率",
             type: "numeric",
-            span: 6,
+            span: 8,
             formItemStyle,
             fieldName: "taxRate",
             componentProps: {
@@ -94,16 +110,9 @@ const searchFields = disabled => {
             fieldDecoratorOptions: {}
         },
         {
-            label: "商品名称",
-            type: "input",
-            span: 6,
-            formItemStyle,
-            fieldName: "commodityName"
-        },
-        {
             label: "发票类型",
             fieldName: "invoiceType",
-            span: 6,
+            span: 8,
             formItemStyle,
             type: "select",
             options: [
@@ -119,46 +128,73 @@ const searchFields = disabled => {
         }
     ];
 };
-const getColumns = context => [
+const getColumns = (context,hasOperate) => {
+    let operates = hasOperate?[{
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:['1061008'],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    }]:[];
+    return [
+        ...operates
+    ,{
+        title: "纳税主体",
+        dataIndex: "mainName",
+    },
     {
-        title: "操作",
-        key: "actions",
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">项目名称</p>
+                <p className="apply-form-list-p2">项目编码</p>
+            </div>
+        ),
+        dataIndex: "projectName",
         render: (text, record) => (
-            <div style={{ textAlign: "center" }}>
-                {parseInt(context.state.dataStatus, 0) === 1 && (
-                    <span
-                        style={pointerStyle}
-                        onClick={() => {
-                            const type = parseInt(record.sourceType, 0);
-                            if (type !== 1) {
-                                Modal.warning({
-                                    title: "友情提示",
-                                    content: "只能修改手工新增的数据"
-                                });
-                                return false;
-                            }
-
-                            context.setState(
-                                {
-                                    modalConfig: {
-                                        type: "edit",
-                                        id: record.id
-                                    }
-                                },
-                                () => {
-                                    context.toggleModalVisible(true);
-                                }
-                            );
-                        }}
-                    >
-                        编辑
-                    </span>
-                )}
-
-                <span
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.projectNum}</p>
+            </div>
+        )
+    },
+    {
+        title: '发票类型',
+        dataIndex: "invoiceType",
+    },
+    {
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">发票号码</p>
+            <p className="apply-form-list-p2">发票代码</p>
+        </div>,
+        dataIndex: "invoiceNum",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1"><span title='查看详情'
                     style={{
-                        ...pointerStyle,
-                        marginLeft: 5
+                        ...pointerStyle
                     }}
                     onClick={() => {
                         context.setState(
@@ -172,82 +208,16 @@ const getColumns = context => [
                                 context.toggleModalVisible(true);
                             }
                         );
-                    }}
-                >
-                    <Icon
-                        title="查看"
-                        type="search"
-                        style={{ fontSize: 16, color: "#08c" }}
-                    />
-                </span>
-            </div>
-        ),
-        fixed: "left",
-        width: "70px"
-    },
-    {
-        title: "纳税主体",
-        dataIndex: "mainName"
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目名称</p>
-                <p className="apply-form-list-p2">项目编码</p>
-            </div>
-        ),
-        dataIndex: "projectNum",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projecName}</p>
-            </div>
-        )
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">发票代码</p>
-            </div>
-        ),
-        dataIndex: "invoiceType",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
+                }}>{text}</span></p>
                 <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
         )
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票号码</p>
-                <p className="apply-form-list-p2">发票明细号</p>
-            </div>
-        ),
-        dataIndex: "invoiceNum",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
-            </div>
-        )
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">商品名称</p>
-                <p className="apply-form-list-p2">金额</p>
-            </div>
-        ),
-        dataIndex: "commodityName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{fMoney(record.amount)}</p>
-            </div>
-        )
+        title: '金额',
+        dataIndex: "amount",
+        className:'table-money',
+        render: (text, record) => fMoney(text)
     },
     {
         title: (
@@ -276,6 +246,11 @@ const getColumns = context => [
         className: "table-money"
     },
     {
+        title: "税率",
+        dataIndex: "taxRate",
+        render: text => text?`${text}%`:text
+    },
+    {
         title: "价税合计",
         dataIndex: "totalAmount",
         render: text => fMoney(text),
@@ -297,6 +272,7 @@ const getColumns = context => [
         }
     }
 ];
+}
 class SalesInvoiceCollection extends Component {
     state = {
         visible: false,
@@ -304,33 +280,32 @@ class SalesInvoiceCollection extends Component {
             type: ""
         },
         tableKey: Date.now(),
-        searchFieldsValues: {},
-        dataSource: [],
+        filters: {},
         /**
          *修改状态和时间
          * */
         statusParam: {},
-        hasData: false,
         totalSource: undefined
     };
     fetchResultStatus = () => {
-        request
-            .get("/output/invoice/collection/listMain", {
-                params: this.state.searchFieldsValues
+        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    this.setState({
-                        statusParam: data.data
-                    });
-                } else {
-                    message.error(`列表主信息查询失败:${data.msg}`);
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-            });
+        })
     };
+    deleteRecord(record){
+        request.delete(`/output/invoice/collection/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     toggleModalVisible = visible => {
         this.setState({
             visible
@@ -349,38 +324,15 @@ class SalesInvoiceCollection extends Component {
             tableKey: Date.now()
         });
     };
-
-    componentDidMount() {
-        const { search } = this.props.location;
-        if (!!search) {
-            this.refreshTable();
-        }
-    }
     render() {
-        const {
-            visible,
-            modalConfig,
-            tableKey,
-            dataSource,
-            totalSource,
-            statusParam,
-            searchFieldsValues={}
-        } = this.state;
-        const { search } = this.props.location,
-            {mainId,billingDate} = searchFieldsValues;
-        let disabled = !!search,
-        submitDefaultValue = {...searchFieldsValues,taxMonth:searchFieldsValues.billingDate};        
-        const disabled1 = dataSource.length===0 || !!(
-            mainId &&
-            billingDate &&
-            (statusParam && parseInt(statusParam.status, 0) === 1)
-        );
-        const disabled2 = dataSource.length===0 || (statusParam && parseInt(statusParam.status, 0) === 2);
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={} } = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return (
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields: searchFields(disabled),
+                    fields: searchFields(disabled,declare),
                     cardProps: {
                         className: ""
                     }
@@ -388,48 +340,59 @@ class SalesInvoiceCollection extends Component {
                 tableOption={{
                     key: tableKey,
                     pageSize: 10,
-                    columns: getColumns(this),
+                    columns: getColumns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                     url: "/output/invoice/collection/list",
-                    onSuccess: (params, data) => {
-                        this.setState(
-                            {
-                                searchFieldsValues: params,
-                                hasData: data.length !== 0
-                            },
-                            () => {
-                                this.fetchResultStatus();
-                            }
-                        );
+                    onSuccess: (params) => {
+                        this.setState({
+                            filters: params
+                        },() => {
+                            this.fetchResultStatus();
+                        });
                     },
                     cardProps: {
-                        title: "销项发票采集列表",
+                        title: "销项发票采集",
                         extra: (
                             <div>
-                                {dataSource.length > 0 &&
-                                    listMainResultStatus(statusParam)}
-                                <PermissibleRender
-                                    userPermissions={["1061010"]}
-                                >
-                                    <SubmitOrRecall
-                                        type={1}
-                                        url="/output/invoice/collection/submit"
-                                        onSuccess={this.refreshTable}
-                                        initialValue={submitDefaultValue}
-                                        disabled={disabled2}
-                                    />
-                                </PermissibleRender>
-                                <PermissibleRender
-                                    userPermissions={["1061011"]}
-                                >
-                                    <SubmitOrRecall
-                                        type={2}
-                                        url="/output/invoice/collection/revoke"
-                                        onSuccess={this.refreshTable}
-                                        initialValue={submitDefaultValue}
-                                        disabled={disabled1}
-                                    />
-                                </PermissibleRender>
-
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
+                                    JSON.stringify(filters)!=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'output/invoice/collection/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1061002'],
+                                    }])
+                                }
+                                {
+                                    composeBotton([{
+                                        type:'fileExport',
+                                        url:'output/invoice/collection/download',
+                                        onSuccess:this.refreshTable
+                                    }])
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                        type:'fileImport',
+                                        url:'/output/invoice/collection/upload/',
+                                        onSuccess:this.refreshTable,
+                                        fields:fields(disabled,declare),
+                                        userPermissions:['1061005'],
+                                    },{
+                                        type:'submit',
+                                        url:'/output/invoice/collection/submit',
+                                        params:filters,
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1061010'],
+                                    },{
+                                        type:'revoke',
+                                        url:'/output/invoice/collection/revoke',
+                                        params:filters,
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1061011'],
+                                    }],statusParam)
+                                }
                                 <TableTotal totalSource={totalSource} />
                             </div>
                         )
@@ -437,11 +400,6 @@ class SalesInvoiceCollection extends Component {
                     /*scroll:{
                         x:'180%'
                     },*/
-                    onDataChange: dataSource => {
-                        this.setState({
-                            dataSource
-                        });
-                    },
                     onTotalSource: totalSource => {
                         this.setState({
                             totalSource
@@ -453,10 +411,13 @@ class SalesInvoiceCollection extends Component {
                     refreshTable={this.refreshTable}
                     visible={visible}
                     modalConfig={modalConfig}
+                    statusParam={statusParam}
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </SearchTable>
         );
     }
 }
-export default withRouter(SalesInvoiceCollection);
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(SalesInvoiceCollection)

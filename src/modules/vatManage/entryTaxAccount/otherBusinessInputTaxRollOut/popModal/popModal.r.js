@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Modal, Form, Button, message, Spin, Row } from "antd";
-import { getFields, request } from "../../../../../utils";
+import { Modal, Form, Button, message, Spin, Row,Col } from "antd";
+import { getFields, request } from "utils";
 import moment from "moment";
+import {connect} from 'react-redux';
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -12,28 +13,6 @@ const formItemLayout = {
         sm: { span: 16 }
     }
 };
-const setComItem = (
-    initialValue,
-    readonly = false,
-    required = true,
-    message
-) => ({
-    span: "12",
-    type: "input",
-    formItemStyle: formItemLayout,
-    fieldDecoratorOptions: {
-        initialValue,
-        rules: [
-            {
-                required: required,
-                message: message
-            }
-        ]
-    },
-    componentProps: {
-        disabled: readonly
-    }
-});
 class PopModal extends Component {
     state = {
         loading: false,
@@ -64,6 +43,14 @@ class PopModal extends Component {
                 this.props.form.resetFields();
                 this.setState({ formLoading: false, record: {}, typelist: [] });
             }
+        }
+    }
+    disabledDate = (value)=>{
+        let {declare} = this.props;
+        if(declare && declare.authMonth){
+            return moment(declare.authMonth).format('YYYY-MM') !== value.format('YYYY-MM');
+        }else{
+            return false;
         }
     }
     hideModal = () => {
@@ -155,6 +142,8 @@ class PopModal extends Component {
         } else if (this.props.action === "modify") {
             title = "编辑";
         }
+
+        let {declare} = this.props;
         return (
             <Modal
                 title={title}
@@ -163,70 +152,61 @@ class PopModal extends Component {
                 style={{ top: "10%" }}
                 bodyStyle={{ maxHeight: "450px", overflow: "auto" }}
                 onCancel={this.hideSelfModal}
-                footer={[
-                    <Button key="back" onClick={this.hideSelfModal}>
-                        取消
-                    </Button>,
-                    readonly ? (
-                        undefined
-                    ) : (
-                        <Button
-                            key="submit"
-                            type="primary"
-                            loading={this.state.loading}
-                            onClick={() => {
-                                this.handleOk();
-                            }}
-                        >
-                            确认
-                        </Button>
-                    )
-                ]}
+                footer={
+                    !readonly && <Row>
+                        <Col span={12}></Col>
+                        <Col span={12}>
+                            <Button key="back" onClick={this.hideSelfModal}> 取消 </Button>
+                            <Button key="submit" type="primary" loading={this.state.loading}
+                                onClick={() => {
+                                    this.handleOk();
+                                }}
+                            >
+                                确认
+                            </Button>
+                        </Col>
+                    </Row>
+                }
                 maskClosable={false}
                 destroyOnClose={true}
             >
                 <Spin spinning={this.state.formLoading}>
                     <Form>
                         <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.mainId
-                                            ? {
-                                                  key: record.mainId,
-                                                  label: record.mainName
-                                              }
-                                            : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择纳税主体"
-                                    ),
+                            {getFields(form, [{
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     label: "纳税主体",
                                     fieldName: "main",
                                     type: "taxMain",
                                     componentProps: {
                                         labelInValue: true,
-                                        disabled: readonly
-                                    }
+                                        disabled: readonly || !!declare
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.mainId
+                                        ? {
+                                              key: record.mainId,
+                                              label: record.mainName
+                                          }
+                                        : declare && declare.mainId && {key:declare.mainId},
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择纳税主体'
+                                            }
+                                        ]
+                                    },
                                 },
                                 {
-                                    ...setComItem(
-                                        record && record.taxableItemId
-                                            ? {
-                                                  label:
-                                                      record.taxableItemName ||
-                                                      "",
-                                                  key:
-                                                      record.taxableItemId || ""
-                                              }
-                                            : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择应税项目"
-                                    ),
                                     label: "应税项目",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     fieldName: "taxableItem",
                                     type: "taxableProject",
+                                    componentProps: {
+                                        disabled: readonly
+                                    },
                                     fieldDecoratorOptions: {
                                         initialValue:
                                             record && record.taxableItemId
@@ -251,29 +231,32 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {//1一般计税方法，2简易计税方法 ,
-                            getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.taxMethod,
-                                        readonly,
-                                        true,
-                                        "请选择计税方法"
-                                    ),
+                            getFields(form, [{
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     label: "计税方法",
                                     fieldName: "taxMethod",
                                     type: "select",
                                     options: [
                                         { text: "一般计税方法", value: "1" },
                                         { text: "简易计税方法", value: "2" }
-                                    ]
+                                    ],
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.taxMethod,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择计税方法'
+                                            }
+                                        ]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly
+                                    }
                                 },
                                 {
-                                    ...setComItem(
-                                        record.adjustReason,
-                                        readonly,
-                                        true,
-                                        "请选择转出项目"
-                                    ),
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     label: "转出项目",
                                     fieldName: "outProject",
                                     type: "asyncSelect",
@@ -311,42 +294,62 @@ class PopModal extends Component {
                             ])}
                         </Row>
                         <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.voucherNum,
-                                        readonly,
-                                        true,
-                                        "请输入凭证号"
-                                    ),
+                            {getFields(form, [{
+                                    span: "12",
+                                    type: "input",
+                                    formItemStyle: formItemLayout,
                                     label: "凭证号",
-                                    fieldName: "voucherNum"
+                                    fieldName: "voucherNum",
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.voucherNum,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请输入凭证号'
+                                            }
+                                        ]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly
+                                    }
                                 },
                                 {
-                                    ...setComItem(
-                                        moment(record.taxDate),
-                                        readonly,
-                                        true,
-                                        "请选择日期"
-                                    ),
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     label: "日期",
                                     fieldName: "taxDate",
-                                    type: "datePicker"
+                                    type: "datePicker",
+                                    componentProps: {
+                                        disabled: readonly,
+                                        disabledDate:this.disabledDate
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue:(record.taxDate && moment(record.taxDate)) || (declare && declare.authMonth && moment(declare.authMonth)),
+                                        rules: [{
+                                                required: true,
+                                                message: '请选择日期'
+                                            }]
+                                    },
                                 }
                             ])}
                         </Row>
                         <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.outTaxAmount,
-                                        readonly,
-                                        true,
-                                        "请输入转出税额"
-                                    ),
+                            {getFields(form, [{
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     label: "转出税额",
                                     fieldName: "outTaxAmount",
-                                    type: "numeric"
+                                    type: "numeric",
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.outTaxAmount,
+                                        rules: [{
+                                                required: true,
+                                                message: '请输入转出税额'
+                                            }]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly
+                                    }
                                 }
                             ])}
                         </Row>
@@ -357,4 +360,6 @@ class PopModal extends Component {
     }
 }
 
-export default Form.create()(PopModal);
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(Form.create()(PopModal));

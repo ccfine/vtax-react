@@ -1,116 +1,358 @@
-/*
- * @Author: liuchunxiu 
- * @Date: 2018-04-04 17:52:39 
- * @Last Modified by:   liuchunxiu 
- * @Last Modified time: 2018-04-04 17:52:39 
+/**
+ * Created by liuliyuan on 2018/5/12.
  */
-import React, { Component } from 'react';
-import { SearchTable } from 'compoments';
-import PopModal from "./popModal";
-import { fMoney } from 'utils'
-// import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
+import React, { Component } from 'react'
+import {connect} from 'react-redux'
+import {message,Form} from 'antd'
+import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {SearchTable} from 'compoments'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import { NumericInputCell } from 'compoments/EditableCell'
 
-const searchFields = [
+import moment from 'moment';
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff'
+}
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
+const searchFields=(disabled,declare)=> {
+    return [
+        {
+            label:'纳税主体',
+            type:'taxMain',
+            fieldName:'mainId',
+            span:8,
+            componentProps:{
+                disabled,
+            },
+            formItemStyle,
+            fieldDecoratorOptions:{
+                initialValue: (disabled && declare.mainId) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            },
+
+        }, {
+            label:'凭证月份',
+            type:'monthPicker',
+            formItemStyle,
+            span:8,
+            fieldName:'authMonth',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择凭证月份'
+                    }
+                ]
+            }
+        }, {
+            label:'可抵扣土地价款',
+            fieldName:'deductionFlag',
+            span:8,
+            formItemStyle,
+            type:'select',
+            options:[
+                {
+                    text:'是',
+                    value:'1'
+                },{
+                    text:'否',
+                    value:'0'
+                }
+            ]
+        },
+    ]
+}
+const markFieldsData = [
     {
-        label: '纳税主体',
-        type: 'taxMain',
-        fieldName: 'mainId',
+        label:'标记类型',
+        fieldName:'deductionFlag',
+        type:'select',
+        notShowAll:true,
+        span:'22',
+        options:[  //1-标记;0-不标记；不传则所有状态
+            {
+                text:'标记',
+                value:'1'
+            },{
+                text:'不标记',
+                value:'0'
+            }
+        ],
     }
 ]
-const getColumns = (context) => [
+const getColumns = (context,disabled,getFieldDecorator) =>[
     {
-        title: '操作',
-        key: 'actions',
-        render: (text, record) => (
-            <div>
-                <a style={{margin:'0 5px'}} onClick={() => {
-                    context.setState({ opid: record.id, readOnly: false, visible: true, updateKey: Date.now() });
-                }}>编辑</a>
-                <a style={{marginRight:5}} onClick={() => {
-                    context.setState({ opid: record.id, readOnly: true, visible: true, updateKey: Date.now() });
-                }}>查看</a>
-            </div>
-        ),
-        fixed: 'left',
-        width: '75px'
-    }, {
-        title: '纳税主体',
+        title: '纳税主体名称',
         dataIndex: 'mainName',
-    }, {
-        title: '项目编码',
-        dataIndex: 'itemNum',
-    }, {
-        title: '项目名称',
-        dataIndex: 'itemName',
-    }, {
-        title: '土地出让合同编号',
-        dataIndex: 'contractNum',
-    }, {
-        title: '合同建筑面积(m²)',
-        dataIndex: 'coveredArea',
-    }, {
-        title: '调整后建筑面积(m²)',
-        dataIndex: 'buildArea',
-    }, {
-        title: '可抵扣地价款',
-        dataIndex: 'deductibleLandPrice',
-        render: text => fMoney(text),
-        className: 'table-money'
-    }, {
-        title: '实际已扣除土地价款',
-        dataIndex: 'actualDeductibleLandPrice',
-        render: text => fMoney(text),
-        className: 'table-money'
-    }, {
-        title: '已售建筑面积(m²)',
-        dataIndex: 'saleArea',
+
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">项目分期名称</p>
+            <p className="apply-form-list-p2">项目分期代码</p>
+        </div>,
+        dataIndex: 'stagesName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.stagesNum}</p>
+            </div>
+        )
+    },{
+        title: '凭证日期',
+        dataIndex: 'voucherDate',
+    },{
+        title: '凭证类型',
+        dataIndex: 'voucherType',
+    },{
+        title: '凭证号',
+        dataIndex: 'voucherNum',
+        render:(text,record)=>(
+            <span title="查看凭证详情" onClick={()=>{
+                context.setState({
+                    voucherNum:text,
+                },()=>{
+                    context.toggleViewModalVisible(true)
+                })
+            }} style={pointerStyle}>
+                {text}
+            </span>
+        )
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">借方科目名称</p>
+            <p className="apply-form-list-p2">借方科目代码</p>
+        </div>,
+        dataIndex: 'debitSubjectName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
+            </div>
+        )
+    },{
+        title: '借方金额',
+        dataIndex: 'debitAmount',
+        width:'150px',
+        className: "table-money",
+        render:(text,record)=>{
+            if(disabled){
+                return record.debitAmount ? fMoney(parseFloat(text)) : text
+            }else{
+                return ((context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1) && parseInt(record.deductionFlag, 0) === 1) ?
+                    <NumericInputCell
+                        fieldName={`debitAmount_${record.id}`}
+                        initialValue={text}
+                        getFieldDecorator={getFieldDecorator}
+                        editAble={disabled}
+                        componentProps={{
+                            onBlur:(e)=>context.handleConfirmBlur(e,record)
+                        }}
+
+                    /> : text
+            }
+
+        },
+    },{
+        title: <div className="apply-form-list-th">
+            <p className="apply-form-list-p1">借方辅助核算名称</p>
+            <p className="apply-form-list-p2">借方辅助核算代码</p>
+        </div>,
+        dataIndex: 'debitProjectName',
+        render:(text,record)=>(
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.debitProjectNum}</p>
+            </div>
+        )
+    },{
+        title: '可抵扣土地价款',
+        dataIndex: 'deductionFlag',
+        width:'75px',
+        render: text => {
+            //1-标记;0-无标记；不传则所有状态
+            let t = '';
+            switch (parseInt(text,0)){
+                case 1:
+                    t='是';
+                    break;
+                case 0:
+                    t=null;
+                    break;
+                default:
+                //no default
+            }
+            return t
+        }
+    },{
+        title: '凭证摘要',
+        dataIndex: 'voucherAbstract',
     }
 ];
+class LandPriceManage extends Component{
+    state={
+        searchTableLoading:false,
+        tableKey:Date.now(),
+        visible:false,
+        voucherNum:undefined,
+        filters:{},
+        selectedRowKeys:[],
+        /**
+         *修改状态和时间
+         * */
+        statusParam:{},
+    }
+    fetchResultStatus = ()=>{
+        requestResultStatus('/land/price/manage/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
+    }
+    toggleViewModalVisible=visible=>{
+        this.setState({
+            visible
+        })
+    }
 
-export default class LandPriceManage extends Component {
-    state = {
-        visible: false, // 控制Modal是否显示
-        opid: "", // 当前操作的记录
-        readOnly: false,
-        updateKey: Date.now(),
-        tableUpdateKey: Date.now()
+    refreshTable = ()=>{
+        this.setState({
+            tableKey:Date.now()
+        })
     }
-    hideModal() {
-        this.setState({ visible: false });
+
+    toggleSearchTableLoading = b =>{
+        this.setState({
+            searchTableLoading:b
+        })
     }
-    updateTable = () => {
-        this.setState({ tableUpdateKey: Date.now() })
+
+    handleConfirmBlur = (e,record) => {
+        const value = e.target.value;
+        if(parseInt(value, 0) !== parseInt(record.debitAmount, 0)){
+            request.put('/land/price/manage/update',{
+                debitAmount:value,
+                id:record.id
+            })
+                .then(({data})=>{
+                    this.toggleSearchTableLoading(true)
+                    if(data.code===200){
+                        message.success('保存成功!');
+                        this.toggleSearchTableLoading(false);
+                        this.refreshTable()
+                    }else{
+                        message.error(`保存失败:${data.msg}`)
+                    }
+                })
+                .catch(err => {
+                    message.error(err.message)
+                    this.toggleSearchTableLoading(true)
+                })
+        }
     }
-    render() {
-        return (
-            <div>
-                <SearchTable
-                    searchOption={{
-                        fields: searchFields
-                    }}
-                    tableOption={{
-                        pageSize: 10,
-                        columns: getColumns(this),
-                        url: '/landPriceInfo/list',
-                        key: this.state.tableUpdateKey,
-                        cardProps: {
-                            title: '土地价款管理',
-                            // extra: (<div>
-                            //     <SubmitOrRecall monthFieldName='authMonth' type={1} url="/landPriceInfo/submit" onSuccess={this.updateTable} />
-                            //     <SubmitOrRecall monthFieldName='authMonth' type={2} url="/landPriceInfo/revoke" onSuccess={this.updateTable} />
-                            // </div>)
-                        }
-                    }}
-                >
-                </SearchTable>
-                <PopModal
-                    visible={this.state.visible}
-                    readOnly={this.state.readOnly}
-                    hideModal={() => { this.hideModal() }}
-                    id={this.state.opid}
-                    onSuccess={this.updateTable}
-                    updateKey={this.state.updateKey} />
-            </div>
+
+    render(){
+        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
+        const {getFieldDecorator} = this.props.form;
+        return(
+            <SearchTable
+                spinning={searchTableLoading}
+                doNotFetchDidMount={!disabled}
+                searchOption={{
+                    fields:searchFields(disabled,declare),
+                    cardProps:{
+                        className:''
+                    },
+                }}
+                tableOption={{
+                    key:tableKey,
+                    pageSize:10,
+                    columns:getColumns(this,!disabled,getFieldDecorator),
+                    url:'/land/price/manage/list',
+                    onSuccess:(params)=>{
+                        this.setState({
+                            filters:params,
+                            selectedRowKeys:[],
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
+                    },
+                    onRowSelect:(disabled && declare.decAction==='edit') ? (selectedRowKeys)=>{
+                        this.setState({
+                            selectedRowKeys
+                        })
+                    } : undefined,
+                    cardProps: {
+                        title: "土地价款管理",
+                        extra:<div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'mark',
+                                    userPermissions:['1545000'],
+                                    formOptions:{
+                                        filters: filters,
+                                        selectedRowKeys: selectedRowKeys,
+                                        url:"/land/price/manage/deductionFlag",
+                                        fields: markFieldsData,
+                                        onSuccess: this.refreshTable,
+                                    }
+                                },{
+                                    type:'reset',
+                                    url:'/land/price/manage/reset',
+                                    params:filters,
+                                    userPermissions:['1541009'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'submit',
+                                    url:'/land/price/manage/submit',
+                                    params:filters,
+                                    userPermissions:['1541010'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/land/price/manage/revoke',
+                                    params:filters,
+                                    userPermissions:['1541011'],
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
+                        </div>,
+                    },
+                    scroll:{
+                     x:1600
+                     },
+                }}
+            >
+                <ViewDocumentDetails
+                    title="查看凭证详情"
+                    visible={visible}
+                    voucherNum={voucherNum}
+                    toggleViewModalVisible={this.toggleViewModalVisible} />
+            </SearchTable>
         )
     }
 }
+export default Form.create()(connect(state=>({
+    declare:state.user.get('declare')
+}))(LandPriceManage))

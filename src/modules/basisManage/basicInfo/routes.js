@@ -8,6 +8,10 @@ import {wrapPage} from 'compoments'
 import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 import TaxIncentives from './taxIncentives'
 import DeclareParameter from './declareParameter'
+import BeginDataCollect from './beginDataCollect'
+/*import TableSum from '../../../compoments/tableSum'*/
+/*import FinancialDocumentsBeginData from './financialDocumentsBeginData'
+import RoomTransactionFile from './roomTransactionFile'*/
 import strategies from 'config/routingAuthority.config'
 
 
@@ -47,6 +51,46 @@ const BasicInfo_Routes = [
         authorityInfo:basicInfo['declareParameter'].options,
         exact:true,
     },{
+        path:`${PATHS}/beginDataCollect`,
+        component:wrapPage('期初数据采集',BeginDataCollect),
+        name:'期初数据采集',
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['beginDataCollect'].options,
+        exact:true,
+    /*},{
+        path:`${PATHS}/tableSum`,
+        component:wrapPage('表格合计组件',TableSum),
+        name:'表格合计组件',
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['beginDataCollect'].options,
+        exact:true,*/
+    },/*{
+        path:`${PATHS}/financialDocumentsBeginData`,
+        component:wrapPage('财务凭证期初数据',FinancialDocumentsBeginData),
+        name:'财务凭证期初数据',
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['financialDocumentsBeginData'].options,
+        exact:true,
+      },{
+        path:`${PATHS}/roomTransactionFile`,
+        name:'房间交易档案期初数据',
+        component:wrapPage('房间交易档案期初数据',RoomTransactionFile),
+        icon:{
+            url:`${ICON_URL_PATH}declareParameter.svg`,
+            backgroundColor:'#9FD360'
+        },
+        authorityInfo:basicInfo['roomTransactionFile'].options,
+        exact:true,
+    },*/{
         path:`${PATHS}`,
         redirect:true,
         to:`${PATHS}/aubjectOfTaxPayment`,

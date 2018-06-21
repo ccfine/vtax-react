@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules} from '../../../../../utils'
+import {request,getFields,regRules,setFormat} from '../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -73,21 +73,11 @@ class PopModal extends Component{
                 this.toggleLoaded(true)
             })
     }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
     fetchTypeList=()=>{
         request.get('/sys/taxrate/list/1').then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    commonlyTaxRateList:this.setFormat(data.data),
+                    commonlyTaxRateList:setFormat(data.data),
                 });
             }
         })
@@ -98,7 +88,7 @@ class PopModal extends Component{
         request.get('/sys/taxrate/list/2').then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    simpleTaxRateList:this.setFormat(data.data),
+                    simpleTaxRateList:setFormat(data.data),
                 });
             }
         })
@@ -245,30 +235,20 @@ class PopModal extends Component{
                                         fieldName:'commonlyTaxRate',
                                         type:'select',
                                         span:'12',
+                                        notShowAll:true,
                                         options:this.state.commonlyTaxRateList,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commonlyTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入一般计税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'简易计税税率',
                                         fieldName:'simpleTaxRate',
                                         type:'select',
                                         span:'12',
+                                        notShowAll:true,
                                         options:this.state.simpleTaxRateList,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入简易计税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'填报说明',

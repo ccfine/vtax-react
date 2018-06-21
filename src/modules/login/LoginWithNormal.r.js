@@ -1,12 +1,6 @@
 /**
  * Created by liuliyuan on 2018/5/8.
  */
-
-/**
- * author       : liuliyuan
- * createTime   : 2017/12/5 14:10
- * description  :
- */
 import React,{Component} from 'react'
 import { Layout,Form, Icon, Input, Button, Alert,Row,Col} from 'antd'
 import PropTypes from 'prop-types'

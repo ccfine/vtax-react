@@ -4,13 +4,15 @@
  * description  :
  */
 import {wrapPage} from 'compoments'
-import LandPriceDeductionDetails from './landPriceDeductionDetails'
+// import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
-import PrePaidHousingSales from './prePaidHousingSales'
-import DeductProjectSummary from './deductProjectSummary'
 import PrepayTax from './prepayTax'
 import TaxCalculation from './taxCalculation'
-/*import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'*/
+/*
+import DeductProjectSummary from './deductProjectSummary'
+import PrePaidHousingSales from './prePaidHousingSales'
+import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
+*/
 import strategies from 'config/routingAuthority.config'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -19,7 +21,7 @@ const otherAccount = strategies['vatManage']['otherAccount'];
 
 const OtherAccount_Routes = [
     {
-        path:`${PATH}/prePaidHousingSales`,
+    /*    path:`${PATH}/prePaidHousingSales`,
         component:wrapPage('售房预缴台账',PrePaidHousingSales),
         name:'售房预缴台账',
         icon:{
@@ -28,7 +30,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['prePaidHousingSales'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATH}/prepayTax`,
         component:wrapPage('预缴税款台账',PrepayTax),
         name:'预缴税款台账',
@@ -38,17 +40,17 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['prepayTax'].options,
         exact:true,
-    },{
-        path:`${PATH}/landPriceDeductionDetails`,
-        component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
-        name:'土地价款扣除明细台账',
-        icon:{
-            url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
-            backgroundColor:'#9A572C'
-        },
-        authorityInfo:otherAccount['landPriceDeductionDetails'].options,
-        exact:true,
-    },{
+    // },{
+    //     path:`${PATH}/landPriceDeductionDetails`,
+    //     component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
+    //     name:'土地价款扣除明细台账',
+    //     icon:{
+    //         url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
+    //         backgroundColor:'#9A572C'
+    //     },
+    //     authorityInfo:otherAccount['landPriceDeductionDetails'].options,
+    //     exact:true,
+    },{/*
         path:`${PATH}/deductProjectSummary`,
         component:wrapPage('扣除项目汇总台账',DeductProjectSummary),
         name:'扣除项目汇总台账',
@@ -58,7 +60,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['deductProjectSummary'].options,
         exact:true,
-    },{
+    },{*/
         path:`${PATH}/taxExemptionDetails`,
         component:wrapPage('减免税明细台账',TaxExemptionDetails),
         name:'减免税明细台账',

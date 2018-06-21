@@ -153,12 +153,13 @@ class PopModal extends Component {
                 maskClosable={false}
                 destroyOnClose={true}
                 onCancel={() => props.toggleModalVisible(false)}
-                width={800}
+                width={900}
                 style={{
-                    maxWidth: "90%"
+                    maxWidth: "90%",
+                    top:'5%'
                 }}
                 visible={props.visible}
-                bodyStyle={{maxHeight:400,overflow:'auto'}}
+                bodyStyle={{maxHeight:500,overflow:'auto'}}
                 footer={
                     type !== "view" ? (
                         <Row>
@@ -239,7 +240,8 @@ class PopModal extends Component {
                                         },
                                         formItemStyle,
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -258,7 +260,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -277,7 +280,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -306,6 +310,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled,
+                                            placeholder:disabled?' ':undefined,
                                             onSelect: value => {
                                                 let rateValue = getFieldValue(
                                                     "taxClassificationCoding"
@@ -379,7 +384,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -392,7 +398,8 @@ class PopModal extends Component {
                                         },
                                         formItemStyle,
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -412,7 +419,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -433,26 +441,13 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled,
+                                            placeholder:disabled?' ':undefined,
                                             onChange: e => {
                                                 setFieldsValue({
                                                     invoiceDetailNum:
-                                                        e.target.value
+                                                    e.target.value
                                                 });
                                             }
-                                        }
-                                    },
-                                    {
-                                        label: "发票明细号",
-                                        fieldName: "invoiceDetailNum",
-                                        type: "input",
-                                        formItemStyle,
-                                        fieldDecoratorOptions: {
-                                            initialValue:
-                                                initData["invoiceDetailNum"],
-                                            rules: [regRules.input_length_20]
-                                        },
-                                        componentProps: {
-                                            disabled: true
                                         }
                                     },
                                     {
@@ -463,13 +458,13 @@ class PopModal extends Component {
                                         fieldDecoratorOptions: {
                                             initialValue: shouldShowDefaultData
                                                 ? moment(
-                                                      `${
-                                                          initData[
-                                                              "billingDate"
-                                                          ]
-                                                      }`,
-                                                      "YYYY-MM-DD"
-                                                  )
+                                                    `${
+                                                        initData[
+                                                            "billingDate"
+                                                            ]
+                                                        }`,
+                                                    "YYYY-MM-DD"
+                                                )
                                                 : undefined,
                                             rules: [
                                                 {
@@ -480,27 +475,8 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             format: "YYYY-MM-DD",
-                                            disabled
-                                        }
-                                    },
-                                    {
-                                        label: "商品名称",
-                                        fieldName: "commodityName",
-                                        type: "input",
-                                        formItemStyle,
-                                        fieldDecoratorOptions: {
-                                            initialValue:
-                                                initData["commodityName"],
-                                            rules: [
-                                                regRules.input_length_20,
-                                                {
-                                                    required: true,
-                                                    message: "请输入商品名称"
-                                                }
-                                            ]
-                                        },
-                                        componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -521,7 +497,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -541,7 +518,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -554,7 +532,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_50]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -567,7 +546,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -580,7 +560,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -593,7 +574,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -605,8 +587,8 @@ class PopModal extends Component {
                                             initialValue: initData["amount"]
                                                 ? disabled
                                                     ? `${fMoney(
-                                                          initData["amount"]
-                                                      )}`
+                                                        initData["amount"]
+                                                    )}`
                                                     : `${initData["amount"]}`
                                                 : undefined,
                                             rules: [
@@ -619,6 +601,7 @@ class PopModal extends Component {
                                         },
                                         componentProps: {
                                             disabled,
+                                            placeholder:disabled?' ':undefined,
                                             onChange: value => {
                                                 if (taxRateValue && value) {
                                                     /**
@@ -636,7 +619,7 @@ class PopModal extends Component {
                                                         ),
                                                         totalAmount: fMoney(
                                                             parseFloat(value) +
-                                                                taxAmount
+                                                            taxAmount
                                                         )
                                                     });
                                                 }
@@ -654,7 +637,8 @@ class PopModal extends Component {
                                                 : undefined
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -665,8 +649,8 @@ class PopModal extends Component {
                                         fieldDecoratorOptions: {
                                             initialValue: initData["taxAmount"]
                                                 ? `${fMoney(
-                                                      initData["taxAmount"]
-                                                  )}`
+                                                    initData["taxAmount"]
+                                                )}`
                                                 : undefined,
                                             rules: [
                                                 regRules.input_length_20,
@@ -677,7 +661,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -687,12 +672,13 @@ class PopModal extends Component {
                                         formItemStyle,
                                         fieldDecoratorOptions: {
                                             initialValue:
-                                                fMoney(
-                                                    initData["totalAmount"]
-                                                ) || undefined
+                                            fMoney(
+                                                initData["totalAmount"]
+                                            ) || undefined
                                         },
                                         componentProps: {
-                                            disabled: true
+                                            disabled: true,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -713,7 +699,8 @@ class PopModal extends Component {
                                             }
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -726,7 +713,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -739,7 +727,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     },
                                     {
@@ -752,7 +741,8 @@ class PopModal extends Component {
                                             rules: [regRules.input_length_20]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled,
+                                            placeholder:disabled?' ':undefined,
                                         }
                                     }
                                 ])}

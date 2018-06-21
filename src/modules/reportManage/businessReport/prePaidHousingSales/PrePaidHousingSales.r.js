@@ -288,9 +288,12 @@ export default class PrePaidHousingSales extends Component{
                 }}
                 doNotFetchDidMount={true}
                 tableOption={{
-                    pageSize:100,
+                    pageSize:10,
                     columns:columns,
                     url:'/account/salehouse/list',
+                    cardProps:{
+                        title:'售房预缴查询'
+                    },
                     extra: <div>
                         <TableTotal type={3} totalSource={totalSource} data={
                             [

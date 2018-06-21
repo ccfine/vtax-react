@@ -4,66 +4,320 @@
  * description  :
  */
 import React, { Component } from "react";
-import { Layout, Form, Button, Icon, Modal, message } from "antd";
+import {connect} from 'react-redux';
+import {Modal,message} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
-import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
-import { request, fMoney, getUrlParam, listMainResultStatus } from "utils";
-import { withRouter } from "react-router";
+import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
-const buttonStyle = {
-    marginRight: 5
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
 };
-
-const getSearchFields = disabled => [
+const getFields = (filters)=>[
     {
-        label: "纳税主体",
-        fieldName: "mainId",
-        type: "taxMain",
-        span: 8,
-        componentProps: {
-            disabled
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
         },
-        fieldDecoratorOptions: {
-            initialValue: (disabled && getUrlParam("mainId")) || undefined,
-            rules: [
+        fieldDecoratorOptions:{
+            initialValue: (filters && filters["mainId"]) || undefined,
+            rules:[
                 {
-                    required: true,
-                    message: "请选择纳税主体"
+                    required:true,
+                    message:'请选择纳税主体'
                 }
             ]
-        }
-    },
-    {
-        label: "认证月份",
-        fieldName: "authMonth",
-        type: "monthPicker",
-        span: 8,
-        componentProps: {
-            format: "YYYY-MM",
-            disabled
         },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {},
         fieldDecoratorOptions: {
             initialValue:
-                (disabled && moment(getUrlParam("authMonth"), "YYYY-MM")) ||
+                (filters && moment(filters["authMonth"], "YYYY-MM")) ||
                 undefined,
             rules: [
                 {
                     required: true,
-                    message: "请选择认证月份"
+                    message: '请选择认证月份'
                 }
             ]
+        },
+    }
+]
+
+const getSearchFields = (disabled,declare) => {
+    return [
+            {
+                label: "纳税主体",
+                fieldName: "mainId",
+                type: "taxMain",
+                span: 8,
+                componentProps: {
+                    disabled
+                },
+                fieldDecoratorOptions: {
+                    initialValue: (disabled && declare["mainId"]) || undefined,
+                    rules: [
+                        {
+                            required: true,
+                            message: "请选择纳税主体"
+                        }
+                    ]
+                }
+            },
+            {
+                label: "认证月份",
+                fieldName: "authMonth",
+                type: "monthPicker",
+                span: 8,
+                componentProps: {
+                    format: "YYYY-MM",
+                    disabled
+                },
+                fieldDecoratorOptions: {
+                    initialValue:
+                        (disabled && moment(declare["authMonth"], "YYYY-MM")) ||
+                        undefined,
+                    rules: [
+                        {
+                            required: true,
+                            message: "请选择认证月份"
+                        }
+                    ]
+                }
+            },
+            {
+                label: "发票号码",
+                fieldName: "invoiceNum",
+                type: "input",
+                span: 8,
+                componentProps: {},
+                fieldDecoratorOptions: {}
+            }
+        ]
+};
+
+const columns = (context,hasOperate) => {
+    let operates = hasOperate?[{
+        title:'操作',
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            style:{color:'#f5222d'},
+            userPermissions:['1491008'],
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
+        fixed:'left',
+        width:'70px',
+        dataIndex:'action',
+        className:'text-center',
+    }]:[];
+    return [...operates,{
+        title: "纳税主体",
+        dataIndex: "mainName"
+    }, {
+        title: "数据来源",
+        dataIndex: "sourceType",
+        render: text => {
+            text = parseInt(text, 0);
+            if (text === 1) {
+                return "手工采集";
+            }
+            if (text === 2) {
+                return "外部导入";
+            }
+            return "";
+        }
+    }, {
+        title: "应税项目",
+        dataIndex: "taxableProject"
+    },
+    {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">项目名称</p>
+                <p className="apply-form-list-p2">项目编码</p>
+            </div>
+        ),
+        dataIndex: "projectName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.projectNum}</p>
+            </div>
+        )
+    },
+    {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票类型</p>
+                <p className="apply-form-list-p2">发票代码</p>
+            </div>
+        ),
+        dataIndex: "invoiceTypeName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.invoiceCode}</p>
+            </div>
+        )
+    },
+    {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">发票号码</p>
+                <p className="apply-form-list-p2">开票日期</p>
+            </div>
+        ),
+        dataIndex: "invoiceNum",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1"><span
+                title="查看详情"
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState({
+                        modalConfig: {
+                            type: "view",
+                            id: record.id
+                        }
+                    },() => {
+                        context.toggleModalVisible(true);
+                    });
+                }}
+            >
+                {text}
+            </span></p>
+                <p className="apply-form-list-p2">{record.billingDate}</p>
+            </div>
+        )
+    },
+    {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">认证月份</p>
+                <p className="apply-form-list-p2">认证时间</p>
+            </div>
+        ),
+        dataIndex: "authMonth",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.authDate}</p>
+            </div>
+        )
+    },
+    {
+        title: (
+            <div className="apply-form-list-th">
+                <p className="apply-form-list-p1">销售单位名称</p>
+                <p className="apply-form-list-p2">纳税人识别号</p>
+            </div>
+        ),
+        dataIndex: "sellerName",
+        render: (text, record) => (
+            <div>
+                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
+            </div>
+        )
+    },
+    {
+        title: "金额",
+        dataIndex: "amount",
+        render: text => fMoney(text)
+    },
+    {
+        title: "税额",
+        dataIndex: "taxAmount",
+        render: text => fMoney(text)
+    },
+    {
+        title: "价税合计",
+        dataIndex: "totalAmount",
+        render: text => fMoney(text)
+    },
+    {
+        title: "认证标记",
+        dataIndex: "authStatus",
+        render: text => {
+            //认证标记:认证结果1:认证成功;2:认证失败;0:无需认证';
+            let res = "";
+            switch (parseInt(text, 0)) {
+                case 1:
+                    res = "认证成功";
+                    break;
+                case 2:
+                    res = "认证失败";
+                    break;
+                case 0:
+                    res = "无需认证";
+                    break;
+                default:
+            }
+            return res;
         }
     },
     {
-        label: "发票号码",
-        fieldName: "invoiceNum",
-        type: "input",
-        span: 8,
-        componentProps: {},
-        fieldDecoratorOptions: {}
+        title: "是否需要认证",
+        dataIndex: "authFlag",
+        render: text => {
+            //是否需要认证:1需要，0不需要let res = '';
+            let res = "";
+            switch (parseInt(text, 10)) {
+                case 1:
+                    res = "需要";
+                    break;
+                case 0:
+                    res = "不需要";
+                    break;
+                default:
+            }
+            return res;
+        }
     }
 ];
+}
+
 class InvoiceCollection extends Component {
     state = {
         /**
@@ -79,173 +333,11 @@ class InvoiceCollection extends Component {
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
          * */
         tableUpDateKey: Date.now(),
-        dataSource: [],
-        selectedRowKeys: null,
-        selectedRows: null,
         visible: false,
         modalConfig: {
             type: ""
         },
         totalSource: undefined
-    };
-
-    columns = [
-        {
-            title: "数据来源",
-            dataIndex: "sourceType",
-            render: text => {
-                text = parseInt(text, 0);
-                if (text === 1) {
-                    return "手工采集";
-                }
-                if (text === 2) {
-                    return "外部导入";
-                }
-                return "";
-            }
-        },
-        {
-            title: "纳税主体",
-            dataIndex: "mainName"
-        },
-        {
-            title: "应税项目",
-            dataIndex: "projectNum"
-        },
-        {
-            title: (
-                <div className="apply-form-list-th">
-                    <p className="apply-form-list-p1">项目名称</p>
-                    <p className="apply-form-list-p2">项目编码</p>
-                </div>
-            ),
-            dataIndex: "projectName",
-            render: (text, record) => (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.projectNum}</p>
-                </div>
-            )
-        },
-        {
-            title: (
-                <div className="apply-form-list-th">
-                    <p className="apply-form-list-p1">发票类型</p>
-                    <p className="apply-form-list-p2">发票代码</p>
-                </div>
-            ),
-            dataIndex: "invoiceTypeName",
-            render: (text, record) => (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.invoiceCode}</p>
-                </div>
-            )
-        },
-        {
-            title: (
-                <div className="apply-form-list-th">
-                    <p className="apply-form-list-p1">发票号码</p>
-                    <p className="apply-form-list-p2">开票日期</p>
-                </div>
-            ),
-            dataIndex: "invoiceNum",
-            render: (text, record) => (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.billingDate}</p>
-                </div>
-            )
-        },
-        {
-            title: (
-                <div className="apply-form-list-th">
-                    <p className="apply-form-list-p1">认证月份</p>
-                    <p className="apply-form-list-p2">认证时间</p>
-                </div>
-            ),
-            dataIndex: "authMonth",
-            render: (text, record) => (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.authDate}</p>
-                </div>
-            )
-        },
-        {
-            title: (
-                <div className="apply-form-list-th">
-                    <p className="apply-form-list-p1">销售单位名称</p>
-                    <p className="apply-form-list-p2">纳税人识别号</p>
-                </div>
-            ),
-            dataIndex: "sellerName",
-            render: (text, record) => (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
-                </div>
-            )
-        },
-        {
-            title: "金额",
-            dataIndex: "amount",
-            render: text => fMoney(text)
-        },
-        {
-            title: "税额",
-            dataIndex: "taxAmount",
-            render: text => fMoney(text)
-        },
-        {
-            title: "价税合计",
-            dataIndex: "totalAmount",
-            render: text => fMoney(text)
-        },
-        {
-            title: "认证标记",
-            dataIndex: "authStatus",
-            render: text => {
-                //认证标记:认证结果1:认证成功;2:认证失败;0:无需认证';
-                let res = "";
-                switch (parseInt(text, 0)) {
-                    case 1:
-                        res = "认证成功";
-                        break;
-                    case 2:
-                        res = "认证失败";
-                        break;
-                    case 0:
-                        res = "无需认证";
-                        break;
-                    default:
-                }
-                return res;
-            }
-        },
-        {
-            title: "是否需要认证",
-            dataIndex: "authFlag",
-            render: text => {
-                //是否需要认证:1需要，0不需要let res = '';
-                let res = "";
-                switch (parseInt(text, 10)) {
-                    case 1:
-                        res = "需要";
-                        break;
-                    case 0:
-                        res = "不需要";
-                        break;
-                    default:
-                }
-                return res;
-            }
-        }
-    ];
-    toggleModalVisible = visible => {
-        this.setState({
-            visible
-        });
     };
     refreshTable = () => {
         this.setState(
@@ -255,147 +347,107 @@ class InvoiceCollection extends Component {
             }
         );
     };
+    toggleModalVisible = visible => {
+        this.setState({
+            visible
+        });
+    };
     showModal = type => {
-        if (type === "edit") {
-            let sourceType = parseInt(this.state.selectedRows[0].sourceType, 0);
-            if (sourceType === 2) {
-                const ref = Modal.warning({
-                    title: "友情提醒",
-                    content: "该发票信息是外部导入，无法修改！",
-                    okText: "确定",
-                    onOk: () => {
-                        ref.destroy();
-                    }
-                });
-            } else {
-                this.toggleModalVisible(true);
-                this.setState({
-                    modalConfig: {
-                        type,
-                        id: this.state.selectedRowKeys
-                    }
-                });
+        this.toggleModalVisible(true);
+        this.setState({
+            modalConfig: {
+                type: type
             }
-        } else {
-            this.toggleModalVisible(true);
+        });
+    };
+    fetchResultStatus = ()=>{
+        requestResultStatus('/income/invoice/collection/listMain',this.state.filters,result=>{
             this.setState({
-                modalConfig: {
-                    type,
-                    id: this.state.selectedRowKeys
-                }
-            });
-        }
-    };
-    updateStatus = () => {
-        request
-            .get("/income/invoice/collection/listMain", {
-                params: this.state.filters
+                statusParam: result,
             })
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    this.setState({
-                        statusParam: data.data
-                    });
-                } else {
-                    message.error(`列表主信息查询失败:${data.msg}`);
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-            });
-    };
-    componentWillReceiveProps(nextProps) {
-        if (this.props.taxSubjectId !== nextProps.taxSubjectId) {
-            this.initData();
-        }
+        })
     }
-
+    deleteRecord(record){
+        request.delete(`/income/invoice/collection/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+                message.error(err.message);
+            })
+    }
     render() {
-        const {
-                tableUpDateKey,
-                filters,
-                selectedRowKeys,
-                visible,
-                modalConfig,
-                dataSource,
-                statusParam,
-                totalSource
-            } = this.state,
-            // (字段名字不一致)这里有些不合理
-            defaultValues = { ...filters, taxMonth: filters.authMonth };
-        const { mainId, authMonth } = this.state.filters;
-        const disabled1 = !!(
-            mainId &&
-            authMonth &&
-            (statusParam && parseInt(statusParam.status, 0) === 1)
-        );
-        const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
-        const { search } = this.props.location;
-        let disabled = !!(search && search.filters);
+        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource } = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return (
-            <Layout style={{ background: "transparent" }}>
                 <SearchTable
-                    doNotFetchDidMount={true}
+                    doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields: getSearchFields(disabled)
-                    }}
-                    backCondition={values => {
-                        this.setState({ filters: values },
-                            () => {
-                                this.updateStatus();
-                            });
+                        fields: getSearchFields(disabled,declare)
                     }}
                     tableOption={{
-                        columns: this.columns,
+                        columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        rowSelection: {
-                            type: "radio"
-                        },
-                        onRowSelect: (selectedRowKeys, selectedRows) => {
+                        scroll: { x: 1200 },
+                        onSuccess:(params)=>{
                             this.setState({
-                                selectedRowKeys,
-                                selectedRows
-                            });
+                                filters:params
+                            },()=>{
+                                this.fetchResultStatus()
+                            })
                         },
-                        scroll: { x: "110%" },
                         extra: (
                             <div>
-                                {dataSource.length > 0 &&
-                                    listMainResultStatus(statusParam)}
-                                <Button
-                                    size="small"
-                                    onClick={() => this.showModal("view")}
-                                    disabled={!selectedRowKeys}
-                                    style={buttonStyle}
-                                >
-                                    <Icon type="search" />
-                                    查看
-                                </Button>
-                                <SubmitOrRecall
-                                    type={1}
-                                    disabled={disabled2}
-                                    url="/income/invoice/collection/submit"
-                                    onSuccess={this.refreshTable}
-                                    initialValue={defaultValues}
-                                />
-                                <SubmitOrRecall
-                                    type={2}
-                                    disabled={disabled1}
-                                    url="/income/invoice/collection/revoke"
-                                    onSuccess={this.refreshTable}
-                                    initialValue={defaultValues}
-                                />
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
+                                    JSON.stringify(filters)!=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'income/invoice/collection/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1491002'],
+                                    }])
+                                }
+                                {
+                                    composeBotton([{
+                                        type:'fileExport',
+                                        url:'income/invoice/collection/download',
+                                        onSuccess:this.refreshTable
+                                    }])
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                        type:'fileImport',
+                                        url:'/income/invoice/collection/upload',
+                                        userPermissions:['1491005'],
+                                        onSuccess:this.refreshTable,
+                                        fields:getFields(filters)
+                                    },{
+                                        type:'submit',
+                                        url:'/income/invoice/collection/submit',
+                                        params:filters,
+                                        userPermissions:['1491010'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'revoke',
+                                        url:'/income/invoice/collection/revoke',
+                                        params:filters,
+                                        userPermissions:['1491011'],
+                                        onSuccess:this.refreshTable,
+                                    }],statusParam)
+                                }
                                 <TableTotal totalSource={totalSource} />
                             </div>
                         ),
                         cardProps: {
                             title: "进项发票采集"
-                        },
-                        onDataChange: dataSource => {
-                            this.setState({
-                                dataSource
-                            });
                         },
                         onTotalSource: totalSource => {
                             this.setState({
@@ -403,16 +455,18 @@ class InvoiceCollection extends Component {
                             });
                         }
                     }}
-                />
-                <PopModal
-                    visible={visible}
-                    modalConfig={modalConfig}
-                    selectedRowKeys={selectedRowKeys}
-                    refreshTable={this.refreshTable}
-                    toggleModalVisible={this.toggleModalVisible}
-                />
-            </Layout>
+                >
+                    <PopModal
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        refreshTable={this.refreshTable}
+                        statusParam={statusParam}
+                        toggleModalVisible={this.toggleModalVisible}
+                    />
+                </SearchTable>
         );
     }
 }
-export default Form.create()(withRouter(InvoiceCollection));
+export default connect(state=>({
+    declare:state.user.get('declare')
+  }))(InvoiceCollection);

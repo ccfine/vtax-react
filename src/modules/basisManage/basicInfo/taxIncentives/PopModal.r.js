@@ -6,6 +6,7 @@ import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields} from 'utils'
 import moment from 'moment'
 import { ButtonWithFileUploadModal } from 'compoments'
+import {composeBotton} from 'utils'
 const formItemStyle = {
     labelCol:{
         span:10
@@ -199,18 +200,22 @@ class PopModal extends Component{
                         <Col span={12}></Col>
                         <Col span={12}>
                             {
-                                type !== 'add' && (
-                                    <ButtonWithFileUploadModal
-                                        title="附件"
-                                        style={{
-                                            marginRight:10
-                                        }}
-                                        readOnly={type==='view'}
-                                        size='default'
-                                        id={props.modalConfig.id}
-                                        uploadUrl={`/tax/preferences/file/upload/${props.modalConfig.id}`}
-                                    />
-                                )
+                                type !== 'add' && composeBotton([{
+                                    type:'self',
+                                    userPermissions:['1091005'],
+                                    component:(
+                                        <ButtonWithFileUploadModal
+                                                    title="附件"
+                                                    style={{
+                                                        marginRight:10
+                                                    }}
+                                                    readOnly={type==='view'}
+                                                    size='default'
+                                                    id={props.modalConfig.id}
+                                                    uploadUrl={`/tax/preferences/file/upload/${props.modalConfig.id}`}
+                                                />
+                                    )
+                                }])
                             }
                             {
                                 type !== 'view' && (
@@ -219,12 +224,17 @@ class PopModal extends Component{
                             }
                             {
                                 type !== 'view' && (
-                                    <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
+                                    <Button style={{marginRight:10}} onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                                 )
                             }
                             {
-                                type === 'edit' && <Button
-                                    onClick={()=>{
+                                type === 'edit' && composeBotton([{
+                                    type:'delete',
+                                    btnType:'danger',
+                                    size:'default',
+                                    text:'删除',
+                                    userPermissions:['1091008'],
+                                    onClick:()=>{
                                         const modalRef = Modal.confirm({
                                             title: '友情提醒',
                                             content: '该删除后将不可恢复，是否删除？',
@@ -239,10 +249,8 @@ class PopModal extends Component{
                                                 modalRef.destroy()
                                             },
                                         });
-                                    }}
-                                    type='danger'>
-                                    删除
-                                </Button>
+                                    }
+                                }])
                             }
                         </Col>
                     </Row>
@@ -263,7 +271,7 @@ class PopModal extends Component{
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainName'],
+                                            initialValue:initData['mainId'],
                                             rules:[
                                                 {
                                                     required:true,
