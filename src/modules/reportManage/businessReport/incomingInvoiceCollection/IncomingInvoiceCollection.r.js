@@ -13,19 +13,18 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = (disabled) => {
-    return [
+const searchFields = [
         {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
             span:8,
             formItemStyle,
-            componentProps:{
-                disabled
-            },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                rules:[{
+                    required:true,
+                    message:'请选择纳税主体',
+                }]
             }
         },{
             label:'查询期间',
@@ -35,14 +34,9 @@ const searchFields = (disabled) => {
             span:8,
             componentProps:{
                 format:'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
             },
         }
     ]
-}
 const columns = [
     {
         title: <div className="apply-form-list-th">
@@ -87,10 +81,26 @@ const columns = [
                     txt = text;
                     break;
             }
+
+            //认证标记:认证结果1:认证成功;2:认证失败;0:无需认证';
+            let res2 = "";
+            switch (parseInt(record.authStatus, 0)) {
+                case 1:
+                    res2 = "认证成功";
+                    break;
+                case 2:
+                    res2 = "认证失败";
+                    break;
+                case 0:
+                    res2 = "无需认证";
+                    break;
+                default:
+            }
+
             return(
                 <div>
                     <p className="apply-form-list-p1">{txt}</p>
-                    <p className="apply-form-list-p2">{record.authStatus}</p>
+                    <p className="apply-form-list-p2">{res2}</p>
                 </div>
             )
         }
@@ -257,21 +267,13 @@ export default class IncomingInvoiceCollection extends Component{
             updateKey:Date.now(),
         })
     }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
-
     render(){
         const {updateKey} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields(disabled)
+                    fields:searchFields
                 }}
                 tableOption={{
                     key:updateKey,

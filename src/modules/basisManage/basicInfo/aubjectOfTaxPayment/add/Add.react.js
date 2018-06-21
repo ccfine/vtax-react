@@ -342,7 +342,7 @@ class Add extends Component {
                                         <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
                                     </span>
                                 }
-                                {
+                                {/* {
                                     type === 'view'  && <span>
                                         {
                                             parseInt(status,0) === 1
@@ -352,7 +352,7 @@ class Add extends Component {
                                                 <Button type="primary" onClick={()=>this.handleSetStatus('撤销',1)}>撤销</Button>
                                         }
                                     </span>
-                                }
+                                } */}
                             </Col>
                         </Row>
                     }

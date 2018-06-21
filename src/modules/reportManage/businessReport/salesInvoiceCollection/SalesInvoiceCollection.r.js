@@ -12,8 +12,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = (disabled) => {
-    return [
+const searchFields = [
         {
             label:'纳税主体',
             fieldName:'mainId',
@@ -22,6 +21,10 @@ const searchFields = (disabled) => {
             formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: undefined,
+                rules:[{
+                    required:true,
+                    message:'请选择纳税主体',
+                }]
             }
         },{
             label:'查询期间',
@@ -37,7 +40,6 @@ const searchFields = (disabled) => {
             },
         }
     ]
-}
 const columns=[
     {
         title: '纳税主体',
@@ -218,8 +220,9 @@ export default class SalesInvoiceCollection extends Component{
         const {updateKey} = this.state;
         return(
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
-                    fields:searchFields()
+                    fields:searchFields
                 }}
                 tableOption={{
                     key:updateKey,
