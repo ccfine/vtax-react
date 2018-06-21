@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-30 19:02:03
+ * @Last Modified time: 2018-06-20 21:24:16
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -11,7 +11,7 @@ import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ButtonConsistent from 'compoments/buttonConsistent'
-import {FileExport,FileImportModal} from 'compoments';
+import {FileExport,FileImportModal,AutoFileUpload} from 'compoments';
 import ButtonTableAction from 'compoments/buttonTableAction'
 import ButtonSwitch from 'compoments/buttonSwitch'
 //1：暂存 2：提交
@@ -88,6 +88,15 @@ const getFileImportOptions = (item, statusParam)=>{
         fields: item.fields,
         ...item,
         style:item.style || item.setButtonStyle || {marginRight:5},
+    };
+}
+
+// 文件自动导入
+const getAutoFileImportOptions =  (item, statusParam)=>{
+    return {
+        url: item.url,
+        fetchTable_1_Data: item.onSuccess,
+        ...item
     };
 }
 
@@ -197,6 +206,13 @@ const composeBotton = (buttons = [], params) => {
                 component = (
                     <FileImportModal
                         {...getFileImportOptions(item, params)}
+                    />
+                );
+                break;
+            case "autoFileImport":
+                component = (
+                    <AutoFileUpload
+                        {...getAutoFileImportOptions(item, params)}
                     />
                 );
                 break;

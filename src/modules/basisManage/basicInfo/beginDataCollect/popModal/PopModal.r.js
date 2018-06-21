@@ -8,6 +8,7 @@ import Tab2 from './tab_2';
 import Tab3 from './tab_3';
 import Tab4 from './tab_4';
 import Tab5 from './tab_5';
+import Tab6 from './tab_6';
 
 const TabPane = Tabs.TabPane;
 const tabList = [{
@@ -25,6 +26,9 @@ const tabList = [{
 }, {
     key: 'tab5',
     tab: '土地价款期初数据',
+}, {
+    key: 'tab6',
+    tab: '房间交易档案期初已开票金额',
 }];
 
 const getContent = (key,mainId,disabled,updateKey) => {
@@ -34,6 +38,7 @@ const getContent = (key,mainId,disabled,updateKey) => {
         tab3: <Tab3 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
         tab4: <Tab4 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
         tab5: <Tab5 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
+        tab6: <Tab6 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
     };
     return contentList[key]
 }

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-05-15 16:12:23
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-07 11:53:57
+ * @Last Modified time: 2018-06-20 19:46:05
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -19,28 +19,6 @@ const formItemLayout = {
         sm: { span: 16 }
     }
 };
-const setComItem = (
-    initialValue,
-    readonly = false,
-    required = true,
-    message
-) => ({
-    span: "12",
-    type: "input",
-    formItemStyle: formItemLayout,
-    fieldDecoratorOptions: {
-        initialValue,
-        rules: [
-            {
-                required: required,
-                message: message
-            }
-        ]
-    },
-    componentProps: {
-        disabled: readonly
-    }
-});
 class PopModal extends Component {
     state = {
         loading: false,
@@ -264,58 +242,52 @@ class PopModal extends Component {
                         <Row>
                             {getFields(form, [
                                 {
-                                    ...setComItem(
-                                        record.mainId
-                                            ? {
-                                            key: record.mainId,
-                                            label: record.mainName
-                                        }
-                                            : (declare?{key:declare.mainId}:undefined),
-                                        readonly || !!declare,
-                                        true,
-                                        "请选择纳税主体"
-                                    ),
                                     label: "纳税主体",
                                     fieldName: "main",
                                     type: "taxMain",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     componentProps: {
                                         labelInValue: true,
                                         disabled: readonly || !!declare,
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.mainId? {key: record.mainId,label: record.mainName}: (declare?{key:declare.mainId}:undefined),
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择纳税主体'
+                                            }
+                                        ]
                                     }
                                 },{
-                                    ...setComItem(
-                                        (record.month && moment(record.month)) || (declare && declare.authMonth && moment(declare.authMonth)),
-                                        readonly || !!declare,
-                                        true,
-                                        "请选择期间"
-                                    ),
                                     label: "期间",
                                     fieldName: "month",
-                                    type: "monthPicker"
+                                    type: "monthPicker",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue:(record.month && moment(record.month)) || (declare && declare.authMonth && moment(declare.authMonth)),
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择期间'
+                                            }
+                                        ]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly || !!declare,
+                                    }
                                 }
                             ])}
                         </Row>
                         <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record && record.projectId
-                                            ? {
-                                            label:
-                                            record.projectName ||
-                                            "",
-                                            key:
-                                            record.projectId || ""
-                                        }
-                                            : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择项目"
-                                    ),
+                            {getFields(form, [{
                                     label: "项目",
                                     fieldName: "project",
                                     type: "asyncSelect",
                                     span: 12,
+                                    formItemStyle: formItemLayout,
                                     componentProps: {
                                         disabled:readonly,
                                         selectOptions: {
@@ -330,27 +302,23 @@ class PopModal extends Component {
                                         getFieldValue("main").key) || (record && record.mainId),
                                         url: `/project/list/${(getFieldValue("main") && getFieldValue("main").key) || (record && record.mainId) ||
                                         (declare && declare.mainId)}`
-                                    }
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue:record && record.projectId? {label:record.projectName,key:record.projectId} : undefined,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择项目'
+                                            }
+                                        ]
+                                    },
                                 },
                                 {
-                                    ...setComItem(
-                                        record && record.stagesId
-                                            ? {
-                                            label:
-                                            record.stagesName ||
-                                            "",
-                                            key:
-                                            record.stagesId || ""
-                                        }
-                                            : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择项目分期"
-                                    ),
                                     label: "项目分期",
                                     fieldName: "stages",
                                     type: "asyncSelect",
                                     span: 12,
+                                    formItemStyle: formItemLayout,
                                     componentProps: {
                                         disabled:readonly,
                                         selectOptions: {
@@ -368,37 +336,55 @@ class PopModal extends Component {
                                         ) &&
                                         getFieldValue("project").key) || (record && record.projectId) ||
                                         ""}`
-                                    }
+                                    },
+                                    fieldDecoratorOptions: {initialValue:record && record.stagesId? {label:record.stagesName,key:record.stagesId }: undefined,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择项目分期'
+                                            }
+                                        ]
+                                    },
                                 }
                             ])}
                         </Row>
                         <Row>
-                            {getFields(form, [
-                                {
-                                    ...setComItem(
-                                        record.creditSubjectCode ? { key: record.creditSubjectCode, label: record.creditSubjectName } : undefined,
-                                        readonly,
-                                        true,
-                                        "请选择科目"
-                                    ),
+                            {getFields(form, [{
                                     label: "科目",
                                     fieldName: "creditSubject",
                                     type: "select",
                                     options: creditSubjectList,
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
                                     componentProps: {
                                         labelInValue: true,
                                         disabled:readonly
                                     },
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.creditSubjectCode ? { key: record.creditSubjectCode, label: record.creditSubjectName } : undefined,
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: '请选择科目'
+                                            }
+                                        ]
+                                    },
                                 },{
-                                    ...setComItem(
-                                        record.creditAmount,
-                                        readonly,
-                                        true,
-                                        "请输入金额"
-                                    ),
                                     label: "金额",
                                     fieldName: "creditAmount",
                                     type: "numeric",
+                                    span: "12",
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue:record.creditAmount,
+                                        rules: [{
+                                                required: true,
+                                                message: '请输入金额'
+                                            }]
+                                    },
+                                    componentProps: {
+                                        disabled: readonly
+                                    }
                                 },
                             ])}
                         </Row>
@@ -420,30 +406,34 @@ class PopModal extends Component {
                                             fieldName: "taxRate",
                                             type: "numeric",
                                         },{
-                                            ...setComItem(
-                                                record.taxAmount,
-                                                true,
-                                                false,
-                                                "请输入税额"
-                                            ),
+                                            span: "12",
+                                            formItemStyle: formItemLayout,
                                             label: "税额",
                                             fieldName: "taxAmount",
-                                            type: "numeric"
+                                            type: "numeric",
+                                            fieldDecoratorOptions: {
+                                                initialValue:record.taxAmount
+                                            },
+                                            componentProps: {
+                                                disabled: true
+                                            }
                                         },
                                     ])}
                                 </Row>
                                 <Row>
                                     { getFields(form, [
                                         {
-                                            ...setComItem(
-                                                record.totalAmount,
-                                                true,
-                                                false,
-                                                "请输入价税合计"
-                                            ),
+                                            span: "12",
+                                            formItemStyle: formItemLayout,
                                             label: "价税合计",
                                             fieldName: "totalAmount",
-                                            type: "numeric"
+                                            type: "numeric",
+                                            fieldDecoratorOptions: {
+                                                initialValue:record.totalAmount
+                                            },
+                                            componentProps: {
+                                                disabled: true
+                                            }
                                         }
                                     ])}
                                 </Row>
