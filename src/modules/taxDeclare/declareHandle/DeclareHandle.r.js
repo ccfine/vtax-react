@@ -224,7 +224,7 @@ const getColumns =(context)=>[
         dataIndex: 'declareBy',
     },{
         title: '申报日期',
-        dataIndex: 'month',
+        dataIndex: 'declarationDate',
     }
 ];
 
