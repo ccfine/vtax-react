@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-13 11:21:11
+ * @Last Modified time: 2018-06-21 15:21:02
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -13,7 +13,13 @@ const searchFields = (getFieldValue)=>[
         label: "纳税主体",
         type: "taxMain",
         span:8,
-        fieldName: "mainId"
+        fieldName: "mainId",
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
+        }
     },{
         label: "项目名称",
         fieldName: "projectId",
@@ -186,7 +192,8 @@ const getColumns = context => [{
 
 export default class AvailableArea extends Component {
     state = {
-        updateKey: Date.now()
+        updateKey: Date.now(),
+        filters:{},
     }
     update = () => {
         this.setState({ updateKey: Date.now() });
@@ -207,6 +214,7 @@ export default class AvailableArea extends Component {
         let { updateKey,filters } = this.state;
         return (
             <SearchTable
+                doNotFetchDidMount={true}
                 searchOption={{
                     fields: searchFields
                 }}
@@ -227,14 +235,17 @@ export default class AvailableArea extends Component {
                         <span>
                             {
                                 JSON.stringify(filters) !== "{}" &&  composeBotton([{
-                                    type: 'fileExport',
-                                    url: 'interAvailableBuildingAreaInformation/download',
-                                },{
                                     type:'fileImport',
                                     url:'/interAvailableBuildingAreaInformation/upload',
                                     onSuccess:this.update,
                                     userPermissions:['1531005'],
                                     fields:importFeilds
+                                }])
+                            }
+                            {
+                                composeBotton([{
+                                    type: 'fileExport',
+                                    url: 'interAvailableBuildingAreaInformation/download',
                                 }])
                             }
                         </span>
