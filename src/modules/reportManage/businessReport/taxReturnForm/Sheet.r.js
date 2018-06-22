@@ -51,7 +51,7 @@ export default class Sheet extends Component{
                         return {
                             ...deepItem,
                             ...sheetData[deepItem.key],
-                            value:(typeof sheetData[deepItem.key].value === 'number' && (readOnly || sheetData[deepItem.key].readOnly)) ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
+                            value:(typeof sheetData[deepItem.key].value === 'string' && sheetData[deepItem.key].value!=='--' && (readOnly || sheetData[deepItem.key].readOnly)) ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
                                 
                         }
                     }else{
@@ -147,7 +147,7 @@ export default class Sheet extends Component{
                                         return {...di,readOnly:true};
                                     }
                                 }))}
-                                valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}
+                                valueRenderer={(cell) => cell ? cell.value : ''}
                                 onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
                                 // onCellsChanged={this.onCellsChanged}
                             />
