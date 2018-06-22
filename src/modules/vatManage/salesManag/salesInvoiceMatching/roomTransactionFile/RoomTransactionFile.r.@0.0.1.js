@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-13 11:50:57
+ * @Last Modified time: 2018-06-22 21:55:42
  *
  */
 import React,{Component} from 'react'
@@ -323,11 +323,11 @@ const getColumns = (context,disabled) => {
     },{
         title: (
             <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">成交总价</p>
+                <p className="apply-form-list-p1">成交金额</p>
                 <p className="apply-form-list-p2">已收款金额</p>
             </div>
         ),
-        dataIndex: 'totalPrice',
+        dataIndex: 'dealPrice',
         className:'table-money',
         render: (text, record) => {
             return (
@@ -496,7 +496,7 @@ class RoomTransactionFile extends Component{
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
-                        x: 1600
+                        x: 2000
                     },
                 }}
             >
