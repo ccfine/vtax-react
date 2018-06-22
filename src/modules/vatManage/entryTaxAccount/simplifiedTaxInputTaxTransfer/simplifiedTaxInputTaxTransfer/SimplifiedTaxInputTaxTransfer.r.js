@@ -32,7 +32,11 @@ const columns = context =>[
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
-                    voucherNum:text,
+                    voucherInfo:{
+                        voucherNum:text,
+                        mainId:record.mainId,
+                        voucherDate:record.voucherDate,
+                    }
                 },()=>{
                     context.toggleViewModalVisible(true)
                 })
@@ -60,7 +64,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
     state={
         tableKey:Date.now(),
         visibleView:false,
-        voucherNum:undefined,
+        voucherInfo:{},
         filters:{},
         /**
          *修改状态和时间
@@ -85,7 +89,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const {tableKey,visibleView,voucherInfo,filters,statusParam} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -151,7 +155,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visibleView}
-                    voucherNum={voucherNum}
+                    {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
         )

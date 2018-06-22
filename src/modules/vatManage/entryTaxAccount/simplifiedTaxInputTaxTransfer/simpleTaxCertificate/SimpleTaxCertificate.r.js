@@ -32,7 +32,11 @@ const columns = context =>[
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
-                    voucherNum:text,
+                    voucherInfo:{
+                        voucherNum:text,
+                        mainId:record.mainId,
+                        voucherDate:record.voucherDate,
+                    }
                 },()=>{
                     context.toggleViewModalVisible(true)
                 })
@@ -60,7 +64,7 @@ class SimpleTaxCertificate extends Component{
     state={
         tableKey:Date.now(),
         visibleView:false,
-        voucherNum:undefined,
+        voucherInfo:{},
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
@@ -73,7 +77,7 @@ class SimpleTaxCertificate extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherNum} = this.state;
+        const {tableKey,visibleView,voucherInfo} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -106,7 +110,7 @@ class SimpleTaxCertificate extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visibleView}
-                    voucherNum={voucherNum}
+                    {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
         )

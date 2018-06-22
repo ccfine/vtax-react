@@ -81,7 +81,7 @@ function dataReander(prevGrid,asyncData){
                 return {
                     ...deepItem,
                     ...sheetData[deepItem.key],
-                    value:typeof sheetData[deepItem.key].value === 'number' ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
+                    value:(!/^\w(1|2)$/.test(deepItem.key) && sheetData[deepItem.key].value!=='--' && (sheetData[deepItem.key].readOnly)) ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
                         
                 }
             }else{

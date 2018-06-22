@@ -11,6 +11,8 @@ import RoomCodeSelect from './RoomCodeSelect.r'
 import MonthRangePicker from './MonthRangePicker.r'
 import Industry from './Industry.r'
 import TaxableProject from './TaxableProject.r'
+import AsyncTreeSelect from './AsyncTreeSelect'
+import AsyncTree from './AsyncTree'
 export default {
     TaxMain,
     AsyncSelect,
@@ -22,4 +24,6 @@ export default {
     MonthRangePicker,
     Industry,
     TaxableProject,
+    AsyncTreeSelect,
+    AsyncTree,
 }

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-21 15:06:42
+ * @Last Modified time: 2018-06-22 19:36:36
  */
 import React, { Component } from "react";
 import {Modal,message} from 'antd';
@@ -50,7 +50,7 @@ const importFeilds = [
             ]
         }
     },
-    {
+    /*{
         label: "入账月份",
         type: "monthPicker",
         fieldName: "accountDate",
@@ -71,7 +71,7 @@ const importFeilds = [
                 }
             ]
         }
-    }
+    }*/
 ];
 
 const getColumns = context => [

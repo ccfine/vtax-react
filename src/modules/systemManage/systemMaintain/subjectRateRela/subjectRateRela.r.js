@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:21 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-11 17:07:56
+ * @Last Modified time: 2018-06-22 10:24:35
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -81,7 +81,7 @@ const getColumns = (context) => [
         dataIndex: "taxItem",
     },
     {
-        title: "税率",
+        title: "一般税率",
         dataIndex: "commonlyTaxRate",
         render: text => (text ? `${text}%` : text)
     },

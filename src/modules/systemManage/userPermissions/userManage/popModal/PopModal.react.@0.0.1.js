@@ -97,22 +97,23 @@ class PopModal extends Component {
                 onCancel={this.handleCancel}
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
-                width="700px"
+                width={700}
                 style={{top:'5%'}}
                 bodyStyle={{
-                    height:450,
+                    height:400,
                     overflowY:'auto',
                 }}
             >
                 <Spin spinning={loading}>
                     <Form onSubmit={this.handleSubmit}>
-                        <Row>
+                        <Row gutter={25}>
+                            <Col span={8}>
                             {getFields(this.props.form, [
                                 {
                                     label: "姓名",
                                     fieldName: "realname",
                                     type: "input",
-                                    span: 12,
+                                    span: 24,
                                     fieldDecoratorOptions: {
                                         initialValue:
                                             defaultFields.realname || "",
@@ -132,7 +133,7 @@ class PopModal extends Component {
                                     label: "帐号",
                                     fieldName: "username",
                                     type: "input",
-                                    span: 12,
+                                    span: 24,
                                     componentProps: {
                                         disabled: modalType !== "create"
                                     },
@@ -156,7 +157,7 @@ class PopModal extends Component {
                                     label: "手机",
                                     fieldName: "phoneNumber",
                                     type: "input",
-                                    span: 12,
+                                    span: 24,
                                     fieldDecoratorOptions: {
                                         initialValue:
                                             defaultFields.phoneNumber || "",
@@ -176,7 +177,7 @@ class PopModal extends Component {
                                     label: "邮箱",
                                     fieldName: "email",
                                     type: "input",
-                                    span: 12,
+                                    span: 24,
                                     componentProps: {
                                         type: "email"
                                     },
@@ -197,41 +198,16 @@ class PopModal extends Component {
                                     label: "微信号",
                                     fieldName: "wechat",
                                     type: "input",
-                                    span: 12,
+                                    span: 24,
                                     fieldDecoratorOptions: {
                                         initialValue: defaultFields.wechat || ""
-                                        //   rules: [{
-                                        //       pattern:/^(\d{3,4}-)?\d{7,8}$/,
-                                        //       message:'请输入正确的传真号'
-                                        //   }],
                                     }
-                                    // },{
-                                    //       label:'状态',
-                                    //       fieldName:'enabled',
-                                    //       type:'switch',
-                                    //       span:24,
-                                    //       formItemStyle,
-                                    //       componentProps:{
-                                    //           checkedChildren:"启用" ,
-                                    //           unCheckedChildren:"禁用"
-                                    //       },
-                                    //       fieldDecoratorOptions:{
-                                    //           initialValue:defaultFields.hasOwnProperty('enabled') ? (parseInt(defaultFields.enabled,0)===1) : true,
-                                    //       },
                                 },
                                 {
                                     label: "备注",
                                     fieldName: "remark",
                                     type: "textArea",
                                     span: 24,
-                                    formItemStyle: {
-                                        labelCol: {
-                                            span: 3
-                                        },
-                                        wrapperCol: {
-                                            span: 21
-                                        }
-                                    },
                                     fieldDecoratorOptions: {
                                         initialValue: defaultFields.remark,
                                         rules: [
@@ -247,10 +223,16 @@ class PopModal extends Component {
                                             }
                                         ]
                                     }
-                                },{
+                                }
+                            ])}
+                            </Col>
+                            <Col span={16}>
+                            {
+                                getFields(this.props.form, [{
+                                    className:'fix-ie10-formItem-textArea',
                                     label: "组织",
                                     fieldName: "orgIds",
-                                    type: "asyncSelect",
+                                    type: "asyncTree",
                                     span: 24,
                                     formItemStyle: {
                                         labelCol: {
@@ -260,18 +242,16 @@ class PopModal extends Component {
                                             span: 21
                                         }
                                     },
-                                    className:'fix-ie10-formItem-textArea',
                                     componentProps: {
-                                        fieldTextName: "orgName",
-                                        fieldValueName: "orgId",
-                                        url: `/org/getOrganizations?size=500`,
-                                        selectOptions: {
-                                            mode: "multiple",
-                                            maxTagCount:50, //最多显示多少个 tag
-                                            showSearch:true,
-                                            // filterOption:false,
-                                            optionFilterProp:'children',
-                                        }
+                                        autoExpandParent:true,
+                                        treeWrapperStyle:{height:280,overflowY:'auto'},
+                                        initialValue: defaultFields.orgIds,
+                                        style:{
+                                            maxHeight:50,
+                                        },
+                                        fieldTextName: "name",
+                                        fieldValueName: "id",
+                                        url: `/org/tree/list`,
                                     },
                                     fieldDecoratorOptions: {
                                         initialValue: defaultFields.orgIds,
@@ -282,8 +262,9 @@ class PopModal extends Component {
                                             }
                                         ]
                                     }
-                                },
-                            ])}
+                                }])
+                            }
+                            </Col>
                             {modalType === "create" ? (
                                 <Col span={24}>
                                     <Alert
@@ -295,6 +276,7 @@ class PopModal extends Component {
                                 </Col>
                             ) : null}
                         </Row>
+                            
                     </Form>
                 </Spin>
             </Modal>

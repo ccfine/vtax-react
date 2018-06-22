@@ -5,6 +5,7 @@ import React,{Component} from 'react';
 import {Modal,Row,Col,Spin,Card,message} from 'antd';
 import {SynchronizeTable} from 'compoments'
 import {request,fMoney} from 'utils'
+import moment from 'moment'
 
 const columns = [{
     title: '摘要',
@@ -55,9 +56,9 @@ export default class ViewDocumentDetails extends Component{
     toggleLoaded = loaded => this.setState({loaded})
 
 
-    fetchReportByVoucherNum = (voucherNum) =>{
+    fetchReportByVoucherNum = ({voucherNum,voucherDate,mainId}) =>{
         this.toggleLoaded(false)
-        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherNum}})
+        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherNum,mainId,authMonth:moment(voucherDate).format('YYYY-MM')}})
             .then(({ data }) => {
                 if (data.code === 200) {
                     this.toggleLoaded(true)
@@ -84,7 +85,7 @@ export default class ViewDocumentDetails extends Component{
             /**
              * 弹出的时候如果类型不为新增，则异步请求数据
              * */
-            this.fetchReportByVoucherNum(nextProps.voucherNum)
+            this.fetchReportByVoucherNum(nextProps)
         }
     }
 

@@ -334,6 +334,8 @@ class unBilledSalesEstate extends Component{
                                         {title: '本期末合计-增值税收入确认金额合计', dataIndex: 'pageEndTotalPrice'},
                                         {title: '本期末合计-增值税开票金额', dataIndex: 'pageEndTotalAmount'},
                                         {title: '本期末合计-未开具发票销售额', dataIndex: 'pageEndNoInvoiceSales'},
+
+                                        {title:'未开具发票销售额',dataIndex:'pageTotalNoInvoiceSales'},
                                     ],
                                 },{
                                 title:'总计',
@@ -349,6 +351,7 @@ class unBilledSalesEstate extends Component{
                                     {title: '本期末合计-增值税收入确认金额合计', dataIndex: 'allEndTotalPrice'},
                                     {title: '本期末合计-增值税开票金额', dataIndex: 'allEndTotalAmount'},
                                     {title: '本期末合计-未开具发票销售额', dataIndex: 'allEndNoInvoiceSales'},
+                                    {title:'未开具发票销售额',dataIndex:'allTotalNoInvoiceSales'},
                                 ],
                             }
                             ]

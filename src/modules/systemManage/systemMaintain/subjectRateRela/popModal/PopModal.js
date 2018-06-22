@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:44 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-01 11:57:54
+ * @Last Modified time: 2018-06-22 10:22:39
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -261,21 +261,21 @@ class PopModal extends Component {
                                         rules: [
                                             {
                                                 required: true,
-                                                message: "请输入税率"
+                                                message: "请输入一般税率"
                                             },{
                                                 pattern:/^100$|^\d{0,2}$/,
                                                 message:"请输入0~100之间的数字"
                                             }
                                         ]
                                     },
-                                    label: "税率（%）",
+                                    label: "一般税率（%）",
                                     fieldName: "commonlyTaxRate",
                                     type: "numeric",
                                     componentProps: {
                                         allowNegative:false,
                                         valueType:'int',
                                         disabled: readonly,
-                                        placeholder:'请输入税率（单位：%）'
+                                        placeholder:'请输入一般税率（单位：%）'
                                     }
                                 },
                                 {
@@ -284,10 +284,10 @@ class PopModal extends Component {
                                     fieldDecoratorOptions: {
                                         initialValue: record.simpleTaxRate,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true,
                                                 message: "请输入简易征收率"
-                                            },{
+                                            },*/{
                                                 pattern:/^100$|^\d{0,2}$/,
                                                 message:"请输入0~100之间的数字"
                                             }
