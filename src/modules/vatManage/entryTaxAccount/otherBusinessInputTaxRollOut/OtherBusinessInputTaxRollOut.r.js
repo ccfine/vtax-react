@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 15:40:28
+ * @Last Modified time: 2018-06-22 20:24:55
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -158,7 +158,7 @@ const getColumns = (context,hasOperate) => {
         dataIndex: "voucherNum"
     },
     {
-        title: "日期",
+        title: "期间",
         dataIndex: "taxDate"
     },
     {
