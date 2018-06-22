@@ -126,7 +126,11 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
-                    voucherNum:text,
+                    voucherInfo:{
+                        voucherNum:text,
+                        mainId:record.mainId,
+                        voucherDate:record.voucherDate,
+                    }
                 },()=>{
                     context.toggleViewModalVisible(true)
                 })
@@ -210,7 +214,7 @@ class LandPriceManage extends Component{
         searchTableLoading:false,
         tableKey:Date.now(),
         visible:false,
-        voucherNum:undefined,
+        voucherInfo:{},
         filters:{},
         selectedRowKeys:[],
         /**
@@ -268,7 +272,7 @@ class LandPriceManage extends Component{
     }
 
     render(){
-        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
+        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         const {getFieldDecorator} = this.props.form;
@@ -347,7 +351,7 @@ class LandPriceManage extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visible}
-                    voucherNum={voucherNum}
+                    {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
         )

@@ -123,7 +123,11 @@ const columns = context =>[
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
                     context.setState({
-                        voucherNum:text,
+                        voucherInfo:{
+                            voucherNum:text,
+                            voucherDate:record.voucherDate,
+                            mainId:record.mainId,
+                        }
                     },()=>{
                         context.toggleViewModalVisible(true)
                     })
@@ -177,7 +181,7 @@ class SalesInvoiceCollection extends Component{
 
         tableKey:Date.now(),
         visible:false,
-        voucherNum:undefined,
+        voucherInfo:{},
         filters:{},
         selectedRowKeys:[],
         /**
@@ -215,7 +219,7 @@ class SalesInvoiceCollection extends Component{
         });
     }
     render(){
-        const {visible,tableKey,filters,selectedRowKeys,voucherNum,statusParam} = this.state;
+        const {visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -283,7 +287,7 @@ class SalesInvoiceCollection extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visible}
-                    voucherNum={voucherNum}
+                    {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
         )
