@@ -45,14 +45,14 @@ class PopModal extends Component {
             }
         }
     }
-    disabledDate = (value)=>{
+    /*disabledDate = (value)=>{
         let {declare} = this.props;
         if(declare && declare.authMonth){
             return moment(declare.authMonth).format('YYYY-MM') !== value.format('YYYY-MM');
         }else{
             return false;
         }
-    }
+    }*/
     hideModal = () => {
         this.setState({ visible: false });
     };
@@ -73,8 +73,8 @@ class PopModal extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // 提交数据
-                // 处理日期
-                values.taxDate = values.taxDate.format("YYYY-MM-DD");
+                // 处理月份
+                values.taxDate = values.taxDate.format("YYYY-MM");
                 //处理下拉数据
                 if (values.main) {
                     values.mainId = values.main.key;
@@ -302,12 +302,12 @@ class PopModal extends Component {
                                     fieldName: "voucherNum",
                                     fieldDecoratorOptions: {
                                         initialValue:record.voucherNum,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true,
                                                 message: '请输入凭证号'
                                             }
-                                        ]
+                                        ]*/
                                     },
                                     componentProps: {
                                         disabled: readonly
@@ -316,18 +316,18 @@ class PopModal extends Component {
                                 {
                                     span: "12",
                                     formItemStyle: formItemLayout,
-                                    label: "日期",
+                                    label: "期间",
                                     fieldName: "taxDate",
-                                    type: "datePicker",
+                                    type: "monthPicker",
                                     componentProps: {
-                                        disabled: readonly,
-                                        disabledDate:this.disabledDate
+                                        disabled: readonly || !!declare
+                                        // disabledDate:this.disabledDate
                                     },
                                     fieldDecoratorOptions: {
                                         initialValue:(record.taxDate && moment(record.taxDate)) || (declare && declare.authMonth && moment(declare.authMonth)),
                                         rules: [{
                                                 required: true,
-                                                message: '请选择日期'
+                                                message: '请选择期间'
                                             }]
                                     },
                                 }
