@@ -95,6 +95,14 @@ const markFieldsData = [
                 value:'0'
             }
         ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择标记类型'
+                }
+            ]
+        }
     }
 ]
 const getColumns = (context,disabled,getFieldDecorator) =>[

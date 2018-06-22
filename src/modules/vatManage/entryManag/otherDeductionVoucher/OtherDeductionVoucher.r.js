@@ -76,7 +76,15 @@ const markFieldsData = context => [
         type: 'select',
         notShowAll: true,
         span: '22',
-        options: context.state.sysDictIdList.concat({value:'0', text:'无'})
+        options: context.state.sysDictIdList.concat({value:'0', text:'无'}),
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择标记类型'
+                }
+            ]
+        }
     }
 ]
 const columns = context =>[
