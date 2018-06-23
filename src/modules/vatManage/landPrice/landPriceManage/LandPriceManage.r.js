@@ -161,7 +161,6 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
-        width:'150px',
         className: "table-money",
         render:(text,record)=>{
             if(disabled){
@@ -215,6 +214,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
     }
 ];
 class LandPriceManage extends Component{
@@ -352,7 +352,7 @@ class LandPriceManage extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:1800
+                     x:1600
                      },
                 }}
             >

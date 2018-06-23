@@ -129,7 +129,6 @@ const getColumns = context =>[
     },{
         title: '项目名称',
         dataIndex: 'projectName',
-        width:'75px'
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">项目分期名称</p>
@@ -169,6 +168,7 @@ const getColumns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
