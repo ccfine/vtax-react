@@ -48,6 +48,8 @@ const columns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:300,
+        
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
