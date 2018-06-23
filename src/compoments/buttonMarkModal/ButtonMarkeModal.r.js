@@ -60,7 +60,7 @@ class ButtonMarkeModal extends Component{
                 const params = {
                     ...filters,
                     ...values,
-                    mainIds:selectedRowKeys
+                    ids:selectedRowKeys
                 }
                 request.put(url,params)
                     .then(({data})=>{
