@@ -317,6 +317,12 @@ class PopModal extends Component{
                                         options:this.state.commonlyTaxRate,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commonlyTaxRateId'],
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请选择一般增值税税率'
+                                                }
+                                            ]
                                         },
                                     }, {
                                         label:'简易增值税税率',
@@ -328,6 +334,9 @@ class PopModal extends Component{
                                         options:this.state.simpleTaxRate,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
+                                        },
+                                        componentProps:{
+                                            allowClear:true,
                                         },
                                     }
                                 ])

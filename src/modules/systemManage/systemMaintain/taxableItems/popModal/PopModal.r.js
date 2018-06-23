@@ -237,6 +237,9 @@ class PopModal extends Component{
                                         span:'12',
                                         notShowAll:true,
                                         options:this.state.commonlyTaxRateList,
+                                        componentProps:{
+                                            allowClear:true,
+                                        },
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commonlyTaxRateId'],
                                         },
@@ -247,6 +250,9 @@ class PopModal extends Component{
                                         span:'12',
                                         notShowAll:true,
                                         options:this.state.simpleTaxRateList,
+                                        componentProps:{
+                                            allowClear:true,
+                                        },
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
                                         },
