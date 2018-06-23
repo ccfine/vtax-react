@@ -182,6 +182,7 @@ const columns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
     }
 ];
 class SalesInvoiceCollection extends Component{

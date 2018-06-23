@@ -180,7 +180,7 @@ const columns=[
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns,
                     url:'/fixedAssetCard/manageList',
                     onSuccess:(params)=>{
@@ -225,7 +225,7 @@ const columns=[
                         )
                     },
                     scroll:{
-                     x:1500
+                     x:1800
                      },
                 }}
             />

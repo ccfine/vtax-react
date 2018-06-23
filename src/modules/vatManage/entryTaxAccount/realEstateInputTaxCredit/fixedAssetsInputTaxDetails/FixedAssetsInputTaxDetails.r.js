@@ -149,7 +149,7 @@ export default class FixedAssetsInputTaxDetails extends Component{
                         </div>
                     ),
                     scroll:{
-                     x:1400
+                     x:1600
                      },
                 }}
             />

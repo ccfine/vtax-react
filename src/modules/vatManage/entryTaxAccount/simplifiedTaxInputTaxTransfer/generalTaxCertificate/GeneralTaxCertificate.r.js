@@ -26,6 +26,14 @@ const markFieldsData = [
                 value:'0'
             }
         ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择标记类型'
+                }
+            ]
+        }
     }
 ]
 const columns = context =>[
@@ -64,6 +72,7 @@ const columns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
@@ -195,7 +204,7 @@ class GeneralTaxCertificate extends Component{
                         </div>,
                     },
                     scroll:{
-                        x:1500
+                        x:1800
                     },
                 }}
             >

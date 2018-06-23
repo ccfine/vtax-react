@@ -112,6 +112,7 @@ const columns=[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -205,10 +206,10 @@ class FinancialDocumentsCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 1800 },
+                    scroll:{ x: 2000 },
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params

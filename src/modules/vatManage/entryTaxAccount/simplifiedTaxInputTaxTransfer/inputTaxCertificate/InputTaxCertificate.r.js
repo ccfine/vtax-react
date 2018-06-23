@@ -48,6 +48,8 @@ const columns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
+        
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
@@ -104,7 +106,7 @@ class InputTaxCertificate extends Component{
                             title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>进项税额列表</span>,
                         },
                         scroll:{
-                            x:1500
+                            x:1700
                         },
                     }}
                 >

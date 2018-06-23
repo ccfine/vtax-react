@@ -47,6 +47,7 @@ const columns = context =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:400,
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
@@ -148,7 +149,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         </div>,
                     },
                     scroll:{
-                        x:1500
+                        x:1800
                     },
                 }}
             >

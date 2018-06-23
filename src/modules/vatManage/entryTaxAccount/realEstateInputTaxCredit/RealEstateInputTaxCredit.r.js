@@ -18,7 +18,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields=(disabled,declare)=> {
+const searchFields=(disabled,declare,monthLabel)=> {
     return [
         {
             label:'纳税主体',
@@ -40,7 +40,7 @@ const searchFields=(disabled,declare)=> {
             },
 
         }, {
-            label:'凭证月份',
+            label:monthLabel,
             type:'monthPicker',
             formItemStyle,
             span:8,
@@ -53,7 +53,7 @@ const searchFields=(disabled,declare)=> {
                 rules:[
                     {
                         required:true,
-                        message:'请选择凭证月份'
+                        message:`请选择${monthLabel}`
                     }
                 ]
             }
@@ -84,13 +84,13 @@ class RealEstateInputTaxCredit extends Component{
         return(
             <Tabs key={tabsKey} onChange={this.onTabChange} type="card" activeKey={activeKey}>
                 <TabPane tab="固定资产进项税额明细" key="1">
-                    <FixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
+                    <FixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare,'入账期间')} refreshTabs={this.refreshTabs} />
                 </TabPane>
                 <TabPane tab="待抵扣进项税额" key="2">
-                    <DeductibleInputTaxAmount declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
+                    <DeductibleInputTaxAmount declare={declare} searchFields={searchFields(disabled,declare,'待抵扣期间')} refreshTabs={this.refreshTabs} />
                 </TabPane>
                 <TabPane tab="自建转自用固定资产进项税额明细" key="3">
-                    <SelfBuiltTransferFixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
+                    <SelfBuiltTransferFixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare,'查询期间')} refreshTabs={this.refreshTabs} />
                 </TabPane>
             </Tabs>
         )
