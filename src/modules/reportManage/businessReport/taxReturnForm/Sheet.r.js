@@ -135,16 +135,19 @@ export default class Sheet extends Component{
                                         return {
                                             ...di,
                                             readOnly:false,
-                                            component:<NumericInputCell
+                                            component:<React.Fragment>
+                                                <NumericInputCell
                                                 initialValue={di.value}
                                                 getFieldDecorator={this.props.form.getFieldDecorator}
                                                 fieldName={`map.${di.key}`}
                                                 editAble={true}
-                                                />,
+                                                componentProps={{valueType:di.type === 'rate'?'int':'float'}}
+                                                /> {di.type === 'rate'&&'%'}
+                                                </React.Fragment>,
                                             forceComponent:true,
                                         }
                                     }else{
-                                        return {...di,readOnly:true};
+                                        return {...di, value:(di.type==='rate' &&  di.value && di.value!=='--')?`${di.value}%`:di.value,readOnly:true};
                                     }
                                 }))}
                                 valueRenderer={(cell) => cell ? cell.value : ''}
