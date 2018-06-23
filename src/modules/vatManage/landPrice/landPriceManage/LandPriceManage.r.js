@@ -352,7 +352,7 @@ class LandPriceManage extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:1600
+                     x:1800
                      },
                 }}
             >
