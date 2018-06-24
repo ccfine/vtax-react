@@ -242,9 +242,9 @@ class RoleManage extends Component{
     render(){
         const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId} = this.state;
         return (
-            <SearchTable
+            this.props.orgId?<SearchTable
                 searchOption={{
-                    fields:this.props.orgId && searchFields(this)
+                    fields:searchFields(this)
                 }}
                 doNotFetchDidMount={false}
                 tableOption={{
@@ -288,8 +288,7 @@ class RoleManage extends Component{
                         toggleUserModalVisible={this.toggleUserModalVisible}
                  />
 
-            </SearchTable>
-
+            </SearchTable>:'loading'
         )
     }
 }
