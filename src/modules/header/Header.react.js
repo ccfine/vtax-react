@@ -74,7 +74,7 @@ class WimsHeader extends Component {
                 </div>
                 <div className='right'>
 
-                    <div style={{float: 'left',width: '328px',padding:'0 12px'}}>
+                    <div style={{float: 'left',width: '500px',padding:'0 12px'}}>
                         {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                     </div>
 
