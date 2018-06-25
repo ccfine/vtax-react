@@ -28,6 +28,24 @@ const columns =[
         title: '应税项目名称',
         dataIndex: 'name',
     },{
+        title: '业务类型',
+        dataIndex: 'businessType',
+        render:(text)=>{
+            let res='';
+            switch(parseInt(text,10)){
+                case 0:
+                    res = '业务类型-非房地产建筑';
+                    break;
+                case 1:
+                    res = '业务类型-房地产建筑';
+                    break;
+                default:
+                    res='';
+                    break;
+            }
+            return res;
+        }
+    },{
         title: '一般计税税率',
         dataIndex: 'commonlyTaxRate',
     },{

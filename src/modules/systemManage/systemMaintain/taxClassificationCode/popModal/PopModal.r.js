@@ -216,7 +216,7 @@ class PopModal extends Component{
                 }
                 title={title}>
                 <Spin spinning={!loaded}>
-                    <Form style={{height:'200px'}}>
+                    <Form style={{height:'180px'}}>
                         <Row>
                             {
                                 getFields(props.form,[
@@ -259,7 +259,7 @@ class PopModal extends Component{
                                             disabled
                                         }
 
-                                    }, {
+                                    }, /*{
                                         label:'业务类型',
                                         fieldName:'businessType',
                                         type:'select',
@@ -278,7 +278,7 @@ class PopModal extends Component{
                                         componentProps:{
                                             disabled
                                         }
-                                    },{
+                                    },*/{
                                         label:'应税项目',
                                         fieldName:'taxableProjectName',
                                         type:'taxableProject',
@@ -330,7 +330,7 @@ class PopModal extends Component{
                                         type:'select',
                                         span:12,
                                         formItemStyle,
-                                        notShowAll:true,
+                                        whetherShowAll:true,
                                         options:this.state.simpleTaxRate,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
