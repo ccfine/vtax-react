@@ -49,6 +49,16 @@ const searchFields = (getFieldValue)=> [
         type:'monthPicker',
         span:8
     },
+    {
+        label:'房间编码',
+        fieldName:'roomCode',
+        span:8
+    },
+    {
+        label:'路址',
+        fieldName:'htRoomName',
+        span:8
+    },
 ]
 const columns = [
     {
