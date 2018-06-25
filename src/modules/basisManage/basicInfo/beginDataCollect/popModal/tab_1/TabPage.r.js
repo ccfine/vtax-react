@@ -46,6 +46,7 @@ const getColumns = (getFieldDecorator,disabled)=> [
                             initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             editAble={disabled}
+                            componentProps={{allowNegative:true}}
                         /> : __html
                 }
 
@@ -65,6 +66,7 @@ const getColumns = (getFieldDecorator,disabled)=> [
                             initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
+                            componentProps={{allowNegative:true}}
                         /> : __html
                 }
             },
@@ -87,6 +89,7 @@ const getColumns = (getFieldDecorator,disabled)=> [
                             initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
+                            componentProps={{allowNegative:true}}
                         /> : __html
                 }
             },
@@ -105,6 +108,7 @@ const getColumns = (getFieldDecorator,disabled)=> [
                             initialValue={text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
+                            componentProps={{allowNegative:true}}
                         /> : __html
                 }
             },
