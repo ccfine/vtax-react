@@ -21,28 +21,18 @@ const searchFields = [
 const columns =[
     {
         title: '机构代码',
-        dataIndex: 'orgCode',
+        dataIndex: 'code',
     },{
         title: '机构名称',
-        dataIndex: 'orgName',
-   /* },{
-        title: '机构简称',
-        dataIndex: 'orgShortName',
-    },{
-        title: '机构所在地',
-        dataIndex: 'location',
-    },{
-        title: '经营地址',
-        dataIndex: 'address',*/
+        dataIndex: 'name',
     },{
         title: '本级序号',
-        dataIndex: 'orgLevel',
+        dataIndex: 'level',
     }, {
         title: '状态',
-        dataIndex: 'isEnabled',
+        dataIndex: 'status',
         render: text => {
-            //1:可用 2:禁用 3:删除,4:暂存 ,
-            //0:删除;1:保存;2:提交; ,
+            //1:可用2:禁用3:删除
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
@@ -53,9 +43,6 @@ const columns =[
                     break;
                 case 3:
                     t=<span style={{color: "#f50"}}>删除</span>;
-                    break;
-                case 4:
-                    t=<span style={{color: "#91d5ff"}}>暂存</span>;
                     break;
                 default:
                 //no default
@@ -74,7 +61,7 @@ class OrganizationalStructureMaintenance extends Component {
         updateTable:Date.now(),
         updateTree:Date.now(),
         id:undefined,
-        selectedRows:[],
+        // selectedRows:[],
         selectedNodes:undefined,
         visible:false, // 控制Modal是否显示
         searchTableLoading:false,
@@ -102,7 +89,7 @@ class OrganizationalStructureMaintenance extends Component {
     refreshTable = ()=>{
         this.setState({
             updateTable:Date.now(),
-            id:undefined,
+            // id:undefined,
         })
     }
     refreshAll = ()=>{
@@ -126,6 +113,10 @@ class OrganizationalStructureMaintenance extends Component {
         })
     }
     deleteData = () =>{
+        if(parseInt(this.state.selectedNodes && this.state.selectedNodes.status, 0) !== 2){
+            message.error('请禁用后，再删除');
+            return;
+        }
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '该删除后将不可恢复，是否删除？',
@@ -135,7 +126,7 @@ class OrganizationalStructureMaintenance extends Component {
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleSearchTableLoading(true)
-                request.delete(`/org/delete/${this.state.id}`)
+                request.delete(`/sysOrganization/delete/${this.state.id}`)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
@@ -156,7 +147,7 @@ class OrganizationalStructureMaintenance extends Component {
     }
     disabledData=()=>{
         this.toggleSearchTableLoading(true)
-        request.put(`/org/enableOrDisable/${this.state.id}`)
+        request.put(`/sysOrganization/enableOrDisable/${this.state.id}`)
             .then(({data})=>{
                 if(data.code===200){
                     this.toggleSearchTableLoading(false)
@@ -174,7 +165,7 @@ class OrganizationalStructureMaintenance extends Component {
             })
     }
     render() {
-        const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,selectedNodes,filters} = this.state;
+        const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,onlyAdd,selectedNodes,filters} = this.state;
         return (
             <TreeTable
                 spinning={searchTableLoading}
@@ -206,7 +197,10 @@ class OrganizationalStructureMaintenance extends Component {
                                 onClick: () => {
                                     this.showModal('add')
                                 }
-                            },{
+                            }])
+                        }
+                        {
+                            id && !onlyAdd && composeBotton([{
                                 type:'edit',
                                 icon:'edit',
                                 text:'编辑',
@@ -242,19 +236,19 @@ class OrganizationalStructureMaintenance extends Component {
                 treeOption={{
                     key:updateTree,
                     showLine:false,
-                    url:"/org/tree",
-                    //isLoadDate:false,
+                    url:"/sysOrganization/tree",
                     onSuccess:(selectedKeys,selectedNodes)=>{
                         this.setState({
-                            //selectedNodes,
                             id:selectedNodes.id,
                             filters:{
                                 id:selectedNodes.id
-                            }
+                            },
+                            selectedNodes:selectedNodes,
+                            onlyAdd:true,
                         },()=>{
                             this.refreshTable()
                         })
-                    }
+                    },
                 }}
                 tableOption={{
                     key:updateTable,
@@ -263,11 +257,12 @@ class OrganizationalStructureMaintenance extends Component {
                     cardProps:{
                         title:'组织架构维护列表信息'
                     },
-                    url:'/org/list',
+                    url:'/sysOrganization/list',
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({
                             id:selectedRowKeys[0],
                             selectedNodes:selectedRows[0],
+                            onlyAdd:false,
                         })
                     },
                     rowSelection:{
