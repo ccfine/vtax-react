@@ -233,6 +233,12 @@ table.data-grid{
 .ant-form-item-label, .ant-form-item-control{
   height: 48px;
 }
+
+ /* 表格收索中距离缩小 */
+.table-search-form .ant-form-item-label, .ant-form-item-control{
+  height: auto;
+}
+
 .fix-ie10-formItem-fileUpload .ant-form-item-label, .fix-ie10-formItem-fileUpload .ant-form-item-control {
   min-height: 48px;
   margin-top: 0;
@@ -274,4 +280,14 @@ table.data-grid{
 /* 纳税申报表输入框高度设置*/
 .data-grid-container .data-grid .cell > input{
   height:20px;
+}
+
+/*组织树选择定位专用*/
+.certain-category-search-dropdown .ant-select-dropdown-menu .ant-select-dropdown-menu-item {
+  padding:0;
+}
+.certain-category-search-dropdown .ant-select-dropdown-menu .ant-select-dropdown-menu-item>a{
+  padding:5px 12px;
+  display: block;
+  color: rgba(0, 0, 0, 0.65);
 }
