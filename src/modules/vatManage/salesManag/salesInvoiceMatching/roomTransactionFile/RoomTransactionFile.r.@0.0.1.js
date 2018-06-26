@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-26 16:02:45
+ * @Last Modified time: 2018-06-26 17:58:48
  *
  */
 import React,{Component} from 'react'
@@ -225,7 +225,6 @@ const getColumns = (context,disabled) => {
                 </div>
             );
         },
-        width:'12%',
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -259,6 +258,7 @@ const getColumns = (context,disabled) => {
                 </div>
             );
         },
+        width:'10%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -275,7 +275,7 @@ const getColumns = (context,disabled) => {
                 </div>
             );
         },
-        width:'12%',
+        width:'10%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -317,11 +317,11 @@ const getColumns = (context,disabled) => {
     },{
         title:'单元',
         dataIndex:'element',
-        width:50,
+        width:'4%',
     }, {
         title:'路址',
         dataIndex:'htRoomName',
-        width:'5%',
+        width:'8%',
     }, {
         title:'房号',
         dataIndex:'roomNumber',
