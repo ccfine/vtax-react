@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:15:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-12 17:08:19
+ * @Last Modified time: 2018-06-25 15:31:19
  */
 import React, { Component } from 'react'
 import { Modal, Form,Button, message, Spin, Row } from 'antd'
@@ -267,7 +267,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled: readonly
+                                            disabled: readonly,
+                                            allowNegative:true,
                                         },
                                         type: 'numeric',
                                     }]
@@ -291,7 +292,8 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled: readonly
+                                            disabled: readonly,
+                                            allowNegative:true,
                                         },
                                         type: 'numeric',
                                     }]

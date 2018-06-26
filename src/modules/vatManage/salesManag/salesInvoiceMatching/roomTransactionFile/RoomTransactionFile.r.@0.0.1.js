@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-22 21:55:42
+ * @Last Modified time: 2018-06-26 17:58:48
  *
  */
 import React,{Component} from 'react'
@@ -224,7 +224,7 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{record.mainCode}</p>
                 </div>
             );
-        }
+        },
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -240,7 +240,8 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
                 </div>
             );
-        }
+        },
+        width:'8%',
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -256,7 +257,8 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{record.projectCode}</p>
                 </div>
             );
-        }
+        },
+        width:'10%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -272,7 +274,8 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{record.stagesCode}</p>
                 </div>
             );
-        }
+        },
+        width:'10%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -288,7 +291,8 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{record.transactionDate}</p>
                 </div>
             );
-        }
+        },
+        width:80,
     },{
         title: (
             <div className="apply-form-list-th">
@@ -296,6 +300,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">合同约定交付日期</p>
             </div>
         ),
+        width:110,
         dataIndex: 'deliveryDate',
         render: (text, record) => {
             return (
@@ -307,19 +312,24 @@ const getColumns = (context,disabled) => {
         }
     },{
         title:'楼栋名称',
-        dataIndex:'buildingName'
+        dataIndex:'buildingName',
+        width:'8%',
     },{
         title:'单元',
-        dataIndex:'element'
+        dataIndex:'element',
+        width:'4%',
     }, {
         title:'路址',
         dataIndex:'htRoomName',
+        width:'8%',
     }, {
         title:'房号',
-        dataIndex:'roomNumber'
+        dataIndex:'roomNumber',
+        width:50,
     }, {
         title:'房间编码',
-        dataIndex:'roomCode'
+        dataIndex:'roomCode',
+        width:'5%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -336,32 +346,39 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{fMoney(record.receivables)}</p>
                 </div>
             );
-        }
+        },
+        width:'4%',
     }, {
         title:'房间面积',
-        dataIndex:'roomArea'
+        dataIndex:'roomArea',
+        width:'5%',
     }, {
         title:'匹配状态',
         dataIndex:'matchingStatus',
+        width:60,
         render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
     }, {
         title:'已开票金额',
         dataIndex:'invoiced',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'4%',
     }, {
         title:' 款项名称',
-        dataIndex:'priceType'
+        dataIndex:'priceType',
+        width:60,
     }, {
         title: "税额",
         dataIndex: "taxAmount",
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'4%',
     }, {
         title:'价税合计',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'4%',
     },
 ]
 }
@@ -496,7 +513,8 @@ class RoomTransactionFile extends Component{
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
-                        x: 2000
+                        x: 2200,
+                        y:200,
                     },
                 }}
             >

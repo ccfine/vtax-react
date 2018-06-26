@@ -22,6 +22,7 @@ const getColumns = (getFieldDecorator,disabled) =>[
                     initialValue={text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={disabled}
+                    componentProps={{allowNegative:true}}
                 /> : fMoney(parseFloat(text))
         },
     }

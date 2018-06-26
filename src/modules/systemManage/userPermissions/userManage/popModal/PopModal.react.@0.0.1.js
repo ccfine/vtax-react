@@ -97,10 +97,10 @@ class PopModal extends Component {
                 onCancel={this.handleCancel}
                 cancelText="取消"
                 confirmLoading={this.state.submitLoading}
-                width={700}
+                width={900}
                 style={{top:'5%'}}
                 bodyStyle={{
-                    height:400,
+                    height:modalType === "create"?460:420,
                     overflowY:'auto',
                 }}
             >
@@ -236,15 +236,15 @@ class PopModal extends Component {
                                     span: 24,
                                     formItemStyle: {
                                         labelCol: {
-                                            span: 3
+                                            span: 2
                                         },
                                         wrapperCol: {
-                                            span: 21
+                                            span: 22
                                         }
                                     },
                                     componentProps: {
                                         autoExpandParent:true,
-                                        treeWrapperStyle:{height:280,overflowY:'auto'},
+                                        treeWrapperStyle:{height:340,overflowY:'auto'},
                                         initialValue: defaultFields.orgIds,
                                         style:{
                                             maxHeight:50,

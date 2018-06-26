@@ -81,6 +81,26 @@ const searchFields =[
             componentProps:{
                 format:'YYYY-MM',
             }
+        },{
+            label:'借方科目名称',
+            fieldName:'debitSubjectName',
+            span:8,
+            formItemStyle,
+        },{
+            label:'借方科目代码',
+            fieldName:'debitSubjectCode',
+            span:8,
+            formItemStyle,
+        },{
+            label:'贷方科目名称',
+            fieldName:'creditSubjectName',
+            span:8,
+            formItemStyle,
+        },{
+            label:'贷方科目代码',
+            fieldName:'creditSubjectCode',
+            span:8,
+            formItemStyle,
         }
     ]
 const getColumns = context =>[

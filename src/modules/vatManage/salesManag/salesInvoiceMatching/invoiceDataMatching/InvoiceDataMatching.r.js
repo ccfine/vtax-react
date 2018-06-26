@@ -210,6 +210,7 @@ const getColumns = (context,disabled) => {
     {
         title:'购货单位名称',
         dataIndex:'purchaseName',
+        width:'6%',
     },
     {
         title: (
@@ -224,7 +225,8 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
-        )
+        ),
+        width:'6%',
     },
     {
         title: (
@@ -248,7 +250,8 @@ const getColumns = (context,disabled) => {
                     <p className="apply-form-list-p2">{record.billingDate}</p>
                 </div>
             )
-        }
+        },
+        width:80,
     },
     {
         title: (
@@ -259,6 +262,7 @@ const getColumns = (context,disabled) => {
         ),
         dataIndex: "amount",
         className:'table-money',
+        width:'6%',
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
@@ -270,17 +274,20 @@ const getColumns = (context,disabled) => {
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
+        width:40,
         render:text=>text? `${text}%`: text,
     },
     {
         title:'价税合计',
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'6%',
     },
     {
         title:'匹配时间',
-        dataIndex:'marryTime'
+        dataIndex:'marryTime',
+        width:120,
     },
     {
         title: (
@@ -289,6 +296,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">身份证号/纳税识别码</p>
             </div>
         ),
+        width:'10%',
         dataIndex: "customerName",
         render: (text, record) => (
             <div>
@@ -304,6 +312,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">单元</p>
             </div>
         ),
+        width:'10%',
         dataIndex: "buildingName",
         render: (text, record) => (
             <div>
@@ -314,6 +323,7 @@ const getColumns = (context,disabled) => {
     }, {
         title:'路址',
         dataIndex:'htRoomName',
+        width:'6%',
     },
     {
         title: (
@@ -322,6 +332,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">房间编码</p>
             </div>
         ),
+        width:'8%',
         dataIndex: "roomNumber",
         render: (text, record) => (
             <div>
@@ -334,11 +345,13 @@ const getColumns = (context,disabled) => {
         title:'成交总价',
         dataIndex:'totalPrice',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'6%',
     },
     {
         title:'匹配方式',
         dataIndex:'matchingWay',
+        width:60,
         render:text=>{
             text = parseInt(text,0);//0:手动匹配,1:自动匹配
             if(text === 0){
@@ -470,7 +483,8 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 1400
+                        x: 1500,
+                        y:170,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,

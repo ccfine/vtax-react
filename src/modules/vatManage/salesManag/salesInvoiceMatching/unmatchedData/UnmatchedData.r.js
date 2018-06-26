@@ -120,11 +120,13 @@ const getColumns = (context,disabled) =>{
      ,
     {
         title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum'
+        dataIndex:'purchaseTaxNum',
+        width:'12%',
     },
     {
         title: '购货单位名称',
         dataIndex: "purchaseName",
+        width:'8%',
     },
     {
         title: (
@@ -134,6 +136,7 @@ const getColumns = (context,disabled) =>{
             </div>
         ),
         dataIndex: "invoiceCode",
+        width:'6%',
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{text}</p>
@@ -149,6 +152,7 @@ const getColumns = (context,disabled) =>{
             </div>
         ),
         dataIndex: "invoiceType",
+        width:70,
         render: (text, record) => {
             let typeText = '';
             if(text==='s'){
@@ -174,6 +178,7 @@ const getColumns = (context,disabled) =>{
         ),
         dataIndex: "amount",
         className:'table-money',
+        width:'6%',
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
@@ -185,17 +190,20 @@ const getColumns = (context,disabled) =>{
         title:'税率',
         dataIndex:'taxRate',
         render:text=>text? `${text}%`: text,
-        className:'text-right'
+        className:'text-right',
+        width:60,
     },
     {
         title:'价税合计',
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'6%',
     },
     {
         title:'匹配时间',
-        dataIndex:'marryTime'
+        dataIndex:'marryTime',
+        width:120,
     },
     {
         title: (
@@ -225,10 +233,12 @@ const getColumns = (context,disabled) =>{
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.element}</p>
             </div>
-        )
+        ),
+        width:'10%',
     }, {
         title:'路址',
         dataIndex:'htRoomName',
+        width:'5%',
     },
     {
         title: (
@@ -243,13 +253,15 @@ const getColumns = (context,disabled) =>{
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.roomCode}</p>
             </div>
-        )
+        ),
+        width:'5%',
     },
     {
         title:'成交总价',
         dataIndex:'totalPrice',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'6%',
     },
     {
         title:'匹配方式',
@@ -263,7 +275,8 @@ const getColumns = (context,disabled) =>{
             }else{
                 return ''
             }
-        }
+        },
+        width:60,
     },
 ];
 }
@@ -350,7 +363,8 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x:1200
+                        x:1300,
+                        y:190,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>未匹配的发票列表</span>,

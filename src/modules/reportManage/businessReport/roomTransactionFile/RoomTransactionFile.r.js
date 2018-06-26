@@ -49,6 +49,16 @@ const searchFields = (getFieldValue)=> [
         type:'monthPicker',
         span:8
     },
+    {
+        label:'房间编码',
+        fieldName:'roomCode',
+        span:8
+    },
+    {
+        label:'路址',
+        fieldName:'htRoomName',
+        span:8
+    },
 ]
 const columns = [
     {
@@ -219,11 +229,11 @@ const columns = [
     },{
         title: (
             <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">成交总价</p>
+                <p className="apply-form-list-p1">成交金额</p>
                 <p className="apply-form-list-p2">已收款金额</p>
             </div>
         ),
-        dataIndex: 'totalPrice',
+        dataIndex: 'dealPrice',
         className:'table-money',
         render: (text, record) => {
             return (

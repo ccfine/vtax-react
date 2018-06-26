@@ -142,7 +142,7 @@ export default class Sheet extends Component{
                                                 fieldName={`map.${di.key}`}
                                                 editAble={true}
                                                 componentProps={{valueType:di.type === 'rate'?'int':'float'}}
-                                                /> {di.type === 'rate'&&'%'}
+                                                /> 
                                                 </React.Fragment>,
                                             forceComponent:true,
                                         }

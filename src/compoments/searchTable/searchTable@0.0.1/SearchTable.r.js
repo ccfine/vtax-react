@@ -137,7 +137,7 @@ class SearchTable extends Component{
                                  }*/
                                 {...searchOption.cardProps}
                             >
-                                <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                                <Form className="table-search-form" onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                                     <Row>
                                         {
                                             getFields(form,searchOption.fields)

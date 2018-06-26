@@ -29,6 +29,7 @@ class PopModal extends Component{
                     this.setState({
                         initData:data.data
                     })
+                    !Number.isNaN(parseInt(data.data.businessType,10)) && this.fetchTypeList(data.data.businessType)
                 }
             })
             .catch(err => {
@@ -73,8 +74,8 @@ class PopModal extends Component{
                 this.toggleLoaded(true)
             })
     }
-    fetchTypeList=()=>{
-        request.get('/sys/taxrate/list/1').then(({data}) => {
+    fetchTypeList=(type)=>{
+        request.get(`sys/taxrate/list/commonlyTaxRate/${type}`).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     commonlyTaxRateList:setFormat(data.data),
@@ -85,7 +86,7 @@ class PopModal extends Component{
             message.error(err.message)
         })
 
-        request.get('/sys/taxrate/list/2').then(({data}) => {
+        request.get(`sys/taxrate/list/simpleTaxRate/${type}`).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
                     simpleTaxRateList:setFormat(data.data),
@@ -128,9 +129,6 @@ class PopModal extends Component{
         });
 
     }
-    componentDidMount(){
-        this.fetchTypeList()
-    }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
             /**
@@ -138,7 +136,10 @@ class PopModal extends Component{
              * */
             nextProps.form.resetFields();
             this.setState({
-                initData:{}
+                initData:{},
+                commonlyTaxRateList:[],
+                simpleTaxRateList:[],
+
             })
         }
         if(nextProps.modalConfig.type === 'add'){
@@ -230,12 +231,33 @@ class PopModal extends Component{
                                                 }
                                             ]
                                         },
-                                    }, {
+                                    },{
+                                        label:'业务类型',
+                                        fieldName:'businessType',
+                                        type:'select',
+                                        span:12,
+                                        options:[{value:'0',text:'业务类型-非房地产建筑'},{value:'1',text:'业务类型-房地产建筑'}],
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData['businessType'],
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入业务类型'
+                                                }
+                                            ]
+                                        },
+                                        componentProps:{
+                                            onChange:value=>{
+                                                this.props.form.setFieldsValue({commonlyTaxRate:undefined,simpleTaxRate:undefined})
+                                                this.fetchTypeList(value)
+                                            }
+                                        }
+                                    },{
                                         label:'一般计税税率',
                                         fieldName:'commonlyTaxRate',
                                         type:'select',
                                         span:'12',
-                                        notShowAll:true,
+                                        whetherShowAll:true,
                                         options:this.state.commonlyTaxRateList,
                                         componentProps:{
                                             allowClear:true,
@@ -248,7 +270,7 @@ class PopModal extends Component{
                                         fieldName:'simpleTaxRate',
                                         type:'select',
                                         span:'12',
-                                        notShowAll:true,
+                                        whetherShowAll:true,
                                         options:this.state.simpleTaxRateList,
                                         componentProps:{
                                             allowClear:true,

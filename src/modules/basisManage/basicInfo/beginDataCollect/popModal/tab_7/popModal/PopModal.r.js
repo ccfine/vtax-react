@@ -1,5 +1,8 @@
-/**
- * Created by liuliyuan on 2018/5/20.
+/*
+ * @Author: liuchunxiu 
+ * @Date: 2018-05-23 10:15:07 
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-06-25 16:02:36
  */
 import React, { Component } from 'react'
 import { Modal, Form,Button, message, Spin, Row } from 'antd'
@@ -11,7 +14,7 @@ const formItemLayout = {
     },
     wrapperCol: {
         xs: { span: 12 },
-        sm: { span: 16 },
+        sm: { span: 14 },
     },
 };
 
@@ -25,7 +28,7 @@ class PopModal extends Component {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/taxReliefProjectCollection/find/${props.id}`).then(({ data }) => {
+                request.get(`/interEstateBuildCollection/find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data});
                     }
@@ -54,21 +57,30 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                // 提交数据
+
                 if(values.project){
-                    values.name = values.project.label;
-                    values.num = values.project.key;
+                    values.projectId = values.project.key;
+                    values.projectName = values.project.label;
                     values.project = undefined;
                 }
-                let obj = Object.assign({}, this.state.record, values);
+
+                if(values.stage){
+                    values.stageId = values.stage.key;
+                    values.stageName = values.stage.label;
+                    values.stage = undefined;
+                }
+
+                let obj = Object.assign({id:this.state.record.id,mainId:this.state.record.mainId}, values);
                 let result,
                     sucessMsg;
 
                 if (this.props.action === "modify") {
-                    result = request.put('/taxReliefProjectCollection/update', obj);
+                    result = request.put('/interEstateBuildCollection/update', obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
                     obj.mainId = this.props.mainId;
-                    result = request.post('/taxReliefProjectCollection/add', obj);
+                    result = request.post('/interEstateBuildCollection/add', obj);
                     sucessMsg = '新增成功';
                 }
 
@@ -76,7 +88,7 @@ class PopModal extends Component {
                 result && result.then(({ data }) => {
                     if (data.code === 200) {
                         message.success(sucessMsg, 4);
-                        this.setState({ loading: false, record: data.data, submited: true });
+                        this.setState({ loading: false, submited: true });
                         this.props.refreshTable();
                         this.hideModal();
                     } else {
@@ -92,20 +104,20 @@ class PopModal extends Component {
         });
     }
     render() {
-        const readonly = (this.props.action === 'look');
+        const readonly = (this.props.action === 'look'),isModify =  (this.props.action === "modify") ;
         let { record = {} } = this.state;
         const form = this.props.form;
         let title = "查看";
         if (this.props.action === "add") {
             title = "新增";
-        } else if (this.props.action === "modify") {
+        } else if (isModify) {
             title = "编辑"
         }
         return (
             <Modal
                 title={title}
                 visible={this.props.visible}
-                width='500px'
+                width='600px'
                 style={{top:'15%'}}
                 bodyStyle={{ maxHeight: 450, overflow: "auto" }}
                 onCancel={() => { this.hideModal() }}
@@ -121,38 +133,67 @@ class PopModal extends Component {
                 <Spin spinning={this.state.formLoading}>
                     <Form>
                         <Row>
-                            {
-                                getFields(form, [{
-                                    label: "减免税项目",
+                            {getFields(form, [{
+                                    label: "项目名称",
                                     fieldName: "project",
                                     type: "asyncSelect",
                                     span:24,
-                                    formItemStyle: formItemLayout,
-                                    componentProps: {
-                                        fieldTextName: "name",
-                                        fieldValueName: "code",
-                                        doNotFetchDidMount: false,
-                                        url: `/sys/dict/listBaseInfo/JMS`,
-                                        selectOptions:{
-                                            disabled: readonly,
-                                            labelInValue:true
-                                        }
-                                    },
+                                    formItemStyle:formItemLayout,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.num && {key:record.num,label:record.name},
+                                        initialValue: record.projectId && {key:record.projectId,label:record.projectName},
                                         rules: [
                                             {
                                                 required: true,
-                                                message: `请选择减免税项目`
+                                                message: `请选择项目`
                                             }
                                         ]
+                                    },
+                                    componentProps: {
+                                        selectOptions:{
+                                            labelInValue:true,
+                                            disabled: readonly,
+                                        },
+                                        fieldTextName: "itemName",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount: false,
+                                        url: `/project/list/${this.props.mainId}`
+                                    }
+                                }]
+                                )
+                            }
+                        </Row>
+                        <Row>
+                            {getFields(form, [{
+                                    label: "项目分期",
+                                    fieldName: "stage",
+                                    type: "asyncSelect",
+                                    span:24,
+                                    formItemStyle:formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue: record.stageId && {key:record.stageId,label:record.stageName},
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: `请选择项目分期`
+                                            }
+                                        ]
+                                    },
+                                    componentProps: {
+                                        selectOptions:{
+                                            labelInValue:true,
+                                            disabled: readonly ,
+                                        },
+                                        fieldTextName: "itemName",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount: !record.projectId,
+                                        fetchAble: (form.getFieldValue("project") && form.getFieldValue("project").key) || record.projectId,
+                                        url: `/project/stages/${(form.getFieldValue("project") && form.getFieldValue("project").key) || record.projectId}`
                                     }
                                 }])
                             }
                         </Row>
                         <Row>
-                            {
-                                getFields(form, [{
+                            {getFields(form, [{
                                         span: '24',
                                         fieldName: 'amount',
                                         label: '金额',
@@ -163,6 +204,31 @@ class PopModal extends Component {
                                                 {
                                                     required: true,
                                                     message: '请输入金额'
+                                                }
+                                            ]
+                                        },
+                                        componentProps: {
+                                            disabled: readonly,
+                                            allowNegative:true,
+                                        },
+                                        type: 'numeric',
+                                    }]
+                                )
+                            }
+                        </Row>
+                        
+                        <Row>
+                            {getFields(form, [{
+                                        span: '24',
+                                        fieldName: 'taxAmount',
+                                        label: '税额',
+                                        formItemStyle: formItemLayout,
+                                        fieldDecoratorOptions: {
+                                            initialValue: record.taxAmount,
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: "请输入税额"
                                                 }
                                             ]
                                         },

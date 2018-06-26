@@ -172,6 +172,7 @@ const getColumns = (context,hasOperate) => {
                 <p className="apply-form-list-p2">项目编码</p>
             </div>
         ),
+        width:'10%',
         dataIndex: "projectName",
         render: (text, record) => (
             <div>
@@ -183,6 +184,7 @@ const getColumns = (context,hasOperate) => {
     {
         title: '发票类型',
         dataIndex: "invoiceType",
+        width:100,
     },
     {
         title: <div className="apply-form-list-th">
@@ -190,6 +192,7 @@ const getColumns = (context,hasOperate) => {
             <p className="apply-form-list-p2">发票代码</p>
         </div>,
         dataIndex: "invoiceNum",
+        width:80,
         render: (text, record) => (
             <div>
                 <p className="apply-form-list-p1"><span title='查看详情'
@@ -217,6 +220,7 @@ const getColumns = (context,hasOperate) => {
         title: '金额',
         dataIndex: "amount",
         className:'table-money',
+        width:'8%',
         render: (text, record) => fMoney(text)
     },
     {
@@ -226,6 +230,7 @@ const getColumns = (context,hasOperate) => {
                 <p className="apply-form-list-p2">购方税号</p>
             </div>
         ),
+        width:'12%',
         dataIndex: "purchaseName",
         render: (text, record) => (
             <div>
@@ -237,29 +242,32 @@ const getColumns = (context,hasOperate) => {
     {
         title: "开票日期",
         dataIndex: "billingDate",
-        width: "75px"
+        width: 75,
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width: '8%',
     },
     {
         title: "税率",
         dataIndex: "taxRate",
+        width: 40,
         render: text => text?`${text}%`:text
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width: '8%',
     },
     {
         title: "数据来源",
         dataIndex: "sourceType",
-        width: "60px",
+        width: 60,
         render: text => {
             text = parseInt(text, 0);
             if (text === 1) {
@@ -397,9 +405,10 @@ class SalesInvoiceCollection extends Component {
                             </div>
                         )
                     },
-                    /*scroll:{
-                        x:'180%'
-                    },*/
+                    scroll:{
+                        y:240,
+                        x:1100,
+                    },
                     onTotalSource: totalSource => {
                         this.setState({
                             totalSource

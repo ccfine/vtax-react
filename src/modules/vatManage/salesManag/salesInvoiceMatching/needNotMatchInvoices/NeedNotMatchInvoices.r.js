@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-13 11:04:23
+ * @Last Modified time: 2018-06-26 18:04:30
  *
  */
 import React, { Component } from 'react'
@@ -104,19 +104,23 @@ const columns = [
     },
     {
         title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum'
+        dataIndex:'purchaseTaxNum',
+        width:'12%',
     },
     {
         title:'购货单位名称',
-        dataIndex:'purchaseName'
+        dataIndex:'purchaseName',
+        width:'12%',
     },
     {
         title:'发票代码',
-        dataIndex:'invoiceCode'
+        dataIndex:'invoiceCode',
+        width:'8%',
     },
     {
         title:'发票号码',
-        dataIndex:'invoiceNum'
+        dataIndex:'invoiceNum',
+        width:'8%',
     },
     {
         title:'发票类型',
@@ -129,7 +133,8 @@ const columns = [
                 return '普票'
             }
             return text;
-        }
+        },
+        width:60,
     },
     {
         title:'开票日期',
@@ -140,25 +145,29 @@ const columns = [
         title:'金额',
         dataIndex:'amount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'8%',
     },
     {
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
         render:text=>text? `${text}%`: text,
+        width:40,
     },
     {
         title:'税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'8%',
     },
     {
         title:'价税合计',
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'8%',
     }
 ];
 
@@ -285,7 +294,8 @@ class NeedNotMatchInvoices extends Component{
                         })
                     },
                     scroll:{
-                        x:1200
+                        x:1200,
+                        y:190,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
