@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:14:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-21 09:20:25
+ * @Last Modified time: 2018-06-26 10:36:06
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
@@ -81,7 +81,7 @@ export default class TabPage extends Component{
                                     url: 'realtyCollection/download',
                                 },{
                                     type:'autoFileImport',
-                                    url:`/realtyCollection/upload/${props.mainId}`,
+                                    url:`realtyCollection/upload/${props.mainId}`,
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1121005'],
                                 },{
