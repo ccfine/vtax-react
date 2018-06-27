@@ -124,7 +124,7 @@ const columns = [
             {
                 title:'房间编码',
                 dataIndex:'roomCode',
-                width:'6%',
+                width:'8%',
             },
             {
                 title:'税率',
@@ -136,7 +136,7 @@ const columns = [
             {
                 title:'房间交付日期',
                 dataIndex:'deliveryDate',
-                width:75,
+                width:90,
             },
         ]
     },
@@ -375,7 +375,7 @@ class unBilledSalesEstate extends Component{
                     </div>,
                     scroll:{
                         x:1800,
-                        y:220,
+                        y:190,
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({

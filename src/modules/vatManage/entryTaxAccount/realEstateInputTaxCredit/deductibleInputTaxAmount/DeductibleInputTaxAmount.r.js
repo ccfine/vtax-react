@@ -132,7 +132,7 @@ export default class DeductibleInputTaxAmount extends Component{
                     }}
                     tableOption={{
                         key:tableKey,
-                        pageSize:20,
+                        pageSize:10,
                         columns:columns(this),
                         url:'/account/income/estate/stayDedList',
                         cardProps: {

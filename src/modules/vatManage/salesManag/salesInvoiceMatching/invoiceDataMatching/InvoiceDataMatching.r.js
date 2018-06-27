@@ -323,7 +323,7 @@ const getColumns = (context,disabled) => {
     }, {
         title:'路址',
         dataIndex:'htRoomName',
-        width:'6%',
+        width:'10%',
     },
     {
         title: (
@@ -484,7 +484,7 @@ class InvoiceDataMatching extends Component{
                     },
                     scroll:{
                         x: 1500,
-                        y:170,
+                        y:130,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,
