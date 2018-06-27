@@ -172,6 +172,7 @@ class FixedAssetsInputTaxDetails extends Component{
                         },()=>{
                             this.fetchResultStatus()
                         })
+                        this.props.form.resetFields();
                     },
                     extra: (
                         <div>
