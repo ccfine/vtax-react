@@ -4,21 +4,22 @@
  * description  :
  */
 import React,{Component} from 'react'
-import { Form,Select,Spin,message } from 'antd'
+import { Form,message,Row } from 'antd'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom';
-import {request} from 'utils'
-import {saveOrgId,saveToken,savePersonal} from '../../redux/ducks/user'
+import {request,getFields} from 'utils'
+import {saveOrgId,saveToken,savePersonal,saveAreaId} from '../../redux/ducks/user'
 
-const Option = Select.Option;
-const FormItem = Form.Item;
 class SelectSearch extends Component {
     state = {
         data:[],
         orgId:undefined,
+        areaId:undefined,
         coreCompanyLoaded:true
     }
-
+    handleAreaChange=(value)=>{
+        this.props.saveAreaId(value)
+    }
     handleChange = (value) => {
         const { saveOrgId } = this.props;
         this.mounted && this.setState({
@@ -84,7 +85,7 @@ class SelectSearch extends Component {
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
+        const { getFieldValue } = this.props.form;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -97,7 +98,54 @@ class SelectSearch extends Component {
         };
         return (
             <Form onSubmit={this.handleSubmit} className="from-search">
-                <FormItem
+                <Row>
+                {
+                    getFields(this.props.form,[{
+                        label:'区域',
+                        fieldName:'areaId',
+                        type:'asyncSelect',
+                        span:12,
+                        formItemLayout,
+                        componentProps:{
+                            fieldTextName:'orgName',
+                            fieldValueName:'orgId',
+                            doNotFetchDidMount:false,
+                            notShowAll:true,
+                            url:`/org/user_area`,
+                            selectOptions:{
+                                onChange:this.handleAreaChange,
+                                defaultActiveFirstOption:true,
+                            },
+                        },
+                        fieldDecoratorOptions: {
+                            initialValue: this.props.areaId
+                        }
+                    },
+                    {
+                        label:'组织',
+                        fieldName:'orgId',
+                        type:'asyncSelect',
+                        span:12,
+                        formItemLayout,
+                        componentProps:{
+                            fieldTextName:'orgName',
+                            fieldValueName:'orgId',
+                            doNotFetchDidMount:!this.props.orgId,
+                            notShowAll:true,
+                            fetchAble:getFieldValue('areaId') || false,
+                            url:`/org/user_organizations/${getFieldValue('areaId')}`,
+                            selectOptions:{
+                                onChange:this.handleChange,
+                                defaultActiveFirstOption:true,
+                            },
+                            fieldDecoratorOptions: {
+                                initialValue: this.props.orgId
+                            }
+                        }
+                    }])
+                }
+                </Row>
+                {/* <FormItem
                     {...formItemLayout}
                     label="切换组织"
                 >
@@ -118,7 +166,7 @@ class SelectSearch extends Component {
                             </Select>
                         )}
                     </Spin>
-                </FormItem>
+                </FormItem> */}
             </Form>
         )
     }
@@ -127,9 +175,11 @@ class SelectSearch extends Component {
 const FormSelectSearch =  Form.create()(SelectSearch)
 
 export default withRouter(connect(state=>({
-    orgId:state.user.get('orgId')
+    orgId:state.user.get('orgId'),
+    areaId:state.user.get('areaId'),
 }),dispatch=>( {
     saveOrgId:saveOrgId(dispatch),
+    saveAreaId:saveAreaId(dispatch),
     saveToken:saveToken(dispatch),
     savePersonal:savePersonal(dispatch)
 }))(FormSelectSearch))
