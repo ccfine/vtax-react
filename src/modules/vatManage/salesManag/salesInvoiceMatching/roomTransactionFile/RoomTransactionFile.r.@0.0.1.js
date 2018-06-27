@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-26 17:58:48
+ * @Last Modified time: 2018-06-27 20:16:21
  *
  */
 import React,{Component} from 'react'
@@ -275,7 +275,7 @@ const getColumns = (context,disabled) => {
                 </div>
             );
         },
-        width:'10%',
+        width:'12%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -351,7 +351,7 @@ const getColumns = (context,disabled) => {
     }, {
         title:'房间面积',
         dataIndex:'roomArea',
-        width:'5%',
+        width:'3%',
     }, {
         title:'匹配状态',
         dataIndex:'matchingStatus',
@@ -514,7 +514,7 @@ class RoomTransactionFile extends Component{
                     },
                     scroll:{
                         x: 2200,
-                        y:200,
+                        y:180,
                     },
                 }}
             >

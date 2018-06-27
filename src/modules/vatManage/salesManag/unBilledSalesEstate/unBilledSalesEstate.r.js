@@ -375,7 +375,7 @@ class unBilledSalesEstate extends Component{
                     </div>,
                     scroll:{
                         x:1800,
-                        y:220,
+                        y:190,
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({

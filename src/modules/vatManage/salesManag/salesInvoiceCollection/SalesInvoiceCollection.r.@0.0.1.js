@@ -406,7 +406,7 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        y:240,
+                        y:210,
                         x:1100,
                     },
                     onTotalSource: totalSource => {

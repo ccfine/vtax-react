@@ -235,9 +235,9 @@ table.data-grid{
 }
 
  /* 表格收索中距离缩小 */
-.table-search-form .ant-form-item-label,.table-search-form .ant-form-item-control{
+/* .table-search-form .ant-form-item-label,.table-search-form .ant-form-item-control{
   height: auto;
-}
+} */
 
 .fix-ie10-formItem-fileUpload .ant-form-item-label, .fix-ie10-formItem-fileUpload .ant-form-item-control {
   min-height: 48px;
