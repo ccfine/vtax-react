@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin} from 'antd'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,Row,Col} from 'antd'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
@@ -64,35 +64,54 @@ class WimsHeader extends Component {
 
         return (
             <Header className="header">
-                <Icon
-                    className='trigger'
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                    onClick={this.toggle}
-                />
-                <div style={{display: 'inline-block'}}>
-                    <h2>碧桂园纳税申报系统</h2>
-                </div>
-                <div className='right'>
+                <Row>
+                    <Col xs={0} sm={4} lg={8}>
+                        <Icon
+                            className='trigger'
+                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                            onClick={this.toggle}
+                        />
+                        <div style={{display: 'inline-block'}}>
+                            <h1>碧桂园纳税申报系统</h1>
+                        </div>
+                    </Col>
+                    <Col xs={18} sm={16} lg={12}>
+                        {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
+                    </Col>
+                    <Col xs={6} sm={4} lg={4}>
+                        <div className='right'>
+                        {this.props.userName ? (
+                            <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                            <span className='action account'>
+                                <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                                {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
+                                <span className='name'>{this.props.userName}</span>
+                            </span>
+                            </Dropdown>
+                        ) : (
+                            <Spin size="small" style={{ marginLeft: 8 }} />
+                        )}
+                        </div>
+                    </Col>
+                </Row>
+                {/* <div className='right'>
 
-                    <div style={{float: 'left',width: '500px',padding:'0 12px'}}>
+                    <div style={{float: 'left',width: 500,padding:'0 12px'}}>
                         {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                     </div>
-
-                    {/*<Message />*/}
 
 
                     {this.props.userName ? (
                         <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                           <span className='action account'>
                             <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
-                              {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
                               <span className='name'>{this.props.userName}</span>
                           </span>
                         </Dropdown>
                     ) : (
                         <Spin size="small" style={{ marginLeft: 8 }} />
                     )}
-                </div>
+                </div> */}
             </Header>
         )
     }

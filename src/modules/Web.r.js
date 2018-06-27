@@ -72,12 +72,12 @@ class Web extends Component {
         const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
         //const pathname = this.props.history.location.pathname;
         return (
-            <Layout key={this.state.refresh}>
-                <Sider collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
+            <Layout>
+                <Sider  key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
                 <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                    <Content style={{ margin: '12px 12px 0'}}>
+                    <Content style={{ margin: '12px 12px 0'}}  key={this.state.refresh}>
                         <Switch>
                             {
                                 composeMenus(routes).map((route, i) => (
