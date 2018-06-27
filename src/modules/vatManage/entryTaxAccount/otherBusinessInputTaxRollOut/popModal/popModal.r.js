@@ -189,7 +189,7 @@ class PopModal extends Component {
                                               key: record.mainId,
                                               label: record.mainName
                                           }
-                                        : declare && declare.mainId && {key:declare.mainId},
+                                        : (declare && declare.mainId) ? {key:declare.mainId} :undefined,
                                         rules: [
                                             {
                                                 required: true,

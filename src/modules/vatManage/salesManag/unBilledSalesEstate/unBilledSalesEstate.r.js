@@ -104,33 +104,39 @@ const columns = [
         children:[
             {
                 title:'分期',
-                dataIndex:'itemName'
+                dataIndex:'itemName',
             },
             {
                 title:'楼栋',
-                dataIndex:'buildingName'
+                dataIndex:'buildingName',
+                width:'8%',
             },
             {
                 title:'单元',
-                dataIndex:'element'
+                dataIndex:'element',
+                width:'6%',
             },
             {
                 title:'房号',
-                dataIndex:'roomNumber'
+                dataIndex:'roomNumber',
+                width:'4%',
             },
             {
                 title:'房间编码',
-                dataIndex:'roomCode'
+                dataIndex:'roomCode',
+                width:'6%',
             },
             {
                 title:'税率',
                 dataIndex:'taxRate',
                 className:'text-right',
                 render:text=>text? `${text}%`: text,
+                width:40,
             },
             {
                 title:'房间交付日期',
-                dataIndex:'deliveryDate'
+                dataIndex:'deliveryDate',
+                width:75,
             },
         ]
     },
@@ -141,19 +147,22 @@ const columns = [
                 title:'增值税收入确认金额',
                 dataIndex:'sumTotalPrice',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
             {
                 title:'增值税开票金额',
                 dataIndex:'sumTotalAmount',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
             {
                 title:'未开具发票销售金额',
                 dataIndex:'sumNoInvoiceSales',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
         ]
     },
@@ -164,19 +173,22 @@ const columns = [
                 title:'增值税收入确认金额合计',
                 dataIndex:'totalPrice',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
             {
                 title:'增值税开票金额',
                 dataIndex:'totalAmount',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
             {
                 title:'未开具发票销售额',
                 dataIndex:'noInvoiceSales',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
         ]
     },
@@ -187,19 +199,22 @@ const columns = [
                 title:'增值税收入确认金额合计',
                 dataIndex:'endTotalPrice',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
             {
                 title:'增值税开票金额',
                 dataIndex:'endTotalAmount',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
             {
                 title:'未开具发票销售额',
                 dataIndex:'endNoInvoiceSales',
                 render:text=>fMoney(text),
-                className:'table-money'
+                className:'table-money',
+                width:'5%',
             },
         ]
     },
@@ -207,7 +222,8 @@ const columns = [
         title:'未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'5%',
     }
 ];
 class unBilledSalesEstate extends Component{
@@ -358,7 +374,8 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:'200%'
+                        x:1800,
+                        y:220,
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({
