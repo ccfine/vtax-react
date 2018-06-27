@@ -159,7 +159,7 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns(this),
                     url:'/account/income/estate/buildList',
                     onSuccess:(params)=>{

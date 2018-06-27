@@ -3,8 +3,10 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
-const columns = context =>[
+import {Form,message} from 'antd';
+import {fMoney,composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
+import { NumericInputCell } from 'compoments/EditableCell'
+const columns = (context,isEdit) =>[
     {
         title:'纳税主体',
         dataIndex: "taxSubjectName",
@@ -58,9 +60,20 @@ const columns = context =>[
         render:(text)=>fMoney(text)
     },
     {
-        title: "税率",
+        title: "税率（%）",
         dataIndex: "intaxRate",
-        render:(text)=>text && `${text}%`,
+        render:(text,record,index)=>{
+            if(isEdit && record.intaxRateEdit){
+                return <NumericInputCell
+                initialValue={text}
+                getFieldDecorator={context.props.form.getFieldDecorator}
+                fieldName={`list[${index}].intaxRate`}
+                editAble={true}
+                />
+             }else{
+                return text && `${text}%`
+             }
+        },
     },
     {
         title: "当期抵扣的进项税额",
@@ -82,11 +95,17 @@ const columns = context =>[
         dataIndex: "assetsState"
     },
 ];
-export default class FixedAssetsInputTaxDetails extends Component{
+class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
 		filters: {},
-		statusParam:{}
+        statusParam:{},
+        dataSource:[],
+
+        saveLoading:false,
+    }
+    toggoleSaveLoading=(saveLoading)=>{
+        this.setState({saveLoading})
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
@@ -95,8 +114,33 @@ export default class FixedAssetsInputTaxDetails extends Component{
             })
         })
     }
+    save=(e)=>{
+        e && e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                let params={...this.state.filters,list:[]};
+                values.list && values.list.forEach((ele,index)=>{
+                    params.list.push({id:this.state.dataSource[index].id,intaxRate:ele.intaxRate });
+                })
+                this.toggoleSaveLoading(true)
+                request.post('/account/income/estate/save',params)
+                .then(({data})=>{
+                    this.toggoleSaveLoading(false)
+                    if(data.code===200){
+                        message.success(`保存成功！`);
+                        this.props.refreshTabs();
+                    }else{
+                        message.error(`保存失败:${data.msg}`)
+                    }
+                }).catch(err=>{
+                    this.toggoleSaveLoading(false)
+                    message.error(`保存失败:${err.message}`)
+                })
+            }
+        })
+    }
     render(){
-        const {tableKey,statusParam,filters} = this.state;
+        const {tableKey,statusParam,filters,saveLoading} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -115,23 +159,35 @@ export default class FixedAssetsInputTaxDetails extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:20,
-                    columns:columns(this),
+                    pageSize:10,
+                    columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
                     url:'/account/income/estate/fixedList',
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
                     },
-                    onSuccess: (params) => {
+                    onSuccess: (params,dataSource) => {
                         this.setState({
-                            filters: params
+                            filters: params,
+                            dataSource
                         },()=>{
                             this.fetchResultStatus()
                         })
+                        this.props.form.resetFields();
                     },
                     extra: (
                         <div>
                             {
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1 && composeBotton([{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    userPermissions:['1251003'],
+                                    onClick:this.save,
+                                    loading:saveLoading
+                                }],statusParam)
                             }
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([
@@ -156,3 +212,5 @@ export default class FixedAssetsInputTaxDetails extends Component{
         )
     }
 }
+
+export default Form.create()(FixedAssetsInputTaxDetails);

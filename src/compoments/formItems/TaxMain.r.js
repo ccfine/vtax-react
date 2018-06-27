@@ -7,43 +7,29 @@ import PropTypes from 'prop-types'
 import {request} from 'utils'
 const FormItem = Form.Item;
 const Option = Select.Option
-let timeout;
-let currentValue;
 function fetchTaxMain(value, callback) {
-
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
-
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value,
-                size:100
+    request.get(`/taxsubject/listByName`,{
+        params:{
+            name:value,
+            size:100
+        }
+    })
+        .then(({data}) => {
+            if(data.code===200){
+                const result = data.data.records || data.data;;
+                const newData = [];
+                result.forEach((r) => {
+                    newData.push({
+                        value: `${r.id}`,
+                        text: r.name,
+                    });
+                });
+                callback(newData);
             }
         })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records || data.data;;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.id}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
+        .catch(err => {
+            message.error(err.message)
+        });
 }
 export default class TaxMain extends Component{
     static propTypes={
