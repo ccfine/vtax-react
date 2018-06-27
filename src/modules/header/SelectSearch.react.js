@@ -107,11 +107,11 @@ class SelectSearch extends Component {
                         span:12,
                         formItemStyle:formItemLayout,
                         componentProps:{
-                            fieldTextName:'orgName',
-                            fieldValueName:'orgId',
+                            fieldTextName:'name',
+                            fieldValueName:'id',
                             doNotFetchDidMount:false,
                             notShowAll:true,
-                            url:`/org/user_area`,
+                            url:`/sysOrganization/queryLoginAreas`,
                             selectOptions:{
                                 onChange:this.handleAreaChange,
                                 defaultActiveFirstOption:true,
@@ -128,19 +128,18 @@ class SelectSearch extends Component {
                         span:12,
                         formItemStyle:formItemLayout,
                         componentProps:{
-                            fieldTextName:'orgName',
-                            fieldValueName:'orgId',
-                            doNotFetchDidMount:!this.props.orgId,
+                            fieldTextName:'name',
+                            fieldValueName:'id',
+                            doNotFetchDidMount:!this.props.areaId,
                             notShowAll:true,
-                            fetchAble:getFieldValue('areaId') || false,
-                            url:`/org/user_organizations/${getFieldValue('areaId')}`,
+                            fetchAble:getFieldValue('areaId') || this.props.areaId || false,
+                            url:`/sysOrganization/queryLoginOrgs/${getFieldValue('areaId') || this.props.areaId}`,
                             selectOptions:{
                                 onChange:this.handleChange,
-                                defaultActiveFirstOption:true,
-                            },
-                            fieldDecoratorOptions: {
-                                initialValue: this.props.orgId
                             }
+                        },
+                        fieldDecoratorOptions: {
+                            initialValue: this.props.orgId
                         }
                     }])
                 }
