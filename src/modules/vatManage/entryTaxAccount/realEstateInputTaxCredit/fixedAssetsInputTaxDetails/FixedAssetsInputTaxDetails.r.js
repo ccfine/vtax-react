@@ -119,7 +119,7 @@ class FixedAssetsInputTaxDetails extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 let params={...this.state.filters,list:[]};
-                values.list.forEach((ele,index)=>{
+                values.list && values.list.forEach((ele,index)=>{
                     params.list.push({id:this.state.dataSource[index].id,intaxRate:ele.intaxRate });
                 })
                 this.toggoleSaveLoading(true)

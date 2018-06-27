@@ -96,14 +96,14 @@ class TabPage extends Component{
                                         text:'保存',
                                         icon:'save',
                                         onClick:()=>this.save(),
-                                        userPermission:['1125005']
+                                        userPermissions:['1121003']
                                     },{
                                         type:'cancel',
                                         text:'取消',
                                         icon:'rollback',
                                         btnType:'default',
                                         onClick:()=>this.cancel(),
-                                        userPermission:['1125005']
+                                        userPermissions:['1121003']
                                     }])
                                 }
                             </span>
