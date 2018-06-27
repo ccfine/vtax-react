@@ -65,17 +65,17 @@ class WimsHeader extends Component {
         return (
             <Header className="header">
                 <Row>
-                    <Col xs={0} sm={4} lg={8}>
-                        <Icon
-                            className='trigger'
-                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.toggle}
-                        />
-                        <div style={{display: 'inline-block'}}>
-                            <h1>碧桂园纳税申报系统</h1>
-                        </div>
+                    <Col xs={0} sm={4} lg={6}>
+                        <h2 style={{overflow:'hidden',whiteSpace:'nowrap'}}>
+                            <Icon
+                                className='trigger'
+                                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                onClick={this.toggle}
+                            />
+                            碧桂园纳税申报系统
+                        </h2>
                     </Col>
-                    <Col xs={18} sm={16} lg={12}>
+                    <Col xs={18} sm={16} lg={14}>
                         {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                     </Col>
                     <Col xs={6} sm={4} lg={4}>
@@ -94,24 +94,6 @@ class WimsHeader extends Component {
                         </div>
                     </Col>
                 </Row>
-                {/* <div className='right'>
-
-                    <div style={{float: 'left',width: 500,padding:'0 12px'}}>
-                        {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
-                    </div>
-
-
-                    {this.props.userName ? (
-                        <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-                          <span className='action account'>
-                            <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
-                              <span className='name'>{this.props.userName}</span>
-                          </span>
-                        </Dropdown>
-                    ) : (
-                        <Spin size="small" style={{ marginLeft: 8 }} />
-                    )}
-                </div> */}
             </Header>
         )
     }

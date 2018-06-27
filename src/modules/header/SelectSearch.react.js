@@ -10,6 +10,16 @@ import {withRouter} from 'react-router-dom';
 import {request,getFields} from 'utils'
 import {saveOrgId,saveToken,savePersonal,saveAreaId} from '../../redux/ducks/user'
 
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 12 },
+        sm: { span: 4 },
+    },
+    wrapperCol: {
+        xs: { span: 12 },
+        sm: { span: 20 },
+    },
+};
 class SelectSearch extends Component {
     state = {
         data:[],
@@ -86,16 +96,6 @@ class SelectSearch extends Component {
 
     render() {
         const { getFieldValue } = this.props.form;
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24 },
-                sm: { span: 8 },
-            },
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 16 },
-            },
-        };
         return (
             <Form onSubmit={this.handleSubmit} className="from-search">
                 <Row>
@@ -105,7 +105,7 @@ class SelectSearch extends Component {
                         fieldName:'areaId',
                         type:'asyncSelect',
                         span:12,
-                        formItemLayout,
+                        formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'orgName',
                             fieldValueName:'orgId',
@@ -126,7 +126,7 @@ class SelectSearch extends Component {
                         fieldName:'orgId',
                         type:'asyncSelect',
                         span:12,
-                        formItemLayout,
+                        formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'orgName',
                             fieldValueName:'orgId',
@@ -145,28 +145,6 @@ class SelectSearch extends Component {
                     }])
                 }
                 </Row>
-                {/* <FormItem
-                    {...formItemLayout}
-                    label="切换组织"
-                >
-                    <Spin size='small' spinning={!this.state.coreCompanyLoaded}>
-                        {getFieldDecorator('select', {
-                            initialValue: this.state.orgId,
-                        })(
-                            <Select
-                                showSearch
-                                placeholder="请选择供应商"
-                                optionFilterProp="children"
-                                notFoundContent="无法找到"
-                                onChange={this.handleChange}
-                            >
-                                {
-                                    this.state.data.map(d => <Option key={d.orgId}>{d.orgName}</Option>)
-                                }
-                            </Select>
-                        )}
-                    </Spin>
-                </FormItem> */}
             </Form>
         )
     }
