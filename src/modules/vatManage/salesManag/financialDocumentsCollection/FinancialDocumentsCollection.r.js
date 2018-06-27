@@ -69,10 +69,12 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.mainNum}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },{
         title: '项目名称',
         dataIndex: 'projectName',
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">项目分期名称</p>
@@ -84,7 +86,7 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.stagesNum}</p>
             </div>
-        )
+        ),
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证日期</p>
@@ -96,7 +98,8 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.billingDate}</p>
             </div>
-        )
+        ),
+        width:75,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证号</p>
@@ -108,7 +111,8 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.voucherType}</p>
             </div>
-        )
+        ),
+        width:'4%',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
@@ -124,12 +128,14 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
             </div>
-        )
+        ),
+        width:'8%',
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'4%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方辅助核算名称</p>
@@ -141,7 +147,8 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitProjectNum}</p>
             </div>
-        )
+        ),
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">贷方科目名称</p>
@@ -153,12 +160,14 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.creditSubjectCode}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },{
         title: '贷方金额',
         dataIndex: 'creditAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'4%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">贷方辅助核算名称</p>
@@ -170,7 +179,8 @@ const columns=[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.creditProjectNum}</p>
             </div>
-        )
+        ),
+        width:'10%',
     }
 ];
 class FinancialDocumentsCollection extends Component{
@@ -209,7 +219,7 @@ class FinancialDocumentsCollection extends Component{
                     pageSize:10,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 2000 },
+                    scroll:{ x: 2200 ,y:280},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params
