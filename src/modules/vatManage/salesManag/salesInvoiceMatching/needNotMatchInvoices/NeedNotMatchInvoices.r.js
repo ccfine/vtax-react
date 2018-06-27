@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-26 18:04:30
+ * @Last Modified time: 2018-06-27 16:08:47
  *
  */
 import React, { Component } from 'react'
@@ -307,7 +307,7 @@ class NeedNotMatchInvoices extends Component{
                     }:undefined,
                 }}
             >
-                <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} declare={declare}/>
             </SearchTable>
         )
     }

@@ -1,32 +1,55 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-28 19:20:38
+ * @Last Modified time: 2018-06-27 16:14:43
  *
  */
 import React,{Component} from 'react';
 import {Button,Modal,message} from 'antd';
 import {request,fMoney} from 'utils'
 import {SearchTable} from 'compoments'
-const searchFields = [
+import moment from 'moment'
+const searchFields = (disabled,declare)=>[
     {
         label:'纳税主体',
         type:'taxMain',
         fieldName:'mainId',
+        componentProps:{
+            disabled,
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && declare.mainId) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
     },
     {
-        label:'开票时间',
-        type:'rangePicker',
-        fieldName:'billingDate',
-        fieldDecoratorOptions:{},
-        componentProps:{}
+        label:'开票月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        componentProps:{
+            disabled,
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择开票月份'
+                }
+            ]
+        }
     },
-    {
+    /*{
         label:'货物名称',
         type:'input',
         fieldName:'commodityName',
         fieldDecoratorOptions:{}
-    },
+    },*/
     {
         label:'购货单位名称',
         type:'input',
@@ -82,10 +105,10 @@ const columns = [
             return text;
         }
     },
-    {
-        title:'货物名称',
-        dataIndex:'commodityName'
-    },
+    // {
+    //     title:'货物名称',
+    //     dataIndex:'commodityName'
+    // },
     {
         title:'开票日期',
         dataIndex:'billingDate',
@@ -177,6 +200,9 @@ class ManualMatchRoomModal extends Component{
         const props = this.props;
         const {title} = this.props;
         const {tableKey,selectedRowKeys,searchTableLoading} = this.state;
+        
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <Modal
                 maskClosable={false}
@@ -201,7 +227,7 @@ class ManualMatchRoomModal extends Component{
                 <SearchTable
                     spinning={searchTableLoading}
                     searchOption={{
-                        fields:searchFields,
+                        fields:searchFields(disabled,declare),
                         getFieldsValues:values=>{
                             this.setState({
                                 searchFieldsValues:values
