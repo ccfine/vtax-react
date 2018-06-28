@@ -191,7 +191,7 @@ const columns=[
     },{
         title: '数据来源',
         dataIndex: 'sourceType',
-        width:'60px',
+        width:60,
         render:text=>{
             text = parseInt(text,0);
             if(text===1){
@@ -204,7 +204,8 @@ const columns=[
         }
     },{
         title: '备注',
-        dataIndex: 'remark'
+        dataIndex: 'remark',
+        width:'5%',
     }
 ];
 export default class SalesInvoiceCollection extends Component{
@@ -232,7 +233,7 @@ export default class SalesInvoiceCollection extends Component{
                         title:'销项发票采集'
                     },
                     url:'/output/invoice/collection/report/list',
-                    scroll:{ x: 1600 },
+                    scroll:{ x: 1800 },
                 }}
             />
 
