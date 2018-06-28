@@ -69,26 +69,6 @@ class SelectSearch extends Component {
             });
     }
 
-    componentDidMount(){
-        request.get('/org/user_belong_organizations')
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.setState({
-                        data: data.data
-                    },()=>{
-                        this.setState({
-                            orgId:this.props.orgId
-                        })
-                    });
-                }else{
-                    message.error(`查询失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message);
-            });
-    }
-
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
