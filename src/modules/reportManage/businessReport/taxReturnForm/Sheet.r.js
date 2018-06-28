@@ -84,7 +84,7 @@ export default class Sheet extends Component{
         request.get(url,{params})
             .then(({data})=>{
                 if(data.code===200){
-                    let nextData = composeGrid(this.state.grid,data.data,readOnly)
+                    let nextData = composeGrid(this.props.grid,data.data,readOnly)
                     this.mounted && this.setState({
                         grid:nextData
                     },()=>{
