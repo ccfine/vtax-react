@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-13 09:39:27
+ * @Last Modified time: 2018-06-28 11:10:27
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
@@ -185,11 +185,11 @@ class RoleModal extends React.Component {
                                 }
                             },
                             componentProps: {
-                                fieldTextName: "orgName",
-                                fieldValueName: "orgId",
+                                fieldTextName: "name",
+                                fieldValueName: "id",
                                 doNotFetchDidMount:!userId,
                                 fetchAble:userId,
-                                url: `org/queryOrgsByUserId/${userId}`,
+                                url: `/sysOrganization/queryOrgsByUserId/${userId}`,
                             },
                             fieldDecoratorOptions: {
                                 initialValue: orgId,

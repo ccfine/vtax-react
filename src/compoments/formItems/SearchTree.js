@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-06-21 23:40:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-22 16:15:38
+ * @Last Modified time: 2018-06-28 10:49:31
  */
 import React from 'react'
 import {Tree,Input} from 'antd'
@@ -49,7 +49,8 @@ export default class SearchTree extends React.Component{
       }
      onCheck=(checkedKeys,e)=>{
         this.setState({checkedKeys:checkedKeys})
-        this.props.onChange && this.props.onChange(checkedKeys)
+        // 过滤掉非叶子节点
+        this.props.onChange && this.props.onChange(e.checkedNodes.filter(ele=>!(ele.props.children && ele.props.children.length>0)).map(ele=>ele.key))
      }
      getFilterKeys_=(searchValue)=>{
         const {treeData=[]} = this.props;
@@ -72,7 +73,7 @@ export default class SearchTree extends React.Component{
     }
      renderTreeNodes = (data) => {
         return data.map((item) => {
-          if (item.children) {
+          if (item.children && item.children.length>0) {
             return (
               <TreeNode title={item.title} key={item.key} dataRef={item}>
                 {this.renderTreeNodes(item.children)}
