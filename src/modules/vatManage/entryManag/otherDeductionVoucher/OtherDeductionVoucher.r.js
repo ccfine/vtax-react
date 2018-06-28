@@ -99,8 +99,8 @@ const columns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.mainNum}</p>
             </div>
-        )
-
+        ),
+        width:'16%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">项目分期名称</p>
@@ -112,7 +112,8 @@ const columns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.stagesNum}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证日期</p>
@@ -124,7 +125,8 @@ const columns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.billingDate}</p>
             </div>
-        )
+        ),
+        width:75,
     },{
         title: '凭证号',
         dataIndex: 'voucherNum',
@@ -135,6 +137,7 @@ const columns = context =>[
                             voucherNum:text,
                             voucherDate:record.voucherDate,
                             mainId:record.mainId,
+                            stagesId:record.stagesId,
                         }
                     },()=>{
                         context.toggleViewModalVisible(true)
@@ -142,10 +145,12 @@ const columns = context =>[
             }} style={pointerStyle}>
                 {text}
             </span>
-        )
+        ),
+        width:'5%',
     },{
         title: '凭证类型',
         dataIndex: 'voucherType',
+        width:'4%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -157,11 +162,12 @@ const columns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
             </div>
-        )
+        ),
+        width:'14%',
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
-        width:'75px',
+        width:'6%',
         render: text => fMoney(text),
         className: "table-money"
     },{
@@ -175,14 +181,15 @@ const columns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitProjectNum}</p>
             </div>
-        )
+        ),
+        width:'8%',
     },{
         title: '标记',
         dataIndex: 'sysDictName',
+        width:'8%',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:400,
     }
 ];
 class SalesInvoiceCollection extends Component{
@@ -289,7 +296,8 @@ class SalesInvoiceCollection extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:1800
+                     x:1800,
+                     y:230,
                      },
                 }}
             >

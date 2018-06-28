@@ -56,9 +56,9 @@ export default class ViewDocumentDetails extends Component{
     toggleLoaded = loaded => this.setState({loaded})
 
 
-    fetchReportByVoucherNum = ({voucherNum,voucherDate,mainId}) =>{
+    fetchReportByVoucherNum = ({voucherNum,voucherDate,mainId,stagesId}) =>{
         this.toggleLoaded(false)
-        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherNum,mainId,authMonth:moment(voucherDate).format('YYYY-MM')}})
+        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherNum,mainId,authMonth:moment(voucherDate).format('YYYY-MM'),stagesId}})
             .then(({ data }) => {
                 if (data.code === 200) {
                     this.toggleLoaded(true)

@@ -138,6 +138,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                         voucherNum:text,
                         mainId:record.mainId,
                         voucherDate:record.voucherDate,
+                        stagesId:record.stagesId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)

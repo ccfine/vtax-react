@@ -36,6 +36,7 @@ const columns = context =>[
                         voucherNum:text,
                         mainId:record.mainId,
                         voucherDate:record.voucherDate,
+                        stagesId:record.stagesId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -109,7 +110,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:20,
+                    pageSize:10,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/allSimpleTaxList',
                     onSuccess:(params)=>{

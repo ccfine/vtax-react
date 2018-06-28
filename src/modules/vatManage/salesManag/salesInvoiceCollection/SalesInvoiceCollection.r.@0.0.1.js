@@ -278,6 +278,10 @@ const getColumns = (context,hasOperate) => {
             }
             return text;
         }
+    },{
+        title: '备注',
+        dataIndex: 'remark',
+        width: '6%',
     }
 ];
 }

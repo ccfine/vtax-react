@@ -55,11 +55,6 @@ const columns = (context,isEdit) =>[
         dataIndex: "areaCovered"
     },
     {
-        title: "税额",
-        dataIndex: "inTax",
-        render:(text)=>fMoney(text)
-    },
-    {
         title: "税率（%）",
         dataIndex: "intaxRate",
         render:(text,record,index)=>{
@@ -74,6 +69,11 @@ const columns = (context,isEdit) =>[
                 return text && `${text}%`
              }
         },
+    },
+    {
+        title: "税额",
+        dataIndex: "inTax",
+        render:(text)=>fMoney(text)
     },
     {
         title: "当期抵扣的进项税额",

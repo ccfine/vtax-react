@@ -150,7 +150,7 @@ const columns = (context,hasOperate) => {
     }]:[];
     return [...operates,{
         title: "纳税主体",
-        dataIndex: "mainName"
+        dataIndex: "mainName",
     }, {
         title: "数据来源",
         dataIndex: "sourceType",
@@ -163,10 +163,12 @@ const columns = (context,hasOperate) => {
                 return "外部导入";
             }
             return "";
-        }
+        },
+        width:60,
     }, {
         title: "应税项目",
-        dataIndex: "taxableProject"
+        dataIndex: "taxableProject",
+        width:'8%',
     },
     {
         title: (
@@ -181,7 +183,8 @@ const columns = (context,hasOperate) => {
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.projectNum}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },
     {
         title: (
@@ -196,7 +199,8 @@ const columns = (context,hasOperate) => {
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
-        )
+        ),
+        width:90,
     },
     {
         title: (
@@ -229,7 +233,8 @@ const columns = (context,hasOperate) => {
             </span></p>
                 <p className="apply-form-list-p2">{record.billingDate}</p>
             </div>
-        )
+        ),
+        width:90,
     },
     {
         title: (
@@ -244,7 +249,8 @@ const columns = (context,hasOperate) => {
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.authDate}</p>
             </div>
-        )
+        ),
+        width:75,
     },
     {
         title: (
@@ -259,22 +265,26 @@ const columns = (context,hasOperate) => {
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
             </div>
-        )
+        ),
+        width:'16%',
     },
     {
         title: "金额",
         dataIndex: "amount",
-        render: text => fMoney(text)
+        render: text => fMoney(text),
+        width:'6%',
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
-        render: text => fMoney(text)
+        render: text => fMoney(text),
+        width:'6%',
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
-        render: text => fMoney(text)
+        render: text => fMoney(text),
+        width:'6%',
     },
     {
         title: "认证标记",
@@ -295,7 +305,8 @@ const columns = (context,hasOperate) => {
                 default:
             }
             return res;
-        }
+        },
+        width:60,
     },
     {
         title: "是否需要认证",
@@ -313,7 +324,8 @@ const columns = (context,hasOperate) => {
                 default:
             }
             return res;
-        }
+        },
+        width:60,
     }
 ];
 }
@@ -393,7 +405,7 @@ class InvoiceCollection extends Component {
                         columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1500 },
+                        scroll: { x: 1500, y:230 },
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params

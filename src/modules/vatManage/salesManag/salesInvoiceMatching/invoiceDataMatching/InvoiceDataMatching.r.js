@@ -312,7 +312,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">单元</p>
             </div>
         ),
-        width:'10%',
+        width:'16%',
         dataIndex: "buildingName",
         render: (text, record) => (
             <div>
@@ -323,7 +323,7 @@ const getColumns = (context,disabled) => {
     }, {
         title:'路址',
         dataIndex:'htRoomName',
-        width:'10%',
+        width:'8%',
     },
     {
         title: (
@@ -332,7 +332,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">房间编码</p>
             </div>
         ),
-        width:'8%',
+        width:'6%',
         dataIndex: "roomNumber",
         render: (text, record) => (
             <div>

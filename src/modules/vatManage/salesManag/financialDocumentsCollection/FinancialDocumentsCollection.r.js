@@ -87,6 +87,7 @@ const columns=[
                 <p className="apply-form-list-p2">{record.stagesNum}</p>
             </div>
         ),
+        width:'12%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证日期</p>
@@ -116,7 +117,6 @@ const columns=[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:400,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -148,7 +148,7 @@ const columns=[
                 <p className="apply-form-list-p2">{record.debitProjectNum}</p>
             </div>
         ),
-        width:'8%',
+        width:'12%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">贷方科目名称</p>
@@ -180,7 +180,7 @@ const columns=[
                 <p className="apply-form-list-p2">{record.creditProjectNum}</p>
             </div>
         ),
-        width:'10%',
+        width:'12%',
     }
 ];
 class FinancialDocumentsCollection extends Component{
