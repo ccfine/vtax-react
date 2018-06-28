@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-19 09:34:41
+ * @Last Modified time: 2018-06-28 15:47:45
  *
  */
 import React, { Component } from 'react'
@@ -82,13 +82,16 @@ const getColumns = (context,getFieldDecorator,disabled) => {
         }, {
             title: '减税性质代码',
             dataIndex: 'reduceNum',
+            width:'8%',
         },{
             title: '减税性质名称',
             dataIndex: 'reduceName',
+            width:'20%',
         },{
             title: '期初余额',
             dataIndex: 'initialBalance',
             render:text=>fMoney(text),
+            width:'5%',
         },{
             title:'本期发生额',
             children:[
@@ -107,6 +110,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             return record.amount ? fMoney(parseFloat(text)) : text
                         }
                     },
+                    width:'10%',
                 },
                 {
                     title:'税额',
@@ -123,6 +127,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             return record.taxAmount ? fMoney(parseFloat(text)) : text
                         }
                     },
+                    width:'10%',
                 },
                 {
                     title:'减免税金额',
@@ -143,6 +148,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             return record.reduceTaxAmount ? fMoney(parseFloat(text)) : text
                         }
                     },
+                    width:'10%',
                 },
             ]
         },{
@@ -179,10 +185,12 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     return txt
                 }
             },
+            width:'8%',
         },{
             title: '本期应抵减税额',
             dataIndex: 'currentDeductAmount',
             render:text=>fMoney(text),
+            width:'8%',
         }
     ];
 }
@@ -340,6 +348,10 @@ class TaxExemptionDetails extends Component{
                     },
                     cardProps:{
                         title:'减免税明细台账'
+                    },
+                    scroll:{
+                        y:240,
+                        x:1000,
                     },
                     extra: <div>
                         {
