@@ -62,6 +62,7 @@ const columns = context =>[
                         voucherNum:text,
                         mainId:record.mainId,
                         voucherDate:record.voucherDate,
+                        stagesId:record.stagesId,
                     }},()=>{
                     context.toggleViewModalVisible(true)
                 })
