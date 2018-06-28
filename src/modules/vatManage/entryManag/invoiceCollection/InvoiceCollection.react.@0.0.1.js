@@ -151,7 +151,6 @@ const columns = (context,hasOperate) => {
     return [...operates,{
         title: "纳税主体",
         dataIndex: "mainName",
-        width:'12%',
     }, {
         title: "数据来源",
         dataIndex: "sourceType",
@@ -267,7 +266,7 @@ const columns = (context,hasOperate) => {
                 <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
             </div>
         ),
-        width:'14%',
+        width:'16%',
     },
     {
         title: "金额",
