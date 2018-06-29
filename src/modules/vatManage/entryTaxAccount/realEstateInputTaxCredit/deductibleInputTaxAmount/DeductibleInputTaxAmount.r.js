@@ -62,10 +62,10 @@ const columns = context =>[
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-    },{
+    },/*{
         title: '项目分期',
         dataIndex: 'stageName',
-    },{
+    },*/{
         title: '固定资产取得价值',
         dataIndex: 'gainValue',
         render: text => fMoney(text),

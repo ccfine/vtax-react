@@ -63,10 +63,10 @@ const columns = context =>[
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-    },{
+    },/*{
         title: '项目分期',
         dataIndex: 'stagesName',
-    },{
+    },*/{
         title: '期初',
         children:[{
             title: '金额',
