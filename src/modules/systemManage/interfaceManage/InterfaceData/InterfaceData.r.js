@@ -53,7 +53,7 @@ class InterfaceData extends React.Component {
 			if (!err) {
                 this.toggleSubmitLoading(true)
 				request
-					.post('url', values)
+					.post('/api/send/', values)
 					.then(({ data }) => {
 						this.toggleSubmitLoading(false)
 						if (data.code === 200) {
@@ -120,7 +120,7 @@ class InterfaceData extends React.Component {
 											}
 										],
 										fieldDecoratorOptions: {
-											initialValue: ['Voucher'],
+											initialValue: 'Voucher',
 											rules: [
 												{
 													required: true,
