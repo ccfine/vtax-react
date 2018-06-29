@@ -15,18 +15,23 @@ const columns = context =>[
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
+        width:'12%',
     },{
         title: '项目分期代码',
         dataIndex: 'stagesNum',
+        width:'8%',
     },{
         title: '项目分期名称',
         dataIndex: 'stagesName',
+        width:'12%',
     },{
         title: '凭证日期',
         dataIndex: 'voucherDate',
+        width:75,
     },{
         title: '凭证类型',
         dataIndex: 'voucherType',
+        width:'6%',
     },{
         title: '凭证号',
         dataIndex: 'voucherNum',
@@ -37,6 +42,7 @@ const columns = context =>[
                         voucherNum:text,
                         mainId:record.mainId,
                         voucherDate:record.voucherDate,
+                        stagesId:record.stagesId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -44,23 +50,26 @@ const columns = context =>[
             }} style={pointerStyle}>
                 {text}
             </span>
-        )
+        ),
+        width:'5%',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:400,
         
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
+        width:'5%',
     },{
         title: '借方科目名称',
         dataIndex: 'debitSubjectName',
+        width:'16%',
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'5%',
     }
 ];
 class InputTaxCertificate extends Component{
@@ -99,14 +108,15 @@ class InputTaxCertificate extends Component{
                     }}
                     tableOption={{
                         key:tableKey,
-                        pageSize:20,
+                        pageSize:10,
                         columns:columns(this),
                         url:'/account/incomeSimpleOut/controller/incomeTaxList',
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>进项税额列表</span>,
                         },
                         scroll:{
-                            x:1700
+                            x:1600,
+                            y:230,
                         },
                     }}
                 >
