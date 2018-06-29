@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-27 20:16:21
+ * @Last Modified time: 2018-06-29 16:34:01
  *
  */
 import React,{Component} from 'react'
@@ -498,12 +498,12 @@ class RoomTransactionFile extends Component{
                             {
                                 title:'本页合计',
                                 total:[
-                                    {title: '本页总价', dataIndex: 'pageTotalPrice'},
+                                    {title: '成交金额', dataIndex: 'pageTotalPrice'},
                                 ],
                             },{
                                 title:'总计',
                                 total:[
-                                    {title: '全部总价', dataIndex: 'allTotalPrice'},
+                                    {title: '成交金额', dataIndex: 'allTotalPrice'},
                                 ],
                             }
                         ]} />

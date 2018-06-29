@@ -110,12 +110,14 @@ export default class ProjectInformationManagement extends Component{
                                 },{
                                     type:'autoFileImport',
                                     url:`project/upload/${this.props.taxSubjectId}`,
+                                    userPermissions:['1581005'],
                                     onSuccess:this.refreshTable,
                                 },{
                                     type:'delete',
                                     icon:'delete',
                                     text:'删除',
                                     btnType:'danger',
+                                    userPermissions:['1581008'],
                                     loading:deleteLoading,
                                     onClick:this.deleteData
                                 }])
