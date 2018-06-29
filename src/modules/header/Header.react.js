@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,Row,Col} from 'antd'
-import {withRouter} from 'react-router-dom'
+import {withRouter,Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
@@ -40,8 +40,8 @@ class WimsHeader extends Component {
                 },
             });
         }else if(key === 'admin') {
-            this.props.history.push(`/${key}`)
-        }else if(key === 'message'){
+            return false
+        }else if(key === 'question'){
             return false
         }else{
             this.props.history.push(`/web/${key}`)
@@ -52,12 +52,17 @@ class WimsHeader extends Component {
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
-                <Menu.Item key='admin' disabled>
-                    <Icon type="user" />个人中心
-                </Menu.Item>
-                <Menu.Divider />
                 <Menu.Item key="logout">
                     <Icon type="logout" />退出登录
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key='admin'>
+                    <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}-${this.props.personal.id}`}>
+                        <Icon type="user" />个人中心
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="question">
+                    <a  rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'><Icon type="question" />我要提问</a>
                 </Menu.Item>
             </Menu>
         );
@@ -72,7 +77,7 @@ class WimsHeader extends Component {
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            碧桂园纳税申报系统
+                            碧桂园纳税申报系统                            
                         </h2>
                     </Col>
                     <Col xs={18} sm={16} lg={14}>
@@ -102,6 +107,8 @@ class WimsHeader extends Component {
 export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
-        userName:state.user.getIn(['personal','username'])  //'secUserBasicBO',
+        userName:state.user.getIn(['personal','username']),  //'secUserBasicBO',
+        orgId: state.user.get("orgId"),
+        personal: state.user.get("personal"),
     }
 })(WimsHeader))

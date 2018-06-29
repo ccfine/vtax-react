@@ -171,7 +171,7 @@ class SimPlePermissionModal extends React.Component{
                         id: this.props.userId,
                         //判断下【用户所属区域继承本次权限设置】是否勾选，如果勾选，组织传空
                         orgId: values.isAll?'':values.orgId,
-                    })
+                    },{timeout:120000})
                     .then(({ data }) => {
                         if (data.code === 200) {
                             message.success("权限配置成功");
