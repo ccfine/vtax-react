@@ -21,6 +21,10 @@ const searchFields = context => [
             fieldTextName: "name",
             fieldValueName: "id",
             url: `/sysOrganization/getOrganizations`,
+            selectOptions:{
+                showSearch:true,
+                optionFilterProp:'children',
+            },
         },
         fieldDecoratorOptions: {
             initialValue: context.props.orgId || undefined,

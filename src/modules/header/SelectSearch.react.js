@@ -95,6 +95,8 @@ class SelectSearch extends Component {
                             selectOptions:{
                                 onChange:this.handleAreaChange,
                                 defaultActiveFirstOption:true,
+                                showSearch:true,
+                                optionFilterProp:'children',
                             },
                         },
                         fieldDecoratorOptions: {
@@ -116,6 +118,9 @@ class SelectSearch extends Component {
                             url:`/sysOrganization/queryLoginOrgs/${getFieldValue('areaId') || this.props.areaId}`,
                             selectOptions:{
                                 onChange:this.handleChange,
+                                defaultActiveFirstOption:true,
+                                showSearch:true,
+                                optionFilterProp:'children',
                             }
                         },
                         fieldDecoratorOptions: {
