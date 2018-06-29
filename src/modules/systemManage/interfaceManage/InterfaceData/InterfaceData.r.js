@@ -15,7 +15,7 @@ class InterfaceData extends React.Component {
 			window.wsURL + 'webSocketHandler/id=' + this.props.personal.id
 		)
 		this.socket.onopen = () => {
-			this.pushMessage('连接成功')
+			// this.pushMessage('连接成功')
 		}
 		this.socket.onmessage = ({ data }) => {
 			this.pushMessage(data)
@@ -57,7 +57,7 @@ class InterfaceData extends React.Component {
 					.then(({ data }) => {
 						this.toggleSubmitLoading(false)
 						if (data.code === 200) {
-							this.pushMessage('操作成功，开始运行任务...')
+							// this.pushMessage('操作成功，开始运行任务...')
 						} else {
 							message.error(`操作失败:${data.msg}`)
 						}
