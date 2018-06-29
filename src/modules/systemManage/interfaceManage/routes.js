@@ -7,7 +7,7 @@
 import {wrapPage} from 'compoments'
 // import strategies from 'config/routingAuthority.config'
 
-import InterfaceMaintain from './InterfaceMaintain'
+import InterfaceData from './InterfaceData'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/systemManage/interfaceManage`
@@ -15,9 +15,9 @@ const PATH = `/web/systemManage/interfaceManage`
 
 const InterfaceManage_Routes = [
     {
-        path:`${PATH}/interfaceMaintain`,
-        component:wrapPage('接口维护',InterfaceMaintain),
-        name:'接口维护',
+        path:`${PATH}/interfaceData`,
+        component:wrapPage('接口数据',InterfaceData),
+        name:'接口数据',
         icon:{
             url:`${ICON_URL_PATH}interfaceMaintain.svg`,
             backgroundColor:'#7ED530'
@@ -27,7 +27,7 @@ const InterfaceManage_Routes = [
     },{
         path:`${PATH}`,
         redirect:true,
-        to:`${PATH}/interfaceMaintain`,
+        to:`${PATH}/interfaceData`,
     }
 ]
 
