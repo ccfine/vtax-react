@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-09 17:06:16 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-20 16:30:30
+ * @Last Modified time: 2018-06-28 11:09:35
  */
 import React, { Component } from "react";
 import { Form, Modal, message, Spin,Alert,Row,Col } from "antd";
@@ -172,11 +172,11 @@ class PermissionModal extends Component {
                                     style:{display:'block'}
                                 },
                                 componentProps: {
-                                    fieldTextName: "orgName",
-                                    fieldValueName: "orgId",
+                                    fieldTextName: "name",
+                                    fieldValueName: "id",
                                     doNotFetchDidMount:!userId,
                                     fetchAble:userId,
-                                    url: `org/queryOrgsByUserId/${userId}`,
+                                    url: `/sysOrganization/queryOrgsByUserId/${userId}`,
                                 },
                                 fieldDecoratorOptions: {
                                     initialValue: orgId,

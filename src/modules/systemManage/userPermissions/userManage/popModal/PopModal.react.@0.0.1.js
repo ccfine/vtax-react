@@ -251,7 +251,7 @@ class PopModal extends Component {
                                         },
                                         fieldTextName: "name",
                                         fieldValueName: "id",
-                                        url: `/org/tree/list`,
+                                        url: `/sysOrganization/tree/all`,
                                     },
                                     fieldDecoratorOptions: {
                                         initialValue: defaultFields.orgIds,

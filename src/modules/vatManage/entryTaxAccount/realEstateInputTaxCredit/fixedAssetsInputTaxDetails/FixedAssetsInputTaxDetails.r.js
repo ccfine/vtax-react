@@ -50,10 +50,10 @@ const columns = (context,isEdit) =>[
         dataIndex:'gainValue',
         render:(text)=>fMoney(text)
     },
-    {
+    /*{
         title: "建筑面积",
         dataIndex: "areaCovered"
-    },
+    },*/
     {
         title: "税率（%）",
         dataIndex: "intaxRate",

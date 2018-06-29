@@ -45,6 +45,9 @@ const initialState = fromJS({
     /**组织代码 - 当前组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）*/
     orgId:null,
 
+    /**区域 */
+    areaId:null,
+
     /**
      * 登录方式
      * 1：通过登录页登录
@@ -62,7 +65,7 @@ const initialState = fromJS({
 
 });
 
-export const {personal, token, isAuthed, orgId, loginType, declare, options} = createActions({
+export const {personal, token, isAuthed, orgId, areaId, loginType, declare, options} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -78,6 +81,9 @@ export const {personal, token, isAuthed, orgId, loginType, declare, options} = c
         LOGOUT:() => false
     },
     ORG_ID:{
+        INCREMENT: info => info
+    },
+    AREA_ID:{
         INCREMENT: info => info
     },
     LOGIN_TYPE:{
@@ -110,6 +116,9 @@ export default handleActions({
     [orgId.increment] : (state, {payload})=>{
         return state.set('orgId', payload)
     },
+    [areaId.increment] : (state, {payload})=>{
+        return state.set('areaId', payload)
+    },
     [loginType.increment]:(state,{payload})=>{
         return state.set('loginType',payload)
     },
@@ -129,6 +138,8 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                 dispatch(token.increment(data.token))
                 //获取组织信息
                 dispatch(orgId.increment(data.orgId))
+                // 获取区域
+                dispatch(areaId.increment(data.areaId))
                 //获取用户信息
                 dispatch(personal.increment(data))
                 //用户信息获取成功的话
@@ -153,6 +164,8 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                         dispatch(token.increment(data.token))
                         //获取组织信息
                         dispatch(orgId.increment(data.orgId))
+                        // 获取区域
+                        dispatch(areaId.increment(data.areaId))
                         //获取用户信息
                         dispatch(personal.increment(data))
 
@@ -187,6 +200,15 @@ export const logout = dispatch => async () =>{
 export const saveOrgId = dispatch => async (id) =>{
     try {
         dispatch(orgId.increment(id))
+    }catch (err){
+        console.log(err)
+    }
+}
+
+
+export const saveAreaId = dispatch => async (id) =>{
+    try {
+        dispatch(areaId.increment(id))
     }catch (err){
         console.log(err)
     }

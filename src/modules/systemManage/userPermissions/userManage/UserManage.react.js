@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-20 15:09:37
+ * @Last Modified time: 2018-06-27 16:44:30
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -23,9 +23,9 @@ const getSearchFields = context => [
         type: "asyncSelect",
         span: 8,
         componentProps: {
-            fieldTextName: "orgName",
-            fieldValueName: "orgId",
-            url: `/org/getOrganizations?size=500`,
+            fieldTextName: "name",
+            fieldValueName: "id",
+            url: `/sysOrganization/getOrganizations`,
             selectOptions:{
                 showSearch:true,
                 // filterOption:false,

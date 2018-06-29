@@ -18,9 +18,13 @@ const searchFields = context => [
         type: "asyncSelect",
         span: 8,
         componentProps: {
-            fieldTextName: "orgName",
-            fieldValueName: "orgId",
-            url: `/org/user_belong_organizations`
+            fieldTextName: "name",
+            fieldValueName: "id",
+            url: `/sysOrganization/getOrganizations`,
+            selectOptions:{
+                showSearch:true,
+                optionFilterProp:'children',
+            },
         },
         fieldDecoratorOptions: {
             initialValue: context.props.orgId || undefined,
