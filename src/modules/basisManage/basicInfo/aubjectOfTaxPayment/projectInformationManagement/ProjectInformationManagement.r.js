@@ -44,7 +44,7 @@ export default class ProjectInformationManagement extends Component{
         if(nextProps.visible && !this.props.visible){
             setTimeout(()=>{
                 this.refreshTable()
-            },0) 
+            },300) 
         }
     }
     refreshTable=()=>{
