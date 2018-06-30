@@ -146,9 +146,9 @@ class PopModal extends Component {
                                                 message: "请输入帐号"
                                             },
                                             {
-                                                pattern: /^(\d|\w){6,20}$/g,
+                                                pattern: /^(\d|\w){4,20}$/g,
                                                 message:
-                                                    "请输入6-20位字母或数字"
+                                                    "请输入4-20位字母或数字"
                                             }
                                         ]
                                     }
