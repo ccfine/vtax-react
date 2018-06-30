@@ -14,12 +14,12 @@ const columns = [{
 }, {
     title: '科目名称',
     dataIndex: 'debitSubjectName',
-    render:(text,record)=>text.trim()||record.creditSubjectName,
+    render:(text,record)=>(text.trim()!=='0' && text.trim()) || record.creditSubjectName,
     width:150
 }, {
     title: '科目代码',
     dataIndex: 'debitSubjectCode',
-    render:(text,record)=>text.trim()||record.creditSubjectCode,
+    render:(text,record)=>(text.trim()!=='0' && text.trim()) ||record.creditSubjectCode,
     width:150
 },{
     title: '借方金额',
