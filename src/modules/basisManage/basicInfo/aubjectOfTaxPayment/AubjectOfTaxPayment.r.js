@@ -39,7 +39,7 @@ const getColumns = context=>[
         }]);
       },
       fixed: "left",
-      width: "50px",
+      width: 75,
       dataIndex: "action"
     },{
     title: '编码',
