@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-29 16:34:01
+ * @Last Modified time: 2018-07-02 14:26:15
  *
  */
 import React,{Component} from 'react'
@@ -225,6 +225,7 @@ const getColumns = (context,disabled) => {
                 </div>
             );
         },
+        width:'10%',
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -241,7 +242,6 @@ const getColumns = (context,disabled) => {
                 </div>
             );
         },
-        width:'8%',
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -300,7 +300,7 @@ const getColumns = (context,disabled) => {
                 <p className="apply-form-list-p2">合同约定交付日期</p>
             </div>
         ),
-        width:110,
+        width:120,
         dataIndex: 'deliveryDate',
         render: (text, record) => {
             return (
@@ -514,7 +514,7 @@ class RoomTransactionFile extends Component{
                     },
                     scroll:{
                         x: 2200,
-                        y:180,
+                        y:window.screen.availHeight-540,
                     },
                 }}
             >

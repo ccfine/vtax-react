@@ -20,7 +20,7 @@ class UserManagementDetail extends Component {
         this.mounted = null;
     }
     getParams() {
-        return this.props.match.params.user.split("-");
+        return this.props.match.params.user.split("~");
     }
     componentDidMount() {
         const [orgId, userId] = this.getParams();

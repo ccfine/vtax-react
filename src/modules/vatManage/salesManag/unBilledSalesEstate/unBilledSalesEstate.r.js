@@ -375,7 +375,7 @@ class unBilledSalesEstate extends Component{
                     </div>,
                     scroll:{
                         x:1800,
-                        y:190,
+                        y:window.screen.availHeight-500,
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({

@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-16 17:47:04
+ * @Last Modified time: 2018-07-02 17:36:31
  *
  */
 import React,{Component} from 'react'
@@ -71,6 +71,7 @@ const getColumns = context => [
     {
         title:'纳税主体',
         dataIndex:'mainName',
+        width:'20%',
     },{
         title:'项目分期',
         dataIndex:'stagesName',
@@ -78,22 +79,26 @@ const getColumns = context => [
         title:'金额（不含税）',
         dataIndex:'withOutAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'15%',
     }, {
         title:'金额（含税）',
         dataIndex:'withTaxAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'15%',
     }, {
         title:'预缴税率',
         dataIndex:'taxRate',
         className:'text-right',
         render:text=>text && `${text}%`,
+        width:80,
     }, {
         title:'预缴税款',
         dataIndex:'prepayAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'15%',
     }
 ];
 
@@ -157,6 +162,10 @@ class PrepayTax extends Component{
                     },
                     cardProps: {
                         title: "预缴税款台账",
+                    },
+                    scroll:{
+                        x:1000,
+                        y:window.screen.availHeight-480,
                     },
                     pageSize:10,
                     columns:getColumns(this),

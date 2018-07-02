@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-27 16:44:30
+ * @Last Modified time: 2018-07-02 17:04:39
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -132,7 +132,7 @@ const getColumns = context => [
                     to={{
                         pathname: `/web/systemManage/userPermissions/userManage/${
                             context.props.orgId
-                            }-${record.id}`
+                            }~${record.id}`
                     }}
                 >
                     {text}

@@ -403,6 +403,21 @@ class InvoiceDataMatching extends Component{
                 message.error(err.message)
             })
     }
+    matchData = ()=>{
+        const {filters} = this.state;
+        request.put(`/output/invoice/marry/already/automatic`,filters)
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success(data.msg);
+                    this.props.refreshTabs()
+                }else{
+                    message.error(`数据匹配失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
     render(){
         const {tableKey,filters,matching,statusParam,totalSource} = this.state;
         const { declare } = this.props;
@@ -451,12 +466,11 @@ class InvoiceDataMatching extends Component{
                         {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'match',
-                                url:'/output/invoice/marry/already/automatic',
-                                params:filters,
+                                icon:'copy',
+                                text:'数据匹配',
+                                btnType:'default',
                                 userPermissions:['1215002'],
-                                onSuccess:()=>{
-                                    this.props.refreshTabs()
-                                }
+                                onClick:this.matchData
                             },{
                                 type:'submit',
                                 url:'/output/invoice/marry/submit',
@@ -484,7 +498,7 @@ class InvoiceDataMatching extends Component{
                     },
                     scroll:{
                         x: 1500,
-                        y:130,
+                        y:window.screen.availHeight-550,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,

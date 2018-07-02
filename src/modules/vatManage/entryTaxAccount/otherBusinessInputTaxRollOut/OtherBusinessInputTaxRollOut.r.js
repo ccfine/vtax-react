@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-22 20:24:55
+ * @Last Modified time: 2018-07-02 17:41:08
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -133,7 +133,8 @@ const getColumns = (context,hasOperate) => {
     },
     {
         title: "应税项目",
-        dataIndex: "taxableItemName"
+        dataIndex: "taxableItemName",
+        width:'16%',
     },
     {
         title: "计税方法",
@@ -147,25 +148,30 @@ const getColumns = (context,hasOperate) => {
                 default:
                     return text;
             }
-        }
+        },
+        width:80,
     },
     {
         title: "转出项目",
-        dataIndex: "outProjectName"
+        dataIndex: "outProjectName",
+        width:'16%',
     },
     {
         title: "凭证号",
-        dataIndex: "voucherNum"
+        dataIndex: "voucherNum",
+        width:'15%',
     },
     {
         title: "期间",
-        dataIndex: "taxDate"
+        dataIndex: "taxDate",
+        width:75,
     },
     {
         title: "转出税额",
         dataIndex: "outTaxAmount",
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'10%',
     }
 ];
 }
@@ -234,6 +240,10 @@ class OtherBusinessInputTaxRollOut extends Component {
                             this.setState({
                                 totalSource
                             });
+                        },
+                        scroll:{
+                            x:1000,
+                            y:window.screen.availHeight-480,
                         },
                         cardProps: {
                             title: "其他业务进项税额转出台账",

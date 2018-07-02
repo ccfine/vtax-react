@@ -57,7 +57,7 @@ class WimsHeader extends Component {
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key='admin'>
-                    <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}-${this.props.personal.id}`}>
+                    <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}~${this.props.personal.id}`}>
                         <Icon type="user" />个人中心
                     </Link>
                 </Menu.Item>

@@ -109,7 +109,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
-
+        width:'12%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">项目分期名称</p>
@@ -121,13 +121,16 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.stagesNum}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },{
         title: '凭证日期',
         dataIndex: 'voucherDate',
+        width:75,
     },{
         title: '凭证类型',
         dataIndex: 'voucherType',
+        width:'6%',
     },{
         title: '凭证号',
         dataIndex: 'voucherNum',
@@ -146,7 +149,8 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             }} style={pointerStyle}>
                 {text}
             </span>
-        )
+        ),
+        width:'6%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -158,7 +162,8 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
@@ -179,8 +184,8 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
 
                     /> : text
             }
-
         },
+        width:'6%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方辅助核算名称</p>
@@ -192,7 +197,8 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitProjectNum}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },{
         title: '可抵扣土地价款',
         dataIndex: 'deductionFlag',
@@ -215,7 +221,6 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:400,
     }
 ];
 class LandPriceManage extends Component{
@@ -353,7 +358,8 @@ class LandPriceManage extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:1600
+                     x:1600,
+                     y:window.screen.availHeight-450,
                      },
                 }}
             >

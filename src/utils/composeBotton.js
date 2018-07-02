@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-20 21:24:16
+ * @Last Modified time: 2018-07-02 18:49:07
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -132,7 +132,7 @@ const getMarkOptions = (item,statusParam) =>{
 }
 
 // 数据匹配参数
-const getMatchOptions = (item,statusParam) =>{
+/*const getMatchOptions = (item,statusParam) =>{
     return {
         ...item,
         url:item.url,
@@ -143,7 +143,7 @@ const getMatchOptions = (item,statusParam) =>{
         icon:'copy',
         style: { marginRight: 5 }
     };
-}
+}*/
 
 //table表格里面的操作 action
 const getActionOptions = (item)=>{
@@ -171,7 +171,7 @@ const getSwitchOptions = (item) =>{
 const composeBotton = (buttons = [], params) => {
     return buttons.map((item, i) => {
         let component = undefined;
-        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel' || item.type === 'edit' || item.type === 'delete' || item.type === 'retweet' ){
+        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel' || item.type === 'edit' || item.type === 'delete' || item.type === 'retweet' || item.type === 'match' ){
             item.type = 'consistent'
         }
 
@@ -226,11 +226,11 @@ const composeBotton = (buttons = [], params) => {
                     <ButtonMarkModal {...getMarkOptions(item, params)} />
                 );
                 break;
-            case 'match':
+            /*case 'match':
                 component = (
                     <ButtonReset {...getMatchOptions(item, params)} />
                 );
-                break;
+                break;*/
             case 'action':
                 component = (
                     <ButtonTableAction {...getActionOptions(item)} />

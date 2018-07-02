@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-19 16:21:08
+ * @Last Modified time: 2018-07-02 16:27:53
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -132,92 +132,109 @@ const searchFields = (disabled,declare) => getFieldValue => {
 const columns = [
 	{
 		title: '纳税主体',
-		dataIndex: 'mainName'
+        dataIndex: 'mainName',
+        width:'11%',
 	},
 	{
 		title: '项目分期名称',
 		dataIndex: 'stagesName',
+        width:'11%',
 	},
 	{
 		title: '分期可售建筑面积',
-		dataIndex: 'upAreaSale'
+        dataIndex: 'upAreaSale',
+        width:'5%',
 	},
 	{
 		title: '期初可抵扣土地价款',
 		dataIndex: 'initialDeductibleLandPrice',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'6%',
 	},
 	{
 		title: '项目分期抵扣的土地价款',
 		dataIndex: 'deductibleLandPrice',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'6%',
 	},
 	{
 		title: '期初销售建筑面积',
-		dataIndex: 'saleArea'
+		dataIndex: 'saleArea',
+        width:'5%',
 	},
 	{
 		title: '期初扣除土地价款',
 		dataIndex: 'actualDeductibleLandPrice',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'5%',
 	},
 	{
 		title: '未销售建筑面积',
-		dataIndex: 'unSaleArea'
+		dataIndex: 'unSaleArea',
+        width:'5%',
 	},
 	{
 		title: '未抵扣土地价款',
 		dataIndex: 'unDeductedLandPrice',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'5%',
 	},
 	{
 		title: '土地单方成本',
 		dataIndex: 'singleLandCost',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'5%',
 	},
 	{
 		title: '当期销售建筑面积',
-		dataIndex: 'salesBuildingArea'
+		dataIndex: 'salesBuildingArea',
+        width:'5%',
 	},
 	{
 		title: '当期应扣除土地价款',
 		dataIndex: 'deductPrice',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'6%',
 	},
 	{
 		title: '收入确认金额',
 		dataIndex: 'price',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'5%',
 	},
 	{
 		title: '税额',
 		dataIndex: 'taxAmount',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'5%',
 	},
 	{
 		title: '税率',
 		dataIndex: 'taxRate',
-		render: text => text && `${text}%`
+        render: text => text && `${text}%`,
+        width:50,
 	},
 	{
 		title: '价税合计',
 		dataIndex: 'totalAmount',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'5%',
 	},
 	{
 		title: '当期实际扣除土地价款',
 		dataIndex: 'actualDeductPrice',
 		render: text => fMoney(text),
-		className: 'table-money'
+		className: 'table-money',
+        width:'6%',
 	}
 ]
 class DeductProjectSummary extends React.Component {
@@ -287,7 +304,8 @@ class DeductProjectSummary extends React.Component {
                         })
                     },
                     scroll:{
-                        x:2000
+                        x:2000,
+                        y:window.screen.availHeight-500,
                     },
 					extra: (
 						<div>

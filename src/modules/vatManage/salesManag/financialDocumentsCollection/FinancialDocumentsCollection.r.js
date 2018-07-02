@@ -219,7 +219,7 @@ class FinancialDocumentsCollection extends Component{
                     pageSize:10,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 2400 ,y:260},
+                    scroll:{ x: 2400 ,y:window.screen.availHeight-420},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params
