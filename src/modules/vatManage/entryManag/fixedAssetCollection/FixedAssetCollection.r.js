@@ -241,7 +241,7 @@ const columns=[
                     },
                     scroll:{
                      x:1800,
-                     y:window.screen.availHeight-430,
+                     y:window.screen.availHeight-380,
                      },
                 }}
             />

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 17:41:08
+ * @Last Modified time: 2018-07-02 21:01:22
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -243,7 +243,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         },
                         scroll:{
                             x:1000,
-                            y:window.screen.availHeight-480,
+                            y:window.screen.availHeight-380,
                         },
                         cardProps: {
                             title: "其他业务进项税额转出台账",

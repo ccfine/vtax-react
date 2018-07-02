@@ -359,7 +359,7 @@ class LandPriceManage extends Component{
                     },
                     scroll:{
                      x:1600,
-                     y:window.screen.availHeight-450,
+                     y:window.screen.availHeight-400,
                      },
                 }}
             >

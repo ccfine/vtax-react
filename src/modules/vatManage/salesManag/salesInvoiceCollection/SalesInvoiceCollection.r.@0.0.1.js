@@ -410,7 +410,7 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        y:window.screen.availHeight-490,
+                        y:window.screen.availHeight-400,
                         x:1100,
                     },
                     onTotalSource: totalSource => {

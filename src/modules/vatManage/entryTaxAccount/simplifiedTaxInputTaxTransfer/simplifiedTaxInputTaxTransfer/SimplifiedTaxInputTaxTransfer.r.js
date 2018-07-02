@@ -159,7 +159,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                     },
                     scroll:{
                         x:1600,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-400,
                     },
                 }}
             >

@@ -115,7 +115,7 @@ class SimpleTaxCertificate extends Component{
                     },
                     scroll:{
                         x:1500,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-400,
                     },
                 }}
             >

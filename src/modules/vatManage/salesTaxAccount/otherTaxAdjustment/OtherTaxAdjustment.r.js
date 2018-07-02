@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 18:47:18
+ * @Last Modified time: 2018-07-02 20:43:54
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -253,7 +253,7 @@ class OtherTaxAdjustment extends Component {
             fields: searchFields(disabled,declare)
           }}
           tableOption={{
-            scroll: { x: 1500,y:window.screen.availHeight-450 },
+            scroll: { x: 1500,y:window.screen.availHeight-380 },
             pageSize: 10,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,

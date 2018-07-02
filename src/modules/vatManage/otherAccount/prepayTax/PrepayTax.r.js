@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 17:36:31
+ * @Last Modified time: 2018-07-02 21:08:11
  *
  */
 import React,{Component} from 'react'
@@ -165,7 +165,7 @@ class PrepayTax extends Component{
                     },
                     scroll:{
                         x:1000,
-                        y:window.screen.availHeight-480,
+                        y:window.screen.availHeight-380,
                     },
                     pageSize:10,
                     columns:getColumns(this),

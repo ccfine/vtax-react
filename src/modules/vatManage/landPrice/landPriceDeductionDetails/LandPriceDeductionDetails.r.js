@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 16:27:53
+ * @Last Modified time: 2018-07-02 21:06:26
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -305,7 +305,7 @@ class DeductProjectSummary extends React.Component {
                     },
                     scroll:{
                         x:2000,
-                        y:window.screen.availHeight-500,
+                        y:window.screen.availHeight-400,
                     },
 					extra: (
 						<div>

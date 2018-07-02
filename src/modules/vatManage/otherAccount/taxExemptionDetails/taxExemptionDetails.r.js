@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 11:03:35
+ * @Last Modified time: 2018-07-02 21:08:43
  *
  */
 import React, { Component } from 'react'
@@ -350,7 +350,7 @@ class TaxExemptionDetails extends Component{
                         title:'减免税明细台账'
                     },
                     scroll:{
-                        y:window.screen.availHeight-450,
+                        y:window.screen.availHeight-380,
                         x:1000,
                     },
                     extra: <div>
