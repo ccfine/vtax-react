@@ -69,7 +69,7 @@ class Web extends Component {
     // }
 
     render() {
-        const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
+        const copyright = <div>Copyright <Icon type="copyright" /> 2018 碧桂园增值税纳税申报系统</div>;
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout>

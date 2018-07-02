@@ -77,7 +77,7 @@ class WimsHeader extends Component {
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            碧桂园纳税申报系统                            
+                            增值税纳税申报系统                            
                         </h2>
                     </Col>
                     <Col xs={18} sm={16} lg={14}>
