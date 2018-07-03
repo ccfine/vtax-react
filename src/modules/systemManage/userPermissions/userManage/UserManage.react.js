@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 17:04:39
+ * @Last Modified time: 2018-07-03 10:19:24
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -110,7 +110,7 @@ const getColumns = context => [
                     {
                         notAdmin && composeBotton([{
                             type:'switch',
-                            checked: parseInt(record.isEnabled, 0) === 1,
+                            checked: parseInt(record.isEnabled, 10) === 1,
                             onSuccess:(checked)=>{
                                 context.handleChange(checked,record.id)
                             }
