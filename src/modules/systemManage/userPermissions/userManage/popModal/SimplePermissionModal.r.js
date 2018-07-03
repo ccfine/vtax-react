@@ -104,7 +104,15 @@ class SimPlePermissionModal extends React.Component{
         }
     }
     onCheck = (checkedKeys) => {
-        this.setState({ checkedKeys });
+        // 如果点击管理相应的查看权限应该被设置
+        let newCheckedKeys = new Set(checkedKeys);
+        checkedKeys.forEach(ele=>{
+            if(/^\d1$/.test(ele)){
+                newCheckedKeys.add(ele.replace(/\d$/,'0'))
+            }
+        })
+        
+        this.setState({ checkedKeys:[...newCheckedKeys] });
     }
     checkAll = ()=>{
         this.setState({ checkedKeys:[...keys] });

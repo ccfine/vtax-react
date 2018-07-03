@@ -73,7 +73,7 @@ const getColumns =(context)=>[
                                 type:'action',
                                 icon:'form',
                                 title:'申报办理',
-                                userPermissions:['1081002'],
+                                userPermissions:['1085004'],
                                 onSuccess:()=>{
                                     context.setState({
                                         record: {...record,decAction:'edit'},
