@@ -342,7 +342,7 @@ const getColumns = (context,disabled) => {
         )
     },
     {
-        title:'成交总价',
+        title:'成交金额',
         dataIndex:'totalPrice',
         render:text=>fMoney(text),
         className:'table-money',
