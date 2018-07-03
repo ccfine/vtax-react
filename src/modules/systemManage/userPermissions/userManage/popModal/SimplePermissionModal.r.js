@@ -11,13 +11,11 @@ let plainStrategies ={};
     keys.forEach(ele=>{
         plainStrategies[ele]=[]
     })
-    const transformStrategies=(obj,index,callCount)=>{
-        // 防止无限循环
-        if(callCount>5)return;
+    const transformStrategies=(obj,index)=>{
         if(obj.options){
             obj.options.forEach(element => {
-                // 如002结尾代表查询，否则就是操作
-                if(/002$/.test(element)){
+                // 如1002结尾代表查询，否则就是操作
+                if(/1002$/.test(element)){
                     plainStrategies[index+'0'].push(element)
                 }else{
                     plainStrategies[index+'1'].push(element)
@@ -25,12 +23,12 @@ let plainStrategies ={};
             });
         }else{
             for(let subObj in obj){
-                transformStrategies(obj[subObj],index,callCount++)
+                transformStrategies(obj[subObj],index)
             }
         }
     }
     [strategies.basisManage,strategies.vatManage,strategies.taxDeclare,strategies.reportManage].forEach((ele,index)=>{
-        transformStrategies(ele,index,0);
+        transformStrategies(ele,index);
     })
 }())
 
