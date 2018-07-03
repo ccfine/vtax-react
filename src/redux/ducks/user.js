@@ -12,6 +12,7 @@ import {request} from 'utils'
 const initialState = fromJS({
     /**用户个人信息*/
     personal:{
+        id:null,// 用户id
         email:null ,// 邮箱
         phoneNumber:null ,// 手机号码
         realname:null ,// 真实姓名

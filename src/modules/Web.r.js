@@ -35,7 +35,7 @@ class Web extends Component {
     checkLoggedIn= props =>{
         const {isAuthed,history} = props;
         if(!isAuthed){
-            history.replace('/login');
+            history.replace('/403');
         }
     }
     //给其它组件传数据

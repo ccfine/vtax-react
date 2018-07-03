@@ -21,8 +21,8 @@ export default ({ className='exception', linkElement = 'a', type, title, desc, i
             createElement(
               linkElement,
               {
-                to: '/',
-                href: '/',
+                to: '/web',
+                href: '/web',
               },
               <Button type="primary">返回首页</Button>
             )}

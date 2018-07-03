@@ -186,7 +186,7 @@ class VTaxSider extends Component {
                 className="vtax-custom-trigger"
             >
                 <div className="logo">
-                    <Link to="/">
+                    <Link to="/web">
                         <img src={logo} alt="logo" />
                         {/*<h1>碧桂园增值税管理系统</h1>*/}
                     </Link>

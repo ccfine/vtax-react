@@ -21,7 +21,7 @@ const routes = [
         component:Web,
         name:'主页',
     },{
-        path:'/login',
+        path:'/tax2018bgy/login',
         component:props=><Login {...props} type={1}/>,
         name:'登录'
     },{
@@ -41,12 +41,13 @@ const routes = [
         component:Exception500,
         name:'500',
     },{
-        path:'*',
+        path:'/web/*',
         redirect:true,
         to:'/web'
-    /*},{
+    },{
         path:'*',
-        component:NoMatch*/
+        redirect:true,
+        to:'/404',
     }
 ]
 
