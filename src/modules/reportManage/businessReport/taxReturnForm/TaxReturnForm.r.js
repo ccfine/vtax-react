@@ -31,7 +31,7 @@ const sheetData = [
         grid:sheet_1,
         url:'/tax/declaration/addendum/one/list',
         scroll:{
-            x:'210%'
+            x:1800
         }
     }, {
         tab:'附表二',
