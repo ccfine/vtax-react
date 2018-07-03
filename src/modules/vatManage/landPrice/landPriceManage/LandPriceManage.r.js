@@ -313,7 +313,7 @@ class LandPriceManage extends Component{
                             this.fetchResultStatus()
                         })
                     },
-                    onRowSelect:(disabled && declare.decAction==='edit') ? (selectedRowKeys)=>{
+                    onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status)===1) ? (selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
