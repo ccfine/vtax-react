@@ -36,7 +36,7 @@ const fields = [
             ]
         },
     }, {
-        label: '认证月份',
+        label: '记账月份',
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
@@ -53,7 +53,7 @@ const fields = [
             rules: [
                 {
                     required: true,
-                    message: '请选择认证月份'
+                    message: '请选择记账月份'
                 }
             ]
         },
