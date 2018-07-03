@@ -215,7 +215,7 @@ class GeneralTaxCertificate extends Component{
                     },
                     scroll:{
                         x:1800,
-                        y:200,
+                        y:window.screen.availHeight-420,
                     },
                 }}
             >

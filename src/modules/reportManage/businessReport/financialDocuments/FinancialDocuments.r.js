@@ -36,7 +36,7 @@ const fields = [
             ]
         },
     }, {
-        label: '认证月份',
+        label: '记账月份',
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
@@ -53,7 +53,7 @@ const fields = [
             rules: [
                 {
                     required: true,
-                    message: '请选择认证月份'
+                    message: '请选择记账月份'
                 }
             ]
         },
@@ -145,10 +145,12 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.mainNum}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },{
         title: '项目名称',
         dataIndex: 'projectName',
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">项目分期名称</p>
@@ -160,7 +162,8 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.stagesNum}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证日期</p>
@@ -172,7 +175,8 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.billingDate}</p>
             </div>
-        )
+        ),
+        width:75,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证号</p>
@@ -184,11 +188,11 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.voucherType}</p>
             </div>
-        )
+        ),
+        width:'6%',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:400,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方科目名称</p>
@@ -200,13 +204,14 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
-        width:'75px',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'5%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">借方辅助核算名称</p>
@@ -218,7 +223,8 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.debitProjectNum}</p>
             </div>
-        )
+        ),
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">贷方科目名称</p>
@@ -230,13 +236,14 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.creditSubjectCode}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },{
         title: '贷方金额',
         dataIndex: 'creditAmount',
-        width:'75px',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'5%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">贷方辅助核算名称</p>
@@ -248,7 +255,8 @@ const getColumns = context =>[
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.creditProjectNum}</p>
             </div>
-        )
+        ),
+        width:'8%',
     }
 ];
 export default class FinancialDocuments extends Component{
@@ -286,7 +294,7 @@ export default class FinancialDocuments extends Component{
                     pageSize:10,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
-                    scroll:{ x: 2200 },
+                    scroll:{ x: 2200,y:window.screen.availHeight-450 },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,

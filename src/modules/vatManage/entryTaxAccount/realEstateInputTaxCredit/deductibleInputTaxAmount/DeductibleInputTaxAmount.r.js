@@ -62,29 +62,30 @@ const columns = context =>[
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-    },/*{
-        title: '项目分期',
-        dataIndex: 'stageName',
-    },*/{
+    },{
         title: '固定资产取得价值',
         dataIndex: 'gainValue',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'15%',
     },{
         title: '当期凭证待抵扣进项税额',
         dataIndex: 'deductedVoucherTaxAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'15%',
     },{
         title: '当期固定资产待抵扣进项税额',
         dataIndex: 'deductedFixedTaxAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'15%',
     },{
         title: '差异金额',
         dataIndex: 'difAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'15%',
     }
 ];
 
@@ -165,9 +166,10 @@ export default class DeductibleInputTaxAmount extends Component{
                                 }
                             </div>
                         ),
-                        /*scroll:{
-                         x:'180%'
-                         },*/
+                        scroll:{
+                         x:1000,
+                         y:window.screen.availHeight-430,
+                         },
                     }}
                 >
                     {/* <ViewDocumentDetails

@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Icon} from 'antd'
+import {Layout} from 'antd'
 import PropTypes from 'prop-types'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
@@ -17,7 +17,7 @@ import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
 // import getPermission from  './index'
 
-const { Content,Footer } = Layout;
+const { Content } = Layout;
 
 class Web extends Component {
 
@@ -35,7 +35,7 @@ class Web extends Component {
     checkLoggedIn= props =>{
         const {isAuthed,history} = props;
         if(!isAuthed){
-            history.replace('/login');
+            history.replace('/403');
         }
     }
     //给其它组件传数据
@@ -69,7 +69,7 @@ class Web extends Component {
     // }
 
     render() {
-        const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜盈佳纳税申报平台</div>;
+        // const copyright = <div>Copyright <Icon type="copyright" /> 2018 碧桂园增值税纳税申报系统</div>;
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout>
@@ -77,7 +77,7 @@ class Web extends Component {
                 <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                    <Content style={{ margin: '12px 12px 0'}}  key={this.state.refresh}>
+                    <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
                         <Switch>
                             {
                                 composeMenus(routes).map((route, i) => (
@@ -87,11 +87,11 @@ class Web extends Component {
                             <Route path="*" component={()=><div>no match</div>} />
                         </Switch>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
+                    {/* <Footer style={{ textAlign: 'center',padding:'8px 12px'}}>
                         {
                             copyright
                         }
-                    </Footer>
+                    </Footer> */}
                 </Layout>
             </Layout>
         )

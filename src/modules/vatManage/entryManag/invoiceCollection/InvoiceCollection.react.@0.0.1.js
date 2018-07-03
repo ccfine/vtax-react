@@ -405,7 +405,7 @@ class InvoiceCollection extends Component {
                         columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1500, y:230 },
+                        scroll: { x: 1500, y:window.screen.availHeight-380 },
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params

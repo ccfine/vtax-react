@@ -20,8 +20,8 @@ export default class ButtonSwitch extends Component{
                 checkedChildren="启"
                 unCheckedChildren="停"
                 size="small"
-                onChange={()=>{
-                    onSuccess && onSuccess()
+                onChange={(checked)=>{
+                    onSuccess && onSuccess(checked)
                 }}
                 checked={ checked }
             />

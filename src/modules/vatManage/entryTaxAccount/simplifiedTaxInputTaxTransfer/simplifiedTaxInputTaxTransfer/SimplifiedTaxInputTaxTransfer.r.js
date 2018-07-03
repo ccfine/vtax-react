@@ -14,18 +14,23 @@ const columns = context =>[
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
+        width:'12%',
     },{
         title: '项目分期代码',
         dataIndex: 'stagesNum',
+        width:'12%',
     },{
         title: '项目分期名称',
         dataIndex: 'stagesName',
+        width:'12%',
     },{
         title: '凭证日期',
         dataIndex: 'voucherDate',
+        width:75,
     },{
         title: '凭证类型',
         dataIndex: 'voucherType',
+        width:'6%',
     },{
         title: '凭证号',
         dataIndex: 'voucherNum',
@@ -44,22 +49,25 @@ const columns = context =>[
             }} style={pointerStyle}>
                 {text}
             </span>
-        )
+        ),
+        width:'6%',
     },{
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:400,
     },{
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
+        width:'6%',
     },{
         title: '借方科目名称',
         dataIndex: 'debitSubjectName',
+        width:'16%',
     },{
         title: '借方金额',
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
-        className: "table-money"
+        className: "table-money",
+        width:'6%',
     }
 ];
 class SimplifiedTaxInputTaxTransfer extends Component{
@@ -150,7 +158,8 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         </div>,
                     },
                     scroll:{
-                        x:1800
+                        x:1600,
+                        y:window.screen.availHeight-400,
                     },
                 }}
             >

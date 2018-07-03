@@ -76,7 +76,7 @@ const columns = [
                     <p className="apply-form-list-p2">{record.mainCode}</p>
                 </div>
             );
-        }
+        },
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -92,61 +92,8 @@ const columns = [
                     <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
                 </div>
             );
-        }
-    /*}, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票号码</p>
-                <p className="apply-form-list-p2">发票代码</p>
-            </div>
-        ),
-        dataIndex: 'invoiceNum',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.invoiceCode}</p>
-                </div>
-            );
-        }
-    },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">发票状态</p>
-            </div>
-        ),
-        dataIndex: 'invoiceType',
-        render: (text,record) => {
-            let invoiceTypeText ='',
-                invoiceStatusText='';
-            if(text==='s'){
-                invoiceTypeText = '专票'
-            }
-            if(text==='c'){
-                invoiceTypeText = '普票'
-            }
-            switch (record.invoiceStatus) {
-                case "0":
-                    invoiceStatusText = "未开票";
-                    break
-                case "1":
-                    invoiceStatusText =  "已完全开票";
-                    break
-                case "2":
-                    invoiceStatusText =  "部分开票";
-                    break
-                default:
-                    invoiceStatusText =  text;
-            }
-
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{invoiceTypeText}</p>
-                    <p className="apply-form-list-p2">{invoiceStatusText}</p>
-                </div>
-            )
-        }*/
+        },
+        width:'8%',
     }, {
         title: (
             <div className="apply-form-list-th">
@@ -162,7 +109,8 @@ const columns = [
                     <p className="apply-form-list-p2">{record.projectCode}</p>
                 </div>
             );
-        }
+        },
+        width:'8%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -178,7 +126,8 @@ const columns = [
                     <p className="apply-form-list-p2">{record.stagesCode}</p>
                 </div>
             );
-        }
+        },
+        width:'10%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -194,7 +143,8 @@ const columns = [
                     <p className="apply-form-list-p2">{record.transactionDate}</p>
                 </div>
             );
-        }
+        },
+        width:75,
     },{
         title: (
             <div className="apply-form-list-th">
@@ -210,22 +160,28 @@ const columns = [
                     <p className="apply-form-list-p2">{record.agreeDate}</p>
                 </div>
             );
-        }
+        },
+        width:80,
     },{
         title:'楼栋名称',
-        dataIndex:'buildingName'
+        dataIndex:'buildingName',
+        width:'6%',
     },{
         title:'单元',
-        dataIndex:'element'
+        dataIndex:'element',
+        width:'4%',
     }, {
         title:'路址',
         dataIndex:'htRoomName',
+        width:'6%',
     }, {
         title:'房号',
-        dataIndex:'roomNumber'
+        dataIndex:'roomNumber',
+        width:'4%',
     }, {
         title:'房间编码',
-        dataIndex:'roomCode'
+        dataIndex:'roomCode',
+        width:'4%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -242,32 +198,39 @@ const columns = [
                     <p className="apply-form-list-p2">{fMoney(record.receivables)}</p>
                 </div>
             );
-        }
+        },
+        width:'5%',
     }, {
         title:'房间面积',
-        dataIndex:'roomArea'
+        dataIndex:'roomArea',
+        width:'5%',
     }, {
         title:'匹配状态',
         dataIndex:'matchingStatus',
-        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
+        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span>, //0:未匹配,1:已匹配
+        width:60,
     }, {
         title:'已开票金额',
         dataIndex:'invoiced',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'5%',
     }, {
         title:' 款项名称',
-        dataIndex:'priceType'
+        dataIndex:'priceType',
+        width:'4%',
     }, {
         title: "税额",
         dataIndex: "taxAmount",
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'5%',
     }, {
         title:'价税合计',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'5%',
     },
 ]
 class RoomTransactionFile extends Component{
@@ -305,7 +268,7 @@ class RoomTransactionFile extends Component{
                             }])
                         }
                     </div>,
-                    scroll:{ x: 1800 },
+                    scroll:{ x: 1800,y:window.screen.availHeight-400 },
                 }}
             >
             </SearchTable>

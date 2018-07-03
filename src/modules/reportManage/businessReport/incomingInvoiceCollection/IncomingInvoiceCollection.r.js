@@ -48,7 +48,8 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
             </div>
-        )
+        ),
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">项目名称</p>
@@ -60,7 +61,8 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.projectNum}</p>
             </div>
-        )
+        ),
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">是否需要认证</p>
@@ -102,7 +104,8 @@ const columns = [
                     <p className="apply-form-list-p2">{res2}</p>
                 </div>
             )
-        }
+        },
+        width:80,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">发票号码</p>
@@ -114,7 +117,8 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
-        )
+        ),
+        width:'4%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">发票类型</p>
@@ -135,7 +139,8 @@ const columns = [
                     <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
                 </div>
             )
-        }
+        },
+        width:'4%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">认证月份</p>
@@ -147,7 +152,8 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.authDate}</p>
             </div>
-        )
+        ),
+        width:75,
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">发票代码</p>
@@ -159,16 +165,20 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.invoiceNum}</p>
             </div>
-        )
+        ),
+        width:'4%',
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
+        width:75,
     },{
         title: '购货单位名称',
         dataIndex: 'purchaseName',
+        width:'6%',
     },{
         title: '销货单位名称',
         dataIndex: 'sellerName',
+        width:'10%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">金额</p>
@@ -180,7 +190,8 @@ const columns = [
                 <p className="apply-form-list-p1">{fMoney(text)}</p>
                 <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
             </div>
-        )
+        ),
+        width:'5%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">开户行</p>
@@ -192,7 +203,8 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.address}</p>
             </div>
-        )
+        ),
+        width:'6%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">账号</p>
@@ -204,22 +216,26 @@ const columns = [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.phone}</p>
             </div>
-        )
+        ),
+        width:'6%',
     },{
         title: '进项结构分类名称',
-        dataIndex: 'incomeStructureTypeName'
+        dataIndex: 'incomeStructureTypeName',
+        width:'6%',
     },{
         title: '应税项目',
-        dataIndex: 'taxableProject'
+        dataIndex: 'taxableProject',
+        width:'6%',
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
-        render:text=>fMoney(text)
+        render:text=>fMoney(text),
+        width:'5%',
     },{
 
         title: '匹配状态',
         dataIndex: 'matchingStatus',
-        width:'60px',
+        width:60,
         render:text=>{
             let txt = '';
             switch (parseInt(text,0)) {
@@ -237,11 +253,11 @@ const columns = [
                     break;
             }
             return txt
-        }
+        },
     },{
         title: '数据来源',
         dataIndex: 'sourceType',
-        width:'60px',
+        width:60,
         render:text=>{
             text = parseInt(text,0);
             if(text===1){
@@ -282,7 +298,7 @@ export default class IncomingInvoiceCollection extends Component{
                         title:'进项发票采集'
                     },
                     url:'/income/invoice/collection/report/list',
-                    scroll:{ x: 1800},
+                    scroll:{ x: 1800,y:window.screen.availHeight-360,},
                 }}
             />
 

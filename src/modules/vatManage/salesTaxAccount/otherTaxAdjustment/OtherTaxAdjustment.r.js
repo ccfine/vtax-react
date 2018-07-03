@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 12:01:34
+ * @Last Modified time: 2018-07-02 20:43:54
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -101,7 +101,7 @@ const getColumns = (context,hasOperate) => {
       }])
     },
     fixed: "left",
-    width: "50px",
+    width: 75,
     dataIndex: "action"
   }]:[];
   return [
@@ -120,11 +120,13 @@ const getColumns = (context,hasOperate) => {
               }} >
               {text}
             </a>
-    }
+    },
+    width:'12%',
   },
   {
     title: "调整日期",
-    dataIndex: "adjustDate"
+    dataIndex: "adjustDate",
+    width:75,
   },
   {
     title: "项目",
@@ -138,38 +140,45 @@ const getColumns = (context,hasOperate) => {
         default:
           return text;
       }
-    }
+    },
+    width:90,
   },
   {
     title: "应税项目",
-    dataIndex: "taxableProjectName"
+    dataIndex: "taxableProjectName",
+    width:'10%',
   },
   {
     title: "业务类型",
-    dataIndex: "taxRateName"
+    dataIndex: "taxRateName",
+    width:'10%',
   },
   {
     title: "税率",
     dataIndex: "taxRate",
     render: text => (text ? `${text}%` : text),
+    width:50,
   },
   {
     title: "销售额（不含税）",
     dataIndex: "amountWithoutTax",
     render: text => fMoney(text),
-    className: "table-money"
+    className: "table-money",
+    width:'7%',
   },
   {
     title: "销项（应纳）税额",
     dataIndex: "taxAmountWithTax",
     render: text => fMoney(text),
-    className: "table-money"
+    className: "table-money",
+    width:'7%',
   },
   {
     title: "服务、不动产和无形资产扣除项目本期实际扣除金额（含税）",
     dataIndex: "deductionAmount",
     render: text => fMoney(text),
     className: "table-money",
+    width:'12%',
   },
   {
     title: "调整原因",
@@ -185,7 +194,8 @@ const getColumns = (context,hasOperate) => {
         default:
           return text;
       }
-    }
+    },
+    width:180,
   },
   {
     title: "具体调整说明",
@@ -243,7 +253,7 @@ class OtherTaxAdjustment extends Component {
             fields: searchFields(disabled,declare)
           }}
           tableOption={{
-            scroll: { x: "150%" },
+            scroll: { x: 1500,y:window.screen.availHeight-380 },
             pageSize: 10,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,

@@ -10,18 +10,22 @@ const columns = (context,isEdit) =>[
     {
         title:'纳税主体',
         dataIndex: "taxSubjectName",
+        width:'12%',
     },{
         title:'项目分期名称',
         dataIndex:'stageName',
+        width:'12%',
     },{
         title:'固定资产名称',
         dataIndex:'assetName',
     },{
         title:'固定资产编号',
         dataIndex:'assetNo',
+        width:'8%',
     },{
         title: "入账日期",
-        dataIndex: "accountDate"
+        dataIndex: "accountDate",
+        width:75,
     },{
         title:'取得方式',
         dataIndex:'acquisitionMode',
@@ -44,11 +48,14 @@ const columns = (context,isEdit) =>[
                     break;
             }
             return res;
-        }
+        },
+        width:60,
     },{
         title:'取得价值',
         dataIndex:'gainValue',
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        className: "table-money",
+        width:'7%',
     },
     /*{
         title: "建筑面积",
@@ -69,30 +76,40 @@ const columns = (context,isEdit) =>[
                 return text && `${text}%`
              }
         },
+        width:'7%',
     },
     {
         title: "税额",
         dataIndex: "inTax",
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        className: "table-money",
+        width:'7%',
     },
     {
         title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        className: "table-money",
+        width:'7%',
     },
     {
         title: "待抵扣的进项税额",
         dataIndex: "deductedTaxAmount",
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        className: "table-money",
+        width:'7%',
     },{
         title: "待抵扣期间",
-        dataIndex: "deductedPeriod"
+        dataIndex: "deductedPeriod",
+        width:80,
     },{
         title: "资产类别",
-        dataIndex: "assetType"
+        dataIndex: "assetType",
+        width:'8%',
     },{
         title: "资产状态",
-        dataIndex: "assetsState"
+        dataIndex: "assetsState",
+        width:60,
     },
 ];
 class FixedAssetsInputTaxDetails extends Component{
@@ -205,7 +222,8 @@ class FixedAssetsInputTaxDetails extends Component{
                         </div>
                     ),
                     scroll:{
-                     x:1600
+                     x:1600,
+                     y:window.screen.availHeight-430,
                      },
                 }}
             />

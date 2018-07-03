@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-27 16:08:47
+ * @Last Modified time: 2018-07-02 20:38:24
  *
  */
 import React, { Component } from 'react'
@@ -295,7 +295,7 @@ class NeedNotMatchInvoices extends Component{
                     },
                     scroll:{
                         x:1200,
-                        y:190,
+                        y:window.screen.availHeight-430,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,

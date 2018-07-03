@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { Form, Row, Col, Card } from "antd";
-import UpdateAccount from "./UpdateAccount.react";
+// import UpdateAccount from "./UpdateAccount.react";
 import PermissionFeilds from "../../permissionDetail";
 
 class UserDetail extends Component {
@@ -97,7 +97,7 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col>
-                        <Col span={6}>
+                        {/* <Col span={6}>
                             <p>
                                 密码：
                                 <span
@@ -111,7 +111,7 @@ class UserDetail extends Component {
                                     修改密码
                                 </span>
                             </p>
-                        </Col>
+                        </Col> */}
                         <Col span={12}>
                                 <p>
                                     备注：<span style={{ color: "#333" }}>
@@ -161,7 +161,7 @@ class UserDetail extends Component {
                         </Col>
                     </Row>
                 </div>
-                <UpdateAccount
+                {/* <UpdateAccount
                     key={this.state.updateAccountKey}
                     refreshCurdTable={this.refreshCurdTable}
                     changeVisable={status => {
@@ -172,7 +172,7 @@ class UserDetail extends Component {
                     }}
                     userId={userData.userId}
                     visible={this.state.updateAccountVisible}
-                />
+                /> */}
             </Card>
         );
     }

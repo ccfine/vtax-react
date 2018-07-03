@@ -61,18 +61,22 @@ const columns=[
     {
         title:'纳税主体名称',
         dataIndex:'taxSubjectName',
+        width:'10%',
     },
     {
         title:'纳税主体代码',
         dataIndex:'taxSubjectNum',
+        width:'6%',
     },
     {
         title:'项目分期名称',
         dataIndex:'stageName',
+        width:'10%',
     },
     {
         title:'纳税主体代码',
         dataIndex:'stageNum',
+        width:'6%',
     },
     {
         title:'固定资产名称',
@@ -81,10 +85,12 @@ const columns=[
     {
         title:'固定资产编号',
         dataIndex:'assetNo',
+        width:'6%',
     },
     {
         title: "入账日期",
-        dataIndex: "accountDate"
+        dataIndex: "accountDate",
+        width:75,
     },
     {
         title:'取得方式',
@@ -108,43 +114,52 @@ const columns=[
                     break;
             }
             return res;
-        }
+        },
+        width:75,
     },
     {
         title: "取得价值",
-        dataIndex: "gainValue"
+        dataIndex: "gainValue",
+        width:'6%',
     },
     {
         title: "建筑面积",
-        dataIndex: "areaCovered"
+        dataIndex: "areaCovered",
+        width:'6%',
     },
     {
         title: "购进税额",
         dataIndex: "inTax",
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        width:'6%',
     },
     {
         title: "购进税率",
         dataIndex: "intaxRate",
-        render:text=>text && `${text}%`
+        render:text=>text && `${text}%`,
+        width:50,
     },
     {
         title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        width:'6%',
     },
     {
         title: "待抵扣的进项税额",
         dataIndex: "deductedTaxAmount",
-        render:(text)=>fMoney(text)
+        render:(text)=>fMoney(text),
+        width:'6%',
     },
     {
         title: "资产类别",
-        dataIndex: "assetType"
+        dataIndex: "assetType",
+        width:'8%',
     },
     {
         title: "资产状态",
-        dataIndex: "assetsState"
+        dataIndex: "assetsState",
+        width:60,
     },
 ];
  class FixedAssetCollection extends Component{
@@ -225,7 +240,8 @@ const columns=[
                         )
                     },
                     scroll:{
-                     x:1800
+                     x:1800,
+                     y:window.screen.availHeight-380,
                      },
                 }}
             />

@@ -92,7 +92,7 @@ class LoginWithNormal extends Component {
                 <header className='login-header'>
                     <div className="login-header-content">
                         <img src={logo} alt="logo" style={{float:'left',marginRight:15}}/>
-                        <span>碧桂园增值税管理系统</span>
+                        <span>增值税纳税申报系统</span>
                     </div>
                 </header>
                 <Layout className='login-content'>
@@ -102,7 +102,7 @@ class LoginWithNormal extends Component {
                         </Col>
                         <Col span={12}>
                             <Form onSubmit={this.handleSubmit}  className="loginForm">
-                                <h2 className="welcome">碧桂园增值税管理系统</h2>
+                                <h2 className="welcome">增值税纳税申报系统</h2>
                                 <FormItem>
                                     {getFieldDecorator('userName', {
                                         rules: [{
@@ -141,13 +141,13 @@ class LoginWithNormal extends Component {
                                         this.state.error.visible ? <Alert key='errorMsg' message={this.state.error.msg} type="error" /> : null
                                     }
                                 </FormItem>
-                                <p className="loginFormFooter">如需帮助，请拨打4000 888 600</p>
+                                {/* <p className="loginFormFooter">如需帮助，请拨打4000 888 600</p> */}
                             </Form>
                         </Col>
                     </Row>
                 </Layout>
                 <footer className="login-footer">
-                    ©Copyright 喜盈佳企业云服务有限公司 粤ICP备16030834号 粤公网安备 44030502000290号
+                    Copyright <Icon type="copyright" /> 2018 碧桂园增值税纳税申报系统
                 </footer>
             </div>
         )

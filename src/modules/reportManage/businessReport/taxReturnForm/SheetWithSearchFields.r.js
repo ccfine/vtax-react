@@ -159,6 +159,7 @@ class SheetWithSearchFields extends Component{
                                     this.setState({
                                         params:{}
                                     })
+                                    this.props.onParamsChange && this.props.onParamsChange({});
                                 }}>重置</Button>
                             </Col>
                         </Row>

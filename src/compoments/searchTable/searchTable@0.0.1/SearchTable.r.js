@@ -127,7 +127,7 @@ class SearchTable extends Component{
                             <Card
                                 className="search-card"
                                 bodyStyle={{
-                                    padding:expand?'12px 16px':'0 16px'
+                                    padding:expand?'8px 16px 0 16px':'0 16px'
                                 }}
                                 /*extra={
                                  <Icon
@@ -143,8 +143,8 @@ class SearchTable extends Component{
                                             getFields(form,searchOption.fields)
                                         }
                                         <Col style={{width:'100%',textAlign:'right'}}>
-                                            <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                            <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
+                                            <Button size='small' style={{margin:'4px 0 4px 10px'}} type="primary" htmlType="submit">查询</Button>
+                                            <Button size='small' style={{margin:'4px 0 4px 10px'}} onClick={()=>{
                                                 form.resetFields()
                                                 this.setState({filters:{}})
                                                 searchOption.onResetFields && searchOption.onResetFields();
@@ -161,8 +161,9 @@ class SearchTable extends Component{
                     }
                     <Card
                         extra={tableOption.extra || null}
-                        style={{marginTop:10}}
+                        style={{marginTop:6}}
                         {...tableOption.cardProps}
+                        bodyStyle={{paddingBottom:(tableOption.pagination || tableOption.pageSize)?0:8}}
                     >
                         <AsyncTable url={tableOption.url}
                                     updateKey={tableUpDateKey}

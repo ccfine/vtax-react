@@ -629,7 +629,7 @@ class BasicInfo extends Component {
                                         initialValue:defaultData.receiptCurrencyAmount,
                                     }
                                 },{
-                                    label:'是否协同（喜盈佳）',
+                                    label:'是否协同',
                                     fieldName:'synergy',
                                     type:'checkbox',
                                     span:24,

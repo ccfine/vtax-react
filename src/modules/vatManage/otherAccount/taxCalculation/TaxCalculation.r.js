@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-05-31 15:31:52
+ * @Last Modified time: 2018-07-02 21:10:09
  *
  */
 import React,{Component} from 'react'
@@ -79,7 +79,8 @@ const getColumns = (getFieldDecorator,disabled) => [
             }}>
 
             </span>
-        )
+        ),
+        width:'50%',
     },
     {
         title:'一般货物及劳务和应税服务',
@@ -93,7 +94,8 @@ const getColumns = (getFieldDecorator,disabled) => [
                     editAble={record.generalAmountEdit}
                 /> : fMoney(text)
         },
-        className:'table-money'
+        className:'table-money',
+        width:'25%',
     },
     {
         title:'即征即退货物及劳务和应税服务',
@@ -107,7 +109,8 @@ const getColumns = (getFieldDecorator,disabled) => [
                     editAble={record.drawbackPolicyAmountEdit}
                 /> : fMoney(text)
         },
-        className:'table-money'
+        className:'table-money',
+        width:'25%',
     }
 ];
 class TaxCalculation extends Component{
@@ -199,6 +202,10 @@ class TaxCalculation extends Component{
                     url:tableUrl,
                     cardProps:{
                         title:'税款计算台账'
+                    },
+                    scroll:{
+                        y:window.screen.availHeight-320,
+                        x:1000,
                     },
                     extra:<div>
                         {

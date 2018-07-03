@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:44 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-22 10:22:39
+ * @Last Modified time: 2018-07-03 09:56:02
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -300,7 +300,7 @@ class PopModal extends Component {
                                         allowNegative:false,
                                         valueType:'int',
                                         disabled: readonly,
-                                        placeholder:'请输入简易征收率（单位：%）'
+                                        placeholder:readonly?' ':'请输入简易征收率（单位：%）'
                                     }
                                 }
                             ])}
@@ -317,7 +317,8 @@ class PopModal extends Component {
                                     fieldName: "taxItem",
                                     type: "input",
                                     componentProps: {
-                                        disabled: readonly
+                                        disabled: readonly,
+                                        placeholder:readonly?' ':'请输入税目'
                                     }
                                 }
                             ])}
