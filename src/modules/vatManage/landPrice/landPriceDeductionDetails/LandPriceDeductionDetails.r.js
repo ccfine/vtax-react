@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 21:06:26
+ * @Last Modified time: 2018-07-03 10:11:05
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -141,16 +141,26 @@ const columns = [
         width:'11%',
 	},
 	{
-		title: '分期可售建筑面积',
-        dataIndex: 'upAreaSale',
-        width:'5%',
-	},
-	{
 		title: '期初可抵扣土地价款',
 		dataIndex: 'initialDeductibleLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
         width:'6%',
+	},
+	{
+		title: '分期可售建筑面积',
+        dataIndex: 'upAreaSale',
+        width:'5%',
+	},
+	{
+		title: '期初销售建筑面积',
+		dataIndex: 'saleArea',
+        width:'5%',
+	},
+	{
+		title: '未销售建筑面积',
+		dataIndex: 'unSaleArea',
+        width:'5%',
 	},
 	{
 		title: '项目分期抵扣的土地价款',
@@ -160,20 +170,10 @@ const columns = [
         width:'6%',
 	},
 	{
-		title: '期初销售建筑面积',
-		dataIndex: 'saleArea',
-        width:'5%',
-	},
-	{
 		title: '期初扣除土地价款',
 		dataIndex: 'actualDeductibleLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
-	},
-	{
-		title: '未销售建筑面积',
-		dataIndex: 'unSaleArea',
         width:'5%',
 	},
 	{
@@ -210,17 +210,17 @@ const columns = [
         width:'5%',
 	},
 	{
+		title: '税率',
+		dataIndex: 'taxRate',
+        render: text => text && `${text}%`,
+        width:50,
+	},
+	{
 		title: '税额',
 		dataIndex: 'taxAmount',
 		render: text => fMoney(text),
 		className: 'table-money',
         width:'5%',
-	},
-	{
-		title: '税率',
-		dataIndex: 'taxRate',
-        render: text => text && `${text}%`,
-        width:50,
 	},
 	{
 		title: '价税合计',
