@@ -185,7 +185,7 @@ class Add extends Component {
             }
         })
     }
-    handleDelete=()=>{
+    /*handleDelete=()=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '该删除后将不可恢复，是否删除？',
@@ -211,7 +211,7 @@ class Add extends Component {
                 modalRef.destroy()
             },
         });
-    }
+    }*/
 
     handleSetStatus=(mes,status)=>{
         request.put(`/taxsubject/update/${(this.props.selectedRowKeys && this.props.selectedRowKeys[0]) || this.state.id}/${status}`
@@ -300,7 +300,7 @@ class Add extends Component {
     render() {
         const {modalConfig,visible,form,selectedRowKeys} = this.props;
 
-        const {jbxx,szjd,gdjcg,gqgx,status} = this.state;
+        const {jbxx,szjd,gdjcg,gqgx} = this.state;
 
         let title='';
         const type = modalConfig.type;
@@ -335,10 +335,10 @@ class Add extends Component {
                                 {
                                     (type ==='add' || type ==='edit') && <span>
                                         <Button type="primary" onClick={this.handleSubmit}>保存</Button>
-                                        {
+                                        {/* {
                                             (type ==='edit') && parseInt(status,0) === 1 &&
                                             <Button type="danger" onClick={this.handleDelete}>删除</Button>
-                                        }
+                                        } */}
                                         <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
                                     </span>
                                 }

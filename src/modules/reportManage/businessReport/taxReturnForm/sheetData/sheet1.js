@@ -77,7 +77,7 @@ export default [
         {readOnly: true,value: '全部征税项目',rowSpan:6},
         ...generateData('A',14,1,{readOnly: true,value: '16%税率的货物及加工修理修配劳务',colSpan:2}),
     ],
-    generateData('B',14,2,{readOnly: true,value: '16%税率',colSpan:2}),
+    generateData('B',14,2,{readOnly: true,value: '16%税率的服务、不动产和无形资产',colSpan:2}),
     generateData('C',14,3,{readOnly: true,value: '13%税率',colSpan:2}),
     generateData('D',14,'4a',{readOnly: true,value: '10%税率的货物及加工修理修配劳务',colSpan:2}),
     generateData('E',14,'4b',{readOnly: true,value: '10%税率的服务、不动产和无形资产',colSpan:2}),

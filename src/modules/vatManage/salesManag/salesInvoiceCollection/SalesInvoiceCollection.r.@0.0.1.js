@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import {connect} from 'react-redux'
 import { SearchTable, TableTotal } from "compoments";
-import {Modal,message} from 'antd';
+import {message} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
@@ -129,7 +129,7 @@ const searchFields = (disabled,declare) => {
     ];
 };
 const getColumns = (context,hasOperate) => {
-    let operates = hasOperate?[{
+    /*let operates = hasOperate?[{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -158,10 +158,8 @@ const getColumns = (context,hasOperate) => {
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    }]:[];
-    return [
-        ...operates
-    ,{
+    }]:[];*/
+    return [{
         title: "纳税主体",
         dataIndex: "mainName",
     },

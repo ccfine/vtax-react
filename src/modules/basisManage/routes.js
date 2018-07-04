@@ -6,10 +6,10 @@
 import {wrapPage} from 'compoments'
 
 import BasicInfo from './basicInfo'
-import TaxFile from './taxFile'
+// import TaxFile from './taxFile'
 
 import BasicInfo_Routes from './basicInfo/routes'
-import TaxFile_Routes from './taxFile/routes'
+// import TaxFile_Routes from './taxFile/routes'
 import { getChildOptions } from 'config/routingAuthority.config'
 
 const PATH = `/web/basisManage`;
@@ -21,14 +21,14 @@ const BasisManage_Routes = [
         exact:true,
         children:BasicInfo_Routes,
         authorityInfo:getChildOptions('basisManage','basicInfo')
-    },{
+    }/*,{
         path:`${PATH}/taxFile`,
         component:wrapPage('税务档案',TaxFile),
         name:'税务档案',
         exact:true,
         children:TaxFile_Routes,
         authorityInfo:getChildOptions('basisManage','taxFile')
-    },{
+    }*/,{
         path:`${PATH}`,
         redirect:true,
         to:`${PATH}/basicInfo`,

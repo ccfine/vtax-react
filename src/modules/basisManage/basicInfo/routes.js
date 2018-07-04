@@ -6,12 +6,12 @@
 import {wrapPage} from 'compoments'
 
 import AubjectOfTaxPayment from './aubjectOfTaxPayment'
-import TaxIncentives from './taxIncentives'
-import DeclareParameter from './declareParameter'
+// import TaxIncentives from './taxIncentives'
+// import DeclareParameter from './declareParameter'
 import BeginDataCollect from './beginDataCollect'
 /*import TableSum from '../../../compoments/tableSum'*/
 /*import FinancialDocumentsBeginData from './financialDocumentsBeginData'
-import RoomTransactionFile from './roomTransactionFile'*/
+// import RoomTransactionFile from './roomTransactionFile'*/
 import strategies from 'config/routingAuthority.config'
 
 
@@ -30,7 +30,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['aubjectOfTaxPayment'].options,
         exact:true,
-    },{
+    },/*{
         path:`${PATHS}/taxIncentives`,
         component:wrapPage('税收优惠',TaxIncentives),
         name:'税收优惠',
@@ -50,7 +50,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['declareParameter'].options,
         exact:true,
-    },{
+    },*/{
         path:`${PATHS}/beginDataCollect`,
         component:wrapPage('期初数据采集',BeginDataCollect),
         name:'期初数据采集',
@@ -60,7 +60,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['beginDataCollect'].options,
         exact:true,
-    /*},{
+    },/*{
         path:`${PATHS}/tableSum`,
         component:wrapPage('表格合计组件',TableSum),
         name:'表格合计组件',
@@ -70,7 +70,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['beginDataCollect'].options,
         exact:true,*/
-    },/*{
+    /*},{
         path:`${PATHS}/financialDocumentsBeginData`,
         component:wrapPage('财务凭证期初数据',FinancialDocumentsBeginData),
         name:'财务凭证期初数据',

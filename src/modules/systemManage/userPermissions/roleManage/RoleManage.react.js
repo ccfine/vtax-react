@@ -121,10 +121,12 @@ const columns = context => [
                     remark:record.remark
                 }
             }} style={{marginRight:10}}>{text}</Link>
-        )
+        ),
+        width:'16%',
     },{
         title: '创建时间',
         dataIndex:'createdDate',
+        width:120,
     },{
         title:'备注',
         dataIndex:'remark',
@@ -257,6 +259,7 @@ class RoleManage extends Component{
                     pageSize: 10,
                     columns: columns(this),
                     url: '/sysRole/list',
+                    scroll:{x:1000,y:window.screen.availHeight-350},
                     cardProps: {
                         title: '角色管理',
                         extra:

@@ -132,7 +132,7 @@ class TreeList extends Component {
         const {treeData} = this.state;  //,selectedKeys,expandedKeys,autoExpandParent
         return (
             <Spin spinning={this.state.eidtLoading}>
-                <div style={{overflow:'scroll',height: '600px'}}>
+                {/* <div style={{overflow:'auto',height: "auto"}}> */}
 
                     <Tree
                         key={props.updateKey}
@@ -148,7 +148,7 @@ class TreeList extends Component {
                         {this.renderTreeNodes(treeData)}
                     </Tree>
 
-                </div>
+                {/* </div> */}
             </Spin>
 
         );

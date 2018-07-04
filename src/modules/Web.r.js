@@ -33,8 +33,8 @@ class Web extends Component {
     }
 
     checkLoggedIn= props =>{
-        const {isAuthed,history} = props;
-        if(!isAuthed){
+        const {isAuthed,history,personal} = props;
+        if(!(isAuthed && personal && personal.id && personal.username)){
             history.replace('/403');
         }
     }
@@ -100,7 +100,8 @@ class Web extends Component {
 
 export default withRouter(connect(state=>({
     isAuthed:state.user.get('isAuthed'),
-    orgId:state.user.get('orgId')
+    orgId:state.user.get('orgId'),
+    personal:state.user.get('personal'),
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))

@@ -83,20 +83,24 @@ const getColumns =(context)=>[
     },{
         title: '税收分类编码',
         dataIndex: 'num',
+        width:'20%',
     }, {
         title: '商品名称',
         dataIndex: 'commodityName',
     },{
         title: '应税项目',
         dataIndex: 'taxableProjectName',
+        width:'20%',
     },{
         title: '一般增值税税率',
         dataIndex: 'commonlyTaxRate',
         render:text=>text&&`${text}%`,
+        width:100,
     },{
         title: '简易增值税税率',
         dataIndex: 'simpleTaxRate',
         render:text=>text&&`${text}%`,
+        width:100,
     }
 ];
 
@@ -164,6 +168,7 @@ class TaxClassificationCode extends Component{
                     cardProps:{
                         title:'税收分类编码'
                     },
+                    scroll:{x:1000,y:window.screen.availHeight-380},
                     columns:getColumns(this),
                     extra:<div>
                         {

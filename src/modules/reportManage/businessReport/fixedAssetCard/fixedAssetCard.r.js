@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-22 19:36:36
+ * @Last Modified time: 2018-07-04 17:45:40
  */
 import React, { Component } from "react";
-import {Modal,message} from 'antd';
+import {message} from 'antd';
 import { SearchTable} from "compoments";
 import { fMoney,composeBotton,request } from "utils";
 const searchFields = [
@@ -75,7 +75,7 @@ const importFeilds = [
 ];
 
 const getColumns = context => [
-    {
+    /*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -101,10 +101,10 @@ const getColumns = context => [
             }
         }]),
         fixed:'left',
-        width:'70px',
+        width:70,
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: (
             <div className="apply-form-list-th">
@@ -133,7 +133,8 @@ const getColumns = context => [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.stageNum}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },
     {
         title: (
@@ -148,11 +149,13 @@ const getColumns = context => [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.assetNo}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },
     {
         title: "入账日期",
-        dataIndex: "accountDate"
+        dataIndex: "accountDate",
+        width:75,
     },
     {
         title: (
@@ -188,7 +191,8 @@ const getColumns = context => [
                     </p>
                 </div>
             );
-        }
+        },
+        width:'8%',
     },
     {
         title: (
@@ -203,11 +207,13 @@ const getColumns = context => [
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.assetsState}</p>
             </div>
-        )
+        ),
+        width:'12%',
     },
     {
         title: "建筑面积",
-        dataIndex: "areaCovered"
+        dataIndex: "areaCovered",
+        width:'7%',
     },
     {
         title: (
@@ -226,7 +232,8 @@ const getColumns = context => [
                     }
                 </p>
             </div>
-        )
+        ),
+        width:'7%',
     },
     {
         title: (
@@ -243,11 +250,13 @@ const getColumns = context => [
                     {fMoney(record.deductedTaxAmount)}
                 </p>
             </div>
-        )
+        ),
+        width:'9%',
     },
     {
         title: "待抵扣期间",
-        dataIndex: "deductedPeriod"
+        dataIndex: "deductedPeriod",
+        width:75,
     }
 ];
 
@@ -289,7 +298,7 @@ export default class fixedAssetCard extends Component {
                     onSuccess:(filters)=>{
                         this.setState({filters})
                     },
-                    scroll:{ x: 1400 },
+                    scroll:{ x: 1200,y:window.screen.availHeight-360,},
                     extra: (
                         <span>
                             {

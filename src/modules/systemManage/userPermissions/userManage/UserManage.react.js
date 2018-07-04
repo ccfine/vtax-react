@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 10:47:46
+ * @Last Modified time: 2018-07-04 20:10:03
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -106,6 +106,16 @@ const getColumns = context => [
                             }
                         }])
                     }
+                    {
+                        parseInt(record.locked, 10)===1 && composeBotton([{
+                            type: 'action',
+                            icon: 'lock',
+                            title: '解锁',
+                            onSuccess: () => {
+                                context.handleUnlock(record.id)
+                            }
+                        }])
+                    }
                     {notAdmin && <Divider type="vertical" />}
                     {
                         notAdmin && composeBotton([{
@@ -117,7 +127,6 @@ const getColumns = context => [
                         }])
                     }
                 </span>
-
             );
         },
         width: 220
@@ -138,24 +147,27 @@ const getColumns = context => [
                     {text}
                 </Link>
             )
-        }
+        },
+        width:'10%',
     },
     {
         title: "姓名",
-        dataIndex: "realname"
+        dataIndex: "realname",
+        width:'8%',
     },
     {
         title: "手机",
-        dataIndex: "phoneNumber"
+        dataIndex: "phoneNumber",
+        width:'10%',
     },
     {
         title: "邮箱",
-        dataIndex: "email"
+        dataIndex: "email",
+        width:'14%',
     },
     {
         title: "角色",
         dataIndex: "roleNames",
-        width: "40%"
     }
 ];
 
@@ -271,6 +283,21 @@ class UserManage extends Component {
             }
         });
     };
+    handleUnlock = (id) => {
+        request
+        .put(`/sysUser/unlock`,{id:id})
+        .then(({ data }) => {
+            if (data.code === 200) {
+                message.success("解锁成功!");
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        })
+        .catch(e => {
+            message.error(e, 4);
+        });
+    };
     render() {
         return (
             <SearchTable
@@ -288,6 +315,7 @@ class UserManage extends Component {
                     pageSize: 10,
                     columns: getColumns(this),
                     url: "/sysUser/list",
+                    scroll:{x:1000,y:window.screen.availHeight-370},
                     cardProps: {
                         title: "用户管理",
                         extra: (
