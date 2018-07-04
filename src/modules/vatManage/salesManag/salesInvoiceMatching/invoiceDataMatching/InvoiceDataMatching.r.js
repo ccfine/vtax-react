@@ -101,15 +101,15 @@ const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
             formItemStyle
         },
         {
-            label:'单元',
-            fieldName:'element',
-            type:'element',
+            label:'房间编码',
+            fieldName:'roomCode',
+            type:'input',
             span:6,
             formItemStyle
         },
         {
-            label:'房号',
-            fieldName:'roomNumber',
+            label:'路址',
+            fieldName:'htRoomName',
             type:'input',
             span:6,
             formItemStyle
