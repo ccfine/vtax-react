@@ -24,15 +24,19 @@ const columns =[
     {
         title: '编码',
         dataIndex: 'code',
+        width:'12%',
     },{
         title: '名称',
         dataIndex: 'name',
+        width:'18%',
     },{
         title: '类型',
         dataIndex: 'type',
+        width:'12%',
     },{
         title: '排序',
         dataIndex: 'sortBy',
+        width:'6%',
     },{
         title: '描述',
         dataIndex: 'description',
@@ -176,6 +180,7 @@ class DataDictionaryMaintain extends Component {
                 treeCardOption={{
                     cardProps:{
                         title:'字典信息树',
+                        bodyStyle:{overflow:'auto',height:window.screen.availHeight-320},
                     }
                 }}
                 treeOption={{
@@ -200,6 +205,7 @@ class DataDictionaryMaintain extends Component {
                     cardProps:{
                         title:'下级列表信息'
                     },
+                    scroll:{x:1000,y:window.screen.availHeight-390},
                     url:'/sys/dict/list',
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({

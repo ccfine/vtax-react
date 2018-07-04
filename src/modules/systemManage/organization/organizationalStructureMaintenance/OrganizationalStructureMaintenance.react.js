@@ -22,12 +22,14 @@ const columns =[
     {
         title: '机构代码',
         dataIndex: 'code',
+        width:'20%',
     },{
         title: '机构名称',
         dataIndex: 'name',
     },{
         title: '本级序号',
         dataIndex: 'level',
+        width:'10%',
     }, {
         title: '状态',
         dataIndex: 'status',
@@ -48,7 +50,8 @@ const columns =[
                 //no default
             }
             return t
-        }
+        },
+        width:'20%',
     }
 ];
 
@@ -231,6 +234,7 @@ class OrganizationalStructureMaintenance extends Component {
                 treeCardOption={{
                     cardProps:{
                         title:'组织架构维护树',
+                        bodyStyle:{overflow:'auto',height:window.screen.availHeight-310},
                     }
                 }}
                 treeOption={{
@@ -257,6 +261,7 @@ class OrganizationalStructureMaintenance extends Component {
                     cardProps:{
                         title:'组织架构维护列表信息'
                     },
+                    scroll:{x:600,y:window.screen.availHeight-390},
                     url:'/sysOrganization/list',
                     onRowSelect:(selectedRowKeys,selectedRows)=>{
                         this.setState({

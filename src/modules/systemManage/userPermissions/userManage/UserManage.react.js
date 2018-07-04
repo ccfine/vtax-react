@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-04 16:47:22
+ * @Last Modified time: 2018-07-04 20:10:03
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -147,24 +147,27 @@ const getColumns = context => [
                     {text}
                 </Link>
             )
-        }
+        },
+        width:'10%',
     },
     {
         title: "姓名",
-        dataIndex: "realname"
+        dataIndex: "realname",
+        width:'8%',
     },
     {
         title: "手机",
-        dataIndex: "phoneNumber"
+        dataIndex: "phoneNumber",
+        width:'10%',
     },
     {
         title: "邮箱",
-        dataIndex: "email"
+        dataIndex: "email",
+        width:'14%',
     },
     {
         title: "角色",
         dataIndex: "roleNames",
-        width: "40%"
     }
 ];
 
@@ -312,6 +315,7 @@ class UserManage extends Component {
                     pageSize: 10,
                     columns: getColumns(this),
                     url: "/sysUser/list",
+                    scroll:{x:1000,y:window.screen.availHeight-370},
                     cardProps: {
                         title: "用户管理",
                         extra: (

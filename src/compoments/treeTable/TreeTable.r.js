@@ -124,7 +124,7 @@ class TreeTable extends Component{
                             <Card
                                 className="search-card"
                                 bodyStyle={{
-                                    padding:expand?'12px 16px':'0 16px'
+                                    padding:expand?'6px 16px 0 16px':'0 16px'
                                 }}
                                 /*extra={
                                  <Icon
@@ -172,7 +172,8 @@ class TreeTable extends Component{
 
                     <Card
                         extra={cardTableOption.extra || null}
-                        style={{marginTop:10}}
+                        style={{marginTop:6}}
+                        bodyStyle={{padding:'6px 8px'}}
                         {...cardTableOption.cardProps}
                     >
                         <Row gutter={24}>
@@ -200,6 +201,7 @@ class TreeTable extends Component{
                                     extra={tableOption.extra || null}
                                     //style={{marginTop:10}}
                                     {...tableOption.cardProps}
+                                    bodyStyle={{paddingBottom:(tableOption.pagination || tableOption.pageSize)?0:8}}
                                 >
                                     <AsyncTable url={tableOption.url}
                                                 updateKey={tableUpDateKey}
