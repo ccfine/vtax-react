@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 10:47:46
+ * @Last Modified time: 2018-07-04 16:47:22
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -106,6 +106,16 @@ const getColumns = context => [
                             }
                         }])
                     }
+                    {
+                        parseInt(record.locked, 10)===1 && composeBotton([{
+                            type: 'action',
+                            icon: 'lock',
+                            title: '解锁',
+                            onSuccess: () => {
+                                context.handleUnlock(record.id)
+                            }
+                        }])
+                    }
                     {notAdmin && <Divider type="vertical" />}
                     {
                         notAdmin && composeBotton([{
@@ -117,7 +127,6 @@ const getColumns = context => [
                         }])
                     }
                 </span>
-
             );
         },
         width: 220
@@ -269,6 +278,21 @@ class UserManage extends Component {
             onCancel() {
                 modalRef.destroy();
             }
+        });
+    };
+    handleUnlock = (id) => {
+        request
+        .put(`/sysUser/unlock`,{id:id})
+        .then(({ data }) => {
+            if (data.code === 200) {
+                message.success("解锁成功!");
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        })
+        .catch(e => {
+            message.error(e, 4);
         });
     };
     render() {
