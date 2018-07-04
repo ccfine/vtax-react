@@ -391,7 +391,7 @@ class PopModal extends Component{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['declareBy'] || this.props.userName,
+                                            initialValue:shouldShowDefaultData?initData['declareBy']:this.props.userName,
                                         }
                                     },{
                                         label:'申报日期',
@@ -405,7 +405,7 @@ class PopModal extends Component{
                                             //format:"YYYY-MM-DD HH:mm",
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:shouldShowDefaultData ? moment(initData['month'], dateFormat) : moment(moment(), dateFormat),
+                                            initialValue:shouldShowDefaultData ? moment(initData['declarationDate'], dateFormat) : moment(moment(), dateFormat),
                                         }
                                     },
                                 ])
