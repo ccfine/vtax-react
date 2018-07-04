@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-21 15:21:02
+ * @Last Modified time: 2018-07-04 16:08:52
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -130,7 +130,8 @@ const getColumns = context => [{
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.companyNum}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },
     {
         title: (
@@ -145,19 +146,24 @@ const getColumns = context => [{
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.stageNum}</p>
             </div>
-        )
+        ),
+        width:'14%',
     },{
         title: "土地总可售面积（总数）",
-        dataIndex: "builtArea"
+        dataIndex: "builtArea",
+        width:'8%',
     },{
         title: "分期总可售面积",
-        dataIndex: "totalArea"
+        dataIndex: "totalArea",
+        width:'8%',
     },{
         title: "分期地上可售面积",
-        dataIndex: "groundArea"
+        dataIndex: "groundArea",
+        width:'8%',
     },{
         title: "分期地下可售面积",
-        dataIndex: "undergroundArea"
+        dataIndex: "undergroundArea",
+        width:'8%',
     },{
         title: (
             <div className="apply-form-list-th">
@@ -171,7 +177,8 @@ const getColumns = context => [{
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.sapCompanyNo}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },
     {
         title: (
@@ -186,7 +193,8 @@ const getColumns = context => [{
                 <p className="apply-form-list-p1">{text}</p>
                 <p className="apply-form-list-p2">{record.profitCenterNo}</p>
             </div>
-        )
+        ),
+        width:'10%',
     },
 ];
 
@@ -226,7 +234,8 @@ export default class AvailableArea extends Component {
                         title: "可售面积"
                     },
                     scroll: {
-                        x: 1400
+                        x: 1200,
+                        y:window.screen.availHeight-430,
                     },
                     onSuccess:filters=>{
                         this.setState({filters})
