@@ -50,7 +50,7 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['declareParameter'].options,
         exact:true,
-    }*/,{
+    },*/{
         path:`${PATHS}/beginDataCollect`,
         component:wrapPage('期初数据采集',BeginDataCollect),
         name:'期初数据采集',
