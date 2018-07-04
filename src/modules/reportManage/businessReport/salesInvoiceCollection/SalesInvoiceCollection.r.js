@@ -44,7 +44,7 @@ const columns=[
     {
         title: '纳税主体',
         dataIndex: 'mainName',
-        width:'10%',
+        width:'8%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">发票号码</p>
@@ -57,7 +57,7 @@ const columns=[
                 <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
         ),
-        width:'6%',
+        width:'4%',
     },{
         title: '发票类型',
         dataIndex: 'invoiceType',
@@ -84,7 +84,7 @@ const columns=[
                 <p className="apply-form-list-p2">{record.projectNum}</p>
             </div>
         ),
-        width:'8%',
+        width:'6%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">商品名称</p>
@@ -97,7 +97,7 @@ const columns=[
                 <p className="apply-form-list-p2">{fMoney(record.amount)}</p>
             </div>
         ),
-        width:'6%',
+        width:'5%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">购货单位名称</p>
@@ -174,7 +174,7 @@ const columns=[
         dataIndex: 'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'5%',
+        width:'4%',
     },{
         title: '税率',
         dataIndex: 'taxRate',
@@ -198,7 +198,7 @@ const columns=[
         dataIndex: 'totalAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'6%',
+        width:'4%',
     },{
         title: '复核',
         dataIndex: 'checker',
@@ -247,7 +247,7 @@ export default class SalesInvoiceCollection extends Component{
                         title:'销项发票采集'
                     },
                     url:'/output/invoice/collection/report/list',
-                    scroll:{ x: 1800,y:window.screen.availHeight-360, },
+                    scroll:{ x: 2400,y:window.screen.availHeight-360, },
                 }}
             />
 
