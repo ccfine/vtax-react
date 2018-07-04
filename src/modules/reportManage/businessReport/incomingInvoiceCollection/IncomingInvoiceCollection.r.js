@@ -191,7 +191,7 @@ const columns = [
                 <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
             </div>
         ),
-        width:'5%',
+        width:'4%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">开户行</p>
@@ -204,7 +204,7 @@ const columns = [
                 <p className="apply-form-list-p2">{record.address}</p>
             </div>
         ),
-        width:'6%',
+        width:'10%',
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">账号</p>
@@ -230,7 +230,7 @@ const columns = [
         title: '价税合计',
         dataIndex: 'totalAmount',
         render:text=>fMoney(text),
-        width:'5%',
+        width:'4%',
     },{
 
         title: '匹配状态',
@@ -298,7 +298,7 @@ export default class IncomingInvoiceCollection extends Component{
                         title:'进项发票采集'
                     },
                     url:'/income/invoice/collection/report/list',
-                    scroll:{ x: 1800,y:window.screen.availHeight-360,},
+                    scroll:{ x: 2400,y:window.screen.availHeight-360,},
                 }}
             />
 
