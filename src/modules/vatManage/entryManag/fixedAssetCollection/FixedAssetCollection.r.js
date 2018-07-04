@@ -66,7 +66,7 @@ const columns=[
     {
         title:'纳税主体代码',
         dataIndex:'taxSubjectNum',
-        width:'6%',
+        width:'10%',
     },
     {
         title:'项目分期名称',
@@ -240,7 +240,7 @@ const columns=[
                         )
                     },
                     scroll:{
-                     x:1800,
+                     x:2000,
                      y:window.screen.availHeight-380,
                      },
                 }}
