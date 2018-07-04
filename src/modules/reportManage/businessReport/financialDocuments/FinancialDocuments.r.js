@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {Modal,message} from 'antd'
+import {message} from 'antd'
 import {fMoney,composeBotton,request} from 'utils'
 const formItemStyle={
     labelCol:{
@@ -104,7 +104,7 @@ const searchFields =[
         }
     ]
 const getColumns = context =>[
-    {
+    /*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -133,7 +133,7 @@ const getColumns = context =>[
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">纳税主体名称</p>

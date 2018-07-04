@@ -1,11 +1,11 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 20:33:52
+ * @Last Modified time: 2018-07-04 17:45:26
  *
  */
 import React,{Component} from 'react'
-import {Modal,message} from 'antd'
+import {message} from 'antd'
 import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
@@ -177,7 +177,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
 ];
 
 const getColumns = (context,disabled) => {
-    let operates = (disabled && parseInt(context.state.statusParam.status,0) === 1)?[{
+    /*let operates = (disabled && parseInt(context.state.statusParam.status,0) === 1)?[{
         title: '操作',
         key: 'actions',
         className:'text-center',
@@ -208,8 +208,8 @@ const getColumns = (context,disabled) => {
                         });
                     }}])
         }
-    }]:[];
-    return [...operates,{
+    }]:[];*/
+    return [{
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">纳税主体名称</p>

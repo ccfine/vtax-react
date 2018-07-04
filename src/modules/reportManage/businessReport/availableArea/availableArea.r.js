@@ -2,12 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-04 16:08:52
+ * @Last Modified time: 2018-07-04 17:42:46
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
 import {composeBotton,request} from 'utils';
-import {Modal,message} from 'antd';
+import {message} from 'antd';
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
@@ -73,7 +73,7 @@ const importFeilds = [
     }
 ];
 
-const getColumns = context => [{
+const getColumns = context => [/*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -102,7 +102,7 @@ const getColumns = context => [{
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: (
             <div className="apply-form-list-th">
