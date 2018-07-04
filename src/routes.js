@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react'
-import {Route, Redirect, Switch} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import {Layout} from 'antd'
 import Web from 'modules/Web.r'
 import Login from 'modules/login'
@@ -21,7 +21,7 @@ const routes = [
         component:Web,
         name:'主页',
     },{
-        path:'/login',
+        path:'/tax2018bgy/login',
         component:props=><Login {...props} type={1}/>,
         name:'登录'
     },{
@@ -41,22 +41,23 @@ const routes = [
         component:Exception500,
         name:'500',
     },{
-        path:'*',
+        path:'/web/*',
         redirect:true,
         to:'/web'
-    /*},{
+    },{
         path:'*',
-        component:NoMatch*/
+        redirect:true,
+        to:'/404'
     }
 ]
 
 const MainRoute =(
     <Route render={({location})=>{
 
-        const homeRoute = () => <Redirect to="/login"/>
+        // const homeRoute = () => <Redirect to="/login"/>
         return(
             <Layout>
-                <Route exact strict path="/" render={homeRoute} />
+                {/* <Route exact strict path="/" render={homeRoute} /> */}
                 <Switch>
                     {routes.map((route, index) => (
                         <RouteWithSubRoutes key={index} {...route}/>

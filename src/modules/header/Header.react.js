@@ -9,6 +9,7 @@ import {withRouter,Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
+import {request} from 'utils';
 
 import './header.less'
 
@@ -21,6 +22,7 @@ class WimsHeader extends Component {
         collapsed: false,
         fetchingNotices:false,
         data:[],
+        ssoPath:'',
     };
 
     toggle = () => {
@@ -31,11 +33,15 @@ class WimsHeader extends Component {
         });
     }
     handleMenuCollapse = ({ key })=>{
+        const {ssoPath} = this.state;
         if(key==='logout') {
             confirm({
                 title: '系统提示',
                 content: '确定要退出吗',
-                onOk: () => this.props.logout(),
+                okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
+                onOk: () => {
+                    this.props.logout()
+                },
                 onCancel() {
                 },
             });
@@ -47,7 +53,14 @@ class WimsHeader extends Component {
             this.props.history.push(`/web/${key}`)
         }
     }
-
+    componentDidMount(){
+        request.post('/oauth/loginOut').then(({data})=>{
+            if(data.code === 200){
+                this.setState({ssoPath:data.data})
+            }
+        }).catch(err=>{
+        })
+    }
 
     render() {
         const menu = (
@@ -57,7 +70,7 @@ class WimsHeader extends Component {
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key='admin'>
-                    <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}~${this.props.personal.id}`}>
+                    <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}~${this.props.id}`}>
                         <Icon type="user" />个人中心
                     </Link>
                 </Menu.Item>
@@ -109,6 +122,6 @@ export default withRouter(connect(state=>{
         isAuthed:state.user.get('isAuthed'),
         userName:state.user.getIn(['personal','username']),  //'secUserBasicBO',
         orgId: state.user.get("orgId"),
-        personal: state.user.get("personal"),
+        id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))
