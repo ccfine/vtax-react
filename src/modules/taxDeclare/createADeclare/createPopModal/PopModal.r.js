@@ -377,6 +377,7 @@ class PopModal extends Component{
                                         },
                                         componentProps:{
                                             disabled,
+                                            placeholder:type==='view'?' ':'请输入事项说明',
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue:initData['remark'],
@@ -389,6 +390,7 @@ class PopModal extends Component{
                                         formItemStyle,
                                         componentProps:{
                                             disabled,
+                                            placeholder:type==='view'?' ':'请输入申报人',
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue:shouldShowDefaultData?initData['declareBy']:this.props.userName,
@@ -401,6 +403,7 @@ class PopModal extends Component{
                                         formItemStyle,
                                         componentProps:{
                                             disabled,
+                                            placeholder:type==='view'?' ':'请选择申报日期',
                                             //showTime:{ format: 'HH:mm' },
                                             //format:"YYYY-MM-DD HH:mm",
                                         },
