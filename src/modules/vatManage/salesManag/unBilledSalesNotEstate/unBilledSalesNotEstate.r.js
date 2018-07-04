@@ -34,25 +34,20 @@ const columns = (context) => [
     {
         title: "项目",
         dataIndex: "taxMethod",
-        render: (text, row, index) => {
-            let count1 = context.state.dataSource.filter(ele=>ele.taxMethod==='1').length,
-                count2 = context.state.dataSource.filter(ele=>ele.taxMethod==='2').length;
-
-            const obj = {
-                children: text ==='1' ? '一般计税' : '简易计税',
-                props: {}
-            };
-            // 前提是按 taxMethod：1 2 排序
-            let rowSpan = 0;
-            if (index === 0) {
-                rowSpan = count1;
+        render: (text) => {
+            let tempText = '';
+            switch(text){
+                case '1':
+                    tempText='一般计税';
+                    break;
+                case '2':
+                    tempText='简易计税';
+                    break;
+                default:
+                    tempText='';
+                    break;
             }
-            if (index === count1) {
-                rowSpan = count2;
-            }
-            obj.props.rowSpan = rowSpan;
-
-            return obj;
+            return tempText;
         },
         footer: (data) => {
             return <div>Summary: {data.taxMethod}</div>
