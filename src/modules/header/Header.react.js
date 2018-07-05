@@ -69,11 +69,11 @@ class WimsHeader extends Component {
                     <Icon type="logout" />退出登录
                 </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key='admin'>
+                {/* <Menu.Item key='admin'>
                     <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}~${this.props.id}`}>
                         <Icon type="user" />个人中心
                     </Link>
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item key="question">
                     <a  rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'><Icon type="question" />我要提问</a>
                 </Menu.Item>
@@ -122,6 +122,6 @@ export default withRouter(connect(state=>{
         isAuthed:state.user.get('isAuthed'),
         userName:state.user.getIn(['personal','username']),  //'secUserBasicBO',
         orgId: state.user.get("orgId"),
-        id: state.user.getIn(["personal",'id']),
+        // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))
