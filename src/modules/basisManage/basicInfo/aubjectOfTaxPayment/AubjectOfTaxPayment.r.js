@@ -187,13 +187,13 @@ class AubjectOfTaxPayment extends Component {
                         title:'纳税主体',
                     },
                     extra:<div>
-                        {
+                        {/*
                             composeBotton([{
                                 type:'add',
                                 icon:'plus',
                                 onClick:()=>this.showModal('add')
                             }])
-                        }
+                        */}
                         {/* <Button size="small"
                                 disabled={!disabled}
                                 style={buttonStyle}
