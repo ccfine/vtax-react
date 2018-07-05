@@ -73,8 +73,8 @@ class LoginWithNormal extends Component {
     }
 
     checkLoggedIn= props =>{
-        const {isAuthed,history} = props;
-        if(isAuthed){
+        const {isAuthed,history,personal} = props;
+        if(isAuthed && personal && personal.id && personal.username){
             history.replace('/web');
         }
     }
@@ -157,7 +157,8 @@ class LoginWithNormal extends Component {
 const LoginWithNormalWithForm = Form.create()(LoginWithNormal);
 
 export default connect(state=>({
-    isAuthed:state.user.get('isAuthed')
+    isAuthed:state.user.get('isAuthed'),
+    personal:state.user.get('personal'),
 }),dispatch=>({
     login:login(dispatch),
 }))(LoginWithNormalWithForm)
