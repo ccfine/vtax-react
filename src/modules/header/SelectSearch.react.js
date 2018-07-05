@@ -78,7 +78,7 @@ class SelectSearch extends Component {
                         label:'区域',
                         fieldName:'areaId',
                         type:'asyncSelect',
-                        span:12,
+                        span:8,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
@@ -101,7 +101,7 @@ class SelectSearch extends Component {
                         label:'组织',
                         fieldName:'orgId',
                         type:'asyncSelect',
-                        span:12,
+                        span:16,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
