@@ -5,7 +5,7 @@
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
-import {message} from 'antd';
+import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
 import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
 import moment from "moment";
@@ -118,7 +118,7 @@ const getSearchFields = (disabled,declare) => {
 };
 
 const columns = (context,hasOperate) => {
-    /*let operates = hasOperate?[{
+    let operates = hasOperate?[{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -147,8 +147,8 @@ const columns = (context,hasOperate) => {
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    }]:[];*/
-    return [{
+    }]:[];
+    return [...operates,{
         title: "纳税主体",
         dataIndex: "mainName",
     }, {
