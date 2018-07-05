@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-05-15 16:12:23
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-20 19:46:05
+ * @Last Modified time: 2018-07-05 16:54:27
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -327,7 +327,7 @@ class PopModal extends Component {
                                         },
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
-                                        doNotFetchDidMount: true,
+                                        doNotFetchDidMount: !(record && record.projectId),
                                         fetchAble:
                                         (getFieldValue("project") &&
                                         getFieldValue("project").key) || (record && record.projectId),

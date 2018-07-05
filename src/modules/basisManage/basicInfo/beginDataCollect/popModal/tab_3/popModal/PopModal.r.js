@@ -135,7 +135,10 @@ class PopModal extends Component {
                                         url: `/sys/dict/listBaseInfo/JMS`,
                                         selectOptions:{
                                             disabled: readonly,
-                                            labelInValue:true
+                                            labelInValue:true,
+                                            onChange:(val,option,item)=>{
+                                                // console.log('change:',item)
+                                            }
                                         }
                                     },
                                     fieldDecoratorOptions: {

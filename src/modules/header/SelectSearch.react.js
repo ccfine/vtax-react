@@ -25,7 +25,6 @@ class SelectSearch extends Component {
         data:[],
         orgId:undefined,
         areaId:undefined,
-        coreCompanyLoaded:true
     }
     handleAreaChange=(value)=>{
         this.props.saveAreaId(value)
@@ -33,23 +32,13 @@ class SelectSearch extends Component {
     handleChange = (value) => {
         const { saveOrgId } = this.props;
         this.mounted && this.setState({
-            value ,
-            coreCompanyLoaded:false
+            value 
         },()=>{
            saveOrgId(value);
-           this.renderSwitchGroupSearch(value)
-            this.mounted && this.setState(prevState=>({
-               coreCompanyLoaded:true
-           }),()=>{
-                //判断权限
-                if(saveOrgId !== this.props.orgId){
-                    this.props.history.replace('/web');
-                    setTimeout(()=>{
-                        this.props.changeRefresh(Date.now()+1)
-                        //window.location.reload()
-                    },300)
-                }
-           })
+            if(this.mounted && saveOrgId !== this.props.orgId){
+                this.props.history.replace('/web');
+                this.renderSwitchGroupSearch(value);
+            }
         });
     }
 
@@ -60,6 +49,11 @@ class SelectSearch extends Component {
                 if(data.code ===200){
                     saveToken(data.data.token)
                     savePersonal(data.data)
+
+                    //保证redux保存成功后更新数据
+                    setTimeout(()=>{
+                        this.props.changeRefresh(Date.now()+1)
+                    },300)
                 }else{
                     message.error(`查询失败:${data.msg}`)
                 }
@@ -84,7 +78,7 @@ class SelectSearch extends Component {
                         label:'区域',
                         fieldName:'areaId',
                         type:'asyncSelect',
-                        span:12,
+                        span:8,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
@@ -107,7 +101,7 @@ class SelectSearch extends Component {
                         label:'组织',
                         fieldName:'orgId',
                         type:'asyncSelect',
-                        span:12,
+                        span:16,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
@@ -121,7 +115,7 @@ class SelectSearch extends Component {
                                 defaultActiveFirstOption:true,
                                 showSearch:true,
                                 optionFilterProp:'children',
-                            }
+                            },
                         },
                         fieldDecoratorOptions: {
                             initialValue: this.props.orgId

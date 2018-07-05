@@ -4,8 +4,8 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,Row,Col} from 'antd'
-import {withRouter,Link} from 'react-router-dom'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,Row,Col,Tooltip} from 'antd'
+import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
@@ -68,7 +68,7 @@ class WimsHeader extends Component {
                 <Menu.Item key="logout">
                     <Icon type="logout" />退出登录
                 </Menu.Item>
-                <Menu.Divider />
+                {/* <Menu.Divider />
                 <Menu.Item key='admin'>
                     <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}~${this.props.id}`}>
                         <Icon type="user" />个人中心
@@ -76,7 +76,7 @@ class WimsHeader extends Component {
                 </Menu.Item>
                 <Menu.Item key="question">
                     <a  rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'><Icon type="question" />我要提问</a>
-                </Menu.Item>
+                </Menu.Item> */}
             </Menu>
         );
 
@@ -93,10 +93,10 @@ class WimsHeader extends Component {
                             增值税纳税申报系统                            
                         </h2>
                     </Col>
-                    <Col xs={18} sm={16} lg={14}>
+                    <Col xs={16} sm={12} lg={12}>
                         {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                     </Col>
-                    <Col xs={6} sm={4} lg={4}>
+                    <Col xs={8} sm={8} lg={6}>
                         <div className='right'>
                         {this.props.userName ? (
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
@@ -110,6 +110,14 @@ class WimsHeader extends Component {
                             <Spin size="small" style={{ marginLeft: 8 }} />
                         )}
                         </div>
+                        <div className='right'>
+                            <Tooltip placement="bottom" title='我要提问'>
+                                <a className='action'
+                                rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'>
+                                    <Icon type="question-circle-o" />
+                                </a>
+                            </Tooltip>
+                        </div>
                     </Col>
                 </Row>
             </Header>
@@ -122,6 +130,6 @@ export default withRouter(connect(state=>{
         isAuthed:state.user.get('isAuthed'),
         userName:state.user.getIn(['personal','username']),  //'secUserBasicBO',
         orgId: state.user.get("orgId"),
-        id: state.user.getIn(["personal",'id']),
+        // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))

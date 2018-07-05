@@ -145,6 +145,18 @@ export default class AsyncSelect extends Component{
     //         this.fetch()
     //     }
     // }
+    onChange=(...args)=>{
+        // 将数据相关的信息全部返回
+        const {dataSource } = this.state,
+            {selectOptions,fieldValueName} = this.props;
+        if(selectOptions && selectOptions.onChange){
+            let item=undefined;
+            if(dataSource && dataSource.length>0){
+                item = dataSource.find(ele=>ele[fieldValueName] === selectOptions.labelInValue?args[0].key:args[0])
+            }
+            selectOptions.onChange(...args,item)
+        }
+    }
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
@@ -169,9 +181,9 @@ export default class AsyncSelect extends Component{
                         <Select
                             style={{ width: '100%' }}
                             onSearch={this.onSearch}
-                            // onChange={this.onChange}
                             placeholder={`请选择${label}`}
                             {...selectOptions}
+                            onChange={this.onChange}
                         >
                             {
                                 optionsData.map((item,i)=>(

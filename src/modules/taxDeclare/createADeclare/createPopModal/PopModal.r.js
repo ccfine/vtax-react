@@ -409,6 +409,12 @@ class PopModal extends Component{
                                         },
                                         fieldDecoratorOptions:{
                                             initialValue:shouldShowDefaultData ? moment(initData['declarationDate'], dateFormat) : moment(moment(), dateFormat),
+                                            rules: [
+                                                {
+                                                    required:true,
+                                                    message:'请选择申报日期'
+                                                }
+                                            ],
                                         }
                                     },
                                 ])

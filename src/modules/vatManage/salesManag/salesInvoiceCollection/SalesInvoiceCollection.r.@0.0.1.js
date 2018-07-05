@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import {connect} from 'react-redux'
 import { SearchTable, TableTotal } from "compoments";
-import {message} from 'antd';
+import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
@@ -129,7 +129,7 @@ const searchFields = (disabled,declare) => {
     ];
 };
 const getColumns = (context,hasOperate) => {
-    /*let operates = hasOperate?[{
+    let operates = hasOperate?[{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -158,10 +158,11 @@ const getColumns = (context,hasOperate) => {
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    }]:[];*/
-    return [{
+    }]:[];
+    return [...operates,{
         title: "纳税主体",
         dataIndex: "mainName",
+        width:'10%',
     },
     {
         title: (
@@ -218,7 +219,7 @@ const getColumns = (context,hasOperate) => {
         title: '金额',
         dataIndex: "amount",
         className:'table-money',
-        width:'8%',
+        width:'6%',
         render: (text, record) => fMoney(text)
     },
     {
@@ -247,7 +248,7 @@ const getColumns = (context,hasOperate) => {
         dataIndex: "taxAmount",
         render: text => fMoney(text),
         className: "table-money",
-        width: '8%',
+        width: '6%',
     },
     {
         title: "税率",
@@ -260,7 +261,7 @@ const getColumns = (context,hasOperate) => {
         dataIndex: "totalAmount",
         render: text => fMoney(text),
         className: "table-money",
-        width: '8%',
+        width: '6%',
     },
     {
         title: "数据来源",
@@ -279,7 +280,6 @@ const getColumns = (context,hasOperate) => {
     },{
         title: '备注',
         dataIndex: 'remark',
-        width: '6%',
     }
 ];
 }
@@ -409,7 +409,7 @@ class SalesInvoiceCollection extends Component {
                     },
                     scroll:{
                         y:window.screen.availHeight-400,
-                        x:1100,
+                        x:1800,
                     },
                     onTotalSource: totalSource => {
                         this.setState({
