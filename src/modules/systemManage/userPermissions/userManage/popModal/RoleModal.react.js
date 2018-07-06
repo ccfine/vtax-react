@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-28 11:10:27
+ * @Last Modified time: 2018-07-06 15:06:33
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
@@ -162,7 +162,9 @@ class RoleModal extends React.Component {
                 onCancel={this.handleCancel}
                 cancelText="取消"
                 confirmLoading={submitLoading}
-                width="700px"
+                width="800px"
+                style={{top:'5%'}}
+                bodyStyle={{maxHeight:400,overflowY:'auto'}}
             >
                 <Spin spinning={roleLoading || charLoading}>
                     <Form
@@ -208,7 +210,7 @@ class RoleModal extends React.Component {
                     </Row>
                     <div className='fix-ie10-formItem-textArea'>
                     <FormItem
-                        wrapperCol= {{span:20}}
+                        wrapperCol= {{span:22}}
                         labelCol= {{span:2}}
                         label="角色"
                         >
