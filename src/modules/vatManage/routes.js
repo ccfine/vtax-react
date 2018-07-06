@@ -59,8 +59,8 @@ const VatManage_Routes = [
                 children:EntryTax_Routes*/
             },{
                 path:`${PATH}/otherAccount`,
-                component:wrapPage('其它台账',OtherAccount),
-                name:'其它台账',
+                component:wrapPage('其他台账',OtherAccount),
+                name:'其他台账',
                 exact:true,
                 children:OtherAccount_Routes,
                 authorityInfo:getChildOptions('vatManage','otherAccount'),
