@@ -55,7 +55,7 @@ const treeData = [{
             key: '010201',
         }]
     },{
-        title:'其它台账',
+        title:'其他台账',
         key:'0103',
         children:[{
             title: '查询',
