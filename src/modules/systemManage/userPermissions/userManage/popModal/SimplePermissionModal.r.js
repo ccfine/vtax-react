@@ -3,11 +3,132 @@ import {Modal,Layout,Tree,Form,Row,Button,Checkbox,message,Spin} from 'antd';
 import {getFields,request} from 'utils';
 import strategies from '../../../../../config/routingAuthority.config'
 import intersection from 'lodash/intersection'
+import padStart from 'lodash/padStart'
 const {Content,Sider,Footer} = Layout,
     TreeNode = Tree.TreeNode,FormItem=Form.Item;
-let keys = ['00','01','10','11','20','21','30','31'];
-let plainStrategies ={};
-(function(){
+    
+const treeData = [{
+    title: '基础管理',
+    key: '00',
+    children: [{
+        title:'基础信息',
+        key:'0000',
+        children:[{
+            title: '查询',
+            key: '000000',
+        },{
+            title: '管理',
+            key: '000001',
+        }]
+    }]
+},{
+    title: '增值税管理',
+    key: '01',
+    children: [{
+        title:'销项管理',
+        key:'0100',
+        children:[{
+            title: '查询',
+            key: '010000',
+        },{
+            title: '管理',
+            key: '010001',
+        }]
+    },{
+        title:'进项管理',
+        key:'0101',
+        children:[{
+            title: '查询',
+            key: '010100',
+        },{
+            title: '管理',
+            key: '010101',
+        }]
+    },{
+        title:'土地价款',
+        key:'0102',
+        children:[{
+            title: '查询',
+            key: '010200',
+        },{
+            title: '管理',
+            key: '010201',
+        }]
+    },{
+        title:'其它台账',
+        key:'0103',
+        children:[{
+            title: '查询',
+            key: '010300',
+        },{
+            title: '管理',
+            key: '010301',
+        }]
+    }]
+},{
+    title: '纳税申报',
+    key: '02',
+    children: [{
+        title:'创建申报',
+        key:'0200',
+        children:[{
+            title: '查询',
+            key: '020000',
+        },{
+            title: '管理',
+            key: '020001',
+        }]
+    },{
+        title:'申报办理',
+        key:'0201',
+        children:[{
+            title: '查询',
+            key: '020100',
+        },{
+            title: '管理',
+            key: '020101',
+        }]
+    },{
+        title:'查询申报',
+        key:'0202',
+        children:[{
+            title: '查询',
+            key: '020200',
+        }/*,{
+            title: '管理',
+            key: '020201',
+        }*/]
+    }]
+},{
+    title: '报表管理',
+    key: '03',
+    children: [{
+        title:'业务报表',
+        key:'0300',
+        children:[{
+            title: '查询',
+            key: '030000',
+        },{
+            title: '管理',
+            key: '030001',
+        }]
+    }]
+}]
+let keys = (()=>{
+    let res=[];
+    treeData.forEach(ele=>{
+        ele.children && ele.children.forEach(dele=>{
+            dele.children && dele.children.forEach(dd=>{
+                res.push(dd.key)
+            })
+        })
+    })
+    return res;
+})();
+
+
+let plainStrategies = (function(){
+    let plainStrategies={};
     keys.forEach(ele=>{
         plainStrategies[ele]=[]
     })
@@ -16,9 +137,9 @@ let plainStrategies ={};
             obj.options.forEach(element => {
                 // 如1002结尾代表查询，否则就是操作
                 if(/1002$/.test(element)){
-                    plainStrategies[index+'0'].push(element)
+                    plainStrategies[index+'00'].push(element)
                 }else{
-                    plainStrategies[index+'1'].push(element)
+                    plainStrategies[index+'01'].push(element)
                 }
             });
         }else{
@@ -28,51 +149,15 @@ let plainStrategies ={};
         }
     }
     [strategies.basisManage,strategies.vatManage,strategies.taxDeclare,strategies.reportManage].forEach((ele,index)=>{
-        transformStrategies(ele,index);
+        let dindex =0;
+        for(let dd in ele){
+            transformStrategies(ele[dd],padStart(`${index}`,2,'0')+padStart(`${dindex}`,2,'0'));
+            dindex++;
+        }
     })
-}())
 
-const treeData = [{
-    title: '基础管理',
-    key: '0',
-    children: [{
-        title: '查询',
-        key: '00',
-    },{
-        title: '管理',
-        key: '01',
-    }]
-},{
-    title: '增值税管理',
-    key: '1',
-    children: [{
-        title: '查询',
-        key: '10',
-    },{
-        title: '管理',
-        key: '11',
-    }]
-},{
-    title: '纳税申报',
-    key: '2',
-    children: [{
-        title: '查询',
-        key: '20',
-    },{
-        title: '管理',
-        key: '21',
-    }]
-},{
-    title: '报表管理',
-    key: '3',
-    children: [{
-        title: '查询',
-        key: '30',
-    },{
-        title: '管理',
-        key: '31',
-    }]
-}]
+    return plainStrategies;
+}())
 
 const renderNode = (list)=>{
     return list.map(item=>{
@@ -107,11 +192,10 @@ class SimPlePermissionModal extends React.Component{
         // 如果点击管理相应的查看权限应该被设置
         let newCheckedKeys = new Set(checkedKeys);
         checkedKeys.forEach(ele=>{
-            if(/^\d1$/.test(ele)){
+            if(/^\d{4}01$/.test(ele)){
                 newCheckedKeys.add(ele.replace(/\d$/,'0'))
             }
         })
-        
         this.setState({ checkedKeys:[...newCheckedKeys] });
     }
     checkAll = ()=>{
@@ -208,10 +292,11 @@ class SimPlePermissionModal extends React.Component{
             footer={null}
             bodyStyle={{padding:0}}
             maskClosable={false}
+            style={{width:600}}
             >
             <Form>
             <Layout>
-                <Sider style={{backgroundColor:'#FFF',height:380,paddingTop:20,overflowY:'auto'}} width={360}>
+                <Sider style={{backgroundColor:'#FFF',height:420,paddingTop:20,overflowY:'auto'}} width={360}>
                     <Row>
                     {
                         getFields(this.props.form, [{
