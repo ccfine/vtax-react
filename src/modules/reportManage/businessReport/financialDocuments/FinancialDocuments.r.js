@@ -13,52 +13,52 @@ const formItemStyle={
         span:16
     }
 }
-const fields = [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:14
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择纳税主体'
-                }
-            ]
-        },
-    }, {
-        label: '记账月份',
-        fieldName: 'authMonth',
-        type: 'monthPicker',
-        span: 24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:14
-            }
-        },
-        componentProps: {},
-        fieldDecoratorOptions: {
-            rules: [
-                {
-                    required: true,
-                    message: '请选择记账月份'
-                }
-            ]
-        },
-    }
-]
+// const fields = [
+//     {
+//         label:'纳税主体',
+//         fieldName:'mainId',
+//         type:'taxMain',
+//         span:24,
+//         formItemStyle:{
+//             labelCol:{
+//                 span:6
+//             },
+//             wrapperCol:{
+//                 span:14
+//             }
+//         },
+//         fieldDecoratorOptions:{
+//             rules:[
+//                 {
+//                     required:true,
+//                     message:'请选择纳税主体'
+//                 }
+//             ]
+//         },
+//     }, {
+//         label: '记账月份',
+//         fieldName: 'authMonth',
+//         type: 'monthPicker',
+//         span: 24,
+//         formItemStyle:{
+//             labelCol:{
+//                 span:6
+//             },
+//             wrapperCol:{
+//                 span:14
+//             }
+//         },
+//         componentProps: {},
+//         fieldDecoratorOptions: {
+//             rules: [
+//                 {
+//                     required: true,
+//                     message: '请选择记账月份'
+//                 }
+//             ]
+//         },
+//     }
+// ]
 const searchFields =[
         {
             label:'纳税主体',
@@ -311,21 +311,21 @@ export default class FinancialDocuments extends Component{
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1891002'],
-                                    },{
+                                    }/*,{
                                         type:'fileImport',
                                         url:'/inter/financial/voucher/report/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields,
                                         userPermissions:['1891005'],
-                                    }])
+                                    }*/])
                                 }
-                                {
+                                {/*
                                     composeBotton([{
                                         type: 'fileExport',
                                         url: 'inter/financial/voucher/report/download',
                                         // onSuccess: this.refreshTable,
                                     }])
-                                }
+                                */}
                             </div>
                         )
                     },

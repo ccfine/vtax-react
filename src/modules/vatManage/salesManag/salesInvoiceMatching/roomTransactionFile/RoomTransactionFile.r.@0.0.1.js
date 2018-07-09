@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-04 17:45:26
+ * @Last Modified time: 2018-07-09 16:47:55
  *
  */
 import React,{Component} from 'react'
@@ -28,6 +28,7 @@ const formItemStyle = {
         }
     }
 }
+/*
 const fields = (disabled,declare)=> [
     {
         label:'纳税主体',
@@ -75,7 +76,7 @@ const fields = (disabled,declare)=> [
             ]
         }
     },
-]
+]*/
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
@@ -466,21 +467,22 @@ class RoomTransactionFile extends Component{
                         {
                             listMainResultStatus(statusParam)
                         }
-                        {
+                        {/*
                             composeBotton([{
                                 type:'fileExport',
                                 url:'output/room/files/download',
                                 onSuccess:this.refreshTable
                             }],statusParam)
+                        */
                         }
                         {
-                            (disabled && declare.decAction==='edit') && composeBotton([{
+                            (disabled && declare.decAction==='edit') && composeBotton([/*{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
                                 userPermissions:['1215012'],
                                 fields:fields(disabled,declare)
-                            },{
+                            },*/{
                                 type:'submit',
                                 url:'/output/room/files/submit',
                                 params:filters,
