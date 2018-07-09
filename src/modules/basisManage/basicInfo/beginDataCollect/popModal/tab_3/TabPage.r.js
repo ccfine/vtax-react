@@ -53,16 +53,22 @@ const getColumns = context=>{
                 onClick={() => context.showModal('look',record.id)}>
                 {text}
             </a>
-        )
+        ),
+        width:'25%',
     },{
         title: '减免税项目代码',
         dataIndex: 'num',
+        width:'12%',
     },{
         title: '金额',
         dataIndex: 'amount',
         render:text=>fMoney(text),
-        className:'table-money'
-    }
+        className:'table-money',
+        width:'10%',
+    },{
+        title: '减免税项目描述',
+        dataIndex: 'description',
+    },
 ];
 }
 
