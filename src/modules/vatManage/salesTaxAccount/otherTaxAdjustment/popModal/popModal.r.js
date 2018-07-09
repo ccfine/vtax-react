@@ -390,8 +390,17 @@ class PopModal extends Component{
                     <Row>
                     {
                         getFields(form,[{
-                            span:'12',
-                            formItemStyle:formItemLayout,
+                            span:16,
+                            formItemStyle:{
+                                labelCol: {
+                                  xs: { span: 12 },
+                                  sm: { span: 6 },
+                                },
+                                wrapperCol: {
+                                  xs: { span: 12 },
+                                  sm: { span: 18 },
+                                },
+                              },
                             label:'调整原因',
                             fieldName:'adjustReason',
                             type:'select',
