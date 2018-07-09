@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-04 17:45:40
+ * @Last Modified time: 2018-07-09 16:47:14
  */
 import React, { Component } from "react";
 import {message} from 'antd';
@@ -27,7 +27,7 @@ const searchFields = [
     }
 ];
 
-const importFeilds = [
+/*const importFeilds = [
     {
         label: "纳税主体",
         type: "taxMain",
@@ -71,8 +71,8 @@ const importFeilds = [
                 }
             ]
         }
-    }*/
-];
+    }
+];*/
 
 const getColumns = context => [
     /*{
@@ -308,20 +308,20 @@ export default class fixedAssetCard extends Component {
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1871002'],
-                                },{
+                                }/*,{
                                     type:'fileImport',
                                     url:'/fixedAssetCard/report/upload',
                                     onSuccess:this.update,
                                     userPermissions:['1875002'],
                                     fields:importFeilds
-                                }])
+                                }*/])
                             }
-                            {
+                            {/*
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: 'fixedAssetCard/report/download',
                                 }])
-                            }
+                            */}
                         </span>
                     )
                 }}

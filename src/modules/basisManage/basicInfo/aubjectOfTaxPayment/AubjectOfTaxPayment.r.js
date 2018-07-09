@@ -31,15 +31,16 @@ const getColumns = context=>[
             title:'项目信息管理',
             icon:'file-add',
             onSuccess:()=>context.showModal('project',record)
-        },{
+        }/*,{
             type:'action',
             title:'编辑',
             icon:'edit',
             onSuccess:()=>context.showModal('edit',record)
-        }]);
+        }*/]);
       },
       fixed: "left",
       width: 75,
+      className:'text-center',
       dataIndex: "action"
     },{
     title: '编码',
@@ -187,13 +188,13 @@ class AubjectOfTaxPayment extends Component {
                         title:'纳税主体',
                     },
                     extra:<div>
-                        {
+                        {/*
                             composeBotton([{
                                 type:'add',
                                 icon:'plus',
                                 onClick:()=>this.showModal('add')
                             }])
-                        }
+                        */}
                         {/* <Button size="small"
                                 disabled={!disabled}
                                 style={buttonStyle}

@@ -2,11 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-04 17:42:46
+ * @Last Modified time: 2018-07-09 16:49:15
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
-import {composeBotton,request} from 'utils';
+import {request} from 'utils';
 import {message} from 'antd';
 const searchFields = (getFieldValue)=>[
     {
@@ -47,7 +47,7 @@ const searchFields = (getFieldValue)=>[
         }
     }
 ];
-
+/*
 const importFeilds = [
     {
         label: "纳税主体",
@@ -71,7 +71,7 @@ const importFeilds = [
             ]
         }
     }
-];
+];*/
 
 const getColumns = context => [/*{
         title:'操作',
@@ -219,7 +219,7 @@ export default class AvailableArea extends Component {
             })
     }
     render() {
-        let { updateKey,filters } = this.state;
+        let { updateKey } = this.state;
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -242,7 +242,7 @@ export default class AvailableArea extends Component {
                     },
                     extra:(
                         <span>
-                            {
+                            {/*
                                 JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                     type:'fileImport',
                                     url:'/interAvailableBuildingAreaInformation/upload',
@@ -250,13 +250,13 @@ export default class AvailableArea extends Component {
                                     userPermissions:['1531005'],
                                     fields:importFeilds
                                 }])
-                            }
-                            {
+                            */}
+                            {/*
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: 'interAvailableBuildingAreaInformation/download',
                                 }])
-                            }
+                            */}
                         </span>
                     )
                 }}
