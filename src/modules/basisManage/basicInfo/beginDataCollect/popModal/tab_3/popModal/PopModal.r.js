@@ -137,7 +137,7 @@ class PopModal extends Component {
                                             disabled: readonly,
                                             labelInValue:true,
                                             onChange:(val,option,item)=>{
-                                                // console.log('change:',item)
+                                                this.props.form.setFieldsValue({description:item.description})
                                             }
                                         }
                                     },
@@ -174,6 +174,25 @@ class PopModal extends Component {
                                             allowNegative:true,
                                         },
                                         type: 'numeric',
+                                    }]
+                                )
+                            }
+                        </Row>
+                        <Row>
+                            {
+                                getFields(form, [{
+                                        span: '24',
+                                        fieldName: 'description',
+                                        label: '减免税描述',
+                                        formItemStyle: formItemLayout,
+                                        fieldDecoratorOptions: {
+                                            initialValue: record.description,
+                                        },
+                                        componentProps: {
+                                            disabled: true,
+                                            rows:8,
+                                        },
+                                        type: 'textArea',
                                     }]
                                 )
                             }

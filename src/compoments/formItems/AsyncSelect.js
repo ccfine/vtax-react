@@ -152,7 +152,7 @@ export default class AsyncSelect extends Component{
         if(selectOptions && selectOptions.onChange){
             let item=undefined;
             if(dataSource && dataSource.length>0){
-                item = dataSource.find(ele=>ele[fieldValueName] === selectOptions.labelInValue?args[0].key:args[0])
+                item = dataSource.find(ele=>ele[fieldValueName] === (selectOptions.labelInValue?args[0].key:args[0]))
             }
             selectOptions.onChange(...args,item)
         }

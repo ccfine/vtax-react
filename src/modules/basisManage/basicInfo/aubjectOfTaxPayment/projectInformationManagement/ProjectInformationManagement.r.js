@@ -2,7 +2,7 @@
  * */
 import React,{Component} from 'react'
 import {Modal,Card} from 'antd'
-import {composeBotton} from 'utils'
+// import {composeBotton} from 'utils'
 import {AsyncTable} from 'compoments'
 const table_1_columns = [{
     title: '项目名称',
@@ -103,7 +103,7 @@ export default class ProjectInformationManagement extends Component{
                     <Card
                         extra={
                             <div>
-                                {
+                                {/*
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: 'project/download',
@@ -112,7 +112,7 @@ export default class ProjectInformationManagement extends Component{
                                     url:`project/upload/${this.props.taxSubjectId}`,
                                     userPermissions:['1581005'],
                                     onSuccess:this.refreshTable,
-                                }/*,{
+                                },{
                                     type:'delete',
                                     icon:'delete',
                                     text:'删除',
@@ -120,7 +120,7 @@ export default class ProjectInformationManagement extends Component{
                                     userPermissions:['1581008'],
                                     loading:deleteLoading,
                                     onClick:this.deleteData
-                                }*/])
+                                }])*/
                             }
                             </div>
                         }
