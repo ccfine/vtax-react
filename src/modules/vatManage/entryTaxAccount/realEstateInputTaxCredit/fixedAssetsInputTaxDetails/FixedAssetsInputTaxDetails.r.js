@@ -71,6 +71,7 @@ const columns = (context,isEdit) =>[
                 getFieldDecorator={context.props.form.getFieldDecorator}
                 fieldName={`list[${index}].intaxRate`}
                 editAble={true}
+                componentProps={{decimalPlaces:10}}
                 />
              }else{
                 return text && `${text}%`
