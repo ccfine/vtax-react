@@ -66,7 +66,14 @@ const searchFields=(context,disabled,declare)=> {
             formItemStyle,
             type:'select',
             options:context.state.sysDictIdList.concat({value:'0', text:'无'})
-        },
+        },{
+            label:'凭证摘要',
+            type:'input',
+            fieldName:'voucherAbstract',
+            span:8,
+            formItemStyle,
+
+        }
     ]
 }
 const markFieldsData = context => [
