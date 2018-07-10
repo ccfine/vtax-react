@@ -10,6 +10,7 @@ import strategies from 'config/routingAuthority.config'
 import CreateADeclare from '../../taxDeclare/createADeclare'
 import SearchDeclare from '../../taxDeclare/searchDeclare'
 import DeclareHandle from '../../taxDeclare/declareHandle'
+import ApplyDeclare from '../../taxDeclare/applyDeclare'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/taxDeclare`
@@ -29,6 +30,14 @@ const AsyncDeclareHandle = LoadAble({
     loader: () => import('../../taxDeclare/declareHandle'),
     loading: LoadingPage,
 });*/
+
+const getApplyDeclareRoute=(middlePath)=>[{
+    path:`${PATH}/${middlePath}/applyDeclare`,
+    component:wrapPage('申报办理',ApplyDeclare),
+    name:'申报办理',
+    exact:true,
+}]
+
 const Children_Routes = [
     {
         path:`${PATH}/createADeclare`,
@@ -50,6 +59,7 @@ const Children_Routes = [
         },
         authorityInfo:taxDeclare['declareHandle'].options,
         exact:true,
+        children:getApplyDeclareRoute('declareHandle'),
     },{
         path:`${PATH}/searchDeclare`,
         component:wrapPage('查询申报',SearchDeclare),
