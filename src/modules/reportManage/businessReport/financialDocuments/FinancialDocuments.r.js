@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {message} from 'antd'
 import {fMoney,composeBotton,request} from 'utils'
 const formItemStyle={
@@ -267,7 +267,8 @@ const getColumns = context =>[
 export default class FinancialDocuments extends Component{
     state={
         updateKey:Date.now(),
-        filters:{}
+        filters:{},
+        totalSource: undefined
     }
     refreshTable = ()=>{
         this.setState({
@@ -287,7 +288,7 @@ export default class FinancialDocuments extends Component{
             })
     }
     render(){
-        const {updateKey,filters} = this.state;
+        const {updateKey,filters,totalSource} = this.state;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -303,6 +304,11 @@ export default class FinancialDocuments extends Component{
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,
+                        });
+                    },
+                    onTotalSource: totalSource => {
+                        this.setState({
+                            totalSource
                         });
                     },
                     cardProps: {
@@ -331,6 +337,15 @@ export default class FinancialDocuments extends Component{
                                         // onSuccess: this.refreshTable,
                                     }])
                                 */}
+                                <TableTotal totalSource={totalSource} type={3} data={[
+                                    {
+                                        title:'总计',
+                                        total:[
+                                            {title: '借方金额', dataIndex: 'debitAmount'},
+                                            {title: '贷方金额', dataIndex: 'creditAmount'},
+                                        ],
+                                    }
+                                ]}/>
                             </div>
                         )
                     },
