@@ -20,13 +20,15 @@ const columns = [
                 return ''
             }
 
-        }
+        },
+        width:90,
     },
     {
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
         render:text=>text? `${text}%`: text,
+        width:50,
     },
     {
         title:'本期应申报的未开票发票销售额',
@@ -39,7 +41,13 @@ const columns = [
         dataIndex:'taxAmount',
         className:'text-right',
         render:text=>fMoney(text)
-    }
+    },
+    {
+        title:'未开具发票销售额',
+        dataIndex:'totalNoInvoiceSales',
+        className:'text-right',
+        render:text=>fMoney(text)
+    },
 ];
 
 class SummarySheetModal extends Component{
@@ -93,7 +101,7 @@ class SummarySheetModal extends Component{
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={600}
+                width={700}
                 destroyOnClose={true}
                 bodyStyle={{
                     backgroundColor:'#fafafa'
@@ -105,7 +113,7 @@ class SummarySheetModal extends Component{
                 visible={props.visible}
                 title={title}>
                 <Spin spinning={loading}>
-                    <Table dataSource={dataSource} columns={columns} />
+                    <Table dataSource={dataSource} columns={columns} rowKey={(record)=>record.id}/>
                 </Spin>
             </Modal>
         )
