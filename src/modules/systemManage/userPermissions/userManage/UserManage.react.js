@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-10 15:20:26
+ * @Last Modified time: 2018-07-10 16:12:27
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -292,7 +292,7 @@ class UserManage extends Component {
                         }
                     })
                     .catch(e => {
-                        message.error(e, 4);
+                        message.error(e.message, 4);
                     });
             },
             onCancel() {
@@ -312,7 +312,7 @@ class UserManage extends Component {
             }
         })
         .catch(e => {
-            message.error(e, 4);
+            message.error(e.message, 4);
         });
     };
     handleAdmin = (id,isAdmin) => {
@@ -327,7 +327,7 @@ class UserManage extends Component {
             }
         })
         .catch(e => {
-            message.error(e, 4);
+            message.error(e.message, 4);
         });
     };
     render() {

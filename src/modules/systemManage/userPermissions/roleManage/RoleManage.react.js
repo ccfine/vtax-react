@@ -196,6 +196,7 @@ class RoleManage extends Component{
 					.then(({ data }) => {
 						if (data.code === 200) {
 							message.success('删除成功')
+                            this.refreshTable();
 						} else {
 							message.error(data.msg)
 						}
