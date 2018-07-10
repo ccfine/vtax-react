@@ -42,8 +42,10 @@ const transformDeclaration = data => {
 						let route = allPlainRoutes.find(
 							ele => ele.name === '销项发票匹配'
 						)
+						
 						return {
 							...decla,
+							component:route.component,
 							path: route && `${route.path}?tab=${tab}`
 						}
 					} else {
@@ -52,6 +54,7 @@ const transformDeclaration = data => {
 						)
 						return {
 							...decla,
+							component:route.component,
 							path: route && route.path
 						}
 					}
@@ -175,13 +178,12 @@ class Main extends Component {
 				renderItem={item => (
 					<List.Item>
 						<Card>
-							{item.path ? (
+							{item.component ? (
 								<a
 								   onClick={e => {
                                        e && e.preventDefault();
-                                       this.LockPageRefresh(item.path)
-                                   }}
-									>
+                                       this.props.addPane(item.name, item.component)
+                                   }}>
                                     {item.name}
                                     {getStatuText(item.status)}
 								</a>
