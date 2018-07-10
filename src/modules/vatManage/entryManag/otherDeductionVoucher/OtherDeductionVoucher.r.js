@@ -141,10 +141,7 @@ const columns = context =>[
             <span title="查看凭证详情" onClick={()=>{
                     context.setState({
                         voucherInfo:{
-                            voucherNum:text,
-                            voucherDate:record.voucherDate,
-                            mainId:record.mainId,
-                            stagesId:record.stagesId,
+                            voucherId:record.voucherId,
                         }
                     },()=>{
                         context.toggleViewModalVisible(true)

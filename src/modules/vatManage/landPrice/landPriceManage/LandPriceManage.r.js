@@ -138,10 +138,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
                     voucherInfo:{
-                        voucherNum:text,
-                        mainId:record.mainId,
-                        voucherDate:record.voucherDate,
-                        stagesId:record.stagesId,
+                        voucherId:record.voucherId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
