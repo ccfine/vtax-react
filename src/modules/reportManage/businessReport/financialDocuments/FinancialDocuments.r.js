@@ -101,6 +101,11 @@ const searchFields =[
             fieldName:'creditSubjectCode',
             span:8,
             formItemStyle,
+        },{
+            label:'凭证号',
+            fieldName:'voucherNum',
+            span:8,
+            formItemStyle,
         }
     ]
 const getColumns = context =>[
