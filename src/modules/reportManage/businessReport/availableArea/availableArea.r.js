@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 14:49:37
+ * @Last Modified time: 2018-07-11 19:54:13
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -307,7 +307,7 @@ class AvailableArea extends Component {
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
-                                    userPermissions:[],
+                                    userPermissions:['1531004'],
                                     onClick:this.save,
                                     loading:saveLoding
                                 }])
