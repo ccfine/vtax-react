@@ -31,20 +31,14 @@ const columns = [
         width:50,
     },
     {
-        title:'本期应申报的未开票发票销售额',
-        dataIndex:'totalAmount',
-        className:'text-right',
-        render:text=>fMoney(text)
-    },
-    {
-        title:'本期应申报的未开票发票销项税额',
-        dataIndex:'taxAmount',
-        className:'text-right',
-        render:text=>fMoney(text)
-    },
-    {
         title:'未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
+        className:'text-right',
+        render:text=>fMoney(text)
+    },
+    {
+        title:'未开具发票税额',
+        dataIndex:'taxAmount',
         className:'text-right',
         render:text=>fMoney(text)
     },
@@ -101,7 +95,7 @@ class SummarySheetModal extends Component{
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={700}
+                width={600}
                 destroyOnClose={true}
                 bodyStyle={{
                     backgroundColor:'#fafafa'
