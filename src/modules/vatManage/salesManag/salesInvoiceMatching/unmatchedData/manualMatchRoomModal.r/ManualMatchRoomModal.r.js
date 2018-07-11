@@ -52,6 +52,12 @@ const searchFields = selectedData=> (getFieldValue)=> {
             span:6
         },
         {
+            label:'路址',
+            fieldName:'htRoomName',
+            type:'input',
+            span:6
+        },
+        {
             label:'客户名称',
             fieldName:'customerName',
             type:'input',
@@ -118,6 +124,10 @@ const getColumns = context => [
     {
         title:'房间编码',
         dataIndex:'roomCode'
+    },
+    {
+        title:'路址',
+        dataIndex:'htRoomName',
     },
     {
         title:'成交总价',
