@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:21 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-22 10:24:35
+ * @Last Modified time: 2018-07-11 10:55:00
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -79,6 +79,11 @@ const getColumns = (context) => [
     {
         title: "税目",
         dataIndex: "taxItem",
+    },
+    {
+        title:'不区分计税方法',
+        dataIndex:'noTaxMethod',
+        render:text=>text?'是':'否'
     },
     {
         title: "一般税率",

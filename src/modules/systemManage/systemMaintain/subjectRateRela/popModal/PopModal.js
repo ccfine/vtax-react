@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:44 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 09:56:02
+ * @Last Modified time: 2018-07-11 10:51:11
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -177,6 +177,7 @@ class PopModal extends Component {
                 visible={this.props.visible}
                 width="500px"
                 bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
+                style={{top:'5%'}}
                 onCancel={this.hideSelfModal}
                 footer={buttons}
                 maskClosable={false}
@@ -257,6 +258,27 @@ class PopModal extends Component {
                                     span: 24,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
+                                        initialValue: record.noTaxMethod,
+                                        onChange:(e)=>{
+                                            this.setState({record:{...record,noTaxMethod:e.target.checked}})
+                                        },
+                                        valuePropName: 'checked',
+                                    },
+                                    label: "不区分计税方法",
+                                    fieldName: "noTaxMethod",
+                                    type: "checkbox",
+                                    componentProps: {
+                                        disabled: readonly,
+                                    }
+                                }
+                            ])}
+                        </Row>
+                        <Row>
+                            {getFields(form, [
+                                {
+                                    span: 24,
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
                                         initialValue: record.commonlyTaxRate,
                                         rules: [
                                             {
@@ -277,17 +299,21 @@ class PopModal extends Component {
                                         disabled: readonly,
                                         placeholder:'请输入一般税率（单位：%）'
                                     }
-                                },
+                                }
+                            ])}
+                        </Row>
+                        <Row>
+                            {!record.noTaxMethod && getFields(form, [
                                 {
                                     span: 24,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.simpleTaxRate,
                                         rules: [
-                                            /*{
+                                            {
                                                 required: true,
                                                 message: "请输入简易征收率"
-                                            },*/{
+                                            },{
                                                 pattern:/^100$|^\d{0,2}$/,
                                                 message:"请输入0~100之间的数字"
                                             }
