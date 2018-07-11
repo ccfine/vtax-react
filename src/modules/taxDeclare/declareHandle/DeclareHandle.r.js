@@ -210,13 +210,13 @@ const getColumns =(context)=>[
             }
             return text;
         }
-    },*/{
+    },{
         title: '所属期起',
         dataIndex: 'subordinatePeriodStart',
     },{
         title: '所属期止',
         dataIndex: 'subordinatePeriodEnd',
-    },{
+    },*/{
         title: '所属流程',
         dataIndex: 'isProcess',
     },{
@@ -330,7 +330,7 @@ class DeclareHandle extends Component{
                     record && <ApplyDeclarationPopModal
                         key={applyDeclarationModalKey}
                         visible={applyVisible}
-                        title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
+                        title={`申报处理【${record.mainName}】 申报期间 【${record.partTerm}】`}
                         record={record}
                         onSuccess={()=>{
                             this.refreshTable()
