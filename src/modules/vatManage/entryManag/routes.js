@@ -105,8 +105,8 @@ const EntryManag_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/otherBusinessInputTaxRollOut`,
-        component:wrapPage('其他业务进项税额转出台账',OtherBusinessInputTaxRollOut),
-        name:'其他业务进项税额转出台账',
+        component:wrapPage('其他类型进项税额转出台账',OtherBusinessInputTaxRollOut),
+        name:'其他类型进项税额转出台账',
         icon:{
             url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
             backgroundColor:'#3B4A83'
