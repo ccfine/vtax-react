@@ -63,6 +63,7 @@ class PopModal extends Component {
                             if (data.code === 200) {
                                 message.success("用户修改成功", 4);
                                 toggleModalVisible(false);
+                                this.props.refreshTable();
                             } else {
                                 message.error(data.msg, 4);
                             }

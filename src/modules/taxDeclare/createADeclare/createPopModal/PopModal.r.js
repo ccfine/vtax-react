@@ -26,13 +26,12 @@ const getColumns = context=> [
     {
         title: '纳税主体',
         dataIndex: 'name',
-        width: '500px',
-    }, {
+    }/*, {
         title: '税（费）种',
         dataIndex: 'taxType',
         width: '260px',
         render:text=>{
-            /*//1增值税、2企业所得税
+            // 1增值税、2企业所得税
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
@@ -45,10 +44,10 @@ const getColumns = context=> [
                     t='增值税';
                     break;
             }
-            return t*/
+            return t
             return '增值税'
         },
-    }
+    }*/
 ];
 
 class PopModal extends Component{
@@ -106,10 +105,8 @@ class PopModal extends Component{
                 if(this.state.selectedRows.length<1){
                     return message.error('请选择要创建申报的纳税主体！')
                 }
-                if(values.subordinatePeriod && values.subordinatePeriod.length!==0){
-                    values.subordinatePeriodStart = values.subordinatePeriod[0].format('YYYY-MM-DD')
-                    values.subordinatePeriodEnd= values.subordinatePeriod[1].format('YYYY-MM-DD')
-                    values.subordinatePeriod = undefined;
+                if(values.partTerm){
+                    values.partTerm = values.partTerm.format('YYYY-MM')
                 }
                 values.declarationDate = values.declarationDate && values.declarationDate.format('YYYY-MM-DD');  //YYYY-MM-DD HH:mm
 
@@ -296,7 +293,7 @@ class PopModal extends Component{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['taxDeclarationId'],
+                                            initialValue:shouldShowDefaultData?initData['taxDeclarationId']:(taxDeclaration && taxDeclaration.length>0 && taxDeclaration[0].value),
                                             rules: [
                                                 {
                                                     required:true,
@@ -315,7 +312,7 @@ class PopModal extends Component{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['taxModalityId'],
+                                            initialValue:shouldShowDefaultData?initData['taxModalityId']:(taxModality && taxModality.length>0 && taxModality[0].value),
                                             rules: [
                                                 {
                                                     required:true,
@@ -324,9 +321,9 @@ class PopModal extends Component{
                                             ],
                                         }
                                     },{
-                                        label:'所属期起止',
-                                        fieldName:'subordinatePeriod',
-                                        type:'rangePicker',  //月份 monthRangePicker
+                                        label:'所属期',
+                                        fieldName:'partTerm',
+                                        type:'monthPicker',  //月份 monthRangePicker
                                         span:12,
                                         formItemStyle,
                                         componentProps:{
@@ -335,11 +332,11 @@ class PopModal extends Component{
                                             //format:"YYYY-MM-DD HH:mm",
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:shouldShowDefaultData ? [moment(initData.subordinatePeriodStart, dateFormat), moment(initData.subordinatePeriodEnd, dateFormat)] : [],
+                                            initialValue:shouldShowDefaultData ? moment(initData.partTerm) : undefined,
                                             rules: [
                                                 {
                                                     required:true,
-                                                    message:'请选择所属期起止'
+                                                    message:'请选择所属期'
                                                 }
                                             ],
                                         }
@@ -354,7 +351,7 @@ class PopModal extends Component{
                                             disabled,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['isProcessId'],
+                                            initialValue:shouldShowDefaultData?initData['isProcessId']:(isProcess && isProcess.length>0 && isProcess[0].value),
                                             rules: [
                                                 {
                                                     required:true,
@@ -393,7 +390,7 @@ class PopModal extends Component{
                                             placeholder:type==='view'?' ':'请输入申报人',
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:shouldShowDefaultData?initData['declareBy']:this.props.userName,
+                                            initialValue:shouldShowDefaultData?initData['declareBy']:this.props.realName,
                                         }
                                     },{
                                         label:'申报日期',
@@ -428,6 +425,6 @@ class PopModal extends Component{
 }
 export default Form.create()(connect(state=>{
     return {
-        userName:state.user.getIn(['personal','username'])
+        realName:state.user.getIn(['personal','realname'])
     }
 })(PopModal))

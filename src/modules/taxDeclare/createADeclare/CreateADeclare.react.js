@@ -33,7 +33,7 @@ const searchFields =(context) => [
         fieldName:'partTerm',
         formItemStyle,
         span:8,
-    },{
+    }/*,{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
@@ -48,7 +48,7 @@ const searchFields =(context) => [
                 value:'2'
             }
         ],
-    }
+    }*/
 ]
 
 const getColumns =(context)=>[
@@ -141,7 +141,7 @@ const getColumns =(context)=>[
     },{
         title: '所属期',
         dataIndex: 'partTerm',
-    },{
+    }/*,{
         title: '税（费）种',
         dataIndex: 'taxType',
         render:text=>{
@@ -155,7 +155,7 @@ const getColumns =(context)=>[
             }
             return text;
         }
-    },{
+    }*/,{
         title: '所属期起',
         dataIndex: 'subordinatePeriodStart',
     },{
