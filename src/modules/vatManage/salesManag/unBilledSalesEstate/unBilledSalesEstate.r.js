@@ -104,7 +104,7 @@ const columns = [
         children:[ {
                 title:'项目',
                 dataIndex:'projectName',
-                width:'12%',
+                width:'10%',
             },
             {
                 title:'项目分期',
@@ -229,6 +229,13 @@ const columns = [
     {
         title:'未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'5%',
+    },
+    {
+        title:'税额',
+        dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
         width:'5%',
@@ -382,7 +389,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:1800,
+                        x:2000,
                         y:window.screen.availHeight-430,
                     },
                     onTotalSource: (totalSource) => {
