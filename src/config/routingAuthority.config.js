@@ -301,10 +301,10 @@ const strategies = {
         //业务报表
         businessReport:{
 
-            //房间交易档案报表  查看-'1861002'
+            //房间交易档案报表  查看-'1861002'  抽数-'1865001'
             roomTransactionFile:{
                 options:[
-                    '1861002',
+                    '1861002','1865001',
                 ],
             },
 
