@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 17:25:56
+ * @Last Modified time: 2018-07-12 17:28:05
  *
  */
 import React,{Component} from 'react'
@@ -9,7 +9,7 @@ import {message,Modal} from 'antd'
 import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-// import moment from 'moment';
+import moment from 'moment';
 const formItemStyle = {
     labelCol:{
         sm:{
