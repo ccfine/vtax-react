@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 18:49:07
+ * @Last Modified time: 2018-07-12 15:05:16
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -14,6 +14,7 @@ import ButtonConsistent from 'compoments/buttonConsistent'
 import {FileExport,FileImportModal,AutoFileUpload} from 'compoments';
 import ButtonTableAction from 'compoments/buttonTableAction'
 import ButtonSwitch from 'compoments/buttonSwitch'
+import {ButtonModalWithForm} from 'compoments'
 //1：暂存 2：提交
 // 判断当前状态是否提交
 const isDisabled = (statusParam = {})=> parseInt(statusParam.status, 0) === 2;
@@ -131,6 +132,29 @@ const getMarkOptions = (item,statusParam) =>{
     };
 }
 
+// form with modal
+const getModalFormOptions = (item,statusParam) =>{
+    return {
+        ...item,
+        buttonOptions:{
+            icon:item.icon,
+            text:item.title,
+            style:item.style || item.setButtonStyle || {marginRight:5},
+        },
+        modalOptions:{
+            title:item.title,
+        },
+        formOptions:{
+            ...item.formOptions,
+            disabled: isDisabled(statusParam),
+            url:item.url,
+            type:item.requestType || 'post',
+            fields:item.fields,
+            onSuccess:item.onSuccess,
+        }
+    };
+}
+
 // 数据匹配参数
 /*const getMatchOptions = (item,statusParam) =>{
     return {
@@ -226,6 +250,11 @@ const composeBotton = (buttons = [], params) => {
                     <ButtonMarkModal {...getMarkOptions(item, params)} />
                 );
                 break;
+            case "modal":
+                component =(
+                    <ButtonModalWithForm {...getModalFormOptions(item,params)}/>
+                )
+                break;            
             /*case 'match':
                 component = (
                     <ButtonReset {...getMatchOptions(item, params)} />

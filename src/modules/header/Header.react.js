@@ -98,12 +98,12 @@ class WimsHeader extends Component {
                     </Col>
                     <Col xs={8} sm={8} lg={6}>
                         <div className='right'>
-                        {this.props.userName ? (
+                        {this.props.realName ? (
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                             <span className='action account'>
                                 <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
                                 {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
-                                <span className='name'>{this.props.userName}</span>
+                                <span className='name'>{this.props.realName}</span>
                             </span>
                             </Dropdown>
                         ) : (
@@ -128,7 +128,7 @@ class WimsHeader extends Component {
 export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
-        userName:state.user.getIn(['personal','username']),  //'secUserBasicBO',
+        realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
         orgId: state.user.get("orgId"),
         // id: state.user.getIn(["personal",'id']),
     }
