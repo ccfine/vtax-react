@@ -101,12 +101,16 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
 const columns = [
     {
         title:'房间交易档案',
-        children:[
-            {
-                title:'分期',
-                dataIndex:'itemName',
+        children:[ {
+                title:'项目',
+                dataIndex:'projectName',
+                width:'10%',
             },
             {
+                title:'项目分期',
+                dataIndex:'itemName',
+            },
+            /*{
                 title:'楼栋',
                 dataIndex:'buildingName',
                 width:'8%',
@@ -120,11 +124,15 @@ const columns = [
                 title:'房号',
                 dataIndex:'roomNumber',
                 width:'4%',
-            },
+            },*/
             {
                 title:'房间编码',
                 dataIndex:'roomCode',
                 width:'8%',
+            },{
+                title:'路址',
+                dataIndex:'htRoomName',
+                width:'12%',
             },
             {
                 title:'税率',
@@ -221,6 +229,13 @@ const columns = [
     {
         title:'未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'5%',
+    },
+    {
+        title:'税额',
+        dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
         width:'5%',
@@ -374,7 +389,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:1800,
+                        x:2000,
                         y:window.screen.availHeight-430,
                     },
                     onTotalSource: (totalSource) => {

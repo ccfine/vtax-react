@@ -66,7 +66,14 @@ const searchFields=(context,disabled,declare)=> {
             formItemStyle,
             type:'select',
             options:context.state.sysDictIdList.concat({value:'0', text:'无'})
-        },
+        },{
+            label:'凭证摘要',
+            type:'input',
+            fieldName:'voucherAbstract',
+            span:8,
+            formItemStyle,
+
+        }
     ]
 }
 const markFieldsData = context => [
@@ -134,10 +141,7 @@ const columns = context =>[
             <span title="查看凭证详情" onClick={()=>{
                     context.setState({
                         voucherInfo:{
-                            voucherNum:text,
-                            voucherDate:record.voucherDate,
-                            mainId:record.mainId,
-                            stagesId:record.stagesId,
+                            voucherId:record.voucherId,
                         }
                     },()=>{
                         context.toggleViewModalVisible(true)
@@ -297,7 +301,7 @@ class SalesInvoiceCollection extends Component{
                     },
                     scroll:{
                      x:1800,
-                     y:window.screen.availHeight-380,
+                     y:window.screen.availHeight-390,
                      },
                 }}
             >

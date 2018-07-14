@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-09 16:47:55
+ * @Last Modified time: 2018-07-12 09:37:17
  *
  */
 import React,{Component} from 'react'
@@ -9,7 +9,7 @@ import {message} from 'antd'
 import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import moment from 'moment';
+// import moment from 'moment';
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -103,18 +103,6 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         type:'monthPicker',
         formItemStyle,
         span:6,
-        componentProps:{
-            disabled,
-        },
-        fieldDecoratorOptions:{
-            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-            rules:[
-                {
-                    required:true,
-                    message:'请选择交易月份'
-                }
-            ]
-        }
     },
     {
         label:'项目名称',
@@ -421,7 +409,9 @@ class RoomTransactionFile extends Component{
             })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/room/files/listMain',this.state.filters,result=>{
+        const { declare } = this.props;
+        if(!declare){return}
+        requestResultStatus('/output/room/files/listMain',{...this.state.filters,authMonth:this.props.declare.authMonth},result=>{
             this.setState({
                 statusParam: result,
             })
@@ -485,13 +475,13 @@ class RoomTransactionFile extends Component{
                             },*/{
                                 type:'submit',
                                 url:'/output/room/files/submit',
-                                params:filters,
+                                params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/output/room/files/revoke',
-                                params:filters,
+                                params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)

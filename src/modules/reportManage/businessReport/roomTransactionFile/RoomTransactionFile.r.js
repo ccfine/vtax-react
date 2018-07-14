@@ -4,6 +4,8 @@
 import React,{Component} from 'react'
 import {SearchTable} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
+import {connect} from 'react-redux'
+import createSocket from './socket'
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -233,6 +235,58 @@ const columns = [
         width:'5%',
     },
 ]
+const apiFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
+        },
+    },
+    {
+        label:'项目名称',
+        fieldName:'projectId',
+        type:'asyncSelect',
+        span:24,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/project/list/${getFieldValue('mainId')}`,
+        },
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择项目名称',
+            }]
+        },
+    },
+    {
+        label:'项目分期',
+        fieldName:'stagesId',
+        type:'asyncSelect',
+        span:24,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('projectId') || false,
+            url:`/project/stages/${getFieldValue('projectId') || ''}`,
+        },
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择项目分期',
+            }]
+        },
+    },
+]
 class RoomTransactionFile extends Component{
     state={
         filters:{},
@@ -267,6 +321,19 @@ class RoomTransactionFile extends Component{
                                 userPermissions:['1861002'],
                             }])
                         }
+                        {
+                            composeBotton([{
+                                type:'modal',
+                                url:'/output/room/files/report/sendApi',
+                                title:'抽数',
+                                icon:'usb',
+                                fields:apiFields,
+                                userPermissions:['1865001'],
+                                onSuccess:()=>{
+                                    createSocket(this.props.userid)
+                                }
+                            }])
+                        }
                     </div>,
                     scroll:{ x: 1800,y:window.screen.availHeight-400 },
                 }}
@@ -276,4 +343,6 @@ class RoomTransactionFile extends Component{
     }
 }
 
-export default RoomTransactionFile
+export default connect(state=>({
+    userid:state.user.getIn(['personal','id'])
+}))(RoomTransactionFile)

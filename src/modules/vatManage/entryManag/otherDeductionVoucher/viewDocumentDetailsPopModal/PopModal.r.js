@@ -5,7 +5,6 @@ import React,{Component} from 'react';
 import {Modal,Row,Col,Spin,Card,message} from 'antd';
 import {SynchronizeTable} from 'compoments'
 import {request,fMoney} from 'utils'
-import moment from 'moment'
 
 const columns = [{
     title: '摘要',
@@ -56,9 +55,9 @@ export default class ViewDocumentDetails extends Component{
     toggleLoaded = loaded => this.setState({loaded})
 
 
-    fetchReportByVoucherNum = ({voucherNum,voucherDate,mainId,stagesId}) =>{
+    fetchReportByVoucherNum = ({voucherId}) =>{
         this.toggleLoaded(false)
-        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherNum,mainId,authMonth:moment(voucherDate).format('YYYY-MM'),stagesId}})
+        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherId}})
             .then(({ data }) => {
                 if (data.code === 200) {
                     this.toggleLoaded(true)

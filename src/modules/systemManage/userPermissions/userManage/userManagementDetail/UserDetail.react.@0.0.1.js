@@ -48,8 +48,15 @@ class UserDetail extends Component {
         } = this.props;
         return (
             <Card title="用户信息" style={{ ...this.props.style }} loading={userLoading}>
-                <div style={{ padding: "30px", color: "#999" }}>
+                <div style={{ padding: "10px 15px", color: "#999" }}>
                     <Row gutter={16}>
+                        <Col span={6}>
+                            <p>
+                                姓名：<span style={{ color: "#333" }}>
+                                    {userData.realname}
+                                </span>
+                            </p>
+                        </Col>
                         <Col span={6}>
                             <p>
                                 账号：<span style={{ color: "#333" }}>
@@ -64,22 +71,22 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col>
-                        <Col span={8}>
+                        <Col span={6}>
                             <p>
                                 邮箱：<span style={{ color: "#333" }}>
                                     {userData.email}
                                 </span>
                             </p>
                         </Col>
-                        <Col span={4}>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={6}>
                             <p>
                                 微信：<span style={{ color: "#333" }}>
                                     {userData.webchat}
                                 </span>
                             </p>
                         </Col>
-                    </Row>
-                    <Row gutter={16}>
                         <Col span={6}>
                             <p>
                                 状态：<span

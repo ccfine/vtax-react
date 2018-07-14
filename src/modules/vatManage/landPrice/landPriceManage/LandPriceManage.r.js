@@ -81,17 +81,25 @@ const searchFields=(disabled,declare)=> {
 }
 const markFieldsData = [
     {
-        label:'标记类型',
+        label:'作为土地价款抵扣的凭证',
         fieldName:'deductionFlag',
         type:'select',
         notShowAll:true,
-        span:'22',
+        formItemStyle:{
+            labelCol:{
+                span:10
+            },
+            wrapperCol:{
+                span:10
+            }
+        },
+        span:22,
         options:[  //1-标记;0-不标记；不传则所有状态
             {
-                text:'标记',
+                text:'是',
                 value:'1'
             },{
-                text:'不标记',
+                text:'否',
                 value:'0'
             }
         ],
@@ -138,10 +146,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
                     voucherInfo:{
-                        voucherNum:text,
-                        mainId:record.mainId,
-                        voucherDate:record.voucherDate,
-                        stagesId:record.stagesId,
+                        voucherId:record.voucherId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -200,9 +205,9 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         ),
         width:'12%',
     },{
-        title: '可抵扣土地价款',
+        title: '作为土地价款抵扣的凭证',
         dataIndex: 'deductionFlag',
-        width:'75px',
+        width:80,
         render: text => {
             //1-标记;0-无标记；不传则所有状态
             let t = '';

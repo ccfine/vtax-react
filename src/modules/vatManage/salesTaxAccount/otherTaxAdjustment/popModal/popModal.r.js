@@ -404,9 +404,13 @@ class PopModal extends Component{
                             label:'调整原因',
                             fieldName:'adjustReason',
                             type:'select',
-                            options:[{text:'尾款调整',value:'1'},{text:'非地产业务（租金，水电费等）相关调整',value:'2'},{text:'未开票收入差异调整',value:'3'}],
+                            options:[{text:'尾款调整',value:'1'},
+                            {text:'非地产业务（租金，水电费等）相关调整',value:'2'},
+                            {text:'未开票收入差异调整',value:'3'},
+                            {text:'其他涉税调整',value:'4'},
+                            {text:'纳税检查调整',value:'5'}],
                             fieldDecoratorOptions:{
-                                initialValue:record.adjustReason,
+                                initialValue:this.props.action==="add"?'5':record.adjustReason,
                                 rules:[{
                                     required:true,
                                     message:'请选择调整原因'

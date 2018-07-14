@@ -2,12 +2,13 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-09 16:49:15
+ * @Last Modified time: 2018-07-11 19:54:13
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
-import {request} from 'utils';
-import {message} from 'antd';
+import {request,composeBotton} from 'utils';
+import {message,Form} from 'antd';
+import { NumericInputCell } from 'compoments/EditableCell'
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
@@ -161,6 +162,17 @@ const getColumns = context => [/*{
         dataIndex: "groundArea",
         width:'8%',
     },{
+        title: "修改后分期地上可售面积",
+        dataIndex: "editGroundArea",
+        render:(text,record,index)=>{
+            return <NumericInputCell
+            fieldName={`editGroundArea[${index}]`}
+            initialValue={text}
+            componentProps={{decimalPlaces:4}}
+            getFieldDecorator={context.props.form.getFieldDecorator} />
+        },
+        width:'10%',
+    },{
         title: "分期地下可售面积",
         dataIndex: "undergroundArea",
         width:'8%',
@@ -198,13 +210,46 @@ const getColumns = context => [/*{
     },
 ];
 
-export default class AvailableArea extends Component {
+class AvailableArea extends Component {
     state = {
         updateKey: Date.now(),
         filters:{},
+        dataSource:[],
+        saveLoding:false,
     }
     update = () => {
         this.setState({ updateKey: Date.now() });
+    }
+    save=(e)=>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                if(!values.editGroundArea){return}
+                const {dataSource} = this.state;
+                let params = dataSource.map((ele,index)=>{
+                    return {
+                        id:ele.id,
+                        editGroundArea:values.editGroundArea[index],
+                    }
+                })
+                this.setState({saveLoding:true})
+                request.put('/interAvailableBuildingAreaInformation/update',params)
+                    .then(({data})=>{
+                        this.setState({saveLoding:false})
+                        if(data.code===200){
+                            message.success('保存成功!');
+                            this.props.form.resetFields(this.state.dataSource.map((ele,index)=>`editGroundArea[${index}]`))
+                            this.update()
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.setState({saveLoding:false})
+                    })
+            }
+        })
     }
     deleteRecord(record){
         request.delete(`/interAvailableBuildingAreaInformation/delete/${record.id}`).then(({data}) => {
@@ -219,7 +264,7 @@ export default class AvailableArea extends Component {
             })
     }
     render() {
-        let { updateKey } = this.state;
+        let { updateKey,saveLoding } = this.state;
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -237,8 +282,8 @@ export default class AvailableArea extends Component {
                         x: 1200,
                         y:window.screen.availHeight-430,
                     },
-                    onSuccess:filters=>{
-                        this.setState({filters})
+                    onSuccess:(filters,dataSource)=>{
+                        this.setState({filters,dataSource})
                     },
                     extra:(
                         <span>
@@ -257,6 +302,16 @@ export default class AvailableArea extends Component {
                                     url: 'interAvailableBuildingAreaInformation/download',
                                 }])
                             */}
+                            {
+                                composeBotton([{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    userPermissions:['1531004'],
+                                    onClick:this.save,
+                                    loading:saveLoding
+                                }])
+                            }
                         </span>
                     )
                 }}
@@ -264,3 +319,5 @@ export default class AvailableArea extends Component {
         );
     }
 }
+
+export default Form.create()(AvailableArea);

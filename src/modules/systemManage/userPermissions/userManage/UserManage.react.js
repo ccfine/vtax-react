@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-04 20:10:03
+ * @Last Modified time: 2018-07-10 16:12:27
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -113,6 +113,23 @@ const getColumns = context => [
                             title: '解锁',
                             onSuccess: () => {
                                 context.handleUnlock(record.id)
+                            }
+                        }])
+                    }
+                    {
+                        notAdmin ? composeBotton([{
+                            type: 'action',
+                            icon: 'user-add',
+                            title: '添加为管理员',
+                            onSuccess: () => {
+                                context.handleAdmin(record.id,false)
+                            }
+                        }]): composeBotton([{
+                            type: 'action',
+                            icon: 'user-delete',
+                            title: '从管理员中移除',
+                            onSuccess: () => {
+                                context.handleAdmin(record.id,true)
                             }
                         }])
                     }
@@ -275,7 +292,7 @@ class UserManage extends Component {
                         }
                     })
                     .catch(e => {
-                        message.error(e, 4);
+                        message.error(e.message, 4);
                     });
             },
             onCancel() {
@@ -295,7 +312,22 @@ class UserManage extends Component {
             }
         })
         .catch(e => {
-            message.error(e, 4);
+            message.error(e.message, 4);
+        });
+    };
+    handleAdmin = (id,isAdmin) => {
+        request
+        .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
+        .then(({ data }) => {
+            if (data.code === 200) {
+                message.success(isAdmin?"移除成功!":'添加成功!');
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        })
+        .catch(e => {
+            message.error(e.message, 4);
         });
     };
     render() {

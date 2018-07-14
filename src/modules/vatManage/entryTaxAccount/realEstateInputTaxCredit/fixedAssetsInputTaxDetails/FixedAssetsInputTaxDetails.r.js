@@ -71,6 +71,7 @@ const columns = (context,isEdit) =>[
                 getFieldDecorator={context.props.form.getFieldDecorator}
                 fieldName={`list[${index}].intaxRate`}
                 editAble={true}
+                componentProps={{decimalPlaces:10}}
                 />
              }else{
                 return text && `${text}%`
@@ -207,17 +208,33 @@ class FixedAssetsInputTaxDetails extends Component{
                                 }],statusParam)
                             }
                             {
-                                (disabled && declare.decAction==='edit') && composeBotton([
-                                    {
-                                        type: 'reset',
-                                        url:'/account/income/estate/reset',
-                                        params:filters,
-                                        userPermissions:['1251009'],
-                                        onSuccess:()=>{
-                                            this.props.refreshTabs()
-                                        },
-                                    }
-                                ],statusParam)
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/income/estate/submit',
+                                    params:filters,
+                                    userPermissions:['1251010'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                },{
+                                    type: 'reset',
+                                    url:'/account/income/estate/reset',
+                                    params:filters,
+                                    userPermissions:['1251009'],
+                                    onSuccess:()=>{
+                                        this.props.refreshTabs()
+                                    },
+                                },{
+                                    type:'revoke',
+                                    url:'/account/income/estate/revoke',
+                                    params:filters,
+                                    userPermissions:['1251011'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                }],statusParam)
                             }
                         </div>
                     ),

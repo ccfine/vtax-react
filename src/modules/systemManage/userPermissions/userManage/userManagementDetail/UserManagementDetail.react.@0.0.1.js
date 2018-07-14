@@ -2,9 +2,11 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React, { Component } from "react";
-import { message } from "antd";
+import { message,Icon } from "antd";
 import { request } from "utils";
 import UserDetail from "./UserDetail.react.@0.0.1";
+import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router'
 
 class UserManagementDetail extends Component {
     state = {
@@ -102,6 +104,7 @@ class UserManagementDetail extends Component {
             });
     }
     render() {
+        const {  location } = this.props
         const {
                 userInfo,
                 checkedPermission,
@@ -113,9 +116,9 @@ class UserManagementDetail extends Component {
 
         return (
             <div>
-                <h2 style={{ margin: "10px 0 5px 16px" }}>
-                    {userInfo["realname"]}
-                </h2>
+                <div style={{ margin: "0px 0 6px 6px" }}>
+                    <Link style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}} to={(location && location.pathname)?location.pathname.substring(0,location.pathname.lastIndexOf('/')):''}><Icon type="left" /><span>返回</span></Link> 
+                </div>
                 {
                     <UserDetail
                         orgId={orgId}
@@ -131,4 +134,4 @@ class UserManagementDetail extends Component {
     }
 }
 
-export default UserManagementDetail;
+export default withRouter(UserManagementDetail);

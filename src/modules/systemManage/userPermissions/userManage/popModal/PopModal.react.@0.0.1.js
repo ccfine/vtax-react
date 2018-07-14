@@ -63,6 +63,7 @@ class PopModal extends Component {
                             if (data.code === 200) {
                                 message.success("用户修改成功", 4);
                                 toggleModalVisible(false);
+                                this.props.refreshTable();
                             } else {
                                 message.error(data.msg, 4);
                             }
@@ -162,10 +163,10 @@ class PopModal extends Component {
                                         initialValue:
                                             defaultFields.phoneNumber || "",
                                         rules: [
-                                            {
-                                                required: true,
-                                                message: "请输入手机号码"
-                                            },
+                                            // {
+                                            //     required: true,
+                                            //     message: "请输入手机号码"
+                                            // },
                                             {
                                                 pattern: /^1(\d){10}$/,
                                                 message: "请输入正确的手机号码"
@@ -188,10 +189,10 @@ class PopModal extends Component {
                                                 type: "email",
                                                 message: "请输入正确的邮箱"
                                             },
-                                            {
-                                                required: true,
-                                                message: "请输入邮箱"
-                                            }
+                                            // {
+                                            //     required: true,
+                                            //     message: "请输入邮箱"
+                                            // }
                                         ]
                                     }
                                 },{

@@ -55,7 +55,7 @@ const searchFields = [
         fieldName:'partTerm',
         formItemStyle,
         span:8,
-    },{
+    },/*{
         label:'税（费）种',
         type:'select',
         fieldName:'taxType',
@@ -70,7 +70,7 @@ const searchFields = [
                 value:'2'
             }
         ],
-    }
+    }*/
 ]
 const getColumns =(context)=>[
     {
@@ -139,7 +139,7 @@ const getColumns =(context)=>[
     },{
         title: '所属期',
         dataIndex: 'partTerm',
-    },{
+    }/*,{
         title: '税（费）种',
         dataIndex: 'taxType',
         render:text=>{
@@ -159,7 +159,7 @@ const getColumns =(context)=>[
     },{
         title: '所属期止',
         dataIndex: 'subordinatePeriodEnd',
-    },{
+    }*/,{
         title: '所属流程',
         dataIndex: 'isProcess',
     },{
@@ -212,7 +212,7 @@ export default class SearchDeclare extends Component{
                     record && <ApplyDeclarationPopModal
                         key={applyDeclarationModalKey}
                         visible={applyVisible}
-                        title={`申报处理【${record.mainName}】 申报期间 【${record.subordinatePeriodStart} 至 ${ record.subordinatePeriodEnd}】`}
+                        title={`申报处理【${record.mainName}】 申报期间 【${record.partTerm}】`}
                         record={{...record,decAction:'look'}}
                         toggleApplyVisible={this.toggleApplyVisible}
                         style={{marginRight:5}}

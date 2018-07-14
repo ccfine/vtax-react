@@ -74,7 +74,7 @@ const columns=[
         width:'10%',
     },
     {
-        title:'纳税主体代码',
+        title:'项目分期代码',
         dataIndex:'stageNum',
         width:'6%',
     },
