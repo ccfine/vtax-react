@@ -208,6 +208,15 @@ class FixedAssetsInputTaxDetails extends Component{
                                 }],statusParam)
                             }
                             {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/income/estate/fixed/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1251007'],
+                                }],statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
                                     url:'/account/income/estate/submit',

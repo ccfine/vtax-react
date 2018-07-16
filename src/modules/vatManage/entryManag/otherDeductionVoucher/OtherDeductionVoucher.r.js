@@ -273,6 +273,15 @@ class SalesInvoiceCollection extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'income/financeDetails/controller/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1521007'],
+                                }],statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
                                     formOptions:{

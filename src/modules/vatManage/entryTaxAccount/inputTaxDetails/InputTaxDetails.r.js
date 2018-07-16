@@ -242,6 +242,15 @@ class InputTaxDetails extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
+                            JSON.stringify(filters) !=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'account/income/taxDetail/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1381007'],
+                            }],statusParam)
+                        }
+                        {
                             (disabled && declare.decAction==='edit') && !isAdd &&  composeBotton([{
                                 type:'add',
                                 icon:'plus',

@@ -330,6 +330,15 @@ class LandPriceManage extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'land/price/manage/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1541007'],
+                                }],statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
                                     userPermissions:['1545000'],
