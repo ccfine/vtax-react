@@ -76,7 +76,8 @@ const getColumns = (context,hasOperate) => {
     let operates = hasOperate?[{
         title:'操作',
         render:(text, record)=>(
-            record.voucherType === '前期认证相符且本期申报抵扣' &&  composeBotton([{
+            (record.voucherType === '前期认证相符且本期申报抵扣' || record.voucherType === '前期入账本期申报抵扣')
+            &&  composeBotton([{
                 type:'action',
                 title:'编辑',
                 icon:'edit',
@@ -105,7 +106,7 @@ const getColumns = (context,hasOperate) => {
         title: '凭据份数',
         dataIndex: 'num',
         render:(text,record)=>{
-            if(record.voucherType === '前期认证相符且本期申报抵扣'){
+            if(record.voucherType === '前期认证相符且本期申报抵扣' || record.voucherType === '前期入账本期申报抵扣'){
                 return text
             }
             if(parseInt(text,0) > 0 ){
@@ -168,7 +169,6 @@ class InputTaxDetails extends Component{
         visible:false,
         voucherVisible:false,
         addVisible:false,
-        isAdd:false,
         params:{},
     }
     refreshTable = ()=>{
@@ -202,7 +202,7 @@ class InputTaxDetails extends Component{
         return data.filter(d=>d.voucherType === '前期认证相符且本期申报抵扣')
     }
     render(){
-        const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam={},filters,totalSource,record,action,isAdd} = this.state;
+        const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam={},filters,totalSource,record,action} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             notSubmit = parseInt(statusParam.status,10)===1;
@@ -218,10 +218,9 @@ class InputTaxDetails extends Component{
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
-                    onSuccess:(params,data)=>{
+                    onSuccess:(params)=>{
                         this.setState({
                             filters:params,
-                            isAdd:this.formatData(data).length>0
                         },()=>{
                             this.fetchResultStatus()
                         })
@@ -242,7 +241,7 @@ class InputTaxDetails extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            (disabled && declare.decAction==='edit') && !isAdd &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
                                 type:'add',
                                 icon:'plus',
                                 userPermissions:['1381003'],
@@ -253,10 +252,7 @@ class InputTaxDetails extends Component{
                                         record:filters,
                                     })
                                 }
-                            }],statusParam)
-                        }
-                        {
-                            (disabled && declare.decAction==='edit') &&  composeBotton([{
+                            },{
                                 type:'submit',
                                 url:'/account/income/taxDetail/submit',
                                 params:filters,
