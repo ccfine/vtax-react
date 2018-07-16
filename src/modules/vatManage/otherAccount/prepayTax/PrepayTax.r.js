@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 21:08:11
+ * @Last Modified time: 2018-07-16 15:56:18
  *
  */
 import React,{Component} from 'react'
@@ -173,6 +173,14 @@ class PrepayTax extends Component{
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)
+                        }{
+                            JSON.stringify(filters) !=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'account/prepaytax/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1331007'],
+                            }],statusParam)
                         }
                         {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{

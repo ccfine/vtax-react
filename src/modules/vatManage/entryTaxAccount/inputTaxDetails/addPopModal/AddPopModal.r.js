@@ -118,11 +118,13 @@ class AddPopModal extends Component{
         const {record,loaded} = this.state;
         let title='';
         const action = props.action;
+        let disabled = false;
         switch (action){
             case 'add':
                 title = '新增';
                 break;
             case 'edit':
+                disabled = true;
                 title = '编辑';
                 break;
             default :
@@ -156,6 +158,33 @@ class AddPopModal extends Component{
                             {
                                 getFields(props.form,[
                                     {
+                                        label:'抵扣凭据类型',
+                                        fieldName:'type',
+                                        type:'select',
+                                        span:22,
+                                        formItemStyle,
+                                        options:[  //抵扣凭据类型：1:前期认证相符且本期申报抵扣 , 2: 前期入账本期申报抵扣
+                                            {
+                                                text:'前期认证相符且本期申报抵扣',
+                                                value:'1'
+                                            },{
+                                                text:'前期入账本期申报抵扣',
+                                                value:'2'
+                                            }
+                                        ],
+                                        componentProps:{
+                                            disabled
+                                        },
+                                        fieldDecoratorOptions:{
+                                            initialValue:record.type,
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入抵扣凭据类型'
+                                                }
+                                            ]
+                                        }
+                                    },{
                                         label:'凭据份数',
                                         fieldName:'num',
                                         type:'numeric',

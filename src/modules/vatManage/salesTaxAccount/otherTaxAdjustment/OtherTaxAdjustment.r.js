@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 20:43:54
+ * @Last Modified time: 2018-07-11 18:08:04
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -191,6 +191,10 @@ const getColumns = (context,hasOperate) => {
           return "非地产业务（租金，水电费等）相关调整";
         case "3":
           return "未开票收入差异调整";
+        case "4":
+          return "其他涉税调整";
+        case "5":
+          return "纳税检查调整";
         default:
           return text;
       }

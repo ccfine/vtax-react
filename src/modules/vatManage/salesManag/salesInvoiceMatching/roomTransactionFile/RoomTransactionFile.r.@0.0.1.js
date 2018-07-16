@@ -1,11 +1,11 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-09 16:47:55
+ * @Last Modified time: 2018-07-12 17:28:05
  *
  */
 import React,{Component} from 'react'
-import {message} from 'antd'
+import {message,Modal} from 'antd'
 import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
@@ -28,7 +28,7 @@ const formItemStyle = {
         }
     }
 }
-/*
+
 const fields = (disabled,declare)=> [
     {
         label:'纳税主体',
@@ -76,7 +76,7 @@ const fields = (disabled,declare)=> [
             ]
         }
     },
-]*/
+]
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
@@ -103,18 +103,6 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         type:'monthPicker',
         formItemStyle,
         span:6,
-        componentProps:{
-            disabled,
-        },
-        fieldDecoratorOptions:{
-            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-            rules:[
-                {
-                    required:true,
-                    message:'请选择交易月份'
-                }
-            ]
-        }
     },
     {
         label:'项目名称',
@@ -178,7 +166,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
 ];
 
 const getColumns = (context,disabled) => {
-    /*let operates = (disabled && parseInt(context.state.statusParam.status,0) === 1)?[{
+    let operates = (disabled && parseInt(context.state.statusParam.status,0) === 1)?[{
         title: '操作',
         key: 'actions',
         className:'text-center',
@@ -209,8 +197,8 @@ const getColumns = (context,disabled) => {
                         });
                     }}])
         }
-    }]:[];*/
-    return [{
+    }]:[];
+    return [...operates,{
         title: (
             <div className="apply-form-list-th">
                 <p className="apply-form-list-p1">纳税主体名称</p>
@@ -421,7 +409,9 @@ class RoomTransactionFile extends Component{
             })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/room/files/listMain',this.state.filters,result=>{
+        const { declare } = this.props;
+        if(!declare){return}
+        requestResultStatus('/output/room/files/listMain',{...this.state.filters,authMonth:this.props.declare.authMonth},result=>{
             this.setState({
                 statusParam: result,
             })
@@ -467,31 +457,30 @@ class RoomTransactionFile extends Component{
                         {
                             listMainResultStatus(statusParam)
                         }
-                        {/*
+                        {
                             composeBotton([{
                                 type:'fileExport',
                                 url:'output/room/files/download',
                                 onSuccess:this.refreshTable
                             }],statusParam)
-                        */
                         }
                         {
-                            (disabled && declare.decAction==='edit') && composeBotton([/*{
+                            (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
-                                userPermissions:['1215012'],
+                                // userPermissions:['1215012'],
                                 fields:fields(disabled,declare)
-                            },*/{
+                            },{
                                 type:'submit',
                                 url:'/output/room/files/submit',
-                                params:filters,
+                                params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215010'],
                                 onSuccess:this.refreshTable
                             },{
                                 type:'revoke',
                                 url:'/output/room/files/revoke',
-                                params:filters,
+                                params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215011'],
                                 onSuccess:this.refreshTable,
                             }],statusParam)

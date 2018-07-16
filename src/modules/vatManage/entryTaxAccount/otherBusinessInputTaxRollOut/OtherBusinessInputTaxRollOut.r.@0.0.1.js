@@ -2,17 +2,19 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 17:34:55
+ * @Last Modified time: 2018-07-11 16:47:47
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
-import { message,Form } from "antd";
+import { message, Modal } from "antd";
 import {SearchTable,TableTotal} from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
-import { NumericInputCell } from 'compoments/EditableCell'
-
+const pointerStyle = {
+    cursor: "pointer",
+    color: "#1890ff"
+};
 const getFields = (disabled,declare) => [
     {
         label: "纳税主体",
@@ -56,33 +58,120 @@ const getFields = (disabled,declare) => [
     }
 ];
 
-const getColumns = (context,isEdit) => {
+const getColumns = (context,hasOperate) => {
+    let operates = hasOperate?[
+        {
+            title: "操作",
+            className:'text-center',
+            render(text, record, index) {
+                return composeBotton([{
+                    type:'action',
+                    title:'编辑',
+                    icon:'edit',
+                    userPermissions:['1401004'],
+                    onSuccess:() => {
+                        context.setState({
+                            visible: true,
+                            action: "modify",
+                            opid: record.id
+                        })
+                    }
+                },{
+                    type:'action',
+                    title:'删除',
+                    icon:'delete',
+                    userPermissions:['1401008'],
+                    style:{color: "#f5222d"},
+                    onSuccess:() => {
+                        const modalRef = Modal.confirm({
+                            title: "友情提醒",
+                            content: "该删除后将不可恢复，是否删除？",
+                            okText: "确定",
+                            okType: "danger",
+                            cancelText: "取消",
+                            onOk: () => {
+                                context.deleteRecord(record.id, () => {
+                                    modalRef && modalRef.destroy();
+                                    context.refreshTable();
+                                });
+                            },
+                            onCancel() {
+                                modalRef.destroy();
+                            }
+                        });
+                    }
+                }])
+            },
+            fixed: "left",
+            width: "75px",
+            dataIndex: "action"
+        }]:[]
     return [
+    ...operates
+    ,
     {
         title: "纳税主体",
         dataIndex: "mainName",
-        width:'40%',
+        render: (text, record) => (
+            <span
+                title="查看详情"
+                style={{
+                    ...pointerStyle,
+                    marginLeft: 5
+                }}
+                onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: "look",
+                        opid: record.id
+                    });
+                }}
+            >
+                {text}
+            </span>
+        ),
+    },
+    {
+        title: "应税项目",
+        dataIndex: "taxableItemName",
+        width:'16%',
+    },
+    {
+        title: "计税方法",
+        dataIndex: "taxMethod",
+        render(text, record, index) {
+            switch (text) {
+                case "1":
+                    return "一般计税方法";
+                case "2":
+                    return "简易计税方法";
+                default:
+                    return text;
+            }
+        },
+        width:80,
     },
     {
         title: "转出项目",
         dataIndex: "outProjectName",
-        width:'40%',
+        width:'16%',
+    },
+    {
+        title: "凭证号",
+        dataIndex: "voucherNum",
+        width:'15%',
+    },
+    {
+        title: "期间",
+        dataIndex: "taxDate",
+        width:75,
     },
     {
         title: "转出税额",
         dataIndex: "outTaxAmount",
-        render: (text,record,index) => {
-            if(isEdit){
-                return <NumericInputCell
-                fieldName={`outTaxAmount[${index}]`}
-                initialValue={text}
-                getFieldDecorator={context.props.form.getFieldDecorator} />
-            }else{
-                return fMoney(text);
-            }
-        },
+        render: text => fMoney(text),
         className: "table-money",
-        width:'20%',
+        width:'10%',
     }
 ];
 }
@@ -95,12 +184,25 @@ class OtherBusinessInputTaxRollOut extends Component {
         updateKey: Date.now(),
         statusParam: undefined,
         filters: {},
-        saveLoding:false,
-        dataSource:[],
     };
     hideModal() {
         this.setState({ visible: false });
     }
+    deleteRecord = (id, cb) => {
+        request
+            .delete(`/account/income/taxout/delete/${id}`)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    message.success("删除成功", 4);
+                    cb && cb();
+                } else {
+                    message.error(data.msg, 4);
+                }
+            })
+            .catch(err => {
+                message.error(err.message);
+            });
+    };
     updateStatus = (values) => {
         requestResultStatus('/account/income/taxout/listMain',values,result=>{
             this.setState({
@@ -111,46 +213,13 @@ class OtherBusinessInputTaxRollOut extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-    save=(e)=>{
-        e && e.preventDefault()
-        this.props.form.validateFields((err, values) => {
-            if(!err){
-                if(!values.outTaxAmount){return}
-                const {dataSource} = this.state;
-                let params = dataSource.map((ele,index)=>{
-                    return {
-                        id:ele.id,
-                        outTaxAmount:values.outTaxAmount[index],
-                        taxDate:ele.taxDate,
-                        mainId:ele.mainId,
-                    }
-                })
-                this.setState({saveLoding:true})
-                request.put('/account/income/taxout/update',params)
-                    .then(({data})=>{
-                        this.setState({saveLoding:false})
-                        if(data.code===200){
-                            message.success('保存成功!');
-                            this.props.form.resetFields(this.state.dataSource.map((ele,index)=>`outTaxAmount[${index}]`))
-                            this.refreshTable()
-                        }else{
-                            message.error(`保存失败:${data.msg}`)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                        this.setState({saveLoding:false})
-                    })
-            }
-        })
-    }
     render() {
-        const { totalSource,saveLoding } = this.state;
+        const { totalSource } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         
         let { filters, statusParam } = this.state;
-        const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
+        const disabled1 = statusParam && parseInt(statusParam.status, 0) === 2;
         return (
             <div>
                 <SearchTable
@@ -158,13 +227,12 @@ class OtherBusinessInputTaxRollOut extends Component {
                     tableOption={{
                         key: this.state.updateKey,
                         url: "/account/income/taxout/list",
-                        pagination: false,
-                        columns: getColumns(this,noSubmit && disabled && declare.decAction==='edit' ),
+                        // pagination: true,
+                        columns: getColumns(this,!disabled1 && disabled && declare.decAction==='edit'),
                         rowKey: "id",
-                        onSuccess:(params,dataSource)=>{
+                        onSuccess:params=>{
                           this.setState({
-                              filters:params,
-                              dataSource,
+                              filters:params
                           });  
                           this.updateStatus(params);
                         },
@@ -183,17 +251,18 @@ class OtherBusinessInputTaxRollOut extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
-                                         (disabled && declare.decAction==='edit' && noSubmit) && composeBotton([{
-                                            type:'save',
-                                            text:'保存',
-                                            icon:'save',
-                                            userPermissions:['1401004'],
-                                            onClick:this.save,
-                                            loading:saveLoding
-                                        }],statusParam)
-                                    }
-                                    {
                                          (disabled && declare.decAction==='edit') && composeBotton([{
+                                            type:'add',
+                                            icon:'plus',
+                                            userPermissions:['1401003'],
+                                            onClick: () => {
+                                            this.setState({
+                                                visible: true,
+                                                action: "add",
+                                                opid: undefined
+                                            });
+                                            }
+                                        },{
                                             type:'submit',
                                             url:'/account/income/taxout/submit',
                                             // monthFieldName:"authMonth",
@@ -249,4 +318,4 @@ class OtherBusinessInputTaxRollOut extends Component {
 
 export default connect(state=>({
     declare:state.user.get('declare')
-  }))(Form.create()(OtherBusinessInputTaxRollOut));
+  }))(OtherBusinessInputTaxRollOut);

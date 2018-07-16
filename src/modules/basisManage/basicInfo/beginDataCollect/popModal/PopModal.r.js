@@ -16,23 +16,23 @@ const tabList = [{
     key: 'tab1',
     tab: '主表项目期初数据/其他项目期初数据'
 }, {
+    key: 'tab6',
+    tab: '房间交易档案期初已开票金额',
+}, {
     key: 'tab2',
     tab: '税额抵减项目期初数据',
-}, {
-    key: 'tab3',
-    tab: '减税项目期初数据',
-}, {
-    key: 'tab4',
-    tab: '其他应税项目扣除（不含土地价款扣除）期初数据',
 }, {
     key: 'tab5',
     tab: '土地价款期初数据',
 }, {
-    key: 'tab6',
-    tab: '房间交易档案期初已开票金额',
-}, {
     key: 'tab7',
     tab: '自建转自用固定资产期初数据',
+}, {
+    key: 'tab4',
+    tab: '其他应税项目扣除（不含土地价款扣除）期初数据',
+}, {
+    key: 'tab3',
+    tab: '减税项目期初数据',
 }];
 
 const getContent = (key,mainId,disabled,updateKey) => {

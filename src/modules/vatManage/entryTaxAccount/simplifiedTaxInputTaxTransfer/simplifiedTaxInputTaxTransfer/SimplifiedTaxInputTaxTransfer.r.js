@@ -132,6 +132,15 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/incomeSimpleOut/controller/allSimple/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1391007'],
+                                }],statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'submit',
                                     url:'/account/incomeSimpleOut/controller/submit',

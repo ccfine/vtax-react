@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 21:10:09
+ * @Last Modified time: 2018-07-10 22:46:02
  *
  */
 import React,{Component} from 'react'
@@ -71,6 +71,11 @@ const searchFields =(disabled,declare)=>{
 }
 const getColumns = (getFieldDecorator,disabled) => [
     {
+        title:'栏次',
+        dataIndex:'idx',
+        width:'8%',
+        className:'text-center',
+    },{
         title:'项目名称',
         dataIndex:'projectName',
         render:text=>(
@@ -80,7 +85,7 @@ const getColumns = (getFieldDecorator,disabled) => [
 
             </span>
         ),
-        width:'50%',
+        width:'42%',
     },
     {
         title:'一般货物及劳务和应税服务',

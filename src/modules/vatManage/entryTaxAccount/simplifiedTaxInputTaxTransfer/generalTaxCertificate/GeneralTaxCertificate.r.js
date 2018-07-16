@@ -194,6 +194,15 @@ class GeneralTaxCertificate extends Component{
                         title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>一般计税列表</span>,
                         extra:<div>
                             {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/incomeSimpleOut/controller/commonly/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1391007'],
+                                }],statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'mark',
                                     formOptions:{

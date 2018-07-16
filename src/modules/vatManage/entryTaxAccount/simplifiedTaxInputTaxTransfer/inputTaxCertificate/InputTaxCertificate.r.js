@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
-import {fMoney} from 'utils'
+import {fMoney,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -74,6 +74,7 @@ class InputTaxCertificate extends Component{
         tableKey:Date.now(),
         visibleView:false,
         voucherInfo:{},
+        filters:{},
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
@@ -86,7 +87,7 @@ class InputTaxCertificate extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherInfo} = this.state;
+        const {tableKey,visibleView,voucherInfo,filters} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -108,8 +109,24 @@ class InputTaxCertificate extends Component{
                         pageSize:10,
                         columns:columns(this),
                         url:'/account/incomeSimpleOut/controller/incomeTaxList',
+                        onSuccess:(params)=>{
+                            this.setState({
+                                filters:params,
+                            })
+                        },
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>进项税额列表</span>,
+                            extra:<div>
+                                {
+                                    JSON.stringify(filters) !=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'account/incomeSimpleOut/controller/incomeTax/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1391007'],
+                                    }])
+                                }
+                            </div>
                         },
                         scroll:{
                             x:1600,

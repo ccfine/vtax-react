@@ -176,33 +176,25 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'submit',
-                                    url:'/account/income/estate/submit',
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/income/estate/build/export',
                                     params:filters,
-                                    userPermissions:['1251010'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type: 'reset',
-                                    url:'/account/income/estate/reset',
-                                    params:filters,
-                                    userPermissions:['1251009'],
-                                    onSuccess:()=>{
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type:'revoke',
-                                    url:'/account/income/estate/revoke',
-                                    params:filters,
-                                    userPermissions:['1251011'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
+                                    title:'导出',
+                                    userPermissions:['1251007'],
                                 }],statusParam)
+                            }
+                            {
+                                (disabled && declare.decAction==='edit') && composeBotton([{
+                                        type: 'reset',
+                                        url:'/account/income/estate/reset',
+                                        params:filters,
+                                        userPermissions:['1251009'],
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs()
+                                        },
+                                    }
+                                ],statusParam)
                             }
                         </div>,
                     },

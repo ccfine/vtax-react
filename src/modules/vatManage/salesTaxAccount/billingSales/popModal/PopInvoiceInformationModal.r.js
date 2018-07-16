@@ -65,7 +65,11 @@ const columns = [
         dataIndex: 'totalAmount',
         width: 100,
         render:text=>fMoney(text),
-    }
+    },{
+        title: '备注',
+        dataIndex: 'remark',
+        width: 100,
+    },
 ];
 export default class PopInvoiceInformationModal extends Component{
     state={

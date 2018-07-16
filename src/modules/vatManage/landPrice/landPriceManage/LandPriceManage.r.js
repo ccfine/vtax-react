@@ -81,17 +81,25 @@ const searchFields=(disabled,declare)=> {
 }
 const markFieldsData = [
     {
-        label:'标记类型',
+        label:'作为土地价款抵扣的凭证',
         fieldName:'deductionFlag',
         type:'select',
         notShowAll:true,
-        span:'22',
+        formItemStyle:{
+            labelCol:{
+                span:10
+            },
+            wrapperCol:{
+                span:10
+            }
+        },
+        span:22,
         options:[  //1-标记;0-不标记；不传则所有状态
             {
-                text:'标记',
+                text:'是',
                 value:'1'
             },{
-                text:'不标记',
+                text:'否',
                 value:'0'
             }
         ],
@@ -197,9 +205,9 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         ),
         width:'12%',
     },{
-        title: '可抵扣土地价款',
+        title: '作为土地价款抵扣的凭证',
         dataIndex: 'deductionFlag',
-        width:'75px',
+        width:80,
         render: text => {
             //1-标记;0-无标记；不传则所有状态
             let t = '';
@@ -320,6 +328,15 @@ class LandPriceManage extends Component{
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'land/price/manage/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1541007'],
+                                }],statusParam)
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{

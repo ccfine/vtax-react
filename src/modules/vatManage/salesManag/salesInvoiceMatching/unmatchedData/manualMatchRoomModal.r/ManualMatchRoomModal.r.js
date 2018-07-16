@@ -5,6 +5,15 @@ import React,{Component} from 'react';
 import {Button,Modal,Row,Col,message,Card,Input,Icon} from 'antd';
 import {request,fMoney} from 'utils'
 import {SearchTable} from 'compoments'
+
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
 const searchFields = selectedData=> (getFieldValue)=> {
     return [
         {
@@ -12,6 +21,7 @@ const searchFields = selectedData=> (getFieldValue)=> {
             fieldName:'projectId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -25,6 +35,7 @@ const searchFields = selectedData=> (getFieldValue)=> {
             fieldName:'stagesId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -37,31 +48,43 @@ const searchFields = selectedData=> (getFieldValue)=> {
             label:'楼栋名称',
             fieldName:'buildingName',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
         },
         {
             label:'单元',
             fieldName:'element',
             type:'element',
-            span:6
+            span:6,
+            formItemStyle,
         },
         {
             label:'房号',
             fieldName:'roomNumber',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
+        },
+        {
+            label:'路址',
+            fieldName:'htRoomName',
+            type:'input',
+            span:6,
+            formItemStyle,
         },
         {
             label:'客户名称',
             fieldName:'customerName',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
         },
         {
             label:'纳税识别号',
             fieldName:'taxIdentificationCode',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
         }
     ]
 }
@@ -118,6 +141,10 @@ const getColumns = context => [
     {
         title:'房间编码',
         dataIndex:'roomCode'
+    },
+    {
+        title:'路址',
+        dataIndex:'htRoomName',
     },
     {
         title:'成交总价',
@@ -234,10 +261,10 @@ class ManualMatchRoomModal extends Component{
             children.push(
                 <Col key={i} span={6}>
                     <Row style={{height:35,lineHeight:'35px'}}>
-                        <Col span={6} style={{textAlign:'right'}}>
-                            {item.label}:
+                        <Col span={8} style={{textAlign:'right'}}>
+                            {item.label}：
                         </Col>
-                        <Col span={18}>
+                        <Col span={16}>
                             <Input value={item.initialValue} disabled/>
                         </Col>
                     </Row>

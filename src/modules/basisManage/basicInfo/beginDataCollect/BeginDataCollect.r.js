@@ -26,6 +26,7 @@ const getColumns = context =>[
             type:'action',
             title:'编辑',
             icon:'edit',
+            userPermissions:['1121004'],
             onSuccess:()=>context.showModal('modify',record.mainId)
         }]),
         fixed:'left',
@@ -39,17 +40,17 @@ const getColumns = context =>[
         title: '统一社会信用代码或纳税人识别号',
         dataIndex: 'taxNum',
     },{
-        title: '是否已处理',
+        title: '是否已采集',
         dataIndex: 'finish',
         render:text=>{
-            //是否处理1:处理，0:未处理 ,
+            //是否处理1:已采集 0:未采集 ,
             let t = '';
             switch (parseInt(text,0)){
                 case 0:
-                    t=<span style={{ color: '#44b973' }}>未处理</span>;
+                    t=<span style={{ color: '#44b973' }}>未采集</span>;
                     break;
                 case 1:
-                    t=<span style={{ color: '#1795f6' }}>处理</span>;
+                    t=<span style={{ color: '#1795f6' }}>已采集</span>;
                     break;
                 default:
                 //no default
