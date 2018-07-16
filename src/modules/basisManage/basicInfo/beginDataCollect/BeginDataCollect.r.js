@@ -26,6 +26,7 @@ const getColumns = context =>[
             type:'action',
             title:'编辑',
             icon:'edit',
+            userPermissions:['1121004'],
             onSuccess:()=>context.showModal('modify',record.mainId)
         }]),
         fixed:'left',
