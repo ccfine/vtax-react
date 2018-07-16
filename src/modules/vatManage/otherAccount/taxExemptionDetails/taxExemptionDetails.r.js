@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 21:08:43
+ * @Last Modified time: 2018-07-16 15:58:37
  *
  */
 import React, { Component } from 'react'
@@ -356,6 +356,15 @@ class TaxExemptionDetails extends Component{
                     extra: <div>
                         {
                             listMainResultStatus(statusParam)
+                        }
+                        {
+                            JSON.stringify(filters) !=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'account/other/reduceTaxDetail/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1301007'],
+                            }],statusParam)
                         }
                         {
                             (disabled && declare.decAction==='edit') &&  composeBotton([{

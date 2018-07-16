@@ -176,8 +176,16 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                                 listMainResultStatus(statusParam)
                             }
                             {
-                                (disabled && declare.decAction==='edit') && composeBotton([
-                                    {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/income/estate/build/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1251007'],
+                                }],statusParam)
+                            }
+                            {
+                                (disabled && declare.decAction==='edit') && composeBotton([{
                                         type: 'reset',
                                         url:'/account/income/estate/reset',
                                         params:filters,
