@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {message} from 'antd'
+import {message,Modal} from 'antd'
 import {fMoney,composeBotton,request} from 'utils'
 const formItemStyle={
     labelCol:{
@@ -13,52 +13,52 @@ const formItemStyle={
         span:16
     }
 }
-// const fields = [
-//     {
-//         label:'纳税主体',
-//         fieldName:'mainId',
-//         type:'taxMain',
-//         span:24,
-//         formItemStyle:{
-//             labelCol:{
-//                 span:6
-//             },
-//             wrapperCol:{
-//                 span:14
-//             }
-//         },
-//         fieldDecoratorOptions:{
-//             rules:[
-//                 {
-//                     required:true,
-//                     message:'请选择纳税主体'
-//                 }
-//             ]
-//         },
-//     }, {
-//         label: '记账月份',
-//         fieldName: 'authMonth',
-//         type: 'monthPicker',
-//         span: 24,
-//         formItemStyle:{
-//             labelCol:{
-//                 span:6
-//             },
-//             wrapperCol:{
-//                 span:14
-//             }
-//         },
-//         componentProps: {},
-//         fieldDecoratorOptions: {
-//             rules: [
-//                 {
-//                     required: true,
-//                     message: '请选择记账月份'
-//                 }
-//             ]
-//         },
-//     }
-// ]
+const fields = [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '记账月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            rules: [
+                {
+                    required: true,
+                    message: '请选择记账月份'
+                }
+            ]
+        },
+    }
+]
 const searchFields =[
         {
             label:'纳税主体',
@@ -109,14 +109,14 @@ const searchFields =[
         }
     ]
 const getColumns = context =>[
-    /*{
+    {
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
             title:'删除',
             icon:'delete',
             style:{color:'#f5222d'},
-            userPermissions:['1891008'],
+            // userPermissions:['1891008'],
             onSuccess:()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -138,7 +138,7 @@ const getColumns = context =>[
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    },*/
+    },
     {
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">纳税主体名称</p>
@@ -322,21 +322,21 @@ export default class FinancialDocuments extends Component{
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1891002'],
-                                    }/*,{
+                                    },{
                                         type:'fileImport',
                                         url:'/inter/financial/voucher/report/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields,
-                                        userPermissions:['1891005'],
-                                    }*/])
+                                        // userPermissions:['1891005'],
+                                    }])
                                 }
-                                {/*
+                                {
                                     composeBotton([{
                                         type: 'fileExport',
                                         url: 'inter/financial/voucher/report/download',
                                         // onSuccess: this.refreshTable,
                                     }])
-                                */}
+                                }
                                 <TableTotal totalSource={totalSource} type={3} data={[
                                     {
                                         title:'总计',
