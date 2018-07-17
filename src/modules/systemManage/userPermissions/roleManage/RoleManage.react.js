@@ -4,13 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {Modal,message,Divider} from 'antd'
 import {SearchTable} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
-import {request,composeBotton} from 'utils'
-
+import {request,composeBotton,getUrlParam,parseJsonToParams} from 'utils'
 const searchFields = context => [
     {
         label: "组织",
@@ -27,7 +27,7 @@ const searchFields = context => [
             },
         },
         fieldDecoratorOptions: {
-            initialValue: context.props.orgId || undefined,
+            initialValue: getUrlParam('orgId') || context.props.orgId,
             rules: [
                 {
                     required: true,
@@ -39,7 +39,10 @@ const searchFields = context => [
         label: "角色名称",
         type: "input",
         span: 8,
-        fieldName: "roleName"
+        fieldName: "roleName",
+        fieldDecoratorOptions: {
+            initialValue: getUrlParam('roleName') || undefined,
+        }
     }
 ];
 
@@ -113,14 +116,28 @@ const columns = context => [
         title: '角色名称',
         dataIndex:'roleName',
         render:(text,record)=>(
-            <Link title="查看详情" to={{
+        <Link
+            title="查看详情"
+            to={{
+                pathname: `/web/systemManage/userPermissions/roleManage/${record.id}`,
+                search:parseJsonToParams(context.state.searchValues),
+                state:{
+                    roleName:record.roleName,
+                    isEnabled:record.isEnabled,
+                    remark:record.remark
+                }
+            }}
+        >
+            {text}
+        </Link>
+            /*<Link title="查看详情" to={{
                 pathname:`/web/systemManage/userPermissions/roleManage/${record.id}`,
                 state:{
                     roleName:record.roleName,
                     isEnabled:record.isEnabled,
                     remark:record.remark
                 }
-            }} style={{marginRight:10}}>{text}</Link>
+            }} style={{marginRight:10}}>{text}</Link>*/
         ),
         width:'16%',
     },{
@@ -143,6 +160,7 @@ class RoleManage extends Component{
         permissionVisible: false,
         permissionId:undefined,
         userId:undefined,
+        searchValues:undefined,
         modalConfig: {
             type: ''
         },
@@ -253,6 +271,11 @@ class RoleManage extends Component{
                 searchOption={{
                     fields:searchFields(this)
                 }}
+                backCondition={values => {
+                    this.setState({
+                        searchValues: values
+                    });
+                }}
                 doNotFetchDidMount={false}
                 tableOption={{
                     rowKey:'id',
@@ -300,8 +323,8 @@ class RoleManage extends Component{
         )
     }
 }
-export default connect(state=>({
+export default withRouter(connect(state=>({
     orgId: state.user.get("orgId")
-}))(RoleManage)
+}))(RoleManage))
 
 

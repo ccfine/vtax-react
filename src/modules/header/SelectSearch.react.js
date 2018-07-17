@@ -71,14 +71,14 @@ class SelectSearch extends Component {
     render() {
         const { getFieldValue } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="from-search">
+            <Form onSubmit={this.handleSubmit} className="from-search set-search-width" >
                 <Row>
                 {
                     getFields(this.props.form,[{
                         label:'区域',
                         fieldName:'areaId',
                         type:'asyncSelect',
-                        span:8,
+                        span:10,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
@@ -101,7 +101,7 @@ class SelectSearch extends Component {
                         label:'组织',
                         fieldName:'orgId',
                         type:'asyncSelect',
-                        span:16,
+                        span:14,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',

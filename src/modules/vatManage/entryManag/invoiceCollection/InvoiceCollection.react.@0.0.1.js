@@ -424,7 +424,7 @@ class InvoiceCollection extends Component {
                                         url:'income/invoice/collection/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1491002'],
+                                        userPermissions:['1491007'],
                                     }])
                                 }
                                 {

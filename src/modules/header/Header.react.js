@@ -93,30 +93,33 @@ class WimsHeader extends Component {
                             增值税纳税申报系统                            
                         </h2>
                     </Col>
-                    <Col xs={16} sm={12} lg={12}>
-                        {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
-                    </Col>
-                    <Col xs={8} sm={8} lg={6}>
+                    {/*<Col xs={20} sm={16} lg={14}>
+
+                    </Col>*/}
+                    <Col xs={20} sm={16} lg={18}>
                         <div className='right'>
-                        {this.props.realName ? (
-                            <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-                            <span className='action account'>
-                                <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
-                                {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
-                                <span className='name'>{this.props.realName}</span>
+                            <span className='action search' style={{float:'left'}}>
+                                {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
                             </span>
-                            </Dropdown>
-                        ) : (
-                            <Spin size="small" style={{ marginLeft: 8 }} />
-                        )}
-                        </div>
-                        <div className='right'>
+
                             <Tooltip placement="bottom" title='我要提问'>
                                 <a className='action'
-                                rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'>
+                                   rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'>
                                     <Icon type="question-circle-o" />
                                 </a>
                             </Tooltip>
+
+                            {this.props.realName ? (
+                                <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                                <span className='action account'>
+                                    <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                                    {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
+                                    <span className='name'>{this.props.realName}</span>
+                                </span>
+                                </Dropdown>
+                            ) : (
+                                <Spin size="small" style={{ marginLeft: 8 }} />
+                            )}
                         </div>
                     </Col>
                 </Row>
