@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 17:28:05
+ * @Last Modified time: 2018-07-17 16:55:19
  *
  */
 import React,{Component} from 'react'
@@ -9,7 +9,7 @@ import {message,Modal} from 'antd'
 import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import moment from 'moment';
+// import moment from 'moment';
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -28,7 +28,7 @@ const formItemStyle = {
         }
     }
 }
-
+/*
 const fields = (disabled,declare)=> [
     {
         label:'纳税主体',
@@ -76,7 +76,7 @@ const fields = (disabled,declare)=> [
             ]
         }
     },
-]
+]*/
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
@@ -457,21 +457,21 @@ class RoomTransactionFile extends Component{
                         {
                             listMainResultStatus(statusParam)
                         }
-                        {
+                        {/*
                             composeBotton([{
                                 type:'fileExport',
                                 url:'output/room/files/download',
                                 onSuccess:this.refreshTable
                             }],statusParam)
-                        }
+                        */}
                         {
-                            (disabled && declare.decAction==='edit') && composeBotton([{
+                            (disabled && declare.decAction==='edit') && composeBotton([/*{
                                 type:'fileImport',
                                 url:'/output/room/files/upload',
                                 onSuccess:this.refreshTable,
                                 // userPermissions:['1215012'],
                                 fields:fields(disabled,declare)
-                            },{
+                            },*/{
                                 type:'submit',
                                 url:'/output/room/files/submit',
                                 params:{...filters,authMonth:declare.authMonth},

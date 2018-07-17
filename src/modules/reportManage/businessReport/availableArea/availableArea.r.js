@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 17:25:37
+ * @Last Modified time: 2018-07-17 16:59:47
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -48,7 +48,7 @@ const searchFields = (getFieldValue)=>[
         }
     }
 ];
-
+/*
 const importFeilds = [
     {
         label: "纳税主体",
@@ -72,7 +72,7 @@ const importFeilds = [
             ]
         }
     }
-];
+];*/
 
 const getColumns = context => [{
         title:'操作',
@@ -264,7 +264,7 @@ class AvailableArea extends Component {
             })
     }
     render() {
-        let { updateKey,saveLoding,filters } = this.state;
+        let { updateKey,saveLoding } = this.state;
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -287,7 +287,7 @@ class AvailableArea extends Component {
                     },
                     extra:(
                         <span>
-                            {
+                            {/*
                                 JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                     type:'fileImport',
                                     url:'/interAvailableBuildingAreaInformation/upload',
@@ -301,7 +301,7 @@ class AvailableArea extends Component {
                                     type: 'fileExport',
                                     url: 'interAvailableBuildingAreaInformation/download',
                                 }])
-                            }
+                            */}
                             {
                                 composeBotton([{
                                     type:'save',
