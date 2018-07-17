@@ -376,6 +376,4 @@ class UnmatchedData extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(UnmatchedData)
+export default UnmatchedData

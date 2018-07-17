@@ -1,96 +1,77 @@
 import React from 'react'
 import Main from './main'
-import { Tabs } from 'antd'
+import { Tabs,message } from 'antd'
+import {request} from 'utils'
+import {withRouter} from 'react-router-dom';
 const TabPane = Tabs.TabPane
 
-
 class ApplyDeclare extends React.Component {
-	static defaultProps = {
-		record:{
-            "id" : "1014110937159667713",
-            "createdDate" : "2018-07-03 19:37:43",
-            "lastModifiedDate" : "2018-07-03 19:37:43",
-            "createdBy" : "5bfdf8840d3c4afab603d5e6fef5d5f0",
-            "lastModifiedBy" : "5bfdf8840d3c4afab603d5e6fef5d5f0",
-            "handleState" : "申报办理",
-            "lastDate" : "",
-            "region" : "江中区域",
-            "orgName" : "凤凰碧桂园房地产开发有限公司01",
-            "mainName" : "凤凰碧桂园01",
-            "partTerm" : "2018-09",
-            "taxType" : "1",
-            "excelTaxType" : "增值税",
-            "subordinatePeriodStart" : "2018-09-01",
-            "subPeriodStart" : "",
-            "subordinatePeriodEnd" : "2018-09-30",
-            "subPeriodEnd" : "",
-            "isProcess" : "一般纳税人-独立纳税",
-            "declareBy" : "",
-            "declarationDate" : "2018-07-03",
-            "decDate" : "",
-            "mainId" : "1011854657783144449",
-            "month" : "2018-09",
-            "orgId" : "e86913c631c44f2f95b2f33b160971bc",
-            "status" : 1,
-            "isProcessId" : "71",
-            "taxDeclaration" : "一般纳税人申报表（通用）",
-            "taxDeclarationId" : "23",
-            "taxModality" : "独立纳税",
-            "taxModalityId" : "69",
-            "remark" : ""
-          }
+	state ={
+		panes: [],
+		activeKey: null,
+		record:null,
+		mainUpdateKey:Date.now(),
 	}
-	constructor(props){
-		super(props)
-		this.state ={
-			panes: [
-				{ title: '申报办理', content: <Main addPane={this.add}/>, key: 'main',closable:false},
-			],
-			activeKey: 'main'
-		}
+	componentDidMount(){
+		this.fetchRecordById(this.props.match.params.id)
+	}
+	fetchRecordById=(id)=>{
+		request.get(`/tax/declaration/find/${id}`).then(({data}) => {
+			if(data.code === 200){
+				this.setState({
+					record:data.data,
+					activeKey:'main',
+				})
+			}else{
+				message.error(data.msg)
+			}
+		}).catch(err=>{
+			message.error(err.message)
+		})
 	}
 	onChange = activeKey => {
-		this.setState({ activeKey })
+		this.setState({ activeKey,mainUpdateKey:Date.now() })
 	}
-
 	onEdit = (targetKey, action) => {
 		this[action](targetKey)
 	}
-
-	add = (title,Component) => {
-		if(!Component){return}
-		const panes = this.state.panes
-		const activeKey = `newTab${this.newTabIndex++}`
+	add = (key,title,Component) => {
+		const panes = this.state.panes,
+			activeKey =key,
+			{record} = this.state;
+		if(!Component ){return}else if(panes.some(ele=>ele.key === key)){
+			this.setState({ activeKey })
+			return;
+		}
+		
 		panes.push({
 			title: title,
-		content: <Component declare={{mainId:this.props.record.mainId,authMonth:this.props.record.partTerm}}/>,
+		content: <Component declare={{mainId:record.mainId,authMonth:record.partTerm,decAction:'edit'}}/>,
 			key: activeKey
 		})
 		this.setState({ panes, activeKey })
 	}
-
 	remove = targetKey => {
 		let activeKey = this.state.activeKey
-		let lastIndex
-		this.state.panes.forEach((pane, i) => {
-			if (pane.key === targetKey) {
-				lastIndex = i - 1
-			}
-		})
 		const panes = this.state.panes.filter(pane => pane.key !== targetKey)
-		if (lastIndex >= 0 && activeKey === targetKey) {
-			activeKey = panes[lastIndex].key
+		if (activeKey === targetKey) {
+			activeKey = panes.length>0 ?panes[panes.length-1].key:'main'
 		}
 		this.setState({ panes, activeKey })
 	}
 	render() {
+		const {record,mainUpdateKey} = this.state;
 		return (
             <Tabs
+				hideAdd={true}
                 tabBarStyle={{marginBottom:0}}
 				onChange={this.onChange}
 				activeKey={this.state.activeKey}
 				type="editable-card"
 				onEdit={this.onEdit}>
+				<TabPane tab='申报处理' key='main' closable={false}>
+					<Main addPane={this.add} record={record} updateKey={mainUpdateKey}/>
+				</TabPane>
 				{this.state.panes.map(pane => (
 					<TabPane
 						tab={pane.title}
@@ -99,9 +80,10 @@ class ApplyDeclare extends React.Component {
 						{pane.content}
 					</TabPane>
 				))}
+				
 			</Tabs>
 		)
 	}
 }
 
-export default ApplyDeclare
+export default withRouter(ApplyDeclare)

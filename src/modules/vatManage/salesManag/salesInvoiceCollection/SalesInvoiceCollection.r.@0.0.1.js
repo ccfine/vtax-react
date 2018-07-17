@@ -2,7 +2,6 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
-import {connect} from 'react-redux'
 import { SearchTable, TableTotal } from "compoments";
 import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
@@ -344,7 +343,8 @@ class SalesInvoiceCollection extends Component {
                 searchOption={{
                     fields: searchFields(disabled,declare),
                     cardProps: {
-                        className: ""
+                        className: "",
+                        style:{borderTop:0},
                     }
                 }}
                 tableOption={{
@@ -429,6 +429,4 @@ class SalesInvoiceCollection extends Component {
         );
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(SalesInvoiceCollection)
+export default SalesInvoiceCollection

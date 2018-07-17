@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 10:11:05
+ * @Last Modified time: 2018-07-17 14:15:24
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -361,6 +361,4 @@ class DeductProjectSummary extends React.Component {
 }
 
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(DeductProjectSummary)
+export default DeductProjectSummary

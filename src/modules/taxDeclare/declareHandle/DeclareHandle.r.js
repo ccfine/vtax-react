@@ -7,6 +7,7 @@ import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
 import {request,composeBotton} from 'utils'
+import {withRouter} from 'react-router-dom';
 const formItemStyle={
     labelCol:{
         span:8
@@ -75,11 +76,13 @@ const getColumns =(context)=>[
                                 title:'申报办理',
                                 userPermissions:['1085004'],
                                 onSuccess:()=>{
-                                    context.setState({
+                                    console.log(context.props)
+                                    context.props.history.push(`/web/taxDeclare/declareHandle/applyDeclare/${record.id}`)
+                                    /*context.setState({
                                         record: {...record,decAction:'edit'},
                                     },() => {
                                         context.toggleApplyVisible(true,'tax/decConduct/list/handle');
-                                    });
+                                    });*/
                                 }
                             },{
                                 type:'action',
@@ -346,4 +349,4 @@ class DeclareHandle extends Component{
 }
 export default connect(state=>({
     options:state.user.getIn(['personal','options']),
-}))(DeclareHandle)
+}))(withRouter(DeclareHandle))

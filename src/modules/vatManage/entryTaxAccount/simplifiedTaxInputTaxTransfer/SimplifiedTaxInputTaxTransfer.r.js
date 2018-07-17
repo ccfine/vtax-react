@@ -101,6 +101,4 @@ class SimpleTaxInputTaxTransferredToTheAccount extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(SimpleTaxInputTaxTransferredToTheAccount);
+export default SimpleTaxInputTaxTransferredToTheAccount;

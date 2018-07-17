@@ -34,11 +34,7 @@ const transformDeclaration = data => {
 							: '生成台账',
 				options: ele.map(decla => {
 					//特殊处理下 销项发票数据匹配||房间交易档案采集
-					let tab = 1
-					if (
-						decla.name === '房间交易档案采集' ||
-						(decla.name === '销项发票数据匹配' && ++tab)
-					) {
+					if (decla.name === '房间交易档案采集' || (decla.name === '销项发票数据匹配')) {
 						let route = allPlainRoutes.find(
 							ele => ele.name === '销项发票匹配'
 						)
@@ -46,7 +42,8 @@ const transformDeclaration = data => {
 						return {
 							...decla,
 							component:route.component,
-							path: route && `${route.path}?tab=${tab}`
+							path: route && route.path,
+							paneTitle:'销项发票匹配',
 						}
 					} else {
 						let route = allPlainRoutes.find(
@@ -115,45 +112,21 @@ class Main extends Component {
 	static defaultProps = {
 		title: '申报办理',
         url:'/tax/decConduct/list/handle',
-        record:{
-            "id" : "1014110937159667713",
-            "createdDate" : "2018-07-03 19:37:43",
-            "lastModifiedDate" : "2018-07-03 19:37:43",
-            "createdBy" : "5bfdf8840d3c4afab603d5e6fef5d5f0",
-            "lastModifiedBy" : "5bfdf8840d3c4afab603d5e6fef5d5f0",
-            "handleState" : "申报办理",
-            "lastDate" : "",
-            "region" : "江中区域",
-            "orgName" : "凤凰碧桂园房地产开发有限公司01",
-            "mainName" : "凤凰碧桂园01",
-            "partTerm" : "2018-09",
-            "taxType" : "1",
-            "excelTaxType" : "增值税",
-            "subordinatePeriodStart" : "2018-09-01",
-            "subPeriodStart" : "",
-            "subordinatePeriodEnd" : "2018-09-30",
-            "subPeriodEnd" : "",
-            "isProcess" : "一般纳税人-独立纳税",
-            "declareBy" : "",
-            "declarationDate" : "2018-07-03",
-            "decDate" : "",
-            "mainId" : "1011854657783144449",
-            "month" : "2018-09",
-            "orgId" : "e86913c631c44f2f95b2f33b160971bc",
-            "status" : 1,
-            "isProcessId" : "71",
-            "taxDeclaration" : "一般纳税人申报表（通用）",
-            "taxDeclarationId" : "23",
-            "taxModality" : "独立纳税",
-            "taxModalityId" : "69",
-            "remark" : ""
-          }
+        record:{}
 	}
 	state = {
 		loading: false,
 		data: [],
 		current: 0,
         path:'',
+	}
+	refresh=()=>{
+		const { record } = this.props;
+        this.fetchDeclarationById({
+            decConduct: this.state.current,
+            mainId: record.mainId,
+            authMonth: record.partTerm
+        },this.props.url)
 	}
 	toggleLoading = loading => {
 		this.setState({
@@ -181,8 +154,8 @@ class Main extends Component {
 							{item.component ? (
 								<a
 								   onClick={e => {
-                                       e && e.preventDefault();
-                                       this.props.addPane(item.name, item.component)
+									   e && e.preventDefault();
+                                       this.props.addPane(item.path,item.paneTitle || item.name, item.component)
                                    }}>
                                     {item.name}
                                     {getStatuText(item.status)}
@@ -255,19 +228,19 @@ class Main extends Component {
 			})
     }
     componentDidMount(){
-        const { record } = this.props;
-        this.fetchDeclarationById({
-            decConduct: this.state.current,
-            mainId: record.mainId,
-            authMonth: record.partTerm
-        },this.props.url)
-    }
+        this.refresh()
+	}
+	componentWillReceiveProps(nextProps){
+		if(this.props.updateKey !== nextProps.updateKey){
+			this.refresh()
+		}
+	}
 	render() {
 		const {record} = this.props
 		const { data, loading, current } = this.state
 		return (
 			<div className="steps-main">
-				<h4 style={{padding:'10px 30px 0',textAlign:'right'}}>申报处理【{record.mainName}】 申报期间 【{record.subordinatePeriodStart}至{record.subordinatePeriodEnd}】</h4>
+				<h4 style={{padding:'10px 30px 0',textAlign:'right'}}>申报处理【{record.mainName}】 申报期间 【{record.partTerm}】</h4>
 				<Steps current={current} size="small">
 					{steps.map((item, i) => {
 						return (

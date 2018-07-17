@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 18:08:04
+ * @Last Modified time: 2018-07-17 15:44:35
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -254,7 +254,10 @@ class OtherTaxAdjustment extends Component {
         <SearchTable
           doNotFetchDidMount={!disabled}
           searchOption={{
-            fields: searchFields(disabled,declare)
+            fields: searchFields(disabled,declare),
+            cardProps:{
+              style:{borderTop:0}
+            }
           }}
           tableOption={{
             scroll: { x: 1500,y:window.screen.availHeight-380 },
@@ -310,12 +313,11 @@ class OtherTaxAdjustment extends Component {
           }}
           id={this.state.opid}
           update={this.refreshTable}
+          declare={declare}
         />
       </div>
     );
   }
 }
 
-export default connect(state=>({
-  declare:state.user.get('declare')
-}))(OtherTaxAdjustment);
+export default OtherTaxAdjustment;

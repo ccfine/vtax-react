@@ -212,7 +212,12 @@ class FinancialDocumentsCollection extends Component{
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled,declare)
+                    fields:searchFields(disabled,declare),
+                    cardProps:{
+                        style:{
+                            borderTop:0
+                        },
+                    }
                 }}
                 tableOption={{
                     key:updateKey,
@@ -258,6 +263,4 @@ class FinancialDocumentsCollection extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(FinancialDocumentsCollection)
+export default FinancialDocumentsCollection

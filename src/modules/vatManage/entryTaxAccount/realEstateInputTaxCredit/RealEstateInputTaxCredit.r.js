@@ -96,6 +96,4 @@ class RealEstateInputTaxCredit extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(RealEstateInputTaxCredit)
+export default RealEstateInputTaxCredit

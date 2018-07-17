@@ -423,10 +423,5 @@ class BillingSales extends Component {
         )
     }
 }
-const enhance = compose(
-    Form.create(),
-    connect( (state) => ({
-        declare:state.user.get('declare')
-    }))
-);
-export default enhance(BillingSales);
+
+export default Form.create()(BillingSales);

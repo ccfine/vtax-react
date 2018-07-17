@@ -212,6 +212,4 @@ class SheetWithSearchFields extends Component{
         )
     }
 }
-export default Form.create()(withRouter(connect(state=>({
-    declare:state.user.get('declare')
-}))(SheetWithSearchFields)))
+export default Form.create()(withRouter(SheetWithSearchFields))

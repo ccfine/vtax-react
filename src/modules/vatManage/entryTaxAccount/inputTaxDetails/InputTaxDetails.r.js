@@ -316,6 +316,4 @@ class InputTaxDetails extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(InputTaxDetails);
+export default InputTaxDetails;

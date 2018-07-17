@@ -386,6 +386,4 @@ class LandPriceManage extends Component{
         )
     }
 }
-export default Form.create()(connect(state=>({
-    declare:state.user.get('declare')
-}))(LandPriceManage))
+export default Form.create()(LandPriceManage)

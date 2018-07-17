@@ -133,7 +133,7 @@ const totalData =  [
         ],
     }
 ];
-class tab1 extends Component{
+class OtherTaxableItemsDeduct extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -233,6 +233,4 @@ class tab1 extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(tab1)
+export default OtherTaxableItemsDeduct

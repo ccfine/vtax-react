@@ -406,10 +406,5 @@ class UnBilledSalesNotEstate extends Component {
         )
     }
 }
-const enhance = compose(
-    Form.create(),
-    connect( (state) => ({
-        declare:state.user.get('declare')
-    }))
-);
-export default enhance(UnBilledSalesNotEstate);
+
+export default Form.create()(UnBilledSalesNotEstate);

@@ -32,7 +32,7 @@ const AsyncDeclareHandle = LoadAble({
 });*/
 
 const getApplyDeclareRoute=(middlePath)=>[{
-    path:`${PATH}/${middlePath}/applyDeclare`,
+    path:`${PATH}/${middlePath}/applyDeclare/:id`,
     component:wrapPage('申报办理',ApplyDeclare),
     name:'申报办理',
     exact:true,

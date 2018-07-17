@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-16 15:58:37
+ * @Last Modified time: 2018-07-17 14:18:15
  *
  */
 import React, { Component } from 'react'
@@ -413,6 +413,4 @@ class TaxExemptionDetails extends Component{
         )
     }
 }
-export default Form.create()(connect(state=>({
-    declare:state.user.get('declare')
-}))(TaxExemptionDetails))
+export default Form.create()(TaxExemptionDetails)

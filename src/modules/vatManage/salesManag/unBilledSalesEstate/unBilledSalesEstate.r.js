@@ -404,6 +404,4 @@ class unBilledSalesEstate extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(unBilledSalesEstate)
+export default unBilledSalesEstate

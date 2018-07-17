@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 20:38:24
+ * @Last Modified time: 2018-07-17 12:04:39
  *
  */
 import React, { Component } from 'react'
@@ -312,6 +312,4 @@ class NeedNotMatchInvoices extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(NeedNotMatchInvoices)
+export default NeedNotMatchInvoices

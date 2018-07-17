@@ -509,6 +509,4 @@ class InvoiceDataMatching extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(InvoiceDataMatching)
+export default InvoiceDataMatching

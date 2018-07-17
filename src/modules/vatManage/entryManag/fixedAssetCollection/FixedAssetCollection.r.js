@@ -191,7 +191,12 @@ const columns=[
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled,declare)
+                    fields:searchFields(disabled,declare),
+                    cardProps:{
+                        style:{
+                            borderTop:0
+                        }
+                    }
                 }}
                 tableOption={{
                     key:updateKey,
@@ -249,6 +254,4 @@ const columns=[
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(FixedAssetCollection)
+export default FixedAssetCollection

@@ -457,6 +457,4 @@ class PopModal extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(Form.create()(PopModal));
+export default Form.create()(PopModal);

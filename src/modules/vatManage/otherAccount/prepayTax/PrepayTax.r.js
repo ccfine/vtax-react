@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-16 15:56:18
+ * @Last Modified time: 2018-07-17 14:17:34
  *
  */
 import React,{Component} from 'react'
@@ -209,6 +209,4 @@ class PrepayTax extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(PrepayTax)
+export default PrepayTax

@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-10 22:46:02
+ * @Last Modified time: 2018-07-17 14:19:29
  *
  */
 import React,{Component} from 'react'
@@ -254,10 +254,5 @@ class TaxCalculation extends Component{
         )
     }
 }
-const enhance = compose(
-    Form.create(),
-    connect( (state) => ({
-        declare:state.user.get('declare')
-    }))
-);
-export default enhance(TaxCalculation);
+
+export default Form.create()(TaxCalculation);

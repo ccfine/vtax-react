@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 17:28:05
+ * @Last Modified time: 2018-07-17 12:04:51
  *
  */
 import React,{Component} from 'react'
@@ -514,6 +514,4 @@ class RoomTransactionFile extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(RoomTransactionFile)
+export default RoomTransactionFile

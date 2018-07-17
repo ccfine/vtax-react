@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 17:34:55
+ * @Last Modified time: 2018-07-17 14:11:11
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -247,6 +247,4 @@ class OtherBusinessInputTaxRollOut extends Component {
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(Form.create()(OtherBusinessInputTaxRollOut));
+export default Form.create()(OtherBusinessInputTaxRollOut);

@@ -399,7 +399,10 @@ class InvoiceCollection extends Component {
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields: getSearchFields(disabled,declare)
+                        fields: getSearchFields(disabled,declare),
+                        cardProps:{
+                            style:{borderTop:0}
+                        }
                     }}
                     tableOption={{
                         columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
@@ -479,6 +482,4 @@ class InvoiceCollection extends Component {
         );
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(InvoiceCollection);
+export default InvoiceCollection;

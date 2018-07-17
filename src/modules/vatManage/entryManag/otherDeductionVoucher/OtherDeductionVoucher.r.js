@@ -324,6 +324,4 @@ class SalesInvoiceCollection extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(SalesInvoiceCollection);
+export default SalesInvoiceCollection;
