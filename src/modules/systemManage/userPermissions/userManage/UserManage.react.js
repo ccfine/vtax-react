@@ -7,14 +7,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { withRouter } from 'react-router'
 import { Divider, Modal, message } from "antd";
-import { request,composeBotton } from "utils";
+import { request,composeBotton,getUrlParam } from "utils";
 import { SearchTable } from "compoments";
 import PopModal, { RoleModal, PermissionModal,SimplePermissionModal } from "./popModal";
 const pointerStyleDelete = {
     cursor:'pointer',
     color:'red',
     marginRight:10
+}
+const parseJsonToParams = data=>{
+    let str = '';
+    for(let key in data){
+        if(typeof data[key] !== 'undefined'){
+            str += `${key}=${data[key]}&`
+        }
+    }
+    return str;
 }
 const getSearchFields = context => [
     {
@@ -33,20 +43,26 @@ const getSearchFields = context => [
             },
         },
         fieldDecoratorOptions: {
-            initialValue: context.props.orgId || undefined,
+            initialValue:  getUrlParam('orgId')==='' ? '' : getUrlParam('orgId') || context.props.orgId
         }
     },
     {
         label: "用户名",
         type: "input",
         span: 8,
-        fieldName: "username"
+        fieldName: "username",
+        fieldDecoratorOptions: {
+            initialValue: getUrlParam('username') || undefined,
+        }
     },
     {
         label: "姓名",
         type: "input",
         span: 8,
-        fieldName: "realname"
+        fieldName: "realname",
+        fieldDecoratorOptions: {
+            initialValue: getUrlParam('realname') || undefined,
+        }
     }
 ];
 const getColumns = context => [
@@ -156,9 +172,8 @@ const getColumns = context => [
                 <Link
                     title="查看详情"
                     to={{
-                        pathname: `/web/systemManage/userPermissions/userManage/${
-                            context.props.orgId
-                            }~${record.id}`
+                        pathname: `/web/systemManage/userPermissions/userManage/${record.id}`,
+                        search:parseJsonToParams(context.state.searchValues),
                     }}
                 >
                     {text}
@@ -444,6 +459,6 @@ class UserManage extends Component {
     }
 }
 
-export default connect(state => ({
+export default withRouter(connect(state => ({
     orgId: state.user.get("orgId")
-}))(UserManage);
+}))(UserManage));

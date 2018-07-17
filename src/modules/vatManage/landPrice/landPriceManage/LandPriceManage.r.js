@@ -90,7 +90,7 @@ const markFieldsData = [
                 span:10
             },
             wrapperCol:{
-                span:10
+                span:14
             }
         },
         span:22,

@@ -13,11 +13,11 @@ import {saveOrgId,saveToken,savePersonal,saveAreaId} from '../../redux/ducks/use
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
-        sm: { span: 4 },
+        sm: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 12 },
-        sm: { span: 20 },
+        sm: { span: 18 },
     },
 };
 class SelectSearch extends Component {
@@ -71,7 +71,7 @@ class SelectSearch extends Component {
     render() {
         const { getFieldValue } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="from-search">
+            <Form onSubmit={this.handleSubmit} className="from-search set-search-width" >
                 <Row>
                 {
                     getFields(this.props.form,[{

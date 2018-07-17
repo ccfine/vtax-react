@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 15:53:58
+ * @Last Modified time: 2018-07-17 18:18:41
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -187,7 +187,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                             type:'save',
                                             text:'保存',
                                             icon:'save',
-                                            userPermissions:['1401004'],
+                                            userPermissions:['1401003'],
                                             onClick:this.save,
                                             loading:saveLoding
                                         }],statusParam)

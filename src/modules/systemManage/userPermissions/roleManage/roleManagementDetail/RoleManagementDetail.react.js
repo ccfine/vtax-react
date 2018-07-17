@@ -7,8 +7,8 @@ import React, { Component } from 'react'
 import { Card, message, Form, Row, Col, Badge,Icon } from 'antd'
 import { request } from 'utils'
 import PermissionFeilds from "../../permissionDetail"
-import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router'
+import { Link } from 'react-router-dom'
 
 class RoleManagementDetail extends Component {
 	constructor(props) {
@@ -96,7 +96,13 @@ class RoleManagementDetail extends Component {
 		return (
 			<div>
 				<div style={{ margin: "0px 0 6px 6px" }}>
-					<Link style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}} to={(location && location.pathname)?location.pathname.substring(0,location.pathname.lastIndexOf('/')):''}><Icon type="left" /><span>返回</span></Link> 
+					<Link
+						style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}
+						to={{
+                            pathname: location && location.pathname ? location.pathname.substring(0,location.pathname.lastIndexOf('/')) : '',
+                            search:location.search,
+                        }}
+					><Icon type="left" /><span>返回</span></Link>
 				</div>
 				<Card loading={loading}
 					title="角色信息">
