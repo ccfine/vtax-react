@@ -302,7 +302,8 @@ class LandPriceManage extends Component{
                 searchOption={{
                     fields:searchFields(disabled,declare),
                     cardProps:{
-                        className:''
+                        className:'',
+                        style:{borderTop:0}
                     },
                 }}
                 tableOption={{

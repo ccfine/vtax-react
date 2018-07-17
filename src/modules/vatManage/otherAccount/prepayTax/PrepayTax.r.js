@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 14:17:34
+ * @Last Modified time: 2018-07-17 15:56:50
  *
  */
 import React,{Component} from 'react'
@@ -146,7 +146,10 @@ class PrepayTax extends Component{
                 searchOption={{
                     fields:searchFields(disabled,declare),
                     cardProps:{
-                        className:''
+                        className:'',
+                        style:{
+                            borderTop:0,
+                        }
                     },
                 }}
                 doNotFetchDidMount={!disabled}

@@ -247,6 +247,9 @@ class SalesInvoiceCollection extends Component{
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields(this,disabled,declare),
+                    cardProps:{
+                        style:{borderTop:0}
+                    }
                 }}
                 tableOption={{
                     key:tableKey,

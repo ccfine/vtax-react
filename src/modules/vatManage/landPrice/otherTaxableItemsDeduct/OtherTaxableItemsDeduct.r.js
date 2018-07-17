@@ -178,6 +178,11 @@ class OtherTaxableItemsDeduct extends Component{
                     doNotFetchDidMount={!disabled}
                     searchOption={{
                         fields:searchFields(disabled,declare),
+                        cardProps:{
+                            style:{
+                                borderTop:0,
+                            }
+                        }
                     }}
                     tableOption={{
                         key:updateKey,

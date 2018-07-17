@@ -52,12 +52,19 @@ class ApplyDeclare extends React.Component {
 		this.setState({ panes, activeKey })
 	}
 	remove = targetKey => {
-		let activeKey = this.state.activeKey
+		let activeKey = this.state.activeKey,
+		newState = {};
 		const panes = this.state.panes.filter(pane => pane.key !== targetKey)
+		newState.panes = panes
 		if (activeKey === targetKey) {
-			activeKey = panes.length>0 ?panes[panes.length-1].key:'main'
+			if(panes.length>0){
+				newState.activeKey = panes[panes.length-1].key
+			}else{
+				newState.activeKey = 'main'
+				newState.mainUpdateKey = Date.now()
+			}
 		}
-		this.setState({ panes, activeKey })
+		this.setState(newState)
 	}
 	render() {
 		const {record,mainUpdateKey} = this.state;

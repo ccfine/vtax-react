@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 14:11:11
+ * @Last Modified time: 2018-07-17 15:53:58
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -230,7 +230,10 @@ class OtherBusinessInputTaxRollOut extends Component {
                         }
                     }}
                     searchOption={{
-                        fields: getFields(disabled,declare)
+                        fields: getFields(disabled,declare),
+                        cardProps:{style:{
+                            borderTop:0,
+                        }}
                     }}
                 />
                 <PopModal
