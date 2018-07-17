@@ -171,7 +171,7 @@ class SearchTable extends Component{
                                     tableProps={{
                                         rowKey:record=>record[tableOption.rowKey] || record.id,
                                         pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
-                                        pageSize:tableOption.pageSize || 10,
+                                        pageSize:tableOption.pageSize || 100,
                                         size:'small',
                                         onRow:tableOption.onRow || undefined,
                                         rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,

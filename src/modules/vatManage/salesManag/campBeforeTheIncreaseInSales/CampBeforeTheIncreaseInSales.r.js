@@ -336,7 +336,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/output/sellinghouse/list',
                     onSuccess:(params,data)=>{

@@ -241,7 +241,7 @@ export default class SalesInvoiceCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     cardProps:{
                         title:'销项发票采集'

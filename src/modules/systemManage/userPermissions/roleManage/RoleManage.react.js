@@ -280,7 +280,7 @@ class RoleManage extends Component{
                 tableOption={{
                     rowKey:'id',
                     key: updateKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: columns(this),
                     url: '/sysRole/list',
                     scroll:{x:1000,y:window.screen.availHeight-350},

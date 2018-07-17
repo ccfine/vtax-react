@@ -115,7 +115,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/allSimpleTaxList',
                     onSuccess:(params)=>{

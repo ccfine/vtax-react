@@ -300,7 +300,7 @@ class RoomTransactionFile extends Component{
                     fields:searchFields
                 }}
                 tableOption={{
-                    pageSize:10,
+                    pageSize:100,
                     columns,
                     onSuccess:(params)=>{
                         this.setState({

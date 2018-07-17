@@ -144,7 +144,7 @@ export default class PopInvoiceInformationModal extends Component{
                             cardProps: {
                                 title: "发票信息列表",
                             },
-                            pageSize:10,
+                            pageSize:100,
                             columns:columns,
                             url:`/income/invoice/collection/detailList?${parseJsonToParams(props.filters)}`,
                             scroll:{ x: '200%', y: 200},

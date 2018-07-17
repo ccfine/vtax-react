@@ -3,9 +3,31 @@
  */
 import React, { Component } from "react";
 import { Form, Row, Col, Card } from "antd";
+import {getFields,request} from 'utils';
 // import UpdateAccount from "./UpdateAccount.react";
 import PermissionFeilds from "../../permissionDetail";
 
+const FormItem = Form.Item
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 12 },
+        sm: { span: 6 },
+    },
+    wrapperCol: {
+        xs: { span: 12 },
+        sm: { span: 18 },
+    },
+};
+const formItemLayout2 = {
+    labelCol: {
+        xs: { span: 12 },
+        sm: { span: 1 },
+    },
+    wrapperCol: {
+        xs: { span: 12 },
+        sm: { span: 20 },
+    },
+};
 class UserDetail extends Component {
     state = {
         updateAccountModalKey: Date.now() + "2",
@@ -46,50 +68,52 @@ class UserDetail extends Component {
             permissionLoading,
             userLoading
         } = this.props;
+        const { getFieldValue } = this.props.form;
         return (
             <Card title="用户信息" style={{ ...this.props.style }} loading={userLoading}>
                 <div style={{ padding: "10px 15px", color: "#999" }}>
                     <Row gutter={16}>
+
                         <Col span={6}>
-                            <p>
-                                姓名：<span style={{ color: "#333" }}>
+                            <FormItem label='姓名' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.realname}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                         <Col span={6}>
-                            <p>
-                                账号：<span style={{ color: "#333" }}>
+                            <FormItem label='账号' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.username}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                         <Col span={6}>
-                            <p>
-                                手机：<span style={{ color: "#333" }}>
+                            <FormItem label='手机' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.phoneNumber}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                         <Col span={6}>
-                            <p>
-                                邮箱：<span style={{ color: "#333" }}>
+                            <FormItem label='邮箱' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.email}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={6}>
-                            <p>
-                                微信：<span style={{ color: "#333" }}>
+                            <FormItem label='微信' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.webchat}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                         <Col span={6}>
-                            <p>
-                                状态：<span
+                            <FormItem label='状态' {...formItemLayout}>
+                                <span
                                     style={{
                                         color:
                                             parseInt(userData.isEnabled, 0) ===
@@ -102,7 +126,7 @@ class UserDetail extends Component {
                                         ? "启用"
                                         : "停用"}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                         {/* <Col span={6}>
                             <p>
@@ -119,15 +143,15 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col> */}
-                        <Col span={12}>
-                                <p>
-                                    备注：<span style={{ color: "#333" }}>
+                        <Col span={6}>
+                            <FormItem label='备注' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                         {userData.remark}
                                     </span>
-                                </p>
+                            </FormItem>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
+                    {/*<Row gutter={16}>
                         <Col span={24}>
                             <p>
                                 组织：<span style={{ color: "#333" }}>
@@ -144,10 +168,83 @@ class UserDetail extends Component {
                                 </span>
                             </p>
                         </Col>
+                    </Row>*/}
+
+                    <Row gutter={16}>
+                        {
+                            getFields(this.props.form,[{
+                                label:'组织',
+                                fieldName:'orgId',
+                                type:'asyncSelect',
+                                span:6,
+                                formItemStyle:formItemLayout,
+                                componentProps:{
+                                    fieldTextName:'name',
+                                    fieldValueName:'id',
+                                    doNotFetchDidMount:false,
+                                    notShowAll:true,
+                                    url:`/sysOrganization/getOrganizations`,
+                                    selectOptions:{
+                                        onChange:this.handleAreaChange,
+                                        defaultActiveFirstOption:true,
+                                        showSearch:true,
+                                        optionFilterProp:'children',
+                                    },
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: this.props.areaId
+                                }
+                            }])
+                        }
+                    </Row>
+                    <Row gutter={16}>
+                        {
+                            getFields(this.props.form,[{
+                                    label:'角色名称',
+                                    fieldName:'roleName',
+                                    type:'asyncSelect',
+                                    span:6,
+                                    formItemStyle:formItemLayout,
+                                    componentProps:{
+                                        fieldTextName:'name',
+                                        fieldValueName:'id',
+                                        doNotFetchDidMount:!this.props.areaId,
+                                        notShowAll:true,
+                                        fetchAble:getFieldValue('orgId') || this.props.areaId || false,
+                                        url:`/sysOrganization/queryLoginOrgs/${getFieldValue('orgId') || this.props.areaId}`,
+                                        selectOptions:{
+                                            onChange:this.handleChange,
+                                            defaultActiveFirstOption:true,
+                                            showSearch:true,
+                                            optionFilterProp:'children',
+                                        },
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue: this.props.orgId
+                                    }
+                                }])
+                        }
                     </Row>
                     <Row gutter={16}>
                         <Col span={24}>
-                            <div>
+                            <Form layout="inline">
+                                <FormItem label='权限' {...formItemLayout2}>
+                                    <span style={{ color: "#333" }}>
+                                        <PermissionFeilds
+                                            editAble={false}
+                                            checkedPermission={
+                                                checkedPermission
+                                            }
+                                            form={this.props.form}
+                                            allPermission={allPermission}
+                                            permissionLoading={
+                                                permissionLoading
+                                            }
+                                        />
+                                    </span>
+                                </FormItem>
+                            </Form>
+                            {/*<div>
                                 权限：
                                 <span style={{ color: "#333" }}>
                                     <Form layout="inline">
@@ -164,7 +261,7 @@ class UserDetail extends Component {
                                         />
                                     </Form>
                                 </span>
-                            </div>
+                            </div>*/}
                         </Col>
                     </Row>
                 </div>

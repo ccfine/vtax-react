@@ -131,7 +131,7 @@ export default class HasDeduct extends React.Component{
                         title: <span><label className="tab-breadcrumb">土地价款扣除明细台账 / </label>土地价款当期实际扣除</span>,
                     },
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/account/landPrice/deductedDetails/list',
                     onSuccess:(params)=>{

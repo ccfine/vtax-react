@@ -177,7 +177,7 @@ class FixedAssetsInputTaxDetails extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
                     url:'/account/income/estate/fixedList',
                     cardProps: {

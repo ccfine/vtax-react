@@ -216,7 +216,7 @@ class FinancialDocumentsCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
                     scroll:{ x: 2400 ,y:window.screen.availHeight-420},

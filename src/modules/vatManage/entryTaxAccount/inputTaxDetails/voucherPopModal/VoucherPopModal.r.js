@@ -115,7 +115,7 @@ export default class VoucherPopModal extends Component{
                             cardProps: {
                                 title: "凭证信息列表",
                             },
-                            pageSize:10,
+                            pageSize:100,
                             columns:columns,
                             url:`/account/income/taxDetail/taxDetailVoucherList?${parseJsonToParams(filters)}`,
                             scroll:{ x: '140%'},

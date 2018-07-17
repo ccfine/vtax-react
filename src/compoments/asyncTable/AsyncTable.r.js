@@ -15,9 +15,9 @@ export default class AsyncTable extends Component{
             pagination: {
                 showSizeChanger:true,
                 showQuickJumper:true,
-                pageSize:props.tableProps.pageSize || 10,
+                pageSize:props.tableProps.pageSize || 100,
                 showTotal:total => `总共 ${total} 条`,
-                pageSizeOptions:['10','20','30','40','50','60','70','80','90','100']
+                pageSizeOptions:['100','200','300','400','500']
             },
             summaryData:[],
             footerDate:{},

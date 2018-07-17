@@ -307,7 +307,7 @@ class LandPriceManage extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this,!disabled,getFieldDecorator),
                     url:'/land/price/manage/list',
                     onSuccess:(params)=>{

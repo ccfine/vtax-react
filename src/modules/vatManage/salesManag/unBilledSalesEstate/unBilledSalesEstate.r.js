@@ -227,7 +227,7 @@ const columns = [
         ]
     },
     {
-        title:'未开具发票销售额',
+        title:'应申报未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
         render:text=>fMoney(text),
         className:'table-money',
@@ -300,7 +300,7 @@ class unBilledSalesEstate extends Component{
                         title:'未开票销售台账-地产'
                     },
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/realty/list',
                     onSuccess:(params)=>{

@@ -95,7 +95,7 @@ export default class BeginDataCollect extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/dataCollection/list', 
                     cardProps:{

@@ -167,7 +167,7 @@ class PrepayTax extends Component{
                         x:1000,
                         y:window.screen.availHeight-380,
                     },
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/account/prepaytax/prepayTaxList',
                     extra:<div>
