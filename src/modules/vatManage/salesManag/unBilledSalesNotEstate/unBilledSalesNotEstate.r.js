@@ -400,6 +400,7 @@ class UnBilledSalesNotEstate extends Component {
                     }}
                     id={this.state.opid}
                     update={this.refreshTable}
+                    declare={declare}
                 />
 
             </Layout>

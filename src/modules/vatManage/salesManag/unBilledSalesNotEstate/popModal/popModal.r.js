@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-05-15 16:12:23
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-05 16:54:27
+ * @Last Modified time: 2018-07-17 18:26:36
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -448,6 +448,4 @@ class PopModal extends Component {
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(Form.create()(PopModal));
+export default Form.create()(PopModal);
