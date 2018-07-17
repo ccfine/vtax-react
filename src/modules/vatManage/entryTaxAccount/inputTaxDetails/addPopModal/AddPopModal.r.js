@@ -115,6 +115,7 @@ class AddPopModal extends Component{
 
     render(){
         const props = this.props;
+        const { getFieldValue } = props.form;
         const {record,loaded} = this.state;
         let title='';
         const action = props.action;
@@ -233,11 +234,14 @@ class AddPopModal extends Component{
                                 ])
                             }
                         </Row>
-                        <Row>
-                            <Col>
-                                <Alert message="凭证类型： 前期认证相符且本期申报抵扣" type="warning" showIcon />
-                            </Col>
-                        </Row>
+                        {
+                            getFieldValue('type') && <Row>
+                                <Col>
+                                    <Alert message={`凭证类型： ${getFieldValue('type')==='1'? '前期认证相符且本期申报抵扣' : '前期入账本期申报抵扣' }`} type="warning" showIcon />
+                                </Col>
+                            </Row>
+                        }
+
                     </Form>
                 </Spin>
 
