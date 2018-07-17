@@ -13,11 +13,11 @@ import {saveOrgId,saveToken,savePersonal,saveAreaId} from '../../redux/ducks/use
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
-        sm: { span: 4 },
+        sm: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 12 },
-        sm: { span: 20 },
+        sm: { span: 18 },
     },
 };
 class SelectSearch extends Component {
@@ -78,7 +78,7 @@ class SelectSearch extends Component {
                         label:'区域',
                         fieldName:'areaId',
                         type:'asyncSelect',
-                        span:10,
+                        span:8,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
@@ -101,7 +101,7 @@ class SelectSearch extends Component {
                         label:'组织',
                         fieldName:'orgId',
                         type:'asyncSelect',
-                        span:14,
+                        span:16,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
