@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { message,Icon } from "antd";
-import { request } from "utils";
+import { request,getUrlParam } from "utils";
 import UserDetail from "./UserDetail.react.@0.0.1";
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router'
@@ -21,11 +21,9 @@ class UserManagementDetail extends Component {
     componentWillUnmount() {
         this.mounted = null;
     }
-    getParams() {
-        return this.props.match.params.user.split("~");
-    }
     componentDidMount() {
-        const [orgId, userId] = this.getParams();
+        const userId = this.props.match.params.id;
+        const orgId = getUrlParam('orgId');
         this.fetchAllPermission();
         this.fetchUserInfo(userId);
         this.fetchPermission(orgId, userId);
@@ -104,24 +102,29 @@ class UserManagementDetail extends Component {
             });
     }
     render() {
-        const {  location } = this.props
+        const {  location } = this.props;
         const {
                 userInfo,
                 checkedPermission,
                 allPermission,
                 permissionLoading,
                 loaded
-            } = this.state,
-            [orgId] = this.getParams();
+            } = this.state;
 
         return (
             <div>
                 <div style={{ margin: "0px 0 6px 6px" }}>
-                    <Link style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}} to={(location && location.pathname)?location.pathname.substring(0,location.pathname.lastIndexOf('/')):''}><Icon type="left" /><span>返回</span></Link> 
+                    <Link
+                        style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}
+                        to={{
+                            pathname: location && location.pathname ? location.pathname.substring(0,location.pathname.lastIndexOf('/')) : '',
+                            search:location.search,
+                        }}
+                    ><Icon type="left" /><span>返回</span></Link>
                 </div>
                 {
                     <UserDetail
-                        orgId={orgId}
+                        orgId={getUrlParam('orgId')}
                         userInfo={userInfo}
                         checkedPermission={checkedPermission}
                         allPermission={allPermission}

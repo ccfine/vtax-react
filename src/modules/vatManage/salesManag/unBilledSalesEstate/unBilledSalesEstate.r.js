@@ -324,7 +324,7 @@ class unBilledSalesEstate extends Component{
                                 url:'account/output/notInvoiceSale/realty/export',
                                 params:filters,
                                 title:'导出',
-                                userPermissions:['1351002'],
+                                userPermissions:['1351007'],
                             }])
                         }
                         {
