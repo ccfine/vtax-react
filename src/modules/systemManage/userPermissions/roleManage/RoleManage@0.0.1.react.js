@@ -66,7 +66,7 @@ class RoleManage extends Component{
                 tableOption={{
                     rowKey:'id',
                     key: tableUpDateKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: columns,
                     url: '/sysRole/list',
                     cardProps: {

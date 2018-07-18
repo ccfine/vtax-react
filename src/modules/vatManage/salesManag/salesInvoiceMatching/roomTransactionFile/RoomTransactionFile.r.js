@@ -484,7 +484,7 @@ class RoomTransactionFile extends Component{
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,
-                                    pageSize:10,
+                                    pageSize:100,
                                     size:'small',
                                     onSuccess:(params,data)=>{
                                         this.setState({

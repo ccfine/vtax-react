@@ -342,7 +342,7 @@ class ManualMatchRoomModal extends Component{
                         }
                     }}
                     tableOption={{
-                        pageSize:10,
+                        pageSize:100,
                         columns:getColumns(this),
                         url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}`,
                     }}

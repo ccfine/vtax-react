@@ -256,7 +256,7 @@ class OrganizationalStructureMaintenance extends Component {
                 }}
                 tableOption={{
                     key:updateTable,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     cardProps:{
                         title:'组织架构维护列表信息'

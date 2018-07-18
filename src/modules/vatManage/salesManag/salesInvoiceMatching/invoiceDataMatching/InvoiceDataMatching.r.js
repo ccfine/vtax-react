@@ -440,7 +440,7 @@ class InvoiceDataMatching extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this,disabled),
                     onSuccess:(params)=>{
                         this.setState({
@@ -489,7 +489,18 @@ class InvoiceDataMatching extends Component{
                                 }
                             }],statusParam)
                         }
-                        <TableTotal type={2} totalSource={totalSource} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '发票金额', dataIndex: 'allAmount'},
+                                        {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                        {title: '房间成交金额', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
                     onTotalSource: (totalSource) => {
                         this.setState({

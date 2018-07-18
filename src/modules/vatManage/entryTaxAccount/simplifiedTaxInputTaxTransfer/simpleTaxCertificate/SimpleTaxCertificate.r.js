@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
@@ -74,6 +74,7 @@ class SimpleTaxCertificate extends Component{
         visibleView:false,
         voucherInfo:{},
         filters:{},
+        totalSource:undefined,
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
@@ -86,7 +87,7 @@ class SimpleTaxCertificate extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherInfo,filters} = this.state;
+        const {tableKey,visibleView,voucherInfo,filters,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -105,7 +106,7 @@ class SimpleTaxCertificate extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/simpleTaxList',
                     onSuccess:(params)=>{
@@ -125,7 +126,22 @@ class SimpleTaxCertificate extends Component{
                                         userPermissions:['1391007'],
                                     }])
                                 }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '借方金额', dataIndex: 'debitAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
                         x:1500,

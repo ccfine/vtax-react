@@ -136,7 +136,7 @@ class LandArea extends Component{
                     cardProps: {
                         title: "分期可售土地面积",
                     },
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/interAvailableBuildingAreaInformation/inter/list',
                 }}

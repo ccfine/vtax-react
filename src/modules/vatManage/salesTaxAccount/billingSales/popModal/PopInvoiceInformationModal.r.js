@@ -120,7 +120,7 @@ export default class PopInvoiceInformationModal extends Component{
                     spinning={searchTableLoading}
                     tableOption={{
                         key:tableKey,
-                        pageSize:10,
+                        pageSize:100,
                         columns:columns,
                         url:`/account/output/billingSale/detail/list?${parseJsonToParams(filters)}`,
                         onSuccess:(params)=>{
