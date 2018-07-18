@@ -26,7 +26,6 @@ const routes = [
         path:`/help`,
         component:wrapPage('帮助中心',Help),
         name:'帮助中心',
-        exact:true,
     },{
         path:'/tax2018bgy/login',
         component:props=><Login {...props} type={1}/>,
