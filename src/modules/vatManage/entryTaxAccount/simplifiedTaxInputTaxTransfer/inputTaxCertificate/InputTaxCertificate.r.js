@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
@@ -75,6 +75,7 @@ class InputTaxCertificate extends Component{
         visibleView:false,
         voucherInfo:{},
         filters:{},
+        totalSource:undefined,
     }
     toggleViewModalVisible=visibleView=>{
         this.setState({
@@ -87,7 +88,7 @@ class InputTaxCertificate extends Component{
         })
     }
     render(){
-        const {tableKey,visibleView,voucherInfo,filters} = this.state;
+        const {tableKey,visibleView,voucherInfo,filters,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -126,7 +127,22 @@ class InputTaxCertificate extends Component{
                                         userPermissions:['1391007'],
                                     }])
                                 }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '借方金额', dataIndex: 'debitAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
+                        },
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            })
                         },
                         scroll:{
                             x:1600,

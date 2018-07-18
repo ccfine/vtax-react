@@ -6,7 +6,7 @@
  */
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
@@ -114,6 +114,7 @@ class PrepayTax extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -138,7 +139,7 @@ class PrepayTax extends Component{
         })
     }
     render(){
-        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters} = this.state;
+        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -162,10 +163,6 @@ class PrepayTax extends Component{
                     },
                     cardProps: {
                         title: "预缴税款台账",
-                    },
-                    scroll:{
-                        x:1000,
-                        y:window.screen.availHeight-380,
                     },
                     pageSize:100,
                     columns:getColumns(this),
@@ -197,7 +194,28 @@ class PrepayTax extends Component{
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '金额（不含税）', dataIndex: 'withOutAmount'},
+                                        {title: '金额（含税）', dataIndex: 'withTaxAmount'},
+                                        {title: '预缴税款', dataIndex: 'prepayAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
+                    scroll:{
+                        x:1000,
+                        y:window.screen.availHeight-380,
+                    },
                 }}
             >
                 <ViewDocumentDetails

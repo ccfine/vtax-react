@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import { NumericInputCell } from 'compoments/EditableCell'
 
@@ -240,6 +240,7 @@ class LandPriceManage extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        totalSource:undefined,
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/land/price/manage/listMain',this.state.filters,result=>{
@@ -291,7 +292,7 @@ class LandPriceManage extends Component{
     }
 
     render(){
-        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam} = this.state;
+        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         const {getFieldDecorator} = this.props.form;
@@ -369,12 +370,27 @@ class LandPriceManage extends Component{
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '借方金额', dataIndex: 'debitAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>,
                     },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                     scroll:{
-                     x:1600,
-                     y:window.screen.availHeight-400,
-                     },
+                         x:1600,
+                         y:window.screen.availHeight-400,
+                    },
                 }}
             >
                 <ViewDocumentDetails

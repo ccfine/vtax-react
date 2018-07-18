@@ -355,7 +355,17 @@ class UnmatchedData extends Component{
                                 onSuccess:this.refreshTable
                             }],statusParam)
                         }*/}
-                        <TableTotal type={2} totalSource={totalSource} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '发票金额', dataIndex: 'allAmount'},
+                                        {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
                     onTotalSource: (totalSource) => {
                         this.setState({

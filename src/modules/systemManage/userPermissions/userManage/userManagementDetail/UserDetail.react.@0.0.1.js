@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { Form, Row, Col, Card } from "antd";
-import {getFields,request} from 'utils';
+import {getFields} from 'utils';
 // import UpdateAccount from "./UpdateAccount.react";
 import PermissionFeilds from "../../permissionDetail";
 

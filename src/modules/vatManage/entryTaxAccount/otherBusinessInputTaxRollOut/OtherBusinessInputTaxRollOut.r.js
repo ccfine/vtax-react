@@ -218,8 +218,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                                 total: [
                                                     {
                                                         title: "转出税额",
-                                                        dataIndex:
-                                                            "pageOutTaxAmount"
+                                                        dataIndex: "pageOutTaxAmount"
                                                     }
                                                 ]
                                             }

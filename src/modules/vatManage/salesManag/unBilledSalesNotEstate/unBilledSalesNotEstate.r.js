@@ -7,7 +7,7 @@ import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
 import { compose } from 'redux';
 import {connect} from 'react-redux'
-import { AsyncTable } from "compoments";
+import { AsyncTable,TableTotal } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
@@ -188,6 +188,7 @@ class UnBilledSalesNotEstate extends Component {
         tableUpDateKey:Date.now(),
         statusParam: {},
         dataSource:[],
+        totalSource:undefined,
 
     }
     refreshTable = ()=>{
@@ -252,7 +253,7 @@ class UnBilledSalesNotEstate extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,statusParam} = this.state;
+        const {tableUpDateKey,filters,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
@@ -341,7 +342,20 @@ class UnBilledSalesNotEstate extends Component {
                                   onSuccess:this.refreshTable,
                               }],statusParam)
                           }
-                      </div>}
+                          <TableTotal type={3} totalSource={totalSource} data={
+                              [
+                                  {
+                                      title:'合计',
+                                      total:[
+                                          {title: '金额', dataIndex: 'allAmount'},
+                                          {title: '税额', dataIndex: 'allTaxAmount'},
+                                          {title: '价税合计', dataIndex: 'allTotalPrice'},
+                                      ],
+                                  }
+                              ]
+                          } />
+                      </div>
+                      }
                       style={{marginTop:10}}>
 
 
@@ -359,6 +373,11 @@ class UnBilledSalesNotEstate extends Component {
                                             dataSource
                                         })
                                     },
+                                    onTotalSource: (totalSource) => {
+                                        this.setState({
+                                            totalSource
+                                        })
+                                    }
                                 }} />
 
                 </Card>
