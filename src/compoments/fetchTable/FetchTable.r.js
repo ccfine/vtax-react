@@ -23,7 +23,7 @@ export default class FetchTable extends React.Component{
             pagination:{
                 total:0,
                 current:1,
-                pageSize:10,
+                pageSize:100,
                 onChange:this.pageChange,
                 onShowSizeChange:this.sizeChange,
             },
@@ -31,7 +31,7 @@ export default class FetchTable extends React.Component{
         };
     }
     componentDidMount(){
-        this.props.doNotFetchDidMount || this.fetch(this.props.url, 1, 10);
+        this.props.doNotFetchDidMount || this.fetch(this.props.url, 1, 100);
     }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey !== nextProps.updateKey){

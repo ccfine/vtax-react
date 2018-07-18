@@ -200,7 +200,7 @@ class DataDictionaryMaintain extends Component {
                 }}
                 tableOption={{
                     key:updateTable,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     cardProps:{
                         title:'下级列表信息'

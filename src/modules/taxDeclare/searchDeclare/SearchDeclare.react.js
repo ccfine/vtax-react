@@ -201,7 +201,7 @@ class SearchDeclare extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     cardProps:{
                         title:'查询申报'

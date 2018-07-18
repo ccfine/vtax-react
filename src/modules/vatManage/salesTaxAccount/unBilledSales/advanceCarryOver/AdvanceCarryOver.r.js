@@ -264,7 +264,7 @@ class AdvanceCarryOver extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     onRowSelect:parseInt(dataStatus,0) === 1 ? (selectedRowKeys)=>{
                         this.setState({

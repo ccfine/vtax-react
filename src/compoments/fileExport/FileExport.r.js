@@ -7,6 +7,7 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Button,Icon} from 'antd';
 import {parseJsonToParams,request} from "utils";
+import debounce from 'lodash/debounce'
 class FileExport extends Component{
 
     static propTypes={
@@ -23,6 +24,11 @@ class FileExport extends Component{
         },
         size:'small',
         WrapComponent:Button
+    }
+
+    constructor(props){
+        super(props)
+        this.handleDownload = debounce(this.handleDownload,300)
     }
 
     handleDownload=()=>{

@@ -288,7 +288,7 @@ export default class PrePaidHousingSales extends Component{
                 }}
                 doNotFetchDidMount={true}
                 tableOption={{
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/account/salehouse/list',
                     cardProps:{

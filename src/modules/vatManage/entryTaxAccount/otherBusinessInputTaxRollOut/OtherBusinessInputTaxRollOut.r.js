@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 11:38:36
+ * @Last Modified time: 2018-07-18 19:19:28
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
@@ -213,12 +213,11 @@ class OtherBusinessInputTaxRollOut extends Component {
                                         totalSource={totalSource}
                                         data={[
                                             {
-                                                title: "本页合计",
+                                                title: "合计",
                                                 total: [
                                                     {
                                                         title: "转出税额",
-                                                        dataIndex:
-                                                            "pageOutTaxAmount"
+                                                        dataIndex: "pageOutTaxAmount"
                                                     }
                                                 ]
                                             }

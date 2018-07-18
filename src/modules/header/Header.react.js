@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,Row,Col,Tooltip} from 'antd'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Row,Col,Tooltip} from 'antd'
 import {withRouter,Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
@@ -90,7 +90,7 @@ class WimsHeader extends Component {
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            增值税纳税申报系统                            
+                            增值税纳税申报系统
                         </h2>
                     </Col>
                     {/*<Col xs={20} sm={16} lg={14}>
@@ -109,17 +109,25 @@ class WimsHeader extends Component {
                                 </a>
                             </Tooltip>
 
-                            {this.props.realName ? (
-                                <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                            <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 <span className='action account'>
                                     <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
                                     {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
+                                    <span className='name'>{(this.props.realName && this.props.realName) || '欢迎您'}</span>
+                                </span>
+                            </Dropdown>
+
+                            {/*{this.props.realName ? (
+                                <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                                <span className='action account'>
+                                    <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                                    src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}
                                     <span className='name'>{this.props.realName}</span>
                                 </span>
                                 </Dropdown>
                             ) : (
                                 <Spin size="small" style={{ marginLeft: 8 }} />
-                            )}
+                            )}*/}
                         </div>
                     </Col>
                 </Row>

@@ -256,7 +256,7 @@ class NeedNotMatchInvoices extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     onSuccess:(params)=>{
                         this.setState({
@@ -285,7 +285,17 @@ class NeedNotMatchInvoices extends Component{
                             }],statusParam)
                         }
                         {/* {(disabled && declare.decAction==='edit') && <Button size="small" loading={revokeLoading} onClick={this.backOutData} disabled={selectedRowKeys.length === 0}><Icon type="rollback" />撤销</Button>} */}
-                        <TableTotal totalSource={totalSource} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '发票金额', dataIndex: 'allAmount'},
+                                        {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
                     onTotalSource: (totalSource) => {
                         this.setState({

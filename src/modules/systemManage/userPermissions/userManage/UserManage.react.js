@@ -359,7 +359,7 @@ class UserManage extends Component {
                 }}
                 tableOption={{
                     key: this.state.updateKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: getColumns(this),
                     url: "/sysUser/list",
                     scroll:{x:1000,y:window.screen.availHeight-370},

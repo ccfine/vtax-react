@@ -450,7 +450,7 @@ class PrePaidHousingSales extends Component{
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/account/salehouse/list',
                     onRowSelect:parseInt(dataStatus,0) === 1 ? (selectedRowKeys)=>{
