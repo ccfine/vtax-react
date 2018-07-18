@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney} from 'utils'
 const formItemStyle={
     labelCol:{
@@ -225,6 +225,7 @@ const columns=[
 export default class SalesInvoiceCollection extends Component{
     state={
         updateKey:Date.now(),
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -232,7 +233,7 @@ export default class SalesInvoiceCollection extends Component{
         })
     }
     render(){
-        const {updateKey} = this.state;
+        const {updateKey,totalSource} = this.state;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -241,12 +242,31 @@ export default class SalesInvoiceCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     cardProps:{
                         title:'销项发票采集'
                     },
                     url:'/output/invoice/collection/report/list',
+                    extra:<div>
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '发票金额', dataIndex: 'allAmount'},
+                                        {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                        {title: '价税合计', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]
+                        } />
+                    </div>,
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                     scroll:{ x: 2400,y:window.screen.availHeight-360, },
                 }}
             />

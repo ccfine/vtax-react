@@ -117,38 +117,7 @@ const getSearchFields = (disabled,declare) => {
         ]
 };
 
-const columns = (context,hasOperate) => {
-    let operates = hasOperate?[{
-        title:'操作',
-        render:(text, record, index)=>composeBotton([{
-            type:'action',
-            title:'删除',
-            icon:'delete',
-            style:{color:'#f5222d'},
-            userPermissions:['1491008'],
-            onSuccess:()=>{
-                const modalRef = Modal.confirm({
-                    title: '友情提醒',
-                    content: '该删除后将不可恢复，是否删除？',
-                    okText: '确定',
-                    okType: 'danger',
-                    cancelText: '取消',
-                    onOk:()=>{
-                        context.deleteRecord(record)
-                        modalRef && modalRef.destroy();
-                    },
-                    onCancel() {
-                        modalRef.destroy()
-                    },
-                });
-            }
-        }]),
-        fixed:'left',
-        width:'70px',
-        dataIndex:'action',
-        className:'text-center',
-    }]:[];
-    return [...operates,{
+const getColumns = (context) => [{
         title: "纳税主体",
         dataIndex: "mainName",
     }, {
@@ -328,7 +297,6 @@ const columns = (context,hasOperate) => {
         width:60,
     }
 ];
-}
 
 class InvoiceCollection extends Component {
     state = {
@@ -349,7 +317,9 @@ class InvoiceCollection extends Component {
         modalConfig: {
             type: ""
         },
-        totalSource: undefined
+        totalSource: undefined,
+        deleteLoading:false,
+        selectedRowKeys:[],
     };
     refreshTable = () => {
         this.setState(
@@ -372,6 +342,38 @@ class InvoiceCollection extends Component {
             }
         });
     };
+    toggleDeleteLoading=(val)=>{
+        this.setState({deleteLoading:val})
+    }
+    deleteData = () =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要删除选中的记录？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleDeleteLoading(true)
+                request.post(`/income/invoice/collection/deleteByIds`,this.state.selectedRowKeys)
+                    .then(({data})=>{
+                        this.toggleDeleteLoading(false)
+                        if(data.code===200){
+                            message.success('删除成功！');
+                            this.refreshTable();
+                        }else{
+                            message.error(`删除失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    message.error(err.message)
+                    this.toggleDeleteLoading(false)
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
     fetchResultStatus = ()=>{
         requestResultStatus('/income/invoice/collection/listMain',this.state.filters,result=>{
             this.setState({
@@ -379,20 +381,8 @@ class InvoiceCollection extends Component {
             })
         })
     }
-    deleteRecord(record){
-        request.delete(`/income/invoice/collection/delete/${record.id}`).then(({data}) => {
-            if (data.code === 200) {
-                message.success('删除成功', 4);
-                this.refreshTable();
-            } else {
-                message.error(data.msg, 4);
-            }
-        }).catch(err => {
-                message.error(err.message);
-            })
-    }
     render() {
-        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource } = this.state;
+        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
@@ -402,10 +392,15 @@ class InvoiceCollection extends Component {
                         fields: getSearchFields(disabled,declare)
                     }}
                     tableOption={{
-                        columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
+                        columns: getColumns(this),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         scroll: { x: 1500, y:window.screen.availHeight-380 },
+                        onRowSelect:(selectedRowKeys)=>{
+                            this.setState({
+                                selectedRowKeys
+                            })
+                        },
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params
@@ -414,6 +409,7 @@ class InvoiceCollection extends Component {
                             })
                         },
                         extra: (
+
                             <div>
                                 {
                                     listMainResultStatus(statusParam)
@@ -442,6 +438,22 @@ class InvoiceCollection extends Component {
                                         onSuccess:this.refreshTable,
                                         fields:getFields(filters)
                                     },{
+                                        type:'revokeImport',
+                                        url:'/income/invoice/collection/revocation',
+                                        params:filters,
+                                        monthFieldName:"authMonth",
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1495000'],
+                                    },{
+                                        type:'delete',
+                                        icon:'delete',
+                                        text:'删除',
+                                        btnType:'danger',
+                                        loading:deleteLoading,
+                                        selectedRowKeys:selectedRowKeys,
+                                        userPermissions:['1491008'],
+                                        onClick:this.deleteData
+                                    },{
                                         type:'submit',
                                         url:'/income/invoice/collection/submit',
                                         params:filters,
@@ -455,7 +467,18 @@ class InvoiceCollection extends Component {
                                         onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
-                                <TableTotal totalSource={totalSource} />
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '发票金额', dataIndex: 'allAmount'},
+                                                {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                                {title: '价税合计', dataIndex: 'allTotalPrice'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
                         ),
                         cardProps: {

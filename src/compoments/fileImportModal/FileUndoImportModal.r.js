@@ -8,60 +8,68 @@ import PropTypes from 'prop-types'
 import {Modal,Form,Row,message,Button,Icon} from 'antd'
 import {request,getFields} from 'utils'
 import moment from 'moment'
-const confirm = Modal.confirm;
-const undoUploadArrList = [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:11
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择纳税主体'
-                }
-            ]
-        },
-    },{
-        label:'认证月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:11
-            }
-        },
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择认证月份'
-                }
-            ]
-        },
-    }
-]
+
 class FileUndoImportModal extends Component{
     static propTypes={
-        undoUpload:PropTypes.any,
         onSuccess:PropTypes.func,
         disabled:PropTypes.bool,
     }
     static defaultProps = {
-        undoUpload:undoUploadArrList,
+        searchFields:(props)=>{
+            let {initialValue={}} = props,
+                monthFieldName = props.monthFieldName || 'taxMonth';
+            return [
+                {
+                    label:'纳税主体',
+                    fieldName:'mainId',
+                    type:'taxMain',
+                    span:20,
+                    formItemStyle:{
+                        labelCol:{
+                            span:8
+                        },
+                        wrapperCol:{
+                            span:16
+                        }
+                    },
+                    fieldDecoratorOptions:{
+                        initialValue: initialValue['mainId'] || undefined,
+                        rules:[
+                            {
+                                required:true,
+                                message:'请选择纳税主体'
+                            }
+                        ]
+                    }
+                },
+                {
+                    label:'查询期间',
+                    fieldName:monthFieldName,
+                    type:'monthPicker',
+                    componentProps:{
+                        format:'YYYY-MM',
+                    },
+                    span:20,
+                    formItemStyle:{
+                        labelCol:{
+                            span:8
+                        },
+                        wrapperCol:{
+                            span:16
+                        }
+                    },
+                    fieldDecoratorOptions:{
+                        initialValue:initialValue[monthFieldName] && moment(initialValue[monthFieldName]),
+                        rules:[
+                            {
+                                required:true,
+                                message:'请选查询期间'
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
     }
     state={
         visible:false,
@@ -80,6 +88,7 @@ class FileUndoImportModal extends Component{
             visible
         })
     }
+
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -94,35 +103,36 @@ class FileUndoImportModal extends Component{
                     }
                 }
 
-                confirm({
+                const modalRef = Modal.confirm({
                     title: '友情提醒',
                     content: '该撤销后将不可恢复，是否撤销？',
                     okText: '确定',
                     okType: 'danger',
                     cancelText: '取消',
-                    onOk: () => {
-
-                        request.post(this.props.url,values
-                        )
-                            .then(({data}) => {
+                    onOk:()=>{
+                        modalRef && modalRef.destroy();
+                        this.toggleLoading(true)
+                        request.post(this.props.url,values)
+                            .then(({data})=>{
                                 this.toggleLoading(false)
-                                if (data.code === 200) {
+                                if(data.code===200){
                                     const {onSuccess} = this.props;
                                     message.success('撤销成功！', 4)
                                     this.toggleVisible(false);
                                     onSuccess && onSuccess()
-                                } else {
-                                    message.error(data.msg, 4)
+                                }else{
+                                    message.error(`撤销失败:${data.msg}`)
                                 }
-                            })
-                            .catch(err => {
+                            }).catch(err=>{
                                 message.error(err.message)
-                                this.toggleVisible(false)
+                                this.toggleVisible(false);
+                        })
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
 
-                            })
-                    }
-
-                })
             }
         })
     }
@@ -139,7 +149,7 @@ class FileUndoImportModal extends Component{
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {
-                                getFields(this.props.form,props.undoUpload)
+                                getFields(this.props.form,props.searchFields(props))
                             }
                         </Row>
                     </Form>

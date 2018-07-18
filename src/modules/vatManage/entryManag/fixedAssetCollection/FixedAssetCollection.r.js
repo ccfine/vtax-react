@@ -195,7 +195,7 @@ const columns=[
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/fixedAssetCard/manageList',
                     onSuccess:(params)=>{

@@ -75,7 +75,7 @@ const getColumns = context => [
   export default class extends React.Component{
     state={
         current:1,
-        pageSize:10,
+        pageSize:100,
         tableUpDateKey:Date.now()
     }
     render(){
@@ -85,7 +85,7 @@ const getColumns = context => [
         tableProps={{
             rowKey:record=>record.id,
             pagination:false,
-            pageSize:10,
+            pageSize:100,
             size:'small',
             renderCount:data=>[
                 {

@@ -269,7 +269,7 @@ class RoomTransactionFile extends Component{
                     fields:searchFields
                 }}
                 tableOption={{
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     cardProps:{
                         title:'房间交易档案期初数据'
