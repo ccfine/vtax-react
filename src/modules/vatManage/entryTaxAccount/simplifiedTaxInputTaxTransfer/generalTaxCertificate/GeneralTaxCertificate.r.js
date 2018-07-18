@@ -196,7 +196,7 @@ class GeneralTaxCertificate extends Component{
                             {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
-                                    url:'/account/incomeSimpleOut/controller/commonly/export',
+                                    url:'account/incomeSimpleOut/controller/commonly/export',
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1391007'],
