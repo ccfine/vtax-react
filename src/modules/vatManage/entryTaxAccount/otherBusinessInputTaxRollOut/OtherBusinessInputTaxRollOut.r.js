@@ -2,10 +2,9 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 18:18:41
+ * @Last Modified time: 2018-07-18 11:38:36
  */
 import React, { Component } from "react";
-import {connect} from 'react-redux';
 import { message,Form } from "antd";
 import {SearchTable,TableTotal} from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
@@ -175,7 +174,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         },
                         scroll:{
                             x:1000,
-                            y:window.screen.availHeight-380,
+                            y:window.screen.availHeight-380-(disabled?50:0),
                         },
                         cardProps: {
                             title: "其他类型进项税额转出台账",

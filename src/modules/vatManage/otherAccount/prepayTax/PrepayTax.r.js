@@ -1,11 +1,10 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 15:56:50
+ * @Last Modified time: 2018-07-18 11:40:46
  *
  */
 import React,{Component} from 'react'
-import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -168,7 +167,7 @@ class PrepayTax extends Component{
                     },
                     scroll:{
                         x:1000,
-                        y:window.screen.availHeight-380,
+                        y:window.screen.availHeight-380-(disabled?50:0),
                     },
                     pageSize:10,
                     columns:getColumns(this),

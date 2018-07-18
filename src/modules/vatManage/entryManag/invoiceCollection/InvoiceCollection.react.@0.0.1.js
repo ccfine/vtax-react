@@ -4,7 +4,6 @@
  * description  :
  */
 import React, { Component } from "react";
-import {connect} from 'react-redux';
 import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
 import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
@@ -408,7 +407,7 @@ class InvoiceCollection extends Component {
                         columns: columns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1500, y:window.screen.availHeight-380 },
+                        scroll: { x: 1500, y:window.screen.availHeight-380-(disabled?50:0) },
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params

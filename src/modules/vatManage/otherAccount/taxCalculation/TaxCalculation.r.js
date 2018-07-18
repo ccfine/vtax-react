@@ -1,12 +1,10 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 15:57:59
+ * @Last Modified time: 2018-07-18 11:40:57
  *
  */
 import React,{Component} from 'react'
-import { compose } from 'redux';
-import {connect} from 'react-redux'
 import {message,Form} from 'antd'
 import {SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
@@ -212,7 +210,7 @@ class TaxCalculation extends Component{
                         title:'税款计算台账'
                     },
                     scroll:{
-                        y:window.screen.availHeight-320,
+                        y:window.screen.availHeight-320-(disabled?50:0),
                         x:1000,
                     },
                     extra:<div>

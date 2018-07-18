@@ -2,11 +2,10 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 14:18:15
+ * @Last Modified time: 2018-07-18 11:41:20
  *
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {Form,message} from 'antd'
 import {fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
@@ -350,7 +349,7 @@ class TaxExemptionDetails extends Component{
                         title:'减免税明细台账'
                     },
                     scroll:{
-                        y:window.screen.availHeight-380,
+                        y:window.screen.availHeight-380-(disabled?50:0),
                         x:1000,
                     },
                     extra: <div>

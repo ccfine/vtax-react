@@ -76,8 +76,7 @@ const getColumns =(context)=>[
                                 title:'申报办理',
                                 userPermissions:['1085004'],
                                 onSuccess:()=>{
-                                    console.log(context.props)
-                                    context.props.history.push(`/web/taxDeclare/declareHandle/applyDeclare/${record.id}`)
+                                    context.props.history.push(`/web/taxDeclare/declareHandle/handleDeclare/${record.id}`)
                                     /*context.setState({
                                         record: {...record,decAction:'edit'},
                                     },() => {
@@ -140,11 +139,13 @@ const getColumns =(context)=>[
                                 icon:'search',
                                 title:'查看申报',
                                 onSuccess:()=>{
-                                    context.setState({
+                                    context.props.history.push(`/web/taxDeclare/declareHandle/lookDeclare/${record.id}`)
+                            
+                                    /*context.setState({
                                         record: {...record,decAction:'look'}
                                     },() => {
                                         context.toggleApplyVisible(true,'tax/decConduct/list/find');
-                                    });
+                                    });*/
                                 }
                             }])
                         }

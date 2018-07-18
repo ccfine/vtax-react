@@ -2,10 +2,9 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 14:15:24
+ * @Last Modified time: 2018-07-18 11:40:06
  */
 import React from 'react'
-import {connect} from 'react-redux'
 // import HasDeduct from './hasDeduct'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
@@ -305,7 +304,7 @@ class DeductProjectSummary extends React.Component {
                     },
                     scroll:{
                         x:2000,
-                        y:window.screen.availHeight-400,
+                        y:window.screen.availHeight-400-(disabled?50:0),
                     },
 					extra: (
 						<div>

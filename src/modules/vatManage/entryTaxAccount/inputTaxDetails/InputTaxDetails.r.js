@@ -4,7 +4,6 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'

@@ -2,7 +2,6 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
@@ -364,7 +363,7 @@ class UnmatchedData extends Component{
                     },
                     scroll:{
                         x:1300,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>未匹配的发票列表</span>,

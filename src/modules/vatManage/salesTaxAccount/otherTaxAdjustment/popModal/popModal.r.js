@@ -4,7 +4,6 @@ import {getFields,request} from 'utils'
 import moment from 'moment'
 import find from 'lodash/find'
 import { BigNumber } from "bignumber.js";
-import {connect} from 'react-redux'
 const formItemLayout = {
     labelCol: {
       xs: { span: 12 },

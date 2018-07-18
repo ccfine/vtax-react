@@ -5,8 +5,6 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
-import { compose } from 'redux';
-import {connect} from 'react-redux'
 import {SynchronizeTable} from 'compoments'
 import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'

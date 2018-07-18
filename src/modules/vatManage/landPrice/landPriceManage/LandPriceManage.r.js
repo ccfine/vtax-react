@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable} from 'compoments'
@@ -374,7 +373,7 @@ class LandPriceManage extends Component{
                     },
                     scroll:{
                      x:1600,
-                     y:window.screen.availHeight-400,
+                     y:window.screen.availHeight-400-(disabled?50:0),
                      },
                 }}
             >

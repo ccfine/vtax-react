@@ -2,11 +2,10 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 15:44:35
+ * @Last Modified time: 2018-07-18 11:43:44
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
-import {connect} from 'react-redux';
 import { SearchTable } from "compoments";
 import PopModal from "./popModal";
 import {
@@ -260,7 +259,7 @@ class OtherTaxAdjustment extends Component {
             }
           }}
           tableOption={{
-            scroll: { x: 1500,y:window.screen.availHeight-380 },
+            scroll: { x: 1500,y:window.screen.availHeight-380-(disabled?50:0) },
             pageSize: 10,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,

@@ -5,8 +5,6 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
-import { compose } from 'redux';
-import {connect} from 'react-redux'
 import { AsyncTable } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from 'moment';

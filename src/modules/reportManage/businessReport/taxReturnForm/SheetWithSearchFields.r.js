@@ -3,7 +3,6 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
 import {Form, Row, Col, Button,Card,message} from 'antd'
 import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import { withRouter } from 'react-router'

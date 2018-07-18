@@ -4,7 +4,6 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
-import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
@@ -390,7 +389,7 @@ class unBilledSalesEstate extends Component{
                     </div>,
                     scroll:{
                         x:2000,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({

@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/17.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {fMoney,requestResultStatus,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
@@ -188,7 +187,7 @@ class OtherTaxableItemsDeduct extends Component{
                         key:updateKey,
                         pagination:true,
                         size:'small',
-                        scroll:{x:1200,y:window.screen.availHeight-380},
+                        scroll:{x:1200,y:window.screen.availHeight-380-(disabled?50:0)},
                         columns:columns,
                         cardProps:{
                             title:'其他应税项目扣除台账'

@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/24.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
@@ -246,7 +245,7 @@ const columns=[
                     },
                     scroll:{
                      x:2000,
-                     y:window.screen.availHeight-380,
+                     y:window.screen.availHeight-380-(disabled?50:0),
                      },
                 }}
             />

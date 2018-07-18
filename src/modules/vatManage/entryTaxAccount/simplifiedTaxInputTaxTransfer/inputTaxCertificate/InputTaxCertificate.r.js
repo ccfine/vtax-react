@@ -130,7 +130,7 @@ class InputTaxCertificate extends Component{
                         },
                         scroll:{
                             x:1600,
-                            y:window.screen.availHeight-400,
+                            y:window.screen.availHeight-400-(disabled?50:0),
                         },
                     }}
                 >

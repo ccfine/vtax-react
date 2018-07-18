@@ -3,7 +3,6 @@
  */
 import React,{Component} from 'react'
 import { Tabs } from 'antd';
-import {connect} from 'react-redux';
 import InputTaxCertificate from './inputTaxCertificate'
 import SimpleTaxCertificate from './simpleTaxCertificate'
 import GeneralTaxCertificate from './generalTaxCertificate'

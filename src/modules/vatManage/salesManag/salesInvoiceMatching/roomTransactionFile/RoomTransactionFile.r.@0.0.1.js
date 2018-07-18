@@ -1,12 +1,11 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 12:04:51
+ * @Last Modified time: 2018-07-18 11:42:11
  *
  */
 import React,{Component} from 'react'
 import {message,Modal} from 'antd'
-import {connect} from 'react-redux'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import moment from 'moment';
@@ -505,7 +504,7 @@ class RoomTransactionFile extends Component{
                     },
                     scroll:{
                         x: 2200,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}
             >
