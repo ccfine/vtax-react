@@ -282,8 +282,8 @@ class InputTaxDetails extends Component{
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '金额', dataIndex: 'pageAmount'},
-                                        {title: '税额', dataIndex: 'pageTaxAmount'},
+                                        {title: '金额', dataIndex: 'allAmount'},
+                                        {title: '税额', dataIndex: 'allTaxAmount'},
                                     ],
                                 }
                             ]

@@ -322,7 +322,8 @@ class SalesInvoiceCollection extends Component {
     };
     refreshTable = () => {
         this.setState({
-            tableKey: Date.now()
+            tableKey: Date.now(),
+            selectedRowKeys:[],
         });
     };
     render() {
@@ -341,7 +342,7 @@ class SalesInvoiceCollection extends Component {
                 }}
                 tableOption={{
                     key: tableKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: getColumns(this),
                     url: "/output/invoice/collection/list",
                     rowSelection:{

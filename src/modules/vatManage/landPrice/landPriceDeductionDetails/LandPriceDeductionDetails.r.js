@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 11:40:06
+ * @Last Modified time: 2018-07-19 18:42:25
  */
 import React from 'react'
 // import HasDeduct from './hasDeduct'
@@ -292,7 +292,7 @@ class DeductProjectSummary extends React.Component {
 						title: '土地价款扣除明细台账',
 					},
 					key: tableKey,
-					pageSize: 10,
+					pageSize: 100,
 					columns: columns,
 					url: '/account/landPrice/deductedDetails/list',
 					onSuccess: (params) => {
@@ -357,7 +357,7 @@ class DeductProjectSummary extends React.Component {
                                     {
                                         title:'合计',
                                         total:[
-                                            {title: '当期实际扣除土地价款', dataIndex: 'allAmount'},
+                                            {title: '当期实际扣除土地价款', dataIndex: 'amount'},
                                         ],
                                     }
                                 ]
