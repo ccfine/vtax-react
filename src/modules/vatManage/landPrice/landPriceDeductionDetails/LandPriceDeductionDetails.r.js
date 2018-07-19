@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 10:11:05
+ * @Last Modified time: 2018-07-19 11:16:28
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -358,7 +358,7 @@ class DeductProjectSummary extends React.Component {
                                     {
                                         title:'合计',
                                         total:[
-                                            {title: '当期实际扣除土地价款', dataIndex: 'allAmount'},
+                                            {title: '当期实际扣除土地价款', dataIndex: 'amount'},
                                         ],
                                     }
                                 ]
