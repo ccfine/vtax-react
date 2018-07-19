@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 15:05:16
+ * @Last Modified time: 2018-07-19 17:21:14
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -140,7 +140,7 @@ const getMarkOptions = (item,statusParam) =>{
         ...item,
         formOptions:{
             ...item.formOptions,
-            disabled: isDisabled(statusParam) ? isDisabled(statusParam) : item.selectedRowKeys && !item.formOptions.selectedRowKeys.length>0,
+            disabled: isDisabled(statusParam) || !item.selectedRowKeys || item.selectedRowKeys.length===0,
         },
         style:item.style || item.setButtonStyle || {marginRight:5},
     };
