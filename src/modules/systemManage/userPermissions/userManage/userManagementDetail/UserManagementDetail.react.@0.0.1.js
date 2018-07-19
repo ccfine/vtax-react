@@ -23,10 +23,8 @@ class UserManagementDetail extends Component {
     }
     componentDidMount() {
         const userId = this.props.match.params.id;
-        const orgId = getUrlParam('orgId');
         this.fetchAllPermission();
         this.fetchUserInfo(userId);
-        this.fetchPermission(orgId, userId);
     }
     fetchAllPermission() {
         this.setState({ permissionLoading: true });
@@ -46,31 +44,6 @@ class UserManagementDetail extends Component {
             .catch(err => {
                 message.error(err.message, 4);
                 this.setState({ permissionLoading: false });
-            });
-    }
-    fetchPermission(orgid, userid) {
-        this.setState({ permissionLoading: true });
-        request
-            .get(`/sysUser/queryUserPermissions/${orgid}/${userid}`)
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    const permissions = data.data;
-                    this.mounted &&
-                        this.setState({
-                            permissionLoading: false,
-                            checkedPermission: [
-                                ...permissions.userPermissions,
-                                ...permissions.rolePermissions
-                            ]
-                        });
-                } else {
-                    this.setState({ permissionLoading: false });
-                    message.error(data.msg);
-                }
-            })
-            .catch(err => {
-                this.setState({ permissionLoading: false });
-                message.error(err.message);
             });
     }
     fetchUserInfo(userid) {
@@ -105,9 +78,9 @@ class UserManagementDetail extends Component {
         const {  location } = this.props;
         const {
                 userInfo,
-                checkedPermission,
+                // checkedPermission,
                 allPermission,
-                permissionLoading,
+                // permissionLoading,
                 loaded
             } = this.state;
 
@@ -126,9 +99,7 @@ class UserManagementDetail extends Component {
                     <UserDetail
                         orgId={getUrlParam('orgId')}
                         userInfo={userInfo}
-                        checkedPermission={checkedPermission}
                         allPermission={allPermission}
-                        permissionLoading={permissionLoading}
                         userLoading = {!loaded}
                     />
                 }
