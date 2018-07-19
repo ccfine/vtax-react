@@ -245,7 +245,7 @@ class ShouldDeduct extends React.Component {
 						title: '土地价款当期应抵扣'
 					},
 					key: tableKey,
-					pageSize: 10,
+					pageSize: 100,
 					columns: columns,
 					url: '/account/landPrice/deductedDetails/list',
 					onSuccess: (params) => {
