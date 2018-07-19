@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 19:09:31
+ * @Last Modified time: 2018-07-19 17:36:39
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -216,7 +216,7 @@ class OtherTaxAdjustment extends Component {
     updateKey: Date.now(),
     filters: undefined,
     statusParam: {},
-      totalSource:undefined,
+    totalSource:undefined,
   };
   hideModal() {
     this.setState({ visible: false });
@@ -267,6 +267,11 @@ class OtherTaxAdjustment extends Component {
               this.setState({ filters: params });
               this.updateStatus(params);
             },
+            onTotalSource: totalSource => {
+              this.setState({
+                  totalSource
+              });
+            },
             cardProps: {
               title: "其他涉税调整台账",
               extra: (
@@ -312,11 +317,6 @@ class OtherTaxAdjustment extends Component {
                   } />
                 </div>
               ),
-                onTotalSource: totalSource => {
-                    this.setState({
-                        totalSource
-                    });
-                }
             }
           }}
         />
