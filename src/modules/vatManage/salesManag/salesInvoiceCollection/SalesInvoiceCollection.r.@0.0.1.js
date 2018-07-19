@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
-import { SearchTable, TableTotal } from "compoments";
+import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
@@ -128,38 +128,7 @@ const searchFields = (disabled,declare) => {
         }
     ];
 };
-const getColumns = (context,hasOperate) => {
-    let operates = hasOperate?[{
-        title:'操作',
-        render:(text, record, index)=>composeBotton([{
-            type:'action',
-            title:'删除',
-            icon:'delete',
-            style:{color:'#f5222d'},
-            userPermissions:['1061008'],
-            onSuccess:()=>{
-                const modalRef = Modal.confirm({
-                    title: '友情提醒',
-                    content: '该删除后将不可恢复，是否删除？',
-                    okText: '确定',
-                    okType: 'danger',
-                    cancelText: '取消',
-                    onOk:()=>{
-                        context.deleteRecord(record)
-                        modalRef && modalRef.destroy();
-                    },
-                    onCancel() {
-                        modalRef.destroy()
-                    },
-                });
-            }
-        }]),
-        fixed:'left',
-        width:'70px',
-        dataIndex:'action',
-        className:'text-center',
-    }]:[];
-    return [...operates,{
+const getColumns = (context) => [{
         title: "纳税主体",
         dataIndex: "mainName",
         width:'10%',
@@ -281,11 +250,12 @@ const getColumns = (context,hasOperate) => {
         title: '备注',
         dataIndex: 'remark',
     }
-];
-}
+]
+
 class SalesInvoiceCollection extends Component {
     state = {
         visible: false,
+        deleteLoading:false,
         modalConfig: {
             type: ""
         },
@@ -295,7 +265,8 @@ class SalesInvoiceCollection extends Component {
          *修改状态和时间
          * */
         statusParam: {},
-        totalSource: undefined
+        totalSource: undefined,
+        selectedRowKeys:[],
     };
     fetchResultStatus = () => {
         requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
@@ -304,18 +275,39 @@ class SalesInvoiceCollection extends Component {
             })
         })
     };
-    deleteRecord(record){
-        request.delete(`/output/invoice/collection/delete/${record.id}`).then(({data}) => {
-            if (data.code === 200) {
-                message.success('删除成功', 4);
-                this.refreshTable();
-            } else {
-                message.error(data.msg, 4);
-            }
-        }).catch(err => {
-                message.error(err.message);
-            })
+    toggleDeleteLoading=(val)=>{
+        this.setState({deleteLoading:val})
     }
+    deleteData = () =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要删除选中的记录？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleDeleteLoading(true)
+                request.post(`/output/invoice/collection/deleteByIds`,this.state.selectedRowKeys)
+                    .then(({data})=>{
+                        this.toggleDeleteLoading(false)
+                        if(data.code===200){
+                            message.success('删除成功！');
+                            this.refreshTable();
+                        }else{
+                            message.error(`删除失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    message.error(err.message)
+                    this.toggleDeleteLoading(false)
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
+
     toggleModalVisible = visible => {
         this.setState({
             visible
@@ -335,7 +327,7 @@ class SalesInvoiceCollection extends Component {
         });
     };
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={} } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
@@ -350,8 +342,16 @@ class SalesInvoiceCollection extends Component {
                 tableOption={{
                     key: tableKey,
                     pageSize: 10,
-                    columns: getColumns(this,(disabled && declare.decAction==='edit') && parseInt(statusParam.status,10)===1),
+                    columns: getColumns(this),
                     url: "/output/invoice/collection/list",
+                    rowSelection:{
+                        type: 'checkbox',
+                    },
+                    onRowSelect:(selectedRowKeys)=>{
+                        this.setState({
+                            selectedRowKeys
+                        })
+                    },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params
@@ -390,6 +390,22 @@ class SalesInvoiceCollection extends Component {
                                         fields:fields(disabled,declare),
                                         userPermissions:['1061005'],
                                     },{
+                                        type:'revokeImport',
+                                        url:'/output/invoice/collection/revocation',
+                                        params:filters,
+                                        monthFieldName:"authMonth",
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1065000'],
+                                    },{
+                                        type:'delete',
+                                        icon:'delete',
+                                        text:'删除',
+                                        btnType:'danger',
+                                        loading:deleteLoading,
+                                        selectedRowKeys:selectedRowKeys,
+                                        userPermissions:['1061008'],
+                                        onClick:this.deleteData
+                                    },{
                                         type:'submit',
                                         url:'/output/invoice/collection/submit',
                                         params:filters,
@@ -403,7 +419,18 @@ class SalesInvoiceCollection extends Component {
                                         userPermissions:['1061011'],
                                     }],statusParam)
                                 }
-                                <TableTotal totalSource={totalSource} />
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '发票金额', dataIndex: 'allAmount'},
+                                                {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                                {title: '价税合计', dataIndex: 'allTotalAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
                         )
                     },

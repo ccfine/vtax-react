@@ -163,7 +163,7 @@ class TaxClassificationCode extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     url:'/tax/classification/coding/list',
                     cardProps:{
                         title:'税收分类编码'

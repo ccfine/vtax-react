@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {Form,message} from 'antd';
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
 import { NumericInputCell } from 'compoments/EditableCell'
@@ -121,6 +121,7 @@ class FixedAssetsInputTaxDetails extends Component{
         dataSource:[],
 
         saveLoading:false,
+        totalSource:undefined,
     }
     toggoleSaveLoading=(saveLoading)=>{
         this.setState({saveLoading})
@@ -158,7 +159,7 @@ class FixedAssetsInputTaxDetails extends Component{
         })
     }
     render(){
-        const {tableKey,statusParam,filters,saveLoading} = this.state;
+        const {tableKey,statusParam,filters,saveLoading,totalSource} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -177,7 +178,7 @@ class FixedAssetsInputTaxDetails extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
                     url:'/account/income/estate/fixedList',
                     cardProps: {
@@ -245,12 +246,28 @@ class FixedAssetsInputTaxDetails extends Component{
                                     },
                                 }],statusParam)
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '当期抵扣的进项税额', dataIndex: 'taxAmount'},
+                                            {title: '待抵扣的进项税额', dataIndex: 'deductedTaxAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>
                     ),
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                     scroll:{
-                     x:1600,
-                     y:window.screen.availHeight-430,
-                     },
+                         x:1600,
+                         y:window.screen.availHeight-430,
+                    },
                 }}
             />
         )

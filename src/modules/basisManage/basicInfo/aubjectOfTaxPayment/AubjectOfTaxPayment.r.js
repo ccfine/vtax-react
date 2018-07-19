@@ -175,7 +175,7 @@ class AubjectOfTaxPayment extends Component {
                 doNotFetchDidMount={true}
                 tableOption={{
                     key: tableUpDateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     onSuccess:()=>{
                         this.setState({

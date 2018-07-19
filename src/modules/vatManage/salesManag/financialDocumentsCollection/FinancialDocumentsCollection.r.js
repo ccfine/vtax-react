@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
@@ -191,6 +191,7 @@ class FinancialDocumentsCollection extends Component{
          *修改状态和时间
          * */
         statusParam: {},
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -205,7 +206,7 @@ class FinancialDocumentsCollection extends Component{
         })
     }
     render(){
-        const {updateKey,filters,statusParam} = this.state;
+        const {updateKey,filters,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -216,7 +217,7 @@ class FinancialDocumentsCollection extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
                     scroll:{ x: 2400 ,y:window.screen.availHeight-420},
@@ -249,8 +250,23 @@ class FinancialDocumentsCollection extends Component{
                                         userPermissions:['1231011'],
                                     }],statusParam)
                                 }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '贷方金额', dataIndex: 'creditAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
                         )
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                 }}
             />

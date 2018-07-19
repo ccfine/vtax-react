@@ -315,7 +315,7 @@ class DeclareHandle extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     cardProps:{
                         title: title ? title : '申报办理'

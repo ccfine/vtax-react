@@ -2,14 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 10:11:05
+ * @Last Modified time: 2018-07-19 11:16:28
  */
 import React from 'react'
 import {connect} from 'react-redux'
 // import HasDeduct from './hasDeduct'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
-import { SearchTable } from 'compoments'
+import { SearchTable,TableTotal } from 'compoments'
 import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
 import PopModal from './popModal'
 
@@ -245,6 +245,7 @@ class DeductProjectSummary extends React.Component {
         statusParam:{},
         canFinish:false,
         visible:false,
+        totalSource:undefined,
 	}
 	toggleModalVisible = visible => {
 		this.setState({
@@ -273,7 +274,7 @@ class DeductProjectSummary extends React.Component {
         })
     }
 	render() {
-		const { tableKey, filters = {}, statusParam={},canFinish,visible} = this.state
+		const { tableKey, filters = {}, statusParam={},canFinish,visible,totalSource} = this.state
         const { declare } = this.props;
         let disabled = !!declare;
 		return (
@@ -352,8 +353,23 @@ class DeductProjectSummary extends React.Component {
                                     }
                                 }],statusParam)
                             }
+							<TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '当期实际扣除土地价款', dataIndex: 'amount'},
+                                        ],
+                                    }
+                                ]
+                            } />
 						</div>
-					)
+					),
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
 				}}
 			/>
 		)

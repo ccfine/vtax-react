@@ -24,7 +24,6 @@ request.testSuccess = (data,success,fail) => {
         success && success(data.data)
     }else{
         console.log(data.msg);
-
         fail && fail(data.msg)
     }
 };

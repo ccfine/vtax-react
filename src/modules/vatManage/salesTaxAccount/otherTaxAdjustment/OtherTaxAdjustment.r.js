@@ -2,12 +2,12 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 18:08:04
+ * @Last Modified time: 2018-07-18 19:09:31
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
 import {connect} from 'react-redux';
-import { SearchTable } from "compoments";
+import { SearchTable,TableTotal } from "compoments";
 import PopModal from "./popModal";
 import {
   request,
@@ -216,6 +216,7 @@ class OtherTaxAdjustment extends Component {
     updateKey: Date.now(),
     filters: undefined,
     statusParam: {},
+      totalSource:undefined,
   };
   hideModal() {
     this.setState({ visible: false });
@@ -247,7 +248,7 @@ class OtherTaxAdjustment extends Component {
   render() {
     const { declare } = this.props;
     let disabled = !!declare;
-    let { filters={}, statusParam = {} } = this.state;
+    let { filters={}, statusParam = {},totalSource } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (
       <div>
@@ -297,8 +298,25 @@ class OtherTaxAdjustment extends Component {
                           onSuccess:this.refreshTable,
                       }],statusParam)
                   }
+                  <TableTotal type={3} totalSource={totalSource} data={
+                      [
+                          {
+                              title:'合计',
+                              total:[
+                                  {title: '销售额（不含税）', dataIndex: 'amount'},
+                                  {title: '销项（应纳）税额', dataIndex: 'taxAmount'},
+                                  {title: '服务、不动产和无形资产扣除项目本期实际扣除金额（含税）', dataIndex: 'deductionAmount'},
+                              ],
+                          }
+                      ]
+                  } />
                 </div>
-              )
+              ),
+                onTotalSource: totalSource => {
+                    this.setState({
+                        totalSource
+                    });
+                }
             }
           }}
         />

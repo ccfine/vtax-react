@@ -227,7 +227,7 @@ const columns = [
         ]
     },
     {
-        title:'未开具发票销售额',
+        title:'应申报未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
         render:text=>fMoney(text),
         className:'table-money',
@@ -300,7 +300,7 @@ class unBilledSalesEstate extends Component{
                         title:'未开票销售台账-地产'
                     },
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/realty/list',
                     onSuccess:(params)=>{
@@ -352,39 +352,23 @@ class unBilledSalesEstate extends Component{
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {
-                                    title:'本页合计',
+                                    title:'合计',
                                     total:[
-                                        {title: '上期-增值税收入确认金额合计', dataIndex: 'pageSumTotalPrice'},
-                                        {title: '上期-增值税开票金额', dataIndex: 'pageSumTotalAmount'},
-                                        {title: '上期末合计金额-未开具发票销售额', dataIndex: 'pageSumNoInvoiceSales'},
+                                        {title: '应申报未开具发票销售额', dataIndex: 'allTotalNoInvoiceSales'},
 
-                                        {title: '本期-增值税收入确认金额合计', dataIndex: 'pageTotalPrice'},
-                                        {title: '本期-增值税开票金额', dataIndex: 'pageTotalAmount'},
-                                        {title: '本期-未开具发票销售额', dataIndex: 'pageNoInvoiceSales'},
+                                        {title: '上期末增值税收入确认金额', dataIndex: 'allSumTotalPrice'},
+                                        {title: '上期末增值税开票金额', dataIndex: 'allSumTotalAmount'},
+                                        {title: '上期末未开具发票销售额', dataIndex: 'allSumNoInvoiceSales'},
 
-                                        {title: '本期末合计-增值税收入确认金额合计', dataIndex: 'pageEndTotalPrice'},
-                                        {title: '本期末合计-增值税开票金额', dataIndex: 'pageEndTotalAmount'},
-                                        {title: '本期末合计-未开具发票销售额', dataIndex: 'pageEndNoInvoiceSales'},
+                                        {title: '本期增值税收入确认金额', dataIndex: 'allTotalPrice'},
+                                        {title: '本期增值税开票金额', dataIndex: 'allTotalAmount'},
+                                        {title: '本期未开具发票销售额', dataIndex: 'allNoInvoiceSales'},
 
-                                        {title:'未开具发票销售额',dataIndex:'pageTotalNoInvoiceSales'},
+                                        {title: '本期末增值税收入确认金额', dataIndex: 'allEndTotalPrice'},
+                                        {title: '本期末增值税开票金额', dataIndex: 'allEndTotalAmount'},
+                                        {title: '本期末未开具发票销售额', dataIndex: 'allEndNoInvoiceSales'},
                                     ],
-                                },{
-                                title:'总计',
-                                total:[
-                                    {title: '上期-增值税收入确认金额合计', dataIndex: 'allSumTotalPrice'},
-                                    {title: '上期-增值税开票金额', dataIndex: 'allSumTotalAmount'},
-                                    {title: '上期末合计金额-未开具发票销售额', dataIndex: 'allSumNoInvoiceSales'},
-
-                                    {title: '本期-增值税收入确认金额合计', dataIndex: 'allTotalPrice'},
-                                    {title: '本期-增值税开票金额', dataIndex: 'allTotalAmount'},
-                                    {title: '本期-未开具发票销售额', dataIndex: 'allNoInvoiceSales'},
-
-                                    {title: '本期末合计-增值税收入确认金额合计', dataIndex: 'allEndTotalPrice'},
-                                    {title: '本期末合计-增值税开票金额', dataIndex: 'allEndTotalAmount'},
-                                    {title: '本期末合计-未开具发票销售额', dataIndex: 'allEndNoInvoiceSales'},
-                                    {title:'未开具发票销售额',dataIndex:'allTotalNoInvoiceSales'},
-                                ],
-                            }
+                                }
                             ]
                         } />
                     </div>,

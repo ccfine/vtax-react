@@ -326,7 +326,7 @@ class ConfirmCarryOver extends Component{
                 spinning={searchTableLoading}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/list',
                     onSuccess:(params,data)=>{

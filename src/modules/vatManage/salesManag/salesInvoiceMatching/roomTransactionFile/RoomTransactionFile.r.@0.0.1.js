@@ -485,27 +485,24 @@ class RoomTransactionFile extends Component{
                                 onSuccess:this.refreshTable,
                             }],statusParam)
                         }
-                        <TableTotal type={3} totalSource={totalSource} data={[
-                            {
-                                title:'本页合计',
-                                total:[
-                                    {title: '成交金额', dataIndex: 'pageTotalPrice'},
-                                ],
-                            },{
-                                title:'总计',
-                                total:[
-                                    {title: '成交金额', dataIndex: 'allTotalPrice'},
-                                ],
-                            }
-                        ]} />
-
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '成交金额', dataIndex: 'allTotalPrice'},
+                                        {title: '已开票金额', dataIndex: 'allInvoicedAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
                         x: 2200,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-500,
                     },
                 }}
             >
