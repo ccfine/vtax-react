@@ -388,7 +388,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                 backCondition={this.updateStatus}
                 tableOption={{
                     key: updateKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: getColumns(this),
                     cardProps: {
                         title: '进项转出差异调整表'

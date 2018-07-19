@@ -259,7 +259,7 @@ class OtherTaxAdjustment extends Component {
           }}
           tableOption={{
             scroll: { x: 1500,y:window.screen.availHeight-380 },
-            pageSize: 10,
+            pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",

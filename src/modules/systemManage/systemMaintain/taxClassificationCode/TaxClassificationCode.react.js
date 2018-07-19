@@ -38,13 +38,13 @@ const searchFields = [
     },{
         label:'税率',
         fieldName:'taxRate',
-        type:'input',
+        type:'numeric',
         span:8,
         componentProps:{
+            valueType:'int'
         },
         fieldDecoratorOptions:{
         },
-
     }
 ]
 const getColumns =(context)=>[
@@ -168,7 +168,7 @@ class TaxClassificationCode extends Component{
                     cardProps:{
                         title:'税收分类编码'
                     },
-                    scroll:{x:1000,y:window.screen.availHeight-380},
+                    scroll:{x:1000,y:window.screen.availHeight-400},
                     columns:getColumns(this),
                     extra:<div>
                         {
