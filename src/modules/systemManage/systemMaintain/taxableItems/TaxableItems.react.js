@@ -24,11 +24,11 @@ const columns =[
     {
         title: '应税项目编号',
         dataIndex: 'num',
-        width:'6%',
+        width:'10%',
     },{
         title: '应税项目名称',
         dataIndex: 'name',
-        width:'6%',
+        width:'10%',
     },{
         title: '业务类型',
         dataIndex: 'businessType',
@@ -47,7 +47,7 @@ const columns =[
             }
             return res;
         },
-        width:'6%',
+        width:'10%',
     },{
         title: '一般计税税率',
         dataIndex: 'commonlyTaxRate',
@@ -230,7 +230,6 @@ class TaxableItems extends Component {
                     cardProps:{
                         title:'下级列表信息'
                     },
-                    scroll:{x:2400,y:window.screen.availHeight-390},
                     url:'/taxable/project/list',
                     clearSelectedRowAfterFetch:false,
                     onRowSelect:(selectedRowKeys)=>{
@@ -240,6 +239,10 @@ class TaxableItems extends Component {
                     },
                     rowSelection:{
                         type:'radio',
+                    },
+                    scroll:{
+                        x:'150%',
+                        y:window.screen.availHeight-400,
                     },
                 }}
             >

@@ -93,7 +93,6 @@ class FileUndoImportModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.toggleLoading(true)
                 for(let key in values){
                     if(moment.isMoment(values[key])){
                         //格式化一下时间 YYYY-MM类型

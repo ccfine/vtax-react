@@ -162,14 +162,14 @@ const getColumns = (context) => [{
                 <p className="apply-form-list-p2">发票代码</p>
             </div>
         ),
-        dataIndex: "invoiceTypeName",
+        dataIndex: "invoiceType",
         render: (text, record) => (
             <div>
-                <p className="apply-form-list-p1">{text}</p>
+                <p className="apply-form-list-p1">{text==='s'?'增值税专用发票':(text==='c'?'增值税普通发票':'')}</p>
                 <p className="apply-form-list-p2">{record.invoiceCode}</p>
             </div>
         ),
-        width:90,
+        width:100,
     },
     {
         title: (
@@ -325,7 +325,7 @@ class InvoiceCollection extends Component {
         this.setState(
             {
                 tableUpDateKey: Date.now(),
-                selectedRowKeys:null
+                selectedRowKeys:[]
             }
         );
     };
