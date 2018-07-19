@@ -234,7 +234,13 @@ class PopModal extends Component{
                                 ]
                             },
                             componentProps:{
-                                disabled:readonly
+                                disabled:readonly,
+                                onChange:(data)=>{
+                                    //项目选择纳税检查调整时，调整原因默认为纳税检查调整
+                                    if(data === '2'){
+                                        this.props.form.setFieldsValue({adjustReason:'5'})
+                                    }
+                                }
                             }
                         },
                         {
@@ -410,7 +416,7 @@ class PopModal extends Component{
                             {text:'其他涉税调整',value:'4'},
                             {text:'纳税检查调整',value:'5'}],
                             fieldDecoratorOptions:{
-                                initialValue:this.props.action==="add"?'5':record.adjustReason,
+                                initialValue:record.adjustReason,
                                 rules:[{
                                     required:true,
                                     message:'请选择调整原因'

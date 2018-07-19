@@ -474,7 +474,7 @@ class InvoiceCollection extends Component {
                                             total:[
                                                 {title: '发票金额', dataIndex: 'allAmount'},
                                                 {title: '发票税额', dataIndex: 'allTaxAmount'},
-                                                {title: '价税合计', dataIndex: 'allTotalPrice'},
+                                                {title: '价税合计', dataIndex: 'allTotalAmount'},
                                             ],
                                         }
                                     ]

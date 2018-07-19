@@ -347,9 +347,9 @@ class UnBilledSalesNotEstate extends Component {
                                   {
                                       title:'合计',
                                       total:[
-                                          {title: '金额', dataIndex: 'allAmount'},
-                                          {title: '税额', dataIndex: 'allTaxAmount'},
-                                          {title: '价税合计', dataIndex: 'allTotalPrice'},
+                                          {title: '金额', dataIndex: 'amount'},
+                                          {title: '税额', dataIndex: 'taxAmount'},
+                                          {title: '价税合计', dataIndex: 'totalAmount'},
                                       ],
                                   }
                               ]

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 18:08:04
+ * @Last Modified time: 2018-07-18 19:09:31
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -303,9 +303,9 @@ class OtherTaxAdjustment extends Component {
                           {
                               title:'合计',
                               total:[
-                                  {title: '销售额（不含税）', dataIndex: 'allAmount'},
-                                  {title: '销项（应纳）税额', dataIndex: 'allAmount'},
-                                  {title: '服务、不动产和无形资产扣除项目本期实际扣除金额（含税）', dataIndex: 'allAmount'},
+                                  {title: '销售额（不含税）', dataIndex: 'amount'},
+                                  {title: '销项（应纳）税额', dataIndex: 'taxAmount'},
+                                  {title: '服务、不动产和无形资产扣除项目本期实际扣除金额（含税）', dataIndex: 'deductionAmount'},
                               ],
                           }
                       ]
