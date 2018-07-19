@@ -199,9 +199,9 @@ class PrepayTax extends Component{
                                 {
                                     title:'合计',
                                     total:[
+                                        {title: '预缴税款', dataIndex: 'prepayAmount'},
                                         {title: '金额（不含税）', dataIndex: 'withOutAmount'},
                                         {title: '金额（含税）', dataIndex: 'withTaxAmount'},
-                                        {title: '预缴税款', dataIndex: 'prepayAmount'},
                                     ],
                                 }
                             ]
