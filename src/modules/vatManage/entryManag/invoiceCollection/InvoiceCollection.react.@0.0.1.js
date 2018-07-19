@@ -325,7 +325,7 @@ class InvoiceCollection extends Component {
         this.setState(
             {
                 tableUpDateKey: Date.now(),
-                selectedRowKeys:null
+                selectedRowKeys:[]
             }
         );
     };

@@ -51,7 +51,9 @@ class TreeTable extends Component{
             /*this.setState({
                 tableUpDateKey:nextProps.tableOption.key,
             })*/
-            this.handleSubmit()
+            setTimeout(()=>{
+                this.handleSubmit()
+            },300)
         }
 
         if(nextProps.searchOption){
@@ -199,7 +201,7 @@ class TreeTable extends Component{
                             <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[1]) || 18}>
                                 <Card
                                     extra={tableOption.extra || null}
-                                    //style={{marginTop:10}}
+                                    //style={{marginTop:6}}
                                     {...tableOption.cardProps}
                                     bodyStyle={{paddingBottom:(tableOption.pagination || tableOption.pageSize)?0:8}}
                                 >
@@ -207,9 +209,9 @@ class TreeTable extends Component{
                                                 updateKey={tableUpDateKey}
                                                 filters={filters}
                                                 tableProps={{
-                                                    rowKey:record=>record.id,
-                                                    pagination:true,
-                                                    pageSize:tableOption.pageSize || 10,
+                                                    rowKey:record=>record[tableOption.rowKey] || record.id,
+                                                    pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
+                                                    pageSize:tableOption.pageSize || 100,
                                                     size:'small',
                                                     onRow:tableOption.onRow || undefined,
                                                     rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
@@ -218,6 +220,7 @@ class TreeTable extends Component{
                                                     onSuccess:tableOption.onSuccess || undefined,
                                                     scroll:tableOption.scroll || undefined,
                                                     onDataChange:tableOption.onDataChange || undefined,
+                                                    onTotalSource:tableOption.onTotalSource || undefined,
                                                     renderFooter:tableOption.renderFooter || undefined
                                                 }} />
                                 </Card>
