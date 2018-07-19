@@ -84,16 +84,16 @@ class SimpleTaxInputTaxTransferredToTheAccount extends Component{
         return(
             <Tabs key={tabsKey}  onChange={this.onTabChange} type="card" activeKey={activeKey}>
                 <TabPane tab="进项税额" key="1">
-                    <InputTaxCertificate searchFields={searchFields(disabled,declare)} />
+                    <InputTaxCertificate searchFields={searchFields(disabled,declare)} declare={declare}/>
                 </TabPane>
                 <TabPane tab="简易计税" key="2">
-                    <SimpleTaxCertificate searchFields={searchFields(disabled,declare)} />
+                    <SimpleTaxCertificate searchFields={searchFields(disabled,declare)} declare={declare}/>
                 </TabPane>
                 <TabPane tab="一般计税" key="3">
-                    <GeneralTaxCertificate searchFields={searchFields(disabled,declare)} />
+                    <GeneralTaxCertificate searchFields={searchFields(disabled,declare)} declare={declare}/>
                 </TabPane>
                 <TabPane tab="简易计税进项税额转出" key="4">
-                    <SimplifiedTaxInputTaxTransfer searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
+                    <SimplifiedTaxInputTaxTransfer searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} declare={declare}/>
                 </TabPane>
             </Tabs>
         )

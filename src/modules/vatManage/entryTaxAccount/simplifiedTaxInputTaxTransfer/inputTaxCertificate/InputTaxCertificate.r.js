@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -160,6 +159,4 @@ class InputTaxCertificate extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(InputTaxCertificate);
+export default InputTaxCertificate;
