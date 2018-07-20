@@ -178,6 +178,14 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                             dispatch(areaId.increment(data.areaId))
                             //获取用户信息
                             dispatch(personal.increment(data))
+
+                            //所有信息获取完毕后，设置登录方式
+                            dispatch(loginType.increment(type))
+                            //用户信息获取成功的话
+                            //所需信息全部加载完毕，完成登录
+                            dispatch(isAuthed.login())
+                            //执行登录成功回调
+                            success && success()
                         }
                     },err=>{
                         fail && fail(err)
@@ -186,15 +194,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                 }).catch(err=>{
                     fail && fail(err.message)
                 })
-
-            //所有信息获取完毕后，设置登录方式
-            dispatch(loginType.increment(type))
-            //用户信息获取成功的话
-            //所需信息全部加载完毕，完成登录
-            dispatch(isAuthed.login())
-            //执行登录成功回调
-            success && success()
-
         }
 
     }catch(err) {
