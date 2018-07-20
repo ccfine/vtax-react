@@ -140,7 +140,7 @@ const getMarkOptions = (item,statusParam) =>{
         ...item,
         formOptions:{
             ...item.formOptions,
-            disabled: isDisabled(statusParam) || !item.selectedRowKeys || item.selectedRowKeys.length===0,
+            disabled: isDisabled(statusParam) || (item.formOptions.selectedRowKeys && !item.formOptions.selectedRowKeys.length>0),
         },
         style:item.style || item.setButtonStyle || {marginRight:5},
     };
