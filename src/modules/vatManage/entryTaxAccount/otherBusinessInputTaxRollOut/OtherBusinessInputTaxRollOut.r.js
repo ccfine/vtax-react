@@ -183,6 +183,15 @@ class OtherBusinessInputTaxRollOut extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
+                                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                                            type:'fileExport',
+                                            url:'account/income/taxout/export',
+                                            params:filters,
+                                            title:'导出',
+                                            userPermissions:['1401007'],
+                                        }])
+                                    }
+                                    {
                                          (disabled && declare.decAction==='edit' && noSubmit) && composeBotton([{
                                             type:'save',
                                             text:'保存',

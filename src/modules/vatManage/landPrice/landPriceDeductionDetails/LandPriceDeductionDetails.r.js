@@ -314,6 +314,15 @@ class DeductProjectSummary extends React.Component {
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/landPrice/deductedDetails/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1261007'],
+                                }])
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') && canFinish && composeBotton([{
                                     type:'consistent',
                                     icon:'exception',

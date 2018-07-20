@@ -136,7 +136,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
             password
         }).then(res=>{
             request.testSuccess(res.data,data=>{
-                console.log(data);
                 //判断是否是管理员 and 是否有权限 没有就跳转到403页面
                 if(data.type !== 8192 && data.options<1){
                     window.location.href="/403";
@@ -168,14 +167,18 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
             await request.post('/oauth/loginName',{userName:userName})
                 .then(res=>{
                     request.testSuccess(res.data,data=>{
-                        dispatch(token.increment(data.token))
-                        //获取组织信息
-                        dispatch(orgId.increment(data.orgId))
-                        // 获取区域
-                        dispatch(areaId.increment(data.areaId))
-                        //获取用户信息
-                        dispatch(personal.increment(data))
-
+                        //判断是否是管理员 and 是否有权限 没有就跳转到403页面
+                        if(data.type !== 8192 && data.options<1){
+                            window.location.href="/403";
+                        }else {
+                            dispatch(token.increment(data.token))
+                            //获取组织信息
+                            dispatch(orgId.increment(data.orgId))
+                            // 获取区域
+                            dispatch(areaId.increment(data.areaId))
+                            //获取用户信息
+                            dispatch(personal.increment(data))
+                        }
                     },err=>{
                         fail && fail(err)
                         console.log(`用户信息获取失败:${err}`)
