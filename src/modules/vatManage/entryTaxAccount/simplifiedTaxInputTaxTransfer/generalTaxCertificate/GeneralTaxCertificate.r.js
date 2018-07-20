@@ -138,7 +138,8 @@ class GeneralTaxCertificate extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[],
         })
     }
     render(){
