@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 15:54:24
+ * @Last Modified time: 2018-07-23 16:00:04
  */
 import React, { Component } from "react";
 import {message,Modal} from 'antd';
@@ -307,7 +307,7 @@ export default class fixedAssetCard extends Component {
                                     url:'fixedAssetCard/report/export',
                                     params:filters,
                                     title:'导出',
-                                    userPermissions:['1871002'],
+                                    userPermissions:['1871007'],
                                 },{
                                     type:'fileImport',
                                     url:'/fixedAssetCard/report/upload',

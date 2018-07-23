@@ -373,7 +373,7 @@ class SalesInvoiceCollection extends Component {
                                         url:'output/invoice/collection/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1061002'],
+                                        userPermissions:['1061007'],
                                     }])
                                 }
                                 {
