@@ -61,12 +61,15 @@ class WimsHeader extends Component {
     componentDidMount(){
         request.post('/oauth/loginOut').then(({data})=>{
             if(data.code === 200){
-                this.setState({ssoPath:data.data})
+                this.mounted && this.setState({ssoPath:data.data})
             }
         }).catch(err=>{
         })
     }
-
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>

@@ -194,6 +194,15 @@ class tab1 extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/othertax/deducted/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1271007'],
+                                }])
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'reset',
                                     url:'/account/othertax/deducted/reset',

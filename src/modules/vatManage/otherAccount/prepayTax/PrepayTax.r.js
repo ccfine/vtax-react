@@ -143,34 +143,35 @@ class PrepayTax extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <SearchTable
-                searchOption={{
-                    fields:searchFields(disabled,declare),
-                    cardProps:{
-                        className:''
-                    },
-                }}
-                doNotFetchDidMount={!disabled}
-                spinning={searchTableLoading}
-                tableOption={{
-                    key:tableKey,
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
-                    cardProps: {
-                        title: "预缴税款台账",
-                    },
-                    pageSize:100,
-                    columns:getColumns(this),
-                    url:'/account/prepaytax/prepayTaxList',
-                    extra:<div>
-                        {
-                            listMainResultStatus(statusParam)
-                        }{
+            <div className="oneLine">
+                    <SearchTable
+                    searchOption={{
+                        fields:searchFields(disabled,declare),
+                        cardProps:{
+                            className:''
+                        },
+                    }}
+                    doNotFetchDidMount={!disabled}
+                    spinning={searchTableLoading}
+                    tableOption={{
+                        key:tableKey,
+                        onSuccess:(params)=>{
+                            this.setState({
+                                filters:params,
+                            },()=>{
+                                this.fetchResultStatus()
+                            })
+                        },
+                        cardProps: {
+                            title: "预缴税款台账",
+                        },
+                        pageSize:100,
+                        columns:getColumns(this),
+                        url:'/account/prepaytax/prepayTaxList',
+                        extra:<div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }{
                             JSON.stringify(filters) !=='{}' && composeBotton([{
                                 type:'fileExport',
                                 url:'account/prepaytax/export',
@@ -179,51 +180,52 @@ class PrepayTax extends Component{
                                 userPermissions:['1331007'],
                             }],statusParam)
                         }
-                        {
-                            (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                type:'submit',
-                                url:'/account/prepaytax/submit',
-                                params:filters,
-                                userPermissions:['1331010'],
-                                onSuccess:this.refreshTable
-                            },{
-                                type:'revoke',
-                                url:'/account/prepaytax/revoke',
-                                params:filters,
-                                userPermissions:['1331011'],
-                                onSuccess:this.refreshTable,
-                            }],statusParam)
-                        }
-                        <TableTotal type={3} totalSource={totalSource} data={
-                            [
-                                {
-                                    title:'合计',
-                                    total:[
-                                        {title: '预缴税款', dataIndex: 'prepayAmount'},
-                                        {title: '金额（不含税）', dataIndex: 'withOutAmount'},
-                                        {title: '金额（含税）', dataIndex: 'withTaxAmount'},
-                                    ],
-                                }
-                            ]
-                        } />
-                    </div>,
-                    onTotalSource: (totalSource) => {
-                        this.setState({
-                            totalSource
-                        })
-                    },
-                    scroll:{
-                        x:1000,
-                        y:window.screen.availHeight-380,
-                    },
-                }}
-            >
-                <ViewDocumentDetails
-                    title="查看凭证详情"
-                    visible={visibleView}
-                    voucherNum={voucherNum}
-                    toggleViewModalVisible={this.toggleViewModalVisible} />
-            </SearchTable>
+                            {
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/prepaytax/submit',
+                                    params:filters,
+                                    userPermissions:['1331010'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/prepaytax/revoke',
+                                    params:filters,
+                                    userPermissions:['1331011'],
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '预缴税款', dataIndex: 'prepayAmount'},
+                                            {title: '金额（不含税）', dataIndex: 'withOutAmount'},
+                                            {title: '金额（含税）', dataIndex: 'withTaxAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
+                        </div>,
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            })
+                        },
+                        scroll:{
+                            x:1000,
+                            y:window.screen.availHeight-380,
+                        },
+                    }}
+                >
+                    <ViewDocumentDetails
+                        title="查看凭证详情"
+                        visible={visibleView}
+                        voucherNum={voucherNum}
+                        toggleViewModalVisible={this.toggleViewModalVisible} />
+                </SearchTable>
+            </div>
         )
     }
 }

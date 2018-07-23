@@ -136,7 +136,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
             password
         }).then(res=>{
             request.testSuccess(res.data,data=>{
-                console.log(data);
                 //判断是否是管理员 and 是否有权限 没有就跳转到403页面
                 if(data.type !== 8192 && data.options<1){
                     window.location.href="/403";
@@ -168,14 +167,26 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
             await request.post('/oauth/loginName',{userName:userName})
                 .then(res=>{
                     request.testSuccess(res.data,data=>{
-                        dispatch(token.increment(data.token))
-                        //获取组织信息
-                        dispatch(orgId.increment(data.orgId))
-                        // 获取区域
-                        dispatch(areaId.increment(data.areaId))
-                        //获取用户信息
-                        dispatch(personal.increment(data))
+                        //判断是否是管理员 and 是否有权限 没有就跳转到403页面
+                        if(data.type !== 8192 && data.options<1){
+                            window.location.href="/403";
+                        }else {
+                            dispatch(token.increment(data.token))
+                            //获取组织信息
+                            dispatch(orgId.increment(data.orgId))
+                            // 获取区域
+                            dispatch(areaId.increment(data.areaId))
+                            //获取用户信息
+                            dispatch(personal.increment(data))
 
+                            //所有信息获取完毕后，设置登录方式
+                            dispatch(loginType.increment(type))
+                            //用户信息获取成功的话
+                            //所需信息全部加载完毕，完成登录
+                            dispatch(isAuthed.login())
+                            //执行登录成功回调
+                            success && success()
+                        }
                     },err=>{
                         fail && fail(err)
                         console.log(`用户信息获取失败:${err}`)
@@ -183,15 +194,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                 }).catch(err=>{
                     fail && fail(err.message)
                 })
-
-            //所有信息获取完毕后，设置登录方式
-            dispatch(loginType.increment(type))
-            //用户信息获取成功的话
-            //所需信息全部加载完毕，完成登录
-            dispatch(isAuthed.login())
-            //执行登录成功回调
-            success && success()
-
         }
 
     }catch(err) {

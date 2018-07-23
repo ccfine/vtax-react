@@ -460,7 +460,7 @@ class InvoiceDataMatching extends Component{
                                 url:'output/invoice/marry/already/export',
                                 params:filters,
                                 title:'导出',
-                                userPermissions:['1211002'],
+                                userPermissions:['1211007'],
                             }])
                         }
                         {
