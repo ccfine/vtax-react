@@ -277,6 +277,15 @@ class OtherTaxAdjustment extends Component {
               extra: (
                 <div>
                   {listMainResultStatus(statusParam)}
+                    {
+                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                            type:'fileExport',
+                            url:'account/output/othertax/export',
+                            params:filters,
+                            title:'导出',
+                            userPermissions:['1311007'],
+                        }])
+                    }
                   {
                       (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',

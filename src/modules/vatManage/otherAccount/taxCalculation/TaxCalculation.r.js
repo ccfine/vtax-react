@@ -180,76 +180,85 @@ class TaxCalculation extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-        <div>
-            <SearchTable
-                doNotFetchDidMount={!disabled}
-                searchOption={{
-                    fields:searchFields(disabled,declare),
-                    cardProps:{
-                        className:''
-                    },
-                }}
-                spinning={searchTableLoading}
-                tableOption={{
-                    key:tableKey,
-                    onRow:record=>({
-                        onDoubleClick:()=>{console.log(record)}
-                    }),
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
-                    pagination:false,
-                    columns:getColumns(getFieldDecorator,(disabled && parseInt(statusParam.status,10)===1)),
-                    url:tableUrl,
-                    cardProps:{
-                        title:'税款计算台账'
-                    },
-                    scroll:{
-                        y:window.screen.availHeight-320,
-                        x:1000,
-                    },
-                    extra:<div>
-                        {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
-                            (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                type:'save',
-                                icon:'save',
-                                text:'保存',
-                                userPermissions:['1371003'],
-                                onClick:()=>this.save()
-                            },{
-                                type:'reset',
-                                url:'/account/taxCalculation/reset',
-                                params:filters,
-                                userPermissions:['1371009'],
-                                onSuccess:this.refreshTable
-                            },{
-                                type:'submit',
-                                url:'/account/taxCalculation/submit',
-                                params:filters,
-                                // monthFieldName:'authMonth',
-                                userPermissions:['1371010'],
-                                onSuccess:this.refreshTable
-                            },{
-                                type:'revoke',
-                                url:'/account/taxCalculation/revoke',
-                                params:filters,
-                                // monthFieldName:'authMonth',
-                                userPermissions:['1371011'],
-                                onSuccess:this.refreshTable,
-                            }],statusParam)
-                        }
-                    </div>
-                }}
-            >
-            </SearchTable>
-        </div>
+            <div className="oneLine">
+                <SearchTable
+                    doNotFetchDidMount={!disabled}
+                    searchOption={{
+                        fields:searchFields(disabled,declare),
+                        cardProps:{
+                            className:''
+                        },
+                    }}
+                    spinning={searchTableLoading}
+                    tableOption={{
+                        key:tableKey,
+                        onRow:record=>({
+                            onDoubleClick:()=>{console.log(record)}
+                        }),
+                        onSuccess:(params)=>{
+                            this.setState({
+                                filters:params,
+                            },()=>{
+                                this.fetchResultStatus()
+                            })
+                        },
+                        pagination:false,
+                        columns:getColumns(getFieldDecorator,(disabled && parseInt(statusParam.status,10)===1)),
+                        url:tableUrl,
+                        cardProps:{
+                            title:'税款计算台账'
+                        },
+                        scroll:{
+                            y:window.screen.availHeight-320,
+                            x:1000,
+                        },
+                        extra:<div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/taxCalculation/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1371007'],
+                                }])
+                            }
+                            {
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'save',
+                                    icon:'save',
+                                    text:'保存',
+                                    userPermissions:['1371003'],
+                                    onClick:()=>this.save()
+                                },{
+                                    type:'reset',
+                                    url:'/account/taxCalculation/reset',
+                                    params:filters,
+                                    userPermissions:['1371009'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'submit',
+                                    url:'/account/taxCalculation/submit',
+                                    params:filters,
+                                    // monthFieldName:'authMonth',
+                                    userPermissions:['1371010'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/taxCalculation/revoke',
+                                    params:filters,
+                                    // monthFieldName:'authMonth',
+                                    userPermissions:['1371011'],
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                            }
+                        </div>
+                    }}
+                >
+                </SearchTable>
+            </div>
 
         )
     }
