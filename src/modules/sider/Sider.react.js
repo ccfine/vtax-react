@@ -187,7 +187,7 @@ class VTaxSider extends Component {
             >
                 <div className="logo">
                     <Link to="/web">
-                        <img src={logo} alt="logo" />
+                        <img src={logo} alt="logo" style={{width: `${this.props.collapsed ? 56 : 145}px`}} />
                         {/*<h1>碧桂园增值税管理系统</h1>*/}
                     </Link>
                 </div>

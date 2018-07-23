@@ -77,6 +77,28 @@
   }
 }*/
 
+.vtax-custom-trigger {
+  overflow: hidden;
+
+  .ant-layout-sider-children {
+    position: fixed;
+    transition: all .2s;
+  }
+}
+
+
+.vtax-custom-trigger {
+  .ant-layout-sider-children {
+    width:200px;
+  }
+}
+
+.vtax-custom-trigger.ant-layout-sider-collapsed{
+  .ant-layout-sider-children {
+    width: @menu-collapsed-width;
+  }
+}
+
 .logo {
   height: 48px;
   line-height: 32px;
@@ -89,15 +111,6 @@
     display: inline-block;
     vertical-align: middle;
     height:42px;
-  }
-}
-
-.vtax-custom-trigger {
-  min-height: 100vh;
-  .ant-layout-sider-collapsed {
-    .logo {
-      width: 60px;
-    }
   }
 }
 
