@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 16:54:24
+ * @Last Modified time: 2018-07-23 14:55:12
  */
 import React, { Component } from "react";
-import {message,Modal} from 'antd';
+import {message} from 'antd';
 import { SearchTable} from "compoments";
 import { fMoney,composeBotton,request } from "utils";
 const searchFields = [
@@ -75,7 +75,7 @@ const importFeilds = [
 ];*/
 
 const getColumns = context => [
-    {
+    /*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -104,7 +104,7 @@ const getColumns = context => [
         width:70,
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: (
             <div className="apply-form-list-th">

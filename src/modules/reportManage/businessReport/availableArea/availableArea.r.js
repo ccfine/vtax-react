@@ -2,12 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-17 16:59:47
+ * @Last Modified time: 2018-07-23 14:58:28
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
 import {request,composeBotton} from 'utils';
-import {message,Form,Modal} from 'antd';
+import {message,Form} from 'antd';
 import { NumericInputCell } from 'compoments/EditableCell'
 const searchFields = (getFieldValue)=>[
     {
@@ -74,7 +74,7 @@ const importFeilds = [
     }
 ];*/
 
-const getColumns = context => [{
+const getColumns = context => [/*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -103,7 +103,7 @@ const getColumns = context => [{
         width:40,
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: (
             <div className="apply-form-list-th">
