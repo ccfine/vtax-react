@@ -8,7 +8,7 @@ import { Form,message,Row } from 'antd'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom';
 import {request,getFields} from 'utils'
-import {saveOrgId,saveToken,savePersonal,saveAreaId} from '../../redux/ducks/user'
+import {saveOrg,saveToken,savePersonal,saveArea} from '../../redux/ducks/user'
 
 const formItemLayout = {
     labelCol: {
@@ -23,21 +23,21 @@ const formItemLayout = {
 class SelectSearch extends Component {
     state = {
         data:[],
-        orgId:undefined,
-        areaId:undefined,
+        org:undefined,
+        area:undefined,
     }
     handleAreaChange=(value)=>{
-        this.props.saveAreaId(value)
+        this.props.saveArea({areaId:value.key,areaName:value.label})
     }
     handleChange = (value) => {
-        const { saveOrgId } = this.props;
+        const { saveOrg, org } = this.props;
         this.mounted && this.setState({
             value 
         },()=>{
-           saveOrgId(value);
-            if(this.mounted && saveOrgId !== this.props.orgId){
+            saveOrg({orgId:value.key,orgName:value.label});
+            if(this.mounted && saveOrg !== org.orgId){
                 this.props.history.replace('/web');
-                this.renderSwitchGroupSearch(value);
+                this.renderSwitchGroupSearch(value.key);
             }
         });
     }
@@ -70,13 +70,14 @@ class SelectSearch extends Component {
 
     render() {
         const { getFieldValue } = this.props.form;
+        const { area,org} = this.props;
         return (
             <Form onSubmit={this.handleSubmit} className="from-search set-search-width" >
                 <Row>
                 {
                     getFields(this.props.form,[{
                         label:'区域',
-                        fieldName:'areaId',
+                        fieldName:'area',
                         type:'asyncSelect',
                         span:8,
                         formItemStyle:formItemLayout,
@@ -87,6 +88,7 @@ class SelectSearch extends Component {
                             notShowAll:true,
                             url:`/sysOrganization/queryLoginAreas`,
                             selectOptions:{
+                                labelInValue:true,
                                 onChange:this.handleAreaChange,
                                 defaultActiveFirstOption:true,
                                 showSearch:true,
@@ -94,23 +96,24 @@ class SelectSearch extends Component {
                             },
                         },
                         fieldDecoratorOptions: {
-                            initialValue: this.props.areaId
+                            initialValue: area && {key: area.areaId,label: area.areaName},
                         }
                     },
                     {
                         label:'组织',
-                        fieldName:'orgId',
+                        fieldName:'org',
                         type:'asyncSelect',
                         span:16,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
                             fieldValueName:'id',
-                            doNotFetchDidMount:!this.props.areaId,
+                            doNotFetchDidMount:!area.areaId,
                             notShowAll:true,
-                            fetchAble:getFieldValue('areaId') || this.props.areaId || false,
-                            url:`/sysOrganization/queryLoginOrgs/${getFieldValue('areaId') || this.props.areaId}`,
+                            fetchAble:(getFieldValue('area') && getFieldValue('area').key ) || area.areaId,
+                            url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('area') && getFieldValue('area').key) || area.areaId}`,
                             selectOptions:{
+                                labelInValue:true,
                                 onChange:this.handleChange,
                                 defaultActiveFirstOption:true,
                                 showSearch:true,
@@ -118,7 +121,7 @@ class SelectSearch extends Component {
                             },
                         },
                         fieldDecoratorOptions: {
-                            initialValue: this.props.orgId
+                            initialValue: org && {key: org.orgId,label: org.orgName},
                         }
                     }])
                 }
@@ -131,11 +134,11 @@ class SelectSearch extends Component {
 const FormSelectSearch =  Form.create()(SelectSearch)
 
 export default withRouter(connect(state=>({
-    orgId:state.user.get('orgId'),
-    areaId:state.user.get('areaId'),
+    org:state.user.get('org'),
+    area:state.user.get('area'),
 }),dispatch=>( {
-    saveOrgId:saveOrgId(dispatch),
-    saveAreaId:saveAreaId(dispatch),
+    saveOrg:saveOrg(dispatch),
+    saveArea:saveArea(dispatch),
     saveToken:saveToken(dispatch),
     savePersonal:savePersonal(dispatch)
 }))(FormSelectSearch))

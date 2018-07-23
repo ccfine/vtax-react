@@ -15,6 +15,11 @@ const searchFields = [
         fieldName:'name',
         type:'input',
         span:8,
+    },{
+        label:'组织机构代码',
+        fieldName:'code',
+        type:'input',
+        span:8,
     }
 ]
 
