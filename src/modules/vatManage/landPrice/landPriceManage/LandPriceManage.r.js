@@ -257,7 +257,8 @@ class LandPriceManage extends Component{
 
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[]
         })
     }
 
@@ -342,13 +343,13 @@ class LandPriceManage extends Component{
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
-                                    userPermissions:['1545000'],
                                     formOptions:{
                                         filters: filters,
                                         selectedRowKeys: selectedRowKeys,
                                         url:"/land/price/manage/deductionFlag",
                                         fields: markFieldsData,
                                         onSuccess: this.refreshTable,
+                                        userPermissions:['1545000'],
                                     }
                                 },{
                                     type:'reset',
