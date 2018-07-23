@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Affix} from 'antd'
+import {Layout} from 'antd'
 import PropTypes from 'prop-types'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
@@ -73,10 +73,8 @@ class Web extends Component {
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout>
-                <Affix>
-                    <Sider  key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
-                </Affix>
-                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
+                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
+                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}} >
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
                     <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
