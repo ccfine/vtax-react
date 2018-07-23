@@ -148,7 +148,7 @@ export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
         realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
-        orgId: state.user.get("orgId"),
+        org: state.user.get("org"),
         // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))

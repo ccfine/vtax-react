@@ -462,5 +462,5 @@ class UserManage extends Component {
 }
 
 export default withRouter(connect(state => ({
-    orgId: state.user.get("orgId")
+    orgId: state.user.get("org").orgId
 }))(UserManage));
