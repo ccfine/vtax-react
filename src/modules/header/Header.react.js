@@ -14,7 +14,6 @@ import {request} from 'utils';
 import './header.less'
 
 const { Header} = Layout;
-const confirm = Modal.confirm;
 
 class WimsHeader extends Component {
 
@@ -32,17 +31,23 @@ class WimsHeader extends Component {
             this.props.changeCollapsed(this.state.collapsed);
         });
     }
+
     handleMenuCollapse = ({ key })=>{
         const {ssoPath} = this.state;
         if(key==='logout') {
-            confirm({
+            const modalRef = Modal.confirm({
                 title: '系统提示',
-                content: '确定要退出吗',
-                okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
-                onOk: () => {
-                    this.props.logout()
+                content: '确定要退出吗？',
+                //okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
+                onOk:()=>{
+                    modalRef && modalRef.destroy();
+                    this.props.logout();
+                    setTimeout(()=>{
+                        window.location.href=`${ssoPath}`;
+                    },200)
                 },
                 onCancel() {
+                    modalRef.destroy()
                 },
             });
         }else if(key === 'admin') {
