@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/8.
  */
 import React,{Component} from 'react';
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 import {Button,Modal,Form,Row,Col,Spin,message,Transfer } from 'antd';
 import {request} from 'utils'
 class PopModal extends Component{
@@ -111,7 +111,7 @@ class PopModal extends Component{
             nextProps.form.resetFields();
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible){
-            this.fetchList(nextProps.org && nextProps.org.orgId)
+            this.fetchList(nextProps.orgId)
             this.fetchRoleId(nextProps.id)
         }
     }
@@ -170,6 +170,6 @@ class PopModal extends Component{
     }
 }
 
-export default connect(state=>({
+export default Form.create()(PopModal);/*connect(state=>({
     org: state.user.get("org")
-}))(Form.create()(PopModal))
+}))(Form.create()(PopModal))*/

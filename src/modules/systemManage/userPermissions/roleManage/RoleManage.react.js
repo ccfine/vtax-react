@@ -166,6 +166,7 @@ class RoleManage extends Component{
         modalConfig: {
             type: ''
         },
+        filters:{},
     }
     toggleModalVisible=visible=>{
         this.setState({
@@ -267,7 +268,7 @@ class RoleManage extends Component{
     }
 
     render(){
-        const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId} = this.state;
+        const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId,filters} = this.state;
         return (
             (this.props.org && this.props.org.orgId) ? <div className="oneLine"><SearchTable
                 searchOption={{
@@ -284,6 +285,9 @@ class RoleManage extends Component{
                     key: updateKey,
                     pageSize: 100,
                     columns: columns(this),
+                    onSuccess:filters=>{
+                        this.setState({filters})
+                    },
                     url: '/sysRole/list',
                     scroll:{x:1000,y:window.screen.availHeight-350},
                     cardProps: {
@@ -316,6 +320,7 @@ class RoleManage extends Component{
                  />
                  <UserPopModal
                         visible={userVisible}
+                        orgId={filters.orgId}
                         id={userId}
                         refreshTable={this.refreshTable}
                         toggleUserModalVisible={this.toggleUserModalVisible}
