@@ -7,7 +7,8 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Button,Icon} from 'antd';
 import {parseJsonToParams,request} from "utils";
-import debounce from 'lodash/debounce'
+//import debounce from 'lodash/debounce'
+import throttle from 'lodash/debounce'
 class FileExport extends Component{
 
     static propTypes={
@@ -28,7 +29,8 @@ class FileExport extends Component{
 
     constructor(props){
         super(props)
-        this.handleDownload = debounce(this.handleDownload,300)
+        //this.handleDownload = debounce(this.handleDownload,300) //确保函数在自上次调用之后经过一定时间后才会执行
+        this.handleDownload = throttle(this.handleDownload,1000) //以防止每秒调用多次
     }
 
     handleDownload=()=>{
