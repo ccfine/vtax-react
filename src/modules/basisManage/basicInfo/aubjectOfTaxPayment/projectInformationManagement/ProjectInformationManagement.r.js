@@ -130,7 +130,7 @@ export default class ProjectInformationManagement extends Component{
                                     updateKey={tableUpDateKey1}
                                     tableProps={{
                                         rowKey:record=>record.id,
-                                        pageSize:10,
+                                        pageSize:100,
                                         size:'small',
                                         rowSelection:{
                                             type:'radio',
@@ -146,7 +146,7 @@ export default class ProjectInformationManagement extends Component{
                                     updateKey={tableUpDateKey2}
                                     tableProps={{
                                         rowKey:record=>record.id,
-                                        pageSize:10,
+                                        pageSize:100,
                                         size:'small',
                                         columns:table_2_columns,
                                         pagination:true,

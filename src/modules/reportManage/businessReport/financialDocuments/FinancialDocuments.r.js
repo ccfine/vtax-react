@@ -297,7 +297,7 @@ export default class FinancialDocuments extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
                     scroll:{ x: 2200,y:window.screen.availHeight-450 },
@@ -321,7 +321,7 @@ export default class FinancialDocuments extends Component{
                                         url:'inter/financial/voucher/report/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1891002'],
+                                        userPermissions:['1891007'],
                                     },{
                                         type:'fileImport',
                                         url:'/inter/financial/voucher/report/upload',

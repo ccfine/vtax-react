@@ -256,7 +256,7 @@ class PopModal extends Component{
                         }}
                         tableOption={{
                             key:tableKey,
-                            pageSize:10,
+                            pageSize:100,
                             columns:getColumns(this),
                             scroll:{ y: 240 },
                             onRowSelect:(selectedRowKeys,selectedRows)=>{

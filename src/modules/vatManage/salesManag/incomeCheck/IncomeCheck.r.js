@@ -97,7 +97,7 @@ class IncomeCheck extends Component {
          * params条件，给table用的
          * */
         filters:{
-            pageSize:10
+            pageSize:100
         },
 
         /**

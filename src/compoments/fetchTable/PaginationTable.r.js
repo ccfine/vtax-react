@@ -14,9 +14,9 @@ export default (props)=>{
                             showQuickJumper={true}
                             defaultCurrent={1} 
                             hideOnSinglePage={true} 
-                            pageSize={10} 
+                            pageSize={100}
                             showTotal={total => `总共 ${total} 条`}
-                            pageSizeOptions={['10','20','30','40','50','60','70','80','90','100']}
+                            pageSizeOptions={['100','200','300','400','500']}
                             {...props.pagination}
                             size={props.size?props.size:'small'}
                             // total={500} 

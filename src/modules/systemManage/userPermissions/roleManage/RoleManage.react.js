@@ -14,7 +14,7 @@ import {request,composeBotton,getUrlParam,parseJsonToParams} from 'utils'
 const searchFields = context => [
     {
         label: "组织",
-        fieldName: "orgId",
+        fieldName: "org",
         type: "asyncSelect",
         span: 8,
         componentProps: {
@@ -22,12 +22,14 @@ const searchFields = context => [
             fieldValueName: "id",
             url: `/sysOrganization/getOrganizations`,
             selectOptions:{
+                labelInValue:true,
                 showSearch:true,
                 optionFilterProp:'children',
             },
         },
         fieldDecoratorOptions: {
-            initialValue: getUrlParam('orgId') || context.props.orgId,
+            initialValue: context.props.org && {key: context.props.org.orgId,label: context.props.org.orgName},
+            //initialValue: getUrlParam('orgId') || (context.props.org && context.props.org.orgId),
             rules: [
                 {
                     required: true,
@@ -267,9 +269,9 @@ class RoleManage extends Component{
     render(){
         const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId} = this.state;
         return (
-            this.props.orgId?<SearchTable
+            (this.props.org && this.props.org.orgId) ? <div className="oneLine"><SearchTable
                 searchOption={{
-                    fields:searchFields(this)
+                    fields:searchFields(this),
                 }}
                 backCondition={values => {
                     this.setState({
@@ -280,7 +282,7 @@ class RoleManage extends Component{
                 tableOption={{
                     rowKey:'id',
                     key: updateKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: columns(this),
                     url: '/sysRole/list',
                     scroll:{x:1000,y:window.screen.availHeight-350},
@@ -319,12 +321,13 @@ class RoleManage extends Component{
                         toggleUserModalVisible={this.toggleUserModalVisible}
                  />
 
-            </SearchTable>:'loading'
+            </SearchTable></div>:'loading'
+
         )
     }
 }
 export default withRouter(connect(state=>({
-    orgId: state.user.get("orgId")
+    org: state.user.get("org")
 }))(RoleManage))
 
 

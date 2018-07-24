@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 14:51:15 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 15:05:16
+ * @Last Modified time: 2018-07-19 17:21:14
  */
 import React from "react";
 /*import ButtonWithPut from "../compoments/buttonWithPut";*/
@@ -11,7 +11,7 @@ import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ButtonConsistent from 'compoments/buttonConsistent'
-import {FileExport,FileImportModal,AutoFileUpload} from 'compoments';
+import {FileExport,FileImportModal,AutoFileUpload,FileUndoImportModal} from 'compoments';
 import ButtonTableAction from 'compoments/buttonTableAction'
 import ButtonSwitch from 'compoments/buttonSwitch'
 import {ButtonModalWithForm} from 'compoments'
@@ -30,7 +30,7 @@ const getConsistentOptions = (item, statusParam) => {
     if(("selectedRowKeys" in item)){
         return {
             ...item,
-            disabled: isDisabled(statusParam) ? isDisabled(statusParam) : !item.selectedRowKeys.length>0,
+            disabled: isDisabled(statusParam) ? isDisabled(statusParam) : item.selectedRowKeys && !item.selectedRowKeys.length>0,
             style: item.style || {marginRight:5},
         };
     }else{
@@ -101,6 +101,20 @@ const getAutoFileImportOptions =  (item, statusParam)=>{
     };
 }
 
+//撤销导入
+const getRevokeImportOptions =(item, statusParam)=>{
+    return {
+        ...item,
+        title:"撤销导入",
+        url: item.url,
+        disabled: isDisabled(statusParam),
+        onSuccess: item.onSuccess,
+        fields: item.fields,
+        initialValue: formatJson(item.params) || item.initialValue,
+        style:item.style || item.setButtonStyle || {marginRight:5},
+    };
+}
+
 //文件导出
 const getFileExportOptions = (item)=>{
     return {
@@ -126,7 +140,7 @@ const getMarkOptions = (item,statusParam) =>{
         ...item,
         formOptions:{
             ...item.formOptions,
-            disabled: isDisabled(statusParam) ? isDisabled(statusParam) : !item.formOptions.selectedRowKeys.length>0,
+            disabled: isDisabled(statusParam) || (item.formOptions.selectedRowKeys && !item.formOptions.selectedRowKeys.length>0),
         },
         style:item.style || item.setButtonStyle || {marginRight:5},
     };
@@ -244,6 +258,11 @@ const composeBotton = (buttons = [], params) => {
                 component = (
                     <FileExport {...getFileExportOptions(item)} />
                 );
+                break;
+            case 'revokeImport':
+                component = (
+                    <FileUndoImportModal {...getRevokeImportOptions(item,params)} />
+                )
                 break;
             case "mark":
                 component = (

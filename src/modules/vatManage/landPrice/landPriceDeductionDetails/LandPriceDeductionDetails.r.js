@@ -2,13 +2,13 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 11:40:06
+ * @Last Modified time: 2018-07-24 11:37:38
  */
 import React from 'react'
 // import HasDeduct from './hasDeduct'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
-import { SearchTable } from 'compoments'
+import { SearchTable,TableTotal } from 'compoments'
 import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
 import PopModal from './popModal'
 
@@ -244,6 +244,7 @@ class DeductProjectSummary extends React.Component {
         statusParam:{},
         canFinish:false,
         visible:false,
+        totalSource:undefined,
 	}
 	toggleModalVisible = visible => {
 		this.setState({
@@ -272,7 +273,7 @@ class DeductProjectSummary extends React.Component {
         })
     }
 	render() {
-		const { tableKey, filters = {}, statusParam={},canFinish,visible} = this.state
+		const { tableKey, filters = {}, statusParam={},canFinish,visible,totalSource} = this.state
         const { declare } = this.props;
         let disabled = !!declare;
 		return (
@@ -291,7 +292,7 @@ class DeductProjectSummary extends React.Component {
 						title: '土地价款扣除明细台账',
 					},
 					key: tableKey,
-					pageSize: 10,
+					pageSize: 100,
 					columns: columns,
 					url: '/account/landPrice/deductedDetails/list',
 					onSuccess: (params) => {
@@ -310,6 +311,15 @@ class DeductProjectSummary extends React.Component {
 						<div>
 							{
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/landPrice/deductedDetails/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1261007'],
+                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') && canFinish && composeBotton([{
@@ -351,8 +361,23 @@ class DeductProjectSummary extends React.Component {
                                     }
                                 }],statusParam)
                             }
+							<TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '当期实际扣除土地价款', dataIndex: 'amount'},
+                                        ],
+                                    }
+                                ]
+                            } />
 						</div>
-					)
+					),
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
 				}}
 			/>
 		)

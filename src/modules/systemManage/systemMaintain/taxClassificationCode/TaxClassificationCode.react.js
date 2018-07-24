@@ -38,13 +38,13 @@ const searchFields = [
     },{
         label:'税率',
         fieldName:'taxRate',
-        type:'input',
+        type:'numeric',
         span:8,
         componentProps:{
+            valueType:'int'
         },
         fieldDecoratorOptions:{
         },
-
     }
 ]
 const getColumns =(context)=>[
@@ -152,51 +152,53 @@ class TaxClassificationCode extends Component{
     render(){
         const {updateKey,visible,modalConfig} = this.state;
         return(
-            <SearchTable
-                searchOption={{
-                    fields:searchFields,
-                    cardProps:{
-                        style:{
-                            borderTop:0
+            <div className="oneLine">
+                <SearchTable
+                    searchOption={{
+                        fields:searchFields,
+                        cardProps:{
+                            style:{
+                                borderTop:0
+                            }
                         }
-                    }
-                }}
-                tableOption={{
-                    key:updateKey,
-                    pageSize:10,
-                    url:'/tax/classification/coding/list',
-                    cardProps:{
-                        title:'税收分类编码'
-                    },
-                    scroll:{x:1000,y:window.screen.availHeight-380},
-                    columns:getColumns(this),
-                    extra:<div>
-                        {
-                            composeBotton([{
-                                type:'add',
-                                icon:'plus',
-                                onClick:()=>{
-                                    this.setState({
-                                        modalConfig:{
-                                            type:'add',
-                                            id:undefined,
-                                        }
-                                    },()=>{
-                                        this.toggleModalVisible(true)
-                                    })
-                                }
-                            }])
-                        }
-                    </div>
-                }}
-            >
-                <PopModal
-                    visible={visible}
-                    modalConfig={modalConfig}
-                    refreshTable={this.refreshTable}
-                    toggleModalVisible={this.toggleModalVisible}
-                />
-            </SearchTable>
+                    }}
+                    tableOption={{
+                        key:updateKey,
+                        pageSize:100,
+                        url:'/tax/classification/coding/list',
+                        cardProps:{
+                            title:'税收分类编码'
+                        },
+                        scroll:{x:1000,y:window.screen.availHeight-400},
+                        columns:getColumns(this),
+                        extra:<div>
+                            {
+                                composeBotton([{
+                                    type:'add',
+                                    icon:'plus',
+                                    onClick:()=>{
+                                        this.setState({
+                                            modalConfig:{
+                                                type:'add',
+                                                id:undefined,
+                                            }
+                                        },()=>{
+                                            this.toggleModalVisible(true)
+                                        })
+                                    }
+                                }])
+                            }
+                        </div>
+                    }}
+                >
+                    <PopModal
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        refreshTable={this.refreshTable}
+                        toggleModalVisible={this.toggleModalVisible}
+                    />
+                </SearchTable>
+            </div>
         )
     }
 }

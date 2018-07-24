@@ -281,7 +281,7 @@ class TaxExemptionDetails extends Component{
                 backCondition={this.updateStatus}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     onRowSelect:parseInt(statusParam.status, 0)  === 1 ? (selectedRowKeys)=>{
                         this.setState({

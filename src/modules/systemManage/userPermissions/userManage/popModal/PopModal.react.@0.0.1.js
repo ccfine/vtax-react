@@ -286,5 +286,5 @@ class PopModal extends Component {
 }
 
 export default connect(state => ({
-    orgId: state.user.get("orgId")
+    orgId: state.user.get("org").orgId
 }))(Form.create()(PopModal));

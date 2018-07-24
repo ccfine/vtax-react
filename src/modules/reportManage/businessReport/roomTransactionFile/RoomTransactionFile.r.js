@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/29.
  */
 import React,{Component} from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
 import createSocket from './socket'
@@ -290,9 +290,10 @@ const apiFields = (getFieldValue)=> [
 class RoomTransactionFile extends Component{
     state={
         filters:{},
+        totalSource:undefined,
     }
     render(){
-        const {filters}=this.state;
+        const {filters,totalSource}=this.state;
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -300,7 +301,7 @@ class RoomTransactionFile extends Component{
                     fields:searchFields
                 }}
                 tableOption={{
-                    pageSize:10,
+                    pageSize:100,
                     columns,
                     onSuccess:(params)=>{
                         this.setState({
@@ -318,7 +319,7 @@ class RoomTransactionFile extends Component{
                                 url:'output/room/files/report/export',
                                 params:filters,
                                 title:'导出',
-                                userPermissions:['1861002'],
+                                userPermissions:['1861007'],
                             }])
                         }
                         {
@@ -334,8 +335,26 @@ class RoomTransactionFile extends Component{
                                 }
                             }])
                         }
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '成交金额', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
-                    scroll:{ x: 1800,y:window.screen.availHeight-400 },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
+                    scroll:{
+                        x: 1800,
+                        y:window.screen.availHeight-400
+                    },
                 }}
             >
             </SearchTable>

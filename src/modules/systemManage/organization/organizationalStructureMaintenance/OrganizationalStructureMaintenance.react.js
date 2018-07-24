@@ -15,6 +15,11 @@ const searchFields = [
         fieldName:'name',
         type:'input',
         span:8,
+    },{
+        label:'组织机构代码',
+        fieldName:'code',
+        type:'input',
+        span:8,
     }
 ]
 
@@ -170,113 +175,115 @@ class OrganizationalStructureMaintenance extends Component {
     render() {
         const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,onlyAdd,selectedNodes,filters} = this.state;
         return (
-            <TreeTable
-                spinning={searchTableLoading}
-                refreshTree={this.refreshTree}
-                searchOption={{
-                    fields:searchFields,
-                    filters:filters,
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
-                    cardProps:{
-                        style:{
-                            borderTop:0
+            <div className="oneLine">
+                <TreeTable
+                    spinning={searchTableLoading}
+                    refreshTree={this.refreshTree}
+                    searchOption={{
+                        fields:searchFields,
+                        filters:filters,
+                        getFieldsValues:values=>{
+                            this.setState({
+                                searchFieldsValues:values
+                            })
+                        },
+                        cardProps:{
+                            style:{
+                                borderTop:0
+                            }
                         }
-                    }
-                }}
-                cardTableOption={{
-                    rowCol:[8,16],
-                    cardProps:{
-                        title:'组织架构维护',
-                    },
-                    extra:<div>
-                        {
-                            id && composeBotton([{
-                                type: 'add',
-                                icon:'plus',
-                                onClick: () => {
-                                    this.showModal('add')
-                                }
-                            }])
+                    }}
+                    cardTableOption={{
+                        rowCol:[8,16],
+                        cardProps:{
+                            title:'组织架构维护',
+                        },
+                        extra:<div>
+                            {
+                                id && composeBotton([{
+                                    type: 'add',
+                                    icon:'plus',
+                                    onClick: () => {
+                                        this.showModal('add')
+                                    }
+                                }])
+                            }
+                            {
+                                id && !onlyAdd && composeBotton([{
+                                    type:'edit',
+                                    icon:'edit',
+                                    text:'编辑',
+                                    btnType:'default',
+                                    onClick:()=>{
+                                        this.showModal('edit')
+                                    }
+                                },{
+                                    type:'delete',
+                                    icon:'delete',
+                                    text:'删除',
+                                    btnType:'danger',
+                                    onClick:()=>{
+                                        this.deleteData()
+                                    }
+                                },{
+                                    type:'retweet',
+                                    icon:'retweet',
+                                    text:'禁用/启用',
+                                    btnType:'default',
+                                    onClick:()=>{
+                                        this.disabledData()
+                                    }
+                                }])
+                            }
+                        </div>
+                    }}
+                    treeCardOption={{
+                        cardProps:{
+                            title:'组织架构维护树',
+                            bodyStyle:{overflow:'auto',height:window.screen.availHeight-310},
                         }
-                        {
-                            id && !onlyAdd && composeBotton([{
-                                type:'edit',
-                                icon:'edit',
-                                text:'编辑',
-                                btnType:'default',
-                                onClick:()=>{
-                                    this.showModal('edit')
-                                }
-                            },{
-                                type:'delete',
-                                icon:'delete',
-                                text:'删除',
-                                btnType:'danger',
-                                onClick:()=>{
-                                    this.deleteData()
-                                }
-                            },{
-                                type:'retweet',
-                                icon:'retweet',
-                                text:'禁用/启用',
-                                btnType:'default',
-                                onClick:()=>{
-                                    this.disabledData()
-                                }
-                            }])
-                        }
-                    </div>
-                }}
-                treeCardOption={{
-                    cardProps:{
-                        title:'组织架构维护树',
-                        bodyStyle:{overflow:'auto',height:window.screen.availHeight-310},
-                    }
-                }}
-                treeOption={{
-                    key:updateTree,
-                    showLine:false,
-                    url:"/sysOrganization/tree",
-                    onSuccess:(selectedKeys,selectedNodes)=>{
-                        this.setState({
-                            id:selectedNodes.id,
-                            filters:{
-                                id:selectedNodes.id
-                            },
-                            selectedNodes:selectedNodes,
-                            onlyAdd:true,
-                        },()=>{
-                            this.refreshTable()
-                        })
-                    },
-                }}
-                tableOption={{
-                    key:updateTable,
-                    pageSize:10,
-                    columns:columns,
-                    cardProps:{
-                        title:'组织架构维护列表信息'
-                    },
-                    scroll:{x:600,y:window.screen.availHeight-390},
-                    url:'/sysOrganization/list',
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            id:selectedRowKeys[0],
-                            selectedNodes:selectedRows[0],
-                            onlyAdd:false,
-                        })
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
-                }}
-            >
-                <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} selectedNodes={selectedNodes} toggleModalVisible={this.toggleModalVisible} />
-            </TreeTable>
+                    }}
+                    treeOption={{
+                        key:updateTree,
+                        showLine:false,
+                        url:"/sysOrganization/tree",
+                        onSuccess:(selectedKeys,selectedNodes)=>{
+                            this.setState({
+                                id:selectedNodes.id,
+                                filters:{
+                                    id:selectedNodes.id
+                                },
+                                selectedNodes:selectedNodes,
+                                onlyAdd:true,
+                            },()=>{
+                                this.refreshTable()
+                            })
+                        },
+                    }}
+                    tableOption={{
+                        key:updateTable,
+                        pageSize:100,
+                        columns:columns,
+                        cardProps:{
+                            title:'组织架构维护列表信息'
+                        },
+                        scroll:{x:600,y:window.screen.availHeight-390},
+                        url:'/sysOrganization/list',
+                        onRowSelect:(selectedRowKeys,selectedRows)=>{
+                            this.setState({
+                                id:selectedRowKeys[0],
+                                selectedNodes:selectedRows[0],
+                                onlyAdd:false,
+                            })
+                        },
+                        rowSelection:{
+                            type:'radio',
+                        },
+                    }}
+                >
+                    <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} selectedNodes={selectedNodes} toggleModalVisible={this.toggleModalVisible} />
+                </TreeTable>
+            </div>
         )
     }
 }

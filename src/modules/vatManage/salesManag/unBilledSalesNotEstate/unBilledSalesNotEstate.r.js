@@ -5,7 +5,9 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
-import { AsyncTable } from "compoments";
+// import { compose } from 'redux';
+// import {connect} from 'react-redux'
+import { AsyncTable,TableTotal } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
@@ -177,7 +179,7 @@ class UnBilledSalesNotEstate extends Component {
          * params条件，给table用的
          * */
         filters:{
-            pageSize:10
+            pageSize:100
         },
 
         /**
@@ -186,6 +188,7 @@ class UnBilledSalesNotEstate extends Component {
         tableUpDateKey:Date.now(),
         statusParam: {},
         dataSource:[],
+        totalSource:undefined,
 
     }
     refreshTable = ()=>{
@@ -250,7 +253,7 @@ class UnBilledSalesNotEstate extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,statusParam} = this.state;
+        const {tableUpDateKey,filters,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
@@ -319,6 +322,15 @@ class UnBilledSalesNotEstate extends Component {
                       extra={<div>
                           {listMainResultStatus(statusParam)}
                           {
+                              JSON.stringify(filters)!=='{}' && composeBotton([{
+                                  type:'fileExport',
+                                  url:'account/notInvoiceUnSale/realty/export',
+                                  params:filters,
+                                  title:'导出',
+                                  userPermissions:['1361007'],
+                              }])
+                          }
+                          {
                               (disabled && declare.decAction==='edit') && composeBotton([{
                                   type:'reset',
                                   url:'/account/notInvoiceUnSale/realty/reset',
@@ -339,7 +351,20 @@ class UnBilledSalesNotEstate extends Component {
                                   onSuccess:this.refreshTable,
                               }],statusParam)
                           }
-                      </div>}
+                          <TableTotal type={3} totalSource={totalSource} data={
+                              [
+                                  {
+                                      title:'合计',
+                                      total:[
+                                          {title: '金额', dataIndex: 'amount'},
+                                          {title: '税额', dataIndex: 'taxAmount'},
+                                          {title: '价税合计', dataIndex: 'totalAmount'},
+                                      ],
+                                  }
+                              ]
+                          } />
+                      </div>
+                      }
                       style={{marginTop:10}}>
 
 
@@ -357,6 +382,11 @@ class UnBilledSalesNotEstate extends Component {
                                             dataSource
                                         })
                                     },
+                                    onTotalSource: (totalSource) => {
+                                        this.setState({
+                                            totalSource
+                                        })
+                                    }
                                 }} />
 
                 </Card>

@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Spin,Row,Col,Tooltip} from 'antd'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Row,Col,Tooltip} from 'antd'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
@@ -14,7 +14,6 @@ import {request} from 'utils';
 import './header.less'
 
 const { Header} = Layout;
-const confirm = Modal.confirm;
 
 class WimsHeader extends Component {
 
@@ -32,17 +31,23 @@ class WimsHeader extends Component {
             this.props.changeCollapsed(this.state.collapsed);
         });
     }
+
     handleMenuCollapse = ({ key })=>{
         const {ssoPath} = this.state;
         if(key==='logout') {
-            confirm({
+            const modalRef = Modal.confirm({
                 title: '系统提示',
-                content: '确定要退出吗',
-                okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
-                onOk: () => {
-                    this.props.logout()
+                content: '确定要退出吗？',
+                //okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
+                onOk:()=>{
+                    modalRef && modalRef.destroy();
+                    this.props.logout();
+                    setTimeout(()=>{
+                        window.location.href=`${ssoPath}`;
+                    },200)
                 },
                 onCancel() {
+                    modalRef.destroy()
                 },
             });
         }else if(key === 'admin') {
@@ -56,12 +61,15 @@ class WimsHeader extends Component {
     componentDidMount(){
         request.post('/oauth/loginOut').then(({data})=>{
             if(data.code === 200){
-                this.setState({ssoPath:data.data})
+                this.mounted && this.setState({ssoPath:data.data})
             }
         }).catch(err=>{
         })
     }
-
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
@@ -90,7 +98,7 @@ class WimsHeader extends Component {
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            增值税纳税申报系统                            
+                            增值税纳税申报系统
                         </h2>
                     </Col>
                     {/*<Col xs={20} sm={16} lg={14}>
@@ -109,17 +117,25 @@ class WimsHeader extends Component {
                                 </a>
                             </Tooltip>
 
-                            {this.props.realName ? (
-                                <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                            <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 <span className='action account'>
                                     <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
                                     {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
+                                    <span className='name'>{(this.props.realName && this.props.realName) || '欢迎您'}</span>
+                                </span>
+                            </Dropdown>
+
+                            {/*{this.props.realName ? (
+                                <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+                                <span className='action account'>
+                                    <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                                    src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}
                                     <span className='name'>{this.props.realName}</span>
                                 </span>
                                 </Dropdown>
                             ) : (
                                 <Spin size="small" style={{ marginLeft: 8 }} />
-                            )}
+                            )}*/}
                         </div>
                     </Col>
                 </Row>
@@ -132,7 +148,7 @@ export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
         realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
-        orgId: state.user.get("orgId"),
+        org: state.user.get("org"),
         // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))

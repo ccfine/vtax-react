@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {requestResultStatus,fMoney,composeBotton} from 'utils'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 const pointerStyle = {
     cursor:'pointer',
@@ -122,6 +122,7 @@ class GeneralTaxCertificate extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        totalSource:undefined,
     }
     toggleViewModalVisible=visible=>{
         this.setState({
@@ -137,11 +138,12 @@ class GeneralTaxCertificate extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[],
         })
     }
     render(){
-        const {visible,voucherInfo,tableKey,filters,selectedRowKeys,statusParam} = this.state;
+        const {visible,voucherInfo,tableKey,filters,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -174,7 +176,7 @@ class GeneralTaxCertificate extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/commonlyTaxList',
                     onSuccess:(params)=>{
@@ -196,7 +198,7 @@ class GeneralTaxCertificate extends Component{
                             {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
-                                    url:'/account/incomeSimpleOut/controller/commonly/export',
+                                    url:'account/incomeSimpleOut/controller/commonly/export',
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1391007'],
@@ -217,7 +219,22 @@ class GeneralTaxCertificate extends Component{
                                     }
                                 }],statusParam)
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '借方金额', dataIndex: 'debitAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>,
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
                         x:1800,

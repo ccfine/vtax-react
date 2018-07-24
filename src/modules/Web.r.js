@@ -33,9 +33,9 @@ class Web extends Component {
     }
 
     checkLoggedIn= props =>{
-        const {isAuthed,history,personal} = props;
-        if(!(isAuthed && personal && personal.id && personal.username)){
-            history.replace('/403');
+        const {isAuthed,history} = props;
+        if(!isAuthed){
+            history.replace('/tax2018bgy/login')
         }
     }
     //给其它组件传数据
@@ -73,8 +73,8 @@ class Web extends Component {
         //const pathname = this.props.history.location.pathname;
         return (
             <Layout>
-                <Sider  key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
-                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
+                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
+                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}} >
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
                     <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
@@ -100,8 +100,6 @@ class Web extends Component {
 
 export default withRouter(connect(state=>({
     isAuthed:state.user.get('isAuthed'),
-    orgId:state.user.get('orgId'),
-    personal:state.user.get('personal'),
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))

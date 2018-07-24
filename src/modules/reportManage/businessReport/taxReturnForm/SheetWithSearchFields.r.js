@@ -170,6 +170,23 @@ class SheetWithSearchFields extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(params)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'report/tax/declare/export',
+                                    params:{...params,authMonth:params.taxMonth},
+                                    title:'导出',
+                                    userPermissions:['1911007'],
+                                }])
+                            }
+                            {
+                                composeBotton([{
+                                    type:'fileExport',
+                                    url:'tax/decConduct/main/download',
+                                    title:'下载附件',
+                                    onSuccess:this.refreshTable
+                                }])
+                            }
+                            {
                                 action ? (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'submit',
                                     url:'/tax/decConduct/main/submit',

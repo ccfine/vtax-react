@@ -251,7 +251,7 @@ class TaxExemptionDetails extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this,disabled,declare),
                     url:'/account/other/reduceTaxDetail/list',
                     onSuccess:(params)=>{

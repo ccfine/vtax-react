@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import { NumericInputCell } from 'compoments/EditableCell'
 
@@ -239,6 +239,7 @@ class LandPriceManage extends Component{
          *修改状态和时间
          * */
         statusParam:{},
+        totalSource:undefined,
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/land/price/manage/listMain',this.state.filters,result=>{
@@ -255,7 +256,8 @@ class LandPriceManage extends Component{
 
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[]
         })
     }
 
@@ -290,7 +292,7 @@ class LandPriceManage extends Component{
     }
 
     render(){
-        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam} = this.state;
+        const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         const {getFieldDecorator} = this.props.form;
@@ -307,7 +309,7 @@ class LandPriceManage extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this,!disabled,getFieldDecorator),
                     url:'/land/price/manage/list',
                     onSuccess:(params)=>{
@@ -341,13 +343,13 @@ class LandPriceManage extends Component{
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'mark',
-                                    userPermissions:['1545000'],
                                     formOptions:{
                                         filters: filters,
                                         selectedRowKeys: selectedRowKeys,
                                         url:"/land/price/manage/deductionFlag",
                                         fields: markFieldsData,
                                         onSuccess: this.refreshTable,
+                                        userPermissions:['1545000'],
                                     }
                                 },{
                                     type:'reset',
@@ -369,12 +371,27 @@ class LandPriceManage extends Component{
                                     onSuccess:this.refreshTable,
                                 }],statusParam)
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '借方金额', dataIndex: 'debitAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>,
                     },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                     scroll:{
-                     x:1600,
-                     y:window.screen.availHeight-400-(disabled?50:0),
-                     },
+                         x:1600,
+                         y:window.screen.availHeight-4000-(disabled?50:0),
+                    },
                 }}
             >
                 <ViewDocumentDetails

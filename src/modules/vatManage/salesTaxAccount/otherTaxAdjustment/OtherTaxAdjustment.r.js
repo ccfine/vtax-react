@@ -2,11 +2,12 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 11:43:44
+ * @Last Modified time: 2018-07-24 11:40:39
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
-import { SearchTable } from "compoments";
+// import {connect} from 'react-redux';
+import { SearchTable,TableTotal } from "compoments";
 import PopModal from "./popModal";
 import {
   request,
@@ -215,6 +216,7 @@ class OtherTaxAdjustment extends Component {
     updateKey: Date.now(),
     filters: undefined,
     statusParam: {},
+    totalSource:undefined,
   };
   hideModal() {
     this.setState({ visible: false });
@@ -246,7 +248,7 @@ class OtherTaxAdjustment extends Component {
   render() {
     const { declare } = this.props;
     let disabled = !!declare;
-    let { filters={}, statusParam = {} } = this.state;
+    let { filters={}, statusParam = {},totalSource } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (
       <div>
@@ -259,8 +261,8 @@ class OtherTaxAdjustment extends Component {
             }
           }}
           tableOption={{
-            scroll: { x: 1500,y:window.screen.availHeight-380-(disabled?50:0) },
-            pageSize: 10,
+            scroll: { x: 1500,y:window.screen.availHeight-380-(disabled?50:0)},
+            pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",
@@ -268,11 +270,25 @@ class OtherTaxAdjustment extends Component {
               this.setState({ filters: params });
               this.updateStatus(params);
             },
+            onTotalSource: totalSource => {
+              this.setState({
+                  totalSource
+              });
+            },
             cardProps: {
               title: "其他涉税调整台账",
               extra: (
                 <div>
                   {listMainResultStatus(statusParam)}
+                    {
+                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                            type:'fileExport',
+                            url:'account/output/othertax/export',
+                            params:filters,
+                            title:'导出',
+                            userPermissions:['1311007'],
+                        }])
+                    }
                   {
                       (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',
@@ -299,8 +315,20 @@ class OtherTaxAdjustment extends Component {
                           onSuccess:this.refreshTable,
                       }],statusParam)
                   }
+                  <TableTotal type={3} totalSource={totalSource} data={
+                      [
+                          {
+                              title:'合计',
+                              total:[
+                                  {title: '销售额（不含税）', dataIndex: 'amount'},
+                                  {title: '销项（应纳）税额', dataIndex: 'taxAmount'},
+                                  {title: '服务、不动产和无形资产扣除项目本期实际扣除金额（含税）', dataIndex: 'deductionAmount'},
+                              ],
+                          }
+                      ]
+                  } />
                 </div>
-              )
+              ),
             }
           }}
         />

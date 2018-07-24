@@ -199,7 +199,7 @@ const columns=[
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     url:'/fixedAssetCard/manageList',
                     onSuccess:(params)=>{
@@ -222,7 +222,7 @@ const columns=[
                                         url:'fixedAssetCard/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1511002'],
+                                        userPermissions:['1511007'],
                                     }])
                                 }
                                 {

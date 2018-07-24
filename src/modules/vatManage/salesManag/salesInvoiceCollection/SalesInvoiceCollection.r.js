@@ -353,7 +353,7 @@ class SalesInvoiceCollection extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/output/invoice/collection/list',
                     onSuccess:(params,data)=>{

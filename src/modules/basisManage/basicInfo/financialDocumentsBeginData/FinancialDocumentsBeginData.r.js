@@ -257,7 +257,7 @@ export default class FinancialDocumentsBeginData extends Component{
                 }}
                 tableOption={{
                     key:updateKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
                     onSuccess: (params) => {
