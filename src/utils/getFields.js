@@ -119,7 +119,7 @@ const getFields = (form,fieldsData=[]) =>{
             </Col>
         }else if(type==='select'){
             //TODO:为了设置所有不是必填的select都加上一个全部默认选项  notShowAll:是否添加无或者全部
-            let optionsData = [], initialValue;
+            let optionsData = [], initialValues;
             if(item['notShowAll'] === true){
                 optionsData = item.options;
             }else{
@@ -128,14 +128,14 @@ const getFields = (form,fieldsData=[]) =>{
                         text: item['whetherShowAll'] ? '无' : '全部',
                         value: ''
                     }].concat(item.options) : item.options;
-                    initialValue = isShowAll ? undefined : '';
+                    initialValues = (item['fieldDecoratorOptions'] && item['fieldDecoratorOptions'].initialValue) || (isShowAll ? undefined : '');
                     optionsData = isShowAll ? item.options : newData;
             }
             return (
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
-                            initialValue:initialValue,
+                            initialValue:initialValues,
                             ...item['fieldDecoratorOptions'],
                         })(
                             <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
