@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 19:15:41
+ * @Last Modified time: 2018-07-24 15:26:03
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -209,6 +209,12 @@ class OtherBusinessInputTaxRollOut extends Component {
                                             params:filters,
                                             userPermissions:['1401010'],
                                             onSuccess:this.refreshTable
+                                        },{
+                                            type:'reset',
+                                            url:'/account/income/taxout/reset',
+                                            params:filters,
+                                            userPermissions:['1401009'],
+                                            onSuccess:this.refreshTable,
                                         },{
                                             type:'revoke',
                                             // monthFieldName:"authMonth",
