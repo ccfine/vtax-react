@@ -2,10 +2,11 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-19 18:42:36
+ * @Last Modified time: 2018-07-24 11:47:52
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
+// import {connect} from 'react-redux';
 import { SearchTable,TableTotal } from "compoments";
 import PopModal from "./popModal";
 import {
@@ -260,7 +261,7 @@ class OtherTaxAdjustment extends Component {
             }
           }}
           tableOption={{
-            scroll: { x: 1500,y:window.screen.availHeight-380-(disabled?50:0) },
+            scroll: { x: 1500,y:window.screen.availHeight-380-(disabled?50:0)},
             pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
@@ -279,6 +280,15 @@ class OtherTaxAdjustment extends Component {
               extra: (
                 <div>
                   {listMainResultStatus(statusParam)}
+                    {
+                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                            type:'fileExport',
+                            url:'account/output/othertax/export',
+                            params:filters,
+                            title:'导出',
+                            userPermissions:['1311007'],
+                        }])
+                    }
                   {
                       (disabled && declare.decAction==='edit') && composeBotton([{
                           type:'add',

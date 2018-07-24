@@ -222,7 +222,7 @@ const columns=[
                                         url:'fixedAssetCard/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1511002'],
+                                        userPermissions:['1511007'],
                                     }])
                                 }
                                 {

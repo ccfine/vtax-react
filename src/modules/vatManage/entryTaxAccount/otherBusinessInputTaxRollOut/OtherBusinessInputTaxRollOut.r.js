@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 19:19:28
+ * @Last Modified time: 2018-07-24 11:46:06
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
@@ -181,6 +181,15 @@ class OtherBusinessInputTaxRollOut extends Component {
                             extra: (
                                 <div>
                                     {listMainResultStatus(statusParam)}
+                                    {
+                                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                                            type:'fileExport',
+                                            url:'account/income/taxout/export',
+                                            params:filters,
+                                            title:'导出',
+                                            userPermissions:['1401007'],
+                                        }])
+                                    }
                                     {
                                          (disabled && declare.decAction==='edit' && noSubmit) && composeBotton([{
                                             type:'save',

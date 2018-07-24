@@ -25,6 +25,7 @@ request.testSuccess = (data,success,fail) => {
     }else{
         console.log(data.msg);
         fail && fail(data.msg)
+        return message.error(`${data.msg}`,4)
     }
 };
 request.interceptors.request.use(function (config) {

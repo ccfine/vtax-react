@@ -5,6 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
+// import { compose } from 'redux';
+// import {connect} from 'react-redux'
 import { AsyncTable,TableTotal } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from 'moment';
@@ -319,6 +321,15 @@ class UnBilledSalesNotEstate extends Component {
                 <Card title={<span>未开票销售台账-非地产汇总列表</span>}
                       extra={<div>
                           {listMainResultStatus(statusParam)}
+                          {
+                              JSON.stringify(filters)!=='{}' && composeBotton([{
+                                  type:'fileExport',
+                                  url:'account/notInvoiceUnSale/realty/export',
+                                  params:filters,
+                                  title:'导出',
+                                  userPermissions:['1361007'],
+                              }])
+                          }
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
                                   type:'reset',

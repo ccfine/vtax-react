@@ -2,6 +2,7 @@
  * Created by liuliyuan on 2018/5/24.
  */
 import React, { Component } from 'react'
+// import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';

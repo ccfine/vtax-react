@@ -2,6 +2,7 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
+// import {connect} from 'react-redux'
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
@@ -373,7 +374,7 @@ class SalesInvoiceCollection extends Component {
                                         url:'output/invoice/collection/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1061002'],
+                                        userPermissions:['1061007'],
                                     }])
                                 }
                                 {

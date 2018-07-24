@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-19 18:42:25
+ * @Last Modified time: 2018-07-24 11:46:10
  */
 import React from 'react'
 // import HasDeduct from './hasDeduct'
@@ -311,6 +311,15 @@ class DeductProjectSummary extends React.Component {
 						<div>
 							{
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/landPrice/deductedDetails/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1261007'],
+                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') && canFinish && composeBotton([{

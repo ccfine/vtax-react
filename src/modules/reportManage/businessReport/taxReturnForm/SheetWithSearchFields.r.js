@@ -179,6 +179,14 @@ class SheetWithSearchFields extends Component{
                                 }])
                             }
                             {
+                                composeBotton([{
+                                    type:'fileExport',
+                                    url:'tax/decConduct/main/download',
+                                    title:'下载附件',
+                                    onSuccess:this.refreshTable
+                                }])
+                            }
+                            {
                                 action ? (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'submit',
                                     url:'/tax/decConduct/main/submit',

@@ -397,7 +397,7 @@ class InvoiceCollection extends Component {
                         columns: getColumns(this),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1500, y:window.screen.availHeight-380-(disabled?50:0) },
+                        scroll: { x: 1500, y:window.screen.availHeight-380-(disabled?50:0)},
                         onRowSelect:(selectedRowKeys)=>{
                             this.setState({
                                 selectedRowKeys

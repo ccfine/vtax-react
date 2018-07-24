@@ -14,7 +14,6 @@ import {request} from 'utils';
 import './header.less'
 
 const { Header} = Layout;
-const confirm = Modal.confirm;
 
 class WimsHeader extends Component {
 
@@ -32,17 +31,23 @@ class WimsHeader extends Component {
             this.props.changeCollapsed(this.state.collapsed);
         });
     }
+
     handleMenuCollapse = ({ key })=>{
         const {ssoPath} = this.state;
         if(key==='logout') {
-            confirm({
+            const modalRef = Modal.confirm({
                 title: '系统提示',
-                content: '确定要退出吗',
-                okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
-                onOk: () => {
-                    this.props.logout()
+                content: '确定要退出吗？',
+                //okText:<a rel='noopener noreferrer' target='_self' href={ssoPath}>确定</a>,
+                onOk:()=>{
+                    modalRef && modalRef.destroy();
+                    this.props.logout();
+                    setTimeout(()=>{
+                        window.location.href=`${ssoPath}`;
+                    },200)
                 },
                 onCancel() {
+                    modalRef.destroy()
                 },
             });
         }else if(key === 'admin') {
@@ -56,12 +61,15 @@ class WimsHeader extends Component {
     componentDidMount(){
         request.post('/oauth/loginOut').then(({data})=>{
             if(data.code === 200){
-                this.setState({ssoPath:data.data})
+                this.mounted && this.setState({ssoPath:data.data})
             }
         }).catch(err=>{
         })
     }
-
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
@@ -140,7 +148,7 @@ export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
         realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
-        orgId: state.user.get("orgId"),
+        org: state.user.get("org"),
         // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))

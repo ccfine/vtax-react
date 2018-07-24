@@ -185,7 +185,7 @@ class ApplyDeclarationPopModal extends Component {
 						)
 					}
 					res.push(
-						<Col span={everySpan}>
+						<Col span={index===dataSource.length-1?(24-(dataSource.length-1)*(everySpan+1)):everySpan}>
 							<h4 className="steps-title">{item.title}</h4>
 							<div className="steps-content">
 								{this.getOneContent(item.options, 0)}

@@ -27,7 +27,7 @@ class PopModal extends Component{
         this.setState({
             submitLoading:true
         })
-        request.post(`/sysRole/assignUser/${this.props.orgId}`,params)
+        request.post(`/sysRole/assignUser/${this.props.org && this.props.org.orgId}`,params)
             .then(({data})=>{
                 this.setState({
                     submitLoading:false
@@ -111,7 +111,7 @@ class PopModal extends Component{
             nextProps.form.resetFields();
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible){
-            this.fetchList(nextProps.orgId)
+            this.fetchList(nextProps.org && nextProps.org.orgId)
             this.fetchRoleId(nextProps.id)
         }
     }
@@ -150,7 +150,7 @@ class PopModal extends Component{
                         margin: '0 auto'
                     }}>
                         <Transfer
-                            //rowKey={record => record.key}
+                            rowKey={record => record.key}
                             listStyle={{
                                 width: 280,
                                 height: 400,
@@ -171,5 +171,5 @@ class PopModal extends Component{
 }
 
 export default connect(state=>({
-    orgId: state.user.get("orgId")
+    org: state.user.get("org")
 }))(Form.create()(PopModal))
