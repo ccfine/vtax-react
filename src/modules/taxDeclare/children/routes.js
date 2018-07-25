@@ -68,8 +68,8 @@ const Children_Routes = [
             exact:true,
         },{
             path:`${PATH}/declareHandle/handleDeclare/:id`,
-            component:wrapPage('申报处理',Handle_HandleDeclare),
-            name:'申报处理',
+            component:wrapPage('申报办理',Handle_HandleDeclare),
+            name:'申报办理',
             exact:true,
         }],
     },{

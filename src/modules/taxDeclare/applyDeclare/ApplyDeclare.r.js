@@ -18,6 +18,9 @@ class ApplyDeclare extends React.Component {
 		mainUpdateKey:Date.now(),
 		recordLoading:true,
 	}
+	componentDidUpdate(){
+		document.title=this.props.decAction==='edit'?'申报办理':'查看申报';
+	}
 	componentDidMount(){
 		this.fetchRecordById(this.props.match.params.id)
 	}
@@ -92,7 +95,7 @@ class ApplyDeclare extends React.Component {
 				type="editable-card"
 				onEdit={this.onEdit}
 				tabBarGutter={0}>
-				<TabPane tab={decAction==='edit'?'申报处理':'查看申报'} key='main' closable={false}>
+				<TabPane tab={decAction==='edit'?'申报办理':'查看申报'} key='main' closable={false}>
 					<Main addPane={this.add} record={record} updateKey={mainUpdateKey} url={url}/>
 				</TabPane>
 				{this.state.panes.map(pane => (
