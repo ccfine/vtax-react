@@ -73,14 +73,14 @@ class WimsHeader extends Component {
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
-                <Menu.Item key="logout">
-                    <Icon type="logout" />退出登录
-                </Menu.Item>
-                <Menu.Divider />
                 <Menu.Item key='admin'>
                     <Link to={`/help`} target='_blank'>
                         <Icon type="info-circle-o" />帮助中心
                     </Link>
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="logout">
+                    <Icon type="logout" />退出登录
                 </Menu.Item>
                 {/* <Menu.Item key="question">
                     <a  rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'><Icon type="question" />我要提问</a>
