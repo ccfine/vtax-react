@@ -35,7 +35,7 @@ class FileExport extends Component{
 
     handleDownload=()=>{
         const {params={},url} = this.props;
-        let nextUrl =`${window.baseURL}${url}?${parseJsonToParams({...params,Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`;
+        let nextUrl =`${window.baseURL}${url}?${parseJsonToParams({...params,Authorization:request.getToken()})}`;
         let elemIF = document.createElement("iframe");
         elemIF.src = nextUrl;
         elemIF.style.display = "none";
