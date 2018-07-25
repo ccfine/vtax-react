@@ -27,7 +27,7 @@ class PopModal extends Component{
         this.setState({
             submitLoading:true
         })
-        request.post(`/sysRole/assignUser/${this.props.org && this.props.org.orgId}`,params)
+        request.post(`/sysRole/assignUser/${this.props.orgId}`,params)
             .then(({data})=>{
                 this.setState({
                     submitLoading:false
