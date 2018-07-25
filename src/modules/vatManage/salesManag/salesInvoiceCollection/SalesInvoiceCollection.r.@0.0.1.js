@@ -330,7 +330,8 @@ class SalesInvoiceCollection extends Component {
     render() {
         const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+        isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -346,14 +347,14 @@ class SalesInvoiceCollection extends Component {
                     pageSize: 100,
                     columns: getColumns(this),
                     url: "/output/invoice/collection/list",
-                    rowSelection:{
-                        type: 'checkbox',
-                    },
-                    onRowSelect:(selectedRowKeys)=>{
+                    // rowSelection:{
+                    //     type: 'checkbox',
+                    // },
+                    onRowSelect:isCheck?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    }:undefined,
                     onSuccess: (params) => {
                         this.setState({
                             filters: params

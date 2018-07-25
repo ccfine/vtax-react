@@ -383,7 +383,8 @@ class InvoiceCollection extends Component {
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+        isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
@@ -398,11 +399,11 @@ class InvoiceCollection extends Component {
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         scroll: { x: 1500, y:window.screen.availHeight-380-(disabled?50:0)},
-                        onRowSelect:(selectedRowKeys)=>{
+                        onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.setState({
                                 selectedRowKeys
                             })
-                        },
+                        }:undefined,
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params
