@@ -35,8 +35,7 @@ class SelectSearch extends Component {
             value 
         },()=>{
             saveOrg({orgId:value.key,orgName:value.label});
-            if(this.mounted && saveOrg !== org.orgId){
-                this.props.history.replace('/web');
+            if(this.mounted && value.key !== org.orgId){
                 this.renderSwitchGroupSearch(value.key);
             }
         });
@@ -49,10 +48,14 @@ class SelectSearch extends Component {
                 if(data.code ===200){
                     saveToken(data.data.token)
                     savePersonal(data.data)
+                    // console.log('savePersonal')
+                    // this.props.history.replace('/web');
 
                     //保证redux保存成功后更新数据
                     setTimeout(()=>{
-                        this.props.changeRefresh(Date.now()+1)
+                        // this.props.changeRefresh(Date.now()+1)
+                        console.log('renderSwitchGroupSearch setTimeout',Date.now())
+                        this.props.history.replace('/web');
                     },300)
                 }else{
                     message.error(`查询失败:${data.msg}`)
