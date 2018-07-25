@@ -52,11 +52,11 @@ class SelectSearch extends Component {
                     // this.props.history.replace('/web');
 
                     //保证redux保存成功后更新数据
-                    setTimeout(()=>{
-                        // this.props.changeRefresh(Date.now()+1)
-                        console.log('renderSwitchGroupSearch setTimeout',Date.now())
-                        this.props.history.replace('/web');
-                    },300)
+                    // setTimeout(()=>{
+                    //     // this.props.changeRefresh(Date.now()+1)
+                    //     // console.log('renderSwitchGroupSearch setTimeout',Date.now())
+                    //     this.props.history.replace('/web');
+                    // },300)
                 }else{
                     message.error(`查询失败:${data.msg}`)
                 }
