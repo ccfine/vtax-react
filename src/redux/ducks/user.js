@@ -137,9 +137,9 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
         }).then(res=>{
             request.testSuccess(res.data,data=>{
                 //判断是否是管理员 and 是否有权限 没有就跳转到403页面
-                if(data.type !== 8192 && data.options<1){
+                /*if(data.type !== 8192 && data.options<1){
                     window.location.href="/403";
-                }else {
+                }else {*/
                     dispatch(token.increment(data.token))
                     //获取组织信息
                     dispatch(org.increment({orgId:data.orgId,orgName:data.orgName}))
@@ -152,7 +152,7 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                     dispatch(isAuthed.login())
                     //执行登录成功回调
                     success && success()
-                }
+                //}
             },err=>{
                 fail && fail(err)
             })
@@ -168,9 +168,9 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                 .then(res=>{
                     request.testSuccess(res.data,data=>{
                         //判断是否是管理员 and 是否有权限 没有就跳转到403页面
-                        if(data.type !== 8192 && data.options<1){
+                        /*if(data.type !== 8192 && data.options<1){
                             window.location.href="/403";
-                        }else {
+                        }else {*/
                             dispatch(token.increment(data.token))
                             //获取组织信息
                             dispatch(org.increment({orgId:data.orgId,orgName:data.orgName}))
@@ -186,7 +186,7 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                             dispatch(isAuthed.login())
                             //执行登录成功回调
                             success && success()
-                        }
+                        //}
                     },err=>{
                         fail && fail(err)
                         console.log(`用户信息获取失败:${err}`)
