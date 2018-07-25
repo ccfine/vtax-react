@@ -30,6 +30,7 @@ class PopModal extends React.Component{
             if(data.code===200){
                 message.success(`分期结转成功！`)
                 this.props.toggleModalVisible(false)
+                this.props.refreshTable && this.props.refreshTable();
             }else{
                 message.error(`操作失败:${data.msg}`)
             }
@@ -60,7 +61,7 @@ class PopModal extends React.Component{
               onCancel={this.handleCancel}
               confirmLoading={submitLoading}
             >
-                <Alert style={{marginBottom:15}} message="以下项目分期，期初销售建筑面积/分期可售建筑面积已达95%，请确认是否确认进行最后一次土地价款的抵减（如果是，请勾选并点击确认）" type="info" showIcon />
+                <Alert style={{marginBottom:15}} message="以下项目分期，期初销售建筑面积/分期可售建筑面积已达95%，请确认是否进行最后一次土地价款的抵减（如果是，请勾选并点击确认）" type="info" showIcon />
                 <AsyncTable url="/account/landPrice/deductedDetails/loadFinishList"
                                 updateKey={tableKey}
                                 filters={filters}

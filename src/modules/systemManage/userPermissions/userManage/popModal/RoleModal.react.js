@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-06 15:06:33
+ * @Last Modified time: 2018-07-25 19:08:17
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
@@ -88,7 +88,7 @@ class RoleModal extends React.Component {
                     ...values
                 };
                 request
-                    .post(`/sysUser/assignRole/${values.orgId}`, params)
+                    .post(`/sysUser/assignRole`, params)
                     .then(({ data }) => {
                         this.setState({
                             submitLoading: false
@@ -175,28 +175,44 @@ class RoleModal extends React.Component {
                     {
                         getFields(this.props.form, [{
                             label: "组织",
-                            fieldName: "orgId",
-                            type: "asyncSelect",
+                            fieldName: "orgIds",
+                            type: "asyncTreeSelect",
                             span: 24,
                             formItemStyle: {
                                 labelCol: {
                                     span: 2
                                 },
                                 wrapperCol: {
-                                    span: 16
+                                    span: 20
                                 }
                             },
                             componentProps: {
                                 fieldTextName: "name",
                                 fieldValueName: "id",
                                 doNotFetchDidMount:!userId,
-                                fetchAble:userId,
-                                url: `/sysOrganization/queryOrgsByUserId/${userId}`,
+                                fetchAble:!!userId,
+                                url: `/sysOrganization/queryOrgTreeByUserId/${userId}`,
+                                maxTagCount:5,
+                                dropdownStyle:{
+                                    maxHeight:400,
+                                },
+                                labelInValue:false,
+                                allowClear:true,
+                                showSearch:true,
+                                // filterTreeNode:true,
                             },
                             fieldDecoratorOptions: {
-                                initialValue: orgId,
-                                onChange:(orgId)=>{
-                                    orgId && this.fetchRoleByUserId(orgId,userId)
+                                initialValue: orgId?[orgId]:undefined,
+                                onChange:(orgIds)=>{
+                                    if(orgIds){
+                                        if(orgIds.length===1){
+                                            this.fetchRoleByUserId(orgIds[0],userId)
+                                        }else{
+                                            this.props.form.setFieldsValue({'roleIds':[]})
+                                            this.props.form.resetFields();
+                                            this.setState({ checkAll: false,roles:[],defaultFields:[] });
+                                        }
+                                    }
                                 },
                                 rules: [
                                     {

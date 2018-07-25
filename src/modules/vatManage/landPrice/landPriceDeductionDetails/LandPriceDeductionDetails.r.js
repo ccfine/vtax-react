@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-19 11:16:28
+ * @Last Modified time: 2018-07-25 16:12:49
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -266,9 +266,9 @@ class DeductProjectSummary extends React.Component {
     }
     fetchIsFinish=()=>{
         request.get('/account/landPrice/deductedDetails/loadFinishCount',{params:this.state.filters}).then(({data})=>{
-            if(data.code===200 && data.data >0){
+            if(data.code===200){// && data.data >0
                 this.setState({
-                    canFinish:true
+                    canFinish:data.data>0
                 })
             }
         })
@@ -334,7 +334,7 @@ class DeductProjectSummary extends React.Component {
                                     }
                                 }],statusParam)
                             }
-                            <PopModal visible={visible} filters={filters} toggleModalVisible={this.toggleModalVisible}/>
+                            <PopModal visible={visible} filters={filters} toggleModalVisible={this.toggleModalVisible} refreshTable={this.refreshTable}/>
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'reset',

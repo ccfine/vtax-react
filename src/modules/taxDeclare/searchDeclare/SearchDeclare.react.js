@@ -32,22 +32,22 @@ const searchFields = [
             {
                 text:'申报办理',
                 value:'1'
-            },{
+            }/*,{
                 text:'申报审核',
                 value:'2'
             },{
                 text:'申报审批',
                 value:'3'
-            },{
+            }*/,{
                 text:'申报完成',
                 value:'4'
             },{
                 text:'归档',
                 value:'5'
-            },{
+            }/*,{
                 text:'流程终止',
                 value:'-1'
-            }
+            }*/
         ],
     },{
         label:'所属期',
