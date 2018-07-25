@@ -17,6 +17,9 @@ class ApplyDeclare extends React.Component {
 		record:null,
 		mainUpdateKey:Date.now(),
 		recordLoading:true,
+
+		// 用来区分 销项发票匹配 中 '销项发票数据匹配' 和 '房间交易档案'
+		activeTab:'1',
 	}
 	componentDidUpdate(){
 		document.title=this.props.decAction==='edit'?'申报办理':'查看申报';
@@ -50,22 +53,22 @@ class ApplyDeclare extends React.Component {
 	onEdit = (targetKey, action) => {
 		this[action](targetKey)
 	}
-	add = (key,title,Component) => {
+	add = (key,title,Component,props={}) => {
 		const panes = this.state.panes,
-			activeKey =key,
-			{record} = this.state,
-			{decAction} = this.props;
+			activeKey =key;
+			// {record} = this.state,
+			// {decAction} = this.props;
 		if(!Component ){return}else if(panes.some(ele=>ele.key === key)){
-			this.setState({ activeKey })
+			this.setState({ activeKey,...props })
 			return;
 		}
 		
 		panes.push({
 			title: title,
-		content: <Component declare={{mainId:record.mainId,authMonth:record.partTerm,decAction:decAction}}/>,
+			Component: Component,
 			key: activeKey
 		})
-		this.setState({ panes, activeKey })
+		this.setState({ panes, activeKey ,...props })
 	}
 	remove = targetKey => {
 		let activeKey = this.state.activeKey,
@@ -83,7 +86,7 @@ class ApplyDeclare extends React.Component {
 		this.setState(newState)
 	}
 	render() {
-		const {record,mainUpdateKey,recordLoading} = this.state,
+		const {record,mainUpdateKey,recordLoading,activeTab} = this.state,
 		{url,decAction} = this.props; 
 		return recordLoading?'加载中...'
 		:(
@@ -103,7 +106,7 @@ class ApplyDeclare extends React.Component {
 						tab={pane.title}
 						key={pane.key}
 						closable={pane.closable}>
-						{pane.content}
+						<pane.Component declare={{mainId:record.mainId,authMonth:record.partTerm,decAction:decAction}} activeTab={pane.title==='销项发票匹配'?activeTab:undefined}/>
 					</TabPane>
 				))}
 				

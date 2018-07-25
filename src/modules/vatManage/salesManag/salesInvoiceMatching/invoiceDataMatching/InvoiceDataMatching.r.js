@@ -511,7 +511,7 @@ class InvoiceDataMatching extends Component{
                         y:window.screen.availHeight-480-(disabled?50:0),
                     },
                     cardProps:{
-                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配</span>,
                     },
                 }}
             >

@@ -44,6 +44,7 @@ const transformDeclaration = data => {
 							component:route.component,
 							path: route && route.path,
 							paneTitle:'销项发票匹配',
+							props:{activeTab:decla.name === '销项发票数据匹配'?'2':'1'}
 						}
 					} else {
 						let route = allPlainRoutes.find(
@@ -155,7 +156,7 @@ class Main extends Component {
 								<a
 								   onClick={e => {
 									   e && e.preventDefault();
-                                       this.props.addPane(item.path,item.paneTitle || item.name, item.component)
+                                       this.props.addPane(item.path,item.paneTitle || item.name, item.component,item.props)
                                    }}>
                                     {item.name}
                                     {getStatuText(item.status)}

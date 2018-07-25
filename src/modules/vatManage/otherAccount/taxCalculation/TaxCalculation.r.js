@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-24 11:39:39
+ * @Last Modified time: 2018-07-25 14:11:23
  *
  */
 import React,{Component} from 'react'
@@ -184,7 +184,8 @@ class TaxCalculation extends Component{
                     searchOption={{
                         fields:searchFields(disabled,declare),
                         cardProps:{
-                            className:''
+                            className:'',
+                            style:{borderTop:0}
                         },
                     }}
                     spinning={searchTableLoading}

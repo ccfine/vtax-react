@@ -7,7 +7,7 @@ import RoomTransactionFilePage from './roomTransactionFile'
 import InvoiceDataMatching from './invoiceDataMatching'
 import UnmatcedData from './unmatchedData'
 import NeedNotMatchInvoices from './needNotMatchInvoices'
-import { getUrlParam } from 'utils'
+// import { getUrlParam } from 'utils'
 const TabPane = Tabs.TabPane;
 class SalesInvoiceMatching extends Component{
     state = {
@@ -20,8 +20,12 @@ class SalesInvoiceMatching extends Component{
         })
     }
     componentDidMount(){
-        const activeKey = getUrlParam('tab');
-        activeKey && this.setState({activeKey})
+        this.setState({activeKey:this.props.activeTab || '1'})
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.activeTab && nextProps.activeTab!==this.props.activeTab){
+            this.setState({activeKey:nextProps.activeTab})
+        }
     }
 
     refreshTabs = ()=>{
@@ -38,7 +42,7 @@ class SalesInvoiceMatching extends Component{
                 <TabPane tab="房间交易档案" key="1">
                     <RoomTransactionFilePage declare={declare}/>
                 </TabPane>
-                <TabPane tab="销项发票数据匹配列表" key="2">
+                <TabPane tab="销项发票数据匹配" key="2">
                     <InvoiceDataMatching refreshTabs={this.refreshTabs} declare={declare}/>
                 </TabPane>
                 <TabPane tab="未匹配的发票列表" key="3">
