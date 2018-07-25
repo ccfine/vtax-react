@@ -33,7 +33,8 @@ class FileExport extends Component{
         this.handleDownload = throttle(this.handleDownload,1000) //以防止每秒调用多次
     }
 
-    handleDownload=()=>{
+    handleDownload=(e)=>{
+        e && e.preventDefault();
         const {params={},url} = this.props;
         let nextUrl =`${window.baseURL}${url}?${parseJsonToParams({...params,Authorization:request.getToken()})}`;
         let elemIF = document.createElement("iframe");
