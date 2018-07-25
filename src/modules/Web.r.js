@@ -62,6 +62,11 @@ class Web extends Component {
 
     componentWillReceiveProps(nextProps){
         this.checkLoggedIn(nextProps);
+
+        if(nextProps.personal!==this.props.personal){
+            this.setState({refresh: Date.now()})
+            this.props.history.replace('/web');
+        }
     }
 
     // componentDidMount(){
@@ -99,6 +104,7 @@ class Web extends Component {
 }
 
 export default withRouter(connect(state=>({
+    personal:state.user.get('personal'),
     isAuthed:state.user.get('isAuthed'),
 }),dispatch=>({
     logout:logout(dispatch)

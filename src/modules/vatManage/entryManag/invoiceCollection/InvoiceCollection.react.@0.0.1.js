@@ -4,7 +4,6 @@
  * description  :
  */
 import React, { Component } from "react";
-import {connect} from 'react-redux';
 import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
 import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
@@ -384,23 +383,27 @@ class InvoiceCollection extends Component {
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+        isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields: getSearchFields(disabled,declare)
+                        fields: getSearchFields(disabled,declare),
+                        cardProps:{
+                            style:{borderTop:0}
+                        }
                     }}
                     tableOption={{
                         columns: getColumns(this),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1500, y:window.screen.availHeight-380 },
-                        onRowSelect:(selectedRowKeys)=>{
+                        scroll: { x: 1500, y:window.screen.availHeight-380-(disabled?50:0)},
+                        onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.setState({
                                 selectedRowKeys
                             })
-                        },
+                        }:undefined,
                         onSuccess:(params)=>{
                             this.setState({
                                 filters:params
@@ -502,6 +505,4 @@ class InvoiceCollection extends Component {
         );
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(InvoiceCollection);
+export default InvoiceCollection;

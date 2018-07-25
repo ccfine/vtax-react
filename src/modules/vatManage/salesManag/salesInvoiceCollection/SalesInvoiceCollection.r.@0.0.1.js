@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/2.
  */
 import React, { Component } from "react";
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
@@ -330,14 +330,16 @@ class SalesInvoiceCollection extends Component {
     render() {
         const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+        isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields: searchFields(disabled,declare),
                     cardProps: {
-                        className: ""
+                        className: "",
+                        style:{borderTop:0},
                     }
                 }}
                 tableOption={{
@@ -345,14 +347,14 @@ class SalesInvoiceCollection extends Component {
                     pageSize: 100,
                     columns: getColumns(this),
                     url: "/output/invoice/collection/list",
-                    rowSelection:{
-                        type: 'checkbox',
-                    },
-                    onRowSelect:(selectedRowKeys)=>{
+                    // rowSelection:{
+                    //     type: 'checkbox',
+                    // },
+                    onRowSelect:isCheck?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    }:undefined,
                     onSuccess: (params) => {
                         this.setState({
                             filters: params
@@ -436,7 +438,7 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        y:window.screen.availHeight-400,
+                        y:window.screen.availHeight-400-(disabled?50:0),
                         x:1800,
                     },
                     onTotalSource: totalSource => {
@@ -457,6 +459,4 @@ class SalesInvoiceCollection extends Component {
         );
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(SalesInvoiceCollection)
+export default SalesInvoiceCollection
