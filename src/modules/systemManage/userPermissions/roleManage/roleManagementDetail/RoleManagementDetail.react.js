@@ -1,5 +1,5 @@
 /**
- * author       : xiaminghua
+ * author       : liuchunxiu
  * createTime   : 2018/4/16
  * description  :
  */
@@ -18,9 +18,6 @@ class RoleManagementDetail extends Component {
 			data: [],
 			permissions: [],
 			roleData: [],
-			roleName: props.location.state.roleName,
-			remark: props.location.state.remark,
-			isEnabled: props.location.state.isEnabled,
             modalKey: Date.now(),
 		}
 	}
@@ -91,7 +88,7 @@ class RoleManagementDetail extends Component {
 
 	render() {
         const {  location } = this.props
-		const {data,permissions,roleData,roleName,isEnabled,remark,loading} = this.state
+		const {data,permissions,roleData,loading} = this.state
         const options = data.options
 		return (
 			<div>
@@ -111,7 +108,7 @@ class RoleManagementDetail extends Component {
 							<Col span={8}>
 								<p>
 									名称：<span style={{ color: '#333' }}>
-										{roleName}
+										{location && location.state.roleName}
 									</span>
 								</p>
 							</Col>
@@ -120,11 +117,11 @@ class RoleManagementDetail extends Component {
 									状态：<span
 										style={{
 											color:
-												parseInt(isEnabled, 0) === 1
+												parseInt(location && location.state.isEnabled, 0) === 1
 													? '#009E4A'
 													: '#FF0000'
 										}}>
-										{parseInt(isEnabled, 0) === 1
+										{parseInt(location && location.state.isEnabled, 0) === 1
 											? '启用'
 											: '停用'}
 									</span>
@@ -133,7 +130,7 @@ class RoleManagementDetail extends Component {
 							<Col span={10}>
 								<p>
 									备注：<span style={{ color: '#333' }}>
-										{remark}
+										{location && location.state.remark}
 									</span>
 								</p>
 							</Col>

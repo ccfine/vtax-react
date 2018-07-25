@@ -87,7 +87,7 @@ class WimsHeader extends Component {
                 </Menu.Item> */}
             </Menu>
         );
-
+        console.log(this.props)
         return (
             <Header className="header">
                 <Row>

@@ -99,7 +99,7 @@ class SelectSearch extends Component {
                             },
                         },
                         fieldDecoratorOptions: {
-                            initialValue: area && {key: area.areaId,label: area.areaName},
+                            initialValue: (area && {key: area.areaId,label: area.areaName}) || undefined,
                         }
                     },
                     {
@@ -111,10 +111,10 @@ class SelectSearch extends Component {
                         componentProps:{
                             fieldTextName:'name',
                             fieldValueName:'id',
-                            doNotFetchDidMount:!area.areaId,
+                            doNotFetchDidMount:!(area && area.areaId),
                             notShowAll:true,
-                            fetchAble:(getFieldValue('area') && getFieldValue('area').key ) || area.areaId,
-                            url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('area') && getFieldValue('area').key) || area.areaId}`,
+                            fetchAble:(getFieldValue('area') && getFieldValue('area').key ) || (area && area.areaId),
+                            url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('area') && getFieldValue('area').key) || (area && area.areaId)}`,
                             selectOptions:{
                                 labelInValue:true,
                                 onChange:this.handleChange,
@@ -124,7 +124,7 @@ class SelectSearch extends Component {
                             },
                         },
                         fieldDecoratorOptions: {
-                            initialValue: org && {key: org.orgId,label: org.orgName},
+                            initialValue: (org && {key: org.orgId,label: org.orgName}) || undefined,
                         }
                     }])
                 }
