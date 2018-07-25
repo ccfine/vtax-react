@@ -63,9 +63,9 @@ class Web extends Component {
     componentWillReceiveProps(nextProps){
         this.checkLoggedIn(nextProps);
 
-        if(nextProps.personal===this.props.personal){
-            console.log('componentWillReceiveProps nextProps.personal===this.props.personal',Date.now())
+        if(nextProps.personal!==this.props.personal){
             this.setState({refresh: Date.now()})
+            this.props.history.replace('/web');
         }
     }
 
