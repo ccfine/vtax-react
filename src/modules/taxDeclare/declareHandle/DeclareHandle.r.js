@@ -81,13 +81,13 @@ const getColumns =(context)=>[
                                         context.toggleApplyVisible(true,'tax/decConduct/list/handle');
                                     });
                                 }
-                            },{
+                            }/*,{
                                 type:'action',
                                 icon:'exception',
                                 title:'流程终止',
                                 userPermissions:['1085000'],
                                 onSuccess:()=>{ context.handelProcessStop(record) }
-                            }])
+                            }*/])
                     break
                 case 2: //申报审核
                     break
