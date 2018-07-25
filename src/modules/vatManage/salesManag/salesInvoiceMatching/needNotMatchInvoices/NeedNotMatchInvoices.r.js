@@ -100,27 +100,8 @@ const searchFields=(disabled,declare)=> {
 const columns = [
     {
         title:'纳税主体',
-        dataIndex:'mainName'
-    },
-    {
-        title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum',
-        width:'12%',
-    },
-    {
-        title:'购货单位名称',
-        dataIndex:'purchaseName',
-        width:'12%',
-    },
-    {
-        title:'发票代码',
-        dataIndex:'invoiceCode',
-        width:'8%',
-    },
-    {
-        title:'发票号码',
-        dataIndex:'invoiceNum',
-        width:'8%',
+        dataIndex:'mainName',
+        width:'200px',
     },
     {
         title:'发票类型',
@@ -134,41 +115,66 @@ const columns = [
             }
             return text;
         },
-        width:60,
+        width:'100px',
     },
     {
-        title:'开票日期',
-        dataIndex:'billingDate',
-        width:'75px'
+        title: '备注',
+        dataIndex: 'remark',
+        width:'500px',
     },
     {
         title:'金额',
         dataIndex:'amount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'8%',
+        width:'100px',
     },
     {
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
         render:text=>text? `${text}%`: text,
-        width:40,
+        width:'100px',
     },
     {
         title:'税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'8%',
+        width:'100px',
     },
     {
         title:'价税合计',
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
         className:'table-money',
+        width:'100px',
+    },
+    {
+        title:'纳税人识别号',
+        dataIndex:'purchaseTaxNum',
+        width:'200px',
+    },
+    {
+        title:'开票日期',
+        dataIndex:'billingDate',
+        width:'100px',
+    },
+    {
+        title:'购货单位名称',
+        dataIndex:'purchaseName',
+        width:'200px',
+    }/*,
+    {
+        title:'发票代码',
+        dataIndex:'invoiceCode',
         width:'8%',
-    }
+    },
+    {
+        title:'发票号码',
+        dataIndex:'invoiceNum',
+        width:'8%',
+    },*/
 ];
 
 class NeedNotMatchInvoices extends Component{
@@ -304,13 +310,13 @@ class NeedNotMatchInvoices extends Component{
                         })
                     },
                     scroll:{
-                        x:1200,
+                        x:1700,
                         y:window.screen.availHeight-430,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
                     },
-                    onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
+                    onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status, 0) !== 2)?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })

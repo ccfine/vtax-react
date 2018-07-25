@@ -187,183 +187,153 @@ const getColumns = (context,disabled) => {
                 }}])
     }]:[];
     return [...operates,
-    {
-        title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum',
-        /*render:(text,record)=>{
-            let color = '#333';
-            if(record.taxIdentificationCode !== record.purchaseTaxNum){
-                /!**销项发票的纳税识别号与房间交易档案中的纳税识别号出现不完全匹配时，销项发票的纳税识别号标记为红色字体；*!/
-                color = '#f5222d';
-            }
-            if(record.customerName !== record.purchaseName){
-                /!**销项发票的购货单位与房间交易档案中的客户，不一致时，销项发票中的购货单位标记为蓝色字体；*!/
-                color = '#1890ff';
-            }
-            if(record.totalAmount !== record.totalPrice){
-                /!** 销项发票的价税合计与房间交易档案中的成交总价不一致时，销项发票中的价税合计标记为紫色字体；*!/
-                color = '#6f42c1'
-            }
-            return <span style={{color}}>{text}</span>
-        }*/
-    },
-    {
-        title:'购货单位名称',
-        dataIndex:'purchaseName',
-        width:'6%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票号码</p>
-                <p className="apply-form-list-p2">发票代码</p>
-            </div>
-        ),
-        dataIndex: "invoiceNum",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceCode}</p>
-            </div>
-        ),
-        width:'6%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">开票日期</p>
-            </div>
-        ),
-        dataIndex: "invoiceType",
-        render: (text, record) => {
-            let txt = '';
-            if(text==='s'){
-                txt = '专票'
-            }
-            if(text==='c'){
-                txt = '普票'
-            }
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{txt}</p>
-                    <p className="apply-form-list-p2">{record.billingDate}</p>
-                </div>
-            )
+        {
+            title:'纳税人识别号',
+            dataIndex:'purchaseTaxNum',
+            width:'200px',
+            /*render:(text,record)=>{
+                let color = '#333';
+                if(record.taxIdentificationCode !== record.purchaseTaxNum){
+                    /!**销项发票的纳税识别号与房间交易档案中的纳税识别号出现不完全匹配时，销项发票的纳税识别号标记为红色字体；*!/
+                    color = '#f5222d';
+                }
+                if(record.customerName !== record.purchaseName){
+                    /!**销项发票的购货单位与房间交易档案中的客户，不一致时，销项发票中的购货单位标记为蓝色字体；*!/
+                    color = '#1890ff';
+                }
+                if(record.totalAmount !== record.totalPrice){
+                    /!** 销项发票的价税合计与房间交易档案中的成交总价不一致时，销项发票中的价税合计标记为紫色字体；*!/
+                    color = '#6f42c1'
+                }
+                return <span style={{color}}>{text}</span>
+            }*/
         },
-        width:80,
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">金额</p>
-                <p className="apply-form-list-p2">税额</p>
-            </div>
-        ),
-        dataIndex: "amount",
-        className:'table-money',
-        width:'6%',
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
-            </div>
-        )
-    },
-    {
-        title:'税率',
-        dataIndex:'taxRate',
-        className:'text-right',
-        width:40,
-        render:text=>text? `${text}%`: text,
-    },
-    {
-        title:'价税合计',
-        dataIndex:'totalAmount',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'6%',
-    },
-    {
-        title:'匹配时间',
-        dataIndex:'marryTime',
-        width:120,
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">客户名称</p>
-                <p className="apply-form-list-p2">身份证号/纳税识别码</p>
-            </div>
-        ),
-        width:'10%',
-        dataIndex: "customerName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
-            </div>
-        )
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">楼栋名称</p>
-                <p className="apply-form-list-p2">单元</p>
-            </div>
-        ),
-        width:'16%',
-        dataIndex: "buildingName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.element}</p>
-            </div>
-        )
-    }, {
-        title:'路址',
-        dataIndex:'htRoomName',
-        width:'8%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">房号</p>
-                <p className="apply-form-list-p2">房间编码</p>
-            </div>
-        ),
-        width:'6%',
-        dataIndex: "roomNumber",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.roomCode}</p>
-            </div>
-        )
-    },
-    {
-        title:'成交金额',
-        dataIndex:'totalPrice',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'6%',
-    },
-    {
-        title:'匹配方式',
-        dataIndex:'matchingWay',
-        width:60,
-        render:text=>{
-            text = parseInt(text,0);//0:手动匹配,1:自动匹配
-            if(text === 0){
-                return '手动匹配';
-            }else if(text ===1){
-                return '自动匹配';
-            }else{
-                return ''
+        {
+            title:'发票号码',
+            dataIndex:'invoiceNum',
+            width:'150px',
+        },
+        {
+            title:'发票类型',
+            dataIndex:'invoiceType',
+            width:'100px',
+            render: (text) => {
+                let txt = '';
+                if(text==='s'){
+                    txt = '专票'
+                }
+                if(text==='c'){
+                    txt = '普票'
+                }
+                return txt
+            },
+        },
+        {
+            title:'金额',
+            dataIndex:'amount',
+            width:'100px',
+            className:'table-money',
+            render:text=>fMoney(text),
+        },
+        {
+            title:'税率',
+            dataIndex:'taxRate',
+            className:'text-right',
+            width:'100px',
+            render:text=>text? `${text}%`: text,
+        },
+        {
+            title:'税额',
+            dataIndex:'taxAmount',
+            width:'100px',
+            className:'table-money',
+            render:text=>fMoney(text),
+        },
+        {
+            title:'价税合计',
+            dataIndex:'totalAmount',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'开票日期',
+            dataIndex:'billingDate',
+            width:'100px',
+        },
+        {
+            title:'购货单位名称',
+            dataIndex:'purchaseName',
+            width:'200px',
+        },
+        {
+            title:'房间编码',
+            dataIndex:'roomCode',
+            width:'100px',
+        },
+        {
+            title:'路址',
+            dataIndex:'htRoomName',
+            width:'200px',
+        },
+        {
+            title:'成交金额',
+            dataIndex:'totalPrice',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'楼栋名称',
+            dataIndex:'buildingName',
+            width:'200px',
+        },
+        {
+            title:'单元',
+            dataIndex:'element',
+            width:'120px',
+        },
+        {
+            title:'房号',
+            dataIndex:'roomNumber',
+            width:'120px',
+        },
+        {
+            title:'客户名称',
+            dataIndex:'customerName',
+            width:'120px',
+        },
+        {
+            title:'身份证号/纳税识别码',
+            dataIndex:'taxIdentificationCode',
+            width:'200px',
+        },
+        {
+            title:'匹配时间',
+            dataIndex:'marryTime',
+            width:'120px',
+        },
+        {
+            title:'匹配方式',
+            dataIndex:'matchingWay',
+            width:'100px',
+            render:text=>{
+                text = parseInt(text,0);//0:手动匹配,1:自动匹配
+                if(text === 0){
+                    return '手动匹配';
+                }else if(text ===1){
+                    return '自动匹配';
+                }else{
+                    return ''
+                }
             }
-        }
-    },
-]
+        }/*,
+        {
+            title:'发票代码',
+            dataIndex:'invoiceCode',
+            width:'100px',
+        },*/
+    ]
 }
 class InvoiceDataMatching extends Component{
     state={
@@ -508,7 +478,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 1500,
+                        x: 3500,
                         y:window.screen.availHeight-480,
                     },
                     cardProps:{

@@ -116,169 +116,145 @@ const getColumns = (context,disabled) =>{
         }])
     }]:[];
     return [
-        ...operates
-     ,
-    {
-        title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum',
-        width:'12%',
-    },
-    {
-        title: '购货单位名称',
-        dataIndex: "purchaseName",
-        width:'8%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票代码</p>
-                <p className="apply-form-list-p2">发票号码</p>
-            </div>
-        ),
-        dataIndex: "invoiceCode",
-        width:'6%',
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceNum}</p>
-            </div>
-        )
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">开票日期</p>
-            </div>
-        ),
-        dataIndex: "invoiceType",
-        width:70,
-        render: (text, record) => {
-            let typeText = '';
-            if(text==='s'){
-                typeText = '专票'
-            }
-            if(text==='c'){
-                typeText = '普票'
-            }
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{typeText}</p>
-                    <p className="apply-form-list-p2">{record.billingDate}</p>
-                </div>
-            )
-        }
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">金额</p>
-                <p className="apply-form-list-p2">税额</p>
-            </div>
-        ),
-        dataIndex: "amount",
-        className:'table-money',
-        width:'6%',
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
-            </div>
-        )
-    },
-    {
-        title:'税率',
-        dataIndex:'taxRate',
-        render:text=>text? `${text}%`: text,
-        className:'text-right',
-        width:60,
-    },
-    {
-        title:'价税合计',
-        dataIndex:'totalAmount',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'6%',
-    },
-    {
-        title:'匹配时间',
-        dataIndex:'marryTime',
-        width:120,
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">客户名称</p>
-                <p className="apply-form-list-p2">身份证号/纳税识别码</p>
-            </div>
-        ),
-        dataIndex: "customerName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
-            </div>
-        )
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">楼栋名称</p>
-                <p className="apply-form-list-p2">单元</p>
-            </div>
-        ),
-        dataIndex: "buildingName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.element}</p>
-            </div>
-        ),
-        width:'10%',
-    }, {
-        title:'路址',
-        dataIndex:'htRoomName',
-        width:'5%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">房号</p>
-                <p className="apply-form-list-p2">房间编码</p>
-            </div>
-        ),
-        dataIndex: "roomNumber",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.roomCode}</p>
-            </div>
-        ),
-        width:'5%',
-    },
-    {
-        title:'成交总价',
-        dataIndex:'totalPrice',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'6%',
-    },
-    {
-        title:'匹配方式',
-        dataIndex:'matchingWay',
-        render:text=>{
-            text = parseInt(text,0);//0:手动匹配,1:自动匹配
-            if(text === 0){
-                return '手动匹配';
-            }else if(text ===1){
-                return '自动匹配';
-            }else{
-                return ''
+            ...operates
+         ,
+        {
+            title: '发票号码',
+            dataIndex: "invoiceNum",
+            width:'200px',
+        },
+        {
+            title:'发票类型',
+            dataIndex:'invoiceType',
+            width:'100px',
+            render: (text) => {
+                let typeText = '';
+                if(text==='s'){
+                    typeText = '专票'
+                }
+                if(text==='c'){
+                    typeText = '普票'
+                }
+                return typeText
             }
         },
-        width:60,
-    },
-];
+        {
+            title: '备注',
+            dataIndex: 'remark',
+            width:'500px',
+        },
+        {
+            title: '金额',
+            dataIndex: "amount",
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'税率',
+            dataIndex:'taxRate',
+            render:text=>text? `${text}%`: text,
+            className:'text-right',
+            width:'100px',
+        },
+        {
+            title:'税额',
+            dataIndex:'taxAmount',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'价税合计',
+            dataIndex:'totalAmount',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'纳税人识别号',
+            dataIndex:'purchaseTaxNum',
+            width:'200px',
+        },
+        {
+            title: '开票日期',
+            dataIndex: "billingDate",
+            width:'100px',
+        },
+
+        /*{
+            title: '购货单位名称',
+            dataIndex: "purchaseName",
+            width:'200px',
+        },
+        {
+            title:'发票代码',
+            dataIndex:'invoiceCode',
+            width:'200px',
+        },
+        {
+            title:'匹配时间',
+            dataIndex:'marryTime',
+            width:'100px',
+        },
+        {
+            title:'客户名称',
+            dataIndex:'customerName',
+            width:'100px',
+        },
+        {
+            title:'身份证号/纳税识别码',
+            dataIndex:'taxIdentificationCode',
+            width:'200px',
+        },
+        {
+            title:'楼栋名称',
+            dataIndex:'buildingName',
+            width:'200px',
+        },
+        {
+            title:'单元',
+            dataIndex:'element',
+            width:'100px',
+        },
+        {
+            title:'路址',
+            dataIndex:'htRoomName',
+            width:'200px',
+        },
+        {
+            title:'房号',
+            dataIndex:'roomNumber',
+            width:'100px',
+        },
+        {
+            title:'房间编码',
+            dataIndex:'roomCode',
+            width:'100px',
+        },
+        {
+            title:'成交总价',
+            dataIndex:'totalPrice',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'匹配方式',
+            dataIndex:'matchingWay',
+            render:text=>{
+                text = parseInt(text,0);//0:手动匹配,1:自动匹配
+                if(text === 0){
+                    return '手动匹配';
+                }else if(text ===1){
+                    return '自动匹配';
+                }else{
+                    return ''
+                }
+            },
+            width:'100px',
+        },*/
+    ];
 }
 class UnmatchedData extends Component{
     state={
@@ -373,7 +349,7 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x:1300,
+                        x:1800,
                         y:window.screen.availHeight-430,
                     },
                     cardProps:{

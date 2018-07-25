@@ -35,25 +35,46 @@ const searchFields =  (disabled,declare) => {
                     }
                 ]
             }
-        },{
-            label:'查询期间',
-            fieldName:'authMonth',
-            type:'monthPicker',
+        }, {
+            label: '查询期间',
+            fieldName: 'authMonth',
+            type: 'monthPicker',
             formItemStyle,
-            span:8,
-            componentProps:{
-                format:'YYYY-MM',
+            span: 8,
+            componentProps: {
+                format: 'YYYY-MM',
                 disabled
             },
-            fieldDecoratorOptions:{
+            fieldDecoratorOptions: {
                 initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
-                rules:[
+                rules: [
                     {
-                        required:true,
-                        message:'请选择查询期间'
+                        required: true,
+                        message: '请选择查询期间'
                     }
                 ]
             },
+        },{
+            label: "取得方式",
+            fieldName: "acquisitionMode",
+            span: 8,
+            formItemStyle,
+            type: "select",
+            options: [ //0-外部获取,1-单独新建，2-自建转自用
+                {
+                    text: "外部获取",
+                    value: "0"
+                },
+                {
+                    text: "单独新建",
+                    value: "1"
+                },
+                {
+                    text: "自建转自用",
+                    value: "2"
+                }
+            ]
+
         }
     ]
 }

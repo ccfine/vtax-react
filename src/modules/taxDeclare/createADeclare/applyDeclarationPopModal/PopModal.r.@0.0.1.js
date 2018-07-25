@@ -212,7 +212,6 @@ class ApplyDeclarationPopModal extends Component {
 		setTimeout(()=>{
         	//TODO: 给ie10用的 为了防止被浏览器拦截
             //window.open(url, '_blank').location;
-        	window.open(url)
             const ref = Modal.warning({
                 title: '友情提醒',
                 content: <h2>操作完成后，请刷新当前页面！</h2>,
@@ -227,7 +226,9 @@ class ApplyDeclarationPopModal extends Component {
                     })
                 }
             })
-        },100)
+
+            window.open(url)
+        },500)
 
     }
 
