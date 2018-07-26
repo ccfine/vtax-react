@@ -105,47 +105,33 @@ const columns = [
         children:[ {
                 title:'项目',
                 dataIndex:'projectName',
-                width:'10%',
+                width:'150px',
             },
             {
                 title:'项目分期',
                 dataIndex:'itemName',
+                width:'150px',
             },
-            /*{
-                title:'楼栋',
-                dataIndex:'buildingName',
-                width:'8%',
-            },
-            {
-                title:'单元',
-                dataIndex:'element',
-                width:'6%',
-            },
-            {
-                title:'房号',
-                dataIndex:'roomNumber',
-                width:'4%',
-            },*/
             {
                 title:'房间编码',
                 dataIndex:'roomCode',
-                width:'8%',
+                width:'100px',
             },{
                 title:'路址',
                 dataIndex:'htRoomName',
-                width:'12%',
+                width:'150px',
             },
             {
                 title:'税率',
                 dataIndex:'taxRate',
                 className:'text-right',
                 render:text=>text? `${text}%`: text,
-                width:40,
+                width:'100px',
             },
             {
                 title:'房间交付日期',
                 dataIndex:'deliveryDate',
-                width:90,
+                width:'100px',
             },
         ]
     },
@@ -157,21 +143,21 @@ const columns = [
                 dataIndex:'sumTotalPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
             {
                 title:'增值税开票金额',
                 dataIndex:'sumTotalAmount',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
             {
                 title:'未开具发票销售金额',
                 dataIndex:'sumNoInvoiceSales',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
         ]
     },
@@ -183,21 +169,21 @@ const columns = [
                 dataIndex:'totalPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
             {
                 title:'增值税开票金额',
                 dataIndex:'totalAmount',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
             {
                 title:'未开具发票销售额',
                 dataIndex:'noInvoiceSales',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
         ]
     },
@@ -209,21 +195,21 @@ const columns = [
                 dataIndex:'endTotalPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'150px',
             },
             {
                 title:'增值税开票金额',
                 dataIndex:'endTotalAmount',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
             {
                 title:'未开具发票销售额',
                 dataIndex:'endNoInvoiceSales',
                 render:text=>fMoney(text),
                 className:'table-money',
-                width:'5%',
+                width:'100px',
             },
         ]
     },
@@ -232,14 +218,14 @@ const columns = [
         dataIndex:'totalNoInvoiceSales',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'5%',
+        width:'150px',
     },
     {
         title:'税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'5%',
+        width:'100px',
     }
 ];
 class unBilledSalesEstate extends Component{
@@ -374,7 +360,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:2000,
+                        x:1950,
                         y:window.screen.availHeight-430,
                     },
                     onTotalSource: (totalSource) => {
