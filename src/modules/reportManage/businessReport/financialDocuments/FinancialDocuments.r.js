@@ -269,6 +269,7 @@ export default class FinancialDocuments extends Component{
     render(){
         const {updateKey,filters,totalSource} = this.state;
         return(
+            <div className='oneLine'> 
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
@@ -330,7 +331,7 @@ export default class FinancialDocuments extends Component{
                     },
                 }}
             />
-
+            </div>
         )
     }
 }

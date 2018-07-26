@@ -104,6 +104,7 @@ export default class VoucherPopModal extends Component{
                     </Row>
                 }
                 title={props.title}>
+                    <div className='oneLine'>
                     <SearchTable
                         searchOption={{
                             fields:searchFields
@@ -121,6 +122,7 @@ export default class VoucherPopModal extends Component{
                             scroll:{ x: '140%'},
                         }}
                     />
+                    </div>
             </Modal>
         )
     }

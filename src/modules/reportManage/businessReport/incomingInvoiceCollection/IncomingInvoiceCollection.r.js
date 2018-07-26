@@ -38,36 +38,23 @@ const searchFields = [
     ]
 const columns = [
     {
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">纳税主体</p>
-            <p className="apply-form-list-p2">纳税人识别号</p>
-        </div>,
+        title: '纳税主体',
         dataIndex: 'mainName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
-            </div>
-        ),
-        width:'8%',
+        width:'150px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">项目名称</p>
-            <p className="apply-form-list-p2">项目编码 </p>
-        </div>,
+        title: '纳税人识别号',
+        dataIndex: 'sellerTaxNum',
+        width:'100px',
+    },{
+        title: '项目名称',
         dataIndex: 'projectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projectNum}</p>
-            </div>
-        ),
-        width:'8%',
+        width:'150px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">是否需要认证</p>
-            <p className="apply-form-list-p2">认证标记</p>
-        </div>,
+        title: '项目编码',
+        dataIndex: 'projectNum',
+        width:'100px',
+    },{
+        title: '是否需要认证',
         dataIndex: 'authFlag',
         render:(text,record)=>{
             let txt = '';
@@ -82,10 +69,16 @@ const columns = [
                     txt = text;
                     break;
             }
-
+            return txt;
+        },
+        width:'100px',
+    },{
+        title: '认证标记',
+        dataIndex: 'authStatus',
+        render:(text,record)=>{
             //认证标记:认证结果1:认证成功;2:认证失败;0:无需认证';
             let res2 = "";
-            switch (parseInt(record.authStatus, 0)) {
+            switch (parseInt(text, 0)) {
                 case 1:
                     res2 = "认证成功";
                     break;
@@ -97,33 +90,19 @@ const columns = [
                     break;
                 default:
             }
-
-            return(
-                <div>
-                    <p className="apply-form-list-p1">{txt}</p>
-                    <p className="apply-form-list-p2">{res2}</p>
-                </div>
-            )
+            return res2;
         },
-        width:80,
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">发票号码</p>
-            <p className="apply-form-list-p2">发票代码</p>
-        </div>,
+        title: '发票号码',
         dataIndex: 'invoiceNum',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceCode}</p>
-            </div>
-        ),
-        width:'4%',
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">发票类型</p>
-            <p className="apply-form-list-p2">发票明细号</p>
-        </div>,
+        title: '发票代码',
+        dataIndex: 'invoiceCode',
+        width:'100px',
+    },{
+        title: '发票类型',
         dataIndex: 'invoiceType',
         render: (text,record) => {
             let invoiceTypeText ='';
@@ -133,109 +112,78 @@ const columns = [
             if(text==='c'){
                 invoiceTypeText = '普票'
             }
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{invoiceTypeText}</p>
-                    <p className="apply-form-list-p2">{record.invoiceDetailNum}</p>
-                </div>
-            )
+            return invoiceTypeText;
         },
-        width:'4%',
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">认证月份</p>
-            <p className="apply-form-list-p2">认证时间</p>
-        </div>,
+        title: '发票明细号',
+        dataIndex: 'invoiceDetailNum',
+        width:'100px',
+    },{
+        title: '认证月份',
         dataIndex: 'authMonth',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.authDate}</p>
-            </div>
-        ),
-        width:75,
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">发票代码</p>
-            <p className="apply-form-list-p2">发票号码</p>
-        </div>,
-        dataIndex: 'invoiceCode',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.invoiceNum}</p>
-            </div>
-        ),
-        width:'4%',
+        title: '认证时间',
+        dataIndex: 'authDate',
+        width:'100px',
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
-        width:75,
+        width:'100px',
     },{
         title: '购货单位名称',
         dataIndex: 'purchaseName',
-        width:'6%',
+        width:'100px',
     },{
         title: '销货单位名称',
         dataIndex: 'sellerName',
-        width:'10%',
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">金额</p>
-            <p className="apply-form-list-p2">税额</p>
-        </div>,
+        title: '金额',
+        className: "table-money",
         dataIndex: 'amount',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">{fMoney(record.taxAmount)}</p>
-            </div>
-        ),
-        width:'4%',
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">开户行</p>
-            <p className="apply-form-list-p2">地址</p>
-        </div>,
+        title: '税额',
+        className: "table-money",
+        dataIndex: 'taxAmount',
+        width:'100px',
+    },{
+        title: '开户行',
         dataIndex: 'bank',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.address}</p>
-            </div>
-        ),
-        width:'10%',
+        width:'100px',
     },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">账号</p>
-            <p className="apply-form-list-p2">电话</p>
-        </div>,
+        title: '地址',
+        dataIndex: 'address',
+        width:'100px',
+    },{
+        title: '账号',
         dataIndex: 'account',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.phone}</p>
-            </div>
-        ),
-        width:'6%',
+        width:'100px',
+    },{
+        title: '电话',
+        dataIndex: 'phone',
+        width:'100px',
     },{
         title: '进项结构分类名称',
         dataIndex: 'incomeStructureTypeName',
-        width:'6%',
+        width:'100px',
     },{
         title: '应税项目',
         dataIndex: 'taxableProject',
-        width:'6%',
+        width:'100px',
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
+        className: "table-money",
         render:text=>fMoney(text),
-        width:'4%',
+        width:'100px',
     },{
 
         title: '匹配状态',
         dataIndex: 'matchingStatus',
-        width:60,
+        width:'100px',
         render:text=>{
             let txt = '';
             switch (parseInt(text,0)) {
@@ -257,7 +205,7 @@ const columns = [
     },{
         title: '数据来源',
         dataIndex: 'sourceType',
-        width:60,
+        width:'100px',
         render:text=>{
             text = parseInt(text,0);
             if(text===1){
@@ -270,7 +218,8 @@ const columns = [
         }
     },{
         title: '备注',
-        dataIndex: 'remark'
+        dataIndex: 'remark',
+        width:'100px',
     }
 ];
 export default class IncomingInvoiceCollection extends Component{
@@ -286,6 +235,7 @@ export default class IncomingInvoiceCollection extends Component{
     render(){
         const {updateKey,totalSource} = this.state;
         return(
+            <div className="oneLine">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
@@ -318,10 +268,10 @@ export default class IncomingInvoiceCollection extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 2400,y:window.screen.availHeight-360,},
+                    scroll:{ x: 2900,y:window.screen.availHeight-360,},
                 }}
             />
-
+            </div>
         )
     }
 }

@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-02 20:38:24
+ * @Last Modified time: 2018-07-26 12:06:55
  *
  */
 import React, { Component } from 'react'
@@ -247,6 +247,7 @@ class NeedNotMatchInvoices extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -325,6 +326,7 @@ class NeedNotMatchInvoices extends Component{
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} declare={declare}/>
             </SearchTable>
+            </div>
         )
     }
 }

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 17:25:37
+ * @Last Modified time: 2018-07-26 11:57:36
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -100,67 +100,45 @@ const getColumns = context => [{
             }
         }]),
         fixed:'left',
-        width:40,
+        width:'50px',
         dataIndex:'action',
         className:'text-center',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">纳税主体名称</p>
-                <p className="apply-form-list-p2">纳税主体代码</p>
-            </div>
-        ),
-        dataIndex: "mainName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.mainId}</p>
-            </div>
-        )
     },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">NC公司名称</p>
-                <p className="apply-form-list-p2">NC公司代码</p>
-            </div>
-        ),
+        title: "纳税主体名称",
+        dataIndex: "mainName",
+        width:'150px',
+    },{
+        title: "纳税主体代码",
+        dataIndex: "mainId",
+        width:'150px',
+    },{
+        title: "NC公司名称",
         dataIndex: "companyName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.companyNum}</p>
-            </div>
-        ),
-        width:'10%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目分期名称</p>
-                <p className="apply-form-list-p2">项目分期代码</p>
-            </div>
-        ),
+        width:'150px',
+    },{
+        title: "NC公司代码",
+        dataIndex: "companyNum",
+        width:'100px',
+    },{
+        title: "项目分期名称",
         dataIndex: "stageName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stageNum}</p>
-            </div>
-        ),
-        width:'14%',
+        width:'150px',
+    },{
+        title: "项目分期代码",
+        dataIndex: "stageNum",
+        width:'100px',
     },{
         title: "土地总可售面积（总数）",
         dataIndex: "builtArea",
-        width:'8%',
+        width:'150px',
     },{
         title: "分期总可售面积",
         dataIndex: "totalArea",
-        width:'8%',
+        width:'100px',
     },{
         title: "分期地上可售面积",
         dataIndex: "groundArea",
-        width:'8%',
+        width:'150px',
     },{
         title: "修改后分期地上可售面积",
         dataIndex: "editGroundArea",
@@ -171,43 +149,28 @@ const getColumns = context => [{
             componentProps={{decimalPlaces:4}}
             getFieldDecorator={context.props.form.getFieldDecorator} />
         },
-        width:'10%',
+        width:'150px',
     },{
         title: "分期地下可售面积",
         dataIndex: "undergroundArea",
-        width:'8%',
+        width:'150px',
     },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">SAP法人公司名称</p>
-                <p className="apply-form-list-p2">SAP法人公司代码</p>
-            </div>
-        ),
+        title: "SAP法人公司名称",
         dataIndex: "sapCompanyName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.sapCompanyNo}</p>
-            </div>
-        ),
-        width:'10%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">SAP利润中心名称</p>
-                <p className="apply-form-list-p2">SAP利润中心代码</p>
-            </div>
-        ),
+        width:'150px',
+    },{
+        title: "SAP法人公司代码",
+        dataIndex: "sapCompanyNo",
+        width:'150px',
+    },{
+        title: "SAP利润中心名称",
         dataIndex: "profitCenterName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.profitCenterNo}</p>
-            </div>
-        ),
-        width:'10%',
-    },
+        width:'150px',
+    },{
+        title: "SAP利润中心代码",
+        dataIndex: "profitCenterNo",
+        width:'150px',
+    }
 ];
 
 class AvailableArea extends Component {
@@ -266,6 +229,7 @@ class AvailableArea extends Component {
     render() {
         let { updateKey,saveLoding,filters } = this.state;
         return (
+            <div className="oneLine">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
@@ -279,7 +243,7 @@ class AvailableArea extends Component {
                         title: "可售面积"
                     },
                     scroll: {
-                        x: 1500,
+                        x: 2150,
                         y:window.screen.availHeight-430,
                     },
                     onSuccess:(filters,dataSource)=>{
@@ -316,6 +280,7 @@ class AvailableArea extends Component {
                     )
                 }}
             />
+            </div>
         );
     }
 }

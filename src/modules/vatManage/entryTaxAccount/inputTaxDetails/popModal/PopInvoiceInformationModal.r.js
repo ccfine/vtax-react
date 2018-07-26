@@ -80,17 +80,20 @@ const columns = [
     },{
         title: '金额',
         dataIndex: 'amount',
+        className: "table-money",
         width:'5%',
         render:text=>fMoney(text),
     },{
         title: '税额',
         dataIndex: 'taxAmount',
+        className: "table-money",
         width:'8%',
         render:text=>fMoney(text),
 
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
+        className: "table-money",
         width:'8%',
         render:text=>fMoney(text),
     }
@@ -133,6 +136,7 @@ export default class PopInvoiceInformationModal extends Component{
                     </Row>
                 }
                 title={props.title}>
+                <div className='oneLine'>
                     <SearchTable
                         searchOption={{
                             fields:searchFields,
@@ -150,6 +154,7 @@ export default class PopInvoiceInformationModal extends Component{
                             scroll:{ x: '200%', y: 200},
                         }}
                     />
+                </div>
             </Modal>
         )
     }

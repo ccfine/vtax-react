@@ -112,6 +112,7 @@ export default class PopInvoiceInformationModal extends Component{
                     </Row>
                 }
                 title={props.title}>
+                <div className='oneLine'>
                 <SearchTable
                     searchOption={{
                         fields:searchFields,
@@ -149,6 +150,7 @@ export default class PopInvoiceInformationModal extends Component{
                     }}
 
                 />
+            </div>
             </Modal>
         )
     }

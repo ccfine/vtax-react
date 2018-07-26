@@ -160,7 +160,7 @@ const getColumns = (context,disabled) => {
         key: 'actions',
         fixed:true,
         className:'text-center',
-        width:50,
+        width:'50px',
         render: (text, record) => composeBotton([{
                 type:'action',
                 title:'解除匹配',
@@ -291,17 +291,17 @@ const getColumns = (context,disabled) => {
         {
             title:'单元',
             dataIndex:'element',
-            width:'120px',
+            width:'100px',
         },
         {
             title:'房号',
             dataIndex:'roomNumber',
-            width:'120px',
+            width:'100px',
         },
         {
             title:'客户名称',
             dataIndex:'customerName',
-            width:'120px',
+            width:'100px',
         },
         {
             title:'身份证号/纳税识别码',
@@ -311,7 +311,7 @@ const getColumns = (context,disabled) => {
         {
             title:'匹配时间',
             dataIndex:'marryTime',
-            width:'120px',
+            width:'100px',
         },
         {
             title:'匹配方式',
@@ -393,6 +393,7 @@ class InvoiceDataMatching extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 style={{
@@ -478,7 +479,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 3500,
+                        x: disabled?2400:2350,
                         y:window.screen.availHeight-480,
                     },
                     cardProps:{
@@ -487,6 +488,7 @@ class InvoiceDataMatching extends Component{
                 }}
             >
             </SearchTable>
+            </div>
         )
     }
 }

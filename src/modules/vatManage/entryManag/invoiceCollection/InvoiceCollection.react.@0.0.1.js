@@ -120,7 +120,7 @@ const getSearchFields = (disabled,declare) => {
 const getColumns = (context) => [{
         title: "纳税主体",
         dataIndex: "mainName",
-        width:'100px',
+        width:'200px',
     },
     {
         title: "数据来源",
@@ -150,7 +150,7 @@ const getColumns = (context) => [{
     {
         title: "项目编码",
         dataIndex: "projectNum",
-        width:'100px',
+        width:'150px',
     },
     {
         title: "发票类型",
@@ -209,7 +209,7 @@ const getColumns = (context) => [{
     {
         title: "销售单位名称",
         dataIndex: "sellerName",
-        width:'100px',
+        width:'200px',
     },
     {
         title: "纳税人识别号",
@@ -366,6 +366,7 @@ class InvoiceCollection extends Component {
         let disabled = !!declare,
         isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
+            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -378,7 +379,7 @@ class InvoiceCollection extends Component {
                         columns: getColumns(this),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 2500, y:window.screen.availHeight-380},
+                        scroll: { x: 2050, y:window.screen.availHeight-380},
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.setState({
                                 selectedRowKeys
@@ -482,6 +483,7 @@ class InvoiceCollection extends Component {
                         toggleModalVisible={this.toggleModalVisible}
                     />
                 </SearchTable>
+            </div>
         );
     }
 }

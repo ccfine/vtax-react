@@ -62,30 +62,31 @@ const columns = context =>[
     {
         title: '纳税主体',
         dataIndex: 'mainName',
+        width:'250px',
     },{
         title: '固定资产取得价值',
         dataIndex: 'gainValue',
         render: text => fMoney(text),
         className: "table-money",
-        width:'15%',
+        width:'200px',
     },{
         title: '当期凭证待抵扣进项税额',
         dataIndex: 'deductedVoucherTaxAmount',
         render: text => fMoney(text),
         className: "table-money",
-        width:'15%',
+        width:'200px',
     },{
         title: '当期固定资产待抵扣进项税额',
         dataIndex: 'deductedFixedTaxAmount',
         render: text => fMoney(text),
         className: "table-money",
-        width:'15%',
+        width:'200px',
     },{
         title: '差异金额',
         dataIndex: 'difAmount',
         render: text => fMoney(text),
         className: "table-money",
-        width:'15%',
+        width:'150px',
     }
 ];
 
@@ -118,6 +119,7 @@ export default class DeductibleInputTaxAmount extends Component{
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
                 <SearchTable
                     style={{
                         marginTop:-16
@@ -186,6 +188,7 @@ export default class DeductibleInputTaxAmount extends Component{
                         voucherNum={voucherNum}
                         toggleViewModalVisible={this.toggleViewModalVisible} /> */}
                 </SearchTable>
+            </div>
         )
     }
 }

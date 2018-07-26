@@ -141,7 +141,7 @@ const getColumns = (context,disabled) =>{
         {
             title: '备注',
             dataIndex: 'remark',
-            width:'500px',
+            width:'400px',
         },
         {
             title: '金额',
@@ -291,6 +291,7 @@ class UnmatchedData extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 style={{
@@ -349,7 +350,7 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x:1800,
+                        x:disabled?1450:1400,
                         y:window.screen.availHeight-430,
                     },
                     cardProps:{
@@ -359,6 +360,7 @@ class UnmatchedData extends Component{
             >
                 <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
+            </div>
         )
     }
 }
