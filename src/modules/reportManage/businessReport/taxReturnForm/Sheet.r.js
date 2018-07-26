@@ -73,6 +73,31 @@ export default class Sheet extends Component{
             loading
         })
     }
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey !== nextProps.updateKey){
             nextProps.form.resetFields();
@@ -137,11 +162,15 @@ export default class Sheet extends Component{
                                             readOnly:false,
                                             component:<React.Fragment>
                                                 <NumericInputCell
-                                                initialValue={di.value}
-                                                getFieldDecorator={this.props.form.getFieldDecorator}
-                                                fieldName={`map.${di.key}`}
-                                                editAble={true}
-                                                componentProps={{valueType:di.type === 'rate'?'int':'float'}}
+                                                    initialValue={di.value==='0' ? '0.00' : di.value}
+                                                    getFieldDecorator={this.props.form.getFieldDecorator}
+                                                    fieldName={`map.${di.key}`}
+                                                    editAble={true}
+                                                    componentProps={{
+                                                        valueType:di.type === 'rate'?'int':'float',
+                                                        onFocus:(e)=>this.handleFocus(e,`map.${di.key}`),
+                                                        onBlur:(e)=>this.handleBlur(e,`map.${di.key}`)
+                                                    }}
                                                 /> 
                                                 </React.Fragment>,
                                             forceComponent:true,

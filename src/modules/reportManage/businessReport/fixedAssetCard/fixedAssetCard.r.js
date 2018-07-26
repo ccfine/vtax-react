@@ -285,12 +285,12 @@ export default class fixedAssetCard extends Component {
                         <span>
                             {
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
-                                    type:'fileExport',
+                                    /*type:'fileExport',
                                     url:'fixedAssetCard/report/export',
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1871007'],
-                                },{
+                                },{*/
                                     type:'fileImport',
                                     url:'/fixedAssetCard/report/upload',
                                     onSuccess:this.update,

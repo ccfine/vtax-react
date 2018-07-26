@@ -293,7 +293,7 @@ class RoomTransactionFile extends Component{
         totalSource:undefined,
     }
     render(){
-        const {filters,totalSource}=this.state;
+        const {totalSource}=this.state; //filters,
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -313,7 +313,7 @@ class RoomTransactionFile extends Component{
                     },
                     url:'/output/room/files/report/list',
                     extra:<div>
-                        {
+                        {/*{
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
                                 url:'output/room/files/report/export',
@@ -321,7 +321,7 @@ class RoomTransactionFile extends Component{
                                 title:'导出',
                                 userPermissions:['1861007'],
                             }])
-                        }
+                        }*/}
                         {
                             composeBotton([{
                                 type:'modal',

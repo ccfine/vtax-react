@@ -22,14 +22,15 @@ const pointerStyle = {
 const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
-        fieldName:'mainId',
+        fieldName:'main',
         type:'taxMain',
         span:8,
         componentProps:{
+            labelInValue:true,
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -105,6 +106,10 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                                     fieldName={`list[${record.id}].amount`}
                                     initialValue={text}
                                     getFieldDecorator={getFieldDecorator}
+                                    componentProps={{
+                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].amount`),
+                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].amount`)
+                                    }}
                                 />
                         }else{
                             return record.amount ? fMoney(parseFloat(text)) : text
@@ -122,6 +127,10 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                                     fieldName={`list[${record.id}].taxAmount`}
                                     initialValue={text}
                                     getFieldDecorator={getFieldDecorator}
+                                    componentProps={{
+                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].taxAmount`),
+                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].taxAmount`)
+                                    }}
                                 />
                         }else{
                             return record.taxAmount ? fMoney(parseFloat(text)) : text
@@ -141,7 +150,9 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                                     initialValue={text}
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
-                                        disabled:true
+                                        disabled:true,
+                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].reduceTaxAmount`),
+                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].reduceTaxAmount`)
                                     }}
                                 />
                         }else{
@@ -294,6 +305,31 @@ class TaxExemptionDetails extends Component{
         })
     }
 
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     handleConfirmChange = (value,record) => {
        // 是 -- -减免税金额显示为金额的值  :0 否 1是
        // 否  减免税金额显示为 金额加税额的合计
