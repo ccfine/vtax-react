@@ -199,7 +199,7 @@ const getColumns = (context,disabled) => {
                                 modalRef.destroy()
                             },
                         });
-                    }}]) :<span> </span>
+                    }}]) : <span></span>
         }
     }]:[];
     return [...operates,
@@ -216,6 +216,7 @@ const getColumns = (context,disabled) => {
         {
             title:'路址',
             dataIndex:'htRoomName',
+            //width:'300px',
         },
         {
             title:'房间编码',

@@ -22,7 +22,11 @@ export default class SalesInvoiceMatching extends Component{
     }
     componentDidMount(){
         const activeKey = getUrlParam('tab');
-        activeKey && this.setState({activeKey})
+        activeKey && this.setState({
+            activeKey
+        },()=>{
+            this.refreshTabs()
+        })
     }
 
     refreshTabs = ()=>{
