@@ -235,6 +235,7 @@ class SalesInvoiceCollection extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
@@ -312,6 +313,7 @@ class SalesInvoiceCollection extends Component{
                     {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
+            </div>
         )
     }
 }

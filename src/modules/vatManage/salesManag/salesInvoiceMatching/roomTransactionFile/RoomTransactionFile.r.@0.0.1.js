@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-12 17:28:05
+ * @Last Modified time: 2018-07-26 15:50:29
  *
  */
 import React,{Component} from 'react'
@@ -173,7 +173,7 @@ const getColumns = (context,disabled) => {
         title: '操作',
         key: 'actions',
         className:'text-center',
-        width:'100px',
+        width:'50px',
         render: (text, record) => {
             return parseInt(record.matchingStatus,0) === 0 && composeBotton([{
                     type:'action',
@@ -412,6 +412,7 @@ class RoomTransactionFile extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -508,6 +509,7 @@ class RoomTransactionFile extends Component{
                 }}
             >
             </SearchTable>
+            </div>
         )
     }
 }

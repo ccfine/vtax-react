@@ -101,6 +101,7 @@ class InputTaxCertificate extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
                 <SearchTable
                     style={{
                         marginTop:-16
@@ -165,6 +166,7 @@ class InputTaxCertificate extends Component{
                         {...voucherInfo}
                         toggleViewModalVisible={this.toggleViewModalVisible} />
                 </SearchTable>
+            </div>
         )
     }
 }

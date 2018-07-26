@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-24 15:26:03
+ * @Last Modified time: 2018-07-26 12:24:45
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -152,7 +152,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         let { filters, statusParam } = this.state;
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (
-            <div>
+            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     tableOption={{

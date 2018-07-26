@@ -192,6 +192,7 @@ class FinancialDocumentsCollection extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
@@ -253,7 +254,7 @@ class FinancialDocumentsCollection extends Component{
                     },
                 }}
             />
-
+            </div>
         )
     }
 }
