@@ -142,7 +142,7 @@ const getColumns = (context,disabled) =>{
         {
             title: '备注',
             dataIndex: 'remark',
-            width:'400px',
+            //width:'500px',
         },
         {
             title: '金额',
@@ -351,8 +351,8 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x:disabled?1450:1400,
-                        y:window.screen.availHeight-430,
+                        x: 1550,
+                        y: window.screen.availHeight-430,
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>未匹配的发票列表</span>,

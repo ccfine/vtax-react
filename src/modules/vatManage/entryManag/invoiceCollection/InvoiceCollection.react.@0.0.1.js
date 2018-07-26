@@ -77,7 +77,7 @@ const getSearchFields = (disabled,declare) => {
                     disabled
                 },
                 fieldDecoratorOptions: {
-                    initialValue: (disabled && declare["mainId"]) || undefined,
+                    initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                     rules: [
                         {
                             required: true,

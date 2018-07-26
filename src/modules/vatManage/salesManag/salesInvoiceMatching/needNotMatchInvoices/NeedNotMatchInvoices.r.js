@@ -121,7 +121,7 @@ const columns = [
     {
         title: '备注',
         dataIndex: 'remark',
-        width:'500px',
+        //width:'500px',
     },
     {
         title:'金额',

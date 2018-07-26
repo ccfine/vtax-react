@@ -82,7 +82,7 @@ const columns = context =>[
     {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:'300px',
+        //width:'300px',
     },
     {
         title: '借方科目代码',
