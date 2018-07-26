@@ -272,14 +272,15 @@ class UnBilledSalesNotEstate extends Component {
                                 getFields(this.props.form,[
                                     {
                                         label:'纳税主体',
-                                        fieldName:'mainId',
+                                        fieldName:'main',
                                         type:'taxMain',
                                         componentProps:{
+                                            labelInValue:true,
                                             disabled:disabled
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && declare.mainId) || undefined,
+                                            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                                             rules:[
                                                 {
                                                     required:true,

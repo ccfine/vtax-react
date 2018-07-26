@@ -7,7 +7,7 @@ import {request,fMoney,composeBotton} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
-const getColumns = (getFieldDecorator,disabled) =>[
+const getColumns = (context,getFieldDecorator,disabled) =>[
     {
         title: '项目名称',
         dataIndex: 'name',
@@ -19,11 +19,15 @@ const getColumns = (getFieldDecorator,disabled) =>[
             return !disabled ?
                 <NumericInputCell
                     fieldName={`amount_${record.id}`}
-                    initialValue={text}
+                    initialValue={text==='0' ? '0.00' : text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={disabled}
-                    componentProps={{allowNegative:true}}
-                /> : fMoney(parseFloat(text))
+                    componentProps={{
+                        allowNegative:true,
+                        onFocus:(e)=>context.handleFocus(e,`amount_${record.id}`),
+                        onBlur:(e)=>context.handleBlur(e,`amount_${record.id}`)
+                    }}
+                /> : text==='0' ? '0.00' : fMoney(text)
         },
     }
 ];
@@ -74,6 +78,31 @@ class TabPage extends Component{
             }
         })
     }
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){
             this.setState({updateKey:props.updateKey});
@@ -113,7 +142,7 @@ class TabPage extends Component{
                 searchOption={null}
                 tableOption={{
                     pagination:false,
-                    columns:getColumns(getFieldDecorator,this.props.disabled),
+                    columns:getColumns(this,getFieldDecorator,this.props.disabled),
                     url:`/tax/credit/items/collection/list/${props.mainId}`,
                     key:updateKey,
                     cardProps:{

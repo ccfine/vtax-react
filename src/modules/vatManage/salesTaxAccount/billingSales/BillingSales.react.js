@@ -217,6 +217,10 @@ class BillingSales extends Component {
                 if(values.authMonth){
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
+                }
                 this.setState({
                     filters:values
                 },()=>{
@@ -285,14 +289,15 @@ class BillingSales extends Component {
                                 getFields(this.props.form,[
                                     {
                                         label:'纳税主体',
-                                        fieldName:'mainId',
+                                        fieldName:'main',
                                         type:'taxMain',
                                         componentProps:{
+                                            labelInValue:true,
                                             disabled:disabled
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && declare.mainId) || undefined,
+                                            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                                             rules:[
                                                 {
                                                     required:true,

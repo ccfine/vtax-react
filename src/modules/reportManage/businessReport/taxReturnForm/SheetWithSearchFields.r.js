@@ -22,14 +22,15 @@ class SheetWithSearchFields extends Component{
         searchFields:(defaultParams={},disabled,declare)=>[
             {
                 label:'纳税主体',
-                fieldName:'mainId',
+                fieldName:'main',
                 type:'taxMain',
                 span:8,
                 componentProps:{
+                    labelInValue:true,
                     disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: (disabled && declare.mainId) || defaultParams.mainId,
+                    initialValue: (disabled && {key:declare.mainId,label:declare.mainName})  || ((defaultParams.main && defaultParams.main.key && defaultParams.main) || undefined),
                     rules:[
                         {
                             required:true,
@@ -101,10 +102,10 @@ class SheetWithSearchFields extends Component{
             if(!err){
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 this.setState({
-                    params:{taxMonth:values.taxMonth,mainId:values.mainId},
+                    params:{taxMonth:values.taxMonth,mainId:values.main.key},
                     updateKey:Date.now()
                 })
-                this.props.onParamsChange && this.props.onParamsChange({taxMonth:values.taxMonth,mainId:values.mainId});
+                this.props.onParamsChange && this.props.onParamsChange({taxMonth:values.taxMonth,main:values.main});
             }
         })
     }
@@ -137,6 +138,8 @@ class SheetWithSearchFields extends Component{
     }
     render(){
         const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,savePermission} = this.props;
+        console.log(defaultParams);
+
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;

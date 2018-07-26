@@ -123,25 +123,25 @@ class PopModal extends Component {
                 if (values.main) {
                     values.mainId = values.main.key;
                     values.mainName = values.main.label;
-                    values.main = undefined;
+                    delete values.main
                 }
                 // 项目
                 if (values.project) {
                     values.projectId = values.project.key;
                     values.projectName = values.project.label;
-                    values.project = undefined;
+                    delete values.project
                 }
                 // 项目分期
                 if (values.stages) {
                     values.stagesId = values.stages.key;
                     values.stagesName = values.stages.label;
-                    values.stages = undefined;
+                    delete values.stages
                 }
                 // 科目
                 if(values.creditSubject){
                     values.creditSubjectCode = values.creditSubject.key;
                     values.creditSubjectName = values.creditSubject.label;
-                    values.creditSubject = undefined;
+                    delete values.creditSubject
                 }
 
 
@@ -150,7 +150,6 @@ class PopModal extends Component {
                 this.getStagesList(values.projectId,values.stagesId,values.creditSubjectCode,(taxRate)=>{
 
                     let obj = Object.assign({}, this.state.record, {...values,taxRate:taxRate});
-                    console.log(obj)
 
                     let result, sucessMsg;
                     if (this.props.action === "modify") {
@@ -252,7 +251,7 @@ class PopModal extends Component {
                                         disabled: readonly || !!declare,
                                     },
                                     fieldDecoratorOptions: {
-                                        initialValue:record.mainId? {key: record.mainId,label: record.mainName}: (declare?{key:declare.mainId}:undefined),
+                                        initialValue:record.mainId ? {key: record.mainId,label: record.mainName}: (declare ? {key:declare.mainId,label:declare.mainName} : undefined),
                                         rules: [
                                             {
                                                 required: true,

@@ -25,14 +25,15 @@ const searchFields=(context,disabled,declare)=> {
         {
             label:'纳税主体',
             type:'taxMain',
-            fieldName:'mainId',
+            fieldName:'main',
             span:8,
             componentProps:{
+                labelInValue:true,
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare['mainId']) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
