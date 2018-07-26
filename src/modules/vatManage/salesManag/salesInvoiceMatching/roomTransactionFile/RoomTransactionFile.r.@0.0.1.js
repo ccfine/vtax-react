@@ -43,8 +43,11 @@ const fields = (disabled,declare)=> [
                 span:14
             }
         },
+        componentProps:{
+            labelInValue:true,
+        },
         fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -444,6 +447,15 @@ class RoomTransactionFile extends Component{
                     extra: <div>
                         {
                             listMainResultStatus(statusParam)
+                        }
+                        {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'output/room/files/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1211007'],
+                            }])
                         }
                         {
                             composeBotton([{

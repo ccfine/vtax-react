@@ -19,9 +19,12 @@ const searchFields = [
     {
         label:'纳税主体',
         type:'taxMain',
-        fieldName:'mainId',
+        fieldName:'main',
         formItemStyle,
         span:8,
+        componentProps:{
+            labelInValue:true,
+        },
     },{
         label:'办理进度',
         type:'select',

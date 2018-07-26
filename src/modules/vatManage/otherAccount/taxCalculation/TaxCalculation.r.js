@@ -16,7 +16,7 @@ const searchFields =(disabled,declare)=>{
     return [
         {
             label:'纳税主体',
-            fieldName:'mainId',
+            fieldName:'main',
             type:'taxMain',
             span:8,
             formItemStyle:{
@@ -28,10 +28,11 @@ const searchFields =(disabled,declare)=>{
                 }
             },
             componentProps:{
+                labelInValue:true,
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare.mainId) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -69,7 +70,7 @@ const searchFields =(disabled,declare)=>{
         }
     ]
 }
-const getColumns = (getFieldDecorator,disabled) => [
+const getColumns = (context,getFieldDecorator,disabled) => [
     {
         title:'栏次',
         dataIndex:'idx',
@@ -97,6 +98,10 @@ const getColumns = (getFieldDecorator,disabled) => [
                     initialValue={text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.generalAmountEdit}
+                    componentProps={{
+                        onFocus:(e)=>context.handleFocus(e,`generalAmount_${record.id}`),
+                        onBlur:(e)=>context.handleBlur(e,`generalAmount_${record.id}`)
+                    }}
                 /> : fMoney(text)
         },
         className:'table-money',
@@ -112,6 +117,10 @@ const getColumns = (getFieldDecorator,disabled) => [
                     initialValue={text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.drawbackPolicyAmountEdit}
+                    componentProps={{
+                        onFocus:(e)=>context.handleFocus(e,`drawbackPolicyAmount_${record.id}`),
+                        onBlur:(e)=>context.handleBlur(e,`drawbackPolicyAmount_${record.id}`)
+                    }}
                 /> : fMoney(text)
         },
         className:'table-money',
@@ -167,6 +176,31 @@ class TaxCalculation extends Component{
             }
         })
     }
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/taxCalculation/listMain',this.state.filters,result=>{
             this.setState({
@@ -203,7 +237,7 @@ class TaxCalculation extends Component{
                             })
                         },
                         pagination:false,
-                        columns:getColumns(getFieldDecorator,(disabled && parseInt(statusParam.status,10)===1)),
+                        columns:getColumns(this,getFieldDecorator,(disabled && parseInt(statusParam.status,10)===1)),
                         url:tableUrl,
                         cardProps:{
                             title:'税款计算台账'

@@ -69,10 +69,11 @@ const getSearchFields = (disabled,declare) => {
     return [
             {
                 label: "纳税主体",
-                fieldName: "mainId",
+                fieldName: "main",
                 type: "taxMain",
                 span: 8,
                 componentProps: {
+                    labelInValue:true,
                     disabled
                 },
                 fieldDecoratorOptions: {

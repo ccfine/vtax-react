@@ -90,13 +90,13 @@ class PopModal extends Component{
                 if(values.main){
                     values.mainId = values.main.key;
                     values.mainName = values.main.label;
-                    values.main = undefined;
+                    delete values.main;
                 }
                 // 处理应税项目
                 if(values.taxableProject){
                     values.taxableProjectId = values.taxableProject.key;
                     values.taxableProjectName = values.taxableProject.taxableProjectName;
-                    values.taxableProject = undefined;
+                    delete values.taxableProject;
                 }
 
                 let obj = Object.assign({},this.state.record,values);
@@ -185,7 +185,7 @@ class PopModal extends Component{
                                 disabled:readonly || NotModifyWhenEdit || disabled
                             },
                             fieldDecoratorOptions:{
-                                initialValue:record.mainId?{key:record.mainId,label:record.mainName}:(declare?{key:declare.mainId}:undefined),
+                                initialValue:record.mainId?{key:record.mainId,label:record.mainName}:(declare?{key:declare.mainId,label:declare.mainName}:undefined),
                                 rules:[
                                 {
                                     required:true,

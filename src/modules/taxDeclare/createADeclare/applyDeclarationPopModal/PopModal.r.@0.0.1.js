@@ -204,6 +204,7 @@ class ApplyDeclarationPopModal extends Component {
         const { saveDeclare, record} = this.props;
         saveDeclare({
             mainId: record.mainId,
+            mainName:record.mainName,
             authMonth: record.partTerm,
             authMonthEnd: record.subordinatePeriodEnd,
             status: record.status,
