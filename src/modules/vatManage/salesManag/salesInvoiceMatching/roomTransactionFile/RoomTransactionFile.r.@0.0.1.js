@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-26 15:50:29
+ * @Last Modified time: 2018-07-26 18:32:57
  *
  */
 import React,{Component} from 'react'
@@ -173,9 +173,10 @@ const getColumns = (context,disabled) => {
         title: '操作',
         key: 'actions',
         className:'text-center',
+        fixed:'left',
         width:'50px',
         render: (text, record) => {
-            return parseInt(record.matchingStatus,0) === 0 && composeBotton([{
+            return parseInt(record.matchingStatus,0) === 0 ? composeBotton([{
                     type:'action',
                     title:'删除',
                     icon:'delete',
@@ -198,7 +199,7 @@ const getColumns = (context,disabled) => {
                                 modalRef.destroy()
                             },
                         });
-                    }}])
+                    }}]) :<span> </span>
         }
     }]:[];
     return [...operates,
@@ -215,7 +216,6 @@ const getColumns = (context,disabled) => {
         {
             title:'路址',
             dataIndex:'htRoomName',
-            width:'300px',
         },
         {
             title:'房间编码',
