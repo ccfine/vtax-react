@@ -243,8 +243,8 @@ class TaxCalculation extends Component{
                             title:'税款计算台账'
                         },
                         scroll:{
-                            y:window.screen.availHeight-320,
                             x:1000,
+                            y:window.screen.availHeight-320,
                         },
                         extra:<div>
                             {

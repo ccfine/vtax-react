@@ -161,7 +161,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:'300px',
+        //width:'300px',
     },
     {
         title: '借方科目名称',
@@ -387,7 +387,7 @@ class LandPriceManage extends Component{
                         })
                     },
                     scroll:{
-                         x:1600,
+                         x:2000,
                          y:window.screen.availHeight-400,
                     },
                 }}

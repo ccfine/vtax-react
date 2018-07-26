@@ -270,12 +270,12 @@ const getColumns = (context,disabled) => {
         {
             title:'房间编码',
             dataIndex:'roomCode',
-            width:'100px',
+            width:'150px',
         },
         {
             title:'路址',
             dataIndex:'htRoomName',
-            width:'200px',
+            //width:'200px',
         },
         {
             title:'成交金额',
@@ -480,7 +480,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: disabled?2400:2350,
+                        x: 2500,
                         y:window.screen.availHeight-480,
                     },
                     cardProps:{

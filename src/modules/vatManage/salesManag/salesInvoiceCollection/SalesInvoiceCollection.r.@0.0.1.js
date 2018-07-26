@@ -171,7 +171,7 @@ const getColumns = (context) => [{
     {
         title: '备注',
         dataIndex: 'remark',
-        width:'500px',
+        //width:'500px',
     },
     {
         title: '金额',
@@ -435,8 +435,8 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        y:window.screen.availHeight-400,
                         x:1650,
+                        y:window.screen.availHeight-400,
                     },
                     onTotalSource: totalSource => {
                         this.setState({

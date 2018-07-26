@@ -184,7 +184,10 @@ class tab1 extends Component{
                         key:updateKey,
                         pagination:true,
                         size:'small',
-                        scroll:{x:1200,y:window.screen.availHeight-380},
+                        scroll:{
+                            x:1200,
+                            y:window.screen.availHeight-380
+                        },
                         columns:columns,
                         cardProps:{
                             title:'其他应税项目扣除台账'

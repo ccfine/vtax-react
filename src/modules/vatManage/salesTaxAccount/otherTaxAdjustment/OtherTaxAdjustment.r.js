@@ -201,7 +201,7 @@ const getColumns = (context,hasOperate) => {
           return text;
       }
     },
-    width:'200px',
+    //width:'200px',
   },
   {
     title: "具体调整说明",
@@ -261,7 +261,10 @@ class OtherTaxAdjustment extends Component {
             fields: searchFields(disabled,declare)
           }}
           tableOption={{
-            scroll: { x: (disabled && declare.decAction==='edit' && noSubmit)?1850:1900,y:window.screen.availHeight-380 },
+            scroll: {
+                x: 1900,
+                y: window.screen.availHeight-380
+            },
             pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
