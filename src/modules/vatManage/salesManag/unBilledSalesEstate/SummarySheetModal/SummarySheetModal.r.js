@@ -5,7 +5,7 @@ import React,{Component} from 'react';
 import {Modal,Table,message,Spin} from 'antd';
 import {request,fMoney} from 'utils'
 const columns = [
-    {
+    /*{
         title:'计税方式',
         dataIndex:'taxMethod',
         className:'text-right',
@@ -22,7 +22,7 @@ const columns = [
 
         },
         width:90,
-    },
+    },*/
     {
         title:'税率',
         dataIndex:'taxRate',

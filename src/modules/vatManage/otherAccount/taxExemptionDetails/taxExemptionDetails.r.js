@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-16 15:58:37
+ * @Last Modified time: 2018-07-27 18:16:28
  *
  */
 import React, { Component } from 'react'
@@ -92,6 +92,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
             title: '期初余额',
             dataIndex: 'initialBalance',
             render:text=>fMoney(text),
+            className:'table-money',
             width:'5%',
         },{
             title:'本期发生额',
@@ -201,6 +202,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
             title: '本期应抵减税额',
             dataIndex: 'currentDeductAmount',
             render:text=>fMoney(text),
+            className:'table-money',
             width:'8%',
         }
     ];

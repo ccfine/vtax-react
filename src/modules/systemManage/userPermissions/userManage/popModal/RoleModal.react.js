@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-25 19:08:17
+ * @Last Modified time: 2018-07-27 17:32:33
  */
 import React from "react";
-import { Form, Spin, message, Modal, Checkbox,Row} from "antd";
+import { Form, Spin, message, Modal, Checkbox,Row,Col} from "antd";
 import { request,getFields } from "utils";
 const FormItem = Form.Item;
 class RoleModal extends React.Component {
@@ -164,114 +164,167 @@ class RoleModal extends React.Component {
                 confirmLoading={submitLoading}
                 width="800px"
                 style={{top:'5%'}}
-                bodyStyle={{maxHeight:400,overflowY:'auto'}}
+                bodyStyle={{maxHeight:400,overflowY:'auto',margin:0,paddingLeft:0,paddingRight:0}}
             >
                 <Spin spinning={roleLoading || charLoading}>
                     <Form
                         onSubmit={this.handleSubmit}
                         style={{ padding: "0 16px" }}
                     >
-                    <Row>
-                    {
-                        getFields(this.props.form, [{
-                            label: "组织",
-                            fieldName: "orgIds",
-                            type: "asyncTreeSelect",
-                            span: 24,
-                            formItemStyle: {
-                                labelCol: {
-                                    span: 2
-                                },
-                                wrapperCol: {
-                                    span: 20
-                                }
-                            },
-                            componentProps: {
-                                fieldTextName: "name",
-                                fieldValueName: "id",
-                                doNotFetchDidMount:!userId,
-                                fetchAble:!!userId,
-                                url: `/sysOrganization/queryOrgTreeByUserId/${userId}`,
-                                maxTagCount:5,
-                                dropdownStyle:{
-                                    maxHeight:400,
-                                },
-                                labelInValue:false,
-                                allowClear:true,
-                                showSearch:true,
-                                // filterTreeNode:true,
-                            },
-                            fieldDecoratorOptions: {
-                                initialValue: orgId?[orgId]:undefined,
-                                onChange:(orgIds)=>{
-                                    if(orgIds){
-                                        if(orgIds.length===1){
-                                            this.fetchRoleByUserId(orgIds[0],userId)
-                                        }else{
-                                            this.props.form.setFieldsValue({'roleIds':[]})
-                                            this.props.form.resetFields();
-                                            this.setState({ checkAll: false,roles:[],defaultFields:[] });
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            {
+                                getFields(this.props.form, [{
+                                    className:'fix-ie10-formItem-textArea',
+                                    label: "组织",
+                                    fieldName: "orgIds",
+                                    type: "asyncTree",
+                                    span: 24,
+                                    formItemStyle: {
+                                        labelCol: {
+                                            span: 4
+                                        },
+                                        wrapperCol: {
+                                            span: 20
                                         }
+                                    },
+                                    componentProps: {
+                                        autoExpandParent:true,
+                                        // defaultExpandAll:true,
+                                        treeWrapperStyle:{height:300,overflowY:'auto'},
+                                        initialValue: orgId?[orgId]:undefined,
+                                        style:{
+                                            maxHeight:50,
+                                        },
+                                        fieldTextName: "name",
+                                        fieldValueName: "id",
+                                        url: `/sysOrganization/queryOrgTreeByUserId/${userId}`,
+                                        onChange:(orgIds)=>{
+                                            if(orgIds){
+                                                if(orgIds.length===1){
+                                                    this.fetchRoleByUserId(orgIds[0],userId)
+                                                }else{
+                                                    this.props.form.setFieldsValue({'roleIds':[]})
+                                                    this.props.form.resetFields();
+                                                    this.setState({ checkAll: false,roles:[],defaultFields:[] });
+                                                }
+                                            }
+                                        },
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue: orgId?[orgId]:undefined, 
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: "请选择组织"
+                                            }
+                                        ]
                                     }
-                                },
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: "请选择组织"
+                                }])
+                               /* getFields(this.props.form, [{
+                                    label: "组织",
+                                    fieldName: "orgIds",
+                                    type: "asyncTreeSelect",
+                                    span: 24,
+                                    formItemStyle: {
+                                        labelCol: {
+                                            span: 2
+                                        },
+                                        wrapperCol: {
+                                            span: 20
+                                        }
+                                    },
+                                    componentProps: {
+                                        fieldTextName: "name",
+                                        fieldValueName: "id",
+                                        doNotFetchDidMount:!userId,
+                                        fetchAble:!!userId,
+                                        url: `/sysOrganization/queryOrgTreeByUserId/${userId}`,
+                                        maxTagCount:5,
+                                        dropdownStyle:{
+                                            maxHeight:400,
+                                        },
+                                        labelInValue:false,
+                                        allowClear:true,
+                                        showSearch:true,
+                                        // filterTreeNode:true,
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue: orgId?[orgId]:undefined,
+                                        onChange:(orgIds)=>{
+                                            if(orgIds){
+                                                if(orgIds.length===1){
+                                                    this.fetchRoleByUserId(orgIds[0],userId)
+                                                }else{
+                                                    this.props.form.setFieldsValue({'roleIds':[]})
+                                                    this.props.form.resetFields();
+                                                    this.setState({ checkAll: false,roles:[],defaultFields:[] });
+                                                }
+                                            }
+                                        },
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: "请选择组织"
+                                            }
+                                        ]
                                     }
-                                ]
+                                }])*/
                             }
-                        }])
-                    }
-                    </Row>
-                    <div className='fix-ie10-formItem-textArea'>
-                    <FormItem
-                        wrapperCol= {{span:22}}
-                        labelCol= {{span:2}}
-                        label="角色"
-                        >
-                        <Checkbox
-                                onChange={this.onCheckAllChange}
-                                checked={this.state.checkAll}
-                            >
-                                {this.state.checkAll ? "取消" : "全选"}
-                            </Checkbox>
-                            {getFieldDecorator("roleIds", {
-                            initialValue: defaultFields.map(
-                                item => item.roleId
-                            ),
-                            onChange:(values)=>{
-                                this.setState({checkAll:this.isAllCheck(values)})
-                            }
-                        })(
-                            <Checkbox.Group style={{ width: "100%" }}>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexWrap: "wrap"
-                                    }}
+                        </Col>
+                        <Col span={12}>
+                        <div className='fix-ie10-formItem-textArea' style={{}}>
+                            <FormItem
+                                wrapperCol= {{span:20}}
+                                labelCol= {{span:4}}
+                                label="角色"
                                 >
-                                    {charAllList.map((item, index) => {
-                                        return (
-                                            <span
-                                                key={item.roleId}
-                                                style={{
-                                                    flex: "0 0 auto",
-                                                    height: 48,
-                                                    paddingRight: 8
-                                                }}
-                                            >
-                                                <Checkbox value={item.roleId}>
-                                                    {item.roleName}
-                                                </Checkbox>
-                                            </span>
-                                        );
-                                    })}
-                                </div>
-                            </Checkbox.Group>
-                        )}
-                    </FormItem>   
-                    </div>                     
+                                <Checkbox
+                                        onChange={this.onCheckAllChange}
+                                        checked={this.state.checkAll}
+                                    >
+                                        {this.state.checkAll ? "取消" : "全选"}
+                                    </Checkbox>
+                                    {getFieldDecorator("roleIds", {
+                                    initialValue: defaultFields.map(
+                                        item => item.roleId
+                                    ),
+                                    onChange:(values)=>{
+                                        this.setState({checkAll:this.isAllCheck(values)})
+                                    }
+                                })(
+                                    <Checkbox.Group style={{ width: "100%" }}>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexWrap: "wrap",
+                                                maxHeight:310,
+                                                overflow:'auto',
+                                            }}
+                                        >
+                                            {charAllList.map((item, index) => {
+                                                return (
+                                                    <span
+                                                        key={item.roleId}
+                                                        style={{
+                                                            flex: "0 0 auto",
+                                                            height: 48,
+                                                            paddingRight: 8
+                                                        }}
+                                                    >
+                                                        <Checkbox value={item.roleId}>
+                                                            {item.roleName}
+                                                        </Checkbox>
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    </Checkbox.Group>
+                                )}
+                            </FormItem>   
+                            </div>        
+                        </Col>
+                    </Row>             
                     </Form>
                 </Spin>
             </Modal>

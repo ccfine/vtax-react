@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-23 10:00:50
+ * @Last Modified time: 2018-07-27 17:23:55
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -330,18 +330,30 @@ class UserManage extends Component {
         });
     };
     handleAdmin = (id,isAdmin) => {
-        request
-        .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
-        .then(({ data }) => {
-            if (data.code === 200) {
-                message.success(isAdmin?"移除成功!":'添加成功!');
-                this.refreshTable();
-            } else {
-                message.error(data.msg, 4);
+        const modalRef = Modal.confirm({
+            title: "友情提醒",
+            content: `是否确认${isAdmin?'从管理员中移除':'添加为管理员'}？`,
+            okText: "确定",
+            okType: "danger",
+            cancelText: "取消",
+            onOk: () => {
+                request
+                .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
+                .then(({ data }) => {
+                    if (data.code === 200) {
+                        message.success(isAdmin?"移除成功!":'添加成功!');
+                        this.refreshTable();
+                    } else {
+                        message.error(data.msg, 4);
+                    }
+                })
+                .catch(e => {
+                    message.error(e.message, 4);
+                });
+            },
+            onCancel() {
+                modalRef.destroy();
             }
-        })
-        .catch(e => {
-            message.error(e.message, 4);
         });
     };
     render() {
