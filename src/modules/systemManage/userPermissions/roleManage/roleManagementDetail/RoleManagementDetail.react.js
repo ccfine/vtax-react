@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Card, message, Form, Row, Col, Badge,Icon } from 'antd'
-import { request } from 'utils'
+import { request,getUrlParam } from 'utils'
 import PermissionFeilds from "../../permissionDetail"
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -42,7 +42,7 @@ class RoleManagementDetail extends Component {
 			})
 
 		this.fetchRole(this.props.match.params.id)
-		this.fetchRoleId(this.props.match.params.id)
+		this.fetchRoleId(this.props.match.params.id, getUrlParam('orgId'))
 	}
 	fetchRole = id => {
 		this.toggleLoading(true)
@@ -63,10 +63,10 @@ class RoleManagementDetail extends Component {
 				this.toggleLoading(false)
 			})
 	}
-	fetchRoleId = id => {
+	fetchRoleId = (id,orgId)=> {
 		this.toggleLoading(true)
 		request
-			.get(`/sysRole/queryUserByRoleId/${id}`)
+			.get(`/sysRole/queryUserByRoleId/${id}/${orgId}`)
 			.then(({ data }) => {
 				if (data.code === 200) {
 					this.toggleLoading(false)

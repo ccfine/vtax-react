@@ -41,7 +41,7 @@ const columns = context => [
         title: '开具增值税专用发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text  : <a onClick={()=>{
@@ -68,7 +68,7 @@ const columns = context => [
         title: '开具其他发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
@@ -126,7 +126,7 @@ const notColumns = context =>[
         title: '开具增值税专用发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
@@ -153,7 +153,7 @@ const notColumns = context =>[
         title: '开具其他发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
