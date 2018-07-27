@@ -68,12 +68,12 @@ const columns = (context,isEdit) =>[
         render:(text,record,index)=>{
             if(isEdit && record.intaxRateEdit){
                 return <NumericInputCell
-                initialValue={text}
-                getFieldDecorator={context.props.form.getFieldDecorator}
-                fieldName={`list[${index}].intaxRate`}
-                editAble={true}
-                componentProps={{decimalPlaces:10}}
-                />
+                            initialValue={text==='0' ? '0.00' : text}
+                            getFieldDecorator={context.props.form.getFieldDecorator}
+                            fieldName={`list[${index}].intaxRate`}
+                            editAble={true}
+                            componentProps={{decimalPlaces:10}}
+                        />
              }else{
                 return text && `${text}%`
              }

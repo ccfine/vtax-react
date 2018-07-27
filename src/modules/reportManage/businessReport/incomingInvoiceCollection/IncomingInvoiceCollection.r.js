@@ -141,13 +141,15 @@ const columns = [
         width:'100px',
     },{
         title: '金额',
-        className: "table-money",
         dataIndex: 'amount',
+        className: "table-money",
+        render: text => fMoney(text),
         width:'100px',
     },{
         title: '税额',
-        className: "table-money",
         dataIndex: 'taxAmount',
+        className: "table-money",
+        render: text => fMoney(text),
         width:'100px',
     },{
         title: '开户行',

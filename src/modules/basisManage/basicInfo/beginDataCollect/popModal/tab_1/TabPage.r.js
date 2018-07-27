@@ -38,12 +38,12 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.commonInitialEdit ? fMoney(parseFloat(text)) : __html
+                    return record.commonInitialEdit ? fMoney(text) : __html
                 }else{
                     return record.commonInitialEdit ?
                         <NumericInputCell
                             fieldName={`commonInitial_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : text}
                             getFieldDecorator={getFieldDecorator}
                             editAble={disabled}
                             componentProps={{
@@ -63,12 +63,12 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.commonCountEdit ? fMoney(parseFloat(text)) : __html
+                    return record.commonCountEdit ? fMoney(text) : __html
                 }else {
                     return record.commonCountEdit ?
                         <NumericInputCell
                             fieldName={`commonCount_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                             componentProps={{
@@ -90,12 +90,12 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.promptlyInitialEdit ? fMoney(parseFloat(text)) : __html
+                    return record.promptlyInitialEdit ? fMoney(text) : __html
                 }else {
                     return record.promptlyInitialEdit ?
                         <NumericInputCell
                             fieldName={`promptlyInitial_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                             componentProps={{
@@ -113,12 +113,12 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.promptlyCountEdit ? fMoney(parseFloat(text)) : __html
+                    return record.promptlyCountEdit ? fMoney(text) : __html
                 }else {
                     return record.promptlyCountEdit ?
                         <NumericInputCell
                             fieldName={`promptlyCount_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : text}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                             componentProps={{

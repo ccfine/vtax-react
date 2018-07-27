@@ -95,7 +95,7 @@ const getColumns = (context,getFieldDecorator,disabled) => [
             return disabled && record.generalAmountEdit ?
                 <NumericInputCell
                     fieldName={`generalAmount_${record.id}`}
-                    initialValue={text}
+                    initialValue={text==='0' ? '0.00' : text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.generalAmountEdit}
                     componentProps={{
@@ -114,7 +114,7 @@ const getColumns = (context,getFieldDecorator,disabled) => [
             return disabled && record.drawbackPolicyAmountEdit ?
                 <NumericInputCell
                     fieldName={`drawbackPolicyAmount_${record.id}`}
-                    initialValue={text}
+                    initialValue={text==='0' ? '0.00' : text}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.drawbackPolicyAmountEdit}
                     componentProps={{

@@ -79,8 +79,8 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('mainId') || false,
-                url:`/project/list/${getFieldValue('mainId')}`,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
             }
         },
         {
@@ -221,7 +221,7 @@ const columns = [
         width:'150px',
     },
     {
-        title:'税额',
+        title:'未开具发票销售税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
