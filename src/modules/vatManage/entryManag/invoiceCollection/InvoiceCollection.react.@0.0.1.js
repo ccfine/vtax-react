@@ -221,18 +221,21 @@ const getColumns = (context) => [{
         title: "金额",
         dataIndex: "amount",
         render: text => fMoney(text),
+        className:'table-money',
         width:'100px',
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
         render: text => fMoney(text),
+        className:'table-money',
         width:'100px',
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
         render: text => fMoney(text),
+        className:'table-money',
         width:'100px',
     },
     {

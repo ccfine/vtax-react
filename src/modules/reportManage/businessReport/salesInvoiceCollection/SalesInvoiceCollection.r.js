@@ -193,7 +193,6 @@ const columns=[
     },{
         title: '备注',
         dataIndex: 'remark',
-        width:'200px',
     }
 ];
 export default class SalesInvoiceCollection extends Component{
