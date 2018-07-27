@@ -17,9 +17,9 @@ class PopModal extends Component{
     }
 
     handleSubmit = () => {
-        if(this.state.targetKeys.length < 1) {
+        /*if(this.state.targetKeys.length < 1) {
             return message.success('请选择要分配的用户!');
-        }
+        }*/
         let params = {
             userIds:this.state.targetKeys,
             id:this.props.id,
@@ -69,9 +69,9 @@ class PopModal extends Component{
             })
     }
 
-    fetchRoleId=(roleId)=>{
+    fetchRoleId=(roleId,orgId)=>{
         const targetKeys = [];
-        request.get(`/sysRole/queryUserByRoleId/${roleId}`)
+        request.get(`/sysRole/queryUserByRoleId/${roleId}/${orgId}`)
             .then(({data})=>{
                 this.toggleLoaded(false)
                 if(data.code===200){
@@ -112,7 +112,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible){
             this.fetchList(nextProps.orgId)
-            this.fetchRoleId(nextProps.id)
+            this.fetchRoleId(nextProps.id,nextProps.orgId)
         }
     }
     render(){
