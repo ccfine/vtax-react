@@ -89,6 +89,8 @@ const columns = context =>[
         },{
             title: '税额',
             dataIndex: 'currentTaxAmount',
+            render: text => fMoney(text),
+            className: "table-money"
         }]
     },{
         title: '累计',

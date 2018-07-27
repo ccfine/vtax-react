@@ -145,7 +145,7 @@ const getColumns = context => [{
         render:(text,record,index)=>{
             return <NumericInputCell
             fieldName={`editGroundArea[${index}]`}
-            initialValue={text}
+            initialValue={text==='0' ? '0.00' : text}
             componentProps={{decimalPlaces:4}}
             getFieldDecorator={context.props.form.getFieldDecorator} />
         },

@@ -221,7 +221,7 @@ const columns = [
         width:'150px',
     },
     {
-        title:'税额',
+        title:'未开具发票销售税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',

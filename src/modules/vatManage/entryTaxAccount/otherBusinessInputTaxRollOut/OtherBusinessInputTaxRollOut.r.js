@@ -75,7 +75,7 @@ const getColumns = (context,isEdit) => {
             if(isEdit){
                 return <NumericInputCell
                 fieldName={`outTaxAmount[${index}]`}
-                initialValue={text}
+                initialValue={text==='0' ? '0.00' : text}
                 getFieldDecorator={context.props.form.getFieldDecorator} />
             }else{
                 return fMoney(text);

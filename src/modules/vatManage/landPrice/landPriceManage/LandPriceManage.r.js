@@ -181,7 +181,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             if(!disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 10) === 1 && parseInt(record.deductionFlag, 10) === 1){
                    return <NumericInputCell
                         fieldName={`debitAmount_${record.id}`}
-                        initialValue={text}
+                        initialValue={text==='0' ? '0.00' : text}
                         getFieldDecorator={getFieldDecorator}
                         editAble={disabled}
                         componentProps={{
