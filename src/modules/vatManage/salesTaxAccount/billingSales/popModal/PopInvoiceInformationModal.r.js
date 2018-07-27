@@ -44,29 +44,29 @@ const columns = [
         width: 300,
     },{
         title: '货物或应税劳务名称',
-        dataIndex: 'remark',
+        dataIndex: 'itemName',
         width: 200,
     },{
         title: '规格型号',
-        dataIndex: 'remark',
+        dataIndex: 'spec',
         width: 100,
     },{
         title: '单位',
-        dataIndex: 'remark',
+        dataIndex: 'unit',
         width: 100,
     },{
         title: '数量',
-        dataIndex: 'remark',
+        dataIndex: 'quantity',
         width: 100,
     },{
         title: '单价',
-        dataIndex: 'amount',
+        dataIndex: 'unitPrice',
         className:'text-right',
         render:text=>fMoney(text),
         width: 100,
     },{
         title: '金额',
-        dataIndex: 'amount',
+        dataIndex: 'amountWithoutTax',
         className:'text-right',
         render:text=>fMoney(text),
         width:100,
