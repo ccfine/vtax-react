@@ -77,8 +77,8 @@ const searchFields = (disabled,declare) => getFieldValue => {
                 fieldTextName: 'itemName',
                 fieldValueName: 'id',
                 doNotFetchDidMount: true,
-                fetchAble: getFieldValue('mainId') || false,
-                url: `/project/list/${getFieldValue('mainId')}`
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url: `/project/list/${getFieldValue('main') && getFieldValue('main').key}`
             }
         },
         {
