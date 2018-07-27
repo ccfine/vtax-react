@@ -112,6 +112,7 @@ export default handleActions({
         return state.set('isAuthed', payload)
     },
     [isAuthed.logout] : state=>{
+        localStorage.clear();
         return initialState
     },
     [org.increment] : (state, {payload})=>{
