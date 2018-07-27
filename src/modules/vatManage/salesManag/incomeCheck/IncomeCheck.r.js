@@ -120,6 +120,10 @@ class IncomeCheck extends Component {
                 if (values.authMonth) {
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
+                }
 
                 this.setState({
                     filters: values
