@@ -110,11 +110,12 @@ const getColumns =(context)=>[
                             title:'申报撤回',
                             userPermissions:['1085005'],
                             onSuccess:()=>{
-                                context.setState({
-                                    record: {...record,decAction:'edit'},
-                                },() => {
-                                    context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
-                                });
+                                context.props.history.push(`/web/taxDeclare/declareHandle/revokeDeclare/${record.id}`)
+                                // context.setState({
+                                //     record: {...record,decAction:'edit'},
+                                // },() => {
+                                //     context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
+                                // });
                             }
                         }])
                     break

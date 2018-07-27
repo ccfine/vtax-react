@@ -14,6 +14,7 @@ import Create_LookDeclare from '../createADeclare/lookDeclare'
 import Handle_LookDeclare from '../declareHandle/lookDeclare'
 import Search_LookDeclare from '../searchDeclare/lookDeclare'
 import Handle_HandleDeclare from '../declareHandle/handleDeclare'
+import Handle_RevokeDeclare from '../declareHandle/revokeDeclare'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/taxDeclare`
@@ -70,6 +71,11 @@ const Children_Routes = [
             path:`${PATH}/declareHandle/handleDeclare/:id`,
             component:wrapPage('申报办理',Handle_HandleDeclare),
             name:'申报办理',
+            exact:true,
+        },{
+            path:`${PATH}/declareHandle/revokeDeclare/:id`,
+            component:wrapPage('申报撤回',Handle_RevokeDeclare),
+            name:'申报撤回',
             exact:true,
         }],
     },{
