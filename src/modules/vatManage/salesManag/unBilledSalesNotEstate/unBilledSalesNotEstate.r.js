@@ -229,6 +229,11 @@ class UnBilledSalesNotEstate extends Component {
                 if (values.authMonth) {
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
+                
+                if(values.main){
+                    values.mainId = values.main.key;
+                    values.main = undefined;
+                }
 
                 this.setState({
                     filters: values

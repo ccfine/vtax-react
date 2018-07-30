@@ -111,7 +111,7 @@ class UserDetail extends Component {
                         <Col span={6}>
                             <FormItem label='微信' {...formItemLayout}>
                                 <span style={{ color: "#333" }}>
-                                    {userData.webchat}
+                                    {userData.wechat}
                                 </span>
                             </FormItem>
                         </Col>

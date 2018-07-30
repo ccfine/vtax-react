@@ -348,7 +348,7 @@ class FinancialDocuments extends Component{
                                 {
                                     composeBotton([{
                                         type:'modal',
-                                        url:'/fixedAssetCard/report/sendApi',
+                                        url:'/inter/financial/voucher/report/sendApi',
                                         title:'抽数',
                                         icon:'usb',
                                         fields:apiFields,
