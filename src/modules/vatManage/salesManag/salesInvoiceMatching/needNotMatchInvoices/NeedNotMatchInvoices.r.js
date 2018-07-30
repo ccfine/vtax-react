@@ -100,10 +100,15 @@ const searchFields=(disabled,declare)=> {
 }
 const columns = [
     {
+        title: '发票号码',
+        dataIndex: "invoiceNum",
+        width:'200px',
+    },
+    /*{
         title:'纳税主体',
         dataIndex:'mainName',
         width:'200px',
-    },
+    },*/
     {
         title:'发票类型',
         dataIndex:'invoiceType',

@@ -80,20 +80,21 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                 {text}
             </span>
             ),
+            width:'200px',
         }, {
             title: '减税性质代码',
             dataIndex: 'reduceNum',
-            width:'8%',
+            width:'100px',
         },{
             title: '减税性质名称',
             dataIndex: 'reduceName',
-            width:'20%',
+            width:'200px',
         },{
             title: '期初余额',
             dataIndex: 'initialBalance',
             render:text=>fMoney(text),
             className:'table-money',
-            width:'5%',
+            width:'100px',
         },{
             title:'本期发生额',
             children:[
@@ -116,7 +117,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             return record.amount ? fMoney(parseFloat(text)) : text
                         }
                     },
-                    width:'10%',
+                    width:'150px',
                 },
                 {
                     title:'税额',
@@ -137,7 +138,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             return record.taxAmount ? fMoney(parseFloat(text)) : text
                         }
                     },
-                    width:'10%',
+                    width:'150px',
                 },
                 {
                     title:'减免税金额',
@@ -160,7 +161,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                             return record.reduceTaxAmount ? fMoney(parseFloat(text)) : text
                         }
                     },
-                    width:'10%',
+                    width:'150px',
                 },
             ]
         },{
@@ -197,13 +198,13 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     return txt
                 }
             },
-            width:'8%',
+            width:'100px',
         },{
             title: '本期应抵减税额',
             dataIndex: 'currentDeductAmount',
             render:text=>fMoney(text),
             className:'table-money',
-            width:'8%',
+            width:'100px',
         }
     ];
 }
@@ -389,7 +390,7 @@ class TaxExemptionDetails extends Component{
                     },
                     scroll:{
                         y:window.screen.availHeight-380,
-                        x:1000,
+                        x:1500,
                     },
                     extra: <div>
                         {

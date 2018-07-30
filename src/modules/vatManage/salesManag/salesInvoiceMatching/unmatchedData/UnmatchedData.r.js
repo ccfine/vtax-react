@@ -182,12 +182,11 @@ const getColumns = (context,disabled) =>{
             dataIndex: "billingDate",
             width:'100px',
         },
-
-        /*{
+        {
             title: '购货单位名称',
             dataIndex: "purchaseName",
             width:'200px',
-        },
+        },/*
         {
             title:'发票代码',
             dataIndex:'invoiceCode',
@@ -351,7 +350,7 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x: 1550,
+                        x: 1750,
                         y: window.screen.availHeight-430,
                     },
                     cardProps:{

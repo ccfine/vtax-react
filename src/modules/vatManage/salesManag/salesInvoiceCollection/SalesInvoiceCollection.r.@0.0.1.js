@@ -24,7 +24,7 @@ const formItemStyle = {
 const fields = (disabled,declare)=> [
     {
         label:'纳税主体',
-        fieldName:'main',
+        fieldName:'mainId',
         type:'taxMain',
         span:24,
         formItemStyle:{
@@ -36,10 +36,11 @@ const fields = (disabled,declare)=> [
             }
         },
         componentProps:{
-            labelInValue:true,
+            //labelInValue:true,
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+            initialValue: (disabled && declare.mainId) || undefined,
+            //initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,

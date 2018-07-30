@@ -230,6 +230,11 @@ const getColumns = (context,disabled) => {
             },
         },
         {
+            title: '备注',
+            dataIndex: 'remark',
+            //width:'500px',
+        },
+        {
             title:'金额',
             dataIndex:'amount',
             width:'100px',
@@ -275,7 +280,7 @@ const getColumns = (context,disabled) => {
         {
             title:'路址',
             dataIndex:'htRoomName',
-            //width:'200px',
+            width:'200px',
         },
         {
             title:'成交金额',
@@ -297,6 +302,11 @@ const getColumns = (context,disabled) => {
         {
             title:'房号',
             dataIndex:'roomNumber',
+            width:'100px',
+        },
+        {
+            title:'间编码',
+            dataIndex:'roomCode',
             width:'100px',
         },
         {
@@ -480,7 +490,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 2500,
+                        x: 3000,
                         y:window.screen.availHeight-480,
                     },
                     cardProps:{
