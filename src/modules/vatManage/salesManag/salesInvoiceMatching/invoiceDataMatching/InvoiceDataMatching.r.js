@@ -273,11 +273,6 @@ const getColumns = (context,disabled) => {
             width:'200px',
         },
         {
-            title:'房间编码',
-            dataIndex:'roomCode',
-            width:'150px',
-        },
-        {
             title:'路址',
             dataIndex:'htRoomName',
             width:'200px',
@@ -305,7 +300,7 @@ const getColumns = (context,disabled) => {
             width:'100px',
         },
         {
-            title:'间编码',
+            title:'房间编码',
             dataIndex:'roomCode',
             width:'100px',
         },
@@ -490,7 +485,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 3000,
+                        x: 2900,
                         y:window.screen.availHeight-480,
                     },
                     cardProps:{

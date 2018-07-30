@@ -10,8 +10,8 @@ import {connect} from 'react-redux'
 import {Modal,message,Divider} from 'antd'
 import {SearchTable} from 'compoments'
 import {RolePopModal,UserPopModal,PermissionPopModal} from './popModal'
-import {request,composeBotton,getUrlParam,parseJsonToParams} from 'utils'
-const searchFields = context => [
+import {request,composeBotton} from 'utils'
+const searchFields = (context,params) => [
     {
         label: "组织",
         fieldName: "org",
@@ -28,8 +28,7 @@ const searchFields = context => [
             },
         },
         fieldDecoratorOptions: {
-            initialValue: context.props.org && {key: context.props.org.orgId,label: context.props.org.orgName},
-            //initialValue: getUrlParam('orgId') || (context.props.org && context.props.org.orgId),
+            initialValue: (params && params.orgId) ? {key: params.orgId,label: ''} : (context.props.org && {key: context.props.org.orgId,label: context.props.org.orgName}),
             rules: [
                 {
                     required: true,
@@ -43,7 +42,7 @@ const searchFields = context => [
         span: 8,
         fieldName: "roleName",
         fieldDecoratorOptions: {
-            initialValue: getUrlParam('roleName') || undefined,
+            initialValue: (params && params.roleName) ? params.roleName : undefined,
         }
     }
 ];
@@ -122,11 +121,12 @@ const columns = context => [
             title="查看详情"
             to={{
                 pathname: `/web/systemManage/userPermissions/roleManage/${record.id}`,
-                search:parseJsonToParams(context.state.searchValues),
+                //search:parseJsonToParams(context.state.searchValues),
                 state:{
                     roleName:record.roleName,
                     isEnabled:record.isEnabled,
-                    remark:record.remark
+                    remark:record.remark,
+                    params:{ ...context.state.searchValues, }
                 }
             }}
         >
@@ -153,21 +153,26 @@ const columns = context => [
 
 
 class RoleManage extends Component{
-    state= {
-        updateKey: Date.now(),
-        selectedRowKeys: null,
-        selectedRows: null,
-        visible: false,
-        userVisible: false,
-        permissionVisible: false,
-        permissionId:undefined,
-        userId:undefined,
-        searchValues:undefined,
-        modalConfig: {
-            type: ''
-        },
-        filters:{},
+    constructor(props){
+        super(props)
+        this.state = {
+            updateKey: Date.now(),
+            selectedRowKeys: null,
+            selectedRows: null,
+            visible: false,
+            userVisible: false,
+            permissionVisible: false,
+            permissionId:undefined,
+            userId:undefined,
+            searchValues:undefined,
+            modalConfig: {
+                type: ''
+            },
+            filters:{},
+            params:{...props.location.state},
+        }
     }
+
     toggleModalVisible=visible=>{
         this.setState({
             visible
@@ -268,11 +273,16 @@ class RoleManage extends Component{
     }
 
     render(){
-        const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId,filters} = this.state;
+        const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId,filters,params} = this.state;
         return (
             (this.props.org && this.props.org.orgId) ? <div className="oneLine"><SearchTable
                 searchOption={{
-                    fields:searchFields(this),
+                    fields:searchFields(this, params),
+                    onResetFields:()=>{
+                        this.setState({
+                            params: {}
+                        })
+                    },
                 }}
                 backCondition={values => {
                     this.setState({
@@ -334,5 +344,3 @@ class RoleManage extends Component{
 export default withRouter(connect(state=>({
     org: state.user.get("org")
 }))(RoleManage))
-
-

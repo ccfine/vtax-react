@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Card, message, Form, Row, Col, Badge,Icon } from 'antd'
-import { request,getUrlParam } from 'utils'
+import { request } from 'utils'
 import PermissionFeilds from "../../permissionDetail"
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -42,7 +42,7 @@ class RoleManagementDetail extends Component {
 			})
 
 		this.fetchRole(this.props.match.params.id)
-		this.fetchRoleId(this.props.match.params.id, getUrlParam('orgId'))
+		this.fetchRoleId(this.props.match.params.id, this.props.location.state.params.orgId)
 	}
 	fetchRole = id => {
 		this.toggleLoading(true)
@@ -96,10 +96,13 @@ class RoleManagementDetail extends Component {
 					<Link
 						style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}
 						to={{
-                            pathname: location && location.pathname ? location.pathname.substring(0,location.pathname.lastIndexOf('/')) : '',
-                            search:location.search,
-                        }}
-					><Icon type="left" /><span>返回</span></Link>
+                        pathname: `/web/systemManage/userPermissions/roleManage`,
+                        state:{
+                            ...location.state.params,
+                        }
+					}}>
+						<Icon type="left" /><span>返回</span>
+					</Link>
 				</div>
 				<Card loading={loading}
 					title="角色信息">
