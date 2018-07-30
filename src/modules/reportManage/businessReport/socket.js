@@ -1,12 +1,18 @@
 
 import {notification } from 'antd';
+let socket = undefined;
 export default function create(id){
     if(typeof(WebSocket) === `undefined`){
         console.error('您得客户端不支持websocket接收消息')
         return;
     }
 
-    let socket = new WebSocket(
+    // 保证单例，如果socket存在，则直接返回；支支持单用户，不支持多用户
+    if(socket){
+        return;
+    }
+
+    socket = new WebSocket(
         window.wsURL + 'webSocketHandler/id=' + id
     )
     socket.onopen = () => {
@@ -25,8 +31,10 @@ export default function create(id){
     }
     socket.onerror = e => {
         console.log('连接错误')
+        socket=undefined;
     }
     socket.onclose = e => {
         console.log('连接断开，代码：' + e.code)
+        socket=undefined;
     }
 }

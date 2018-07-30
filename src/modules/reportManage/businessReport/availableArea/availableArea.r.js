@@ -2,13 +2,15 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-26 11:57:36
+ * @Last Modified time: 2018-07-30 12:57:39
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
 import {request,composeBotton} from 'utils';
 import {message,Form,Modal} from 'antd';
 import { NumericInputCell } from 'compoments/EditableCell'
+import {connect} from 'react-redux'
+import createSocket from '../socket'
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
@@ -74,6 +76,32 @@ const importFeilds = [
     }
 ];
 
+const apiFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
+        },
+    },
+    {
+        label:'抽取月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择抽取月份',
+            }]
+        },
+    },
+]
 const getColumns = context => [{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
@@ -276,6 +304,19 @@ class AvailableArea extends Component {
                                     loading:saveLoding
                                 }])
                             }
+                            {
+                                composeBotton([{
+                                    type:'modal',
+                                    url:'/interAvailableBuildingAreaInformation/sendApi',
+                                    title:'抽数',
+                                    icon:'usb',
+                                    fields:apiFields,
+                                    userPermissions:['1535001'],
+                                    onSuccess:()=>{
+                                        createSocket(this.props.userid)
+                                    }
+                                }])
+                            }
                         </span>
                     )
                 }}
@@ -285,4 +326,7 @@ class AvailableArea extends Component {
     }
 }
 
-export default Form.create()(AvailableArea);
+
+export default connect(state=>({
+    userid:state.user.getIn(['personal','id'])
+}))(Form.create()(AvailableArea));

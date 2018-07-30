@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
-import createSocket from './socket'
+import createSocket from '../socket'
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -185,7 +185,7 @@ const apiFields = (getFieldValue)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:24,
+        span:20,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
@@ -194,40 +194,14 @@ const apiFields = (getFieldValue)=> [
         },
     },
     {
-        label:'项目名称',
-        fieldName:'projectId',
-        type:'asyncSelect',
-        span:24,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:true,
-            fetchAble:getFieldValue('mainId') || false,
-            url:`/project/list/${getFieldValue('mainId')}`,
-        },
+        label:'抽取月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:20,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
-                message:'请选择项目名称',
-            }]
-        },
-    },
-    {
-        label:'项目分期',
-        fieldName:'stagesId',
-        type:'asyncSelect',
-        span:24,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:true,
-            fetchAble:getFieldValue('projectId') || false,
-            url:`/project/stages/${getFieldValue('projectId') || ''}`,
-        },
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择项目分期',
+                message:'请选择抽取月份',
             }]
         },
     },

@@ -2,12 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-23 16:00:04
+ * @Last Modified time: 2018-07-30 12:24:42
  */
 import React, { Component } from "react";
 import {message,Modal} from 'antd';
 import { SearchTable} from "compoments";
+import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
+import createSocket from '../socket'
 const searchFields = [
     {
         label: "纳税主体",
@@ -95,6 +97,32 @@ const importFeilds = [
     }*/
 ];
 
+const apiFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
+        },
+    },
+    {
+        label:'抽取月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择抽取月份',
+            }]
+        },
+    },
+]
 const getColumns = context => [
     {
         title:'操作',
@@ -242,7 +270,7 @@ const getColumns = context => [
     }
 ];
 
-export default class fixedAssetCard extends Component {
+class fixedAssetCard extends Component {
     state = {
         updateKey: Date.now(),
         filters:{},
@@ -304,6 +332,19 @@ export default class fixedAssetCard extends Component {
                                     url: 'fixedAssetCard/report/download',
                                 }])
                             }
+                            {
+                                composeBotton([{
+                                    type:'modal',
+                                    url:'/inter/financial/voucher/report/sendApi',
+                                    title:'抽数',
+                                    icon:'usb',
+                                    fields:apiFields,
+                                    userPermissions:['1875001'],
+                                    onSuccess:()=>{
+                                        createSocket(this.props.userid)
+                                    }
+                                }])
+                            }
                         </span>
                     )
                 }}
@@ -311,3 +352,7 @@ export default class fixedAssetCard extends Component {
         );
     }
 }
+
+export default connect(state=>({
+    userid:state.user.getIn(['personal','id'])
+}))(fixedAssetCard)
