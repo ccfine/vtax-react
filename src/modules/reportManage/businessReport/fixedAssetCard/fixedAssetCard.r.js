@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-30 12:24:42
+ * @Last Modified time: 2018-07-30 16:14:45
  */
 import React, { Component } from "react";
 import {message,Modal} from 'antd';
@@ -335,7 +335,7 @@ class fixedAssetCard extends Component {
                             {
                                 composeBotton([{
                                     type:'modal',
-                                    url:'/inter/financial/voucher/report/sendApi',
+                                    url:'/fixedAssetCard/report/sendApi',
                                     title:'抽数',
                                     icon:'usb',
                                     fields:apiFields,
