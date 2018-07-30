@@ -44,10 +44,11 @@ const fields = (disabled,declare)=> [
             }
         },
         componentProps:{
-            labelInValue:true,
+            //labelInValue:true,
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+            initialValue: (disabled && declare.mainId) || undefined,
+            //initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
