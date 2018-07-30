@@ -222,7 +222,7 @@ const getColumns = (context,disabled) => {
         {
             title:'房间编码',
             dataIndex:'roomCode',
-            width:'100px',
+            width:'150px',
         },
         {
             title:'房间交付日期',
@@ -505,7 +505,7 @@ class RoomTransactionFile extends Component{
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
-                        x: 3500,
+                        x: 3200,
                         y:window.screen.availHeight-500,
                     },
                 }}

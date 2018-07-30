@@ -168,8 +168,8 @@ export default class Sheet extends Component{
                                                     editAble={true}
                                                     componentProps={{
                                                         valueType:di.type === 'rate'?'int':'float',
-                                                        onFocus:(e)=>this.handleFocus(e,`map.${di.key}`),
-                                                        onBlur:(e)=>this.handleBlur(e,`map.${di.key}`)
+                                                        onFocus:(e)=>di.type !== 'rate' && this.handleFocus(e,`map.${di.key}`),
+                                                        onBlur:(e)=>di.type !== 'rate' && this.handleBlur(e,`map.${di.key}`)
                                                     }}
                                                 /> 
                                                 </React.Fragment>,
