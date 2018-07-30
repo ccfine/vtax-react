@@ -101,11 +101,15 @@ class SheetWithSearchFields extends Component{
         this.props.form.validateFields((err, values) => {
             if(!err){
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
+                }
                 this.setState({
-                    params:{taxMonth:values.taxMonth,mainId:values.main.key},
+                    params: values,
                     updateKey:Date.now()
                 })
-                this.props.onParamsChange && this.props.onParamsChange({taxMonth:values.taxMonth,main:values.main});
+                this.props.onParamsChange && this.props.onParamsChange(values); //{taxMonth:values.taxMonth,main:values.main}
             }
         })
     }
@@ -114,6 +118,10 @@ class SheetWithSearchFields extends Component{
         this.props.form.validateFields((err, values) => {
             if(!err){
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
+                }
                 this.setState({saveLoding:true})
                 request.post(this.props.saveUrl,{...values})
                     .then(({data})=>{
@@ -138,8 +146,6 @@ class SheetWithSearchFields extends Component{
     }
     render(){
         const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,savePermission} = this.props;
-        console.log(defaultParams);
-
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
