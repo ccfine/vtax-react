@@ -11,13 +11,13 @@ import {request,composeBotton} from 'utils'
 
 const searchFields = [
     {
-        label:'组织机构名称',
-        fieldName:'name',
+        label:'组织机构代码',
+        fieldName:'code',
         type:'input',
         span:8,
     },{
-        label:'组织机构代码',
-        fieldName:'code',
+        label:'组织机构名称',
+        fieldName:'name',
         type:'input',
         span:8,
     }
