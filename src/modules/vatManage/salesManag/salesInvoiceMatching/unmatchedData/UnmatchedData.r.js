@@ -120,6 +120,11 @@ const getColumns = (context,disabled) =>{
             ...operates
          ,
         {
+            title:'发票代码',
+            dataIndex:'invoiceCode',
+            width:'150px',
+        },
+        {
             title: '发票号码',
             dataIndex: "invoiceNum",
             width:'200px',
@@ -187,11 +192,6 @@ const getColumns = (context,disabled) =>{
             dataIndex: "purchaseName",
             width:'200px',
         },/*
-        {
-            title:'发票代码',
-            dataIndex:'invoiceCode',
-            width:'200px',
-        },
         {
             title:'匹配时间',
             dataIndex:'marryTime',
@@ -350,7 +350,7 @@ class UnmatchedData extends Component{
                         })
                     },
                     scroll:{
-                        x: 1750,
+                        x: 1900,
                         y: window.screen.availHeight-430,
                     },
                     cardProps:{
