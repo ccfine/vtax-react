@@ -100,6 +100,11 @@ const searchFields=(disabled,declare)=> {
 }
 const columns = [
     {
+        title:'发票代码',
+        dataIndex:'invoiceCode',
+        width:'150px',
+    },
+    {
         title: '发票号码',
         dataIndex: "invoiceNum",
         width:'200px',
@@ -170,18 +175,8 @@ const columns = [
         title:'购货单位名称',
         dataIndex:'purchaseName',
         width:'200px',
-    }/*,
-    {
-        title:'发票代码',
-        dataIndex:'invoiceCode',
-        width:'8%',
-    },
-    {
-        title:'发票号码',
-        dataIndex:'invoiceNum',
-        width:'8%',
-    },*/
-];
+    }
+]
 
 class NeedNotMatchInvoices extends Component{
     state={
@@ -317,7 +312,7 @@ class NeedNotMatchInvoices extends Component{
                         })
                     },
                     scroll:{
-                        x:1700,
+                        x:1850,
                         y:window.screen.availHeight-430,
                     },
                     cardProps:{

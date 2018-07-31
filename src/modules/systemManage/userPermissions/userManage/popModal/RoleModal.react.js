@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-08 11:41:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-27 17:32:33
+ * @Last Modified time: 2018-07-31 14:52:54
  */
 import React from "react";
 import { Form, Spin, message, Modal, Checkbox,Row,Col} from "antd";
@@ -189,6 +189,7 @@ class RoleModal extends React.Component {
                                         }
                                     },
                                     componentProps: {
+                                        onlyCheckLeaf:true,
                                         autoExpandParent:true,
                                         // defaultExpandAll:true,
                                         treeWrapperStyle:{height:300,overflowY:'auto'},

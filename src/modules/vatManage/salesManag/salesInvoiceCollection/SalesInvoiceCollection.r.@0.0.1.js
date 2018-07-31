@@ -144,6 +144,11 @@ const getColumns = (context) => [{
         width:'100px',
     },
     {
+        title: '发票代码',
+        dataIndex: "invoiceCode",
+        width:'150px',
+    },
+    {
         title: '发票号码',
         dataIndex: "invoiceNum",
         width:'150px',
@@ -241,11 +246,7 @@ const getColumns = (context) => [{
         dataIndex: "projectNum",
         width:'150px',
     },
-    {
-        title: '发票代码',
-        dataIndex: "invoiceCode",
-        width:'150px',
-    }*/
+    */
 
 ]
 
@@ -436,7 +437,7 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        x:1650,
+                        x:1800,
                         y:window.screen.availHeight-400,
                     },
                     onTotalSource: totalSource => {

@@ -6,12 +6,18 @@ import createHistory from 'history/createBrowserHistory'
 //TODO：npm install 的时候 react-router-redux要加上 @next 最新版本号
 import {ConnectedRouter} from 'react-router-redux'
 import { store, persistor } from 'redux/store';
-import { LocaleProvider } from 'antd'
+import { LocaleProvider,message } from 'antd'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import './App.css';
 moment.locale('zh-cn')
+
+message.config({
+    top: 50, //window.screen.availHeight/2-140,  //消息距离顶部的位置
+    duration: 3,  //默认自动关闭延时，单位秒
+    maxCount: 1,  //最大显示数, 超过限制时，最早的消息会被自动关闭
+});
 
 const history = createHistory();
 const onBeforeLift = () => {
