@@ -210,6 +210,11 @@ const getColumns = (context,disabled) => {
             }*/
         },
         {
+            title:'发票代码',
+            dataIndex:'invoiceCode',
+            width:'150px',
+        },
+        {
             title:'发票号码',
             dataIndex:'invoiceNum',
             width:'150px',
@@ -310,7 +315,7 @@ const getColumns = (context,disabled) => {
             width:'100px',
         },
         {
-            title:'身份证号/纳税识别码',
+            title:'身份证号/纳税识别号',
             dataIndex:'taxIdentificationCode',
             width:'200px',
         },
@@ -333,12 +338,7 @@ const getColumns = (context,disabled) => {
                     return ''
                 }
             }
-        }/*,
-        {
-            title:'发票代码',
-            dataIndex:'invoiceCode',
-            width:'100px',
-        },*/
+        }
     ]
 }
 class InvoiceDataMatching extends Component{
@@ -485,7 +485,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 2900,
+                        x: 3050,
                         y:window.screen.availHeight-480,
                     },
                     cardProps:{
