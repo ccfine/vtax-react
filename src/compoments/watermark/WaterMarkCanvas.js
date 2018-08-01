@@ -40,12 +40,26 @@ export default function getWaterMarkCanvas(text, options) {
         //ctx.fillText(moment().format('YYYY-MM-DD HH:mm'), item.x-25, item.y+20)
         let txt = item.text.split(',');
         txt.forEach((t,i)=>{
-            i=i+1;
+            switch (i){
+                case 0:
+                    ctx.fillText(t, item.x, item.y)
+                    break
+                case 1:
+                    ctx.fillText(t, item.x-10, item.y+25)
+                    break
+                case 2:
+                    ctx.fillText(t, item.x-40, item.y+50)
+                    break
+                default:
+                    ctx.fillText(t, item.x, item.y)
+                    break
+            }
+            /*i=i+1;
             if(i===1){
                 ctx.fillText(t, item.x, item.y)
             }else{
-                ctx.fillText(t, item.x-45, item.y+30)
-            }
+                ctx.fillText(t, item.x-45*i, item.y+30*i)
+            }*/
         })
 
     })
