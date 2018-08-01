@@ -153,8 +153,6 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
                                         disabled:true,
-                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].reduceTaxAmount`),
-                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].reduceTaxAmount`)
                                     }}
                                 />
                         }else{
@@ -350,18 +348,19 @@ class TaxExemptionDetails extends Component{
        // 否  减免税金额显示为 金额加税额的合计
         const {getFieldValue,setFieldsValue} = this.props.form
 
-        let amount = new BigNumber(getFieldValue(`list[${record.id}].amount`));
-        let taxAmount = new BigNumber(getFieldValue(`list[${record.id}].taxAmount`));
+        let amount = new BigNumber(getFieldValue(`list[${record.id}].amount`).replace(/\$\s?|(,*)/g, ''));
+        let taxAmount = new BigNumber(getFieldValue(`list[${record.id}].taxAmount`).replace(/\$\s?|(,*)/g, ''));
         let sum = amount.plus(taxAmount);
+        console.log(sum.toFormat(2))
         let incomeTaxAuth = parseInt(value, 0);
         if(incomeTaxAuth === 1){
             setFieldsValue({
-                [`list[${record.id}].reduceTaxAmount`]: amount
+                [`list[${record.id}].reduceTaxAmount`]: amount.toFormat(2)
             });
         }
         if(incomeTaxAuth === 0){
             setFieldsValue({
-                [`list[${record.id}].reduceTaxAmount`]: sum
+                [`list[${record.id}].reduceTaxAmount`]: sum.toFormat(2)
             });
         }
     }
