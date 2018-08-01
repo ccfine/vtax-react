@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:14:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-03 15:01:24
+ * @Last Modified time: 2018-08-01 09:53:54
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
@@ -135,6 +135,7 @@ export default class TabPage extends Component{
                         style:{marginTop:"0px"}
                     },
                     pagination:true,
+                    pageSize:100,
                 }}
             >
                 <PopModal
