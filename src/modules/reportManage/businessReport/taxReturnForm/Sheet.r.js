@@ -166,7 +166,7 @@ export default class Sheet extends Component{
                                             readOnly:false,
                                             component:<React.Fragment>
                                                 <NumericInputCell
-                                                    initialValue={di.value==='0' ? '0.00' : fMoney(di.value)}
+                                                    initialValue={di.type !== 'rate' ? di.value==='0' ? '0.00' : fMoney(di.value) : di.value}
                                                     getFieldDecorator={this.props.form.getFieldDecorator}
                                                     fieldName={`map.${di.key}`}
                                                     editAble={true}

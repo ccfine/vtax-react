@@ -83,7 +83,7 @@ class Web extends Component {
             textAlign: 'left',
             textBaseline: 'bottom',
             globalAlpha: 0.17,
-            font: '18px Microsoft Yahei',
+            font: '14px Microsoft Yahei',
             rotateAngle: -0.26,
             fillStyle: '#666'
         }
