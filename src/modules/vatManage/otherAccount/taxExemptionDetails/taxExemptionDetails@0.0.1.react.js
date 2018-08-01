@@ -124,14 +124,17 @@ const getColumns = context=> [
     },{
         title: '金额',
         dataIndex: 'amount',
+        className: "table-money",
         render:text=>fMoney(text),
     },{
         title: '税额',
         dataIndex: 'taxAmount',
+        className: "table-money",
         render:text=>fMoney(text),
     },{
         title: '减免税金额',
         dataIndex: 'reduceTaxAmount',
+        className: "table-money",
         render:text=>fMoney(text),
     },{
         title: '进项税额是否认证抵扣',

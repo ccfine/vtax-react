@@ -35,8 +35,12 @@ const fields = (disabled,declare)=> [
                 span:14
             }
         },
+        componentProps:{
+            //labelInValue:true,
+        },
         fieldDecoratorOptions:{
             initialValue: (disabled && declare.mainId) || undefined,
+            //initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -52,14 +56,15 @@ const searchFields = (disabled,declare) => {
         {
             label: "纳税主体",
             type: "taxMain",
-            fieldName: "mainId",
+            fieldName: "main",
             span: 8,
             componentProps: {
+                labelInValue:true,
                 disabled
             },
             formItemStyle,
             fieldDecoratorOptions: {
-                initialValue: (disabled && declare.mainId) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules: [
                     {
                         required: true,
@@ -131,111 +136,95 @@ const searchFields = (disabled,declare) => {
 const getColumns = (context) => [{
         title: "纳税主体",
         dataIndex: "mainName",
-        width:'10%',
-    },
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目名称</p>
-                <p className="apply-form-list-p2">项目编码</p>
-            </div>
-        ),
-        width:'10%',
-        dataIndex: "projectName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projectNum}</p>
-            </div>
-        )
+        width:'200px',
     },
     {
         title: '发票类型',
         dataIndex: "invoiceType",
-        width:100,
+        width:'100px',
     },
     {
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">发票号码</p>
-            <p className="apply-form-list-p2">发票代码</p>
-        </div>,
+        title: '发票代码',
+        dataIndex: "invoiceCode",
+        width:'150px',
+    },
+    {
+        title: '发票号码',
         dataIndex: "invoiceNum",
-        width:80,
+        width:'150px',
         render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1"><span title='查看详情'
-                    style={{
-                        ...pointerStyle
-                    }}
-                    onClick={() => {
-                        context.setState(
-                            {
-                                modalConfig: {
-                                    type: "view",
-                                    id: record.id
-                                }
-                            },
-                            () => {
-                                context.toggleModalVisible(true);
-                            }
-                        );
-                }}>{text}</span></p>
-                <p className="apply-form-list-p2">{record.invoiceCode}</p>
-            </div>
+            <a title='查看详情'
+               style={{
+                   ...pointerStyle
+               }}
+               onClick={() => {
+                   context.setState(
+                       {
+                           modalConfig: {
+                               type: "view",
+                               id: record.id
+                           }
+                       },
+                       () => {
+                           context.toggleModalVisible(true);
+                       }
+                   );
+               }}>
+                {text}
+            </a>
         )
+    },
+    {
+        title: '备注',
+        dataIndex: 'remark',
+        //width:'500px',
     },
     {
         title: '金额',
         dataIndex: "amount",
         className:'table-money',
-        width:'6%',
+        width:'100px',
         render: (text, record) => fMoney(text)
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">购货单位</p>
-                <p className="apply-form-list-p2">购方税号</p>
-            </div>
-        ),
-        width:'12%',
-        dataIndex: "purchaseName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.purchaseTaxNum}</p>
-            </div>
-        )
-    },
-    {
-        title: "开票日期",
-        dataIndex: "billingDate",
-        width: 75,
+        title: "税率",
+        dataIndex: "taxRate",
+        width:'100px',
+        render: text => text?`${text}%`:text
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
         render: text => fMoney(text),
         className: "table-money",
-        width: '6%',
-    },
-    {
-        title: "税率",
-        dataIndex: "taxRate",
-        width: 40,
-        render: text => text?`${text}%`:text
+        width:'100px',
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
         render: text => fMoney(text),
         className: "table-money",
-        width: '6%',
+        width:'100px',
+    },
+    {
+        title: "开票日期",
+        dataIndex: "billingDate",
+        width:'100px',
+    },
+    {
+        title: '购货单位',
+        dataIndex: "purchaseName",
+        width:'200px',
+    }/*,
+    {
+        title: '购方税号',
+        dataIndex: "purchaseTaxNum",
+        width:'150px',
     },
     {
         title: "数据来源",
         dataIndex: "sourceType",
-        width: 60,
+        width:'100px',
         render: text => {
             text = parseInt(text, 0);
             if (text === 1) {
@@ -246,10 +235,19 @@ const getColumns = (context) => [{
             }
             return text;
         }
-    },{
-        title: '备注',
-        dataIndex: 'remark',
-    }
+    },
+    {
+        title: '项目名称',
+        dataIndex: "projectName",
+        width:'150px',
+    },
+    {
+        title: '项目编码',
+        dataIndex: "projectNum",
+        width:'150px',
+    },
+    */
+
 ]
 
 class SalesInvoiceCollection extends Component {
@@ -330,14 +328,17 @@ class SalesInvoiceCollection extends Component {
     render() {
         const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+        isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields: searchFields(disabled,declare),
                     cardProps: {
-                        className: ""
+                        className: "",
+                        style:{borderTop:0},
                     }
                 }}
                 tableOption={{
@@ -345,14 +346,14 @@ class SalesInvoiceCollection extends Component {
                     pageSize: 100,
                     columns: getColumns(this),
                     url: "/output/invoice/collection/list",
-                    rowSelection:{
-                        type: 'checkbox',
-                    },
-                    onRowSelect:(selectedRowKeys)=>{
+                    // rowSelection:{
+                    //     type: 'checkbox',
+                    // },
+                    onRowSelect:isCheck?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
-                    },
+                    }:undefined,
                     onSuccess: (params) => {
                         this.setState({
                             filters: params
@@ -373,7 +374,7 @@ class SalesInvoiceCollection extends Component {
                                         url:'output/invoice/collection/export',
                                         params:filters,
                                         title:'导出',
-                                        userPermissions:['1061002'],
+                                        userPermissions:['1061007'],
                                     }])
                                 }
                                 {
@@ -436,8 +437,8 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        y:window.screen.availHeight-400,
                         x:1800,
+                        y:window.screen.availHeight-400,
                     },
                     onTotalSource: totalSource => {
                         this.setState({
@@ -454,6 +455,7 @@ class SalesInvoiceCollection extends Component {
                     toggleModalVisible={this.toggleModalVisible}
                 />
             </SearchTable>
+        </div>
         );
     }
 }

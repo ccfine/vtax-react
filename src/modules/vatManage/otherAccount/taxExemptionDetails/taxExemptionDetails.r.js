@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-16 15:58:37
+ * @Last Modified time: 2018-07-27 18:16:28
  *
  */
 import React, { Component } from 'react'
@@ -22,14 +22,15 @@ const pointerStyle = {
 const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
-        fieldName:'mainId',
+        fieldName:'main',
         type:'taxMain',
         span:8,
         componentProps:{
+            labelInValue:true,
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -79,19 +80,21 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                 {text}
             </span>
             ),
+            width:'200px',
         }, {
             title: '减税性质代码',
             dataIndex: 'reduceNum',
-            width:'8%',
+            width:'100px',
         },{
             title: '减税性质名称',
             dataIndex: 'reduceName',
-            width:'20%',
+            width:'200px',
         },{
             title: '期初余额',
             dataIndex: 'initialBalance',
             render:text=>fMoney(text),
-            width:'5%',
+            className:'table-money',
+            width:'100px',
         },{
             title:'本期发生额',
             children:[
@@ -103,14 +106,18 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                         if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].amount`}
-                                    initialValue={text}
+                                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                                     getFieldDecorator={getFieldDecorator}
+                                    componentProps={{
+                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].amount`),
+                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].amount`)
+                                    }}
                                 />
                         }else{
                             return record.amount ? fMoney(parseFloat(text)) : text
                         }
                     },
-                    width:'10%',
+                    width:'150px',
                 },
                 {
                     title:'税额',
@@ -120,14 +127,18 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                         if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].taxAmount`}
-                                    initialValue={text}
+                                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                                     getFieldDecorator={getFieldDecorator}
+                                    componentProps={{
+                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].taxAmount`),
+                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].taxAmount`)
+                                    }}
                                 />
                         }else{
                             return record.taxAmount ? fMoney(parseFloat(text)) : text
                         }
                     },
-                    width:'10%',
+                    width:'150px',
                 },
                 {
                     title:'减免税金额',
@@ -138,17 +149,19 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                         if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].reduceTaxAmount`}
-                                    initialValue={text}
+                                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
-                                        disabled:true
+                                        disabled:true,
+                                        onFocus:(e)=>context.handleFocus(e,`list[${record.id}].reduceTaxAmount`),
+                                        onBlur:(e)=>context.handleBlur(e,`list[${record.id}].reduceTaxAmount`)
                                     }}
                                 />
                         }else{
                             return record.reduceTaxAmount ? fMoney(parseFloat(text)) : text
                         }
                     },
-                    width:'10%',
+                    width:'150px',
                 },
             ]
         },{
@@ -185,12 +198,13 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     return txt
                 }
             },
-            width:'8%',
+            width:'100px',
         },{
             title: '本期应抵减税额',
             dataIndex: 'currentDeductAmount',
             render:text=>fMoney(text),
-            width:'8%',
+            className:'table-money',
+            width:'100px',
         }
     ];
 }
@@ -272,8 +286,16 @@ class TaxExemptionDetails extends Component{
                         )
                     }
                 }
+                const data = nArr.map(item=>{
+                    return {
+                        ...item,
+                        amount:item.amount.replace(/\$\s?|(,*)/g, ''),
+                        reduceTaxAmount:item.reduceTaxAmount.replace(/\$\s?|(,*)/g, ''),
+                        taxAmount:item.taxAmount.replace(/\$\s?|(,*)/g, ''),
+                    }
+                })
                 request.post('/account/other/reduceTaxDetail/save',{
-                    list:nArr,
+                    list:data,
                     mainId:this.state.filters.mainId,
                     taxMonth:this.state.filters.authMonth
                 })
@@ -294,6 +316,35 @@ class TaxExemptionDetails extends Component{
         })
     }
 
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     handleConfirmChange = (value,record) => {
        // 是 -- -减免税金额显示为金额的值  :0 否 1是
        // 否  减免税金额显示为 金额加税额的合计
@@ -351,7 +402,7 @@ class TaxExemptionDetails extends Component{
                     },
                     scroll:{
                         y:window.screen.availHeight-380,
-                        x:1000,
+                        x:1500,
                     },
                     extra: <div>
                         {

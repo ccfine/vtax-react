@@ -2,12 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-23 14:55:12
+ * @Last Modified time: 2018-08-01 22:05:22
  */
 import React, { Component } from "react";
 import {message} from 'antd';
 import { SearchTable} from "compoments";
+import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
+import createSocket from '../socket'
 const searchFields = [
     {
         label: "纳税主体",
@@ -24,6 +26,27 @@ const searchFields = [
         label: "入账月份",
         type: "monthPicker",
         fieldName: "taxMonth"
+    },
+    {
+        label: "取得方式",
+        fieldName: "acquisitionMode",
+        span: 8,
+        type: "select",
+        options: [ //0-外部获取,1-单独新建，2-自建转自用
+            {
+                text: "外部获取",
+                value: "0"
+            },
+            {
+                text: "单独新建",
+                value: "1"
+            },
+            {
+                text: "自建转自用",
+                value: "2"
+            }
+        ]
+
     }
 ];
 /*
@@ -74,6 +97,32 @@ const importFeilds = [
     }
 ];*/
 
+const apiFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
+        },
+    },
+    {
+        label:'抽取月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择抽取月份',
+            }]
+        },
+    },
+]
 const getColumns = context => [
     /*{
         title:'操作',
@@ -101,71 +150,50 @@ const getColumns = context => [
             }
         }]),
         fixed:'left',
-        width:70,
+        width:'70px',
         dataIndex:'action',
         className:'text-center',
     },*/
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">纳税主体名称</p>
-                <p className="apply-form-list-p2">纳税主体代码</p>
-            </div>
-        ),
+        title: "纳税主体名称",
         dataIndex: "taxSubjectName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.taxSubjectNum}</p>
-            </div>
-        )
+        width:'200px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目分期名称</p>
-                <p className="apply-form-list-p2">项目分期代码</p>
-            </div>
-        ),
+        title: "纳税主体代码",
+        dataIndex: "taxSubjectNum",
+        width:'100px',
+    },
+    {
+        title: "项目分期名称",
         dataIndex: "stageName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stageNum}</p>
-            </div>
-        ),
-        width:'12%',
+        width:'200px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">固定资产名称</p>
-                <p className="apply-form-list-p2">固定资产编号</p>
-            </div>
-        ),
+        title: "项目分期代码",
+        dataIndex: "stageNum",
+        width:'100px',
+    },
+    {
+        title: "固定资产名称",
         dataIndex: "assetName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.assetNo}</p>
-            </div>
-        ),
-        width:'12%',
+        width:'200px',
+    },
+    {
+        title: "固定资产编号",
+        dataIndex: "assetNo",
+        width:'100px',
     },
     {
         title: "入账日期",
         dataIndex: "accountDate",
-        width:75,
+        width:'100px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">取得方式</p>
-                <p className="apply-form-list-p2">取得价值</p>
-            </div>
-        ),
+        title: "取得方式",
         dataIndex: "acquisitionMode",
-        render: (text, record) => {
+        width:'100px',
+        render: (text) => {
             // 0-外部获取
             // 1-单独新建
             // 2-自建转自用
@@ -183,84 +211,66 @@ const getColumns = context => [
                 default:
                     break;
             }
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{res}</p>
-                    <p className="apply-form-list-p2">
-                        {fMoney(record.gainValue)}
-                    </p>
-                </div>
-            );
+            return res
         },
-        width:'8%',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">资产类别</p>
-                <p className="apply-form-list-p2">资产状态</p>
-            </div>
-        ),
+        title: "取得价值",
+        dataIndex: "gainValue",
+        width:'100px',
+        render: text => fMoney(text),
+        className: "table-money"
+    },
+    {
+        title: "资产类别",
         dataIndex: "assetType",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.assetsState}</p>
-            </div>
-        ),
-        width:'12%',
+        width:'200px',
+    },
+    {
+        title: "资产状态",
+        dataIndex: "assetsState",
+        width:'100px',
     },
     {
         title: "建筑面积",
         dataIndex: "areaCovered",
-        width:'7%',
+        width:'100px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">购进税额</p>
-                <p className="apply-form-list-p2">购进税率</p>
-            </div>
-        ),
+        title: "购进税额",
         dataIndex: "inTax",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">
-                    {
-                        record.intaxRate? `${record.intaxRate}%`: record.intaxRate
-                    }
-                </p>
-            </div>
-        ),
-        width:'7%',
+        width:'100px',
+        render: text => fMoney(text),
+        className: "table-money"
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">当期抵扣的进项税额</p>
-                <p className="apply-form-list-p2">待抵扣的进项税额</p>
-            </div>
-        ),
+        title: "购进税率",
+        dataIndex: "intaxRate",
+        width:'100px',
+        render: (text) => text ? `${text}%`: text
+    },
+    {
+        title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{fMoney(text)}</p>
-                <p className="apply-form-list-p2">
-                    {fMoney(record.deductedTaxAmount)}
-                </p>
-            </div>
-        ),
-        width:'9%',
+        width:'100px',
+        render: text => fMoney(text),
+        className: "table-money"
+    },
+    {
+        title: "待抵扣的进项税额",
+        dataIndex: "deductedTaxAmount",
+        width:'100px',
+        render: text => fMoney(text),
+        className: "table-money"
     },
     {
         title: "待抵扣期间",
         dataIndex: "deductedPeriod",
-        width:75,
+        width:'100px',
     }
 ];
 
-export default class fixedAssetCard extends Component {
+class fixedAssetCard extends Component {
     state = {
         updateKey: Date.now(),
         filters:{},
@@ -298,30 +308,43 @@ export default class fixedAssetCard extends Component {
                     onSuccess:(filters)=>{
                         this.setState({filters})
                     },
-                    scroll:{ x: 1200,y:window.screen.availHeight-360,},
+                    scroll:{ x: 2170,y:window.screen.availHeight-360,},
                     extra: (
                         <span>
-                            {
+                            {/*
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'fixedAssetCard/report/export',
                                     params:filters,
                                     title:'导出',
-                                    userPermissions:['1871002'],
-                                }/*,{
+                                    userPermissions:['1871007'],
+                                },{
                                     type:'fileImport',
                                     url:'/fixedAssetCard/report/upload',
                                     onSuccess:this.update,
                                     // userPermissions:['1875002'],
                                     fields:importFeilds
-                                }*/])
-                            }
+                                }])
+                            */}
                             {/*
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: 'fixedAssetCard/report/download',
                                 }])
                             */}
+                            {
+                                composeBotton([{
+                                    type:'modal',
+                                    url:'/fixedAssetCard/report/sendApi',
+                                    title:'抽数',
+                                    icon:'usb',
+                                    fields:apiFields,
+                                    userPermissions:['1875001'],
+                                    onSuccess:()=>{
+                                        createSocket(this.props.userid)
+                                    }
+                                }])
+                            }
                         </span>
                     )
                 }}
@@ -329,3 +352,7 @@ export default class fixedAssetCard extends Component {
         );
     }
 }
+
+export default connect(state=>({
+    userid:state.user.getIn(['personal','id'])
+}))(fixedAssetCard)

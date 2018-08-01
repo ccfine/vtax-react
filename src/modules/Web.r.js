@@ -8,7 +8,7 @@ import {Layout} from 'antd'
 import PropTypes from 'prop-types'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
-import {RouteWithSubRoutes} from 'compoments'
+import {RouteWithSubRoutes, WaterMark} from 'compoments'
 import {composeMenus} from 'utils'
 import Header from './header'
 import Sider from './sider'
@@ -16,9 +16,8 @@ import Sider from './sider'
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
 // import getPermission from  './index'
-
+import moment from 'moment';
 const { Content } = Layout;
-
 class Web extends Component {
 
     state = {
@@ -62,6 +61,11 @@ class Web extends Component {
 
     componentWillReceiveProps(nextProps){
         this.checkLoggedIn(nextProps);
+
+        if(nextProps.personal!==this.props.personal){
+            this.setState({refresh: Date.now()})
+            this.props.history.replace('/web');
+        }
     }
 
     // componentDidMount(){
@@ -71,27 +75,47 @@ class Web extends Component {
     render() {
         // const copyright = <div>Copyright <Icon type="copyright" /> 2018 碧桂园增值税纳税申报系统</div>;
         //const pathname = this.props.history.location.pathname;
+        const text = `${this.props.realName}, ${moment().format('YYYY-MM-DD HH:mm')}`;
+        const beginAlarm = function() { console.log('start alarm'); };
+        const options = {
+            //chunkWidth: 200,
+            //chunkHeight: 60,
+            textAlign: 'left',
+            textBaseline: 'bottom',
+            globalAlpha: 0.17,
+            font: '18px Microsoft Yahei',
+            rotateAngle: -0.26,
+            fillStyle: '#666'
+        }
+
         return (
             <Layout>
-                <Sider  key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
-                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}}>
+                <Sider key={this.state.refresh} collapsed={this.state.collapsed} menusData={routes} changeCollapsed={this.changeCollapsed.bind(this)}  />
+                <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}} >
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                    <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
-                        <Switch>
+                    <WaterMark
+                        waterMarkText={text}
+                        openSecurityDefense
+                        securityAlarm={beginAlarm}
+                        options={options}
+                    >
+                        <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
+                            <Switch>
+                                {
+                                    composeMenus(routes).map((route, i) => (
+                                        <RouteWithSubRoutes key={i} {...route}/>
+                                    ))
+                                }
+                                <Route path="*" component={()=><div>no match</div>} />
+                            </Switch>
+                        </Content>
+                        {/* <Footer style={{ textAlign: 'center',padding:'8px 12px'}}>
                             {
-                                composeMenus(routes).map((route, i) => (
-                                    <RouteWithSubRoutes key={i} {...route}/>
-                                ))
+                                copyright
                             }
-                            <Route path="*" component={()=><div>no match</div>} />
-                        </Switch>
-                    </Content>
-                    {/* <Footer style={{ textAlign: 'center',padding:'8px 12px'}}>
-                        {
-                            copyright
-                        }
-                    </Footer> */}
+                        </Footer> */}
+                    </WaterMark>
                 </Layout>
             </Layout>
         )
@@ -99,7 +123,9 @@ class Web extends Component {
 }
 
 export default withRouter(connect(state=>({
+    personal:state.user.get('personal'),
     isAuthed:state.user.get('isAuthed'),
+    realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))

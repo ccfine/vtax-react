@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 19:15:41
+ * @Last Modified time: 2018-07-26 12:24:45
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux';
@@ -18,13 +18,13 @@ const getFields = (disabled,declare) => [
         label: "纳税主体",
         type: "taxMain",
         span:8,
-        fieldName: "mainId",
+        fieldName: "main",
         componentProps: {
+            labelInValue:true,
             disabled
         },
         fieldDecoratorOptions: {
-            initialValue:
-                (disabled && declare["mainId"]) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules: [
                 {
                     required: true,
@@ -75,7 +75,7 @@ const getColumns = (context,isEdit) => {
             if(isEdit){
                 return <NumericInputCell
                 fieldName={`outTaxAmount[${index}]`}
-                initialValue={text}
+                initialValue={text==='0' ? '0.00' : text}
                 getFieldDecorator={context.props.form.getFieldDecorator} />
             }else{
                 return fMoney(text);
@@ -152,7 +152,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         let { filters, statusParam } = this.state;
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (
-            <div>
+            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     tableOption={{
@@ -183,6 +183,15 @@ class OtherBusinessInputTaxRollOut extends Component {
                                 <div>
                                     {listMainResultStatus(statusParam)}
                                     {
+                                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                                            type:'fileExport',
+                                            url:'account/income/taxout/export',
+                                            params:filters,
+                                            title:'导出',
+                                            userPermissions:['1401007'],
+                                        }])
+                                    }
+                                    {
                                          (disabled && declare.decAction==='edit' && noSubmit) && composeBotton([{
                                             type:'save',
                                             text:'保存',
@@ -200,6 +209,12 @@ class OtherBusinessInputTaxRollOut extends Component {
                                             params:filters,
                                             userPermissions:['1401010'],
                                             onSuccess:this.refreshTable
+                                        },{
+                                            type:'reset',
+                                            url:'/account/income/taxout/reset',
+                                            params:filters,
+                                            userPermissions:['1401009'],
+                                            onSuccess:this.refreshTable,
                                         },{
                                             type:'revoke',
                                             // monthFieldName:"authMonth",

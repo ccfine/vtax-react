@@ -27,14 +27,15 @@ const searchFields=(disabled,declare)=> {
         {
             label:'纳税主体',
             type:'taxMain',
-            fieldName:'mainId',
+            fieldName:'main',
             span:8,
             componentProps:{
+                labelInValue:true,
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare.mainId) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -117,29 +118,29 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
-        width:'12%',
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">项目分期名称</p>
-            <p className="apply-form-list-p2">项目分期代码</p>
-        </div>,
+        width:'150px',
+    },
+    {
+        title: '项目分期名称',
         dataIndex: 'stagesName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stagesNum}</p>
-            </div>
-        ),
-        width:'12%',
-    },{
+        width:'150px',
+    },
+    {
+        title: '项目分期代码',
+        dataIndex: 'stagesNum',
+        width:'150px',
+    },
+    {
         title: '凭证日期',
         dataIndex: 'voucherDate',
-        width:75,
-    },{
+        width:'100px',
+    },
+    /*{
         title: '凭证类型',
         dataIndex: 'voucherType',
         width:'6%',
-    },{
+    },*/
+    {
         title: '凭证号',
         dataIndex: 'voucherNum',
         render:(text,record)=>(
@@ -155,59 +156,58 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 {text}
             </span>
         ),
-        width:'6%',
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">借方科目名称</p>
-            <p className="apply-form-list-p2">借方科目代码</p>
-        </div>,
+        width:'100px',
+    },
+    {
+        title: '凭证摘要',
+        dataIndex: 'voucherAbstract',
+        //width:'300px',
+    },
+    {
+        title: '借方科目名称',
         dataIndex: 'debitSubjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
-            </div>
-        ),
-        width:'12%',
-    },{
+        width:'100px',
+    },
+    {
+        title: '借方科目代码',
+        dataIndex: 'debitSubjectCode',
+        width:'100px',
+    },
+    {
         title: '借方金额',
         dataIndex: 'debitAmount',
         className: "table-money",
         render:(text,record)=>{
-            if(disabled){
-                return record.debitAmount ? fMoney(parseFloat(text)) : text
-            }else{
-                return ((context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1) && parseInt(record.deductionFlag, 0) === 1) ?
-                    <NumericInputCell
+            if(!disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 10) === 1 && parseInt(record.deductionFlag, 10) === 1){
+                   return <NumericInputCell
                         fieldName={`debitAmount_${record.id}`}
-                        initialValue={text}
+                        initialValue={text==='0' ? '0.00' : text}
                         getFieldDecorator={getFieldDecorator}
                         editAble={disabled}
                         componentProps={{
                             onBlur:(e)=>context.handleConfirmBlur(e,record)
                         }}
-
-                    /> : text
+                    /> 
+            }else{
+                return fMoney(text)
             }
         },
-        width:'6%',
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">借方辅助核算名称</p>
-            <p className="apply-form-list-p2">借方辅助核算代码</p>
-        </div>,
+        width:'100px',
+    },
+    {
+        title: '借方辅助核算名称',
         dataIndex: 'debitProjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.debitProjectNum}</p>
-            </div>
-        ),
-        width:'12%',
-    },{
+        width:'150px',
+    },
+    {
+        title: '借方辅助核算代码',
+        dataIndex: 'debitProjectNum',
+        width:'150px',
+    },
+    {
         title: '作为土地价款抵扣的凭证',
         dataIndex: 'deductionFlag',
-        width:80,
+        width:'150px',
         render: text => {
             //1-标记;0-无标记；不传则所有状态
             let t = '';
@@ -223,9 +223,6 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             }
             return t
         }
-    },{
-        title: '凭证摘要',
-        dataIndex: 'voucherAbstract',
     }
 ];
 class LandPriceManage extends Component{
@@ -298,6 +295,7 @@ class LandPriceManage extends Component{
         let disabled = !!declare;
         const {getFieldDecorator} = this.props.form;
         return(
+            <div className='oneLine'>
             <SearchTable
                 spinning={searchTableLoading}
                 doNotFetchDidMount={!disabled}
@@ -389,7 +387,7 @@ class LandPriceManage extends Component{
                         })
                     },
                     scroll:{
-                         x:1600,
+                         x:2000,
                          y:window.screen.availHeight-400,
                     },
                 }}
@@ -400,6 +398,7 @@ class LandPriceManage extends Component{
                     {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
+            </div>
         )
     }
 }

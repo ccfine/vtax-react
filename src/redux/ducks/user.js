@@ -29,8 +29,8 @@ const initialState = fromJS({
         isEnabled:'' ,// 是否可用,1:可用 2:禁用 3:删除
         lastModifiedBy:'' ,// 修改人
         lastModifiedDate:'' ,// 修改时间
-        orgId:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
-        orgIds:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
+        org:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
+        orgs:'' ,// 所属组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）
         password:'' ,// 用户密码
         remark:'' ,// 备注
         token:'' ,// 用户身份令牌
@@ -44,10 +44,10 @@ const initialState = fromJS({
         username:null ,// 用户名
     },*/
     /**组织代码 - 当前组织列表（登录帐号类型为系统管理员时必填否则不填，后台会默认当前组织）*/
-    orgId:null,
+    org:null,
 
     /**区域 */
-    areaId:null,
+    area:null,
 
     /**
      * 登录方式
@@ -66,7 +66,7 @@ const initialState = fromJS({
 
 });
 
-export const {personal, token, isAuthed, orgId, areaId, loginType, declare, options} = createActions({
+export const {personal, token, isAuthed, org, area, loginType, declare, options} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -81,10 +81,10 @@ export const {personal, token, isAuthed, orgId, areaId, loginType, declare, opti
         /**退出*/
         LOGOUT:() => false
     },
-    ORG_ID:{
+    ORG:{
         INCREMENT: info => info
     },
-    AREA_ID:{
+    AREA:{
         INCREMENT: info => info
     },
     LOGIN_TYPE:{
@@ -112,13 +112,14 @@ export default handleActions({
         return state.set('isAuthed', payload)
     },
     [isAuthed.logout] : state=>{
+        localStorage.clear();
         return initialState
     },
-    [orgId.increment] : (state, {payload})=>{
-        return state.set('orgId', payload)
+    [org.increment] : (state, {payload})=>{
+        return state.set('org', payload)
     },
-    [areaId.increment] : (state, {payload})=>{
-        return state.set('areaId', payload)
+    [area.increment] : (state, {payload})=>{
+        return state.set('area', payload)
     },
     [loginType.increment]:(state,{payload})=>{
         return state.set('loginType',payload)
@@ -136,16 +137,15 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
             password
         }).then(res=>{
             request.testSuccess(res.data,data=>{
-                console.log(data);
                 //判断是否是管理员 and 是否有权限 没有就跳转到403页面
-                if(data.type !== 8192 && data.options<1){
+                /*if(data.type !== 8192 && data.options<1){
                     window.location.href="/403";
-                }else {
+                }else {*/
                     dispatch(token.increment(data.token))
                     //获取组织信息
-                    dispatch(orgId.increment(data.orgId))
+                    dispatch(org.increment({orgId:data.orgId,orgName:data.orgName}))
                     // 获取区域
-                    dispatch(areaId.increment(data.areaId))
+                    dispatch(area.increment({areaId:data.areaId,areaName:data.areaName}))
                     //获取用户信息
                     dispatch(personal.increment(data))
                     //用户信息获取成功的话
@@ -153,7 +153,7 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                     dispatch(isAuthed.login())
                     //执行登录成功回调
                     success && success()
-                }
+                //}
             },err=>{
                 fail && fail(err)
             })
@@ -168,14 +168,26 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
             await request.post('/oauth/loginName',{userName:userName})
                 .then(res=>{
                     request.testSuccess(res.data,data=>{
-                        dispatch(token.increment(data.token))
-                        //获取组织信息
-                        dispatch(orgId.increment(data.orgId))
-                        // 获取区域
-                        dispatch(areaId.increment(data.areaId))
-                        //获取用户信息
-                        dispatch(personal.increment(data))
+                        //判断是否是管理员 and 是否有权限 没有就跳转到403页面
+                        /*if(data.type !== 8192 && data.options<1){
+                            window.location.href="/403";
+                        }else {*/
+                            dispatch(token.increment(data.token))
+                            //获取组织信息
+                            dispatch(org.increment({orgId:data.orgId,orgName:data.orgName}))
+                            // 获取区域
+                            dispatch(area.increment({areaId:data.areaId,areaName:data.areaName}))
+                            //获取用户信息
+                            dispatch(personal.increment(data))
 
+                            //所有信息获取完毕后，设置登录方式
+                            dispatch(loginType.increment(type))
+                            //用户信息获取成功的话
+                            //所需信息全部加载完毕，完成登录
+                            dispatch(isAuthed.login())
+                            //执行登录成功回调
+                            success && success()
+                        //}
                     },err=>{
                         fail && fail(err)
                         console.log(`用户信息获取失败:${err}`)
@@ -183,15 +195,6 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
                 }).catch(err=>{
                     fail && fail(err.message)
                 })
-
-            //所有信息获取完毕后，设置登录方式
-            dispatch(loginType.increment(type))
-            //用户信息获取成功的话
-            //所需信息全部加载完毕，完成登录
-            dispatch(isAuthed.login())
-            //执行登录成功回调
-            success && success()
-
         }
 
     }catch(err) {
@@ -204,18 +207,18 @@ export const logout = dispatch => async () =>{
     dispatch(isAuthed.logout())
 }
 
-export const saveOrgId = dispatch => async (id) =>{
+export const saveOrg = dispatch => async (data) =>{
     try {
-        dispatch(orgId.increment(id))
+        dispatch(org.increment(data))
     }catch (err){
         console.log(err)
     }
 }
 
 
-export const saveAreaId = dispatch => async (id) =>{
+export const saveArea = dispatch => async (data) =>{
     try {
-        dispatch(areaId.increment(id))
+        dispatch(area.increment(data))
     }catch (err){
         console.log(err)
     }

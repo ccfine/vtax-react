@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-/*import {message} from 'antd'*/
+import {message} from 'antd'
 import {getUrlParam} from 'utils'
 import {connect} from 'react-redux'
 import {login} from '../../redux/ducks/user'
@@ -22,7 +22,7 @@ class LoginWithURL extends Component{
                 this.props.history.push('/web')
             },
             fail:err=>{
-                //message.error(err)
+                message.error(err)
             },
         })
     }
@@ -46,7 +46,7 @@ class LoginWithURL extends Component{
     render(){
         return(
             <div>
-                loginWithUrl-跳转登录
+                {/*loginWithUrl-跳转登录*/}
             </div>
         )
     }

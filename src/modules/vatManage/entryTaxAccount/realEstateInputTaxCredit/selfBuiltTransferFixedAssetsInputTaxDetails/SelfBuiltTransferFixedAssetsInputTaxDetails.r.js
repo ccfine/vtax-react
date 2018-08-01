@@ -71,27 +71,39 @@ const columns = context =>[
         children:[{
             title: '金额',
             dataIndex: 'initialAmount',
+            render: text => fMoney(text),
+            className: "table-money"
         },{
             title: '税额',
             dataIndex: 'initialTaxAmount',
+            render: text => fMoney(text),
+            className: "table-money"
         }]
     },{
         title: '本期',
         children:[{
             title: '金额',
             dataIndex: 'currentAmount',
+            render: text => fMoney(text),
+            className: "table-money",
         },{
             title: '税额',
             dataIndex: 'currentTaxAmount',
+            render: text => fMoney(text),
+            className: "table-money"
         }]
     },{
         title: '累计',
         children:[{
             title: '金额',
             dataIndex: 'countAmount',
+            render: text => fMoney(text),
+            className: "table-money"
         },{
             title: '税额',
             dataIndex: 'countTaxAmount',
+            render: text => fMoney(text),
+            className: "table-money"
         }]
     },{
         title: '综合税率',

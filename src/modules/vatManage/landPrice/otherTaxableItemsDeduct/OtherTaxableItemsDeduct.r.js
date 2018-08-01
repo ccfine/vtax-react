@@ -9,14 +9,15 @@ import moment from 'moment';
 const searchFields =(disabled,declare)=> [
     {
         label:'纳税主体',
-        fieldName:'mainId',
+        fieldName:'main',
         type:'taxMain',
         span:8,
         componentProps:{
+            labelInValue:true,
             disabled
         },
         fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -75,36 +76,43 @@ const columns = [{
     title: '价税合计 ',
     dataIndex: 'totalAmount',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 },{
     title: '期初余额',
     dataIndex: 'initialBalance',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 },{
     title: '本期发生额',
     dataIndex: 'currentAmount',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 },{
     title: '本期应扣除金额',
     dataIndex: 'currentDeductAmount',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 },{
     title: '本期实际扣除金额',
     dataIndex: 'actualDeductAmount',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 },{
     title: '期末余额',
     dataIndex: 'endingBalance',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 },{
     title: '销项税额',
     dataIndex: 'outputTax',
     render:text=>fMoney(text),
+    className:'table-money',
     width:'8%',
 }];
 // 总计数据结构，用于传递至TableTotal中
@@ -183,7 +191,10 @@ class tab1 extends Component{
                         key:updateKey,
                         pagination:true,
                         size:'small',
-                        scroll:{x:1200,y:window.screen.availHeight-380},
+                        scroll:{
+                            x:1200,
+                            y:window.screen.availHeight-380
+                        },
                         columns:columns,
                         cardProps:{
                             title:'其他应税项目扣除台账'
@@ -192,6 +203,15 @@ class tab1 extends Component{
                         extra: <div>
                             {
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/othertax/deducted/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1271007'],
+                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{

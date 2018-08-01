@@ -2,14 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-10 16:12:27
+ * @Last Modified time: 2018-07-27 17:23:55
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router'
 import { Divider, Modal, message } from "antd";
-import { request,composeBotton,getUrlParam } from "utils";
+import { request,composeBotton } from "utils";
 import { SearchTable } from "compoments";
 import PopModal, { RoleModal, PermissionModal,SimplePermissionModal } from "./popModal";
 const pointerStyleDelete = {
@@ -17,19 +17,10 @@ const pointerStyleDelete = {
     color:'red',
     marginRight:10
 }
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        if(typeof data[key] !== 'undefined'){
-            str += `${key}=${data[key]}&`
-        }
-    }
-    return str;
-}
-const getSearchFields = context => [
+const getSearchFields = (context,params) => [
     {
         label: "组织",
-        fieldName: "orgId",
+        fieldName: "org",
         type: "asyncSelect",
         span: 8,
         componentProps: {
@@ -37,13 +28,14 @@ const getSearchFields = context => [
             fieldValueName: "id",
             url: `/sysOrganization/getOrganizations`,
             selectOptions:{
+                labelInValue:true,
                 showSearch:true,
                 // filterOption:false,
                 optionFilterProp:'children',
             },
         },
         fieldDecoratorOptions: {
-            initialValue:  getUrlParam('orgId')==='' ? '' : getUrlParam('orgId') || context.props.orgId
+            initialValue:  (JSON.stringify(params) !== "{}"  && {key: params.orgId === '' ? '' : params.orgId,label: ''} ) || (context.props.org && {key: context.props.org.orgId,label: context.props.org.orgName}),
         }
     },
     {
@@ -52,7 +44,7 @@ const getSearchFields = context => [
         span: 8,
         fieldName: "username",
         fieldDecoratorOptions: {
-            initialValue: getUrlParam('username') || undefined,
+            initialValue: (params && params.username) ? params.username : undefined,
         }
     },
     {
@@ -61,7 +53,7 @@ const getSearchFields = context => [
         span: 8,
         fieldName: "realname",
         fieldDecoratorOptions: {
-            initialValue: getUrlParam('realname') || undefined,
+            initialValue:  (params && params.realname) ? params.realname : undefined,
         }
     }
 ];
@@ -161,8 +153,7 @@ const getColumns = context => [
                     }
                 </span>
             );
-        },
-        width: 220
+        }
     },
     {
         title: "用户名",
@@ -173,62 +164,68 @@ const getColumns = context => [
                     title="查看详情"
                     to={{
                         pathname: `/web/systemManage/userPermissions/userManage/${record.id}`,
-                        search:parseJsonToParams(context.state.searchValues),
+                        state:{
+                            ...context.state.searchValues
+                        }
                     }}
                 >
                     {text}
                 </Link>
             )
         },
-        width:'10%',
+        width:'15%',
     },
     {
         title: "姓名",
         dataIndex: "realname",
-        width:'8%',
+        width:'15%',
     },
     {
         title: "手机",
         dataIndex: "phoneNumber",
-        width:'10%',
+        width:'20%',
     },
     {
         title: "邮箱",
         dataIndex: "email",
-        width:'14%',
-    },
+        width:'20%',
+    }/*,
     {
         title: "角色",
         dataIndex: "roleNames",
-    }
+    }*/
 ];
 
 class UserManage extends Component {
-    state = {
-        updateKey: Date.now(),
+    constructor(props) {
+        super(props)
+        this.state = {
+            updateKey: Date.now(),
 
-        createUserKey: Date.now() + 1,
-        createUserVisible: false,
-        createModalType: "create",
-        createUserDefault: undefined,
-        createUserLoading:false,
+            createUserKey: Date.now() + 1,
+            createUserVisible: false,
+            createModalType: "create",
+            createUserDefault: undefined,
+            createUserLoading: false,
 
-        roleModalVisible: false,
-        roleModalKey: Date.now() + 2,
-        //roleModalDefault: undefined,
-        roleAssignUserId: undefined,
-        //roleLoading:false,
+            roleModalVisible: false,
+            roleModalKey: Date.now() + 2,
+            //roleModalDefault: undefined,
+            roleAssignUserId: undefined,
+            //roleLoading:false,
 
-        permissionVisible: false,
-        permissionKey: Date.now() + 3,
-        permissionId: undefined,
-        
-        simplePermissionVisible: false,
-        simplePermissionKey: Date.now() + 4,
-        simplePermissionId: undefined,
+            permissionVisible: false,
+            permissionKey: Date.now() + 3,
+            permissionId: undefined,
 
-        searchValues: undefined
-    };
+            simplePermissionVisible: false,
+            simplePermissionKey: Date.now() + 4,
+            simplePermissionId: undefined,
+
+            searchValues: undefined,
+            params: {...props.location.state},
+        }
+    }
     async fetchUser(url) {
         return await request
             .get(url)
@@ -331,134 +328,156 @@ class UserManage extends Component {
         });
     };
     handleAdmin = (id,isAdmin) => {
-        request
-        .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
-        .then(({ data }) => {
-            if (data.code === 200) {
-                message.success(isAdmin?"移除成功!":'添加成功!');
-                this.refreshTable();
-            } else {
-                message.error(data.msg, 4);
+        const modalRef = Modal.confirm({
+            title: "友情提醒",
+            content: `是否确认${isAdmin?'从管理员中移除':'添加为管理员'}？`,
+            okText: "确定",
+            okType: "danger",
+            cancelText: "取消",
+            onOk: () => {
+                request
+                .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
+                .then(({ data }) => {
+                    if (data.code === 200) {
+                        message.success(isAdmin?"移除成功!":'添加成功!');
+                        this.refreshTable();
+                    } else {
+                        message.error(data.msg, 4);
+                    }
+                })
+                .catch(e => {
+                    message.error(e.message, 4);
+                });
+            },
+            onCancel() {
+                modalRef.destroy();
             }
-        })
-        .catch(e => {
-            message.error(e.message, 4);
         });
     };
     render() {
+        const {  params } = this.state
         return (
-            <SearchTable
-                searchOption={{
-                    fields: getSearchFields(this)
-                }}
-                doNotFetchDidMount={false}
-                backCondition={values => {
-                    this.setState({
-                        searchValues: values
-                    });
-                }}
-                tableOption={{
-                    key: this.state.updateKey,
-                    pageSize: 100,
-                    columns: getColumns(this),
-                    url: "/sysUser/list",
-                    scroll:{x:1000,y:window.screen.availHeight-370},
-                    cardProps: {
-                        title: "用户管理",
-                        extra: (
-                            <div>
-                                {
-                                    composeBotton([{
-                                        type:'add',
-                                        icon:'plus',
-                                        onClick:()=>{
-                                            this.setState({
-                                                createUserVisible: true,
-                                                createModalType: "create",
-                                                createUserDefault: undefined
-                                            });
-                                        }
-                                    }])
+            <div className="oneLine">
+                <SearchTable
+                    searchOption={{
+                        fields: getSearchFields(this,params),
+                        onResetFields:()=>{
+                            this.setState({
+                                params: {
+                                    orgId:''
                                 }
-                            </div>
-                        )
-                    }
-                }}
-            >
-                <PopModal
-                    defaultFields={this.state.createUserDefault}
-                    toggleModalVisible={visible => {
+                            })
+                        },
+                    }}
+                    doNotFetchDidMount={false}
+                    backCondition={values => {
                         this.setState({
-                            createUserVisible: visible,
-                            createUserKey: Date.now()
+                            searchValues: values
                         });
                     }}
-                    modalType={this.state.createModalType}
-                    refreshTable={this.refreshTable}
-                    visible={this.state.createUserVisible}
-                    loading={this.state.createUserLoading}
-                />
-                <RoleModal
-                    userId={this.state.roleAssignUserId}
-                    orgId={
-                        this.state.searchValues &&
-                        this.state.searchValues["orgId"]
-                    }
-                    // defaultFields={this.state.roleModalDefault}
-                    toggleModalVisible={visible => {
-                        this.setState({
-                            roleModalVisible: visible,
-                            roleModalKey: Date.now()
-                        });
+                    tableOption={{
+                        key: this.state.updateKey,
+                        pageSize: 100,
+                        columns: getColumns(this),
+                        url: "/sysUser/list",
+                        scroll:{x:1000,y:window.screen.availHeight-370},
+                        cardProps: {
+                            title: "用户管理",
+                            extra: (
+                                <div>
+                                    {
+                                        composeBotton([{
+                                            type:'add',
+                                            icon:'plus',
+                                            onClick:()=>{
+                                                this.setState({
+                                                    createUserVisible: true,
+                                                    createModalType: "create",
+                                                    createUserDefault: undefined
+                                                });
+                                            }
+                                        }])
+                                    }
+                                </div>
+                            )
+                        }
                     }}
-                    refreshTable={this.refreshTable}
-                    visible={this.state.roleModalVisible}
-                    updateKey={this.state.roleModalKey}
-                    // loading={this.state.roleLoading}
-                />
-                <SimplePermissionModal
-                    userId={this.state.permissionUserId}
-                    orgId={
-                        this.state.searchValues &&
-                        this.state.searchValues["orgId"]
-                    }
-                    updateKey={this.state.simplePermissionKey}
-                    visible={this.state.simplePermissionVisible}
-                    toggleModalVisible={visible => {
-                        this.setState({
-                            simplePermissionVisible: visible,
-                            simplePermissionKey: Date.now()
-                        });
-                    }}
-                    togglePermissionModalVisible={visible => {
-                        this.setState({
-                            permissionVisible: visible,
-                            permissionKey: Date.now()
-                        });
-                    }}
+                >
+                    <PopModal
+                        defaultFields={this.state.createUserDefault}
+                        toggleModalVisible={visible => {
+                            this.setState({
+                                createUserVisible: visible,
+                                createUserKey: Date.now()
+                            });
+                        }}
+                        modalType={this.state.createModalType}
+                        refreshTable={this.refreshTable}
+                        visible={this.state.createUserVisible}
+                        loading={this.state.createUserLoading}
                     />
-                <PermissionModal
-                    userId={this.state.permissionUserId}
-                    orgId={
-                        this.state.searchValues &&
-                        this.state.searchValues["orgId"]
-                    }
-                    toggleModalVisible={visible => {
-                        this.setState({
-                            permissionVisible: visible,
-                            permissionKey: Date.now(),
-                            simplePermissionKey:Date.now(),
-                        });
-                    }}
-                    updateKey={this.state.permissionKey}
-                    visible={this.state.permissionVisible}
-                    editAble={true}
-                />
-            </SearchTable>
+                    <RoleModal
+                        userId={this.state.roleAssignUserId}
+                        orgId={
+                            this.state.searchValues &&
+                            this.state.searchValues["orgId"]
+                        }
+                        // defaultFields={this.state.roleModalDefault}
+                        toggleModalVisible={visible => {
+                            this.setState({
+                                roleModalVisible: visible,
+                                roleModalKey: Date.now()
+                            });
+                        }}
+                        refreshTable={this.refreshTable}
+                        visible={this.state.roleModalVisible}
+                        updateKey={this.state.roleModalKey}
+                        // loading={this.state.roleLoading}
+                    />
+                    <SimplePermissionModal
+                        userId={this.state.permissionUserId}
+                        orgId={
+                            this.state.searchValues &&
+                            this.state.searchValues["orgId"]
+                        }
+                        updateKey={this.state.simplePermissionKey}
+                        visible={this.state.simplePermissionVisible}
+                        toggleModalVisible={visible => {
+                            this.setState({
+                                simplePermissionVisible: visible,
+                                simplePermissionKey: Date.now()
+                            });
+                        }}
+                        togglePermissionModalVisible={visible => {
+                            this.setState({
+                                permissionVisible: visible,
+                                permissionKey: Date.now()
+                            });
+                        }}
+                        />
+                    <PermissionModal
+                        userId={this.state.permissionUserId}
+                        orgId={
+                            this.state.searchValues &&
+                            this.state.searchValues["orgId"]
+                        }
+                        toggleModalVisible={visible => {
+                            this.setState({
+                                permissionVisible: visible,
+                                permissionKey: Date.now(),
+                                simplePermissionKey:Date.now(),
+                            });
+                        }}
+                        updateKey={this.state.permissionKey}
+                        visible={this.state.permissionVisible}
+                        editAble={true}
+                    />
+                </SearchTable>
+            </div>
         );
     }
 }
 
 export default withRouter(connect(state => ({
-    orgId: state.user.get("orgId")
+    org: state.user.get("org")
 }))(UserManage));

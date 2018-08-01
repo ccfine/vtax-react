@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/8.
  */
 import React,{Component} from 'react';
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 import {Button,Modal,Form,Row,Col,Spin,message,Transfer } from 'antd';
 import {request} from 'utils'
 class PopModal extends Component{
@@ -17,9 +17,9 @@ class PopModal extends Component{
     }
 
     handleSubmit = () => {
-        if(this.state.targetKeys.length < 1) {
+        /*if(this.state.targetKeys.length < 1) {
             return message.success('请选择要分配的用户!');
-        }
+        }*/
         let params = {
             userIds:this.state.targetKeys,
             id:this.props.id,
@@ -69,9 +69,9 @@ class PopModal extends Component{
             })
     }
 
-    fetchRoleId=(roleId)=>{
+    fetchRoleId=(roleId,orgId)=>{
         const targetKeys = [];
-        request.get(`/sysRole/queryUserByRoleId/${roleId}`)
+        request.get(`/sysRole/queryUserByRoleId/${roleId}/${orgId}`)
             .then(({data})=>{
                 this.toggleLoaded(false)
                 if(data.code===200){
@@ -112,7 +112,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible){
             this.fetchList(nextProps.orgId)
-            this.fetchRoleId(nextProps.id)
+            this.fetchRoleId(nextProps.id,nextProps.orgId)
         }
     }
     render(){
@@ -150,7 +150,7 @@ class PopModal extends Component{
                         margin: '0 auto'
                     }}>
                         <Transfer
-                            //rowKey={record => record.key}
+                            rowKey={record => record.key}
                             listStyle={{
                                 width: 280,
                                 height: 400,
@@ -170,6 +170,6 @@ class PopModal extends Component{
     }
 }
 
-export default connect(state=>({
-    orgId: state.user.get("orgId")
-}))(Form.create()(PopModal))
+export default Form.create()(PopModal);/*connect(state=>({
+    org: state.user.get("org")
+}))(Form.create()(PopModal))*/

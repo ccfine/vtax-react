@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-06-21 23:40:20 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-29 19:57:44
+ * @Last Modified time: 2018-07-31 16:46:52
  */
 import React from 'react'
 import {Tree,Input} from 'antd'
@@ -34,6 +34,9 @@ export default class SearchTree extends React.Component{
        super(props);
        this.getFilterKeys_ = debounce(this.getFilterKeys_,300)
      }
+     static defaultProps={
+        onlyCheckLeaf:false
+     }
      state={
       checkedKeys:[],
       searchValue:undefined,
@@ -50,8 +53,12 @@ export default class SearchTree extends React.Component{
      onCheck=(checkedKeys,e)=>{
         this.setState({checkedKeys:checkedKeys})
         // 过滤掉非叶子节点
-        this.props.onChange && this.props.onChange(checkedKeys)//e.checkedNodes.filter(ele=>!(ele.props.children && ele.props.children.length>0)).map(ele=>ele.key))
-     }
+        if(this.props.onlyCheckLeaf){
+          this.props.onChange && this.props.onChange(e.checkedNodes.filter(ele=>!(ele.props.children && ele.props.children.length>0)).map(ele=>ele.key));
+        }else{
+          this.props.onChange && this.props.onChange(checkedKeys)
+        }
+      }
      getFilterKeys_=(searchValue)=>{
         const {treeData=[]} = this.props;
         this.setState({

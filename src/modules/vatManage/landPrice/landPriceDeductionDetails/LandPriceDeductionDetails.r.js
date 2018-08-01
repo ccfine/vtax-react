@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-19 11:16:28
+ * @Last Modified time: 2018-07-25 16:12:49
  */
 import React from 'react'
 import {connect} from 'react-redux'
@@ -27,15 +27,16 @@ const searchFields = (disabled,declare) => getFieldValue => {
     return [
         {
             label: '纳税主体',
-            fieldName: 'mainId',
+            fieldName: 'main',
             type: 'taxMain',
             span: 8,
             formItemStyle,
             componentProps: {
+                labelInValue:true,
                 disabled
             },
             fieldDecoratorOptions: {
-                initialValue: (disabled && declare.mainId) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules: [
                     {
                         required: true,
@@ -76,8 +77,8 @@ const searchFields = (disabled,declare) => getFieldValue => {
                 fieldTextName: 'itemName',
                 fieldValueName: 'id',
                 doNotFetchDidMount: true,
-                fetchAble: getFieldValue('mainId') || false,
-                url: `/project/list/${getFieldValue('mainId')}`
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url: `/project/list/${getFieldValue('main') && getFieldValue('main').key}`
             }
         },
         {
@@ -133,108 +134,108 @@ const columns = [
 	{
 		title: '纳税主体',
         dataIndex: 'mainName',
-        width:'11%',
+        width:'200px',
 	},
 	{
 		title: '项目分期名称',
 		dataIndex: 'stagesName',
-        width:'11%',
+        width:'200px',
 	},
 	{
 		title: '期初可抵扣土地价款',
 		dataIndex: 'initialDeductibleLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'6%',
+        width:'150px',
 	},
 	{
 		title: '分期可售建筑面积',
         dataIndex: 'upAreaSale',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '期初销售建筑面积',
 		dataIndex: 'saleArea',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '未销售建筑面积',
 		dataIndex: 'unSaleArea',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '项目分期抵扣的土地价款',
 		dataIndex: 'deductibleLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'6%',
+        width:'200px',
 	},
 	{
 		title: '期初扣除土地价款',
 		dataIndex: 'actualDeductibleLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
+        width:'150px',
 	},
 	{
 		title: '未抵扣土地价款',
 		dataIndex: 'unDeductedLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '土地单方成本',
 		dataIndex: 'singleLandCost',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '当期销售建筑面积',
 		dataIndex: 'salesBuildingArea',
-        width:'5%',
+        width:'150px',
 	},
 	{
 		title: '当期应扣除土地价款',
 		dataIndex: 'deductPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'6%',
+        width:'150px',
 	},
 	{
 		title: '收入确认金额',
 		dataIndex: 'price',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '税率',
 		dataIndex: 'taxRate',
         render: text => text && `${text}%`,
-        width:50,
+        width:'100px',
 	},
 	{
 		title: '税额',
 		dataIndex: 'taxAmount',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '价税合计',
 		dataIndex: 'totalAmount',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'5%',
+        width:'100px',
 	},
 	{
 		title: '当期实际扣除土地价款',
 		dataIndex: 'actualDeductPrice',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'6%',
+        width:'200px',
 	}
 ]
 class DeductProjectSummary extends React.Component {
@@ -266,9 +267,9 @@ class DeductProjectSummary extends React.Component {
     }
     fetchIsFinish=()=>{
         request.get('/account/landPrice/deductedDetails/loadFinishCount',{params:this.state.filters}).then(({data})=>{
-            if(data.code===200 && data.data >0){
+            if(data.code===200){// && data.data >0
                 this.setState({
-                    canFinish:true
+                    canFinish:data.data>0
                 })
             }
         })
@@ -305,13 +306,22 @@ class DeductProjectSummary extends React.Component {
                         })
                     },
                     scroll:{
-                        x:2000,
+                        x:2400,
                         y:window.screen.availHeight-400,
                     },
 					extra: (
 						<div>
 							{
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(filters)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/landPrice/deductedDetails/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1261007'],
+                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') && canFinish && composeBotton([{
@@ -325,7 +335,7 @@ class DeductProjectSummary extends React.Component {
                                     }
                                 }],statusParam)
                             }
-                            <PopModal visible={visible} filters={filters} toggleModalVisible={this.toggleModalVisible}/>
+                            <PopModal visible={visible} filters={filters} toggleModalVisible={this.toggleModalVisible} refreshTable={this.refreshTable}/>
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                     type:'reset',

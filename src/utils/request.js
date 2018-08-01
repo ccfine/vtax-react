@@ -25,6 +25,7 @@ request.testSuccess = (data,success,fail) => {
     }else{
         console.log(data.msg);
         fail && fail(data.msg)
+        return message.error(`${data.msg}`,4)
     }
 };
 request.interceptors.request.use(function (config) {
@@ -139,7 +140,7 @@ request.interceptors.response.use(function (response) {
         //message.error(error.message)
     }else{
         //message.error('网络错误')
-        error.message = "网络错误";
+        error.message = "网络连接失败";
     }
     return Promise.reject(error);
 });

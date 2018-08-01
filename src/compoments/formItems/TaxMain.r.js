@@ -11,7 +11,7 @@ function fetchTaxMain(value, callback) {
     request.get(`/taxsubject/listByName`,{
         params:{
             name:value,
-            size:100
+            ///size:100
         }
     })
         .then(({data}) => {
@@ -91,7 +91,11 @@ export default class TaxMain extends Component{
         }else{
             const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true,
                 newData =  mainTaxItems.length>0 ? [{text: whetherShowAll ? '无' : '全部', value:''}].concat(mainTaxItems) : mainTaxItems;
-            initialValue = isShowAll ? undefined : '';
+            if(componentProps && componentProps.labelInValue === true){
+                initialValue = (fieldDecoratorOptions && fieldDecoratorOptions.initialValue) || (isShowAll ? undefined : {key:'',label:'全部'});
+            }else{
+                initialValue = (fieldDecoratorOptions && fieldDecoratorOptions.initialValue) || (isShowAll ? undefined : '');
+            }
             optionsData = isShowAll ? mainTaxItems : newData;
         }
 
@@ -104,9 +108,11 @@ export default class TaxMain extends Component{
                     <Select
                         showSearch
                         style={{ width: '100%' }}
-                        optionFilterProp="children"
-                        // onSearch={this.onSearch}
                         placeholder="请选择纳税主体"
+                        optionFilterProp="children"
+                        //filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        // onSearch={this.onSearch}
+                        //labelInValue={true}
                         {...componentProps}
                     >
                         {

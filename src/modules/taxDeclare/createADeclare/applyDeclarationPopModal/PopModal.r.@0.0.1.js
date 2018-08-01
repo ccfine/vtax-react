@@ -185,7 +185,7 @@ class ApplyDeclarationPopModal extends Component {
 						)
 					}
 					res.push(
-						<Col span={everySpan}>
+						<Col span={index===dataSource.length-1?(24-(dataSource.length-1)*(everySpan+1)):everySpan}>
 							<h4 className="steps-title">{item.title}</h4>
 							<div className="steps-content">
 								{this.getOneContent(item.options, 0)}
@@ -204,6 +204,7 @@ class ApplyDeclarationPopModal extends Component {
         const { saveDeclare, record} = this.props;
         saveDeclare({
             mainId: record.mainId,
+            mainName:record.mainName,
             authMonth: record.partTerm,
             authMonthEnd: record.subordinatePeriodEnd,
             status: record.status,
@@ -212,7 +213,6 @@ class ApplyDeclarationPopModal extends Component {
 		setTimeout(()=>{
         	//TODO: 给ie10用的 为了防止被浏览器拦截
             //window.open(url, '_blank').location;
-        	window.open(url)
             const ref = Modal.warning({
                 title: '友情提醒',
                 content: <h2>操作完成后，请刷新当前页面！</h2>,
@@ -227,7 +227,9 @@ class ApplyDeclarationPopModal extends Component {
                     })
                 }
             })
-        },100)
+
+            window.open(url)
+        },500)
 
     }
 

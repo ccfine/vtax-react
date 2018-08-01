@@ -2,35 +2,64 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React, { Component } from "react";
-import { Form, Row, Col, Card } from "antd";
+import { Form, Row, Col, Card,message,Tag } from "antd";
+import {getFields,request} from 'utils';
 // import UpdateAccount from "./UpdateAccount.react";
 import PermissionFeilds from "../../permissionDetail";
 
+const FormItem = Form.Item
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 12 },
+        sm: { span: 8 },
+    },
+    wrapperCol: {
+        xs: { span: 12 },
+        sm: { span: 16 },
+    },
+};
+const formItemLayout2 = {
+    labelCol: {
+        xs: { span: 12 },
+        sm: { span: 2 },
+    },
+    wrapperCol: {
+        xs: { span: 12 },
+        sm: { span: 22 },
+    },
+};
 class UserDetail extends Component {
     state = {
-        updateAccountModalKey: Date.now() + "2",
-        updateAccountVisible: false,
-        updateAccountKey: Date.now() + "2",
-
-        userData: {
-            ...this.props.userInfo,
-            char: []
-        }
+        infoLoading:false,
+        checkedPermission:[],
+        userSecRoles:[],
     };
-    showModal = modalName => e => {
-        this.mounted &&
-            this.setState({
-                [`${modalName}Visible`]: true
+    fetchPermissionByUserId=(orgId,userId)=>{
+        this.setState({infoLoading: true});
+        request
+            .get(`/sysUser/orgUserPermissions/${orgId}/${userId}`)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    this.mounted &&
+                        this.setState({
+                            checkedPermission:data.data.userPermissions,
+                            userSecRoles:data.data.userSecRoles,
+                            infoLoading: false
+                        });
+                } else {
+                    message.error(data.msg);
+                    this.setState({infoLoading: false});
+                }
+            })
+            .catch(err => {
+                message.error(err.message);
+                this.setState({infoLoading: false});
             });
-    };
+    }
     componentWillReceiveProps(nextProps) {
-        //更新了用户信息之后，也要更新已分配角色列表
-        this.setState(prevState => ({
-            userData: {
-                ...prevState.userData,
-                ...nextProps.userInfo
-            }
-        }));
+        if(nextProps.orgId && nextProps.userInfo.id && (nextProps.orgId !== this.props.orgId || nextProps.userInfo.id !== this.props.userInfo.id)){
+            this.fetchPermissionByUserId(nextProps.orgId,nextProps.userInfo.id)
+        }
     }
 
     mounted = true;
@@ -39,50 +68,56 @@ class UserDetail extends Component {
     }
 
     render() {
-        const { userData } = this.state;
+        const { checkedPermission,userSecRoles ,infoLoading} = this.state;
         let {
             allPermission,
-            checkedPermission,
-            permissionLoading,
-            userLoading
+            userInfo:userData,
+            userLoading,
         } = this.props;
         return (
             <Card title="用户信息" style={{ ...this.props.style }} loading={userLoading}>
-                <div style={{ padding: "30px", color: "#999" }}>
-                    <Row gutter={16}>
+                <div style={{ padding: "10px 15px", color: "#999" }}>
+                    <Row>
                         <Col span={6}>
-                            <p>
-                                账号：<span style={{ color: "#333" }}>
+                            <FormItem label='姓名' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
+                                    {userData.realname}
+                                </span>
+                            </FormItem>
+                        </Col>
+                        <Col span={6}>
+                            <FormItem label='账号' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.username}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
                         <Col span={6}>
-                            <p>
-                                手机：<span style={{ color: "#333" }}>
+                            <FormItem label='手机' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.phoneNumber}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
-                        <Col span={8}>
-                            <p>
-                                邮箱：<span style={{ color: "#333" }}>
+                        <Col span={6}>
+                            <FormItem label='邮箱' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                     {userData.email}
                                 </span>
-                            </p>
-                        </Col>
-                        <Col span={4}>
-                            <p>
-                                微信：<span style={{ color: "#333" }}>
-                                    {userData.webchat}
-                                </span>
-                            </p>
+                            </FormItem>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
+                    <Row>
                         <Col span={6}>
-                            <p>
-                                状态：<span
+                            <FormItem label='微信' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
+                                    {userData.wechat}
+                                </span>
+                            </FormItem>
+                        </Col>
+                        <Col span={6}>
+                            <FormItem label='状态' {...formItemLayout}>
+                                <span
                                     style={{
                                         color:
                                             parseInt(userData.isEnabled, 0) ===
@@ -95,52 +130,87 @@ class UserDetail extends Component {
                                         ? "启用"
                                         : "停用"}
                                 </span>
-                            </p>
+                            </FormItem>
                         </Col>
-                        {/* <Col span={6}>
-                            <p>
-                                密码：
-                                <span
-                                    style={{
-                                        color: "#0F83E6",
-                                        cursor: "pointer",
-                                        marginLeft: "20px"
-                                    }}
-                                    onClick={this.showModal("updateAccount")}
-                                >
-                                    修改密码
-                                </span>
-                            </p>
-                        </Col> */}
-                        <Col span={12}>
-                                <p>
-                                    备注：<span style={{ color: "#333" }}>
+                        <Col span={6}>
+                            <FormItem label='备注' {...formItemLayout}>
+                                <span style={{ color: "#333" }}>
                                         {userData.remark}
                                     </span>
-                                </p>
+                            </FormItem>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <p>
-                                组织：<span style={{ color: "#333" }}>
-                                    {userData.orgNames}
-                                </span>
-                            </p>
+                    <Row>
+                        {
+                            getFields(this.props.form,[{
+                                label:'组织',
+                                fieldName:'orgId',
+                                type:'asyncSelect',
+                                span:24,
+                                formItemStyle:{
+                                    labelCol: {
+                                        xs: { span: 12 },
+                                        sm: { span: 2 },
+                                    },
+                                    wrapperCol: {
+                                        xs: { span: 12 },
+                                        sm: { span: 10 },
+                                    },
+                                },
+                                componentProps:{
+                                    fieldTextName:'name',
+                                    fieldValueName:'id',
+                                    doNotFetchDidMount:false,
+                                    notShowAll:true,
+                                    url:`/sysOrganization/getOrganizations`,
+                                    selectOptions:{
+                                        defaultActiveFirstOption:true,
+                                        showSearch:true,
+                                        optionFilterProp:'children',
+                                    },
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: this.props.orgId,
+                                    onChange:(orgId)=>{
+                                        orgId && this.fetchPermissionByUserId(orgId,userData.id)
+                                    },
+                                }
+                            }])
+                        }
+                    </Row>
+                    <Row>
+                        <Col span={24} className='fix-ie10-formItem-textArea'>
+                            <FormItem label='角色' {...formItemLayout2}>
+                                <div>{
+                                    userSecRoles.map(({roleName,id  })=> <Tag key={id} color="#2db7f5">{roleName}</Tag>)
+                                }</div>
+                            </FormItem>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
+                    <Row>
                         <Col span={24}>
-                            <p>
-                                角色：<span style={{ color: "#333" }}>
-                                    {userData.roleNames}
-                                </span>
-                            </p>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <div>
+                            <Form layout="inline">
+                                <FormItem label='权限' {...formItemLayout2}>
+                                    <span style={{ color: "#333" }}>
+                                    <Row>
+                                        <Col span={24}>
+                                            <PermissionFeilds
+                                                editAble={false}
+                                                checkedPermission={
+                                                    checkedPermission
+                                                }
+                                                form={this.props.form}
+                                                allPermission={allPermission}
+                                                permissionLoading={
+                                                    infoLoading
+                                                }
+                                            />
+                                        </Col>
+                                    </Row>
+                                    </span>
+                                </FormItem>
+                            </Form>
+                            {/*<div>
                                 权限：
                                 <span style={{ color: "#333" }}>
                                     <Form layout="inline">
@@ -157,7 +227,7 @@ class UserDetail extends Component {
                                         />
                                     </Form>
                                 </span>
-                            </div>
+                            </div>*/}
                         </Col>
                     </Row>
                 </div>

@@ -5,7 +5,7 @@ import React,{Component} from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
-import createSocket from './socket'
+import createSocket from '../socket'
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -62,177 +62,122 @@ const searchFields = (getFieldValue)=> [
         span:8
     },
 ]
-const columns = [
-    {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">纳税主体名称</p>
-                <p className="apply-form-list-p2">纳税主体编码</p>
-            </div>
-        ),
-        dataIndex: 'mainName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.mainCode}</p>
-                </div>
-            );
-        },
-    }, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">客户名称</p>
-                <p className="apply-form-list-p2">身份证号/纳税识别号</p>
-            </div>
-        ),
-        dataIndex: 'customerName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
-                </div>
-            );
-        },
-        width:'8%',
-    }, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目名称</p>
-                <p className="apply-form-list-p2">项目编码</p>
-            </div>
-        ),
-        dataIndex: 'projectName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.projectCode}</p>
-                </div>
-            );
-        },
-        width:'8%',
+const columns = [{
+        title:'纳税主体名称',
+        dataIndex:'mainName',
+        width:'150px',
     },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目分期名称</p>
-                <p className="apply-form-list-p2">项目分期编码</p>
-            </div>
-        ),
-        dataIndex: 'stagesName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.stagesCode}</p>
-                </div>
-            );
-        },
-        width:'10%',
+        title:'纳税主体编码',
+        dataIndex:'mainCode',
+        width:'100px',
     },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">交易月份</p>
-                <p className="apply-form-list-p2">交易日期</p>
-            </div>
-        ),
-        dataIndex: 'authMonth',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.transactionDate}</p>
-                </div>
-            );
-        },
-        width:75,
+        title:'客户名称',
+        dataIndex:'customerName',
+        width:'150px',
     },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">房间交付日期</p>
-                <p className="apply-form-list-p2">合同约定交付日期</p>
-            </div>
-        ),
-        dataIndex: 'deliveryDate',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.agreeDate}</p>
-                </div>
-            );
-        },
-        width:80,
+        title:'身份证号/纳税识别号',
+        dataIndex:'taxIdentificationCode',
+        width:'150px',
+    },{
+        title:'项目名称',
+        dataIndex:'projectName',
+        width:'150px',
+    },{
+        title:'项目编码',
+        dataIndex:'projectCode',
+        width:'100px',
+    },{
+        title:'项目分期名称',
+        dataIndex:'stagesName',
+        width:'150px',
+    },{
+        title:'项目分期编码',
+        dataIndex:'stagesCode',
+        width:'100px',
+    },{
+        title:'交易月份',
+        dataIndex:'authMonth',
+        width:'100px',
+    },{
+        title:'交易日期',
+        dataIndex:'transactionDate',
+        width:'100px',
+    },{
+        title:'房间交付日期',
+        dataIndex:'deliveryDate',
+        width:'100px',
+    },{
+        title:'合同约定交付日期',
+        dataIndex:'agreeDate',
+        width:'100px',
     },{
         title:'楼栋名称',
         dataIndex:'buildingName',
-        width:'6%',
+        width:'150px',
     },{
         title:'单元',
         dataIndex:'element',
-        width:'4%',
+        width:'100px',
     }, {
         title:'路址',
         dataIndex:'htRoomName',
-        width:'6%',
+        width:'150px',
     }, {
         title:'房号',
         dataIndex:'roomNumber',
-        width:'4%',
+        width:'100px',
     }, {
         title:'房间编码',
         dataIndex:'roomCode',
-        width:'4%',
+        width:'100px',
     },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">成交金额</p>
-                <p className="apply-form-list-p2">已收款金额</p>
-            </div>
-        ),
-        dataIndex: 'dealPrice',
+        title:'成交金额',
         className:'table-money',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{fMoney(text)}</p>
-                    <p className="apply-form-list-p2">{fMoney(record.receivables)}</p>
-                </div>
-            );
-        },
-        width:'5%',
+        dataIndex:'dealPrice',
+        width:'100px',
+    }, {
+        title:'已收款金额',
+        className:'table-money',
+        dataIndex:'receivables',
+        width:'100px',
     }, {
         title:'房间面积',
         dataIndex:'roomArea',
-        width:'5%',
+        width:'100px',
     }, {
         title:'匹配状态',
         dataIndex:'matchingStatus',
         render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span>, //0:未匹配,1:已匹配
-        width:60,
+        width:'100px',
     }, {
         title:'已开票金额',
         dataIndex:'invoiced',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'5%',
+        width:'100px',
     }, {
         title:' 款项名称',
         dataIndex:'priceType',
-        width:'4%',
+        width:'100px',
     }, {
         title: "税额",
         dataIndex: "taxAmount",
         render:text=>fMoney(text),
         className:'table-money',
-        width:'5%',
+        width:'100px',
+    },
+    {
+        title:'税率',
+        dataIndex:'taxRate',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
+        width:'100px',
     }, {
         title:'价税合计',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'5%',
+        width:'100px',
     },
 ]
 const apiFields = (getFieldValue)=> [
@@ -240,7 +185,7 @@ const apiFields = (getFieldValue)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:24,
+        span:20,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
@@ -249,40 +194,14 @@ const apiFields = (getFieldValue)=> [
         },
     },
     {
-        label:'项目名称',
-        fieldName:'projectId',
-        type:'asyncSelect',
-        span:24,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:true,
-            fetchAble:getFieldValue('mainId') || false,
-            url:`/project/list/${getFieldValue('mainId')}`,
-        },
+        label:'抽取月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:20,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
-                message:'请选择项目名称',
-            }]
-        },
-    },
-    {
-        label:'项目分期',
-        fieldName:'stagesId',
-        type:'asyncSelect',
-        span:24,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:true,
-            fetchAble:getFieldValue('projectId') || false,
-            url:`/project/stages/${getFieldValue('projectId') || ''}`,
-        },
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择项目分期',
+                message:'请选择抽取月份',
             }]
         },
     },
@@ -293,7 +212,7 @@ class RoomTransactionFile extends Component{
         totalSource:undefined,
     }
     render(){
-        const {filters,totalSource}=this.state;
+        const {totalSource}=this.state; //filters,
         return(
             <SearchTable
                 doNotFetchDidMount={true}
@@ -313,15 +232,15 @@ class RoomTransactionFile extends Component{
                     },
                     url:'/output/room/files/report/list',
                     extra:<div>
-                        {
+                        {/*{
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
                                 url:'output/room/files/report/export',
                                 params:filters,
                                 title:'导出',
-                                userPermissions:['1861002'],
+                                userPermissions:['1861007'],
                             }])
-                        }
+                        }*/}
                         {
                             composeBotton([{
                                 type:'modal',
@@ -352,7 +271,7 @@ class RoomTransactionFile extends Component{
                         })
                     },
                     scroll:{
-                        x: 1800,
+                        x: 2850,
                         y:window.screen.availHeight-400
                     },
                 }}

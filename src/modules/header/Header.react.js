@@ -61,12 +61,15 @@ class WimsHeader extends Component {
     componentDidMount(){
         request.post('/oauth/loginOut').then(({data})=>{
             if(data.code === 200){
-                this.setState({ssoPath:data.data})
+                this.mounted && this.setState({ssoPath:data.data})
             }
         }).catch(err=>{
         })
     }
-
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
@@ -84,7 +87,6 @@ class WimsHeader extends Component {
                 </Menu.Item> */}
             </Menu>
         );
-
         return (
             <Header className="header">
                 <Row>
@@ -145,7 +147,7 @@ export default withRouter(connect(state=>{
     return {
         isAuthed:state.user.get('isAuthed'),
         realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
-        orgId: state.user.get("orgId"),
+        org: state.user.get("org"),
         // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))

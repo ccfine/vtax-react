@@ -40,7 +40,7 @@ const SystemManage_Routes = [
         name:'系统维护',
         exact:true,
         children:SystemMaintain_Routes,
-    /*},{
+   /* },{
         path:`${PATH}/interfaceManage`,
         component:wrapPage('接口管理',InterfaceManage),
         name:'接口管理',

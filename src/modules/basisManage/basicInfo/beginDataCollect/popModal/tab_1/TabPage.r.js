@@ -8,7 +8,7 @@ import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/Sear
 import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
 
-const getColumns = (getFieldDecorator,disabled)=> [
+const getColumns = (context,getFieldDecorator,disabled)=> [
     {
         title:'项目',
         dataIndex:'project',
@@ -38,15 +38,20 @@ const getColumns = (getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.commonInitialEdit ? fMoney(parseFloat(text)) : __html
+                    return record.commonInitialEdit ? fMoney(text) : __html
                 }else{
                     return record.commonInitialEdit ?
                         <NumericInputCell
                             fieldName={`commonInitial_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             editAble={disabled}
-                            componentProps={{allowNegative:true}}
+                            componentProps={{
+                                allowNegative:true,
+                                onFocus:(e)=>context.handleFocus(e,`commonInitial_${record.id}`),
+                                onBlur:(e)=>context.handleBlur(e,`commonInitial_${record.id}`)
+                            }}
+
                         /> : __html
                 }
 
@@ -58,15 +63,19 @@ const getColumns = (getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.commonCountEdit ? fMoney(parseFloat(text)) : __html
+                    return record.commonCountEdit ? fMoney(text) : __html
                 }else {
                     return record.commonCountEdit ?
                         <NumericInputCell
                             fieldName={`commonCount_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
-                            componentProps={{allowNegative:true}}
+                            componentProps={{
+                                allowNegative:true,
+                                onFocus:(e)=>context.handleFocus(e,`commonCount_${record.id}`),
+                                onBlur:(e)=>context.handleBlur(e,`commonCount_${record.id}`)
+                            }}
                         /> : __html
                 }
             },
@@ -81,15 +90,19 @@ const getColumns = (getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.promptlyInitialEdit ? fMoney(parseFloat(text)) : __html
+                    return record.promptlyInitialEdit ? fMoney(text) : __html
                 }else {
                     return record.promptlyInitialEdit ?
                         <NumericInputCell
                             fieldName={`promptlyInitial_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
-                            componentProps={{allowNegative:true}}
+                            componentProps={{
+                                allowNegative:true,
+                                onFocus:(e)=>context.handleFocus(e,`promptlyInitial_${record.id}`),
+                                onBlur:(e)=>context.handleBlur(e,`promptlyInitial_${record.id}`)
+                            }}
                         /> : __html
                 }
             },
@@ -100,15 +113,19 @@ const getColumns = (getFieldDecorator,disabled)=> [
             render:(text,record)=>{
                 let __html = <span dangerouslySetInnerHTML={{  __html:text }}/>;
                 if(disabled){
-                    return record.promptlyCountEdit ? fMoney(parseFloat(text)) : __html
+                    return record.promptlyCountEdit ? fMoney(text) : __html
                 }else {
                     return record.promptlyCountEdit ?
                         <NumericInputCell
                             fieldName={`promptlyCount_${record.id}`}
-                            initialValue={text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
-                            componentProps={{allowNegative:true}}
+                            componentProps={{
+                                allowNegative:true,
+                                onFocus:(e)=>context.handleFocus(e,`promptlyCount_${record.id}`),
+                                onBlur:(e)=>context.handleBlur(e,`promptlyCount_${record.id}`)
+                            }}
                         /> : __html
                 }
             },
@@ -147,6 +164,9 @@ class TabPage extends Component{
 
         this.props.form.validateFields((err, values) => {
             if(!err){
+                for(let key in values){
+                    values[key] = values[key].replace(/\$\s?|(,*)/g, '')
+                }
                 request.post('/mainProjectCollection/save',values)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -164,6 +184,37 @@ class TabPage extends Component{
             }
         })
     }
+
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
+
     componentDidMount(){
         const {search} = this.props.location;
         if(!!search){
@@ -215,7 +266,7 @@ class TabPage extends Component{
                             onDoubleClick:()=>{console.log(record)}
                         }),
                         pagination:false,
-                        columns:getColumns(getFieldDecorator,this.props.disabled),
+                        columns:getColumns(this,getFieldDecorator,this.props.disabled),
                         url:`/mainProjectCollection/list/${this.props.mainId}`,
                     }}
                 />

@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:14:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-06-27 15:30:23
+ * @Last Modified time: 2018-08-01 09:53:47
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
@@ -109,6 +109,7 @@ export default class TabPage extends Component{
                         style:{marginTop:"0px"}
                     },
                     pagination:true,
+                    pageSize:100,
                 }}
             >
             </SearchTable>

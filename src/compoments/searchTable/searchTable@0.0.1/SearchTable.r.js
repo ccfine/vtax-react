@@ -61,6 +61,12 @@ class SearchTable extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 for(let key in values){
+                    if(typeof values[key] === 'object' && values[key]!==null){
+                        if(("key" in values[key]) && ("label" in values[key])){
+                            values[`${key}Id`] = values[key].key;
+                            delete values[key];
+                        }
+                    }
                     if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
                         //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
                         values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
@@ -88,6 +94,7 @@ class SearchTable extends Component{
                         }*/
                     }
                 }
+
                 this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
