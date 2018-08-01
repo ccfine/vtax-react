@@ -81,6 +81,10 @@ export default class Sheet extends Component{
             setFieldsValue({
                 [fieldName]:''
             })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
         }
     }
 
@@ -162,7 +166,7 @@ export default class Sheet extends Component{
                                             readOnly:false,
                                             component:<React.Fragment>
                                                 <NumericInputCell
-                                                    initialValue={di.value==='0' ? '0.00' : di.value}
+                                                    initialValue={di.value==='0' ? '0.00' : fMoney(di.value)}
                                                     getFieldDecorator={this.props.form.getFieldDecorator}
                                                     fieldName={`map.${di.key}`}
                                                     editAble={true}

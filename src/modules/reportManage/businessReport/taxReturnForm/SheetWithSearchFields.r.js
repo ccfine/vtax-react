@@ -19,7 +19,7 @@ class SheetWithSearchFields extends Component{
     }
     static defaultProps = {
         grid:[],
-        searchFields:(defaultParams={},disabled,declare)=>[
+        searchFields:(disabled,declare,defaultParams={})=>[
             {
                 label:'纳税主体',
                 fieldName:'main',
@@ -30,7 +30,7 @@ class SheetWithSearchFields extends Component{
                     disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: (disabled && {key:declare.mainId,label:declare.mainName})  || ((defaultParams.main && defaultParams.main.key && defaultParams.main) || undefined),
+                    initialValue: (disabled && declare.mainId) ? {key:declare.mainId,label:declare.mainName} : JSON.stringify(defaultParams) !== "{}" ? (defaultParams && {key:defaultParams.mainId,label:''}) : undefined ,
                     rules:[
                         {
                             required:true,
@@ -70,7 +70,7 @@ class SheetWithSearchFields extends Component{
         saveLoding:false,
     }
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             updateKey:Date.now()
         },()=>{
             this.fetchResultStatus()
@@ -78,7 +78,7 @@ class SheetWithSearchFields extends Component{
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/tax/decConduct/main/listMain',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
@@ -86,7 +86,7 @@ class SheetWithSearchFields extends Component{
     componentDidMount(){
         const { declare } = this.props;
         if (!!declare) {
-            this.setState({
+            this.mounted && this.setState({
                 params:{
                     mainId:declare.mainId || undefined,
                     taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
@@ -105,7 +105,7 @@ class SheetWithSearchFields extends Component{
                     values.mainId = values.main.key
                     delete values.main
                 }
-                this.setState({
+                this.mounted && this.setState({
                     params: values,
                     updateKey:Date.now()
                 })
@@ -117,15 +117,18 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
+                for(let key in values.map){
+                    values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
+                }
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
                     values.mainId = values.main.key
                     delete values.main
                 }
-                this.setState({saveLoding:true})
+                this.mounted && this.setState({saveLoding:true})
                 request.post(this.props.saveUrl,{...values})
                     .then(({data})=>{
-                        this.setState({saveLoding:false})
+                        this.mounted && this.setState({saveLoding:false})
                         if(data.code===200){
                             message.success('保存成功!');
                             this.onSubmit();
@@ -135,7 +138,7 @@ class SheetWithSearchFields extends Component{
                     })
                     .catch(err => {
                         message.error(err.message)
-                        this.setState({saveLoding:false})
+                        this.mounted && this.setState({saveLoding:false})
                     })
             }
         })
@@ -159,7 +162,7 @@ class SheetWithSearchFields extends Component{
                 }}>
                         <Row>
                             {
-                                getFields(form, searchFields(defaultParams,disabled,declare))
+                                getFields(form, searchFields(disabled,declare,defaultParams))
                             }
                             <Col style={{width:'100%',textAlign:'right'}}>
                                 <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
