@@ -95,7 +95,7 @@ const getColumns = (context,getFieldDecorator,disabled) => [
             return disabled && record.generalAmountEdit ?
                 <NumericInputCell
                     fieldName={`generalAmount_${record.id}`}
-                    initialValue={text==='0' ? '0.00' : text}
+                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.generalAmountEdit}
                     componentProps={{
@@ -114,7 +114,7 @@ const getColumns = (context,getFieldDecorator,disabled) => [
             return disabled && record.drawbackPolicyAmountEdit ?
                 <NumericInputCell
                     fieldName={`drawbackPolicyAmount_${record.id}`}
-                    initialValue={text==='0' ? '0.00' : text}
+                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                     getFieldDecorator={getFieldDecorator}
                     editAble={record.drawbackPolicyAmountEdit}
                     componentProps={{
@@ -155,6 +155,9 @@ class TaxCalculation extends Component{
         this.toggleSearchTableLoading(true)
         this.props.form.validateFields((err, values) => {
             if(!err){
+                for(let key in values){
+                    values[key] = values[key].replace(/\$\s?|(,*)/g, '')
+                }
                 request.post('/account/taxCalculation/save',{
                     data:values,
                     mainId:this.state.filters.mainId,
@@ -183,6 +186,10 @@ class TaxCalculation extends Component{
         if(value === '0.00'){
             setFieldsValue({
                 [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
             })
         }
     }
