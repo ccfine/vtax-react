@@ -43,7 +43,7 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
                     return record.commonInitialEdit ?
                         <NumericInputCell
                             fieldName={`commonInitial_${record.id}`}
-                            initialValue={text==='0' ? '0.00' : text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             editAble={disabled}
                             componentProps={{
@@ -68,7 +68,7 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
                     return record.commonCountEdit ?
                         <NumericInputCell
                             fieldName={`commonCount_${record.id}`}
-                            initialValue={text==='0' ? '0.00' : text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                             componentProps={{
@@ -95,7 +95,7 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
                     return record.promptlyInitialEdit ?
                         <NumericInputCell
                             fieldName={`promptlyInitial_${record.id}`}
-                            initialValue={text==='0' ? '0.00' : text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                             componentProps={{
@@ -118,7 +118,7 @@ const getColumns = (context,getFieldDecorator,disabled)=> [
                     return record.promptlyCountEdit ?
                         <NumericInputCell
                             fieldName={`promptlyCount_${record.id}`}
-                            initialValue={text==='0' ? '0.00' : text}
+                            initialValue={text==='0' ? '0.00' : fMoney(text)}
                             getFieldDecorator={getFieldDecorator}
                             disabled={disabled}
                             componentProps={{
@@ -164,6 +164,9 @@ class TabPage extends Component{
 
         this.props.form.validateFields((err, values) => {
             if(!err){
+                for(let key in values){
+                    values[key] = values[key].replace(/\$\s?|(,*)/g, '')
+                }
                 request.post('/mainProjectCollection/save',values)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -189,6 +192,10 @@ class TabPage extends Component{
         if(value === '0.00'){
             setFieldsValue({
                 [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
             })
         }
     }

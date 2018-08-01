@@ -19,7 +19,7 @@ const getColumns = (context,getFieldDecorator,disabled) =>[
             return !disabled ?
                 <NumericInputCell
                     fieldName={`amount_${record.id}`}
-                    initialValue={text==='0' ? '0.00' : text}
+                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                     getFieldDecorator={getFieldDecorator}
                     editAble={disabled}
                     componentProps={{
@@ -58,6 +58,9 @@ class TabPage extends Component{
 
         this.props.form.validateFields((err, values) => {
             if(!err){
+                for(let key in values){
+                    values[key] = values[key].replace(/\$\s?|(,*)/g, '')
+                }
                 request.post('/tax/credit/items/collection/save',{
                    ...values,
                     mainId:this.props.mainId,
@@ -85,6 +88,10 @@ class TabPage extends Component{
         if(value === '0.00'){
             setFieldsValue({
                 [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
             })
         }
     }

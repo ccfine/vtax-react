@@ -106,7 +106,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                         if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].amount`}
-                                    initialValue={text==='0' ? '0.00' : text}
+                                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
                                         onFocus:(e)=>context.handleFocus(e,`list[${record.id}].amount`),
@@ -127,7 +127,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                         if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].taxAmount`}
-                                    initialValue={text==='0' ? '0.00' : text}
+                                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
                                         onFocus:(e)=>context.handleFocus(e,`list[${record.id}].taxAmount`),
@@ -149,7 +149,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                         if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].reduceTaxAmount`}
-                                    initialValue={text==='0' ? '0.00' : text}
+                                    initialValue={text==='0' ? '0.00' : fMoney(text)}
                                     getFieldDecorator={getFieldDecorator}
                                     componentProps={{
                                         disabled:true,
@@ -286,8 +286,16 @@ class TaxExemptionDetails extends Component{
                         )
                     }
                 }
+                const data = nArr.map(item=>{
+                    return {
+                        ...item,
+                        amount:item.amount.replace(/\$\s?|(,*)/g, ''),
+                        reduceTaxAmount:item.reduceTaxAmount.replace(/\$\s?|(,*)/g, ''),
+                        taxAmount:item.taxAmount.replace(/\$\s?|(,*)/g, ''),
+                    }
+                })
                 request.post('/account/other/reduceTaxDetail/save',{
-                    list:nArr,
+                    list:data,
                     mainId:this.state.filters.mainId,
                     taxMonth:this.state.filters.authMonth
                 })
@@ -315,6 +323,10 @@ class TaxExemptionDetails extends Component{
         if(value === '0.00'){
             setFieldsValue({
                 [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
             })
         }
     }
