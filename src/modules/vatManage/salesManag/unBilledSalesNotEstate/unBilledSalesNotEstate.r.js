@@ -32,7 +32,7 @@ const formItemStyle = {
 }
 const columns = (context) => [
     {
-        title: "项目",
+        title: "计税方法",
         dataIndex: "taxMethod",
         render: (text) => {
             let tempText = '';
