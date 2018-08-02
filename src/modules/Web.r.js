@@ -18,6 +18,7 @@ import {logout} from '../redux/ducks/user'
 // import getPermission from  './index'
 import moment from 'moment';
 const { Content } = Layout;
+
 class Web extends Component {
 
     state = {
@@ -75,15 +76,15 @@ class Web extends Component {
     render() {
         // const copyright = <div>Copyright <Icon type="copyright" /> 2018 碧桂园增值税纳税申报系统</div>;
         //const pathname = this.props.history.location.pathname;
-        const text = `${this.props.realName}, ${moment().format('YYYY-MM-DD HH:mm')}`;
+        const text = `${this.props.realName}, ${this.props.username}, ${moment().format('YYYY-MM-DD HH:mm')}`;
         const beginAlarm = function() { console.log('start alarm'); };
         const options = {
-            //chunkWidth: 200,
-            //chunkHeight: 60,
+            chunkWidth: 300,
+            chunkHeight: 120,
             textAlign: 'left',
             textBaseline: 'bottom',
             globalAlpha: 0.17,
-            font: '14px Microsoft Yahei',
+            font: '18px Microsoft Yahei',
             rotateAngle: -0.26,
             fillStyle: '#666'
         }
@@ -96,7 +97,7 @@ class Web extends Component {
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
                     <WaterMark
                         waterMarkText={text}
-                        openSecurityDefense
+                        openSecurityDefense={false}
                         securityAlarm={beginAlarm}
                         options={options}
                     >
@@ -126,6 +127,7 @@ export default withRouter(connect(state=>({
     personal:state.user.get('personal'),
     isAuthed:state.user.get('isAuthed'),
     realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
+    username:state.user.getIn(['personal','username']),
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))
