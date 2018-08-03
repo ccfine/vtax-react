@@ -18,6 +18,7 @@ import {sheet_8,composeGrid_8} from './sheetData/sheet8'
 // import sheet_9 from './sheetData/sheet9'
 import sheet_10 from './sheetData/sheet10'
 import SheetWithSearchFields from './SheetWithSearchFields.r'
+import TaxCalculation from './taxCalculation'
 const TabPane = Tabs.TabPane;
 
 const sheetData = [
@@ -42,19 +43,16 @@ const sheetData = [
         grid:sheet_3,
         url:'/tax/declaration/addendum/three/list',
         saveUrl:'/tax/declaration/addendum/three/save',
-        savePermission:['1915003'],
     }, {
         tab:'附表四',
         grid:sheet_4,
         url:'/tax/declaration/addendum/four/list',
         saveUrl:'/tax/declaration/addendum/four/save',
-        savePermission:['1915004'],
     }, {
         tab:'附表五',
         grid:sheet_5,
         url:'/tax/declaration/addendum/five/list',
         saveUrl:'/tax/declaration/addendum/five/save',
-        savePermission:['1915005'],
     /*}, {
         tab:'固定资产表',
         grid:sheet_6,
@@ -68,12 +66,14 @@ const sheetData = [
         grid:sheet_10,
         url:'/tax/decConduct/prepayTax/list',
         saveUrl:'/tax/decConduct/prepayTax/save',
-        savePermission:['1915006'],
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
         url:'/tax/declaration/reduce/list',
         composeGrid:composeGrid_8
+    },{
+        tab:'税款计算台账',
+        Component:TaxCalculation,
     },
     // {
     //     tab:'营改增税负分析测算明细表',
@@ -98,14 +98,19 @@ class TaxReturnForm extends Component{
         })
     }
     render () {
-        const {activeKey,params} = this.state;
+        const {activeKey,params} = this.state,
+            {declare} = this.props;
         return (
             <Tabs tabBarStyle={{marginBottom:0}} onChange={this.onChange} activeKey={activeKey} type="card">
                 {
                     sheetData.map((item,i)=>(
                         <TabPane tab={item.tab} key={i}>
                             {
-                                parseInt(activeKey,0) === i ? <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params}/> : ''
+                                parseInt(activeKey,0) === i ? (
+                                item.Component?<item.Component onParamsChange={this.onParamsChange} defaultParams={params}  declare={declare}/>:
+                                <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare}/>
+                                )
+                                 : ''
                             }
                         </TabPane>
                     ))

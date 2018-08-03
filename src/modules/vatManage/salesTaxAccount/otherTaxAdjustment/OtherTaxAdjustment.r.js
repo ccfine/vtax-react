@@ -2,11 +2,11 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-26 14:39:43
+ * @Last Modified time: 2018-08-03 14:17:06
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
-import {connect} from 'react-redux';
+// import {connect} from 'react-redux';
 import { SearchTable,TableTotal } from "compoments";
 import PopModal from "./popModal";
 import {
@@ -258,13 +258,13 @@ class OtherTaxAdjustment extends Component {
         <SearchTable
           doNotFetchDidMount={!disabled}
           searchOption={{
-            fields: searchFields(disabled,declare)
+            fields: searchFields(disabled,declare),
+            cardProps:{
+              style:{borderTop:0}
+            }
           }}
           tableOption={{
-            scroll: {
-                x: 1900,
-                y: window.screen.availHeight-380
-            },
+            scroll: { x: 1900,y:window.screen.availHeight-380-(disabled?50:0)},
             pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
@@ -343,12 +343,11 @@ class OtherTaxAdjustment extends Component {
           }}
           id={this.state.opid}
           update={this.refreshTable}
+          declare={declare}
         />
       </div>
     );
   }
 }
 
-export default connect(state=>({
-  declare:state.user.get('declare')
-}))(OtherTaxAdjustment);
+export default OtherTaxAdjustment;

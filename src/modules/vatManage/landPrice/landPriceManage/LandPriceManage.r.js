@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
@@ -302,7 +301,8 @@ class LandPriceManage extends Component{
                 searchOption={{
                     fields:searchFields(disabled,declare),
                     cardProps:{
-                        className:''
+                        className:'',
+                        style:{borderTop:0}
                     },
                 }}
                 tableOption={{
@@ -388,7 +388,7 @@ class LandPriceManage extends Component{
                     },
                     scroll:{
                          x:2000,
-                         y:window.screen.availHeight-400,
+                         y:window.screen.availHeight-400-(disabled?50:0),
                     },
                 }}
             >
@@ -402,6 +402,4 @@ class LandPriceManage extends Component{
         )
     }
 }
-export default Form.create()(connect(state=>({
-    declare:state.user.get('declare')
-}))(LandPriceManage))
+export default Form.create()(LandPriceManage)

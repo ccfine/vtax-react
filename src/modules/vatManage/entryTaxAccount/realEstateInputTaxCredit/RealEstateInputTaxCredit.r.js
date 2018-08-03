@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React,{Component} from 'react'
-import {connect} from 'react-redux'
 import { Tabs } from 'antd';
 import DeductibleInputTaxAmount from './deductibleInputTaxAmount'
 import FixedAssetsInputTaxDetails from './fixedAssetsInputTaxDetails'
@@ -97,6 +96,4 @@ class RealEstateInputTaxCredit extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(RealEstateInputTaxCredit)
+export default RealEstateInputTaxCredit

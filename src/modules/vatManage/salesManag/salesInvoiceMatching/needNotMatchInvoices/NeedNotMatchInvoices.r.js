@@ -1,11 +1,10 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-26 12:06:55
+ * @Last Modified time: 2018-08-03 14:16:13
  *
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {Modal,message} from 'antd'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
@@ -313,7 +312,7 @@ class NeedNotMatchInvoices extends Component{
                     },
                     scroll:{
                         x:1850,
-                        y:window.screen.availHeight-430,
+                        y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
@@ -331,6 +330,4 @@ class NeedNotMatchInvoices extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(NeedNotMatchInvoices)
+export default NeedNotMatchInvoices

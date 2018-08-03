@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -175,7 +174,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                     },
                     scroll:{
                         x:1600,
-                        y:window.screen.availHeight-400,
+                        y:window.screen.availHeight-400-(disabled?50:0),
                     },
                 }}
             >
@@ -189,6 +188,4 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(SimplifiedTaxInputTaxTransfer);
+export default SimplifiedTaxInputTaxTransfer;

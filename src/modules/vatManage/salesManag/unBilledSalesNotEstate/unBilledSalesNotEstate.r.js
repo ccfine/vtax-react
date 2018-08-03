@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
-import { compose } from 'redux';
-import {connect} from 'react-redux'
+// import { compose } from 'redux';
+// import {connect} from 'react-redux'
 import { AsyncTable,TableTotal } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
 import moment from 'moment';
@@ -434,16 +434,12 @@ class UnBilledSalesNotEstate extends Component {
                     }}
                     id={this.state.opid}
                     update={this.refreshTable}
+                    declare={declare}
                 />
 
             </Layout>
         )
     }
 }
-const enhance = compose(
-    Form.create(),
-    connect( (state) => ({
-        declare:state.user.get('declare')
-    }))
-);
-export default enhance(UnBilledSalesNotEstate);
+
+export default Form.create()(UnBilledSalesNotEstate);

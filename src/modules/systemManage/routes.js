@@ -46,7 +46,7 @@ const SystemManage_Routes = [
         name:'接口管理',
         exact:true,
         children:InterfaceManage_Routes,
-    /*},{
+    },{
         path:`${PATH}/processManage`,
         component:wrapPage('流程管理',ProcessManage),
         name:'流程管理',

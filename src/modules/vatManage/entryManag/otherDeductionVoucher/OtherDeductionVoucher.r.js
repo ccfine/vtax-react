@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {requestResultStatus,fMoney,requestDict,listMainResultStatus,composeBotton,setFormat} from 'utils'
 import {SearchTable} from 'compoments'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -240,6 +239,9 @@ class SalesInvoiceCollection extends Component{
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields(this,disabled,declare),
+                    cardProps:{
+                        style:{borderTop:0}
+                    }
                 }}
                 tableOption={{
                     key:tableKey,
@@ -303,7 +305,7 @@ class SalesInvoiceCollection extends Component{
                     },
                     scroll:{
                      x:2400,
-                     y:window.screen.availHeight-390,
+                     y:window.screen.availHeight-390-(disabled?50:0),
                      },
                 }}
             >
@@ -318,6 +320,4 @@ class SalesInvoiceCollection extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(SalesInvoiceCollection);
+export default SalesInvoiceCollection;

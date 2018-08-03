@@ -2,10 +2,10 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-30 16:14:45
+ * @Last Modified time: 2018-08-01 22:05:22
  */
 import React, { Component } from "react";
-import {message,Modal} from 'antd';
+import {message} from 'antd';
 import { SearchTable} from "compoments";
 import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
@@ -49,7 +49,7 @@ const searchFields = [
 
     }
 ];
-
+/*
 const importFeilds = [
     {
         label: "纳税主体",
@@ -94,8 +94,8 @@ const importFeilds = [
                 }
             ]
         }
-    }*/
-];
+    }
+];*/
 
 const apiFields = (getFieldValue)=> [
     {
@@ -124,7 +124,7 @@ const apiFields = (getFieldValue)=> [
     },
 ]
 const getColumns = context => [
-    {
+    /*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -153,7 +153,7 @@ const getColumns = context => [
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: "纳税主体名称",
         dataIndex: "taxSubjectName",
@@ -311,27 +311,27 @@ class fixedAssetCard extends Component {
                     scroll:{ x: 2170,y:window.screen.availHeight-360,},
                     extra: (
                         <span>
-                            {
+                            {/*
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
-                                    /*type:'fileExport',
+                                    type:'fileExport',
                                     url:'fixedAssetCard/report/export',
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1871007'],
-                                },{*/
+                                },{
                                     type:'fileImport',
                                     url:'/fixedAssetCard/report/upload',
                                     onSuccess:this.update,
                                     // userPermissions:['1875002'],
                                     fields:importFeilds
                                 }])
-                            }
-                            {
+                            */}
+                            {/*
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: 'fixedAssetCard/report/download',
                                 }])
-                            }
+                            */}
                             {
                                 composeBotton([{
                                     type:'modal',

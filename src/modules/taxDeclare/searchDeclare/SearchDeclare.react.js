@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
 import {composeBotton} from 'utils'
+import {withRouter} from 'react-router-dom';
 const formItemStyle={
     labelCol:{
         span:8
@@ -82,11 +83,14 @@ const getColumns =(context)=>[
                 icon:'search',
                 title:'查看申报',
                 onSuccess:()=>{
-                    context.setState({
+                    
+                    context.props.history.push(`${context.props.match.url}/lookDeclare/${record.id}`)
+                            
+                    /*context.setState({
                         record: record
                     },() => {
                         context.toggleApplyVisible(true);
-                    });
+                    });*/
                 }
             }])
         },
@@ -171,7 +175,7 @@ const getColumns =(context)=>[
     }
 ];
 
-export default class SearchDeclare extends Component{
+class SearchDeclare extends Component{
     state={
         updateKey:Date.now(),
         applyDeclarationModalKey:Date.now(),
@@ -223,3 +227,5 @@ export default class SearchDeclare extends Component{
         )
     }
 }
+
+export default withRouter(SearchDeclare)

@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {message,Modal} from 'antd'
+import {message} from 'antd'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
 import {fMoney,composeBotton,request} from 'utils'
@@ -15,6 +15,7 @@ const formItemStyle={
         span:16
     }
 }
+/*
 const fields = [
     {
         label:'纳税主体',
@@ -60,7 +61,7 @@ const fields = [
             ]
         },
     }
-]
+]*/
 const apiFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -137,7 +138,7 @@ const searchFields =[
         }
     ]
 const getColumns = context =>[
-    {
+    /*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -166,7 +167,7 @@ const getColumns = context =>[
         width:'70px',
         dataIndex:'action',
         className:'text-center',
-    },
+    },*/
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
@@ -330,21 +331,21 @@ class FinancialDocuments extends Component{
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1891007'],
-                                    },{
+                                    }/*,{
                                         type:'fileImport',
                                         url:'/inter/financial/voucher/report/upload',
                                         onSuccess:this.refreshTable,
                                         fields:fields,
                                         // userPermissions:['1891005'],
-                                    }])
+                                    }*/])
                                 }
-                                {
+                                {/*
                                     composeBotton([{
                                         type: 'fileExport',
                                         url: 'inter/financial/voucher/report/download',
                                         // onSuccess: this.refreshTable,
                                     }])
-                                }
+                                */}
                                 {
                                     composeBotton([{
                                         type:'modal',

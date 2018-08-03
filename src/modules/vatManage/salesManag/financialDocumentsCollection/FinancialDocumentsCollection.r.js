@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/24.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
@@ -196,14 +196,19 @@ class FinancialDocumentsCollection extends Component{
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled,declare)
+                    fields:searchFields(disabled,declare),
+                    cardProps:{
+                        style:{
+                            borderTop:0
+                        },
+                    }
                 }}
                 tableOption={{
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 3200 ,y:window.screen.availHeight-420},
+                    scroll:{ x: 3200 ,y:window.screen.availHeight-360-(disabled?50:0)},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params
@@ -258,6 +263,4 @@ class FinancialDocumentsCollection extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(FinancialDocumentsCollection)
+export default FinancialDocumentsCollection

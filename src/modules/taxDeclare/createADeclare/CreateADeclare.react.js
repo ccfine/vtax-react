@@ -8,6 +8,7 @@ import {SearchTable} from 'compoments';
 import {composeBotton} from 'utils'
 import PopModal from './createPopModal';
 import ApplyDeclarationPopModal from './applyDeclarationPopModal'
+import {withRouter} from 'react-router-dom';
 const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
@@ -62,11 +63,12 @@ const getColumns =(context)=>[
                         title:'查看申报',
                         userPermissions:['1071002'],
                         onSuccess:()=>{
-                            context.setState({
+                            context.props.history.push(`${context.props.match.url}/lookDeclare/${record.id}`)
+                            /*context.setState({
                                 record: record
                             },() => {
                                 context.toggleApplyVisible(true);
-                            });
+                            });*/
                         }
                     }])
 
@@ -172,7 +174,7 @@ const getColumns =(context)=>[
         dataIndex: 'declarationDate',
     }
 ];
-export default class CreateADeclare extends Component{
+class CreateADeclare extends Component{
     state={
         visible:false, // 控制Modal是否显示
         applyVisible:false,
@@ -321,3 +323,5 @@ export default class CreateADeclare extends Component{
         )
     }
 }
+
+export default withRouter(CreateADeclare)

@@ -2,10 +2,9 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-16 17:42:14 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-25 16:12:49
+ * @Last Modified time: 2018-08-03 14:14:04
  */
 import React from 'react'
-import {connect} from 'react-redux'
 // import HasDeduct from './hasDeduct'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
@@ -307,7 +306,7 @@ class DeductProjectSummary extends React.Component {
                     },
                     scroll:{
                         x:2400,
-                        y:window.screen.availHeight-400,
+                        y:window.screen.availHeight-400-(disabled?50:0),
                     },
 					extra: (
 						<div>
@@ -387,6 +386,4 @@ class DeductProjectSummary extends React.Component {
 }
 
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(DeductProjectSummary)
+export default DeductProjectSummary

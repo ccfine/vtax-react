@@ -5,8 +5,6 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
-import { compose } from 'redux';
-import {connect} from 'react-redux'
 import {SynchronizeTable} from 'compoments'
 import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
@@ -428,10 +426,5 @@ class BillingSales extends Component {
         )
     }
 }
-const enhance = compose(
-    Form.create(),
-    connect( (state) => ({
-        declare:state.user.get('declare')
-    }))
-);
-export default enhance(BillingSales);
+
+export default Form.create()(BillingSales);

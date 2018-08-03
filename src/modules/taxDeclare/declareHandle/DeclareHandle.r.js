@@ -7,6 +7,7 @@ import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
 import {request,composeBotton} from 'utils'
+import {withRouter} from 'react-router-dom';
 const formItemStyle={
     labelCol:{
         span:8
@@ -78,11 +79,12 @@ const getColumns =(context)=>[
                                 title:'申报办理',
                                 userPermissions:['1085004'],
                                 onSuccess:()=>{
-                                    context.setState({
+                                    context.props.history.push(`/web/taxDeclare/declareHandle/handleDeclare/${record.id}`)
+                                    /*context.setState({
                                         record: {...record,decAction:'edit'},
                                     },() => {
                                         context.toggleApplyVisible(true,'tax/decConduct/list/handle');
-                                    });
+                                    });*/
                                 }
                             }/*,{
                                 type:'action',
@@ -111,11 +113,12 @@ const getColumns =(context)=>[
                             title:'申报撤回',
                             userPermissions:['1085005'],
                             onSuccess:()=>{
-                                context.setState({
-                                    record: {...record,decAction:'edit'},
-                                },() => {
-                                    context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
-                                });
+                                context.props.history.push(`/web/taxDeclare/declareHandle/revokeDeclare/${record.id}`)
+                                // context.setState({
+                                //     record: {...record,decAction:'edit'},
+                                // },() => {
+                                //     context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
+                                // });
                             }
                         }])
                     break
@@ -140,11 +143,13 @@ const getColumns =(context)=>[
                                 icon:'search',
                                 title:'查看申报',
                                 onSuccess:()=>{
-                                    context.setState({
+                                    context.props.history.push(`/web/taxDeclare/declareHandle/lookDeclare/${record.id}`)
+                            
+                                    /*context.setState({
                                         record: {...record,decAction:'look'}
                                     },() => {
                                         context.toggleApplyVisible(true,'tax/decConduct/list/find');
-                                    });
+                                    });*/
                                 }
                             }])
                         }
@@ -349,4 +354,4 @@ class DeclareHandle extends Component{
 }
 export default connect(state=>({
     options:state.user.getIn(['personal','options']),
-}))(DeclareHandle)
+}))(withRouter(DeclareHandle))

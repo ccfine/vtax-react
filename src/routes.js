@@ -12,6 +12,8 @@ import Exception403 from 'modules/exception/403'
 import Exception404 from 'modules/exception/404'
 import Exception500 from 'modules/exception/500'
 import {RouteWithSubRoutes} from 'compoments'
+import Help from './modules/help'
+import {wrapPage} from 'compoments'
 /*const NoMatch = () => <div>no match</div>*/
 
 
@@ -20,6 +22,10 @@ const routes = [
         path:'/web',
         component:Web,
         name:'主页',
+    },{
+        path:`/help`,
+        component:wrapPage('帮助中心',Help),
+        name:'帮助中心',
     },{
         path:'/tax2018bgy/login',
         component:props=><Login {...props} type={1}/>,

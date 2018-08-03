@@ -3,7 +3,6 @@
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
-import {connect} from 'react-redux'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
@@ -486,10 +485,10 @@ class InvoiceDataMatching extends Component{
                     },
                     scroll:{
                         x: 3050,
-                        y:window.screen.availHeight-480,
+                        y:window.screen.availHeight-480-(disabled?50:0),
                     },
                     cardProps:{
-                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配列表</span>,
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配</span>,
                     },
                 }}
             >
@@ -498,6 +497,4 @@ class InvoiceDataMatching extends Component{
         )
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(InvoiceDataMatching)
+export default InvoiceDataMatching

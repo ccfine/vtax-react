@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -156,7 +155,7 @@ class SimpleTaxCertificate extends Component{
                     },
                     scroll:{
                         x:1300,
-                        y:window.screen.availHeight-400,
+                        y:window.screen.availHeight-400-(disabled?50:0),
                     },
                 }}
             >
@@ -171,6 +170,4 @@ class SimpleTaxCertificate extends Component{
     }
 }
 
-export default connect(state=>({
-    declare:state.user.get('declare')
-  }))(SimpleTaxCertificate);
+export default SimpleTaxCertificate;

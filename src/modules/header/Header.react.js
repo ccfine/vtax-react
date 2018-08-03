@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Row,Col,Tooltip} from 'antd'
-import {withRouter} from 'react-router-dom'
+import {withRouter,Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
@@ -73,16 +73,16 @@ class WimsHeader extends Component {
     render() {
         const menu = (
             <Menu className='menu' selectedKeys={[]} onClick={this.handleMenuCollapse}>
+                <Menu.Item key='admin'>
+                    <Link to={`/help`} target='_blank'>
+                        <Icon type="info-circle-o" />帮助中心
+                    </Link>
+                </Menu.Item>
+                <Menu.Divider />
                 <Menu.Item key="logout">
                     <Icon type="logout" />退出登录
                 </Menu.Item>
-                {/* <Menu.Divider />
-                <Menu.Item key='admin'>
-                    <Link to={`/web/systemManage/userPermissions/userManage/${this.props.orgId}~${this.props.id}`}>
-                        <Icon type="user" />个人中心
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="question">
+                {/* <Menu.Item key="question">
                     <a  rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'><Icon type="question" />我要提问</a>
                 </Menu.Item> */}
             </Menu>
