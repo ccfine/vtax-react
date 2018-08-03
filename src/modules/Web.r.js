@@ -8,7 +8,7 @@ import {Layout} from 'antd'
 import PropTypes from 'prop-types'
 import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
-import {RouteWithSubRoutes} from 'compoments'
+import {RouteWithSubRoutes, WaterMark} from 'compoments'
 import {composeMenus} from 'utils'
 import Header from './header'
 import Sider from './sider'
@@ -18,6 +18,7 @@ import {logout} from '../redux/ducks/user'
 // import getPermission from  './index'
 import moment from 'moment';
 const { Content } = Layout;
+
 class Web extends Component {
 
     state = {
@@ -75,18 +76,18 @@ class Web extends Component {
     render() {
         // const copyright = <div>Copyright <Icon type="copyright" /> 2018 碧桂园增值税纳税申报系统</div>;
         //const pathname = this.props.history.location.pathname;
-        // const text = `${this.props.realName}, ${moment().format('YYYY-MM-DD HH:mm')}`;
-        // const beginAlarm = function() { console.log('start alarm'); };
-        // const options = {
-        //     //chunkWidth: 200,
-        //     //chunkHeight: 60,
-        //     textAlign: 'left',
-        //     textBaseline: 'bottom',
-        //     globalAlpha: 0.17,
-        //     font: '18px Microsoft Yahei',
-        //     rotateAngle: -0.26,
-        //     fillStyle: '#666'
-        // }
+        const text = `${this.props.realName}, ${this.props.username}, ${moment().format('YYYY-MM-DD HH:mm')}`;
+        const beginAlarm = function() { console.log('start alarm'); };
+        const options = {
+            chunkWidth: 300,
+            chunkHeight: 120,
+            textAlign: 'left',
+            textBaseline: 'bottom',
+            globalAlpha: 0.17,
+            font: '18px Microsoft Yahei',
+            rotateAngle: -0.26,
+            fillStyle: '#666'
+        }
 
         return (
             <Layout>
@@ -94,12 +95,12 @@ class Web extends Component {
                 <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}} >
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                    {/* <WaterMark
+                    <WaterMark
                         waterMarkText={text}
-                        openSecurityDefense
+                        openSecurityDefense={false}
                         securityAlarm={beginAlarm}
                         options={options}
-                    > */}
+                    >
                         <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
                             <Switch>
                                 {
@@ -115,7 +116,7 @@ class Web extends Component {
                                 copyright
                             }
                         </Footer> */}
-                    {/* </WaterMark> */}
+                    </WaterMark>
                 </Layout>
             </Layout>
         )
@@ -126,6 +127,7 @@ export default withRouter(connect(state=>({
     personal:state.user.get('personal'),
     isAuthed:state.user.get('isAuthed'),
     realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
+    username:state.user.getIn(['personal','username']),
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))
