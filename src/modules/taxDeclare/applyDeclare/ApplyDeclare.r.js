@@ -90,6 +90,7 @@ class ApplyDeclare extends React.Component {
 		{url,decAction} = this.props; 
 		return recordLoading?'加载中...'
 		:(
+			!record?'加载异常，请检查网络！':
             <Tabs
 				hideAdd={true}
                 tabBarStyle={{marginBottom:0}}

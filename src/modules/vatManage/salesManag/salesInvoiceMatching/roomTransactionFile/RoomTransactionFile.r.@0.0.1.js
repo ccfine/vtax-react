@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:35:32
+ * @Last Modified time: 2018-08-03 14:50:50
  *
  */
 import React,{Component} from 'react'
@@ -503,7 +503,7 @@ class RoomTransactionFile extends Component{
                     },
                     scroll:{
                         x: 3200,
-                        y:window.screen.availHeight-500-(disabled?50:0),
+                        y:window.screen.availHeight-400-(disabled?50:0),
                     },
                 }}
             >
