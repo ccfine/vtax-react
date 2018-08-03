@@ -18,15 +18,16 @@ const searchFields =  (disabled,declare) => {
     return [
         {
             label:'纳税主体',
-            fieldName:'mainId',
+            fieldName:'main',
             type:'taxMain',
             span:8,
             formItemStyle,
             componentProps:{
+                labelInValue:true,
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare['mainId']) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -34,25 +35,46 @@ const searchFields =  (disabled,declare) => {
                     }
                 ]
             }
-        },{
-            label:'查询期间',
-            fieldName:'authMonth',
-            type:'monthPicker',
+        }, {
+            label: '查询期间',
+            fieldName: 'authMonth',
+            type: 'monthPicker',
             formItemStyle,
-            span:8,
-            componentProps:{
-                format:'YYYY-MM',
+            span: 8,
+            componentProps: {
+                format: 'YYYY-MM',
                 disabled
             },
-            fieldDecoratorOptions:{
+            fieldDecoratorOptions: {
                 initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
-                rules:[
+                rules: [
                     {
-                        required:true,
-                        message:'请选择查询期间'
+                        required: true,
+                        message: '请选择查询期间'
                     }
                 ]
             },
+        },{
+            label: "取得方式",
+            fieldName: "acquisitionMode",
+            span: 8,
+            formItemStyle,
+            type: "select",
+            options: [ //0-外部获取,1-单独新建，2-自建转自用
+                {
+                    text: "外部获取",
+                    value: "0"
+                },
+                {
+                    text: "单独新建",
+                    value: "1"
+                },
+                {
+                    text: "自建转自用",
+                    value: "2"
+                }
+            ]
+
         }
     ]
 }
@@ -60,36 +82,37 @@ const columns=[
     {
         title:'纳税主体名称',
         dataIndex:'taxSubjectName',
-        width:'10%',
+        width:'150px',
     },
     {
         title:'纳税主体代码',
         dataIndex:'taxSubjectNum',
-        width:'10%',
+        width:'100px',
     },
     {
         title:'项目分期名称',
         dataIndex:'stageName',
-        width:'10%',
+        width:'150px',
     },
     {
         title:'项目分期代码',
         dataIndex:'stageNum',
-        width:'6%',
+        width:'100px',
     },
     {
         title:'固定资产名称',
         dataIndex:'assetName',
+        width:'100px',
     },
     {
         title:'固定资产编号',
         dataIndex:'assetNo',
-        width:'6%',
+        width:'100px',
     },
     {
         title: "入账日期",
         dataIndex: "accountDate",
-        width:75,
+        width:'100px',
     },
     {
         title:'取得方式',
@@ -114,51 +137,56 @@ const columns=[
             }
             return res;
         },
-        width:75,
+        width:'100px',
     },
     {
         title: "取得价值",
         dataIndex: "gainValue",
-        width:'6%',
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'100px',
     },
     {
         title: "建筑面积",
         dataIndex: "areaCovered",
-        width:'6%',
+        width:'100px',
     },
     {
         title: "购进税额",
         dataIndex: "inTax",
-        render:(text)=>fMoney(text),
-        width:'6%',
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'100px',
     },
     {
         title: "购进税率",
         dataIndex: "intaxRate",
         render:text=>text && `${text}%`,
-        width:50,
+        width:'100px',
     },
     {
         title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
         render:(text)=>fMoney(text),
-        width:'6%',
+        className: "table-money",
+        width:'150px',
     },
     {
         title: "待抵扣的进项税额",
         dataIndex: "deductedTaxAmount",
+        className: "table-money",
         render:(text)=>fMoney(text),
-        width:'6%',
+        width:'150px',
     },
     {
         title: "资产类别",
         dataIndex: "assetType",
-        width:'8%',
+        width:'100px',
     },
     {
         title: "资产状态",
         dataIndex: "assetsState",
-        width:60,
+        width:'100px',
     },
 ];
  class FixedAssetCollection extends Component{
@@ -187,6 +215,7 @@ const columns=[
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
@@ -244,12 +273,12 @@ const columns=[
                         )
                     },
                     scroll:{
-                     x:2000,
+                     x:1800,
                      y:window.screen.availHeight-380-(disabled?50:0),
                      },
                 }}
             />
-
+            </div>
         )
     }
 }

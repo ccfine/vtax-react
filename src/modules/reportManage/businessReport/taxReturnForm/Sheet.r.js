@@ -73,6 +73,35 @@ export default class Sheet extends Component{
             loading
         })
     }
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     componentWillReceiveProps(nextProps){
         if(this.props.updateKey !== nextProps.updateKey){
             nextProps.form.resetFields();
@@ -137,17 +166,21 @@ export default class Sheet extends Component{
                                             readOnly:false,
                                             component:<React.Fragment>
                                                 <NumericInputCell
-                                                initialValue={di.value}
-                                                getFieldDecorator={this.props.form.getFieldDecorator}
-                                                fieldName={`map.${di.key}`}
-                                                editAble={true}
-                                                componentProps={{valueType:di.type === 'rate'?'int':'float'}}
+                                                    initialValue={di.type !== 'rate' ? di.value==='0' ? '0.00' : fMoney(di.value) : di.value}
+                                                    getFieldDecorator={this.props.form.getFieldDecorator}
+                                                    fieldName={`map.${di.key}`}
+                                                    editAble={true}
+                                                    componentProps={{
+                                                        valueType:di.type === 'rate'?'int':'float',
+                                                        onFocus:(e)=>di.type !== 'rate' && this.handleFocus(e,`map.${di.key}`),
+                                                        onBlur:(e)=>di.type !== 'rate' && this.handleBlur(e,`map.${di.key}`)
+                                                    }}
                                                 /> 
                                                 </React.Fragment>,
                                             forceComponent:true,
                                         }
                                     }else{
-                                        return {...di, value:(di.type==='rate' &&  di.value && di.value!=='--')?`${di.value}%`:di.value,readOnly:true};
+                                        return {...di, value:(di.type==='rate' &&  di.value && di.value!=='--')?`${di.value}`:di.value,readOnly:true};
                                     }
                                 }))}
                                 valueRenderer={(cell) => cell ? cell.value : ''}

@@ -177,11 +177,14 @@ class SimPlePermissionModal extends React.Component{
         userPermissionLoading:false,
         userPermission:[],
         submitLoading:false,
+
+        _orgFetch:Date.now(),
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.updateKey !== this.props.updateKey){
             if(nextProps.orgId){
                 this.fetchPermissionByUserId(nextProps)
+                this.setState({_orgFetch:Date.now()})
             }else{
                 this.props.form.resetFields();
                 this.setState({checkedKeys:[]})
@@ -283,7 +286,7 @@ class SimPlePermissionModal extends React.Component{
     }
     render(){
         let {visible,orgId,userId} = this.props,
-            {userPermissionLoading,submitLoading} = this.state,
+            {userPermissionLoading,submitLoading,_orgFetch} = this.state,
             {getFieldDecorator} = this.props.form;
         return <Modal
             title="用户权限设置"
@@ -318,7 +321,7 @@ class SimPlePermissionModal extends React.Component{
                                 fieldValueName: "id",
                                 doNotFetchDidMount:!userId,
                                 fetchAble:userId,
-                                url: `/sysOrganization/queryOrgsByUserId/${userId}`,
+                                url: `/sysOrganization/queryOrgsByUserId/${userId}?refresh=${_orgFetch}`,
                             },
                             fieldDecoratorOptions: {
                                 initialValue: orgId,

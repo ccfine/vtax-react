@@ -2,14 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-16 14:07:17 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-23 10:00:50
+ * @Last Modified time: 2018-07-27 17:23:55
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router'
 import { Divider, Modal, message } from "antd";
-import { request,composeBotton,getUrlParam } from "utils";
+import { request,composeBotton } from "utils";
 import { SearchTable } from "compoments";
 import PopModal, { RoleModal, PermissionModal,SimplePermissionModal } from "./popModal";
 const pointerStyleDelete = {
@@ -17,19 +17,10 @@ const pointerStyleDelete = {
     color:'red',
     marginRight:10
 }
-const parseJsonToParams = data=>{
-    let str = '';
-    for(let key in data){
-        if(typeof data[key] !== 'undefined'){
-            str += `${key}=${data[key]}&`
-        }
-    }
-    return str;
-}
-const getSearchFields = context => [
+const getSearchFields = (context,params) => [
     {
         label: "组织",
-        fieldName: "orgId",
+        fieldName: "org",
         type: "asyncSelect",
         span: 8,
         componentProps: {
@@ -37,13 +28,14 @@ const getSearchFields = context => [
             fieldValueName: "id",
             url: `/sysOrganization/getOrganizations`,
             selectOptions:{
+                labelInValue:true,
                 showSearch:true,
                 // filterOption:false,
                 optionFilterProp:'children',
             },
         },
         fieldDecoratorOptions: {
-            initialValue:  getUrlParam('orgId')==='' ? '' : getUrlParam('orgId') || context.props.orgId
+            initialValue:  (JSON.stringify(params) !== "{}"  && {key: params.orgId === '' ? '' : params.orgId,label: ''} ) || (context.props.org && {key: context.props.org.orgId,label: context.props.org.orgName}),
         }
     },
     {
@@ -52,7 +44,7 @@ const getSearchFields = context => [
         span: 8,
         fieldName: "username",
         fieldDecoratorOptions: {
-            initialValue: getUrlParam('username') || undefined,
+            initialValue: (params && params.username) ? params.username : undefined,
         }
     },
     {
@@ -61,7 +53,7 @@ const getSearchFields = context => [
         span: 8,
         fieldName: "realname",
         fieldDecoratorOptions: {
-            initialValue: getUrlParam('realname') || undefined,
+            initialValue:  (params && params.realname) ? params.realname : undefined,
         }
     }
 ];
@@ -172,7 +164,9 @@ const getColumns = context => [
                     title="查看详情"
                     to={{
                         pathname: `/web/systemManage/userPermissions/userManage/${record.id}`,
-                        search:parseJsonToParams(context.state.searchValues),
+                        state:{
+                            ...context.state.searchValues
+                        }
                     }}
                 >
                     {text}
@@ -203,31 +197,35 @@ const getColumns = context => [
 ];
 
 class UserManage extends Component {
-    state = {
-        updateKey: Date.now(),
+    constructor(props) {
+        super(props)
+        this.state = {
+            updateKey: Date.now(),
 
-        createUserKey: Date.now() + 1,
-        createUserVisible: false,
-        createModalType: "create",
-        createUserDefault: undefined,
-        createUserLoading:false,
+            createUserKey: Date.now() + 1,
+            createUserVisible: false,
+            createModalType: "create",
+            createUserDefault: undefined,
+            createUserLoading: false,
 
-        roleModalVisible: false,
-        roleModalKey: Date.now() + 2,
-        //roleModalDefault: undefined,
-        roleAssignUserId: undefined,
-        //roleLoading:false,
+            roleModalVisible: false,
+            roleModalKey: Date.now() + 2,
+            //roleModalDefault: undefined,
+            roleAssignUserId: undefined,
+            //roleLoading:false,
 
-        permissionVisible: false,
-        permissionKey: Date.now() + 3,
-        permissionId: undefined,
-        
-        simplePermissionVisible: false,
-        simplePermissionKey: Date.now() + 4,
-        simplePermissionId: undefined,
+            permissionVisible: false,
+            permissionKey: Date.now() + 3,
+            permissionId: undefined,
 
-        searchValues: undefined
-    };
+            simplePermissionVisible: false,
+            simplePermissionKey: Date.now() + 4,
+            simplePermissionId: undefined,
+
+            searchValues: undefined,
+            params: {...props.location.state},
+        }
+    }
     async fetchUser(url) {
         return await request
             .get(url)
@@ -330,26 +328,46 @@ class UserManage extends Component {
         });
     };
     handleAdmin = (id,isAdmin) => {
-        request
-        .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
-        .then(({ data }) => {
-            if (data.code === 200) {
-                message.success(isAdmin?"移除成功!":'添加成功!');
-                this.refreshTable();
-            } else {
-                message.error(data.msg, 4);
+        const modalRef = Modal.confirm({
+            title: "友情提醒",
+            content: `是否确认${isAdmin?'从管理员中移除':'添加为管理员'}？`,
+            okText: "确定",
+            okType: "danger",
+            cancelText: "取消",
+            onOk: () => {
+                request
+                .put(isAdmin?`/sysUser/update/unAdmin`:`/sysUser/update/admin`,{id:id})
+                .then(({ data }) => {
+                    if (data.code === 200) {
+                        message.success(isAdmin?"移除成功!":'添加成功!');
+                        this.refreshTable();
+                    } else {
+                        message.error(data.msg, 4);
+                    }
+                })
+                .catch(e => {
+                    message.error(e.message, 4);
+                });
+            },
+            onCancel() {
+                modalRef.destroy();
             }
-        })
-        .catch(e => {
-            message.error(e.message, 4);
         });
     };
     render() {
+        const {  params } = this.state
         return (
             <div className="oneLine">
                 <SearchTable
                     searchOption={{
-                        fields: getSearchFields(this)
+                        fields: getSearchFields(this,params),
+                        onResetFields:()=>{
+                            this.setState({
+                                params: {
+                                    orgId:''
+                                }
+                            })
+                        },
                     }}
                     doNotFetchDidMount={false}
                     backCondition={values => {
@@ -461,5 +479,5 @@ class UserManage extends Component {
 }
 
 export default withRouter(connect(state => ({
-    orgId: state.user.get("org").orgId
+    org: state.user.get("org")
 }))(UserManage));

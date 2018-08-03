@@ -36,7 +36,7 @@ class NumericInput extends React.Component {
         }
     }
     onChange = (e) => {
-        const { value } = e.target;
+        let { value } = e.target;
         let noNegativeValue = value.indexOf('-')===0
                                 ?
                                 value.substr(1,value.length-1)

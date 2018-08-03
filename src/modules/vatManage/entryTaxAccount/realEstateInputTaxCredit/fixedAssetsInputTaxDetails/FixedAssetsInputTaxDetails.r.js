@@ -10,22 +10,23 @@ const columns = (context,isEdit) =>[
     {
         title:'纳税主体',
         dataIndex: "taxSubjectName",
-        width:'12%',
+        width:'150px',
     },{
         title:'项目分期名称',
         dataIndex:'stageName',
-        width:'12%',
+        width:'150px',
     },{
         title:'固定资产名称',
         dataIndex:'assetName',
+        width:'150px',
     },{
         title:'固定资产编号',
         dataIndex:'assetNo',
-        width:'8%',
+        width:'100px',
     },{
         title: "入账日期",
         dataIndex: "accountDate",
-        width:75,
+        width:'100px',
     },{
         title:'取得方式',
         dataIndex:'acquisitionMode',
@@ -49,13 +50,13 @@ const columns = (context,isEdit) =>[
             }
             return res;
         },
-        width:60,
+        width:'100px',
     },{
         title:'取得价值',
         dataIndex:'gainValue',
         render:(text)=>fMoney(text),
         className: "table-money",
-        width:'7%',
+        width:'100px',
     },
     /*{
         title: "建筑面积",
@@ -67,50 +68,50 @@ const columns = (context,isEdit) =>[
         render:(text,record,index)=>{
             if(isEdit && record.intaxRateEdit){
                 return <NumericInputCell
-                initialValue={text}
-                getFieldDecorator={context.props.form.getFieldDecorator}
-                fieldName={`list[${index}].intaxRate`}
-                editAble={true}
-                componentProps={{decimalPlaces:10}}
-                />
+                            initialValue={text==='0' ? '0.00' : text}
+                            getFieldDecorator={context.props.form.getFieldDecorator}
+                            fieldName={`list[${index}].intaxRate`}
+                            editAble={true}
+                            componentProps={{decimalPlaces:10}}
+                        />
              }else{
                 return text && `${text}%`
              }
         },
-        width:'7%',
+        width:'100px',
     },
     {
         title: "税额",
         dataIndex: "inTax",
         render:(text)=>fMoney(text),
         className: "table-money",
-        width:'7%',
+        width:'100px',
     },
     {
         title: "当期抵扣的进项税额",
         dataIndex: "taxAmount",
         render:(text)=>fMoney(text),
         className: "table-money",
-        width:'7%',
+        width:'150px',
     },
     {
         title: "待抵扣的进项税额",
         dataIndex: "deductedTaxAmount",
         render:(text)=>fMoney(text),
         className: "table-money",
-        width:'7%',
+        width:'150px',
     },{
         title: "待抵扣期间",
         dataIndex: "deductedPeriod",
-        width:80,
+        width:'100px',
     },{
         title: "资产类别",
         dataIndex: "assetType",
-        width:'8%',
+        width:'150px',
     },{
         title: "资产状态",
         dataIndex: "assetsState",
-        width:60,
+        width:'100px',
     },
 ];
 class FixedAssetsInputTaxDetails extends Component{
@@ -163,6 +164,7 @@ class FixedAssetsInputTaxDetails extends Component{
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -265,11 +267,12 @@ class FixedAssetsInputTaxDetails extends Component{
                         })
                     },
                     scroll:{
-                         x:1600,
+                         x:1700,
                          y:window.screen.availHeight-430,
                     },
                 }}
             />
+            </div>
         )
     }
 }

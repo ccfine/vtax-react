@@ -10,12 +10,15 @@ import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {RouteWithSubRoutes} from 'compoments'
 import {composeMenus} from 'utils'
+import watermark from '../utils/WaterMark'
 import Header from './header'
 import Sider from './sider'
 /*import BreadCrumb from './breadcrumb/Breadcrumb'*/
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
 // import getPermission from  './index'
+import moment from 'moment';
+
 
 const { Content } = Layout;
 
@@ -55,6 +58,10 @@ class Web extends Component {
         this.checkLoggedIn(this.props)
     }
 
+    componentDidMount(){
+        watermark({ watermark_txt:`${this.props.realName}, ${this.props.username}, ${moment().format('YYYY-MM-DD HH:mm')}`});
+    }
+
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
@@ -82,21 +89,21 @@ class Web extends Component {
                 <Layout style={{ msFlex:'1 1 auto', msOverflowY: 'hidden',minHeight:'100vh'}} >
                     <Header logout={()=>this.props.logout()} changeCollapsed={this.changeCollapsed.bind(this)} changeRefresh={this.changeRefresh.bind(this)}  />
                     {/*<BreadCrumb location={this.props.location} routes={routes} />*/}
-                    <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
-                        <Switch>
+                        <Content style={{ margin: '8px 12px 0'}}  key={this.state.refresh}>
+                            <Switch>
+                                {
+                                    composeMenus(routes).map((route, i) => (
+                                        <RouteWithSubRoutes key={i} {...route}/>
+                                    ))
+                                }
+                                <Route path="*" component={()=><div>no match</div>} />
+                            </Switch>
+                        </Content>
+                        {/* <Footer style={{ textAlign: 'center',padding:'8px 12px'}}>
                             {
-                                composeMenus(routes).map((route, i) => (
-                                    <RouteWithSubRoutes key={i} {...route}/>
-                                ))
+                                copyright
                             }
-                            <Route path="*" component={()=><div>no match</div>} />
-                        </Switch>
-                    </Content>
-                    {/* <Footer style={{ textAlign: 'center',padding:'8px 12px'}}>
-                        {
-                            copyright
-                        }
-                    </Footer> */}
+                        </Footer> */}
                 </Layout>
             </Layout>
         )
@@ -106,6 +113,8 @@ class Web extends Component {
 export default withRouter(connect(state=>({
     personal:state.user.get('personal'),
     isAuthed:state.user.get('isAuthed'),
+    realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
+    username:state.user.getIn(['personal','username']),
 }),dispatch=>({
     logout:logout(dispatch)
 }))(Web))

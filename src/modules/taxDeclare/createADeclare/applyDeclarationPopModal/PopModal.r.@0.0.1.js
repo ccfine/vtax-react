@@ -92,13 +92,13 @@ const steps = [
 		title: '其他管理',
 		decConduct: 2
 	},
-	{
-		title: '税款计算',
-		decConduct: 3
-	},
+	// {
+	// 	title: '税款计算',
+	// 	decConduct: 3
+	// },
 	{
 		title: '纳税申报表',
-		decConduct: 4
+		decConduct: 3
 	}
 ]
 
@@ -125,7 +125,7 @@ class ApplyDeclarationPopModal extends Component {
 	handleCurrent = current => {
 		this.setState({ current }, () => {
 			this.fetchDeclarationById({
-				decConduct: current,
+				decConduct: steps[current].decConduct,
 				mainId: this.props.record.mainId,
 				authMonth: this.props.record.partTerm
 			})
@@ -204,6 +204,7 @@ class ApplyDeclarationPopModal extends Component {
         const { saveDeclare, record} = this.props;
         saveDeclare({
             mainId: record.mainId,
+            mainName:record.mainName,
             authMonth: record.partTerm,
             authMonthEnd: record.subordinatePeriodEnd,
             status: record.status,
@@ -212,7 +213,6 @@ class ApplyDeclarationPopModal extends Component {
 		setTimeout(()=>{
         	//TODO: 给ie10用的 为了防止被浏览器拦截
             //window.open(url, '_blank').location;
-        	window.open(url)
             const ref = Modal.warning({
                 title: '友情提醒',
                 content: <h2>操作完成后，请刷新当前页面！</h2>,
@@ -221,13 +221,15 @@ class ApplyDeclarationPopModal extends Component {
                     ref.destroy()
                     const { record } = this.props;
                     this.fetchDeclarationById({
-                        decConduct: this.state.current,
+                        decConduct: steps[this.state.current].decConduct,
                         mainId: record.mainId,
                         authMonth: record.partTerm
                     })
                 }
             })
-        },100)
+
+            window.open(url)
+        },500)
 
     }
 
@@ -258,7 +260,7 @@ class ApplyDeclarationPopModal extends Component {
 		if (!this.props.visible && nextProps.visible) {
             const { record } = nextProps;
 			this.fetchDeclarationById({
-				decConduct: this.state.current,
+				decConduct: steps[this.state.current].decConduct,
 				mainId: record.mainId,
 				authMonth: record.partTerm
 			},nextProps.url)

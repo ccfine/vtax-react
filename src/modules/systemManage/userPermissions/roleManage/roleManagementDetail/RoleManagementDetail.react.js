@@ -42,7 +42,7 @@ class RoleManagementDetail extends Component {
 			})
 
 		this.fetchRole(this.props.match.params.id)
-		this.fetchRoleId(this.props.match.params.id)
+		this.fetchRoleId(this.props.match.params.id, this.props.location.state.params.orgId)
 	}
 	fetchRole = id => {
 		this.toggleLoading(true)
@@ -63,10 +63,10 @@ class RoleManagementDetail extends Component {
 				this.toggleLoading(false)
 			})
 	}
-	fetchRoleId = id => {
+	fetchRoleId = (id,orgId)=> {
 		this.toggleLoading(true)
 		request
-			.get(`/sysRole/queryUserByRoleId/${id}`)
+			.get(`/sysRole/queryUserByRoleId/${id}/${orgId}`)
 			.then(({ data }) => {
 				if (data.code === 200) {
 					this.toggleLoading(false)
@@ -96,10 +96,13 @@ class RoleManagementDetail extends Component {
 					<Link
 						style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}
 						to={{
-                            pathname: location && location.pathname ? location.pathname.substring(0,location.pathname.lastIndexOf('/')) : '',
-                            search:location.search,
-                        }}
-					><Icon type="left" /><span>返回</span></Link>
+                        pathname: `/web/systemManage/userPermissions/roleManage`,
+                        state:{
+                            ...location.state.params,
+                        }
+					}}>
+						<Icon type="left" /><span>返回</span>
+					</Link>
 				</div>
 				<Card loading={loading}
 					title="角色信息">

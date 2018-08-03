@@ -39,24 +39,29 @@ const columns = context =>[
     {
         title: '纳税主体名称',
         dataIndex: 'mainName',
-        width:'12%',
-    },{
+        width:'150px',
+    },
+    {
         title: '项目分期代码',
         dataIndex: 'stagesNum',
-        width:'8%',
-    },{
+        width:'100px',
+    },
+    {
         title: '项目分期名称',
         dataIndex: 'stagesName',
-        width:'12%',
-    },{
+        width:'150px',
+    },
+    {
         title: '凭证日期',
         dataIndex: 'voucherDate',
-        width:75,
-    },{
+        width:'100px',
+    },
+    /*{
         title: '凭证类型',
         dataIndex: 'voucherType',
         width:'6%',
-    },{
+    },*/
+    {
         title: '凭证号',
         dataIndex: 'voucherNum',
         render:(text,record)=>(
@@ -71,25 +76,31 @@ const columns = context =>[
                 {text}
             </span>
         ),
-        width:'8%',
-    },{
+        width:'100px',
+    },
+    {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-    },{
+        //width:'300px',
+    },
+    {
         title: '借方科目代码',
         dataIndex: 'debitSubjectCode',
-        width:'6%',
-    },{
+        width:'100px',
+    },
+    {
         title: '借方科目名称',
         dataIndex: 'debitSubjectName',
-        width:'16%',
-    },{
+        width:'200px',
+    },
+    {
         title: '借方金额',
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
         className: "table-money",
-        width:'5%',
-    },{
+        width:'100px',
+    },
+    {
         title: '简易计税',
         dataIndex: 'commonlyFlag',
         sorter: true,
@@ -107,7 +118,7 @@ const columns = context =>[
             }
             return res;
         },
-        width:60,
+        width:'100px',
     }
 ];
 class GeneralTaxCertificate extends Component{
@@ -146,6 +157,7 @@ class GeneralTaxCertificate extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -236,7 +248,7 @@ class GeneralTaxCertificate extends Component{
                         })
                     },
                     scroll:{
-                        x:1800,
+                        x:1400,
                         y:window.screen.availHeight-420-(disabled?50:0),
                     },
                 }}
@@ -247,6 +259,7 @@ class GeneralTaxCertificate extends Component{
                     {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
+            </div>
         )
     }
 }

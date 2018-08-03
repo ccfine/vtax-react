@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 11:42:00
+ * @Last Modified time: 2018-08-03 14:16:13
  *
  */
 import React, { Component } from 'react'
@@ -33,14 +33,15 @@ const searchFields=(disabled,declare)=> {
         {
             label: '纳税主体',
             type: 'taxMain',
-            fieldName: 'mainId',
+            fieldName: 'main',
             span:6,
             componentProps:{
+                labelInValue:true,
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare.mainId) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -98,29 +99,20 @@ const searchFields=(disabled,declare)=> {
 }
 const columns = [
     {
-        title:'纳税主体',
-        dataIndex:'mainName'
-    },
-    {
-        title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum',
-        width:'12%',
-    },
-    {
-        title:'购货单位名称',
-        dataIndex:'purchaseName',
-        width:'12%',
-    },
-    {
         title:'发票代码',
         dataIndex:'invoiceCode',
-        width:'8%',
+        width:'150px',
     },
     {
-        title:'发票号码',
-        dataIndex:'invoiceNum',
-        width:'8%',
+        title: '发票号码',
+        dataIndex: "invoiceNum",
+        width:'200px',
     },
+    /*{
+        title:'纳税主体',
+        dataIndex:'mainName',
+        width:'200px',
+    },*/
     {
         title:'发票类型',
         dataIndex:'invoiceType',
@@ -133,42 +125,57 @@ const columns = [
             }
             return text;
         },
-        width:60,
+        width:'100px',
     },
     {
-        title:'开票日期',
-        dataIndex:'billingDate',
-        width:'75px'
+        title: '备注',
+        dataIndex: 'remark',
+        //width:'500px',
     },
     {
         title:'金额',
         dataIndex:'amount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'8%',
+        width:'100px',
     },
     {
         title:'税率',
         dataIndex:'taxRate',
         className:'text-right',
         render:text=>text? `${text}%`: text,
-        width:40,
+        width:'100px',
     },
     {
         title:'税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'8%',
+        width:'100px',
     },
     {
         title:'价税合计',
         dataIndex:'totalAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'8%',
+        width:'100px',
+    },
+    {
+        title:'纳税人识别号',
+        dataIndex:'purchaseTaxNum',
+        width:'200px',
+    },
+    {
+        title:'开票日期',
+        dataIndex:'billingDate',
+        width:'100px',
+    },
+    {
+        title:'购货单位名称',
+        dataIndex:'purchaseName',
+        width:'200px',
     }
-];
+]
 
 class NeedNotMatchInvoices extends Component{
     state={
@@ -240,6 +247,7 @@ class NeedNotMatchInvoices extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -303,13 +311,13 @@ class NeedNotMatchInvoices extends Component{
                         })
                     },
                     scroll:{
-                        x:1200,
+                        x:1850,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     cardProps:{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>无需匹配的发票列表</span>,
                     },
-                    onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
+                    onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status, 0) !== 2)?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
@@ -318,6 +326,7 @@ class NeedNotMatchInvoices extends Component{
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} declare={declare}/>
             </SearchTable>
+            </div>
         )
     }
 }

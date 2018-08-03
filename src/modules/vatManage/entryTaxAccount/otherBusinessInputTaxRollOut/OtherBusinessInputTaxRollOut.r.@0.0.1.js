@@ -20,13 +20,13 @@ const getFields = (disabled,declare) => [
         label: "纳税主体",
         type: "taxMain",
         span:8,
-        fieldName: "mainId",
+        fieldName: "main",
         componentProps: {
+            labelInValue:true,
             disabled
         },
         fieldDecoratorOptions: {
-            initialValue:
-                (disabled && declare["mainId"]) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules: [
                 {
                     required: true,

@@ -112,43 +112,45 @@ export default class PopInvoiceInformationModal extends Component{
                     </Row>
                 }
                 title={props.title}>
-                <SearchTable
-                    searchOption={{
-                        fields:searchFields,
-                    }}
-                    doNotFetchDidMount={true}
-                    spinning={searchTableLoading}
-                    tableOption={{
-                        key:tableKey,
-                        pageSize:100,
-                        columns:columns,
-                        url:`/account/output/billingSale/detail/list?${parseJsonToParams(filters)}`,
-                        onSuccess:(params)=>{
-                            this.setState({
-                                filters:params
-                            })
-                        },
-                        scroll:{ x: '160%', y: 200 },
-                        /*extra:<div>
-                            <FileExport
-                                url='account/output/billingSale/detail/export'
-                                title='导出'
-                                setButtonStyle={{marginRight:5}}
-                                params={{
-                                    ...props.filters,
-                                    ...filters
-                                }}
-                            />
-                            <TableTotal totalSource={totalSource} />
-                        </div>,
-                        onTotalSource: (totalSource) => {
-                            this.setState({
-                                totalSource
-                            })
-                        },*/
-                    }}
+                <div className='oneLine'>
+                    <SearchTable
+                        searchOption={{
+                            fields:searchFields,
+                        }}
+                        doNotFetchDidMount={true}
+                        spinning={searchTableLoading}
+                        tableOption={{
+                            key:tableKey,
+                            pageSize:100,
+                            columns:columns,
+                            url:`/account/output/billingSale/detail/list?${parseJsonToParams(filters)}`,
+                            onSuccess:(params)=>{
+                                this.setState({
+                                    filters:params
+                                })
+                            },
+                            scroll:{ x: '160%', y: 200 },
+                            /*extra:<div>
+                             <FileExport
+                             url='account/output/billingSale/detail/export'
+                             title='导出'
+                             setButtonStyle={{marginRight:5}}
+                             params={{
+                             ...props.filters,
+                             ...filters
+                             }}
+                             />
+                             <TableTotal totalSource={totalSource} />
+                             </div>,
+                             onTotalSource: (totalSource) => {
+                             this.setState({
+                             totalSource
+                             })
+                             },*/
+                        }}
 
-                />
+                    />
+                </div>
             </Modal>
         )
     }

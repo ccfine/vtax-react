@@ -5,6 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
+import { compose } from 'redux';
+import {connect} from 'react-redux'
 import {SynchronizeTable} from 'compoments'
 import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
@@ -39,7 +41,7 @@ const columns = context => [
         title: '开具增值税专用发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text  : <a onClick={()=>{
@@ -66,7 +68,7 @@ const columns = context => [
         title: '开具其他发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
@@ -124,7 +126,7 @@ const notColumns = context =>[
         title: '开具增值税专用发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
@@ -151,7 +153,7 @@ const notColumns = context =>[
         title: '开具其他发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
@@ -340,34 +342,34 @@ class BillingSales extends Component {
                               listMainResultStatus(statusParam)
                           }
                           {
-                              JSON.stringify(filters) !=='{}' && composeBotton([{
-                                  type:'fileExport',
-                                  url:'account/output/billingSale/isEstate/export',
-                                  params:filters,
-                                  title:'导出',
-                                  userPermissions:['1221007'],
-                              }],statusParam)
-                          }
+                            JSON.stringify(filters) !=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'account/output/billingSale/isEstate/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1221007'],
+                            }],statusParam)
+                            }
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
-                                  type:'reset',
-                                  url:'/account/output/billingSale/reset',
-                                  params:filters,
-                                  userPermissions:['1221009'],
-                                  onSuccess:this.refreshTable
-                              },{
-                                  type:'submit',
-                                  url:'/account/output/billingSale/submit',
-                                  params:filters,
-                                  userPermissions:['1221010'],
-                                  onSuccess:this.refreshTable
-                              },{
-                                  type:'revoke',
-                                  url:'/account/output/billingSale/revoke',
-                                  params:filters,
-                                  userPermissions:['1221011'],
-                                  onSuccess:this.refreshTable,
-                              }],statusParam)
+                                type:'reset',
+                                url:'/account/output/billingSale/reset',
+                                params:filters,
+                                userPermissions:['1221009'],
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'submit',
+                                url:'/account/output/billingSale/submit',
+                                params:filters,
+                                userPermissions:['1221010'],
+                                onSuccess:this.refreshTable
+                            },{
+                                type:'revoke',
+                                url:'/account/output/billingSale/revoke',
+                                params:filters,
+                                userPermissions:['1221011'],
+                                onSuccess:this.refreshTable,
+                            }],statusParam)
                           }
                       </div>
                       }
@@ -388,14 +390,14 @@ class BillingSales extends Component {
                 <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-非地产</span>}
                       extra={<div>
                           {
-                              JSON.stringify(filters) !=='{}' && composeBotton([{
-                                  type:'fileExport',
-                                  url:'account/output/billingSale/noEstate/export',
-                                  params:filters,
-                                  title:'导出',
-                                  userPermissions:['1221007'],
-                              }],statusParam)
-                          }
+                            JSON.stringify(filters) !=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'account/output/billingSale/noEstate/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1221007'],
+                            }],statusParam)
+                            }
                       </div>}
                       style={{marginTop:10}}>
 
@@ -426,5 +428,10 @@ class BillingSales extends Component {
         )
     }
 }
-
-export default Form.create()(BillingSales);
+const enhance = compose(
+    Form.create(),
+    connect( (state) => ({
+        declare:state.user.get('declare')
+    }))
+);
+export default enhance(BillingSales);

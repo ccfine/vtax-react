@@ -4,6 +4,7 @@
  * description  :
  */
 import React, { Component } from "react";
+import {connect} from 'react-redux'
 import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
 import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
@@ -68,14 +69,15 @@ const getSearchFields = (disabled,declare) => {
     return [
             {
                 label: "纳税主体",
-                fieldName: "mainId",
+                fieldName: "main",
                 type: "taxMain",
                 span: 8,
                 componentProps: {
+                    labelInValue:true,
                     disabled
                 },
                 fieldDecoratorOptions: {
-                    initialValue: (disabled && declare["mainId"]) || undefined,
+                    initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                     rules: [
                         {
                             required: true,
@@ -119,7 +121,9 @@ const getSearchFields = (disabled,declare) => {
 const getColumns = (context) => [{
         title: "纳税主体",
         dataIndex: "mainName",
-    }, {
+        width:'200px',
+    },
+    {
         title: "数据来源",
         dataIndex: "sourceType",
         render: text => {
@@ -132,55 +136,42 @@ const getColumns = (context) => [{
             }
             return "";
         },
-        width:60,
-    }, {
+        width:'100px',
+    },
+    {
         title: "应税项目",
         dataIndex: "taxableProject",
-        width:'8%',
+        width:'100px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目名称</p>
-                <p className="apply-form-list-p2">项目编码</p>
-            </div>
-        ),
+        title: "项目名称",
         dataIndex: "projectName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.projectNum}</p>
-            </div>
-        ),
-        width:'12%',
+        width:'100px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票类型</p>
-                <p className="apply-form-list-p2">发票代码</p>
-            </div>
-        ),
+        title: "项目编码",
+        dataIndex: "projectNum",
+        width:'150px',
+    },
+    {
+        title: "发票类型",
         dataIndex: "invoiceType",
+        width:'100px',
         render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text==='s'?'增值税专用发票':(text==='c'?'增值税普通发票':'')}</p>
-                <p className="apply-form-list-p2">{record.invoiceCode}</p>
-            </div>
+            <p className="apply-form-list-p1">{text==='s'?'增值税专用发票':(text==='c'?'增值税普通发票':'')}</p>
         ),
-        width:100,
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">发票号码</p>
-                <p className="apply-form-list-p2">开票日期</p>
-            </div>
-        ),
+        title: "发票代码",
+        dataIndex: "invoiceCode",
+        width:'100px',
+    },
+    {
+        title: "发票号码",
         dataIndex: "invoiceNum",
+        width:'100px',
         render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1"><span
+            <a
                 title="查看详情"
                 style={{
                     ...pointerStyle,
@@ -198,61 +189,54 @@ const getColumns = (context) => [{
                 }}
             >
                 {text}
-            </span></p>
-                <p className="apply-form-list-p2">{record.billingDate}</p>
-            </div>
+            </a>
         ),
-        width:90,
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">认证月份</p>
-                <p className="apply-form-list-p2">认证时间</p>
-            </div>
-        ),
+        title: "开票日期",
+        dataIndex: "billingDate",
+        width:'100px',
+    },
+    {
+        title: "认证月份",
         dataIndex: "authMonth",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.authDate}</p>
-            </div>
-        ),
-        width:75,
+        width:'100px',
     },
     {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">销售单位名称</p>
-                <p className="apply-form-list-p2">纳税人识别号</p>
-            </div>
-        ),
+        title: "认证时间",
+        dataIndex: "authDate",
+        width:'100px',
+    },
+    {
+        title: "销售单位名称",
         dataIndex: "sellerName",
-        render: (text, record) => (
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.sellerTaxNum}</p>
-            </div>
-        ),
-        width:'16%',
+        width:'200px',
+    },
+    {
+        title: "纳税人识别号",
+        dataIndex: "sellerTaxNum",
+        width:'100px',
     },
     {
         title: "金额",
         dataIndex: "amount",
         render: text => fMoney(text),
-        width:'6%',
+        className:'table-money',
+        width:'100px',
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
         render: text => fMoney(text),
-        width:'6%',
+        className:'table-money',
+        width:'100px',
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
         render: text => fMoney(text),
-        width:'6%',
+        className:'table-money',
+        width:'100px',
     },
     {
         title: "认证标记",
@@ -274,7 +258,7 @@ const getColumns = (context) => [{
             }
             return res;
         },
-        width:60,
+        width:'100px',
     },
     {
         title: "是否需要认证",
@@ -293,7 +277,7 @@ const getColumns = (context) => [{
             }
             return res;
         },
-        width:60,
+        width:'100px',
     }
 ];
 
@@ -386,6 +370,7 @@ class InvoiceCollection extends Component {
         let disabled = !!declare,
         isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
+            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -398,7 +383,7 @@ class InvoiceCollection extends Component {
                         columns: getColumns(this),
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1500, y:window.screen.availHeight-380-(disabled?50:0)},
+                        scroll: { x: 2050, y:window.screen.availHeight-380},
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.setState({
                                 selectedRowKeys
@@ -502,7 +487,10 @@ class InvoiceCollection extends Component {
                         toggleModalVisible={this.toggleModalVisible}
                     />
                 </SearchTable>
+            </div>
         );
     }
 }
-export default InvoiceCollection;
+export default connect(state=>({
+    declare:state.user.get('declare')
+}))(InvoiceCollection)

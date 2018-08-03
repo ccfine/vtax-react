@@ -9,6 +9,11 @@
   .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
     background-color:#fff;
     padding:5px;
+
+    // 解决IE下数字不换行的问题
+    word-break:break-all;
+    word-wrap:break-word;
+    white-space: pre-wrap;
   }
   .ant-badge-status-dot{
     width:10px;

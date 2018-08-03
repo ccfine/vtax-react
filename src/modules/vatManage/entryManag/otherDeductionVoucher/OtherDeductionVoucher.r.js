@@ -24,14 +24,15 @@ const searchFields=(context,disabled,declare)=> {
         {
             label:'纳税主体',
             type:'taxMain',
-            fieldName:'mainId',
+            fieldName:'main',
             span:8,
             componentProps:{
+                labelInValue:true,
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && declare['mainId']) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -95,45 +96,36 @@ const markFieldsData = context => [
 ]
 const columns = context =>[
     {
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">纳税主体名称</p>
-            <p className="apply-form-list-p2">纳税主体代码</p>
-        </div>,
+        title: '纳税主体名称',
         dataIndex: 'mainName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.mainNum}</p>
-            </div>
-        ),
-        width:'16%',
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">项目分期名称</p>
-            <p className="apply-form-list-p2">项目分期代码</p>
-        </div>,
+        width:'200px',
+    },
+    {
+        title: '纳税主体代码',
+        dataIndex: 'mainNum',
+        width:'100px',
+    },
+    {
+        title: '项目分期名称',
         dataIndex: 'stagesName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.stagesNum}</p>
-            </div>
-        ),
-        width:'12%',
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">凭证日期</p>
-            <p className="apply-form-list-p2">记账日期</p>
-        </div>,
+        width:'200px',
+    },
+    {
+        title: '项目分期代码',
+        dataIndex: 'stagesNum',
+        width:'100px',
+    },
+    {
+        title: '凭证日期',
         dataIndex: 'voucherDate',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.billingDate}</p>
-            </div>
-        ),
-        width:75,
-    },{
+        width:'100px',
+    },
+    {
+        title: '记账日期',
+        dataIndex: 'billingDate',
+        width:'100px',
+    },
+    {
         title: '凭证号',
         dataIndex: 'voucherNum',
         render:(text,record)=>(
@@ -149,50 +141,49 @@ const columns = context =>[
                 {text}
             </span>
         ),
-        width:'5%',
-    },{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
-        width:'4%',
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">借方科目名称</p>
-            <p className="apply-form-list-p2">借方科目代码</p>
-        </div>,
-        dataIndex: 'debitSubjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.debitSubjectCode}</p>
-            </div>
-        ),
-        width:'14%',
-    },{
-        title: '借方金额',
-        dataIndex: 'debitAmount',
-        width:'6%',
-        render: text => fMoney(text),
-        className: "table-money"
-    },{
-        title: <div className="apply-form-list-th">
-            <p className="apply-form-list-p1">借方辅助核算名称</p>
-            <p className="apply-form-list-p2">借方辅助核算代码</p>
-        </div>,
-        dataIndex: 'debitProjectName',
-        render:(text,record)=>(
-            <div>
-                <p className="apply-form-list-p1">{text}</p>
-                <p className="apply-form-list-p2">{record.debitProjectNum}</p>
-            </div>
-        ),
-        width:'8%',
-    },{
-        title: '标记',
-        dataIndex: 'sysDictName',
-        width:'8%',
-    },{
+        width:'100px',
+    },
+    {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
+        width:'500px',
+    },
+    /*{
+        title: '凭证类型',
+        dataIndex: 'voucherType',
+        width:'100px',
+    },*/
+    {
+        title: '借方科目名称',
+        dataIndex: 'debitSubjectName',
+        width:'300px',
+    },
+    {
+        title: '借方科目代码',
+        dataIndex: 'debitSubjectCode',
+        width:'100px',
+    },
+    {
+        title: '借方金额',
+        dataIndex: 'debitAmount',
+        width:'100px',
+        render: text => fMoney(text),
+        className: "table-money"
+    },
+    {
+        title: '借方辅助核算名称',
+        dataIndex: 'debitProjectName',
+        width:'200px',
+    },
+    {
+        title: '借方辅助核算代码',
+        dataIndex: 'debitProjectNum',
+        width:'200px',
+    },
+    {
+        title: '标记',
+        dataIndex: 'sysDictName',
+        width:'100px',
     }
 ];
 class SalesInvoiceCollection extends Component{
@@ -243,6 +234,7 @@ class SalesInvoiceCollection extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
@@ -312,7 +304,7 @@ class SalesInvoiceCollection extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:1800,
+                     x:2400,
                      y:window.screen.availHeight-390-(disabled?50:0),
                      },
                 }}
@@ -323,6 +315,7 @@ class SalesInvoiceCollection extends Component{
                     {...voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
+            </div>
         )
     }
 }

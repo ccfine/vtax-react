@@ -143,6 +143,7 @@ export default class TabPage extends Component{
                         style:{marginTop:"0px"}
                     },
                     pagination:true,
+                    pageSize:100,
                 }}
             >
                 <PopModal

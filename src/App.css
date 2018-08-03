@@ -305,8 +305,12 @@ table.data-grid{
     /*position: relative !important;*/ /* 更改滚动条的定位方式为相对 */
     overflow: hidden !important;
     z-index: 999999999 !important; /* 把滚动条提到Z轴最上层 */
-    height: 39px;
+    height: 41px;
     margin-right: 17px;
+  }
+
+  .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header th{
+    height: 24px;
   }
 }
 

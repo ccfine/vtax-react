@@ -140,7 +140,7 @@ request.interceptors.response.use(function (response) {
         //message.error(error.message)
     }else{
         //message.error('网络错误')
-        error.message = "网络错误";
+        error.message = "网络连接失败";
     }
     return Promise.reject(error);
 });

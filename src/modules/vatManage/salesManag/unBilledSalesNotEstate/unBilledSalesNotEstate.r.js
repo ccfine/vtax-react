@@ -32,7 +32,7 @@ const formItemStyle = {
 }
 const columns = (context) => [
     {
-        title: "项目",
+        title: "计税方法",
         dataIndex: "taxMethod",
         render: (text) => {
             let tempText = '';
@@ -229,6 +229,11 @@ class UnBilledSalesNotEstate extends Component {
                 if (values.authMonth) {
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
+                
+                if(values.main){
+                    values.mainId = values.main.key;
+                    values.main = undefined;
+                }
 
                 this.setState({
                     filters: values
@@ -272,14 +277,15 @@ class UnBilledSalesNotEstate extends Component {
                                 getFields(this.props.form,[
                                     {
                                         label:'纳税主体',
-                                        fieldName:'mainId',
+                                        fieldName:'main',
                                         type:'taxMain',
                                         componentProps:{
+                                            labelInValue:true,
                                             disabled:disabled
                                         },
                                         formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && declare.mainId) || undefined,
+                                            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                                             rules:[
                                                 {
                                                     required:true,

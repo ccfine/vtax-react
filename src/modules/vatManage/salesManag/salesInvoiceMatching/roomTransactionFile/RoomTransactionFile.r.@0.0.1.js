@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-24 11:47:25
+ * @Last Modified time: 2018-08-03 14:16:35
  *
  */
 import React,{Component} from 'react'
@@ -42,8 +42,12 @@ const fields = (disabled,declare)=> [
                 span:14
             }
         },
+        componentProps:{
+            //labelInValue:true,
+        },
         fieldDecoratorOptions:{
             initialValue: (disabled && declare.mainId) || undefined,
+            //initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -169,9 +173,10 @@ const getColumns = (context,disabled) => {
         title: '操作',
         key: 'actions',
         className:'text-center',
-        width:50,
+        fixed:'left',
+        width:'50px',
         render: (text, record) => {
-            return parseInt(record.matchingStatus,0) === 0 && composeBotton([{
+            return parseInt(record.matchingStatus,0) === 0 ? composeBotton([{
                     type:'action',
                     title:'删除',
                     icon:'delete',
@@ -194,181 +199,168 @@ const getColumns = (context,disabled) => {
                                 modalRef.destroy()
                             },
                         });
-                    }}])
+                    }}]) : <span></span>
         }
     }]:[];
-    return [...operates,{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">纳税主体名称</p>
-                <p className="apply-form-list-p2">纳税主体编码</p>
-            </div>
-        ),
-        dataIndex: 'mainName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.mainCode}</p>
-                </div>
-            );
+    return [...operates,
+        {
+            title:'项目名称',
+            dataIndex:'projectName',
+            width:'150px',
         },
-        width:'10%',
-    }, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">客户名称</p>
-                <p className="apply-form-list-p2">身份证号/纳税识别号</p>
-            </div>
-        ),
-        dataIndex: 'customerName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.taxIdentificationCode}</p>
-                </div>
-            );
+        {
+            title:'项目分期名称',
+            dataIndex:'stagesName',
+            width:'200px',
         },
-    }, {
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目名称</p>
-                <p className="apply-form-list-p2">项目编码</p>
-            </div>
-        ),
-        dataIndex: 'projectName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.projectCode}</p>
-                </div>
-            );
+        {
+            title:'路址',
+            dataIndex:'htRoomName',
+            //width:'300px',
         },
-        width:'10%',
-    },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">项目分期名称</p>
-                <p className="apply-form-list-p2">项目分期编码</p>
-            </div>
-        ),
-        dataIndex: 'stagesName',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.stagesCode}</p>
-                </div>
-            );
+        {
+            title:'房间编码',
+            dataIndex:'roomCode',
+            width:'150px',
         },
-        width:'12%',
-    },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">交易月份</p>
-                <p className="apply-form-list-p2">交易日期</p>
-            </div>
-        ),
-        dataIndex: 'authMonth',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.transactionDate}</p>
-                </div>
-            );
+        {
+            title:'房间交付日期',
+            dataIndex:'deliveryDate',
+            width:'100px',
         },
-        width:80,
-    },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">房间交付日期</p>
-                <p className="apply-form-list-p2">合同约定交付日期</p>
-            </div>
-        ),
-        width:120,
-        dataIndex: 'deliveryDate',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{text}</p>
-                    <p className="apply-form-list-p2">{record.agreeDate}</p>
-                </div>
-            );
-        }
-    },{
-        title:'楼栋名称',
-        dataIndex:'buildingName',
-        width:'8%',
-    },{
-        title:'单元',
-        dataIndex:'element',
-        width:'4%',
-    }, {
-        title:'路址',
-        dataIndex:'htRoomName',
-        width:'8%',
-    }, {
-        title:'房号',
-        dataIndex:'roomNumber',
-        width:50,
-    }, {
-        title:'房间编码',
-        dataIndex:'roomCode',
-        width:'5%',
-    },{
-        title: (
-            <div className="apply-form-list-th">
-                <p className="apply-form-list-p1">成交金额</p>
-                <p className="apply-form-list-p2">已收款金额</p>
-            </div>
-        ),
-        dataIndex: 'dealPrice',
-        className:'table-money',
-        render: (text, record) => {
-            return (
-                <div>
-                    <p className="apply-form-list-p1">{fMoney(text)}</p>
-                    <p className="apply-form-list-p2">{fMoney(record.receivables)}</p>
-                </div>
-            );
+        {
+            title:'合同约定交付日期',
+            dataIndex:'agreeDate',
+            width:'150px',
         },
-        width:'4%',
-    }, {
-        title:'房间面积',
-        dataIndex:'roomArea',
-        width:'3%',
-    }, {
-        title:'匹配状态',
-        dataIndex:'matchingStatus',
-        width:60,
-        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未匹配</span>:<span style={{color: "#87d068"}}>已匹配</span> //0:未匹配,1:已匹配
-    }, {
-        title:'已开票金额',
-        dataIndex:'invoiced',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'4%',
-    }, {
-        title:' 款项名称',
-        dataIndex:'priceType',
-        width:60,
-    }, {
-        title: "税额",
-        dataIndex: "taxAmount",
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'4%',
-    }, {
-        title:'价税合计',
-        dataIndex:'sdValorem',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'4%',
-    },
-]
+        {
+            title:'成交金额',
+            dataIndex:'dealPrice',
+            width:'100px',
+            className:'table-money',
+            render:text=>fMoney(text),
+        },
+        {
+            title:'已开票金额',
+            dataIndex:'invoiced',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'已收款金额',
+            dataIndex:'receivables',
+            width:'100px',
+            className:'table-money',
+            render:text=>fMoney(text),
+        },
+        {
+            title:'税率',
+            dataIndex:'taxRate',
+            className:'text-right',
+            render:text=>text? `${text}%`: text,
+            width:'100px',
+        },
+        {
+            title: "税额",
+            dataIndex: "taxAmount",
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'价税合计',
+            dataIndex:'sdValorem',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'楼栋名称',
+            dataIndex:'buildingName',
+            width:'300px',
+        },
+        {
+            title:'单元',
+            dataIndex:'element',
+            width:'100px',
+        },
+        {
+            title:'房号',
+            dataIndex:'roomNumber',
+            width:'100px',
+        },
+        {
+            title:'房间面积',
+            dataIndex:'roomArea',
+            width:'100px',
+        },
+        {
+            title:'交易日期',
+            dataIndex:'transactionDate',
+            width:'100px',
+        },
+        {
+            title:'客户名称',
+            dataIndex:'customerName',
+            width:'100px',
+        },
+        {
+            title:'身份证号/纳税识别号',
+            dataIndex:'taxIdentificationCode',
+            width:'200px',
+        },
+        {
+            title:' 款项名称',
+            dataIndex:'priceType',
+            width:'100px',
+        },
+        {
+            title:'匹配状态',
+            dataIndex:'matchingStatus',
+            width:'100px',
+            render:text=>{ //0:未匹配,1:已匹配
+                let txt = '';
+                switch (parseInt(text,0)) {
+                    case 0:
+                        txt = "未匹配";
+                        break;
+                    case 1:
+                        txt = "已匹配";
+                        break;
+                    default:
+                        txt = text;
+                        break;
+                }
+                return txt
+            },
+        },
+        /*{
+            title:'纳税主体名称',
+            dataIndex:'mainName',
+            width:'200px',
+        },
+        {
+            title:'纳税主体编码',
+            dataIndex:'mainCode',
+            width:'100px',
+        },
+        {
+            title:'项目编码',
+            dataIndex:'projectCode',
+            width:'100px',
+        },
+        {
+            title:'项目分期编码',
+            dataIndex:'stagesCode',
+            width:'100px',
+        },
+        {
+            title:'交易月份',
+            dataIndex:'authMonth',
+            width:'100px',
+        },*/
+    ]
 }
 class RoomTransactionFile extends Component{
     state={
@@ -421,6 +413,7 @@ class RoomTransactionFile extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -457,6 +450,15 @@ class RoomTransactionFile extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'output/room/files/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1211007'],
+                            }])
+                        }
+                        {
                             composeBotton([{
                                 type:'fileExport',
                                 url:'output/room/files/download',
@@ -470,13 +472,15 @@ class RoomTransactionFile extends Component{
                                 onSuccess:this.refreshTable,
                                 // userPermissions:['1215012'],
                                 fields:fields(disabled,declare)
-                            },{
+                            },
+                            {
                                 type:'submit',
                                 url:'/output/room/files/submit',
                                 params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215010'],
                                 onSuccess:this.refreshTable
-                            },{
+                            },
+                            {
                                 type:'revoke',
                                 url:'/output/room/files/revoke',
                                 params:{...filters,authMonth:declare.authMonth},
@@ -500,12 +504,13 @@ class RoomTransactionFile extends Component{
                         title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                     },
                     scroll:{
-                        x: 2200,
+                        x: 3200,
                         y:window.screen.availHeight-500-(disabled?50:0),
                     },
                 }}
             >
             </SearchTable>
+            </div>
         )
     }
 }
