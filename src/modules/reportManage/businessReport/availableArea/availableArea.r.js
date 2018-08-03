@@ -2,12 +2,12 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-30 12:57:39
+ * @Last Modified time: 2018-08-01 21:53:37
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
 import {request,composeBotton} from 'utils';
-import {message,Form,Modal} from 'antd';
+import {message,Form} from 'antd';
 import { NumericInputCell } from 'compoments/EditableCell'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
@@ -50,7 +50,7 @@ const searchFields = (getFieldValue)=>[
         }
     }
 ];
-
+/*
 const importFeilds = [
     {
         label: "纳税主体",
@@ -74,7 +74,7 @@ const importFeilds = [
             ]
         }
     }
-];
+];*/
 
 const apiFields = (getFieldValue)=> [
     {
@@ -102,7 +102,7 @@ const apiFields = (getFieldValue)=> [
         },
     },
 ]
-const getColumns = context => [{
+const getColumns = context => [/*{
         title:'操作',
         render:(text, record, index)=>composeBotton([{
             type:'action',
@@ -131,7 +131,7 @@ const getColumns = context => [{
         width:'50px',
         dataIndex:'action',
         className:'text-center',
-    },{
+    },*/{
         title: "纳税主体名称",
         dataIndex: "mainName",
         width:'150px',
@@ -255,7 +255,7 @@ class AvailableArea extends Component {
             })
     }
     render() {
-        let { updateKey,saveLoding,filters } = this.state;
+        let { updateKey,saveLoding } = this.state;
         return (
             <div className="oneLine">
             <SearchTable
@@ -279,7 +279,7 @@ class AvailableArea extends Component {
                     },
                     extra:(
                         <span>
-                            {
+                            {/*
                                 JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                     type:'fileImport',
                                     url:'/interAvailableBuildingAreaInformation/upload',
@@ -293,7 +293,7 @@ class AvailableArea extends Component {
                                     type: 'fileExport',
                                     url: 'interAvailableBuildingAreaInformation/download',
                                 }])
-                            }
+                            */}
                             {
                                 composeBotton([{
                                     type:'save',
