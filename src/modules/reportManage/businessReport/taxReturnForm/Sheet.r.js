@@ -180,7 +180,7 @@ export default class Sheet extends Component{
                                             forceComponent:true,
                                         }
                                     }else{
-                                        return {...di, value:(di.type==='rate' &&  di.value && di.value!=='--')?`${di.value}%`:di.value,readOnly:true};
+                                        return {...di, value:(di.type==='rate' &&  di.value && di.value!=='--')?`${di.value}`:di.value,readOnly:true};
                                     }
                                 }))}
                                 valueRenderer={(cell) => cell ? cell.value : ''}
