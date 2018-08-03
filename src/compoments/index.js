@@ -23,7 +23,6 @@ import {FetchTable,CardSearch} from './fetchTable'
 import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
-import WaterMark from './watermark/index'
 
 export {
     RouteWithSubRoutes,
@@ -45,5 +44,4 @@ export {
     TreeTable,
     LoadingPage,
     TableTotal,
-    WaterMark
 }
