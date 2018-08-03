@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-10 22:46:02
+ * @Last Modified time: 2018-08-03 12:20:43
  *
  */
 import React,{Component} from 'react'
@@ -12,7 +12,7 @@ import {SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import { NumericInputCell } from 'compoments/EditableCell'
 import moment from 'moment';
-const searchFields =(disabled,declare)=>{
+const searchFields =(disabled,declare,defaultParams={})=>{
     return [
         {
             label:'纳税主体',
@@ -32,7 +32,7 @@ const searchFields =(disabled,declare)=>{
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || (defaultParams.mainId ? {key:defaultParams.mainId,label:''}:undefined),
                 rules:[
                     {
                         required:true,
@@ -59,7 +59,7 @@ const searchFields =(disabled,declare)=>{
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.authMonth?moment(defaultParams.authMonth, 'YYYY-MM'):undefined),
                 rules:[
                     {
                         required:true,
@@ -209,7 +209,7 @@ class TaxCalculation extends Component{
         }
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/taxCalculation/listMain',this.state.filters,result=>{
+        requestResultStatus('/tax/decConduct/main/listMain',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -218,16 +218,19 @@ class TaxCalculation extends Component{
     render(){
         const {searchTableLoading,tableKey,statusParam,tableUrl,filters} = this.state;
         const {getFieldDecorator} = this.props.form;
-        const { declare } = this.props;
+        let { declare,defaultParams} = this.props;
+        defaultParams.authMonth = defaultParams.taxMonth;
+
         let disabled = !!declare;
         return(
             <div className="oneLine">
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields:searchFields(disabled,declare),
+                        fields:searchFields(disabled,declare,defaultParams),
                         cardProps:{
-                            className:''
+                            className:'',
+                            style:{borderTop:0}
                         },
                     }}
                     spinning={searchTableLoading}
@@ -236,7 +239,9 @@ class TaxCalculation extends Component{
                         onRow:record=>({
                             onDoubleClick:()=>{console.log(record)}
                         }),
-                        onSuccess:(params)=>{
+                        onSuccess:(params)=>{ 
+                            params.taxMonth = params.authMonth;
+                            this.props.onParamsChange && this.props.onParamsChange(params);
                             this.setState({
                                 filters:params,
                             },()=>{
@@ -251,7 +256,7 @@ class TaxCalculation extends Component{
                         },
                         scroll:{
                             x:1000,
-                            y:window.screen.availHeight-320,
+                            y:window.screen.availHeight-330,
                         },
                         extra:<div>
                             {
@@ -263,7 +268,7 @@ class TaxCalculation extends Component{
                                     url:'account/taxCalculation/export',
                                     params:filters,
                                     title:'导出',
-                                    userPermissions:['1371007'],
+                                    userPermissions:['1911007'],
                                 }])
                             }
                             {
@@ -271,9 +276,9 @@ class TaxCalculation extends Component{
                                     type:'save',
                                     icon:'save',
                                     text:'保存',
-                                    userPermissions:['1371003'],
+                                    userPermissions:['1911007'],
                                     onClick:()=>this.save()
-                                },{
+                                }/*,{
                                     type:'reset',
                                     url:'/account/taxCalculation/reset',
                                     params:filters,
@@ -293,7 +298,7 @@ class TaxCalculation extends Component{
                                     // monthFieldName:'authMonth',
                                     userPermissions:['1371011'],
                                     onSuccess:this.refreshTable,
-                                }],statusParam)
+                                }*/],statusParam)
                             }
                         </div>
                     }}

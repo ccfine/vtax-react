@@ -7,7 +7,7 @@ import {wrapPage} from 'compoments'
 // import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
 import PrepayTax from './prepayTax'
-import TaxCalculation from './taxCalculation'
+// import TaxCalculation from './taxCalculation'
 /*
 import DeductProjectSummary from './deductProjectSummary'
 import PrePaidHousingSales from './prePaidHousingSales'
@@ -80,7 +80,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['businessTaxChangeTaxAnalysisNegative'].options,
         exact:true,*/
-    },{
+    }/*,{
         path:`${PATH}/taxCalculation`,
         component:wrapPage('税款计算台账',TaxCalculation),
         name:'税款计算台账',
@@ -90,7 +90,7 @@ const OtherAccount_Routes = [
         },
         authorityInfo:otherAccount['taxCalculation'].options,
         exact:true,
-    },{
+    }*/,{
         path:`${PATH}`,
         redirect:true,
         to:`${PATH}/billingSalesAccount`,

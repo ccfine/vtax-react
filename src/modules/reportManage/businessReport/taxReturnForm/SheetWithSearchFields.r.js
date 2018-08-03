@@ -148,7 +148,7 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,savePermission} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
@@ -220,7 +220,7 @@ class SheetWithSearchFields extends Component{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
-                                    userPermissions:savePermission,
+                                    userPermissions:['1911003'],
                                     onClick:this.save,
                                     loading:saveLoding
                                 }])
