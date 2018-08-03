@@ -1,11 +1,10 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-24 11:47:03
+ * @Last Modified time: 2018-08-03 14:36:53
  *
  */
 import React,{Component} from 'react'
-// import {connect} from 'react-redux'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
@@ -149,7 +148,10 @@ class PrepayTax extends Component{
                     searchOption={{
                         fields:searchFields(disabled,declare),
                         cardProps:{
-                            className:''
+                            className:'',
+                            style:{
+                                borderTop:0
+                            }
                         },
                     }}
                     doNotFetchDidMount={!disabled}

@@ -95,13 +95,13 @@ const steps = [
 		title: '其他管理',
 		decConduct: 2
 	},
-	{
-		title: '税款计算',
-		decConduct: 3
-	},
+	// {
+	// 	title: '税款计算',
+	// 	decConduct: 3
+	// },
 	{
 		title: '纳税申报表',
-		decConduct: 4
+		decConduct: 3
 	}
 ]
 
@@ -124,7 +124,7 @@ class Main extends Component {
 	refresh=()=>{
 		const { record } = this.props;
         this.fetchDeclarationById({
-            decConduct: this.state.current,
+            decConduct: steps[this.state.current].decConduct,
             mainId: record.mainId,
             authMonth: record.partTerm
         },this.props.url)
@@ -137,7 +137,7 @@ class Main extends Component {
 	handleCurrent = current => {
 		this.setState({ current }, () => {
 			this.fetchDeclarationById({
-				decConduct: current,
+				decConduct: steps[current].decConduct,
 				mainId: this.props.record.mainId,
 				authMonth: this.props.record.partTerm
 			})

@@ -4,7 +4,6 @@
  * description  :
  */
 import React, { Component } from "react";
-import {connect} from 'react-redux'
 import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
 import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request} from "utils";
@@ -491,6 +490,4 @@ class InvoiceCollection extends Component {
         );
     }
 }
-export default connect(state=>({
-    declare:state.user.get('declare')
-}))(InvoiceCollection)
+export default InvoiceCollection
