@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:24:51 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-01 21:53:37
+ * @Last Modified time: 2018-08-06 13:44:52
  */
 import React, { Component } from "react";
 import { SearchTable} from "compoments";
@@ -11,6 +11,7 @@ import {message,Form} from 'antd';
 import { NumericInputCell } from 'compoments/EditableCell'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
+import TableTitle from 'compoments/tableTitleWithTime'
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
@@ -207,6 +208,7 @@ class AvailableArea extends Component {
         filters:{},
         dataSource:[],
         saveLoding:false,
+        totalSource:{},
     }
     update = () => {
         this.setState({ updateKey: Date.now() });
@@ -255,7 +257,7 @@ class AvailableArea extends Component {
             })
     }
     render() {
-        let { updateKey,saveLoding } = this.state;
+        let { updateKey,saveLoding ,totalSource} = this.state;
         return (
             <div className="oneLine">
             <SearchTable
@@ -268,7 +270,7 @@ class AvailableArea extends Component {
                     url: "/interAvailableBuildingAreaInformation/inter/list",
                     key: updateKey,
                     cardProps: {
-                        title: "可售面积"
+                        title:  <TableTitle time={totalSource && totalSource.extractTime}>可售面积</TableTitle>
                     },
                     scroll: {
                         x: 2150,
@@ -276,6 +278,11 @@ class AvailableArea extends Component {
                     },
                     onSuccess:(filters,dataSource)=>{
                         this.setState({filters,dataSource})
+                    },
+                    onTotalSource: totalSource => {
+                        this.setState({
+                            totalSource
+                        });
                     },
                     extra:(
                         <span>

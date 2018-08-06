@@ -7,6 +7,7 @@ import {message} from 'antd'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
 import {fMoney,composeBotton,request} from 'utils'
+import TableTitle from 'compoments/tableTitleWithTime'
 const formItemStyle={
     labelCol:{
         span:8
@@ -321,7 +322,7 @@ class FinancialDocuments extends Component{
                         });
                     },
                     cardProps: {
-                        title: "财务凭证",
+                        title: <TableTitle time={totalSource && totalSource.extractTime}>财务凭证</TableTitle>,
                         extra: (
                             <div>
                                 {

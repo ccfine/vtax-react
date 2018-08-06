@@ -2,13 +2,14 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-01 22:05:22
+ * @Last Modified time: 2018-08-06 13:41:26
  */
 import React, { Component } from "react";
 import {message} from 'antd';
 import { SearchTable} from "compoments";
 import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
+import TableTitle from 'compoments/tableTitleWithTime'
 import createSocket from '../socket'
 const searchFields = [
     {
@@ -274,6 +275,7 @@ class fixedAssetCard extends Component {
     state = {
         updateKey: Date.now(),
         filters:{},
+        totalSource:{},
     }
     update = () => {
         this.setState({ updateKey: Date.now() });
@@ -291,7 +293,7 @@ class fixedAssetCard extends Component {
             })
     }
     render() {
-        let { updateKey,filters } = this.state;
+        let { updateKey,totalSource } = this.state;
         return (
             <SearchTable
                 doNotFetchDidMount={true}
@@ -303,7 +305,12 @@ class fixedAssetCard extends Component {
                     url: "/fixedAssetCard/report/list",
                     key: updateKey,
                     cardProps: {
-                        title: "固定资产卡片"
+                        title: <TableTitle time={totalSource && totalSource.extractTime}>固定资产卡片</TableTitle>
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                     onSuccess:(filters)=>{
                         this.setState({filters})
