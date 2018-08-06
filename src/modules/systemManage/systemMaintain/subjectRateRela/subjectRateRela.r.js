@@ -23,17 +23,17 @@ const getColumns = (context) => [
         className:'text-center',
         render(text, record, index) {
             return composeBotton([{
-                    type: 'action',
-                    icon: 'edit',
-                    title: '编辑',
-                    onSuccess: () => {
-                        context.setState({
-                            visible: true,
-                            action: "modify",
-                            opid: record.id
-                        });
-                    }
-                }])
+                type: 'action',
+                icon: 'edit',
+                title: '编辑',
+                onSuccess: () => {
+                    context.setState({
+                        visible: true,
+                        action: "modify",
+                        opid: record.id
+                    });
+                }
+            }])
         },
         fixed: "left",
         width: "75px",

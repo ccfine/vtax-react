@@ -59,7 +59,11 @@ class Web extends Component {
     }
 
     componentDidMount(){
-        watermark({ watermark_txt:`${this.props.realName}, ${this.props.username}, ${moment().format('YYYY-MM-DD HH:mm')}`});
+        const {isAuthed} = this.props;
+        if(isAuthed){
+            watermark({ watermark_txt:`${this.props.realName}, ${this.props.username}, ${moment().format('YYYY-MM-DD HH:mm')}`});
+        }
+
     }
 
     mounted = true;

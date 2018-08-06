@@ -2,9 +2,10 @@
  * Created by liuliyuan on 2018/5/20.
  */
 import React, { Component } from 'react'
+import {message} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
-import {composeBotton} from 'utils';
+import {request,composeBotton} from 'utils';
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff',
@@ -28,9 +29,24 @@ const getColumns = context =>[
             icon:'edit',
             userPermissions:['1121004'],
             onSuccess:()=>context.showModal('modify',record.mainId)
-        }]),
+        },
+        {
+            type:'action',
+            title:'提交',
+            icon:'check',
+            userPermissions:['1121010'],
+            onSuccess:()=>context.handleSubmit('/dataCollection/submit','提交',record)
+        },
+        {
+            type:'action',
+            title:'撤回提交',
+            icon:'rollback',
+            userPermissions:['1121011'],
+            onSuccess:()=>context.handleSubmit('/dataCollection/revoke','撤回提交',record)
+        }
+        ]),
         fixed:'left',
-        width:'50px',
+        width:'100px',
         className:'text-center'
     },{
         title: '纳税主体名称',
@@ -86,6 +102,25 @@ export default class BeginDataCollect extends Component{
             }
         })
     }
+
+    handleSubmit = (url,text,record) =>{
+        request.post(url,{
+            mainId:record.mainId,
+            mainName:record.mainId
+        })
+            .then(({data})=>{
+                if(data.code===200){
+                    message.success(`${text}成功!`);
+                    this.refreshTable();
+                }else{
+                    message.error(`${text}失败:${data.msg}`)
+                }
+            })
+            .catch(err=>{
+                message.error(err.message);
+            })
+    }
+
     render(){
         const {visible,modalConfig,tableKey} = this.state;
         return(
