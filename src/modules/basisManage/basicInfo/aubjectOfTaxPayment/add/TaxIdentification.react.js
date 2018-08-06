@@ -12,6 +12,7 @@ class TaxIdentification extends Component {
 
     render() {
         const {defaultData} = this.props;
+        const disabled = this.props.type ==='view' ||  this.props.type ==='edit';
         const list= [
             {
                 label:'流转税',
@@ -21,6 +22,7 @@ class TaxIdentification extends Component {
                     {
                         label: '增值税',
                         value: 'zzs',
+                        disabled,
                     },{
                         label: '消费税',
                         value: 'xfs',
@@ -35,6 +37,7 @@ class TaxIdentification extends Component {
                 {
                     label: '企业所得税',
                     value: 'qysds',
+                    disabled,
                 },{
                     label: '个人所得税',
                     value: 'grsds',

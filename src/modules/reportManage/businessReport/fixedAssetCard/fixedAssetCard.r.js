@@ -291,7 +291,7 @@ class fixedAssetCard extends Component {
             })
     }
     render() {
-        let { updateKey,filters } = this.state;
+        let { updateKey } = this.state;
         return (
             <SearchTable
                 doNotFetchDidMount={true}

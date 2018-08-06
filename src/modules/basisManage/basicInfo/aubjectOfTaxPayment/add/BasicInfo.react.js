@@ -4,9 +4,9 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Row,Card,message} from 'antd'
+import {Row,Card} from 'antd'
 import moment from 'moment';
-import {request,getFields,requestDict,setFormat} from 'utils'
+import {getFields,requestDict,setFormat} from 'utils'
 import './styles.less'
 
 class BasicInfo extends Component {
@@ -18,7 +18,7 @@ class BasicInfo extends Component {
         registrationType:[],
         taxpayerQualification:[],
         maximumLimit:[],
-        selectOptions:[],
+        //selectOptions:[],
     }
 
     //注册类型:取基础资料DJZCLX
@@ -47,7 +47,7 @@ class BasicInfo extends Component {
     }
 
     //省市区联动
-    getlistArea=()=>{
+    /*getlistArea=()=>{
         request.get('/taxsubject/list/area')
             .then(({data})=>{
                 if(data.code ===200){
@@ -59,13 +59,13 @@ class BasicInfo extends Component {
             .catch(err => {
                 message.error(err.message)
             });
-    }
+    }*/
 
     componentDidMount() {
         this.getRegistrationType()
         this.getTaxpayerQualification()
         this.getMaximumLimit()
-        this.getlistArea()
+        //this.getlistArea()
     }
 
     componentWillReceiveProps(nextProps){
@@ -80,9 +80,9 @@ class BasicInfo extends Component {
     render() {
 
         const {defaultData} = this.props;
-        const {getFieldValue} = this.props.form
+        //const {getFieldValue} = this.props.form
         const dateFormat = 'YYYY-MM-DD';
-        let disabled = this.props.type ==='view';
+        let disabled = this.props.type ==='view' ||  this.props.type ==='edit' ;
         let shouldShowDefaultData = false;
         if(this.props.type==='edit' || this.props.type==='view'){
             shouldShowDefaultData = true;
@@ -186,7 +186,7 @@ class BasicInfo extends Component {
                                             }*/
                                         ],
                                     }
-                                },{
+                                /*},{
                                     label:'所属行业',
                                     fieldName:'jbxx.industry',
                                     type:'industry',
@@ -197,12 +197,12 @@ class BasicInfo extends Component {
                                             label:defaultData['industry'] || '',
                                             key:defaultData['industry'] || ''
                                         } : undefined,
-                                        /*rules:[
+                                        /!*rules:[
                                             {
                                                 required:true,
                                                 message:'请选择所属行业'
                                             }
-                                        ]*/
+                                        ]*!/
                                     },
                                     componentProps:{
                                         disabled,
@@ -211,7 +211,7 @@ class BasicInfo extends Component {
                                         } : {
                                             industry:defaultData['industry']
                                         },
-                                    }
+                                    }*/
 
                                 },{
                                     label:'注册类型',
@@ -357,7 +357,7 @@ class BasicInfo extends Component {
                                             }
                                         ],*/
                                     }
-                                },{
+                                /*},{
                                     label:'生产经营地址',
                                     fieldName:'jbxx.operatingProvince',
                                     type:'cascader',
@@ -381,12 +381,12 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operatingAddress,
-                                        /*rules: [
+                                        rules: [
                                             {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                             }
-                                        ],*/
-                                    }
+                                        ],
+                                    }*/
                                 },{
                                     label:'办公电话',
                                     fieldName:'jbxx.officePhone',
@@ -647,7 +647,7 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.synergy,
                                     }
-                                },{
+                                /*},{
                                     label:'主管国税机关',
                                     fieldName:'jbxx.nationalTaxProvince',
                                     type:'cascader',
@@ -672,11 +672,11 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.nationalTaxAddress,
                                         rules: [
-                                            /*{
+                                            {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                            }*/
+                                            }
                                         ],
-                                    }
+                                    }*/
                                 },{
                                     label:'联系电话',
                                     fieldName:'nationalTaxPhone',
@@ -696,7 +696,7 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.nationalTaxPhone,
                                     }
-                                },{
+                                /*},{
                                     label:'主管地税机关',
                                     fieldName:'jbxx.localTaxProvince',
                                     type:'cascader',
@@ -721,11 +721,11 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.localTaxAddress,
                                         rules: [
-                                            /*{
+                                            {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
-                                            }*/
+                                            }
                                         ],
-                                    }
+                                    }*/
                                 },{
                                     label:'联系电话',
                                     fieldName:'jbxx.localTaxPhone',
