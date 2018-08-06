@@ -18,12 +18,12 @@ const searchFields = [
 ]
 const columns = [
     {
-        title: '发票代码',
-        dataIndex: 'invoiceCode',
-        width:'100px',
-    },{
         title: '发票号码',
         dataIndex: 'invoiceNum',
+        width:'100px',
+    },{
+        title: '发票代码',
+        dataIndex: 'invoiceCode',
         width:'100px',
     },{
         title:'发票类型',
@@ -52,27 +52,23 @@ const columns = [
         width:'150px',
     },{
         title: '规格型号',
-        dataIndex: 'purchaseTaxNum',
+        dataIndex: 'spec',
         width:'150px',
     },{
         title: '单位',
-        dataIndex: 'purchaseTaxNum',
+        dataIndex: 'unit',
         width:'150px',
     },{
         title: '数量',
-        dataIndex: 'purchaseTaxNum',
+        dataIndex: 'quantity',
         width:'150px',
     },{
         title: '单价',
-        dataIndex: 'purchaseTaxNum',
-        width:'150px',
-    },{
-        title: '购方税号',
-        dataIndex: 'purchaseTaxNum',
+        dataIndex: 'unitPrice',
         width:'150px',
     },{
         title: '金额',
-        dataIndex: 'amount',
+        dataIndex: 'amountWithoutTax',
         render:text=>fMoney(text),
         width:'100px',
     },{
@@ -86,11 +82,11 @@ const columns = [
         dataIndex: 'taxAmount',
         render:text=>fMoney(text),
         width:'100px',
-    },{
+    /*},{
         title: '价税合计',
         dataIndex: 'totalAmount',
         width: '100px',
-        render:text=>fMoney(text),
+        render:text=>fMoney(text),*/
     },{
         title: '开票日期',
         dataIndex: 'billingDate',
