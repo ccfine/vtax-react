@@ -1,14 +1,16 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:36:53
+ * @Last Modified time: 2018-08-06 18:42:49
  *
  */
 import React,{Component} from 'react'
+import {Form,message} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
+import { NumericInputCell } from 'compoments/EditableCell'
 const searchFields =(disabled,declare)=> {
     return [
         {
@@ -67,40 +69,118 @@ const searchFields =(disabled,declare)=> {
         },
     ]
 }
-const getColumns = context => [
+const getColumns = (context,disabled) => {
+    let lastStegesId1 = '',lastStegesId2 = '',{dataSource} = context.state;
+    return [
     {
         title:'纳税主体',
         dataIndex:'mainName',
-        width:'20%',
+        width:'15%',
+        render:(text, row, index) => {
+            let rowSpan = 0;
+            if(lastStegesId1 !== row.stagesId){
+                lastStegesId1 = row.stagesId;
+                rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
+            }
+            return {
+              children: text,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          },
     },{
         title:'项目分期',
         dataIndex:'stagesName',
+        width:'15%',
+        render:(text, row, index) => {
+            let rowSpan = 0;
+            if(lastStegesId2 !== row.stagesId){
+                lastStegesId2 = row.stagesId;
+                rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
+            }
+            return {
+              children: text,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          },
+    },{
+        title:'预征项目',
+        dataIndex:'preProject',
+        width:'20%',
     }, {
         title:'金额（不含税）',
         dataIndex:'withOutAmount',
-        render:text=>fMoney(text),
+        render:(text,record)=>{
+            const {getFieldDecorator} = context.props.form;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产'){
+                return <NumericInputCell
+                        fieldName={`list[${record.id}].withOutAmount`}
+                        initialValue={text==='0' ? '0.00' : fMoney(text)}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            onFocus:(e)=>context.handleFocus(e,`list[${record.id}].withOutAmount`),
+                            onBlur:(e)=>context.handleBlur(e,`list[${record.id}].withOutAmount`),
+                        }}
+                    />
+            }else{
+                return fMoney(text)
+            }
+        },
         className:'table-money',
         width:'15%',
     }, {
         title:'金额（含税）',
         dataIndex:'withTaxAmount',
-        render:text=>fMoney(text),
+        render:(text,record)=>{
+            const {getFieldDecorator} = context.props.form;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产'){
+                return <NumericInputCell
+                        fieldName={`list[${record.id}].withTaxAmount`}
+                        initialValue={text==='0' ? '0.00' : fMoney(text)}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            onFocus:(e)=>context.handleFocus(e,`list[${record.id}].withTaxAmount`),
+                            onBlur:(e)=>context.handleBlur(e,`list[${record.id}].withTaxAmount`)
+                        }}
+                    />
+            }else{
+                return fMoney(text)
+            }
+        },
         className:'table-money',
         width:'15%',
     }, {
-        title:'预缴税率',
+        title:'预缴税率（%）',
         dataIndex:'taxRate',
         className:'text-right',
-        render:text=>text && `${text}%`,
-        width:80,
+        render:(text,record,index)=>{
+            const {getFieldDecorator} = context.props.form;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产' && index<3){
+                return <NumericInputCell
+                        fieldName={`list[${record.id}].taxRate`}
+                        initialValue={text}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            valueType:'int',
+                        }}
+                    />
+            }else{
+                return text
+            }
+        },
+        // width:80,
     }, {
         title:'预缴税款',
         dataIndex:'prepayAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'15%',
+        width:'10%',
     }
 ];
+}
 
 
 class PrepayTax extends Component{
@@ -115,6 +195,8 @@ class PrepayTax extends Component{
          * */
         statusParam:{},
         totalSource:undefined,
+        dataSource:[],
+        saveLoding:false,
     }
     refreshTable = ()=>{
         this.setState({
@@ -138,8 +220,79 @@ class PrepayTax extends Component{
             })
         })
     }
+    save=(e)=>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                const {dataSource} = this.state;
+                let firstTaxRate0 = 0,firstTaxRate1=0;
+                let params = dataSource.filter(ele=>ele.preProject!=='销售不动产').map(ele=>{
+                    let res = {};
+                    res.id = ele.id;
+                    // res.prepayAmount = values[ele.id].prepayAmount
+                    res.withOutAmount = values.list[ele.id].withOutAmount.replace(/,/g,'') || 0;
+                    res.withTaxAmount = values.list[ele.id].withTaxAmount.replace(/,/g,'') || 0;
+                    res.taxRate = values.list[ele.id].taxRate || 0;
+                    if(ele.preProject === '建筑服务'){
+                        firstTaxRate0 = res.taxRate = values.list[ele.id].taxRate || firstTaxRate0;
+                    }else{
+                        firstTaxRate1 = res.taxRate = values.list[ele.id].taxRate || firstTaxRate1;
+                    }
+
+                    return res;
+                });
+
+                this.setState({saveLoding:true})
+                request.post('/account/prepaytax/save',params)
+                    .then(({data})=>{
+                        this.setState({saveLoding:false})
+                        if(data.code===200){
+                            message.success('保存成功!');
+                            // this.props.form.resetFields(this.state.dataSource.map((ele,index)=>`outTaxAmount[${index}]`))
+                            this.refreshTable()
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.setState({saveLoding:false})
+                    })
+            }
+        })
+    }
+    
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
     render(){
-        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters,totalSource} = this.state;
+        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters,totalSource,saveLoding} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -159,36 +312,56 @@ class PrepayTax extends Component{
                     tableOption={{
                         key:tableKey,
                         onSuccess:(params)=>{
+                            this.props.form.resetFields();
                             this.setState({
                                 filters:params,
                             },()=>{
                                 this.fetchResultStatus()
                             })
                         },
+                        onDataChange:(dataSource)=>{
+                            this.setState({
+                                dataSource
+                            })
+                        },
                         cardProps: {
                             title: "预缴税款台账",
                         },
-                        pageSize:100,
-                        columns:getColumns(this),
+                        // pageSize:100,
+                        pagination:false,
+                        columns:getColumns(this,disabled),
                         url:'/account/prepaytax/prepayTaxList',
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
                             }{
-                            JSON.stringify(filters) !=='{}' && composeBotton([{
-                                type:'fileExport',
-                                url:'account/prepaytax/export',
-                                params:filters,
-                                title:'导出',
-                                userPermissions:['1331007'],
-                            }],statusParam)
-                        }
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/prepaytax/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1331007'],
+                                }],statusParam)
+                            }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
                                     url:'/account/prepaytax/submit',
                                     params:filters,
                                     userPermissions:['1331010'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    userPermissions:['1331003'],
+                                    onClick:this.save,
+                                    loading:saveLoding
+                                },{
+                                    type:'reset',
+                                    url:'/account/prepaytax/reset',
+                                    params:filters,
+                                    userPermissions:['1331009'],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
@@ -232,4 +405,4 @@ class PrepayTax extends Component{
         )
     }
 }
-export default PrepayTax
+export default Form.create()(PrepayTax)

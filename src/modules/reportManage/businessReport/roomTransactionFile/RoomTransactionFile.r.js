@@ -6,6 +6,7 @@ import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
+import TableTitle from 'compoments/tableTitleWithTime'
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
@@ -228,7 +229,7 @@ class RoomTransactionFile extends Component{
                         })
                     },
                     cardProps:{
-                        title:'房间交易档案'
+                        title:<TableTitle time={totalSource && totalSource.extractTime}>房间交易档案</TableTitle>
                     },
                     url:'/output/room/files/report/list',
                     extra:<div>
