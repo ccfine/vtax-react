@@ -20,11 +20,11 @@ const columns = [
     {
         title: '发票代码',
         dataIndex: 'invoiceCode',
-        width:100,
+        width:'100px',
     },{
         title: '发票号码',
         dataIndex: 'invoiceNum',
-        width:100,
+        width:'100px',
     },{
         title:'发票类型',
         dataIndex:'invoiceType',
@@ -37,38 +37,64 @@ const columns = [
             }
             return text;
         },
-        width:60,
-    },{
-        title: '开票日期',
-        dataIndex: 'billingDate',
-        width:100,
+        width:'100px',
     },{
         title: '购货单位名称',
         dataIndex: 'purchaseName',
-        width:100,
+        width:'100px',
+    },{
+        title: '备注',
+        dataIndex: 'remark',
+        //width: 100'px,
+    },{
+        title: '货物或应税劳务名称',
+        dataIndex: 'itemName',
+        width:'150px',
+    },{
+        title: '规格型号',
+        dataIndex: 'purchaseTaxNum',
+        width:'150px',
+    },{
+        title: '单位',
+        dataIndex: 'purchaseTaxNum',
+        width:'150px',
+    },{
+        title: '数量',
+        dataIndex: 'purchaseTaxNum',
+        width:'150px',
+    },{
+        title: '单价',
+        dataIndex: 'purchaseTaxNum',
+        width:'150px',
     },{
         title: '购方税号',
         dataIndex: 'purchaseTaxNum',
-        width:150,
+        width:'150px',
     },{
         title: '金额',
         dataIndex: 'amount',
         render:text=>fMoney(text),
-        width:100,
+        width:'100px',
+    },{
+        title: '税率',
+        dataIndex:'taxRate',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
+        width:'100px',
     },{
         title: '税额',
         dataIndex: 'taxAmount',
         render:text=>fMoney(text),
-        width:100,
+        width:'100px',
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
-        width: 100,
+        width: '100px',
         render:text=>fMoney(text),
     },{
-        title: '备注',
-        dataIndex: 'remark',
-        width: 100,
+        title: '开票日期',
+        dataIndex: 'billingDate',
+        width:'100px',
     },
 ];
 export default class PopInvoiceInformationModal extends Component{
@@ -129,7 +155,7 @@ export default class PopInvoiceInformationModal extends Component{
                                     filters:params
                                 })
                             },
-                            scroll:{ x: '160%', y: 200 },
+                            scroll:{ x: 1900, y: 200 },
                             /*extra:<div>
                              <FileExport
                              url='account/output/billingSale/detail/export'
