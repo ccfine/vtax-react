@@ -5,7 +5,7 @@
  *
  */
 import React,{Component} from 'react'
-import {message} from 'antd'
+import {message,Alert} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 // import moment from 'moment';
@@ -476,6 +476,18 @@ class RoomTransactionFile extends Component{
                                 url:'/output/room/files/submit',
                                 params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215010'],
+                                children:(
+                                    <Alert
+                                        type="warning"
+                                        showIcon
+                                        message={
+                                            <div>
+                                                <p>房间交付日期在2018年5月1号之后的存在有11%税率，需要统一调整为10%税率，请确认。</p>
+                                                <p>确认后系统会自动调整，同时会反算结算价：结算价=[(结算价*(1+11%)]/(1+10%)</p>
+                                            </div>
+                                        }
+                                    />
+                                ),
                                 onSuccess:this.refreshTable
                             },
                             {

@@ -127,11 +127,12 @@ export default class AsyncTable extends Component{
         });
         //设置去掉排序默认设置的值
         let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
+        console.log(sor)
         this.fetch({
             size: pagination.pageSize,
             current: pagination.current,
             orderByField: sorter.field,
-            isAsc: sor ? sor === 'asc' : undefined,
+            asc: sor ? sor === 'asc' : undefined,
             ...filters,
             //...this.props.filters.values,
         });
