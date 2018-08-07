@@ -99,6 +99,7 @@ const columns=[
         title: '凭证号',
         dataIndex: 'voucherNum',
         width:'100px',
+        sorter: true,
     },
     {
         title: '凭证摘要',
