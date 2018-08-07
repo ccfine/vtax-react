@@ -7,6 +7,7 @@ import {wrapPage} from 'compoments'
 // import LandPriceDeductionDetails from './landPriceDeductionDetails'
 import TaxExemptionDetails from './taxExemptionDetails'
 import PrepayTax from './prepayTax'
+import OtherRevision from './otherRevision'
 // import TaxCalculation from './taxCalculation'
 /*
 import DeductProjectSummary from './deductProjectSummary'
@@ -91,6 +92,16 @@ const OtherAccount_Routes = [
         authorityInfo:otherAccount['taxCalculation'].options,
         exact:true,
     }*/,{
+        path:`${PATH}/otherRevision`,
+        component:wrapPage('其他事项调整台账',OtherRevision),
+        name:'其他事项调整台账',
+        icon:{
+            url:`${ICON_URL_PATH}taxExemptionDetails.svg`,
+            backgroundColor:'#57C8F2'
+        },
+        authorityInfo:otherAccount['otherRevision'].options,
+        exact:true,
+    },{
         path:`${PATH}`,
         redirect:true,
         to:`${PATH}/billingSalesAccount`,
