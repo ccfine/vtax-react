@@ -26,6 +26,7 @@ module.exports = function override(config, env) {
     config = injectBabelPlugin(['import', { libraryName: 'antd', style: true }], config);
    // config = rewireCssModules(config, env);
     config = rewireLess.withLoaderOptions({
+        javascriptEnabled:true, //TODO: 防止 npm start 启动报错
         modifyVars: {
             "@primary-color": "#1890ff",
             "@font-size-base":'12px',
