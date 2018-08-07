@@ -115,28 +115,14 @@ const columns = [{
     width:'8%',
 }];
 // 总计数据结构，用于传递至TableTotal中
-const totalData =  [
-    {
-        title:'本页合计',
+const totalData =  [{
+        title:'合计',
         total:[
-            {title: '期初余额', dataIndex: 'pageInitialBalance'},
-            {title: '本期发生额', dataIndex: 'pageCurrentAmount'},
-            {title: '本期应扣除金额', dataIndex: 'pageCurrentDeductAmount'},
-            {title: '本期实际扣除金额', dataIndex: 'pageActualDeductAmount'},
-            {title: '期末余额', dataIndex: 'pageEndingBalance'},
-            {title: '销项税额', dataIndex: 'pageOutputTax'},
-            {title: '价税合计', dataIndex: 'pageTotalAmount'},
-        ],
-    },{
-        title:'总计',
-        total:[
-            {title: '期初余额', dataIndex: 'totalInitialBalance'},
-            {title: '本期发生额', dataIndex: 'totalCurrentAmount'},
-            {title: '本期应扣除金额', dataIndex: 'totalCurrentDeductAmount'},
             {title: '本期实际扣除金额', dataIndex: 'totalActualDeductAmount'},
-            {title: '期末余额', dataIndex: 'totalEndingBalance'},
+            {title: '本期应扣除金额', dataIndex: 'totalCurrentDeductAmount'},
+            {title: '本期发生额', dataIndex: 'totalCurrentAmount'},
+            {title: '期初余额', dataIndex: 'totalInitialBalance'},
             {title: '销项税额', dataIndex: 'totalOutputTax'},
-            {title: '价税合计', dataIndex: 'totalTotalAmount'},
         ],
     }
 ];
