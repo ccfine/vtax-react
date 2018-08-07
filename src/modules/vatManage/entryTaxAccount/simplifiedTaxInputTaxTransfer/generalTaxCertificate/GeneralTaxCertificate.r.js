@@ -76,6 +76,7 @@ const columns = context =>[
                 {text}
             </span>
         ),
+        sorter: true,
         width:'100px',
     },
     {
