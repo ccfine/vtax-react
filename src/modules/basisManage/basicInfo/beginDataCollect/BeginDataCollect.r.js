@@ -40,7 +40,6 @@ const getColumns = context =>[
                     onSuccess:()=>context.handleSubmit('/dataCollection/revoke','撤回提交',record)
                 };
             let showIcon = parseInt(record.status, 0) === 2 ? revoke : submit;
-
             return composeBotton(
                 [
                     {

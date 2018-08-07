@@ -83,7 +83,7 @@ const fields = (disabled,declare)=> [
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
-        fieldName:'mainId',
+        fieldName:'main',
         type:'taxMain',
         span:6,
         componentProps:{
@@ -91,7 +91,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         },
         formItemStyle,
         fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -117,8 +117,8 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
             fieldTextName:'itemName',
             fieldValueName:'id',
             doNotFetchDidMount:true,
-            fetchAble:getFieldValue('mainId') || false,
-            url:`/project/list/${getFieldValue('mainId')}`,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
         }
     },
     {
