@@ -170,7 +170,7 @@ class SearchTable extends Component{
                         extra={tableOption.extra || null}
                         style={{marginTop:6}}
                         {...tableOption.cardProps}
-                        bodyStyle={{paddingBottom:(tableOption.pagination || tableOption.pageSize)?0:8}}
+                        bodyStyle={{paddingBottom:( tableOption.pagination || tableOption.pageSize)?0:8}}
                     >
                         <AsyncTable url={tableOption.url}
                                     updateKey={tableUpDateKey}

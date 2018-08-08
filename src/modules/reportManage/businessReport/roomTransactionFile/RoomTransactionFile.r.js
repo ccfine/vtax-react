@@ -12,7 +12,7 @@ const searchFields = (getFieldValue)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:8,
+        span:6,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
@@ -24,7 +24,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目名称',
         fieldName:'projectId',
         type:'asyncSelect',
-        span:8,
+        span:6,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -37,7 +37,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
-        span:8,
+        span:6,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -50,17 +50,37 @@ const searchFields = (getFieldValue)=> [
         label:'交易月份',
         fieldName:'authMonth',
         type:'monthPicker',
-        span:8
+        span:6
     },
     {
         label:'房间编码',
         fieldName:'roomCode',
-        span:8
+        span:6
     },
     {
         label:'路址',
         fieldName:'htRoomName',
-        span:8
+        span:6
+    },{
+        label:'状态',
+        fieldName:'knots',
+        type:'select',
+        span:6,
+        options:[
+            {
+                text:'未结转',
+                value:'0'
+            },
+            {
+                text:'已结转',
+                value:'1'
+            }
+        ]
+    },{
+        label:'房间交付期间',
+        fieldName:'deliveryDate',
+        type:'monthPicker',
+        span:6
     },
 ]
 const columns = [{
@@ -104,13 +124,13 @@ const columns = [{
         dataIndex:'transactionDate',
         width:'100px',
     },{
-        title:'房间交付日期',
+        title:'房间交付期间',
         dataIndex:'deliveryDate',
         width:'100px',
     },{
         title:'合同约定交付日期',
         dataIndex:'agreeDate',
-        width:'100px',
+        width:'120px',
     },{
         title:'楼栋名称',
         dataIndex:'buildingName',
@@ -123,7 +143,11 @@ const columns = [{
         title:'路址',
         dataIndex:'htRoomName',
         width:'150px',
-    }, {
+    },{
+        title:'状态',
+        dataIndex:'knots',
+        width:'100px'
+    },{
         title:'房号',
         dataIndex:'roomNumber',
         width:'100px',
@@ -174,7 +198,7 @@ const columns = [{
         render:text=>text? `${text}%`: text,
         width:'100px',
     }, {
-        title:'价税合计',
+        title:'结算价',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
         className:'table-money',
