@@ -33,7 +33,7 @@ export default function  watermark(settings) {
         }
     }
 
-    let oTemp = document.createDocumentFragment();
+    let oTemp = document.getElementById('root'); //document.createDocumentFragment();
 
     //获取页面最大宽度
     let page_width = Math.max(document.body.scrollWidth, document.body.clientWidth);
