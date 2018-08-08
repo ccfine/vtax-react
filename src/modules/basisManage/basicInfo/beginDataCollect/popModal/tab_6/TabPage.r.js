@@ -12,8 +12,14 @@ const columns = [{
         title: '房间编码',
         dataIndex: 'roomCode',
     }, {
-        title: '已开票金额',
+        title: '期初已开票金额',
         dataIndex: 'amount',
+        render:text=>fMoney(text),
+        className:'table-money'
+    },
+    {
+        title: '期初增值税已纳税销售额',
+        dataIndex: 'initialTaxableSales',
         render:text=>fMoney(text),
         className:'table-money'
     }

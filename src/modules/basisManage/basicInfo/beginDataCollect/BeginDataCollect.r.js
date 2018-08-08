@@ -23,28 +23,36 @@ const getColumns = context =>[
     {
         title:'操作',
         key:'actions',
-        render:(text,record)=>composeBotton([{
-            type:'action',
-            title:'编辑',
-            icon:'edit',
-            userPermissions:['1121004'],
-            onSuccess:()=>context.showModal('modify',record.mainId)
+        render:(text,record)=>{
+
+            let submit = {
+                type:'action',
+                title:'提交',
+                icon:'check',
+                userPermissions:['1121010'],
+                onSuccess:()=>context.handleSubmit('/dataCollection/submit','提交',record)
+            },
+                revoke = {
+                    type:'action',
+                    title:'撤回提交',
+                    icon:'rollback',
+                    userPermissions:['1121011'],
+                    onSuccess:()=>context.handleSubmit('/dataCollection/revoke','撤回提交',record)
+                };
+            let showIcon = parseInt(record.status, 0) === 2 ? revoke : submit;
+            return composeBotton(
+                [
+                    {
+                        type:'action',
+                        title:'编辑',
+                        icon:'edit',
+                        userPermissions:['1121004'],
+                        onSuccess:()=>context.showModal('modify',record.mainId)
+                    }
+                ].concat(showIcon)
+            )
+
         },
-        {
-            type:'action',
-            title:'提交',
-            icon:'check',
-            userPermissions:['1121010'],
-            onSuccess:()=>context.handleSubmit('/dataCollection/submit','提交',record)
-        },
-        {
-            type:'action',
-            title:'撤回提交',
-            icon:'rollback',
-            userPermissions:['1121011'],
-            onSuccess:()=>context.handleSubmit('/dataCollection/revoke','撤回提交',record)
-        }
-        ]),
         fixed:'left',
         width:'100px',
         className:'text-center'

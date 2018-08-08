@@ -153,7 +153,7 @@ const columns = [
         width:'100px',
 	},
 	{
-		title: '期初销售建筑面积',
+		title: '累计销售建筑面积',
 		dataIndex: 'saleArea',
         width:'100px',
 	},
@@ -170,7 +170,7 @@ const columns = [
         width:'200px',
 	},
 	{
-		title: '期初扣除土地价款',
+		title: '累计扣除土地价款',
 		dataIndex: 'actualDeductibleLandPrice',
 		render: text => fMoney(text),
 		className: 'table-money',

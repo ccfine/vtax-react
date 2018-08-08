@@ -107,7 +107,7 @@ class ApplyDeclare extends React.Component {
 						tab={pane.title}
 						key={pane.key}
 						closable={pane.closable}>
-						<pane.Component declare={{mainId:record.mainId,authMonth:record.partTerm,decAction:decAction}} activeTab={pane.title==='销项发票匹配'?activeTab:undefined}/>
+						<pane.Component declare={{mainId:record.mainId,mainName:record.mainName,authMonth:record.partTerm,decAction:decAction}} activeTab={pane.title==='销项发票匹配'?activeTab:undefined}/>
 					</TabPane>
 				))}
 				

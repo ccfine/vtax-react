@@ -65,6 +65,7 @@ const SubmitOrRecall = props => {
             type:props.method || 'post',
             url:props.url,
             fields,
+            children:props.children || null,
             disabled:props.disabled,
             onSuccess:props.onSuccess,
         },

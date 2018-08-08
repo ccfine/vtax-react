@@ -131,6 +131,14 @@ class ButtonModalWithForm extends Component{
                                 getFields(this.props.form,formOptions.fields)
                             }
                         </Row>
+                        {
+                            formOptions && formOptions.children && <Row>
+                                { formOptions.children }
+                            </Row>
+                        }
+
+
+
                     </Form>
                 </Modal>
             </span>

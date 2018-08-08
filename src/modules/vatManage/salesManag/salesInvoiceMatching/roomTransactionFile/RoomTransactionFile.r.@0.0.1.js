@@ -5,7 +5,7 @@
  *
  */
 import React,{Component} from 'react'
-import {message} from 'antd'
+import {message,Alert} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 // import moment from 'moment';
@@ -83,7 +83,7 @@ const fields = (disabled,declare)=> [
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
-        fieldName:'mainId',
+        fieldName:'main',
         type:'taxMain',
         span:6,
         componentProps:{
@@ -91,7 +91,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         },
         formItemStyle,
         fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) || undefined,
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
             rules:[
                 {
                     required:true,
@@ -117,8 +117,8 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
             fieldTextName:'itemName',
             fieldValueName:'id',
             doNotFetchDidMount:true,
-            fetchAble:getFieldValue('mainId') || false,
-            url:`/project/list/${getFieldValue('mainId')}`,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
         }
     },
     {
@@ -154,6 +154,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         fieldName:'knots',
         type:'select',
         span:6,
+        formItemStyle,
         options:[
             {
                 text:'未结转',
@@ -504,6 +505,18 @@ class RoomTransactionFile extends Component{
                                 url:'/output/room/files/submit',
                                 params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215010'],
+                                children:(
+                                    <Alert
+                                        type="warning"
+                                        showIcon
+                                        message={
+                                            <div>
+                                                <p>房间交付日期在2018年5月1号之后的存在有11%税率，需要统一调整为10%税率，请确认。</p>
+                                                <p>确认后系统会自动调整，同时会反算结算价：结算价=[(结算价*(1+11%)]/(1+10%)</p>
+                                            </div>
+                                        }
+                                    />
+                                ),
                                 onSuccess:this.refreshTable
                             },
                             {

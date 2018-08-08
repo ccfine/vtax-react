@@ -155,6 +155,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 {text}
             </span>
         ),
+        sorter: true,
         width:'100px',
     },
     {
