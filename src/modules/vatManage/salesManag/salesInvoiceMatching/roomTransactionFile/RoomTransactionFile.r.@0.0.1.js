@@ -154,6 +154,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         fieldName:'knots',
         type:'select',
         span:6,
+        formItemStyle,
         options:[
             {
                 text:'未结转',
