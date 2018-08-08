@@ -150,6 +150,22 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         span:6
     },
     {
+        label:'状态',
+        fieldName:'knots',
+        type:'select',
+        span:6,
+        options:[
+            {
+                text:'未结转',
+                value:'0'
+            },
+            {
+                text:'已结转',
+                value:'1'
+            }
+        ]
+    },
+    {
         label:'匹配状态',
         fieldName:'matchingStatus',
         type:'select',
@@ -165,6 +181,13 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
                 value:'1'
             }
         ]
+    },
+    {
+        label:'房间交付日期',
+        fieldName:'deliveryDate',
+        type:'monthPicker',
+        formItemStyle,
+        span:6,
     },
 ];
 
@@ -218,6 +241,11 @@ const getColumns = (context,disabled) => {
         //width:'300px',
     },
     {
+        title:'状态',
+        dataIndex:'knots',
+        width:'100px'
+    },
+    {
         title:'房间编码',
         dataIndex:'roomCode',
         width:'150px',
@@ -268,7 +296,7 @@ const getColumns = (context,disabled) => {
         width:'100px',
     },
     {
-        title:'价税合计',
+        title:'结算价',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
         className:'table-money',
