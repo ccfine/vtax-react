@@ -414,17 +414,17 @@ class InvoiceDataMatching extends Component{
                         className:''
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,disabled),
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     url:'/output/invoice/marry/already/list',
                     extra:<div>
                         {

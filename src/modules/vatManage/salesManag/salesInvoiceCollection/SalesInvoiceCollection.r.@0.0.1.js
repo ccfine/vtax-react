@@ -340,6 +340,13 @@ class SalesInvoiceCollection extends Component {
                         style:{borderTop:0},
                     }
                 }}
+                backCondition={(filters) => {
+                    this.setState({
+                        filters,
+                    },() => {
+                        this.fetchResultStatus();
+                    });
+                }}
                 tableOption={{
                     key: tableKey,
                     pageSize: 100,
@@ -353,13 +360,6 @@ class SalesInvoiceCollection extends Component {
                             selectedRowKeys
                         })
                     }:undefined,
-                    onSuccess: (params) => {
-                        this.setState({
-                            filters: params
-                        },() => {
-                            this.fetchResultStatus();
-                        });
-                    },
                     cardProps: {
                         title: "销项发票采集",
                         extra: (

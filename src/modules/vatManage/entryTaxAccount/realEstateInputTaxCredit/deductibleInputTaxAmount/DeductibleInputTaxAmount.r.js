@@ -133,6 +133,13 @@ export default class DeductibleInputTaxAmount extends Component{
                             }
                         }
                     }}
+                    backCondition={(filters)=>{
+                        this.setState({
+                            filters,
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
+                    }}
                     tableOption={{
                         key:tableKey,
                         pageSize:100,
@@ -140,13 +147,6 @@ export default class DeductibleInputTaxAmount extends Component{
                         url:'/account/income/estate/stayDedList',
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>待抵扣进项税额</span>,
-                        },
-                        onSuccess: (params) => {
-                            this.setState({
-                                filters: params
-                            },()=>{
-                                this.fetchResultStatus()
-                            })
                         },
                         extra: (
                             <div>

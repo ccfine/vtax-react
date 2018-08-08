@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:17:30
+ * @Last Modified time: 2018-08-08 11:15:26
  *
  */
 import React,{Component} from 'react'
@@ -232,20 +232,20 @@ class TaxCalculation extends Component{
                         },
                     }}
                     spinning={searchTableLoading}
+                    backCondition={(filters) => {
+                        filters.taxMonth = filters.authMonth;
+                        this.props.onParamsChange && this.props.onParamsChange(filters);
+                        this.setState({
+                            filters,
+                        },() => {
+                            this.fetchResultStatus()
+                        });
+                    }}
                     tableOption={{
                         key:tableKey,
                         onRow:record=>({
                             onDoubleClick:()=>{console.log(record)}
                         }),
-                        onSuccess:(params)=>{ 
-                            params.taxMonth = params.authMonth;
-                            this.props.onParamsChange && this.props.onParamsChange(params);
-                            this.setState({
-                                filters:params,
-                            },()=>{
-                                this.fetchResultStatus()
-                            })
-                        },
                         pagination:false,
                         columns:getColumns(this,getFieldDecorator,(disabled && parseInt(statusParam.status,10)===1)),
                         url:tableUrl,

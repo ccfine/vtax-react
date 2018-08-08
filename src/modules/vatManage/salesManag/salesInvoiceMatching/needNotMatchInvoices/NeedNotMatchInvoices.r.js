@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/11.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:16:13
+ * @Last Modified time: 2018-08-08 10:34:46
  *
  */
 import React, { Component } from 'react'
@@ -262,17 +262,17 @@ class NeedNotMatchInvoices extends Component{
                         className:''
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     url:'/output/invoice/marry/unwanted/list',
                     extra:<div>
                         {

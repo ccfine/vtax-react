@@ -123,18 +123,18 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         }
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:columns(this),
                     url:'/account/incomeSimpleOut/controller/allSimpleTaxList',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>简易计税进项税额转出列表</span>,
                         extra:<div>

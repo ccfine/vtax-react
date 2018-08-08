@@ -178,6 +178,14 @@ class FixedAssetsInputTaxDetails extends Component{
                         }
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                    this.props.form.resetFields();
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
@@ -186,15 +194,15 @@ class FixedAssetsInputTaxDetails extends Component{
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
                     },
-                    onSuccess: (params,dataSource) => {
-                        this.setState({
-                            filters: params,
-                            dataSource
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                        this.props.form.resetFields();
-                    },
+                    // onSuccess: (params,dataSource) => {
+                    //     this.setState({
+                    //         filters: params,
+                    //         dataSource
+                    //     },()=>{
+                    //         this.fetchResultStatus()
+                    //     })
+                    //     this.props.form.resetFields();
+                    // },
                     extra: (
                         <div>
                             {
@@ -264,6 +272,11 @@ class FixedAssetsInputTaxDetails extends Component{
                     onTotalSource: (totalSource) => {
                         this.setState({
                             totalSource
+                        })
+                    },
+                    onDataChange: (dataSource) => {
+                        this.setState({
+                            dataSource
                         })
                     },
                     scroll:{

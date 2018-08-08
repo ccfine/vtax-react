@@ -226,18 +226,18 @@ const columns=[
                         }
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
                     url:'/fixedAssetCard/manageList',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps: {
                         title: "固定资产信息采集",
                         extra: (

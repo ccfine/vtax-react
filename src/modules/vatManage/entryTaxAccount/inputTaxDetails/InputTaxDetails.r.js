@@ -219,15 +219,15 @@ class InputTaxDetails extends Component{
                 }}
                 doNotFetchDidMount={!disabled}
                 spinning={searchTableLoading}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     onTotalSource: (totalSource) => {
                         this.setState({
                             totalSource

@@ -235,9 +235,6 @@ class unBilledSalesEstate extends Component{
         filters:{
 
         },
-        resultFieldsValues:{
-
-        },
 
         statusParam:undefined,
 
@@ -281,6 +278,13 @@ class unBilledSalesEstate extends Component{
                     }
                 }}
                 spinning={searchTableLoading}
+                backCondition={(params)=>{
+                    this.setState({
+                        filters:params,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     cardProps:{
                         title:'未开票销售台账-地产'
@@ -289,14 +293,6 @@ class unBilledSalesEstate extends Component{
                     pageSize:100,
                     columns:columns,
                     url:'/account/output/notInvoiceSale/realty/list',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                            resultFieldsValues:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)

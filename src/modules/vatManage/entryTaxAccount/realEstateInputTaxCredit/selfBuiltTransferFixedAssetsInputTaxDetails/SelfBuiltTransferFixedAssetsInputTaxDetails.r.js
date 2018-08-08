@@ -169,18 +169,18 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                         }
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:columns(this),
                     url:'/account/income/estate/buildList',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>自建转自用固定资产进项税额明细</span>,
                         extra:<div>

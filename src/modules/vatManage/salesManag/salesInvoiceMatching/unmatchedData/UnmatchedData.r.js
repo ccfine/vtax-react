@@ -305,18 +305,18 @@ class UnmatchedData extends Component{
                         className:''
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,disabled),
                     url:'/output/invoice/marry/unmatched/list',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     extra:<div>
                         {
                             listMainResultStatus(statusParam)

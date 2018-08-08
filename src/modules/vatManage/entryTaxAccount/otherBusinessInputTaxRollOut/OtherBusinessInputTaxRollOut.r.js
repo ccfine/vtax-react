@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:13:29
+ * @Last Modified time: 2018-08-08 11:03:59
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
@@ -154,22 +154,34 @@ class OtherBusinessInputTaxRollOut extends Component {
             <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
+                    backCondition={(filters)=>{
+                        this.setState({
+                            filters,
+                        },()=>{
+                            this.updateStatus(filters);
+                        })
+                    }}
                     tableOption={{
                         key: this.state.updateKey,
                         url: "/account/income/taxout/list",
                         pagination: false,
                         columns: getColumns(this,noSubmit && disabled && declare.decAction==='edit' ),
                         rowKey: "id",
-                        onSuccess:(params,dataSource)=>{
-                          this.setState({
-                              filters:params,
-                              dataSource,
-                          });  
-                          this.updateStatus(params);
-                        },
+                        // onSuccess:(params,dataSource)=>{
+                        //   this.setState({
+                        //       filters:params,
+                        //       dataSource,
+                        //   });  
+                        //   this.updateStatus(params);
+                        // },
                         onTotalSource: totalSource => {
                             this.setState({
                                 totalSource
+                            });
+                        },
+                        onDataChange: dataSource => {
+                            this.setState({
+                                dataSource
                             });
                         },
                         scroll:{

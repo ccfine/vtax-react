@@ -2,7 +2,7 @@
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:14:44
+ * @Last Modified time: 2018-08-08 11:13:00
  *
  */
 import React, { Component } from 'react'
@@ -382,19 +382,19 @@ class TaxExemptionDetails extends Component{
                         }
                     },
                 }}
+                backCondition={(filters) => {
+                    this.setState({
+                        filters,
+                    },() => {
+                        this.fetchResultStatus();
+                    });
+                    this.props.form.resetFields();
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,getFieldDecorator,(disabled && declare.decAction==='edit')),
                     url:'/account/other/reduceTaxDetail/list',
-                    onSuccess:(params)=>{
-                        this.props.form.resetFields();
-                        this.setState({
-                            filters:params
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     cardProps:{
                         title:'减免税明细台账'
                     },
