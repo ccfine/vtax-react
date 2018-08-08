@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:50:50
+ * @Last Modified time: 2018-08-08 10:15:26
  *
  */
 import React,{Component} from 'react'
@@ -88,6 +88,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         span:6,
         componentProps:{
             disabled,
+            labelInValue:true,
         },
         formItemStyle,
         fieldDecoratorOptions:{
