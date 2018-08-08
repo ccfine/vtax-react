@@ -10,7 +10,7 @@ import TableTitle from 'compoments/tableTitleWithTime'
 const formItemStyle = {
     labelCol:{
         sm:{
-            span:10,
+            span:12,
         },
         xl:{
             span:8
@@ -30,7 +30,7 @@ const searchFields = (getFieldValue)=> [
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:8,
+        span:6,
         formItemStyle,
         fieldDecoratorOptions:{
             rules:[{
@@ -43,7 +43,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目名称',
         fieldName:'projectId',
         type:'asyncSelect',
-        span:8,
+        span:6,
         formItemStyle,
         componentProps:{
             fieldTextName:'itemName',
@@ -57,7 +57,7 @@ const searchFields = (getFieldValue)=> [
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
-        span:8,
+        span:6,
         formItemStyle,
         componentProps:{
             fieldTextName:'itemName',
@@ -71,25 +71,25 @@ const searchFields = (getFieldValue)=> [
         label:'交易月份',
         fieldName:'authMonth',
         type:'monthPicker',
-        span:8,
+        span:6,
         formItemStyle,
     },
     {
         label:'房间编码',
         fieldName:'roomCode',
-        span:8,
+        span:6,
         formItemStyle,
     },
     {
         label:'路址',
         fieldName:'htRoomName',
-        span:8,
+        span:6,
         formItemStyle,
     },{
         label:'状态',
         fieldName:'knots',
         type:'select',
-        span:8,
+        span:6,
         formItemStyle,
         options:[
             {
@@ -105,7 +105,7 @@ const searchFields = (getFieldValue)=> [
         label:'房间交付期间',
         fieldName:'deliveryDate',
         type:'monthPicker',
-        span:8,
+        span:6,
         formItemStyle,
     },
 ]
