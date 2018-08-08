@@ -2,7 +2,7 @@
  * @Author: liuchunxiu
  * @Date: 2018-04-04 17:52:53
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:17:06
+ * @Last Modified time: 2018-08-08 10:39:57
  */
 import React, { Component } from "react";
 import { Modal, message } from "antd";
@@ -263,16 +263,19 @@ class OtherTaxAdjustment extends Component {
               style:{borderTop:0}
             }
           }}
+          backCondition={(filters)=>{
+              this.setState({
+                  filters,
+              },()=>{
+                  this.updateStatus(filters)
+              })
+          }}
           tableOption={{
             scroll: { x: 1900,y:window.screen.availHeight-380-(disabled?50:0)},
             pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
             url: "/account/output/othertax/list",
-            onSuccess:(params)=>{
-              this.setState({ filters: params });
-              this.updateStatus(params);
-            },
             onTotalSource: totalSource => {
               this.setState({
                   totalSource

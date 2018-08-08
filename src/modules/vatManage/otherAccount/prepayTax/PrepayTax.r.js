@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-06 18:42:49
+ * @Last Modified time: 2018-08-08 11:10:47
  *
  */
 import React,{Component} from 'react'
@@ -309,16 +309,16 @@ class PrepayTax extends Component{
                     }}
                     doNotFetchDidMount={!disabled}
                     spinning={searchTableLoading}
+                    backCondition={(filters) => {
+                        this.setState({
+                            filters,
+                        },() => {
+                            this.fetchResultStatus();
+                        });
+                        this.props.form.resetFields();
+                    }}
                     tableOption={{
                         key:tableKey,
-                        onSuccess:(params)=>{
-                            this.props.form.resetFields();
-                            this.setState({
-                                filters:params,
-                            },()=>{
-                                this.fetchResultStatus()
-                            })
-                        },
                         onDataChange:(dataSource)=>{
                             this.setState({
                                 dataSource

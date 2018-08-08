@@ -72,7 +72,7 @@ const sheetData = [
         url:'/tax/declaration/reduce/list',
         composeGrid:composeGrid_8
     },{
-        tab:'税款计算台账',
+        tab:'税款计算表',
         Component:TaxCalculation,
     },
     // {

@@ -306,19 +306,19 @@ class LandPriceManage extends Component{
                         style:{borderTop:0}
                     },
                 }}
+                backCondition={(filters) => {
+                    this.setState({
+                        filters,
+                        selectedRowKeys:[],
+                    },() => {
+                        this.fetchResultStatus();
+                    });
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,!disabled,getFieldDecorator),
                     url:'/land/price/manage/list',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                            selectedRowKeys:[],
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1) ? (selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys

@@ -378,6 +378,13 @@ class InvoiceCollection extends Component {
                             style:{borderTop:0}
                         }
                     }}
+                    backCondition={(filters)=>{
+                        this.setState({
+                            filters,
+                        },()=>{
+                            this.fetchResultStatus()
+                        })
+                    }}
                     tableOption={{
                         columns: getColumns(this),
                         url: "/income/invoice/collection/list",
@@ -388,13 +395,6 @@ class InvoiceCollection extends Component {
                                 selectedRowKeys
                             })
                         }:undefined,
-                        onSuccess:(params)=>{
-                            this.setState({
-                                filters:params
-                            },()=>{
-                                this.fetchResultStatus()
-                            })
-                        },
                         extra: (
 
                             <div>

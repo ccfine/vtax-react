@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-03 14:50:50
+ * @Last Modified time: 2018-08-08 10:33:09
  *
  */
 import React,{Component} from 'react'
@@ -88,6 +88,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         span:6,
         componentProps:{
             disabled,
+            labelInValue:true,
         },
         formItemStyle,
         fieldDecoratorOptions:{
@@ -455,14 +456,14 @@ class RoomTransactionFile extends Component{
                     }
                 }}
                 doNotFetchDidMount={!disabled}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     onTotalSource: (totalSource) => {
                         this.setState({
                             totalSource

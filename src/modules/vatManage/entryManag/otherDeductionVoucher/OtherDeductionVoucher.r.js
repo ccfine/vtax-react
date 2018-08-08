@@ -244,19 +244,19 @@ class SalesInvoiceCollection extends Component{
                         style:{borderTop:0}
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                        selectedRowKeys:[],
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
                     columns:columns(this),
                     url:'/income/financeDetails/controller/list',
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                            selectedRowKeys:[],
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
                     onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys

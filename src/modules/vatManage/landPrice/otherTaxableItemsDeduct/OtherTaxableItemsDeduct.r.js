@@ -177,6 +177,13 @@ class OtherTaxableItemsDeduct extends Component{
                             }
                         }
                     }}
+                    backCondition={(filters) => {
+                        this.setState({
+                            filters,
+                        },() => {
+                            this.fetchResultStatus();
+                        });
+                    }}
                     tableOption={{
                         key:updateKey,
                         pagination:true,
@@ -223,13 +230,6 @@ class OtherTaxableItemsDeduct extends Component{
                             }
                             <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                         </div>,
-                        onSuccess:(params)=>{
-                            this.setState({
-                                filters:params,
-                            },()=>{
-                                this.fetchResultStatus()
-                            })
-                        },
                         onTotalSource: (totalSource) => {
                             this.setState({
                                 totalSource
