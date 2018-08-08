@@ -7,12 +7,31 @@ import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
 import TableTitle from 'compoments/tableTitleWithTime'
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:8
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:16
+        }
+    }
+}
 const searchFields = (getFieldValue)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
         type:'taxMain',
-        span:6,
+        span:8,
+        formItemStyle,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
@@ -24,7 +43,8 @@ const searchFields = (getFieldValue)=> [
         label:'项目名称',
         fieldName:'projectId',
         type:'asyncSelect',
-        span:6,
+        span:8,
+        formItemStyle,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -37,7 +57,8 @@ const searchFields = (getFieldValue)=> [
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
-        span:6,
+        span:8,
+        formItemStyle,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -50,22 +71,26 @@ const searchFields = (getFieldValue)=> [
         label:'交易月份',
         fieldName:'authMonth',
         type:'monthPicker',
-        span:6
+        span:8,
+        formItemStyle,
     },
     {
         label:'房间编码',
         fieldName:'roomCode',
-        span:6
+        span:8,
+        formItemStyle,
     },
     {
         label:'路址',
         fieldName:'htRoomName',
-        span:6
+        span:8,
+        formItemStyle,
     },{
         label:'状态',
         fieldName:'knots',
         type:'select',
-        span:6,
+        span:8,
+        formItemStyle,
         options:[
             {
                 text:'未结转',
@@ -80,7 +105,8 @@ const searchFields = (getFieldValue)=> [
         label:'房间交付期间',
         fieldName:'deliveryDate',
         type:'monthPicker',
-        span:6
+        span:8,
+        formItemStyle,
     },
 ]
 const columns = [{
