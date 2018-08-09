@@ -85,23 +85,25 @@ const searchFields = (getFieldValue)=> [
         fieldName:'htRoomName',
         span:6,
         formItemStyle,
-    },{
-        label:'状态',
-        fieldName:'knots',
-        type:'select',
-        span:6,
-        formItemStyle,
-        options:[
-            {
-                text:'未结转',
-                value:'0'
-            },
-            {
-                text:'已结转',
-                value:'1'
-            }
-        ]
-    },{
+    },
+    // {
+    //     label:'状态',
+    //     fieldName:'knots',
+    //     type:'select',
+    //     span:6,
+    //     formItemStyle,
+    //     options:[
+    //         {
+    //             text:'未结转',
+    //             value:'0'
+    //         },
+    //         {
+    //             text:'已结转',
+    //             value:'1'
+    //         }
+    //     ]
+    // },
+    {
         label:'房间交付期间',
         fieldName:'deliveryDate',
         type:'monthPicker',
@@ -169,12 +171,14 @@ const columns = [{
         title:'路址',
         dataIndex:'htRoomName',
         width:'150px',
-    },{
-        title:'状态',
-        dataIndex:'knots',
-        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未结转</span>:<span style={{color: "#87d068"}}>已结转</span>,
-        width:'100px'
-    },{
+     }
+    // {
+    //     title:'状态',
+    //     dataIndex:'knots',
+    //     render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未结转</span>:<span style={{color: "#87d068"}}>已结转</span>,
+    //     width:'100px'
+    // }
+    ,{
         title:'房号',
         dataIndex:'roomNumber',
         width:'100px',
