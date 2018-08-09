@@ -36,7 +36,7 @@ export default class ParameterSettings extends Component{
                                     }
                                 },
                                 fieldDecoratorOptions: {
-                                    initialValue: defaultData && parseInt(defaultData.prepayTaxesDeduction,0) === 1,
+                                    initialValue: defaultData!==null && parseInt(defaultData.prepayTaxesDeduction,0) === 1,
                                     valuePropName: 'checked',
                                 },
                                 componentProps: {
