@@ -150,23 +150,23 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         formItemStyle,
         span:6
     },
-    {
-        label:'状态',
-        fieldName:'knots',
-        type:'select',
-        span:6,
-        formItemStyle,
-        options:[
-            {
-                text:'未结转',
-                value:'0'
-            },
-            {
-                text:'已结转',
-                value:'1'
-            }
-        ]
-    },
+    // {
+    //     label:'状态',
+    //     fieldName:'knots',
+    //     type:'select',
+    //     span:6,
+    //     formItemStyle,
+    //     options:[
+    //         {
+    //             text:'未结转',
+    //             value:'0'
+    //         },
+    //         {
+    //             text:'已结转',
+    //             value:'1'
+    //         }
+    //     ]
+    // },
     {
         label:'匹配状态',
         fieldName:'matchingStatus',
@@ -242,12 +242,12 @@ const getColumns = (context,disabled) => {
         dataIndex:'htRoomName',
         //width:'300px',
     },
-    {
-        title:'状态',
-        dataIndex:'knots',
-        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未结转</span>:<span style={{color: "#87d068"}}>已结转</span>,
-        width:'100px'
-    },
+    // {
+    //     title:'状态',
+    //     dataIndex:'knots',
+    //     render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未结转</span>:<span style={{color: "#87d068"}}>已结转</span>,
+    //     width:'100px'
+    // },
     {
         title:'房间编码',
         dataIndex:'roomCode',
