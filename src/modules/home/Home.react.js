@@ -82,13 +82,13 @@ class Home extends Component {
                     showBullets={true}
                     slideInterval={3000}
                     slideDuration={500}
-                    lazyLoad={false}
+                    lazyLoad={true}
                     showNav={false}
                     thumbnailPosition='bottom'
                     showFullscreenButton={false}
                     useBrowserFullscreen={false}
                     showPlayButton={false}
-                    useTranslate3D={false}
+                    //useTranslate3D={false}  这个会影响水印抖动
                     showThumbnails={false}
                     items={banner}
                 />
