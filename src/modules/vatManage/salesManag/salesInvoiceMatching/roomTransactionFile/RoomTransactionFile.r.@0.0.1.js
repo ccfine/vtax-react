@@ -406,7 +406,7 @@ class RoomTransactionFile extends Component{
         statusParam:'',
 
         filters:{},
-        totalSource:undefined
+        totalSource:undefined,
     }
 
     refreshTable = ()=>{
@@ -507,7 +507,7 @@ class RoomTransactionFile extends Component{
                                 url:'/output/room/files/submit',
                                 params:{...filters,authMonth:declare.authMonth},
                                 userPermissions:['1215010'],
-                                children:(
+                                children: totalSource && totalSource.flag===true && (
                                     <Alert
                                         type="warning"
                                         showIcon
