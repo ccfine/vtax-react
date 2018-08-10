@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-08 11:15:26
+ * @Last Modified time: 2018-08-10 13:43:28
  *
  */
 import React,{Component} from 'react'
@@ -250,7 +250,7 @@ class TaxCalculation extends Component{
                         columns:getColumns(this,getFieldDecorator,(disabled && parseInt(statusParam.status,10)===1)),
                         url:tableUrl,
                         cardProps:{
-                            title:'税款计算台账'
+                            title:'税款计算表'
                         },
                         scroll:{
                             x:1000,
