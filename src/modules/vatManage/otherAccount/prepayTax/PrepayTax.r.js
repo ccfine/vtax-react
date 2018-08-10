@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-08 11:10:47
+ * @Last Modified time: 2018-08-09 16:32:52
  *
  */
 import React,{Component} from 'react'
@@ -157,14 +157,24 @@ const getColumns = (context,disabled) => {
         dataIndex:'taxRate',
         className:'text-right',
         render:(text,record,index)=>{
-            const {getFieldDecorator} = context.props.form;
-            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产' && index<3){
+            const {getFieldDecorator,setFieldsValue} = context.props.form,
+            {dataSource} = context.state;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产'){
                 return <NumericInputCell
                         fieldName={`list[${record.id}].taxRate`}
                         initialValue={text}
                         getFieldDecorator={getFieldDecorator}
                         componentProps={{
                             valueType:'int',
+                            onChange:(value)=>{
+                                let values = {};
+                                dataSource.forEach(ele=>{
+                                    if(record.preProject === ele.preProject){
+                                        values[`list[${ele.id}].taxRate`] = value;
+                                    }
+                                })
+                                setFieldsValue(values)
+                            }
                         }}
                     />
             }else{
@@ -225,20 +235,12 @@ class PrepayTax extends Component{
         this.props.form.validateFields((err, values) => {
             if(!err){
                 const {dataSource} = this.state;
-                let firstTaxRate0 = 0,firstTaxRate1=0;
                 let params = dataSource.filter(ele=>ele.preProject!=='销售不动产').map(ele=>{
                     let res = {};
                     res.id = ele.id;
-                    // res.prepayAmount = values[ele.id].prepayAmount
                     res.withOutAmount = values.list[ele.id].withOutAmount.replace(/,/g,'') || 0;
                     res.withTaxAmount = values.list[ele.id].withTaxAmount.replace(/,/g,'') || 0;
                     res.taxRate = values.list[ele.id].taxRate || 0;
-                    if(ele.preProject === '建筑服务'){
-                        firstTaxRate0 = res.taxRate = values.list[ele.id].taxRate || firstTaxRate0;
-                    }else{
-                        firstTaxRate1 = res.taxRate = values.list[ele.id].taxRate || firstTaxRate1;
-                    }
-
                     return res;
                 });
 
