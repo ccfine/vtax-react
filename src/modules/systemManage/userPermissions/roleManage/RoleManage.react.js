@@ -174,18 +174,18 @@ class RoleManage extends Component{
     }
 
     toggleModalVisible=visible=>{
-        this.setState({
+        this.mounted && this.setState({
             visible
         })
     }
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             updateKey:Date.now()
         })
     }
     showModal=(type,record)=>{
         this.toggleModalVisible(true)
-        this.setState({
+        this.mounted && this.setState({
             modalConfig:{
                 type,
                 id:record.id,
@@ -194,12 +194,12 @@ class RoleManage extends Component{
         })
     }
     toggleUserModalVisible=userVisible=>{
-        this.setState({
+        this.mounted && this.setState({
             userVisible,
         })
     }
     togglePermissionModalVisible=permissionVisible=>{
-        this.setState({
+        this.mounted && this.setState({
             permissionVisible,
         })
     }
@@ -271,7 +271,10 @@ class RoleManage extends Component{
         });
 
     }
-
+    mounted=true;
+    componentWillUnmount(){
+        this.mounted=null
+    }
     render(){
         const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId,filters,params} = this.state;
         return (

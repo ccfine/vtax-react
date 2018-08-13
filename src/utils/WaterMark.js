@@ -14,12 +14,12 @@ export default function  watermark(settings) {
         watermark_cols: 20,//水印列数
         watermark_x_space: 100,//水印x轴间隔
         watermark_y_space: 50,//水印y轴间隔
-        watermark_color: '#aaa',//水印字体颜色
+        watermark_color: '#D7D7D7',//水印字体颜色
         watermark_alpha: 0.4,//水印透明度
-        watermark_fontSize: '15px',//水印字体大小
-        watermark_font: '微软雅黑',//水印字体
+        watermark_fontSize: '14px',//水印字体大小
+        watermark_font: 'SimSun',//水印字体
         watermark_width: 210,//水印宽度
-        watermark_height: 80,//水印长度
+        watermark_height: 100,//水印长度
         watermark_angle: 15//水印倾斜度数
     };
     //采用配置项替换默认值，作用类似jquery.extend
@@ -33,7 +33,7 @@ export default function  watermark(settings) {
         }
     }
 
-    let oTemp = document.getElementById('root'); //document.createDocumentFragment();
+    let oTemp = document.createDocumentFragment(); //document.getElementById('root');
 
     //获取页面最大宽度
     let page_width = Math.max(document.body.scrollWidth, document.body.clientWidth);

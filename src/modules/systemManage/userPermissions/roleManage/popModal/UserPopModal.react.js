@@ -18,18 +18,18 @@ class PopModal extends Component{
 
     handleSubmit = () => {
         /*if(this.state.targetKeys.length < 1) {
-            return message.success('请选择要分配的用户!');
-        }*/
+         return message.success('请选择要分配的用户!');
+         }*/
         let params = {
             userIds:this.state.targetKeys,
             id:this.props.id,
         }
-        this.setState({
+        this.mounted && this.setState({
             submitLoading:true
         })
         request.post(`/sysRole/assignUser/${this.props.orgId}`,params)
             .then(({data})=>{
-                this.setState({
+                this.mounted && this.setState({
                     submitLoading:false
                 })
                 if(data.code===200){
@@ -48,7 +48,7 @@ class PopModal extends Component{
     }
 
 
-    toggleLoaded = loaded => this.setState({loaded})
+    toggleLoaded = loaded => this.mounted && this.setState({loaded})
 
     fetchList(orgId){
         request.get(`/sysUser/queryUserList/${orgId}`)
@@ -97,7 +97,7 @@ class PopModal extends Component{
         return option.title.indexOf(inputValue) > -1;
     }
     handleChange = (targetKeys) => {
-        this.setState({ targetKeys });
+        this.mounted && this.setState({ targetKeys });
     }
     mounted=true;
     componentWillUnmount(){
@@ -171,5 +171,5 @@ class PopModal extends Component{
 }
 
 export default Form.create()(PopModal);/*connect(state=>({
-    org: state.user.get("org")
-}))(Form.create()(PopModal))*/
+ org: state.user.get("org")
+ }))(Form.create()(PopModal))*/
