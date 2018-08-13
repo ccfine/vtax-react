@@ -101,7 +101,7 @@ class TaxReturnForm extends Component{
         const {activeKey,params} = this.state,
             {declare} = this.props;
         return (
-            <Tabs tabBarStyle={{marginBottom:0}} onChange={this.onChange} activeKey={activeKey} type="card">
+            <Tabs tabBarStyle={{marginBottom:0,backgroundColor:!!declare?'#FFF':'transparent'}} onChange={this.onChange} activeKey={activeKey}  type={!!declare?'line':"card"}>
                 {
                     sheetData.map((item,i)=>(
                         <TabPane tab={item.tab} key={i}>

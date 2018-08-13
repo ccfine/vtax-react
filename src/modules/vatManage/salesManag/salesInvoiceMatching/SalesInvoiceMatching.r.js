@@ -38,7 +38,7 @@ class SalesInvoiceMatching extends Component{
         const {tabsKey,activeKey} = this.state,
         {declare} = this.props;
         return(
-            <Tabs key={tabsKey} onChange={this.onTabChange} type="card" activeKey={activeKey}>
+            <Tabs key={tabsKey} onChange={this.onTabChange} type={!!declare?'line':"card"} tabBarStyle={!!declare?{backgroundColor:'#FFF'}:{}} activeKey={activeKey}>
                 <TabPane tab="房间交易档案" key="1">
                     <RoomTransactionFilePage declare={declare}/>
                 </TabPane>
