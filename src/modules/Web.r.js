@@ -63,7 +63,7 @@ class Web extends Component {
         if(isAuthed){
             let mask_div = document.getElementsByClassName("mask_div");
             mask_div.innerHTML = null;
-            watermark({ watermark_txt:`${this.props.realName}, ${this.props.username}, ${moment().format('YYYY-MM-DD HH:mm')}`});
+            watermark({ watermark_txt:`${this.props.realName},${this.props.username},${moment().format('YYYY-MM-DD HH:mm')}`});
         }
 
     }

@@ -4,6 +4,7 @@
 import React,{Component} from 'react'
 import {Form,Select,message} from 'antd'
 import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
 import {request} from 'utils'
 const FormItem = Form.Item;
 const Option = Select.Option
@@ -31,7 +32,7 @@ function fetchTaxMain(value, callback) {
             message.error(err.message)
         });
 }
-export default class TaxMain extends Component{
+class TaxMain extends Component{
     static propTypes={
         form:PropTypes.object.isRequired,
         formItemStyle:PropTypes.object,
@@ -70,11 +71,13 @@ export default class TaxMain extends Component{
         }
     }*/
     componentDidMount(){
-        fetchTaxMain('',data => {
-            this.mounted && this.setState({
-                mainTaxItems: data
-            })
-        });
+        if(this.props.isAuthed){
+            fetchTaxMain('',data => {
+                this.mounted && this.setState({
+                    mainTaxItems: data
+                })
+            });
+        }
     }
     mounted = true
     componentWillUnmount(){
@@ -126,3 +129,6 @@ export default class TaxMain extends Component{
         )
     }
 }
+export default connect(state=>({
+    isAuthed:state.user.get('isAuthed'),
+}))(TaxMain)
