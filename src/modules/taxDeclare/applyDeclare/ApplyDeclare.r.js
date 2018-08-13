@@ -34,7 +34,7 @@ class ApplyDeclare extends React.Component {
 		this.toggleRecordLoading(true)
 		request.get(`/tax/declaration/find/${id}`).then(({data}) => {
 			if(data.code === 200){
-				this.setState({
+                this.mounted && this.setState({
 					record:data.data,
 					activeKey:'main',
 				})
@@ -48,7 +48,7 @@ class ApplyDeclare extends React.Component {
 		})
 	}
 	onChange = activeKey => {
-		this.setState({ activeKey,mainUpdateKey:Date.now() })
+        this.mounted && this.setState({ activeKey,mainUpdateKey:Date.now() })
 	}
 	onEdit = (targetKey, action) => {
 		this[action](targetKey)
@@ -59,7 +59,7 @@ class ApplyDeclare extends React.Component {
 			// {record} = this.state,
 			// {decAction} = this.props;
 		if(!Component ){return}else if(panes.some(ele=>ele.key === key)){
-			this.setState({ activeKey,...props })
+            this.mounted && this.setState({ activeKey,...props })
 			return;
 		}
 		
@@ -68,7 +68,7 @@ class ApplyDeclare extends React.Component {
 			Component: Component,
 			key: activeKey
 		})
-		this.setState({ panes, activeKey ,...props })
+        this.mounted && this.setState({ panes, activeKey ,...props })
 	}
 	remove = targetKey => {
 		let activeKey = this.state.activeKey,
@@ -83,8 +83,12 @@ class ApplyDeclare extends React.Component {
 				newState.mainUpdateKey = Date.now()
 			}
 		}
-		this.setState(newState)
+        this.mounted && this.setState(newState)
 	}
+    mounted=true;
+    componentWillUnmount(){
+        this.mounted=null;
+    }
 	render() {
 		const {record,mainUpdateKey,recordLoading,activeTab} = this.state,
 		{url,decAction} = this.props; 

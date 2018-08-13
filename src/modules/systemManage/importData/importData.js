@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Col, Row, Form} from 'antd'
-import {getFields,composeBotton} from 'utils'
+import {composeBotton} from 'utils'
 const fields = [
     {
         label:'纳税主体',

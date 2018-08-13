@@ -47,7 +47,7 @@ const sheetData = [
         tab:'附表四',
         grid:sheet_4,
         url:'/tax/declaration/addendum/four/list',
-        saveUrl:'/tax/declaration/addendum/four/save',
+        //saveUrl:'/tax/declaration/addendum/four/save',
     }, {
         tab:'附表五',
         grid:sheet_5,
