@@ -270,6 +270,7 @@ class UnBilledSalesNotEstate extends Component {
                         borderTop:'none'
                     }}
                     className="search-card"
+                    bordered={false}
                 >
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
@@ -325,6 +326,7 @@ class UnBilledSalesNotEstate extends Component {
                     </Form>
                 </Card>
                 <Card title={<span>未开票销售台账-非地产汇总列表</span>}
+                    bordered={false}
                       extra={<div>
                           {listMainResultStatus(statusParam)}
                           {
@@ -397,6 +399,7 @@ class UnBilledSalesNotEstate extends Component {
 
                 </Card>
                 <Card title={<span>未开票销售台账-非地产手工新增列表</span>}
+                    bordered={false}
                       extra={<div>
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
