@@ -42,6 +42,10 @@ class WimsHeader extends Component {
                 onOk:()=>{
                     modalRef && modalRef.destroy();
                     this.props.logout();
+                    let mask_div = document.getElementsByClassName("mask_div");
+                    if(mask_div.length>0){
+                        mask_div.innerHTML = null;
+                    }
                     setTimeout(()=>{
                         window.location.href=`${ssoPath}`;
                     },200)
