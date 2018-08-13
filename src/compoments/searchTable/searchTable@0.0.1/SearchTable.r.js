@@ -140,6 +140,7 @@ class SearchTable extends Component{
                                 bodyStyle={{
                                     padding:expand?'8px 16px 0 16px':'0 16px'
                                 }}
+                                bordered={false}
                                 /*extra={
                                  <Icon
                                  style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
@@ -173,6 +174,7 @@ class SearchTable extends Component{
                     <Card
                         extra={tableOption.extra || null}
                         style={{marginTop:6}}
+                        bordered={false}
                         {...tableOption.cardProps}
                         bodyStyle={{paddingBottom:( tableOption.pagination || tableOption.pageSize)?0:8}}
                     >

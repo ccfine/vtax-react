@@ -176,6 +176,7 @@ class SheetWithSearchFields extends Component{
                         </Row>
                 </div>
                 <Card
+                    bordered={false}
                     extra={
                         <div>
                             {

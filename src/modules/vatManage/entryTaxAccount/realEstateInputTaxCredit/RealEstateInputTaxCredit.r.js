@@ -82,7 +82,7 @@ class RealEstateInputTaxCredit extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <Tabs key={tabsKey} onChange={this.onTabChange} type="card" activeKey={activeKey}>
+            <Tabs key={tabsKey} onChange={this.onTabChange} type={!!declare?'line':"card"} tabBarStyle={!!declare?{backgroundColor:'#FFF'}:{}} activeKey={activeKey}>
                 <TabPane tab="固定资产进项税额明细" key="1">
                     <FixedAssetsInputTaxDetails declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>

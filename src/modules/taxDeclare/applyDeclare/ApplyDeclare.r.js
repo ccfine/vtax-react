@@ -97,12 +97,13 @@ class ApplyDeclare extends React.Component {
 			!record?'加载异常，请检查网络！':
             <Tabs
 				hideAdd={true}
-                tabBarStyle={{marginBottom:0}}
+                tabBarStyle={{marginBottom:5,backgroundColor:'#FFF'}}
 				onChange={this.onChange}
 				activeKey={this.state.activeKey}
 				type="editable-card"
 				onEdit={this.onEdit}
-				tabBarGutter={0}>
+				tabBarGutter={2}
+				className='declare-card-container'>
 				<TabPane tab={decAction==='edit'?'申报办理':'查看申报'} key='main' closable={false}>
 					<Main addPane={this.add} record={record} updateKey={mainUpdateKey} url={url}/>
 				</TabPane>
