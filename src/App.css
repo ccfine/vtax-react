@@ -334,7 +334,7 @@ table.data-grid{
   border-top-right-radius:4px;
   background: #F8F8F8;
 }
-.declare-card-container.ant-tabs-editable-card > .ant-tabs-bar .ant-tabs-tab:nth-child(2){
+.declare-card-container.ant-tabs-editable-card > .ant-tabs-bar .ant-tabs-tab:nth-child(1){
   background: #FFF;
 }
 
