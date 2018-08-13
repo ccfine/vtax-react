@@ -147,9 +147,9 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action} = this.props; //saveUrl
         let disabled = !!declare;
-        const { params,updateKey,statusParam,saveLoding } = this.state;
+        const { params,updateKey,statusParam } = this.state; //saveLoding
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
@@ -214,7 +214,7 @@ class SheetWithSearchFields extends Component{
                                 }],statusParam)
                                 : null
                             }
-                            {
+                            {/*{
                                 saveUrl && !readOnly && composeBotton([{
                                     type:'save',
                                     text:'保存',
@@ -223,7 +223,7 @@ class SheetWithSearchFields extends Component{
                                     onClick:this.save,
                                     loading:saveLoding
                                 }])
-                            }
+                            }*/}
                         </div>
                     }
                     title={<span><label className="tab-breadcrumb">纳税申报表 / </label>{tab}</span>}
