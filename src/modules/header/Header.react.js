@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Row,Col,Tooltip} from 'antd'
-import {withRouter,Link} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
