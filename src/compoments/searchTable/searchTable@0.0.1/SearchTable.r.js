@@ -49,7 +49,7 @@ class SearchTable extends Component{
         if(nextProps.searchOption){
             for(let key in nextProps.searchOption.filters){
                 if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
-                    this.setState({
+                    this.mounted && this.setState({
                         filters:nextProps.searchOption.filters
                     })
                 }
@@ -95,7 +95,7 @@ class SearchTable extends Component{
                     }
                 }
 
-                this.setState(prevState=>({
+                this.mounted && this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
                         //合并上次filters的原因是组件会接收外部的额外filter条件，如果不合并就会忽略到外部的条件
@@ -103,7 +103,7 @@ class SearchTable extends Component{
                         ...values
                     }
                 }),()=>{
-                    this.setState({
+                    this.mounted && this.setState({
                         tableUpDateKey:Date.now()
                     })
                 });
@@ -122,6 +122,10 @@ class SearchTable extends Component{
         this.props.searchOption && this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
+    }
+    mounted=true;
+    componentWillUnmount(){
+        this.mounted=null
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;

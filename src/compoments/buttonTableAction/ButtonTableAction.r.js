@@ -20,7 +20,7 @@ export default class ButtonTableAction extends Component{
         const props = this.props;
         const {style,title, icon, onSuccess} = props;
         return(
-                <span title={title} style={{ ...pointerStyle, ...style }} onClick={() => {
+                <a title={title} style={{ ...pointerStyle, ...style }} onClick={() => {
                     onSuccess && onSuccess()
                 }} >
                     <Tooltip placement="top" title={title}>
@@ -29,7 +29,7 @@ export default class ButtonTableAction extends Component{
                             }
                     </Tooltip>
 
-                </span>
+                </a>
         )
     }
 }
