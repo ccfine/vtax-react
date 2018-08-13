@@ -14,7 +14,7 @@ export default function  watermark(settings) {
         watermark_cols: 20,//水印列数
         watermark_x_space: 100,//水印x轴间隔
         watermark_y_space: 50,//水印y轴间隔
-        watermark_color: '#D7D7D7',//水印字体颜色
+        watermark_color: '#ccc',//水印字体颜色
         watermark_alpha: 0.4,//水印透明度
         watermark_fontSize: '14px',//水印字体大小
         watermark_font: 'SimSun',//水印字体
