@@ -88,7 +88,6 @@ class Add extends Component {
              /*if(values.jbxx.industry && values.jbxx.industry.label && values.jbxx.industry.key){
                  values.jbxx.industry = values.jbxx.industry.key
              }*/
-
              const type = this.props.modalConfig.type;
              //const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
              //const gqgx = this.checkeGqgxId(this.state.gqgx);
@@ -115,11 +114,14 @@ class Add extends Component {
                 //gdjcg:gdjcg,
                 //gqgx:gqgx,
                 szjd:szjd,
-                taxSubjectConfigBO:{
+                taxSubjectConfigBO: type === 'add' ? {
+                    prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0'
+                } : {
                     id:this.state.taxSubjectConfigBO.id,
                     parentId:this.state.taxSubjectConfigBO.parentId,
                     prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0'
                 }
+
              }
              console.log(data);
 
