@@ -1,6 +1,7 @@
 import React from 'react'
-import { List, Card, Form} from 'antd'
+import { List, Card, Form } from 'antd'
 import {composeBotton} from 'utils'
+import DeleteModal from './deleteModal'
 const mainId = [
     {
         label:'纳税主体',
@@ -65,27 +66,30 @@ const authMonth = [
         const data = [
             {
                 title: '房间交易档案',
-                url:'/output/room/files/upload',
+                importUrl:'/output/room/files/upload',
+                deleteUrl:'/output/room/files/delete',
                 fields:fields,
             },
             {
                 title: '固定资产卡片',
-                url:'/fixedAssetCard/report/upload',
+                importUrl:'/fixedAssetCard/report/upload',
+                deleteUrl:'/fixedAssetCard/report/delete',
                 fields:fields,
             },
             {
                 title: '财务凭证',
-                url:'/inter/financial/voucher/report/upload',
+                importUrl:'/inter/financial/voucher/report/upload',
+                deleteUrl:'/inter/financial/voucher/report/delete',
                 fields:fields,
             },
             {
                 title: '可售面积',
-                url:'/interAvailableBuildingAreaInformation/upload',
-                fields:fields,
+                importUrl:'/interAvailableBuildingAreaInformation/upload',
+                fields:mainId,
             },
             {
                 title: '项目管理',
-                url:'/project/upload/',
+                importUrl:'/project/upload/',
                 fields:mainId,
             },
         ];
@@ -102,11 +106,18 @@ const authMonth = [
                                 {
                                     composeBotton([{
                                         type:'fileImport',
-                                        url:item.url,
+                                        url:item.importUrl,
                                         onSuccess:this.refreshTable,
                                         fields:item.fields,
                                         // userPermissions:['1891005'],
                                     }])
+                                }
+                                {
+                                    item.deleteUrl && <DeleteModal
+                                        fields={item.fields}
+                                        url={item.deleteUrl}
+                                        onSuccess={this.refreshTable}
+                                    />
                                 }
                             </Card>
                         </List.Item>

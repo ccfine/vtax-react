@@ -286,7 +286,7 @@ class AvailableArea extends Component {
                     },
                     extra:(
                         <span>
-                            {/*
+                            {/*{
                                 JSON.stringify(filters) !== "{}" &&  composeBotton([{
                                     type:'fileImport',
                                     url:'/interAvailableBuildingAreaInformation/upload',
@@ -294,13 +294,13 @@ class AvailableArea extends Component {
                                     // userPermissions:['1531005'],
                                     fields:importFeilds
                                 }])
-                            }
+                            }*/}
                             {
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: 'interAvailableBuildingAreaInformation/download',
                                 }])
-                            */}
+                            }
                             {
                                 composeBotton([{
                                     type:'save',
