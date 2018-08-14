@@ -214,11 +214,6 @@ const getColumns = (context) => [{
         title: '购货单位',
         dataIndex: "purchaseName",
         width:'200px',
-    }/*,
-    {
-        title: '购方税号',
-        dataIndex: "purchaseTaxNum",
-        width:'150px',
     },
     {
         title: "数据来源",
@@ -234,6 +229,12 @@ const getColumns = (context) => [{
             }
             return text;
         }
+    },
+    /*,
+    {
+        title: '购方税号',
+        dataIndex: "purchaseTaxNum",
+        width:'150px',
     },
     {
         title: '项目名称',
@@ -436,7 +437,7 @@ class SalesInvoiceCollection extends Component {
                         )
                     },
                     scroll:{
-                        x:1800,
+                        x:1900,
                         y:window.screen.availHeight-400,
                     },
                     onTotalSource: totalSource => {

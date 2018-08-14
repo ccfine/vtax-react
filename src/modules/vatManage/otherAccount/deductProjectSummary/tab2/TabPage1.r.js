@@ -60,14 +60,17 @@ const columns = [{
     dataIndex: 'taxMethod',
     render:text=>{
         //1一般计税方法，2简易计税方法 ,
-        text = parseInt(text,0);
-        if(text===1){
-            return '一般计税方法'
+        let res = "";
+        switch (parseInt(text, 10)) {
+            case 1:
+                res = "一般计税方法";
+                break;
+            case 2:
+                res = "简易计税方法";
+                break;
+            default:
         }
-        if(text ===2){
-            return '简易计税方法'
-        }
-        return text;
+        return res;
     }
 },{
     title: '税率',

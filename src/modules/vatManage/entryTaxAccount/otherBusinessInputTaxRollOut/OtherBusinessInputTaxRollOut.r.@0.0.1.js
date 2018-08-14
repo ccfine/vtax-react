@@ -140,14 +140,17 @@ const getColumns = (context,hasOperate) => {
         title: "计税方法",
         dataIndex: "taxMethod",
         render(text, record, index) {
-            switch (text) {
-                case "1":
-                    return "一般计税方法";
-                case "2":
-                    return "简易计税方法";
+            let res = "";
+            switch (parseInt(text, 10)) {
+                case 1:
+                    res = "一般计税方法";
+                    break;
+                case 2:
+                    res = "简易计税方法";
+                    break;
                 default:
-                    return text;
             }
+            return res;
         },
         width:80,
     },
