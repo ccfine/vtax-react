@@ -4,10 +4,8 @@
  * description  :
  */
 import {wrapPage} from 'compoments'
-
 import BasicInfo from './basicInfo'
 // import TaxFile from './taxFile'
-
 import BasicInfo_Routes from './basicInfo/routes'
 // import TaxFile_Routes from './taxFile/routes'
 import { getChildOptions } from 'config/routingAuthority.config'

@@ -35,6 +35,7 @@ const getColumns = context=>[
             type:'action',
             title:'编辑',
             icon:'edit',
+            userPermissions:['1051004'],
             onSuccess:()=>context.showModal('edit',record)
         }]);
       },
