@@ -3,7 +3,6 @@
  * createTime   : 2017/12/7 15:38
  * description  :
  */
-//import LoadAble from 'react-loadable'
 import {wrapPage} from 'compoments'
 import Home from './home'
 import TaxDeclare from './taxDeclare'
@@ -13,11 +12,6 @@ import BasisManage_Routes from './basisManage'
 import SystemManage_Routes from './systemManage'
 import Children_Routes from './taxDeclare/children/routes'
 import { getParentOptions } from 'config/routingAuthority.config'
-
-/*const AsyncHome = LoadAble({
-    loader: () => import('./home'),
-    loading: LoadingPage,
-});*/
 
 const PATH = '/web';
 const routes = [

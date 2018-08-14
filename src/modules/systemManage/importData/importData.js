@@ -1,7 +1,8 @@
 import React from 'react'
-import { Card, Col, Row, Form} from 'antd'
+import { List, Card, Form } from 'antd'
 import {composeBotton} from 'utils'
-const fields = [
+import DeleteModal from './deleteModal'
+const mainId = [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -23,8 +24,11 @@ const fields = [
                 }
             ]
         },
-    }, {
-        label: '记账月份',
+    }
+]
+const authMonth = [
+    {
+        label: '月份',
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
@@ -41,7 +45,7 @@ const fields = [
             rules: [
                 {
                     required: true,
-                    message: '请选择记账月份'
+                    message: '请选择月份'
                 }
             ]
         },
@@ -58,64 +62,68 @@ const fields = [
          })
      }
     render(){
+        const fields = mainId.concat(authMonth)
+        const data = [
+            {
+                title: '房间交易档案',
+                importUrl:'/output/room/files/upload',
+                deleteUrl:'/output/room/files/delete',
+                fields:fields,
+            },
+            {
+                title: '固定资产卡片',
+                importUrl:'/fixedAssetCard/report/upload',
+                deleteUrl:'/fixedAssetCard/report/delete',
+                fields:fields,
+            },
+            {
+                title: '财务凭证',
+                importUrl:'/inter/financial/voucher/report/upload',
+                deleteUrl:'/inter/financial/voucher/report/delete',
+                fields:fields,
+            },
+            {
+                title: '可售面积',
+                importUrl:'/interAvailableBuildingAreaInformation/upload',
+                fields:mainId,
+            },
+            {
+                title: '项目管理',
+                importUrl:'/project/upload/',
+                fields:mainId,
+            },
+        ];
+
         return(
             <React.Fragment key={this.state.updateKey}>
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Card title="房间交易档案" bordered={false}>
-                            {
-                                composeBotton([{
-                                    type:'fileImport',
-                                    url:'/output/room/files/upload',
-                                    onSuccess:this.refreshTable,
-                                    fields:fields,
-                                    // userPermissions:['1891005'],
-                                }])
-                            }
-                        </Card>
-                    </Col>
-                    <Col span={12}>
-                        <Card title="固定资产卡片" bordered={false}>
-                            {
-                                composeBotton([{
-                                    type:'fileImport',
-                                    url:'/fixedAssetCard/report/upload',
-                                    onSuccess:this.refreshTable,
-                                    fields:fields,
-                                    // userPermissions:['1891005'],
-                                }])
-                            }
-                        </Card>
-                    </Col>
-                </Row>
-                <Row gutter={16} style={{ marginTop:10 }}>
-                    <Col span={12}>
-                        <Card title="财务凭证" bordered={false}>
-                            {
-                                composeBotton([{
-                                    type:'fileImport',
-                                    url:'/inter/financial/voucher/report/upload',
-                                    onSuccess:this.refreshTable,
-                                    fields:fields,
-                                    // userPermissions:['1891005'],
-                                }])
-                            }
-                        </Card>
-                    </Col>
-                    <Col span={12}>
-                        <Card title="可售面积" bordered={false}>
-                            {
-                                composeBotton([{
-                                    type:'fileImport',
-                                    url:'/interAvailableBuildingAreaInformation/upload',
-                                    onSuccess:this.refreshTable,
-                                    fields:fields,
-                                    // userPermissions:['1891005'],
-                                }])
-                            }
-                        </Card>
-                    </Col>
-                </Row>
+
+                <List
+                    grid={{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }}
+                    dataSource={data}
+                    renderItem={item => (
+                        <List.Item>
+                            <Card title={item.title}>
+                                {
+                                    composeBotton([{
+                                        type:'fileImport',
+                                        url:item.importUrl,
+                                        onSuccess:this.refreshTable,
+                                        fields:item.fields,
+                                        // userPermissions:['1891005'],
+                                    }])
+                                }
+                                {
+                                    item.deleteUrl && <DeleteModal
+                                        fields={item.fields}
+                                        url={item.deleteUrl}
+                                        onSuccess={this.refreshTable}
+                                    />
+                                }
+                            </Card>
+                        </List.Item>
+                    )}
+                />
+
             </React.Fragment>
 
         )

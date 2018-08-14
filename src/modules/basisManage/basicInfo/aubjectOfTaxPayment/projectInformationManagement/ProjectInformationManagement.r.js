@@ -90,7 +90,7 @@ export default class ProjectInformationManagement extends Component{
                     destroyOnClose={true}
                     title="项目管理"
                     visible={this.props.visible}
-                    width={600}
+                    width={800}
                     onCancel={()=>this.props.toggleModal(false)}
                     footer={false}
                     style={{ top: '5%' }}
@@ -124,7 +124,7 @@ export default class ProjectInformationManagement extends Component{
                             */}
                             </div>
                         }
-                        bodyStyle={{padding:0}}
+                        bodyStyle={{padding: '10px 20px'}}
                         title="项目信息">
                         <AsyncTable url={`/taxsubject/projectList/${taxSubjectId}`}
                                     updateKey={tableUpDateKey1}
@@ -141,7 +141,7 @@ export default class ProjectInformationManagement extends Component{
                                         pagination:true,
                                     }} />
                      </Card>
-                    <Card title="分期信息" bodyStyle={{padding:0}} style={{marginTop:10}}>
+                    <Card title="分期信息" bodyStyle={{padding: '10px 20px'}} style={{marginTop:10}}>
                         <AsyncTable url={`/taxsubject/stages/${selectedRowKeys && selectedRowKeys[0]}`}
                                     updateKey={tableUpDateKey2}
                                     tableProps={{

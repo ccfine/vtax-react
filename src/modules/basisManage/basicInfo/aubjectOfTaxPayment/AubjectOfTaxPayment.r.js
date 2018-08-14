@@ -35,6 +35,7 @@ const getColumns = context=>[
             type:'action',
             title:'编辑',
             icon:'edit',
+            userPermissions:['1051004'],
             onSuccess:()=>context.showModal('edit',record)
         }]);
       },
@@ -188,13 +189,13 @@ class AubjectOfTaxPayment extends Component {
                         title:'纳税主体',
                     },
                     extra:<div>
-                        {/*{
-                            composeBotton([{
+                        {
+                          window.isProd && window.isProd===true && composeBotton([{
                                 type:'add',
                                 icon:'plus',
                                 onClick:()=>this.showModal('add')
                             }])
-                        }*/}
+                        }
                         {/* <Button size="small"
                                 disabled={!disabled}
                                 style={buttonStyle}

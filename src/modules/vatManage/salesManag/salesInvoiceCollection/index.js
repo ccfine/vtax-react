@@ -1,1 +1,1 @@
-export {default} from './SalesInvoiceCollection.r.@0.0.1'
+export {default} from './SalesInvoiceCollection.r'
