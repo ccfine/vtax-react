@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-23 10:14:18 
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-01 09:53:47
+ * @Last Modified time: 2018-08-14 16:32:38
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
@@ -20,6 +20,12 @@ const columns = [{
     {
         title: '期初增值税已纳税销售额',
         dataIndex: 'initialTaxableSales',
+        render:text=>fMoney(text),
+        className:'table-money'
+    },
+    {
+        title: '应申报销售额',
+        dataIndex: 'reportSalesAmount',
         render:text=>fMoney(text),
         className:'table-money'
     }

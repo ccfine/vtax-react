@@ -161,6 +161,7 @@ export default class Sheet extends Component{
                                 overflow={overflow}
                                 data={grid.map((i,row)=>i.map((di,col)=>{
                                     if(!readOnly && di.key && !di.readOnly){
+                                        //di.type === 'rate'  代表税率，跟其它得金额类型得输入框区别开来
                                         return {
                                             ...di,
                                             readOnly:false,
