@@ -190,7 +190,7 @@ class AubjectOfTaxPayment extends Component {
                     },
                     extra:<div>
                         {
-                          window.isProd && window.isProd===true && composeBotton([{
+                          window.isProd===false && composeBotton([{
                                 type:'add',
                                 icon:'plus',
                                 onClick:()=>this.showModal('add')
