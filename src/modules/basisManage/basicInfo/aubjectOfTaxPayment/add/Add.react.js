@@ -124,7 +124,6 @@ class Add extends Component {
                     offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
                 }
              }
-             console.log(data);
 
             this.mounted && this.setState({
                submitLoading: true
