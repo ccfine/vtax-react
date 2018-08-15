@@ -246,6 +246,7 @@ class OrganizationalStructureMaintenance extends Component {
                     treeOption={{
                         key:updateTree,
                         showLine:false,
+                        isShowCode:true,
                         url:"/sysOrganization/tree",
                         onSuccess:(selectedKeys,selectedNodes)=>{
                             this.setState({

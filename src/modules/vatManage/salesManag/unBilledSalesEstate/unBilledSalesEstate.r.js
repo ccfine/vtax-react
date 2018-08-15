@@ -128,10 +128,15 @@ const columns = [
                 width:'100px',
             },
             {
+                title:'确收时点',
+                dataIndex:'confirmedDate',
+                width:'100px',
+            },
+            /*{
                 title:'房间交付日期',
                 dataIndex:'deliveryDate',
                 width:'100px',
-            },
+            },*/
         ]
     },
     {

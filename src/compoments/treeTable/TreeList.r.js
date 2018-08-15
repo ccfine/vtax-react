@@ -59,16 +59,29 @@ class TreeList extends Component {
     }
 
     renderTreeNodes = data => {
-        return data.map((item) => {
-            if (item.children) {
-                return (
-                    <TreeNode title={item.name}  key={item.id} dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
-                    </TreeNode>
-                );
-            }
-            return <TreeNode key={item.id} {...item} title={item.name} dataRef={item} />;
-        });
+        if(this.props.isShowCode){ //判断是否显示code
+            return data.map((item) => {
+                if (item.children) {
+                    return (
+                        <TreeNode title={`${item.code && item.code}${item.name}`}  key={item.id} dataRef={item}>
+                            {this.renderTreeNodes(item.children)}
+                        </TreeNode>
+                    );
+                }
+                return <TreeNode key={item.id} {...item} title={`${item.code && item.code}${item.name}`} dataRef={item} />;
+            });
+        }else{
+            return data.map((item) => {
+                if (item.children) {
+                    return (
+                        <TreeNode title={item.name}  key={item.id} dataRef={item}>
+                            {this.renderTreeNodes(item.children)}
+                        </TreeNode>
+                    );
+                }
+                return <TreeNode key={item.id} {...item} title={item.name} dataRef={item} />;
+            });
+        }
     }
 
     fetchTree = (props) => {

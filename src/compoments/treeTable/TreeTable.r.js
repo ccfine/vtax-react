@@ -162,6 +162,7 @@ class TreeTable extends Component{
                                     <TreeList
                                         url={treeOption.url}
                                         showLine={treeOption.showLine}
+                                        isShowCode={treeOption.isShowCode}
                                         updateKey={treeOption.key}
                                         id={propsFilter.id || 0} // 这里的id作用是什么？？？filter.id修改为propsFilter.id
                                         treeOption={{

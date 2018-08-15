@@ -350,6 +350,11 @@ const strategies = {
                     '1531002','1531004','1535001',
                 ],
             },
+            //科目余额表
+            accountBalanceSheet:{
+                options:[
+                ],
+            },
         },
     },
 }
