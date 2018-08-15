@@ -12,6 +12,7 @@ import FinancialDocuments from './financialDocuments'
 import IncomingInvoiceCollection from './incomingInvoiceCollection'
 import SalesInvoiceCollection from './salesInvoiceCollection'
 import AvailableArea from './availableArea'
+import AccountBalanceSheet from './accountBalanceSheet'
 
 import strategies from 'config/routingAuthority.config'
 
@@ -111,6 +112,16 @@ const BusinessReport_Routes = [
             backgroundColor:'#57C8F2'
         },
         authorityInfo:businessReport['availableArea'].options,
+        exact:true,
+    },{
+        path:`${PATH}/accountBalanceSheet`,
+        component:wrapPage('科目余额表',AccountBalanceSheet),
+        name:'科目余额表',
+        icon:{
+            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['accountBalanceSheet'].options,
         exact:true,
     },{
         path:`${PATH}`,

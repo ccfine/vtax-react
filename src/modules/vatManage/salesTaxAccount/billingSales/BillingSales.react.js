@@ -342,7 +342,7 @@ class BillingSales extends Component {
                           {
                               JSON.stringify(filters) !=='{}' && composeBotton([{
                                   type:'fileExport',
-                                  url:'account/output/billingSale/isEstate/export',
+                                  url:'account/output/billingSale/export',
                                   params:filters,
                                   title:'导出',
                                   userPermissions:['1221007'],
@@ -386,17 +386,6 @@ class BillingSales extends Component {
 
                 </Card>
                 <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-非地产</span>}
-                      extra={<div>
-                          {
-                              JSON.stringify(filters) !=='{}' && composeBotton([{
-                                  type:'fileExport',
-                                  url:'account/output/billingSale/noEstate/export',
-                                  params:filters,
-                                  title:'导出',
-                                  userPermissions:['1221007'],
-                              }],statusParam)
-                          }
-                      </div>}
                       style={{marginTop:10}}>
 
                     <SynchronizeTable
