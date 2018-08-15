@@ -59,7 +59,7 @@ const SystemMaintain_Routes = [
         component:wrapPage('应税项目',TaxableItems),
         name:'应税项目',
         icon:{
-            url:`${ICON_URL_PATH}taxClassificationCode.svg`,
+            url:`${ICON_URL_PATH}taxableItems.svg`,
             backgroundColor:'#6CCCCA'
         },
         exact:true,

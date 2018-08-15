@@ -39,7 +39,7 @@ const EntryManag_Routes = [
         component:wrapPage('固定资产信息采集',FixedAssetCollection),
         name:'固定资产信息采集',
         icon:{
-            url:`${ICON_URL_PATH}invoiceCollection.svg`,
+            url:`${ICON_URL_PATH}fixedAssetCollection.svg`,
             backgroundColor:'#73CF2B'
         },
         authorityInfo:entryManag['fixedAssetCollection'].options,
@@ -69,7 +69,7 @@ const EntryManag_Routes = [
         component:wrapPage('其他扣税凭证',OtherDeductionVoucher),
         name:'其他扣税凭证',
         icon:{
-            url:`${ICON_URL_PATH}invoiceMatching.svg`,
+            url:`${ICON_URL_PATH}otherDeductionVoucher.svg`,
             backgroundColor:'#4DC1F0'
         },
         authorityInfo:entryManag['otherDeductionVoucher'].options,
@@ -118,7 +118,7 @@ const EntryManag_Routes = [
         component:wrapPage('简易计税进项税额转出台账',SimplifiedTaxInputTaxTransfer),
         name:'简易计税进项税额转出台账',
         icon:{
-            url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
+            url:`${ICON_URL_PATH}simplifiedTaxInputTaxTransfer.svg`,
             backgroundColor:'#3B4A83'
         },
         authorityInfo:entryManag['simplifiedTaxInputTaxTransfer'].options,
@@ -128,7 +128,7 @@ const EntryManag_Routes = [
         component:wrapPage('不动产进项税额抵扣台账',RealEstateInputTaxCredit),
         name:'不动产进项税额抵扣台账',
         icon:{
-            url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
+            url:`${ICON_URL_PATH}realEstateInputTaxCredit.svg`,
             backgroundColor:'#3B4A83'
         },
         authorityInfo:entryManag['realEstateInputTaxCredit'].options,

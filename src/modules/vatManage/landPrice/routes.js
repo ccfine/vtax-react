@@ -50,7 +50,7 @@ const LandPrice_Routes = [
         component:wrapPage('其他应税项目扣除台账',OtherTaxableItemsDeduct),
         name:'其他应税项目扣除台账',
         icon:{
-            url:`${ICON_URL_PATH}landPriceManage.svg`,
+            url:`${ICON_URL_PATH}otherTaxableItemsDeduct.svg`,
             backgroundColor:'#904C27'
         },
         authorityInfo:landPrice['otherTaxableItemsDeduct'].options,
