@@ -12,7 +12,7 @@ import UnBilledSales from '../salesTaxAccount/unBilledSales'
 * */
 import IncomeCheck from './incomeCheck'
 import BillingSales from '../salesTaxAccount/billingSales'
-//import BeginningNotTaxSalesEstate from './beginningNotTaxSalesEstate'
+import BeginningNotTaxSalesEstate from './beginningNotTaxSalesEstate'
 import UnBilledSalesEstate from './unBilledSalesEstate'
 import UnBilledSalesNotEstate from './unBilledSalesNotEstate'
 import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
@@ -84,7 +84,7 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['unBilledSales'].options,
         exact:true,*/
-    /*},{
+    },{
         path:`${PATH}/beginningNotTaxSalesEstate`,
         component:wrapPage('期初未纳税销售额台账-地产',BeginningNotTaxSalesEstate),
         name:'期初未纳税销售额台账-地产',
@@ -93,7 +93,7 @@ const SalesManag_Routes = [
             backgroundColor:'#7ED530'
         },
         authorityInfo:salesManag['unBilledSalesEstate'].options,
-        exact:true,*/
+        exact:true,
     },{
         path:`${PATH}/unBilledSalesEstate`,
         component:wrapPage('未开票销售台账-地产',UnBilledSalesEstate),

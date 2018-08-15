@@ -183,6 +183,7 @@ class SearchTable extends Component{
                                     filters={filters}
                                     tableProps={{
                                         rowKey:record=>record[tableOption.rowKey] || record.id,
+                                        dataSource:tableOption.dataSource || tableOption.dataSource || undefined,
                                         pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
                                         pageSize:tableOption.pageSize || 100,
                                         size:'small',

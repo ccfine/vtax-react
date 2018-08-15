@@ -91,7 +91,7 @@ class ApplyDeclare extends React.Component {
     }
 	render() {
 		const {record,mainUpdateKey,recordLoading,activeTab} = this.state,
-		{url,decAction} = this.props; 
+		{url,decAction} = this.props;
 		return recordLoading?'加载中...'
 		:(
 			!record?'加载异常，请检查网络！':
