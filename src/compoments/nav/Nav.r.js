@@ -55,9 +55,11 @@ class NavRouter extends Component {
                         <Link to={ parseInt(this.props.type, 0) === 8192 ? item.path : '###'}>
                             <Card className="nav-card">
                                 <Meta
-                                    avatar={<Avatar className="IconImg" src={item.icon.url} style={{
-                                        background:item.icon.backgroundColor
-                                    }} />}
+                                    avatar={<Avatar className="IconImg" src={item.icon.url}
+                                                   /* style={{
+                                            background:item.icon.backgroundColor
+                                        }}*/
+                                    />}
                                     //title={item.name}
                                     description={<span style={{color:'#666'}}>{item.name}</span>}
                                 />
