@@ -327,7 +327,7 @@ class unBilledSalesEstate extends Component{
         })
     }
     onSelectChange = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        // console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     }
     getCheckboxProps= record => ({
@@ -414,8 +414,7 @@ class unBilledSalesEstate extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                             // JSON.stringify(filters)!=='{}' &&
-                             composeBotton([
+                              JSON.stringify(filters)!=='{}' &&composeBotton([
                                 {
                                     type:'mark',
                                     buttonOptions:{
@@ -435,9 +434,6 @@ class unBilledSalesEstate extends Component{
                         }
                         {
                             (disabled && declare.decAction==='edit') && composeBotton([
-                                {
-
-                                },
                                 {
                                     type:'reset',
                                     url:'/accountInitialUntaxedSales/reset',
