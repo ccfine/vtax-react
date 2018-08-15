@@ -55,7 +55,7 @@ const BasicInfo_Routes = [
         component:wrapPage('期初数据采集',BeginDataCollect),
         name:'期初数据采集',
         icon:{
-            url:`${ICON_URL_PATH}declareParameter.svg`,
+            url:`${ICON_URL_PATH}beginDataCollect.svg`,
             backgroundColor:'#9FD360'
         },
         authorityInfo:basicInfo['beginDataCollect'].options,

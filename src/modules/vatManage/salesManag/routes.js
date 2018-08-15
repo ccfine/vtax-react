@@ -59,7 +59,7 @@ const SalesManag_Routes = [
         component:wrapPage('收入检查',IncomeCheck),
         name:'收入检查',
         icon:{
-            url:`${ICON_URL_PATH}campBeforeTheIncreaseInSales.svg`,
+            url:`${ICON_URL_PATH}incomeCheck.svg`,
             backgroundColor:'#FFBE06'
         },
         authorityInfo:salesManag['incomeCheck'].options,
@@ -99,7 +99,7 @@ const SalesManag_Routes = [
         component:wrapPage('未开票销售台账-地产',UnBilledSalesEstate),
         name:'未开票销售台账-地产',
         icon:{
-            url:`${ICON_URL_PATH}billingSales.svg`,
+            url:`${ICON_URL_PATH}unBilledSalesEstate.svg`,
             backgroundColor:'#7ED530'
         },
         authorityInfo:salesManag['unBilledSalesEstate'].options,
@@ -109,7 +109,7 @@ const SalesManag_Routes = [
         component:wrapPage('未开票销售台账-非地产',UnBilledSalesNotEstate),
         name:'未开票销售台账-非地产',
         icon:{
-            url:`${ICON_URL_PATH}unbilledAales.svg`,
+            url:`${ICON_URL_PATH}unBilledSalesNotEstate.svg`,
             backgroundColor:'#F5A544'
         },
         authorityInfo:salesManag['unBilledSalesNotEstate'].options,
@@ -129,7 +129,7 @@ const SalesManag_Routes = [
         component:wrapPage('财务凭证采集',FinancialDocumentsCollection),
         name:'财务凭证采集',
         icon:{
-            url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
+            url:`${ICON_URL_PATH}financialDocumentsCollection.svg`,
             backgroundColor:'#57C8F2'
         },
         authorityInfo:salesManag['financialDocumentsCollection'].options,

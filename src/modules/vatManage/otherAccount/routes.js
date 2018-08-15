@@ -96,7 +96,7 @@ const OtherAccount_Routes = [
         component:wrapPage('其他事项调整台账',OtherRevision),
         name:'其他事项调整台账',
         icon:{
-            url:`${ICON_URL_PATH}taxExemptionDetails.svg`,
+            url:`${ICON_URL_PATH}otherRevision.svg`,
             backgroundColor:'#57C8F2'
         },
         authorityInfo:otherAccount['otherRevision'].options,

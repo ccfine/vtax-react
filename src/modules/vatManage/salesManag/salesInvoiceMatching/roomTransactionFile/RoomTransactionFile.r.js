@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-08 10:33:09
+ * @Last Modified time: 2018-08-15 16:53:42
  *
  */
 import React,{Component} from 'react'
@@ -150,23 +150,6 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         formItemStyle,
         span:6
     },
-    // {
-    //     label:'状态',
-    //     fieldName:'knots',
-    //     type:'select',
-    //     span:6,
-    //     formItemStyle,
-    //     options:[
-    //         {
-    //             text:'未结转',
-    //             value:'0'
-    //         },
-    //         {
-    //             text:'已结转',
-    //             value:'1'
-    //         }
-    //     ]
-    // },
     {
         label:'匹配状态',
         fieldName:'matchingStatus',
@@ -194,39 +177,6 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
 ];
 
 const getColumns = (context,disabled) => {
-    /*let operates = (disabled && parseInt(context.state.statusParam.status,0) === 1)?[{
-     title: '操作',
-     key: 'actions',
-     className:'text-center',
-     fixed:'left',
-     width:'50px',
-     render: (text, record) => {
-     return parseInt(record.matchingStatus,0) === 0 ? composeBotton([{
-     type:'action',
-     title:'删除',
-     icon:'delete',
-     style:{color:'#f5222d'},
-     userPermissions:['1215013'],
-     onSuccess:()=>{
-     const modalRef = Modal.confirm({
-     title: '友情提醒',
-     content: '该删除后将不可恢复，是否删除？',
-     okText: '确定',
-     okType: 'danger',
-     cancelText: '取消',
-     onOk:()=>{
-     context.deleteRecord(record.id,()=>{
-     modalRef && modalRef.destroy();
-     context.refreshTable()
-     })
-     },
-     onCancel() {
-     modalRef.destroy()
-     },
-     });
-     }}]) : <span></span>
-     }
-     }]:[];*/
     return [{
         title:'项目名称',
         dataIndex:'projectName',
@@ -242,12 +192,6 @@ const getColumns = (context,disabled) => {
             dataIndex:'htRoomName',
             //width:'300px',
         },
-        // {
-        //     title:'状态',
-        //     dataIndex:'knots',
-        //     render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未结转</span>:<span style={{color: "#87d068"}}>已结转</span>,
-        //     width:'100px'
-        // },
         {
             title:'房间编码',
             dataIndex:'roomCode',
@@ -299,7 +243,7 @@ const getColumns = (context,disabled) => {
             width:'100px',
         },
         {
-            title:'结算价',
+            title:'价税合计',
             dataIndex:'sdValorem',
             render:text=>fMoney(text),
             className:'table-money',
@@ -364,32 +308,36 @@ const getColumns = (context,disabled) => {
                 }
                 return txt
             },
+        },{
+            title:'发票信息',
+            children:[{
+                title:'发票号码集',
+                dataIndex:'invoiceNum',
+                width:'150px',
+            },{
+                title:'发票代码集',
+                dataIndex:'invoiceCode',
+                width:'150px',
+            },{
+                title:'装修款（不含税）',
+                dataIndex:'decorationValorem ',
+                render:text=>fMoney(text),
+                className:'table-money',
+                width:'150px',
+            },{
+                title:'毛胚结算价（不含税）',
+                dataIndex:'embryoSdValorem',
+                render:text=>fMoney(text),
+                className:'table-money',
+                width:'150px',
+            },{
+                title:'结算价合计（不含税）',
+                dataIndex:'oldSdValorem',
+                render:text=>fMoney(text),
+                className:'table-money',
+                width:'150px',
+            }]
         },
-        /*{
-         title:'纳税主体名称',
-         dataIndex:'mainName',
-         width:'200px',
-         },
-         {
-         title:'纳税主体编码',
-         dataIndex:'mainCode',
-         width:'100px',
-         },
-         {
-         title:'项目编码',
-         dataIndex:'projectCode',
-         width:'100px',
-         },
-         {
-         title:'项目分期编码',
-         dataIndex:'stagesCode',
-         width:'100px',
-         },
-         {
-         title:'交易月份',
-         dataIndex:'authMonth',
-         width:'100px',
-         },*/
     ]}
 class RoomTransactionFile extends Component{
     state={
@@ -545,7 +493,7 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 3200,
+                            x: 3850,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                     }}

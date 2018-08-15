@@ -57,7 +57,7 @@ const BusinessReport_Routes = [
         component:wrapPage('纳税申报表',TaxReturnForm),
         name:'纳税申报表',
         icon:{
-            url:`${ICON_URL_PATH}declareQuery.svg`,
+            url:`${ICON_URL_PATH}taxReturn.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['taxReturn'].options,
@@ -77,7 +77,7 @@ const BusinessReport_Routes = [
         component:wrapPage('财务凭证',FinancialDocuments),
         name:'财务凭证',
         icon:{
-            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            url:`${ICON_URL_PATH}financialDocuments.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['financialDocuments'].options,
@@ -87,7 +87,7 @@ const BusinessReport_Routes = [
         component:wrapPage('进项发票采集',IncomingInvoiceCollection),
         name:'进项发票采集',
         icon:{
-            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            url:`${ICON_URL_PATH}invoiceCollection.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['incomingInvoiceCollection'].options,
@@ -97,7 +97,7 @@ const BusinessReport_Routes = [
         component:wrapPage('销项发票采集',SalesInvoiceCollection),
         name:'销项发票采集',
         icon:{
-            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            url:`${ICON_URL_PATH}salesInvoiceCollection.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['salesInvoiceCollection'].options,
@@ -107,7 +107,7 @@ const BusinessReport_Routes = [
         component:wrapPage('可售面积',AvailableArea),
         name:'可售面积',
         icon:{
-            url:`${ICON_URL_PATH}invoiceQuery.svg`,
+            url:`${ICON_URL_PATH}availableArea.svg`,
             backgroundColor:'#57C8F2'
         },
         authorityInfo:businessReport['availableArea'].options,

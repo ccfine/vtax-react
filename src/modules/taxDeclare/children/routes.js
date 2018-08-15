@@ -41,7 +41,7 @@ const Children_Routes = [
         component:wrapPage('创建申报',CreateADeclare),
         name:'创建申报',
         icon:{
-            url:`${ICON_URL_PATH}createAMatter.svg`,
+            url:`${ICON_URL_PATH}createADeclare.svg`,
             backgroundColor:'#56C7F3'
         },
         authorityInfo:taxDeclare['createADeclare'].options,
@@ -57,7 +57,7 @@ const Children_Routes = [
         component:wrapPage('申报办理',DeclareHandle),
         name:'申报办理',
         icon:{
-            url:`${ICON_URL_PATH}createAMatter.svg`,
+            url:`${ICON_URL_PATH}declareHandle.svg`,
             backgroundColor:'#56C7F3'
         },
         authorityInfo:taxDeclare['declareHandle'].options,
@@ -83,7 +83,7 @@ const Children_Routes = [
         component:wrapPage('查询申报',SearchDeclare),
         name:'查询申报',
         icon:{
-            url:`${ICON_URL_PATH}upcomingMatter.svg`,
+            url:`${ICON_URL_PATH}searchDeclare.svg`,
             backgroundColor:'#F5A544'
         },
         authorityInfo:taxDeclare['searchDeclare'].options,

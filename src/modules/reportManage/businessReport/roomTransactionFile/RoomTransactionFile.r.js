@@ -162,7 +162,7 @@ const columns = [{
     },{
         title:'楼栋名称',
         dataIndex:'buildingName',
-        width:'150px',
+        width:'200px',
     },{
         title:'单元',
         dataIndex:'element',
@@ -170,7 +170,7 @@ const columns = [{
     }, {
         title:'路址',
         dataIndex:'htRoomName',
-        width:'150px',
+        // width:'150px',
      }
     // {
     //     title:'状态',
@@ -228,12 +228,41 @@ const columns = [{
         className:'text-right',
         render:text=>text? `${text}%`: text,
         width:'100px',
-    }, {
-        title:'结算价',
+    },{
+        title:'价税合计',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
+    },{
+        title:'发票信息',
+        children:[{
+            title:'发票号码集',
+            dataIndex:'invoiceNum',
+            width:'150px',
+        },{
+            title:'发票代码集',
+            dataIndex:'invoiceCode',
+            width:'150px',
+        },{
+            title:'装修款（不含税）',
+            dataIndex:'decorationValorem ',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+        },{
+            title:'毛胚结算价（不含税）',
+            dataIndex:'embryoSdValorem',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+        },{
+            title:'结算价合计（不含税）',
+            dataIndex:'oldSdValorem',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+        }]
     },
 ]
 const apiFields = (getFieldValue)=> [
@@ -327,7 +356,7 @@ class RoomTransactionFile extends Component{
                         })
                     },
                     scroll:{
-                        x: 2850,
+                        x: 4000,
                         y:window.screen.availHeight-400
                     },
                 }}
