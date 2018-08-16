@@ -137,8 +137,8 @@ const columns=[
         width:'200px',
     },
     {
-        title:'项目代码',
-        dataIndex:'projectNum',
+        title:'项目分期',
+        dataIndex:'projectStagesName',
         width:'150px',
     },
     {

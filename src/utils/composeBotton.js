@@ -27,9 +27,6 @@ const formatJson = (param) => {
 
 //新增
 const getConsistentOptions = (item, statusParam) => {
-    console.log(item);
-
-    console.log(statusParam);
     if(("selectedRowKeys" in item)){
         return {
             ...item,
