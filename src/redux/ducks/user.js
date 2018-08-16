@@ -203,6 +203,15 @@ export const login = dispatch => async ({userName,password,success,fail,type,log
 }
 
 export const logout = dispatch => async () =>{
+    //删掉水印
+    let mask_div = document.getElementsByClassName("mask_div");
+    if(mask_div.length>0){
+        Array.from(mask_div).map((item)=>{
+            console.log(item.innerHTML)
+            let divParent = item.parentNode;//获取父对象
+            return divParent.removeChild(item)
+        })
+    }
     //登出
     dispatch(isAuthed.logout())
 }

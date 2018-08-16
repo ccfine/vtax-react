@@ -93,6 +93,7 @@ request.interceptors.response.use(function (response) {
                 error.message = '请求错误'
                 break
             case 401:
+                debugger
                 // 返回 401 清除token信息并跳转到登录页面
                 store.dispatch && logout(store.dispatch)()
                 error.message = '登录超时,请重新登录'
