@@ -49,7 +49,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'纳税申报期',
-            fieldName:'month',
+            fieldName:'authMonth',
             type:'monthPicker',
             span:8,
             formItemStyle,
@@ -83,7 +83,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'项目名称',
-            fieldName:'stagesName',
+            fieldName:'projectId',
             type:'asyncSelect',
             span:8,
             formItemStyle,
@@ -111,7 +111,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'确收时点',
-            fieldName:'confirmedDate ',
+            fieldName:'confirmedDate',
             type:'datePicker',
             span:8,
             formItemStyle,
@@ -120,7 +120,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 disabled:disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+                // initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
             },
         },
         {
@@ -164,7 +164,7 @@ const columns = [
     },
     {
         title:'项目分期',
-        dataIndex:'stagesId',
+        dataIndex:'stagesName',
         width:'150px',
     },
     {
@@ -248,18 +248,29 @@ const columns = [
         dataIndex:'currentNoTaxableTaxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'150px',
+        width:'200px',
     },
     {
         title:'状态',
         dataIndex:'status',
         width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.status,10) === 0 ? "未缴税":"已缴税";
+        }
+    },
+    {
+        title:'是否勾选',
+        dataIndex:'check',
+        width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.check,10) === 0 ? "未勾选":"已勾选";
+        }
     }
 ];
 const markFieldsData = [
     {
         label:'作为本期缴税房间凭证',
-        fieldName:'deductionFlag',
+        fieldName:'check',
         type:'select',
         notShowAll:true,
         formItemStyle:{
@@ -316,7 +327,8 @@ class unBilledSalesEstate extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[]
         })
     }
     fetchResultStatus = ()=>{
@@ -458,7 +470,7 @@ class unBilledSalesEstate extends Component{
                         }
                     </div>,
                     scroll:{
-                        x:1950,
+                        x:2050,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}
