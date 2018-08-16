@@ -89,7 +89,7 @@ const SalesManag_Routes = [
         component:wrapPage('期初未纳税销售额台账-地产',BeginningNotTaxSalesEstate),
         name:'期初未纳税销售额台账-地产',
         icon:{
-            url:`${ICON_URL_PATH}billingSales.svg`,
+            url:`${ICON_URL_PATH}beginningNotTaxSalesEstate.svg`,
             backgroundColor:'#7ED530'
         },
         authorityInfo:salesManag['unBilledSalesEstate'].options,

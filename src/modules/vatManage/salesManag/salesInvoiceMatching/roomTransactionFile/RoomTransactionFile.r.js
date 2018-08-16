@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-15 16:53:42
+ * @Last Modified time: 2018-08-16 14:33:49
  *
  */
 import React,{Component} from 'react'
@@ -206,6 +206,11 @@ const getColumns = (context,disabled) => {
             title:'合同约定交付日期',
             dataIndex:'agreeDate',
             width:'150px',
+        },
+        {
+            title:'确收时点',
+            dataIndex:'confirmedDate',
+            width:'100px',
         },
         {
             title:'成交金额',
@@ -493,7 +498,7 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 3850,
+                            x: 3950,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                     }}

@@ -88,7 +88,7 @@ const BusinessReport_Routes = [
         component:wrapPage('进项发票采集',IncomingInvoiceCollection),
         name:'进项发票采集',
         icon:{
-            url:`${ICON_URL_PATH}invoiceCollection.svg`,
+            url:`${ICON_URL_PATH}businessReportIncomingInvoiceCollection.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['incomingInvoiceCollection'].options,
@@ -98,7 +98,7 @@ const BusinessReport_Routes = [
         component:wrapPage('销项发票采集',SalesInvoiceCollection),
         name:'销项发票采集',
         icon:{
-            url:`${ICON_URL_PATH}salesInvoiceCollection.svg`,
+            url:`${ICON_URL_PATH}businessReportSalesInvoiceCollection.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['salesInvoiceCollection'].options,
@@ -118,7 +118,7 @@ const BusinessReport_Routes = [
         component:wrapPage('科目余额表',AccountBalanceSheet),
         name:'科目余额表',
         icon:{
-            url:`${ICON_URL_PATH}fixedAssetCard.svg`,
+            url:`${ICON_URL_PATH}accountBalanceSheet.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['accountBalanceSheet'].options,
