@@ -100,8 +100,8 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             }
         },
         {
-            label: '房间号',
-            fieldName: 'commodityName',
+            label: '房间编码',
+            fieldName: 'roomCode',
             formItemStyle,
             span:6,
             type: 'input',

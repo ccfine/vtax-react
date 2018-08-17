@@ -4,4 +4,4 @@
  * @Last Modified by: liuchunxiu
  * @Last Modified time: 2018-05-13 17:00:00
  */
-export {default} from './BeginningNotTaxSalesEstate.r01'
+export {default} from './BeginningNotTaxSalesEstate.r'

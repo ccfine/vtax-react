@@ -84,14 +84,16 @@ class SearchTable extends Component{
                     }
 
                     if(moment.isMoment(values[key])){
-                        //格式化一下时间 YYYY-MM类型
-                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM');
+                        if(key === 'taxMonth' || key === 'authMonth'){
+                            //格式化一下时间 YYYY-MM类型
+                            if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                                values[key] = values[key].format('YYYY-MM');
+                            }
+                        }else{
+                            if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                                values[key] = values[key].format('YYYY-MM-DD');
+                            }
                         }
-
-                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM-DD');
-                        }*/
                     }
                 }
 
