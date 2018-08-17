@@ -8,7 +8,6 @@ import React,{Component} from 'react'
 import {message,Alert} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-// import moment from 'moment';
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -27,59 +26,6 @@ const formItemStyle = {
         }
     }
 }
-/*
- const fields = (disabled,declare)=> [
- {
- label:'纳税主体',
- fieldName:'mainId',
- type:'taxMain',
- span:24,
- formItemStyle:{
- labelCol:{
- span:6
- },
- wrapperCol:{
- span:14
- }
- },
- componentProps:{
- //labelInValue:true,
- },
- fieldDecoratorOptions:{
- initialValue: (disabled && declare.mainId) || undefined,
- //initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
- rules:[
- {
- required:true,
- message:'请选择纳税主体'
- }
- ]
- },
- },
- {
- label:'交易月份',
- fieldName:'authMonth',
- type:'monthPicker',
- span:24,
- formItemStyle:{
- labelCol:{
- span:6
- },
- wrapperCol:{
- span:14
- }
- },
- fieldDecoratorOptions:{
- initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
- rules:[
- {
- required:true,
- message:'请选择交易月份'
- }
- ]
- }
- },
- ]*/
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
@@ -137,7 +83,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         }
     },
     {
-        label:'房号',
+        label:'房间编码',
         fieldName:'roomNumber',
         type:'input',
         formItemStyle,
@@ -236,6 +182,13 @@ const getColumns = (context,disabled) => {
         {
             title:'税率',
             dataIndex:'taxRate',
+            className:'text-right',
+            render:text=>text? `${text}%`: text,
+            width:'100px',
+        },
+        {
+            title:'修改后税率',
+            dataIndex:'newTaxRate',
             className:'text-right',
             render:text=>text? `${text}%`: text,
             width:'100px',
@@ -341,7 +294,14 @@ const getColumns = (context,disabled) => {
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
-            }]
+            }, {
+                title:'修改后结算价（不含税）',
+                dataIndex:'newSdValorem',
+                render:text=>fMoney(text),
+                className:'table-money',
+                width:'150px',
+                }
+            ]
         },
     ]}
 class RoomTransactionFile extends Component{
@@ -448,13 +408,7 @@ class RoomTransactionFile extends Component{
                              }],statusParam)
                              */}
                             {
-                                (disabled && declare.decAction==='edit') && composeBotton([/*{
-                                 type:'fileImport',
-                                 url:'/output/room/files/upload',
-                                 onSuccess:this.refreshTable,
-                                 // userPermissions:['1215012'],
-                                 fields:fields(disabled,declare)
-                                 },*/
+                                (disabled && declare.decAction==='edit') && composeBotton([
                                     {
                                         type:'submit',
                                         url:'/output/room/files/submit',
