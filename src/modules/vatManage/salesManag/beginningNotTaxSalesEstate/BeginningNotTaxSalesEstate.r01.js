@@ -71,9 +71,19 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             label:'利润中心',
             fieldName:'profitCenter',
             // type:'asyncSelect',
-            type:'input',
+            type:'select',
             span:8,
             formItemStyle,
+            options:[
+                {
+                    text:'',
+                    value:'0'
+                },
+                {
+                    text:'',
+                    value:'1'
+                }
+            ]
             /*componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -117,11 +127,11 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             span:8,
             formItemStyle,
             componentProps:{
-                // format:'YYYY-MM',
-                disabled:disabled
+                 format:'YYYY-MM-DD',
+                // disabled:disabled
             },
             fieldDecoratorOptions:{
-                // initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+                // initialValue: ( moment(declare.authMonth, 'YYYY-MM-DD')) || undefined,
             },
         },
         {
