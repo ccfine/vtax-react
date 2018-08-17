@@ -339,59 +339,11 @@ class unBilledSalesEstate extends Component{
             })
         })
     }
-    onSelectChange = (selectedRowKeys) => {
-        // console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
-    }
-    getCheckboxProps= record => ({
-        disabled: record.doCheck === 1,
-    })
     render(){
         const {tableKey,filters={},statusParam={},searchTableLoading,selectedRowKeys} = this.state;
         const { declare } = this.props;
-        const rowSelection ={
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-            getCheckboxProps:this.getCheckboxProps
-        };
-        let disabled = !!declare;
-      /*  const dataOne=[
-            {
-                id:'1',
-                projectName:111,
-                itemName:222,
-                roomAddress:"福田",
-                roomCode:502,
-                htRoomName:"2018/08",
-                taxRate:18,
-                declaredSales:300,
-                sumTotalPrice:400,
-                sumTotalAmount:500,
-                sumNoInvoiceSales:600,
-                totalPrice:700,
-                totalAmount:410,
-                noInvoiceSales:520,
-                endTotalPrice:620,
-                endTotalAmount:0,
-            },{
-                id:'2',
-                projectName:111,
-                itemName:222,
-                roomAddress:"福田",
-                roomCode:502,
-                htRoomName:"2018/08",
-                taxRate:18,
-                declaredSales:300,
-                sumTotalPrice:400,
-                sumTotalAmount:500,
-                sumNoInvoiceSales:600,
-                totalPrice:700,
-                totalAmount:410,
-                noInvoiceSales:520,
-                endTotalPrice:620,
-                endTotalAmount:1,
-            }
-        ];*/
+        let disabled = !!declare,
+        isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -403,16 +355,27 @@ class unBilledSalesEstate extends Component{
                         }
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                        selectedRowKeys:[],
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 spinning={searchTableLoading}
                 tableOption={{
                     cardProps:{
                         title:'期初未纳税销售额台账-地产'
                     },
-                    // dataSource:dataOne,
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    rowSelection,
+                    onRowSelect:isCheck?(selectedRowKeys)=>{
+                        this.setState({
+                            selectedRowKeys
+                        })
+                    }:undefined,
                     url:'/accountInitialUntaxedSales/list',
                     onSuccess:(params)=>{
                         this.setState({
