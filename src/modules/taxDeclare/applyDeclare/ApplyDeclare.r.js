@@ -12,10 +12,12 @@ class ApplyDeclare extends React.Component {
 		decAction:PropTypes.oneOf(['edit',''])
 		}
 	state ={
+        tabsKey:Date.now(),
+        mainKey:Date.now()+1,
 		panes: [],
 		activeKey: 'main',
 		record:null,
-		mainUpdateKey:Date.now(),
+		mainUpdateKey:Date.now()+2,
 		recordLoading:true,
 
 		// 用来区分 销项发票匹配 中 '销项发票数据匹配' 和 '房间交易档案'
@@ -90,12 +92,13 @@ class ApplyDeclare extends React.Component {
         this.mounted=null;
     }
 	render() {
-		const {record,mainUpdateKey,recordLoading,activeTab} = this.state,
+		const {tabsKey,mainKey,record,mainUpdateKey,recordLoading,activeTab} = this.state,
 		{url,decAction} = this.props;
 		return recordLoading?'加载中...'
 		:(
 			!record?'加载异常，请检查网络！':
             <Tabs
+				key={tabsKey}
 				hideAdd={true}
                 tabBarStyle={{marginBottom:5,backgroundColor:'#FFF'}}
 				onChange={this.onChange}
@@ -105,7 +108,7 @@ class ApplyDeclare extends React.Component {
 				tabBarGutter={2}
 				className='declare-card-container'>
 				<TabPane tab={decAction==='edit'?'申报办理':'查看申报'} key='main' closable={false}>
-					<Main addPane={this.add} record={record} updateKey={mainUpdateKey} url={url}/>
+					<Main key={mainKey} addPane={this.add} record={record} updateKey={mainUpdateKey} url={url}/>
 				</TabPane>
 				{this.state.panes.map(pane => (
 					<TabPane

@@ -207,7 +207,6 @@ export const logout = dispatch => async () =>{
     let mask_div = document.getElementsByClassName("mask_div");
     if(mask_div.length>0){
         Array.from(mask_div).map((item)=>{
-            console.log(item.innerHTML)
             let divParent = item.parentNode;//获取父对象
             return divParent.removeChild(item)
         })
