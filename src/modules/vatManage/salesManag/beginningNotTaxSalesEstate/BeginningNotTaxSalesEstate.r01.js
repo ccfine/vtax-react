@@ -69,17 +69,18 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'利润中心',
-            fieldName:'projectName',
-            type:'asyncSelect',
+            fieldName:'profitCenter',
+            // type:'asyncSelect',
+            type:'input',
             span:8,
             formItemStyle,
-            componentProps:{
+            /*componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
                 url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
-            }
+            }*/
         },
         {
             label:'项目名称',
@@ -159,7 +160,7 @@ const columns = [
     // },
     {
         title:'利润中心',
-        dataIndex:'projectName',
+        dataIndex:'profitCenter',
         width:'150px',
     },
     {
