@@ -267,6 +267,31 @@ const getColumns = (context,disabled) => {
                 return txt
             },
         },{
+            title:'装修款（不含税）',
+            dataIndex:'decorationValorem ',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+        },{
+            title:'毛胚结算价（不含税）',
+            dataIndex:'embryoSdValorem',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+        },{
+            title:'结算价合计（不含税）',
+            dataIndex:'oldSdValorem',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+        }, {
+            title:'修改后结算价（不含税）',
+            dataIndex:'newSdValorem',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'150px',
+
+        },{
             title:'发票信息',
             children:[{
                 title:'发票号码集',
@@ -276,31 +301,7 @@ const getColumns = (context,disabled) => {
                 title:'发票代码集',
                 dataIndex:'invoiceCode',
                 width:'150px',
-            },{
-                title:'装修款（不含税）',
-                dataIndex:'decorationValorem ',
-                render:text=>fMoney(text),
-                className:'table-money',
-                width:'150px',
-            },{
-                title:'毛胚结算价（不含税）',
-                dataIndex:'embryoSdValorem',
-                render:text=>fMoney(text),
-                className:'table-money',
-                width:'150px',
-            },{
-                title:'结算价合计（不含税）',
-                dataIndex:'oldSdValorem',
-                render:text=>fMoney(text),
-                className:'table-money',
-                width:'150px',
-            }, {
-                title:'修改后结算价（不含税）',
-                dataIndex:'newSdValorem',
-                render:text=>fMoney(text),
-                className:'table-money',
-                width:'150px',
-                }
+            }
             ]
         },
     ]}

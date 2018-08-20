@@ -127,7 +127,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             formItemStyle,
         },
         {
-            label: '房间号',
+            label: '房间编码',
             fieldName: 'roomCode',
             formItemStyle,
             span:8,
@@ -169,7 +169,7 @@ const columns = [
         width:'100px',
     },
     {
-        title:'房间号',
+        title:'房间编码',
         dataIndex:'roomCode',
         width:'100px',
     },{
