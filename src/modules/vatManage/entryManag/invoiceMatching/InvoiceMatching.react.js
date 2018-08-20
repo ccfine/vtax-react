@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import {Layout,Card,Row,Col,Form,Button,Icon,Modal,Tabs,message } from 'antd'
-import {AsyncTable,FileImportModal,FileExport} from 'compoments'
+import {AsyncTable,FileImportModal,FileExport,TableTotal} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {request,fMoney,getFields,getUrlParam,listMainResultStatus} from 'utils'
 import PopDifferenceModal from './popModal'
@@ -89,7 +89,8 @@ class InvoiceMatching extends Component {
         modalConfig:{
             type:''
         },
-        activeKey:'tab1'
+        activeKey:'tab1',
+        totalSource:undefined,
     }
     columns = [
         {
@@ -186,7 +187,9 @@ class InvoiceMatching extends Component {
     }
     refreshTable = ()=>{
         this.setState({
-            [`${this.state.activeKey}UpdateKey`]:Date.now()
+            [`${this.state.activeKey}UpdateKey`]:Date.now(),
+            selectedRowKeys:null,
+            selectedRows:null
         },()=>{
             this.updateStatus();
         })
@@ -270,36 +273,16 @@ class InvoiceMatching extends Component {
                                     selectedRows
                                 })
                             } : undefined,
-                            renderFooter:data=>{
-                                return (
-                                    <div className="footer-total">
-                                        <div className="footer-total-meta">
-                                            <div className="footer-total-meta-title">
-                                                <label>本页合计：</label>
-                                            </div>
-                                            <div className="footer-total-meta-detail">
-                                                本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                                本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                            </div>
-                                            <div className="footer-total-meta-title">
-                                                <label>总计：</label>
-                                            </div>
-                                            <div className="footer-total-meta-detail">
-                                                总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                                总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                                总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            },
                             onDataChange:(dataSource)=>{
                                 this.setState({
                                     dataSource
                                 })
                             },
-
+                            onTotalSource: (totalSource) => {
+                                this.setState({
+                                    totalSource
+                                })
+                            },
                         }} />
         )
     }
@@ -312,6 +295,9 @@ class InvoiceMatching extends Component {
                 } else {
                     message.error(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     updateStatus=()=>{
@@ -332,10 +318,13 @@ class InvoiceMatching extends Component {
                 }
             }
         })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
 
     render() {
-        const {tab1UpdateKey,tab2UpdateKey,tab3UpdateKey,selectedRowKeys,selectedRows,visible,dataSource,statusParam} = this.state;
+        const {tab1UpdateKey,tab2UpdateKey,tab3UpdateKey,selectedRowKeys,selectedRows,visible,dataSource,statusParam,totalSource} = this.state;
         const {mainId, authMonth} = this.state.filters;
         const disabled1 = !!((mainId && authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
@@ -361,7 +350,7 @@ class InvoiceMatching extends Component {
                 label:'纳税主体',
                 fieldName:'mainId',
                 type:'taxMain',
-                span:6,
+                span:8,
                 componentProps:{
                     disabled
                 },
@@ -377,7 +366,7 @@ class InvoiceMatching extends Component {
             },{
                 label:'认证时间',
                 type:'monthPicker',
-                span:6,
+                span:8,
                 fieldName:'authMonth',
                 componentProps:{
                     disabled,
@@ -409,7 +398,7 @@ class InvoiceMatching extends Component {
                                     {
                                         label:'发票来源',
                                         type:'select',
-                                        span:6,
+                                        span:8,
                                         fieldName:'sourceType',
                                         options:[
                                             {
@@ -423,8 +412,7 @@ class InvoiceMatching extends Component {
                                     }
                                 ) : FieldsList)
                             }
-                            <Col span={this.state.activeKey==='tab2' ? 6 : 12} style={{textAlign:'right'}}>
-                                <Form.Item>
+                            <Col  style={{width:'100%',textAlign:'right'}}>                              
                                 <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                 <Button
                                     style={{marginLeft:10}}
@@ -441,7 +429,6 @@ class InvoiceMatching extends Component {
                                 >
                                     重置
                                 </Button>
-                                </Form.Item>
                             </Col>
                         </Row>
                     </Form>
@@ -474,6 +461,7 @@ class InvoiceMatching extends Component {
                                 <SubmitOrRecall type={2} disabled={disabled1} url="/income/invoice/marry/revoke" onSuccess={this.refreshTable} />
                             </span>
                         }
+                        <TableTotal totalSource={totalSource} />
                     </div>}
                     style={{marginTop:10}}>
 

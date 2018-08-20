@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>销项管理-未开票销售台账-非地产</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="25" height="27" rx="2"></rect>
+    </defs>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="销项管理-未开票销售台账-非地产">
+            <circle id="Oval-Copy" fill="#F79E45" cx="30" cy="30" r="30"></circle>
+            <g id="Group-47" transform="translate(15.000000, 15.000000)">
+                <g id="Group-46">
+                    <g id="Rectangle-4">
+                        <use fill="#F79E45" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#FFFFFF" stroke-width="1.5" x="0.75" y="0.75" width="23.5" height="25.5" rx="2"></rect>
+                    </g>
+                    <circle id="Oval-2" fill="#F79E45" cx="22.5" cy="22.5" r="7.5"></circle>
+                    <g id="Group-2" transform="translate(16.000000, 16.000000)" fill="#FFFFFF">
+                        <path d="M6.69230769,13.3846154 C2.99624821,13.3846154 0,10.3883672 0,6.69230769 C0,2.99624821 2.99624821,0 6.69230769,0 C10.3883672,0 13.3846154,2.99624821 13.3846154,6.69230769 C13.3846154,10.3883672 10.3883672,13.3846154 6.69230769,13.3846154 Z M6.69230769,12 C9.62366521,12 12,9.62366521 12,6.69230769 C12,3.76095017 9.62366521,1.38461538 6.69230769,1.38461538 C3.76095017,1.38461538 1.38461538,3.76095017 1.38461538,6.69230769 C1.38461538,9.62366521 3.76095017,12 6.69230769,12 Z" id="Oval-3" fill-rule="nonzero"></path>
+                        <path d="M7,7 L10.5,7 C10.7761424,7 11,7.22385763 11,7.5 C11,7.77614237 10.7761424,8 10.5,8 L6.5,8 C6.22385763,8 6,7.77614237 6,7.5 L6,3.5 C6,3.22385763 6.22385763,3 6.5,3 C6.77614237,3 7,3.22385763 7,3.5 L7,7 Z" id="Combined-Shape" transform="translate(8.500000, 5.500000) rotate(-360.000000) translate(-8.500000, -5.500000) "></path>
+                    </g>
+                </g>
+                <rect id="Rectangle-3" fill="#FFFFFF" x="5" y="5" width="15" height="1.5" rx="0.75"></rect>
+                <rect id="Rectangle-3-Copy" fill="#FFFFFF" x="5" y="10" width="15" height="1.5" rx="0.75"></rect>
+                <rect id="Rectangle-3-Copy-2" fill="#FFFFFF" x="5" y="15" width="10" height="1.5" rx="0.75"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

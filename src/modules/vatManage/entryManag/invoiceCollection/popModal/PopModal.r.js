@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Card,Icon,message,Spin} from 'antd';
-import {request,regRules,fMoney,requestDict,getFields} from '../../../../../utils'
+import {request,regRules,fMoney,getFields} from 'utils'
 import {SynchronizeTable} from 'compoments'
 import PopsModal from './popModal'
 import moment from 'moment';
@@ -43,9 +43,6 @@ class PopModal extends Component{
         modalConfig:{
             type:''
         },
-
-        invoiceTypeItem:[], //发票类型
-        incomeStructureTypeItem:[], //进项结构分类
     }
 
     columns = [{
@@ -81,6 +78,39 @@ class PopModal extends Component{
         dataIndex: 'totalAmount',
         render:text=>fMoney(text),
     }];
+
+    getAuthFlag=(flag)=>{
+        //是否需要认证:1需要，0不需要';
+        let res= ''
+        switch (parseInt(flag,0)){
+            case 1:
+                res = '需要'
+                break
+            case 0:
+                res = '不需要'
+                break
+            default:
+        }
+        return res;
+    }
+
+    getAuthStatus=(status)=>{
+        // 认证标记:认证结果1:认证成功;2:认证失败;0:无需认证'
+        let res= ''
+        switch (parseInt(status,0)){
+            case 1:
+                res = '认证成功'
+                break
+            case 2:
+                res = '认证失败'
+                break
+            case 0:
+                res = '无需认证'
+                break
+            default:
+        }
+        return res;
+    }
 
     //计算金额的总和
     cellAmountSum=arr=>{
@@ -119,23 +149,6 @@ class PopModal extends Component{
             });
         }
     }
-
-    //注册类型:发票类型
-    getRegistrationType=()=>{
-        requestDict('JXFPLX',result=>{
-            this.setState({
-                invoiceTypeItem:this.setFormat(result)
-            })
-        })
-    }
-    //注册类型:进项结构分类
-    getIncomeStructureType=()=>{
-        requestDict('JXJGFL',result=>{
-            this.setState({
-                incomeStructureTypeItem:this.setFormat(result)
-            })
-        })
-    }
     setDetailsDate=detailsDate=>{
         this.setState({
             detailsDate
@@ -173,75 +186,6 @@ class PopModal extends Component{
         })
     }
 
-    handleSubmit = (e) => {
-        e && e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const type = this.props.modalConfig.type;
-                const info = this.state.initData;
-                let data = {
-                    incomeInvoiceCollectionDO:{
-                        ...info,
-                        ...values.incomeInvoiceCollectionDO,
-                        authDate:values.incomeInvoiceCollectionDO.authDate && values.incomeInvoiceCollectionDO.authDate.format('YYYY-MM-DD'),
-                        authMonth:values.incomeInvoiceCollectionDO.authMonth && values.incomeInvoiceCollectionDO.authMonth.format('YYYY-MM'),
-                        billingDate:values.incomeInvoiceCollectionDO.billingDate && values.incomeInvoiceCollectionDO.billingDate.format('YYYY-MM-DD'),
-                        amount:values.incomeInvoiceCollectionDO.amount && parseFloat(`${values.incomeInvoiceCollectionDO.amount}`.replace(/\$\s?|(,*)/g, '')),
-                        taxAmount:values.incomeInvoiceCollectionDO.taxAmount && parseFloat(`${values.incomeInvoiceCollectionDO.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
-                        totalAmount:values.incomeInvoiceCollectionDO.totalAmount && parseFloat(`${values.incomeInvoiceCollectionDO.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                    },
-                    list:this.checkeDetailsDateId(this.state.detailsDate)
-                }
-
-                this.setState({
-                    submitLoading: true
-                })
-                if (type === 'add') {
-                    request.post('/income/invoice/collection/save', data
-                    )
-                        .then(({data}) => {
-                            this.setState({ submitLoading: false })
-                            if (data.code === 200) {
-                                message.success('新增成功！', 4)
-                                //新增成功，关闭当前窗口,刷新父级组件
-                                this.props.toggleModalVisible(false);
-                                this.props.refreshTable();
-                            } else {
-                                message.error(data.msg, 4)
-                            }
-                        })
-                        .catch(err => {
-                            message.error(err.message)
-                            this.setState({ submitLoading: false })
-
-                        })
-                }
-
-                if (type === 'edit') {
-
-                    request.put('/income/invoice/collection/update', data
-                    )
-                        .then(({data}) => {
-                            this.setState({ submitLoading: false })
-                            if (data.code === 200) {
-                                message.success('编辑成功！', 4);
-                                //编辑成功，关闭当前窗口,刷新父级组件
-                                this.props.toggleModalVisible(false);
-                                this.props.refreshTable();
-
-                            } else {
-                                message.error(data.msg, 4);
-                            }
-                        })
-                        .catch(err => {
-                            message.error(err.message)
-                            this.setState({ submitLoading: false })
-                        })
-                }
-            }
-        })
-    }
-
     fetch = id=> {
         this.setState({ loaded: false });
         request.get(`/income/invoice/collection/get/${id}`,{
@@ -264,45 +208,13 @@ class PopModal extends Component{
                 }
 
             }).catch(err=>{
-                this.setState({
-                    loaded: true
-                });
+            message.error(err.message)
+            this.setState({
+                loaded: true
             });
-    }
-
-    checkeDetailsDateId = (data)=>{
-        return data.map((item)=>{
-            return {
-                amount:parseFloat(`${item.amount}`.replace(/\$\s?|(,*)/g, '')),
-                goodsServicesName:item.goodsServicesName,
-                parentId:item.parentId,
-                qty:item.qty,
-                specificationModel:item.specificationModel,
-                taxAmount:parseFloat(`${item.taxAmount}`.replace(/\$\s?|(,*)/g, '')),
-                taxRate:item.taxRate,
-                totalAmount:parseFloat(`${item.totalAmount}`.replace(/\$\s?|(,*)/g, '')),
-                unit:item.unit,
-                unitPrice:parseFloat(`${item.unitPrice}`),
-                id: (item.id.indexOf('t') > -1) ? null : item.id
-            }
-        })
-    }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
-    }
-    componentDidMount(){
-        this.getRegistrationType()
-        this.getIncomeStructureType()
+        });
     }
     componentWillReceiveProps(nextProps){
-        //console.log(nextProps)
         if(!nextProps.visible){
             /**
              * 关闭的时候清空表单
@@ -313,13 +225,12 @@ class PopModal extends Component{
                 detailsDate:[],
             })
         }
+
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
              * 弹出的时候如果类型不为添加，则异步请求数据
              * */
-            if(nextProps.selectedRowKeys.length>0){
-                this.fetch(nextProps.selectedRowKeys[0])
-            }
+            this.fetch(nextProps.modalConfig.id, nextProps)
         }
     }
     mounted=true
@@ -338,7 +249,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -348,7 +259,7 @@ class PopModal extends Component{
                 disabled=true;
                 break;
             default:
-                title = '添加';
+                title = '新增';
                 break;
         }
         const max20={
@@ -377,7 +288,8 @@ class PopModal extends Component{
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
-                style={{ top: 50 }}
+                style={{ top: '5%' }}
+                bodyStyle={{maxHeight:500,overflowY:'auto'}}
                 visible={props.visible}
                 footer={
                     type !== 'view' && <Row>
@@ -390,7 +302,7 @@ class PopModal extends Component{
                 }
                 title={title}>
                 <Spin spinning={this.state.submitLoading}>
-                    <Form onSubmit={this.handleSubmit} style={{height:'400px',overflowY:'scroll'}}>
+                    <Form onSubmit={this.handleSubmit}>
                         <Card>
                             <Row>
                                 {
@@ -402,7 +314,8 @@ class PopModal extends Component{
                                             span: 12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions: {
                                                 initialValue: initData.mainId,
@@ -413,14 +326,72 @@ class PopModal extends Component{
                                                 ],
                                             }
                                         },{
-                                            label:'进项结构分类',
-                                            fieldName:'incomeInvoiceCollectionDO.incomeStructureType',
-                                            type:'select',
+                                            label:'应税项目',
+                                            fieldName:'incomeInvoiceCollectionDO.taxableProject',
+                                            type:'input',
                                             span:12,
                                             formItemStyle,
-                                            options:this.state.incomeStructureTypeItem,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.taxableProject,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入应税项目'
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'项目编码',
+                                            fieldName:'incomeInvoiceCollectionDO.projectNum',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.projectNum,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入项目编码'
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'项目名称',
+                                            fieldName:'incomeInvoiceCollectionDO.projectName',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps: {
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:initData.projectName,
+                                                rules:[
+                                                    {
+                                                        required:true,
+                                                        message:'请输入项目名称s'
+                                                    }
+                                                ]
+                                            }
+                                        },{
+                                            label:'进项结构分类',
+                                            fieldName:'incomeInvoiceCollectionDO.incomeStructureType',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            //options:this.state.incomeStructureTypeItem,
+                                            componentProps: {
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.incomeStructureType,
@@ -436,9 +407,13 @@ class PopModal extends Component{
                                             type:'select',
                                             span:12,
                                             formItemStyle,
-                                            options:this.state.invoiceTypeItem,
+                                            options:[
+                                                {value:'s',text:'增值税专用发票'},
+                                                {value:'c',text:'增值税普通发票'}
+                                            ],
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.invoiceType,
@@ -455,7 +430,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.invoiceNum,
@@ -474,7 +450,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.invoiceCode,
@@ -494,7 +471,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:shouldShowDefaultData ? moment(initData.billingDate, dateFormat) : undefined,
@@ -512,7 +490,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:shouldShowDefaultData ? moment(initData.authMonth, dateFormat) : undefined,
@@ -530,7 +509,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:shouldShowDefaultData ? moment(initData.authDate, dateFormat) : undefined,
@@ -548,7 +528,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.sellerName,
@@ -568,7 +549,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.sellerTaxNum,
@@ -588,7 +570,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.address,
@@ -608,7 +591,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.phone,
@@ -628,7 +612,8 @@ class PopModal extends Component{
                                             span:12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.bank,
@@ -648,7 +633,8 @@ class PopModal extends Component{
                                             span: 12,
                                             formItemStyle,
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions: {
                                                 initialValue: initData.account,
@@ -669,7 +655,7 @@ class PopModal extends Component{
                                             formItemStyle,
                                             componentProps: {
                                                 placeholder:'金额数据来源于发票明细',
-                                                disabled:true,
+                                                disabled:true
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.amount,
@@ -720,6 +706,32 @@ class PopModal extends Component{
                                                 ]
                                             }
                                         },{
+                                            label:'认证标记',
+                                            fieldName:'incomeInvoiceCollectionDO.authStatus',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps:{
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:this.getAuthStatus(initData.authStatus)
+                                            },
+                                        },{
+                                            label:'是否需要认证',
+                                            fieldName:'incomeInvoiceCollectionDO.authFlag',
+                                            type:'input',
+                                            span:12,
+                                            formItemStyle,
+                                            componentProps:{
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
+                                            },
+                                            fieldDecoratorOptions:{
+                                                initialValue:this.getAuthFlag(initData.authFlag)
+                                            },
+                                        },{
                                             label:'备注',
                                             fieldName:'incomeInvoiceCollectionDO.remark',
                                             type:'textArea',
@@ -733,7 +745,8 @@ class PopModal extends Component{
                                                 }
                                             },
                                             componentProps: {
-                                                disabled
+                                                disabled,
+                                                placeholder:disabled?' ':undefined,
                                             },
                                             fieldDecoratorOptions:{
                                                 initialValue:initData.remark,
@@ -807,23 +820,23 @@ class PopModal extends Component{
                                     bordered:true,
                                     size:'small',
                                     columns:this.columns,
-                                    rowSelection: type !== 'view' && rowSelection,
+                                    rowSelection: type !== 'view'?rowSelection:null,
                                     footerDate:  footerDate,
                                     renderFooter:data=>{
-                                      return(
-                                          <div className="footer-total">
-                                              <div className="footer-total-meta">
-                                                  <div className="footer-total-meta-title">
-                                                      <label>本页合计：</label>
-                                                  </div>
-                                                  <div className="footer-total-meta-detail">
-                                                      金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                                      税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                                      价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      )
+                                        return(
+                                            <div className="footer-total">
+                                                <div className="footer-total-meta">
+                                                    <div className="footer-total-meta-title">
+                                                        <label>本页合计：</label>
+                                                    </div>
+                                                    <div className="footer-total-meta-detail">
+                                                        金额合计：<span className="amount-code">{fMoney(data.pageAmount)}</span>
+                                                        税额合计：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
+                                                        价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
                                     },
                                 }}
                             />

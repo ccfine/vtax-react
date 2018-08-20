@@ -49,7 +49,7 @@ class SearchTable extends Component{
         if(nextProps.searchOption){
             for(let key in nextProps.searchOption.filters){
                 if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
-                    this.setState({
+                    this.mounted && this.setState({
                         filters:nextProps.searchOption.filters
                     })
                 }
@@ -61,6 +61,12 @@ class SearchTable extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 for(let key in values){
+                    if(typeof values[key] === 'object' && values[key]!==null){
+                        if(("key" in values[key]) && ("label" in values[key])){
+                            values[`${key}Id`] = values[key].key;
+                            delete values[key];
+                        }
+                    }
                     if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
                         //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
                         values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
@@ -78,17 +84,20 @@ class SearchTable extends Component{
                     }
 
                     if(moment.isMoment(values[key])){
-                        //格式化一下时间 YYYY-MM类型
-                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM');
+                        if(key === 'taxMonth' || key === 'authMonth'){
+                            //格式化一下时间 YYYY-MM类型
+                            if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                                values[key] = values[key].format('YYYY-MM');
+                            }
+                        }else{
+                            if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                                values[key] = values[key].format('YYYY-MM-DD');
+                            }
                         }
-
-                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM-DD');
-                        }*/
                     }
                 }
-                this.setState(prevState=>({
+
+                this.mounted && this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
                         //合并上次filters的原因是组件会接收外部的额外filter条件，如果不合并就会忽略到外部的条件
@@ -96,7 +105,7 @@ class SearchTable extends Component{
                         ...values
                     }
                 }),()=>{
-                    this.setState({
+                    this.mounted && this.setState({
                         tableUpDateKey:Date.now()
                     })
                 });
@@ -111,10 +120,17 @@ class SearchTable extends Component{
         this.handleSubmit()
     }
     componentDidMount(){
-        !this.props.doNotFetchDidMount && this.updateTable()
+        /** 延迟100ms是因为如果这个弹窗里面如果包含SearchTable,并且table里有radio单选
+         * 就会出现radio对不齐的情况出现，因为radio外层是动态计算位置，可能原因是modal弹出时需要时间导致计算的举距离有偏差
+         */
+        !this.props.doNotFetchDidMount && setTimeout(this.updateTable, 100);
         this.props.searchOption && this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
+    }
+    mounted=true;
+    componentWillUnmount(){
+        this.mounted=null
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;
@@ -127,8 +143,9 @@ class SearchTable extends Component{
                             <Card
                                 className="search-card"
                                 bodyStyle={{
-                                    padding:expand?'12px 16px':'0 16px'
+                                    padding:expand?'8px 16px 0 16px':'0 16px'
                                 }}
+                                bordered={false}
                                 /*extra={
                                  <Icon
                                  style={{fontSize:24,color:'#ccc',cursor:'pointer'}}
@@ -137,14 +154,14 @@ class SearchTable extends Component{
                                  }*/
                                 {...searchOption.cardProps}
                             >
-                                <Form onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
+                                <Form className="table-search-form" onSubmit={this.handleSubmit} style={{display:expand?'block':'none'}}>
                                     <Row>
                                         {
                                             getFields(form,searchOption.fields)
                                         }
                                         <Col style={{width:'100%',textAlign:'right'}}>
-                                            <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
-                                            <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
+                                            <Button size='small' style={{margin:'4px 0 4px 10px'}} type="primary" htmlType="submit">查询</Button>
+                                            <Button size='small' style={{margin:'4px 0 4px 10px'}} onClick={()=>{
                                                 form.resetFields()
                                                 this.setState({filters:{}})
                                                 searchOption.onResetFields && searchOption.onResetFields();
@@ -161,16 +178,19 @@ class SearchTable extends Component{
                     }
                     <Card
                         extra={tableOption.extra || null}
-                        style={{marginTop:10}}
+                        style={{marginTop:6}}
+                        bordered={false}
                         {...tableOption.cardProps}
+                        bodyStyle={{paddingBottom:( tableOption.pagination || tableOption.pageSize)?0:8}}
                     >
                         <AsyncTable url={tableOption.url}
                                     updateKey={tableUpDateKey}
                                     filters={filters}
                                     tableProps={{
                                         rowKey:record=>record[tableOption.rowKey] || record.id,
+                                        dataSource:tableOption.dataSource || tableOption.dataSource || undefined,
                                         pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
-                                        pageSize:tableOption.pageSize || 10,
+                                        pageSize:tableOption.pageSize || 100,
                                         size:'small',
                                         onRow:tableOption.onRow || undefined,
                                         rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
@@ -179,12 +199,13 @@ class SearchTable extends Component{
                                         onSuccess:tableOption.onSuccess || undefined,
                                         scroll:tableOption.scroll || undefined,
                                         onDataChange:tableOption.onDataChange || undefined,
+                                        onTotalSource:tableOption.onTotalSource || undefined,
                                         renderFooter:tableOption.renderFooter || undefined
                                     }} />
                     </Card>
                 </Spin>
                 {
-                    children? children : null
+                    children ? children : null
                 }
             </Layout>
         )

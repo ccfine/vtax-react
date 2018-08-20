@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react'
 import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {SearchTable,FileExport,FileImportModal,TableTotal} from 'compoments'
 import {fMoney,request,getUrlParam} from '../../../../../utils'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import { withRouter } from 'react-router'
@@ -163,7 +163,8 @@ class AdvanceCarryOver extends Component{
         dataStatus:'',
         submitDate:'',
 
-        hasData:false
+        hasData:false,
+        totalSource:undefined
     }
     refreshTable = ()=>{
         this.setState({
@@ -188,6 +189,9 @@ class AdvanceCarryOver extends Component{
                 }else{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     deleteData = () =>{
@@ -234,7 +238,7 @@ class AdvanceCarryOver extends Component{
         }
     }
     render(){
-        const {tableKey,selectedRowKeys,searchTableLoading,doNotFetchDidMount,dataStatus,submitDate} = this.state;
+        const {tableKey,selectedRowKeys,searchTableLoading,doNotFetchDidMount,dataStatus,submitDate,totalSource} = this.state;
         const {search} = this.props.location;
         let disabled = !!search;
         return(
@@ -260,7 +264,7 @@ class AdvanceCarryOver extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:columns,
                     onRowSelect:parseInt(dataStatus,0) === 1 ? (selectedRowKeys)=>{
                         this.setState({
@@ -279,7 +283,7 @@ class AdvanceCarryOver extends Component{
                     extra:<div>
                         {
                             dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
                                 {
@@ -348,27 +352,27 @@ class AdvanceCarryOver extends Component{
                         <Button size="small" type='danger' style={{marginRight:5}} onClick={this.deleteData} disabled={selectedRowKeys.length === 0}><Icon type="delete" />删除</Button>
                         <SubmitOrRecall type={1} url="/account/output/notInvoiceAdvance/submit" monthFieldName='authMonth' onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} url="/account/output/notInvoiceAdvance/revoke" monthFieldName='authMonth' onSuccess={this.refreshTable} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'本页合计',
+                                    total:[
+                                        {title: '预结转收入金额', dataIndex: 'pageAmount'},
+                                    ],
+                                },{
+                                title:'总计',
+                                total:[
+                                    {title: '预结转收入金额', dataIndex: 'allAmount'},
+                                ],
+                            }
+                            ]
+                        } />
                     </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        预结转收入金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        预结转收入金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    }
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                 }}
             >
             </SearchTable>

@@ -47,6 +47,10 @@ class PopModal extends Component{
                     if (data.code === 200) {
                         this.setState({formLoading:false,record:data.data,submited:false});
                     }
+                })
+                .catch(err => {
+                    this.setState({formLoading:false});
+                    message.error(err.message)
                 });
             }else{
                 this.setState({formLoading:false,record:{}});
@@ -84,10 +88,10 @@ class PopModal extends Component{
                 let result ,
                 sucessMsg ,
                 isModify=(this.props.action==="modify" || (this.state.submited && this.props.action==="add"));
-                
+
                 if(isModify){
                     result = request.put('/card/house/ownership/update', obj);
-                    sucessMsg='修改成功';
+                    sucessMsg='编辑成功';
                 }else if(this.props.action==="add"){
                     obj.projectId = this.props.projectid;
                     result = request.post('/card/house/ownership/add', obj);
@@ -99,7 +103,7 @@ class PopModal extends Component{
                         message.success(sucessMsg, 4);
                         this.setState({loading:false,record:data.data,submited:true});
                         this.props.update();
-                        // 修改成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
+                        // 编辑成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
                         if(isModify){
                             this.hideModal();
                         }
@@ -122,12 +126,12 @@ class PopModal extends Component{
         {getFieldDecorator} = this.props.form;
         let title = "查看";
         if(this.props.action==="add"){
-            title = "添加";
+            title = "新增";
         }else if(this.props.action==="modify"){
-            title="修改"
+            title="编辑"
         }
         return (
-            <Modal 
+            <Modal
             title={title}
             visible={this.props.visible}
             width='850px'

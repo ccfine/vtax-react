@@ -1,5 +1,3 @@
-import { generateRows } from './sheetUtils'
-
 export default [
     [
         {value:'增值税纳税申报表附列资料（五）',readOnly:true,colSpan:6}
@@ -22,8 +20,12 @@ export default [
         { value: '4', readOnly: true},
         { value: '5≤1+4', readOnly: true},
         { value:'6=1+2-3+4-5',readOnly:true}
-    ],
-    ...generateRows([
-        []
-    ], 6, 'A')
+    ],[
+        { key: 'A1', value:'--', readOnly: true },
+        { key: 'A2', value:'--', readOnly: true },
+        { key: 'A3', value:'--', readOnly: true},
+        { key: 'A4', value:'--', readOnly: true},
+        { key: 'A5', value:'', readOnly: true },
+        { key: 'A6', value:'--', readOnly:true}
+    ]
 ];

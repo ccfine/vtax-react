@@ -97,6 +97,9 @@ class TaxableProjectTreeForm extends Component{
                     resolve();
                     // }, 1000);
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             });
 
         });
@@ -105,11 +108,11 @@ class TaxableProjectTreeForm extends Component{
         return data.map((item) => {
             if (item.children && item.children.length>0) {
                 return (
-                    item.num ? <TreeNode title={`[${item.num}]${item.name}`} key={item.id} dataRef={item}>
+                    item.num ? <TreeNode selectable={false} title={`[${item.num}]${item.name}`} key={item.id} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                         :
-                        <TreeNode title={item.name} key={item.id} dataRef={item}>
+                        <TreeNode  selectable={false} title={item.name} key={item.id} dataRef={item}>
                             {this.renderTreeNodes(item.children)}
                         </TreeNode>
                 )
@@ -129,13 +132,20 @@ class TaxableProjectTreeForm extends Component{
                     submitLoading: false,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
+            this.mounted && this.setState({ submitLoading: false });
         });
     }
     onSelect = (selectedKeys, info) => {
-        this.setState({
-            selectedKeys,
-            initData: info.node.props.dataRef
-        });
+        let initData = info.node.props.dataRef;
+        if(initData && initData.isLeaf){
+            this.setState({
+                selectedKeys,
+                initData: initData
+            });
+        }
     }
     onExpand = (expandedKeys) => {
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
@@ -152,22 +162,10 @@ class TaxableProjectTreeForm extends Component{
     componentWillUnmount(){
         this.mounted = null;
     }
-
-    /*componentWillReceiveProps(nextProps){
-        if(typeof (nextProps.conditionValue.taxableProject) !== 'undefined' && typeof (nextProps.conditionValue.taxableProject) !== "object"){
-
-        }
-    }
-    componentWillReceiveProps(nextProps){
-        if(this.props.updateKey!==nextProps.updateKey){
-            this.fetchTree()
-        }
-    }*/
-
     handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if(typeof (values.commonlyTaxRate) === 'undefined'  || typeof (values.simpleTaxRate) === 'undefined' || typeof (values.description) === 'undefined'){
+            if(typeof (values.commonlyTaxRate) === 'undefined'  || typeof (values.description) === 'undefined'){
                 return message.warning('请选择应税项目！')
             }else{
                 const {setFieldsValue,fieldName,onChange} = this.props;
@@ -252,7 +250,7 @@ class TaxableProjectTreeForm extends Component{
                                             disabled:true
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData.commonlyTaxRate ? (initData.commonlyTaxRate+'%') : undefined,
+                                            initialValue:initData.commonlyTaxRate,
                                             /*rules:[
                                                 {
                                                     required:true,
@@ -270,7 +268,7 @@ class TaxableProjectTreeForm extends Component{
                                             disabled:true
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData.simpleTaxRate ? (initData.simpleTaxRate+'%') : undefined,
+                                            initialValue:initData.simpleTaxRate,
                                             /*rules:[
                                                 {
                                                     required:true,

@@ -36,7 +36,7 @@ class NumericInput extends React.Component {
         }
     }
     onChange = (e) => {
-        const { value } = e.target;
+        let { value } = e.target;
         let noNegativeValue = value.indexOf('-')===0
                                 ?
                                 value.substr(1,value.length-1)
@@ -64,6 +64,11 @@ class NumericInput extends React.Component {
             this.props.onChange(noNegativeValue);
         }
     }
+    onFocus=(e)=>{
+        // 聚焦在Input的时候，选中内容
+        e.target.select();
+        this.props.onFocus && this.props.onFocus(e);
+    }
     render() {
         const props = {...this.props};
         delete props['valueType'];
@@ -74,6 +79,7 @@ class NumericInput extends React.Component {
                 {...props}
                 onChange={this.onChange}
                 maxLength={this.props.decimalPlaces+20}
+                onFocus={this.onFocus}
             />
         );
     }

@@ -5,12 +5,14 @@
  */
 import React from 'react'
 import {wrapPage} from 'compoments'
+import strategies from 'config/routingAuthority.config'
 
 const ProcessConfiguration =()=><div>流程配置</div>
 const ApproveTheConfiguration =()=><div>审批配置</div>
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/systemManage/processManage`
+const processManage = strategies['systemManage']['processManage']
 
 const ProcessManage_Routes = [
     {
@@ -21,6 +23,7 @@ const ProcessManage_Routes = [
             url:`${ICON_URL_PATH}processConfiguration.svg`,
             backgroundColor:'#55C6F2'
         },
+        authorityInfo:processManage['processConfiguration'].options,
         exact:true,
     },{
         path:`${PATH}/approveTheConfiguration`,
@@ -30,6 +33,7 @@ const ProcessManage_Routes = [
             url:`${ICON_URL_PATH}approveTheConfiguration.svg`,
             backgroundColor:'#F5A544'
         },
+        authorityInfo:processManage['approveTheConfiguration'].options,
         exact:true,
     },{
         path:`${PATH}`,

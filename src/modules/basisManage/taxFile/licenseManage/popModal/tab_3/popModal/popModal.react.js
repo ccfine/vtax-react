@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Modal,Form,Input,Col,Button,message,Spin,Row} from 'antd'
-import {getFields,request} from '../../../../../../../utils'
+import {getFields,request} from 'utils'
 import moment from 'moment';
 import { ButtonWithFileUploadModal } from 'compoments'
 const { TextArea } = Input;
@@ -47,6 +47,10 @@ class PopModal extends Component{
                     if (data.code === 200) {
                         this.setState({formLoading:false,record:data.data,submited:false});
                     }
+                })
+                .catch(err => {
+                    this.setState({formLoading:false});
+                    message.error(err.message)
                 });
             }else{
                 this.setState({formLoading:false,record:{}});
@@ -92,7 +96,7 @@ class PopModal extends Component{
                         message.success(sucessMsg, 4);
                         this.setState({loading:false,record:data.data,submited:true});
                         this.props.update();
-                        // 修改成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
+                        // 编辑成功关闭Modal，新增成功不关闭-提醒是否进行附件上传
                         if(isModify){
                             this.hideModal();
                         }
@@ -115,12 +119,12 @@ class PopModal extends Component{
         {getFieldDecorator} = this.props.form;
         let title = "查看";
         if(this.props.action==="add"){
-            title = "添加";
+            title = "新增";
         }else if(this.props.action==="modify"){
-            title="修改"
+            title="编辑"
         }
         return (
-            <Modal 
+            <Modal
             title={title}
             visible={this.props.visible}
             width='800px'

@@ -9,64 +9,84 @@
  */
 import Axios from 'axios';
 import {message} from 'antd'
-import {logout} from '../redux/ducks/user'
+import moment from 'moment';
+import { store } from 'redux/store';
+import {logout} from 'redux/ducks/user'
+
+const parseJwt = (token) =>{
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(window.atob(base64));
+    // return JSON.parse(decodeURIComponent(escape($window.atob(base64))));
+}
 
 const request = Axios.create({
     baseURL:window.baseURL,
     timeout:20000,
 });
 request.getToken = ()=>{
-    return request.getState().user.get('token') || false
+    return store.getState().user.get('token') || false
 }
 request.testSuccess = (data,success,fail) => {
     if(data.code===200){
         success && success(data.data)
     }else{
         console.log(data.msg);
-
         fail && fail(data.msg)
+        return message.error(`${data.msg}`,4)
     }
 };
 request.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     if(request.getToken()){
-        config.headers={
-            Authorization:request.getToken(),
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-        if(config.method==='get'){
-            let obj = config.params;
-            let temp = {};
-            if(config.params){
-                for(let i in obj) {
-                    if((obj[i] + "").replace(/\s+/g,"") !== "" || obj[i] === null){
-                        temp[i] = obj[i];
+        const jwt = parseJwt(request.getToken());
+        let d = new Date(0); // The 0 here is the key, which sets the date to the epoch
+        d.setUTCSeconds(jwt.exp);
+        //console.log(jwt);
+        //console.log(d, moment(d).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss'))
+        //console.log(moment(d).isBefore(moment(), 'seconds'))
+        if(!moment(d).isBefore(moment(), 'seconds')){
+            config.headers={
+                Authorization:request.getToken(),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+            if(config.method==='get'){
+                let obj = config.params;
+                let temp = {};
+                if(config.params){
+                    for(let i in obj) {
+                        if((obj[i] + "").replace(/\s+/g,"") !== "" || obj[i] === null){
+                            temp[i] = obj[i];
+                        }
+                    }
+                    config.params = {
+                        _t: Date.parse(new Date())/1000,
+                        ...temp
                     }
                 }
+
+                config.params = {
+                    ...config.params,
+                    _t: Date.parse(new Date())/1000,
+                }
+
+            }else if(config.method==='delete'){
                 config.params = {
                     _t: Date.parse(new Date())/1000,
-                    ...temp
+                    ...config.params
                 }
             }
 
-            config.params = {
-                ...config.params,
-                _t: Date.parse(new Date())/1000,
-            }
-
-        }else if(config.method==='delete'){
-            config.params = {
-                _t: Date.parse(new Date())/1000,
-                ...config.params
-            }
+            /*config.params = {
+             ...config.params,
+             _t: Date.parse(new Date())/1000,
+             }*/
+        }else{
+            store.dispatch && logout(store.dispatch)()
+            message.error('登录超时,请重新登录')
         }
+
     }
-
-    /*config.params = {
-        ...config.params,
-        _t: Date.parse(new Date())/1000,
-    }*/
-
     return config;
 }, function (error) {
     // 对请求错误做些什么
@@ -82,18 +102,18 @@ request.interceptors.response.use(function (response) {
 }, function (error) {
 
     if(error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
-        return message.error('请求超时',4)
+        error.message = "请求超时";
+        // return message.error('请求超时',4)
     }
-
     // 对响应错误做点什么
-    if (error.response) {
+    else if (error.response) {
         switch (error.response.status) {
             case 400:
                 error.message = '请求错误'
                 break
             case 401:
                 // 返回 401 清除token信息并跳转到登录页面
-                request.dispatch && logout(request.dispatch)()
+                store.dispatch && logout(store.dispatch)()
                 error.message = '登录超时,请重新登录'
                 break;
             case 403:
@@ -132,12 +152,14 @@ request.interceptors.response.use(function (response) {
                 error.message = 'HTTP版本不受支持'
                 break
             default:
-                message.error(error.response.statusText,4)
+                error.message = error.response.statusText;
+            //message.error(error.response.statusText,4)
             //no default statusText
         }
-        message.error(error.message)
+        //message.error(error.message)
     }else{
-        message.error('网络错误')
+        //message.error('网络错误')
+        error.message = "网络连接失败";
     }
     return Promise.reject(error);
 });

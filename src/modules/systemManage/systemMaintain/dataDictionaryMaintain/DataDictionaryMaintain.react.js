@@ -4,14 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Form,Button,Icon,Modal,message} from 'antd';
+import { compose } from 'redux';
+import {connect} from 'react-redux'
+import {Form,Modal,message} from 'antd';
 import {TreeTable} from 'compoments'
 import PopModal from './popModal'
-import {request} from '../../../../utils'
+import {request,composeBotton} from 'utils'
 
-const buttonStyle={
-    marginRight:5
-}
 const searchFields = [
     {
         label:'名称',
@@ -25,15 +24,19 @@ const columns =[
     {
         title: '编码',
         dataIndex: 'code',
+        width:'12%',
     },{
         title: '名称',
         dataIndex: 'name',
+        width:'18%',
     },{
         title: '类型',
         dataIndex: 'type',
+        width:'12%',
     },{
         title: '排序',
         dataIndex: 'sortBy',
+        width:'6%',
     },{
         title: '描述',
         dataIndex: 'description',
@@ -74,6 +77,7 @@ class DataDictionaryMaintain extends Component {
     refreshTable = ()=>{
         this.setState({
             updateTable:Date.now(),
+            //id:undefined,
         })
     }
     refreshAll = ()=>{
@@ -111,8 +115,9 @@ class DataDictionaryMaintain extends Component {
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -122,81 +127,108 @@ class DataDictionaryMaintain extends Component {
     render() {
         const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,filters} = this.state;
         return (
-            <TreeTable
-                spinning={searchTableLoading}
-                refreshTree={this.refreshTree}
-                searchOption={{
-                    fields:searchFields,
-                    filters:filters,
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
-                    cardProps:{
-                        style:{
-                            borderTop:0
-                        }
-                    }
-                }}
-                cardTableOption={{
-                    extra:<div>
-                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('edit')}>
-                            <Icon type="edit" />
-                            编辑
-                        </Button>
-                        <Button size="small" disabled={!id} style={buttonStyle} type='danger' onClick={this.deleteData}>
-                            <Icon type="delete" />
-                            删除
-                        </Button>
-                    </div>
-                }}
-                treeCardOption={{
-                    cardProps:{
-                        title:'字典信息树',
-                    }
-                }}
-                treeOption={{
-                    key:updateTree,
-                    showLine:false,
-                    url:"/sys/dict/tree",
-                    onSuccess:(selectedKeys,selectedNodes)=>{
-                        this.setState({
-                            id:selectedNodes.id,
-                            filters:{
-                                id:selectedNodes.id
+            <div className="oneLine">
+                <TreeTable
+                    spinning={searchTableLoading}
+                    refreshTree={this.refreshTree}
+                    searchOption={{
+                        fields:searchFields,
+                        filters:filters,
+                        getFieldsValues:values=>{
+                            this.setState({
+                                searchFieldsValues:values
+                            })
+                        },
+                        cardProps:{
+                            style:{
+                                borderTop:0
                             }
-                        },()=>{
-                            this.refreshTable()
-                        })
-                    },
-                }}
-                tableOption={{
-                    key:updateTable,
-                    pageSize:10,
-                    columns:columns,
-                    cardProps:{
-                        title:'下级列表信息'
-                    },
-                    url:'/sys/dict/list',
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            id:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    }
-                }}
-            >
-                <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
-            </TreeTable>
+                        }
+                    }}
+                    cardTableOption={{
+                        cardProps:{
+                            title:'数据字典维护',
+                        },
+                        extra:<div>
+                            {
+                                id && composeBotton([{
+                                    type: 'add',
+                                    icon:'plus',
+                                    userPermissions: [],
+                                    onClick: () => {
+                                        this.showModal('add')
+                                    }
+                                },{
+                                    type:'edit',
+                                    icon:'edit',
+                                    text:'编辑',
+                                    btnType:'default',
+                                    onClick:()=>{
+                                        this.showModal('edit')
+                                    }
+                                },{
+                                    type:'delete',
+                                    icon:'delete',
+                                    btnType:'danger',
+                                    text:'删除',
+                                    onClick:()=>{
+                                        this.deleteData()
+                                    }
+                                }])
+                            }
+                        </div>
+                    }}
+                    treeCardOption={{
+                        cardProps:{
+                            title:'字典信息树',
+                            bodyStyle:{overflow:'auto',height:window.screen.availHeight-320},
+                        }
+                    }}
+                    treeOption={{
+                        key:updateTree,
+                        showLine:false,
+                        url:"/sys/dict/tree",
+                        onSuccess:(selectedKeys,selectedNodes)=>{
+                            this.setState({
+                                id:selectedNodes.id,
+                                filters:{
+                                    id:selectedNodes.id
+                                }
+                            },()=>{
+                                this.refreshTable()
+                            })
+                        },
+                    }}
+                    tableOption={{
+                        key:updateTable,
+                        pageSize:100,
+                        columns:columns,
+                        cardProps:{
+                            title:'下级列表信息'
+                        },
+                        scroll:{x:1000,y:window.screen.availHeight-390},
+                        url:'/sys/dict/list',
+                        onRowSelect:(selectedRowKeys,selectedRows)=>{
+                            this.setState({
+                                id:selectedRowKeys[0],
+                                selectedRows,
+                            })
+                        },
+                        rowSelection:{
+                            type:'radio',
+                        }
+                    }}
+                >
+                    <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
+                </TreeTable>
+            </div>
         )
     }
 }
-export default Form.create()(DataDictionaryMaintain)
+const enhance = compose(
+    Form.create(),
+    connect( (state) => ({
+        declare:state.user.get('declare')
+    }))
+);
+export default enhance(DataDictionaryMaintain);

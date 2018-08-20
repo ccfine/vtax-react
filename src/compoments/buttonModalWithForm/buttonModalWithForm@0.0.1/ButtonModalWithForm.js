@@ -34,7 +34,7 @@ class ButtonModalWithForm extends Component{
         formOptions:PropTypes.shape({
             type: PropTypes.oneOf(['post','put']).isRequired,
             url: PropTypes.string.isRequired,
-            fields:PropTypes.array.isRequired,
+            fields:PropTypes.oneOfType([PropTypes.array,PropTypes.func]),
             disabled:PropTypes.bool,
             onSuccess:PropTypes.func,
             onValuesChange:PropTypes.func,
@@ -131,6 +131,14 @@ class ButtonModalWithForm extends Component{
                                 getFields(this.props.form,formOptions.fields)
                             }
                         </Row>
+                        {
+                            formOptions && formOptions.children && <Row>
+                                { formOptions.children }
+                            </Row>
+                        }
+
+
+
                     </Form>
                 </Modal>
             </span>

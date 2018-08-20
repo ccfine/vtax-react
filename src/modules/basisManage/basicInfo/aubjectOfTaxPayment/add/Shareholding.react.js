@@ -123,7 +123,7 @@ class Shareholding extends Component {
             getCheckboxProps:this.getCheckboxProps
         };
         return (
-                <div style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
+                <div style={{height:'350px',overflow:'hidden',overflowY:'auto'}}>
                     <Card title="查询结果"
                           extra={
                                   this.props.type !== 'view' ?  <div>
@@ -176,7 +176,7 @@ class Shareholding extends Component {
                                   </div>
                                       :
                                   <div>
-                                      <Button onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
+                                      <Button size="small" onClick={()=>this.showModal('view')} disabled={!selectedRowKeys} style={buttonStyle}>
                                           <Icon type="search" />
                                           查看
                                       </Button>

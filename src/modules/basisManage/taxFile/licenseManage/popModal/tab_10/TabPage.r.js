@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Modal,message,Card,Icon} from 'antd'
+import {Modal,message,Card} from 'antd'
 import PopModal from './popModal'
-import {request} from 'utils'
+import {request,composeBotton} from 'utils'
 import PartTwo from './TabPage2.r'
 const getSearchFields = projectId => [
     {
@@ -22,46 +22,52 @@ const getSearchFields = projectId => [
 const getColumns = context=> [
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'modify',opid:record.id});
-                }}>修改</a>
-                <span style={{
-                    color:'#f5222d',
-                    cursor:'pointer'
-                }} onClick={()=>{
-                    const modalRef = Modal.confirm({
-                        title: '友情提醒',
-                        content: '该删除后将不可恢复，是否删除？',
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk:()=>{
-                            context.deleteRecord(record)
-                            modalRef && modalRef.destroy();
-                        },
-                        onCancel() {
-                            modalRef.destroy()
-                        },
-                    });
-                }}>
-                    删除
-                </span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'look',opid:record.id});
-                }}>查看</a>
-                </span>
-            );
-        },
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.setState({visible:true,action:'modify',opid:record.id})
+        },{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            userPermissions:[],
+            style:{color:'#f5222d'},
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
         fixed:'left',
         width:'100px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center',
     },
     {
         title: '权证名称 ',
         dataIndex: 'warrantName',
+        render:(text,record)=>(
+            <a title="查看详情"
+                onClick={() => {
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}
+            >
+                {text}
+            </a>
+        )
     }, {
         title: '权证号',
         dataIndex: 'warrantNum',
@@ -150,52 +156,62 @@ export default class TabPage extends Component{
         const {projectId} = this.props;
         return(
             <div style={{padding:"0 15px"}}>
-            <Card title="大产证">
-            <SearchTable
-                searchOption={{
-                    fields:getSearchFields(projectId),
-                    cardProps:{
-                        title:'',
-                        bordered:false,
-                        extra:null,
-                        bodyStyle:{padding:"0px"},
-                    }
-                }}
-                actionOption={{
-                    body:(<Button size='small' onClick={()=>{
-                        this.setState({visible:true,action:'add',opid:undefined});
-                    }}><Icon type="plus" />新增</Button>)
-                }}
-                tableOption={{
-                    columns:getColumns(this),
-                    url:`/card/house/ownership/list/${props.projectId}`,
-                    scroll:{x:'200%'},
-                    key:this.state.updateKey,
-                    cardProps:{
-                        bordered:false,
-                        bodyStyle:{marginLeft:'-2px',padding:'10px'}
-                    },
-                    rowSelection:{
-                        selectedRowKeys:this.state.selectedRowKeys,
-                        type:'radio',
-                        onChange:selectedRowKeys=>{
-                            this.setState({selectedRowKeys,titleCertificateId:(selectedRowKeys&&selectedRowKeys.length>0)?selectedRowKeys[0]:undefined});
-                        }
-                    }
-                }}
-            >
-            </SearchTable>
-            </Card>
-               <PopModal 
-                projectid={props.projectId}
-                id={this.state.opid}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal>
+                <Card title="大产证">
+                    <SearchTable
+                        searchOption={{
+                            fields:getSearchFields(projectId),
+                            cardProps:{
+                                title:'',
+                                bordered:false,
+                                extra:null,
+                                bodyStyle:{padding:"0px"},
+                            }
+                        }}
+                        actionOption={{
+                            body:(
+                                <span>
+                                    {
+                                        composeBotton([{
+                                            type:'add',
+                                            icon:'plus',
+                                            userPermissions:[],
+                                            onClick:()=>{
+                                                this.setState({visible:true,action:'add',opid:undefined});
+                                            }
+                                        }])
+                                    }
+                                </span>
+                            )
+                        }}
+                        tableOption={{
+                            columns:getColumns(this),
+                            url:`/card/house/ownership/list/${props.projectId}`,
+                            scroll:{x:'200%'},
+                            key:this.state.updateKey,
+                            cardProps:{
+                                bordered:false,
+                                bodyStyle:{marginLeft:'-2px',padding:'10px'}
+                            },
+                            rowSelection:{
+                                selectedRowKeys:this.state.selectedRowKeys,
+                                type:'radio',
+                                onChange:selectedRowKeys=>{
+                                    this.setState({selectedRowKeys,titleCertificateId:(selectedRowKeys&&selectedRowKeys.length>0)?selectedRowKeys[0]:undefined});
+                                }
+                            }
+                        }}
+                    />
+                </Card>
+               <PopModal
+                    projectid={props.projectId}
+                    id={this.state.opid}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
                 {this.state.titleCertificateId && <PartTwo titleCertificateId={this.state.titleCertificateId} updateKey={this.state.updateKey}/>}
-                
+
             </div>
         )
     }

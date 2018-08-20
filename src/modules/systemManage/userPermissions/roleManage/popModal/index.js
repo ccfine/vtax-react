@@ -3,5 +3,13 @@
  * createTime   : 2018/4/20
  * description  :
  */
-export { default } from './RolePopModal.react'
+import RolePopModal from './RolePopModal.react'
+import UserPopModal from './UserPopModal.react'
+import PermissionPopModal from './PermissionPopModal.react'
+
+export {
+    RolePopModal,
+    UserPopModal,
+    PermissionPopModal
+}
 

@@ -56,13 +56,14 @@ class PopModal extends Component {
 
                 //状态从true变更未数字1,2
                 values.enabled = values.enabled ? 1 :2;
+                values.id = this.props.orgId;
 
                 //新建
                 if(this.props.modalType==='create'){
                     //默认密码
                     values.password = '888888'
 
-                    request.post(`/organizations/${this.props.orgId}/users`,values)
+                    request.post(`/sysUser/add`,values)
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false
@@ -80,7 +81,7 @@ class PopModal extends Component {
                         })
                         .catch(err=>{
                             message.error(err.message)
-                            this.mounted&&this.setState({
+                            this.mounted && this.setState({
                                 submitLoading:false
                             })
                         })
@@ -90,7 +91,7 @@ class PopModal extends Component {
 
                 if(this.props.modalType==='edit'){
                     const {defaultFields,fetchUserInfo,toggleModalVisible} = this.props;
-                    request.put(`/users/${defaultFields.userId}`,values)
+                    request.put(`/sysUser/update`,values)
                         .then(({data})=>{
                             this.setState({
                                 submitLoading:false
@@ -107,7 +108,7 @@ class PopModal extends Component {
                         })
                         .catch(err=>{
                             message.error(err.message)
-                            this.mounted&&this.setState({
+                            this.mounted && this.setState({
                                 submitLoading:false
                             })
                         })
@@ -132,6 +133,9 @@ class PopModal extends Component {
                 }else{
                     message.error(data.msg)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     componentDidMount(){
@@ -158,7 +162,7 @@ class PopModal extends Component {
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
-                title={modalType==='create'?'添加用户':'编辑用户'}
+                title={modalType==='create'?'新增用户':'编辑用户'}
                 key={this.state.createSysModalKey}
                 visible={this.props.visible}
                 onOk={this.handleSubmit}
@@ -267,9 +271,12 @@ class PopModal extends Component {
                                   type:'switch',
                                   span:24,
                                   formItemStyle,
+                                  componentProps:{
+                                      checkedChildren:"启用" ,
+                                      unCheckedChildren:"禁用"
+                                  },
                                   fieldDecoratorOptions:{
                                       initialValue:defaultFields.hasOwnProperty('enabled') ? (parseInt(defaultFields.enabled,0)===1) : true,
-                                      valuePropName: 'checked' ,
                                   },
                               }
                           ])
@@ -277,7 +284,8 @@ class PopModal extends Component {
                       {
                           modalType === 'create' ? (
                               <Col span={24}>
-                                <Alert message="新添加的帐号的初始密码为：888888" type="info" showIcon />
+                                <Alert message="新添加的帐号的初始密码
+                                为：888888" type="info" showIcon />
                               </Col>
                           ) : null
                       }
@@ -291,5 +299,5 @@ class PopModal extends Component {
 }
 
 export default connect(state=>({
-    orgId: state.user.get("orgId")
+    orgId: state.user.get("org").orgId
 }))(Form.create()(PopModal))

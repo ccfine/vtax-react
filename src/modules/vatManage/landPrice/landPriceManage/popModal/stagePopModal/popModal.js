@@ -258,7 +258,7 @@ class PopModal extends React.Component {
     return (
       <Modal
         visible={this.props.visible}
-        title="修改"
+        title={!!this.props.type&&this.props.type==="look"?"查看":"编辑"}
         onCancel={() => {
           this.props.form.resetFields();
           this.props.hideModal();

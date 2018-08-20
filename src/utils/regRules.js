@@ -4,7 +4,7 @@
 
 export default {
     userName:{
-        pattern:/^[a-zA-Z0-9]{6,20}?$/,
+        pattern:/^[a-zA-Z0-9]{4,20}?$/,
         message:'请输入有效的用户名'
     },
     password:{

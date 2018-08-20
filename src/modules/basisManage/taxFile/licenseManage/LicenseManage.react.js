@@ -20,23 +20,15 @@ const searchFields = [
 ]
 const getColumns = context =>[
     {
-        title:'操作',
-        key:'actions',
-        render:(text,record)=>(
-            <span style={pointerStyle} onClick={()=>{
+        title: '纳税主体',
+        dataIndex: 'mainName',
+        render:(text,record)=>(<span title='查看详情' style={pointerStyle} onClick={()=>{
                 context.setState({
                     projectId:record.id,
                 },()=>{
                     context.toggleModalVisible(true)
                 })
-            }}>查看</span>
-        ),
-        fixed:'left',
-        width:'100px',
-    },
-    {
-        title: '纳税主体',
-        dataIndex: 'mainName',
+            }}>{text}</span>),
     }, {
         title: '项目代码',
         dataIndex: 'itemNum',
@@ -69,10 +61,12 @@ export default class LicenseManage extends Component{
                     fields:searchFields
                 }}
                 tableOption={{
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/card/certificate/list',
-                    scroll:{x:'100%'},
+                    cardProps:{
+                        title:'证照管理',
+                    },
                 }}
             >
                 <PopModal visible={visible} projectId={projectId} toggleModalVisible={this.toggleModalVisible} />

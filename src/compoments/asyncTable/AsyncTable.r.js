@@ -5,6 +5,7 @@ import React,{Component} from 'react';
 import {Table,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from 'utils'
+import './styles.module.less'
 export default class AsyncTable extends Component{
     constructor(props){
         super(props);
@@ -14,12 +15,13 @@ export default class AsyncTable extends Component{
             pagination: {
                 showSizeChanger:true,
                 showQuickJumper:true,
-                pageSize:props.tableProps.pageSize || 10,
+                pageSize:props.tableProps.pageSize || 100,
                 showTotal:total => `总共 ${total} 条`,
-                pageSizeOptions:['10','20','30','40','50','60','70','80','90','100']
+                pageSizeOptions:['100','200','300','400','500']
             },
             summaryData:[],
             footerDate:{},
+            totalSource:{},
             selectedRowKeys: []
         }
     }
@@ -71,9 +73,13 @@ export default class AsyncTable extends Component{
                 pagination.pageSize = typeof data.data.size !== 'undefined' ? data.data.size : data.data.page.size;
 
                 let dataSource = data.data.records ? data.data.records : data.data.page.records;
+                let totalSource = {...data.data, page:undefined};
 
                 /** 给外部一个回调方法，可以得到每次变更后的data*/
                 props.tableProps.onDataChange && props.tableProps.onDataChange(dataSource)
+
+                /** 给外部一个回调方法，可以得到每次变更后的合计和总计*/
+                props.tableProps.onTotalSource && props.tableProps.onTotalSource(totalSource)
 
                 this.mounted && this.setState({
                     loaded: true,
@@ -82,6 +88,7 @@ export default class AsyncTable extends Component{
                      * */
                     //dataSource:[...dataSource,{id:'sss'}],
                     dataSource,
+                    totalSource,
                     footerDate: data.data,
                     selectedRowKeys:[],
                     //summaryData:summaryData,
@@ -99,6 +106,7 @@ export default class AsyncTable extends Component{
                 message.error(data.msg)
                 /** 给外部一个回调方法，可以得到每次变更后的data*/
                 props.tableProps.onDataChange && props.tableProps.onDataChange([])
+                props.tableProps.onTotalSource && props.tableProps.onTotalSource({})
                 this.mounted && this.setState({
                     loaded: true,
                     dataSource:[],
@@ -117,12 +125,16 @@ export default class AsyncTable extends Component{
         this.setState({
             pagination: pager,
         });
+        //设置去掉排序默认设置的值
+        let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
+        console.log(sor)
         this.fetch({
             size: pagination.pageSize,
             current: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sorter.order,
+            orderByField: sorter.field,
+            asc: sor ? sor === 'asc' : undefined,
             ...filters,
+            //...this.props.filters.values,
         });
     }
     mounted=true
@@ -141,6 +153,7 @@ export default class AsyncTable extends Component{
         return(
             <div ref="asyncTable">
                 <Table
+                    className="apply-form-list-table"
                     {...props.tableProps}
                     dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
                     rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}

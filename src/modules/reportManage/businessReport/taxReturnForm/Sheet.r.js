@@ -4,8 +4,10 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import DataSheet from 'react-datasheet';
-import {Spin,message} from 'antd'
-import {request,fMoney} from '../../../../utils'
+import {Spin, message } from 'antd'
+import {request,fMoney} from 'utils'
+import { NumericInputCell } from 'compoments/EditableCell'
+
 export default class Sheet extends Component{
     static propTypes={
         grid:PropTypes.array,
@@ -22,7 +24,7 @@ export default class Sheet extends Component{
             x:undefined,
             y:undefined
         },
-        composeGrid:(prevGrid,asyncData)=>{
+        composeGrid:(prevGrid,asyncData,readOnly=true)=>{
             /**
              * prevGrid:原数据
              * asyncData:异步获取到的数据
@@ -42,20 +44,21 @@ export default class Sheet extends Component{
                      *      'B2': {key: 'B2', value: '', expr: ''},
                      *  }
              * */
-
-            return nextData.map( item =>{
-                return item.map( deepItem =>{
-                    for(let key in sheetData){
-                        if(deepItem.key === key){
-                            return {
-                                ...sheetData[key],
-                                value:typeof sheetData[key]['value'] === 'number' ? fMoney(sheetData[key]['value']) : sheetData[key]['value']
-                            };
+    
+            return nextData.map(item=>{
+                return item.map(deepItem=>{
+                    if(deepItem.key && sheetData && sheetData[deepItem.key]){
+                        return {
+                            ...deepItem,
+                            ...sheetData[deepItem.key],
+                            value:(typeof sheetData[deepItem.key].value === 'string' && sheetData[deepItem.key].value!=='--'  && deepItem.type!=='rate' && (readOnly || sheetData[deepItem.key].readOnly)) ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
+                                
                         }
+                    }else{
+                        return {...deepItem};
                     }
-                    return deepItem;
-                });
-            });
+                 })
+             })
         }
     }
     constructor(props){
@@ -70,17 +73,47 @@ export default class Sheet extends Component{
             loading
         })
     }
-    componentWillReceiveProps(nextProps){
-        if(this.props.updateKey !== nextProps.updateKey){
-            this.fetchSheetData(nextProps.url,nextProps.params)
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
         }
     }
-    fetchSheetData = (url,params) =>{
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props.updateKey !== nextProps.updateKey){
+            nextProps.form.resetFields();
+            this.fetchSheetData(nextProps)
+        }
+    }
+    fetchSheetData = ({url,params,readOnly,composeGrid}) =>{
         this.toggleLoading(true);
         request.get(url,{params})
             .then(({data})=>{
                 if(data.code===200){
-                    let nextData = this.props.composeGrid(this.state.grid,data.data)
+                    let nextData = composeGrid(this.props.grid,data.data,readOnly)
                     this.mounted && this.setState({
                         grid:nextData
                     },()=>{
@@ -91,20 +124,33 @@ export default class Sheet extends Component{
                     message.error(`报表数据获取失败:${data.msg}`,4)
                 }
             }).catch(err=>{
-            this.toggleLoading(false);
-        })
+                message.error(err.message)
+                this.toggleLoading(false);
+            })
     }
+    /*onCellsChanged = (changes) => {
+        const grid = this.state.grid.map(row => [...row])
+        changes.forEach(({cell, row, col, value}) => {
+            //获取修改后的返回的一条的数据
+            if (grid[row] && grid[row][col]) {
+                let newValue = grid[row][col].onChange && grid[row][col].onChange(grid[row][col].value,value,grid,this.props.params)
+                grid[row][col] = {...grid[row][col], value:newValue}
+            }
+        })
+        this.setState({grid})
+    }*/
+
     mounted=true;
     componentWillUnmount(){
         this.mounted=null;
     }
     render(){
-        const { loading, grid,  } = this.state;
-        const {scroll,overflow} = this.props;
+        const { loading, grid} = this.state;
+        const {scroll,overflow,readOnly} = this.props;
         const xBool = !!scroll.x,
             yBool = !!scroll.y;
         return(
-            <div style={{backgroundColor:'#fff',padding:10,overflow:'hidden'}}>
+            <div style={{backgroundColor:'#fff',overflow:'hidden'}}>
                 <div style={{overflowX:xBool ? 'scroll':'visible',overflowY:yBool ? 'scroll':'visible'}}>
                     <Spin spinning={loading}>
                         <div style={{
@@ -113,9 +159,34 @@ export default class Sheet extends Component{
                         }}>
                             <DataSheet
                                 overflow={overflow}
-                                data={grid}
-                                valueRenderer={(cell) => cell ? (cell.value ? cell.value : '') : ''}
+                                data={grid.map((i,row)=>i.map((di,col)=>{
+                                    if(!readOnly && di.key && !di.readOnly){
+                                        //di.type === 'rate'  代表税率，跟其它得金额类型得输入框区别开来
+                                        return {
+                                            ...di,
+                                            readOnly:false,
+                                            component:<React.Fragment>
+                                                <NumericInputCell
+                                                    initialValue={di.type !== 'rate' ? di.value==='0' ? '0.00' : fMoney(di.value) : di.value}
+                                                    getFieldDecorator={this.props.form.getFieldDecorator}
+                                                    fieldName={`map.${di.key}`}
+                                                    editAble={true}
+                                                    componentProps={{
+                                                        valueType:di.type === 'rate'?'int':'float',
+                                                        onFocus:(e)=>di.type !== 'rate' && this.handleFocus(e,`map.${di.key}`),
+                                                        onBlur:(e)=>di.type !== 'rate' && this.handleBlur(e,`map.${di.key}`)
+                                                    }}
+                                                /> 
+                                                </React.Fragment>,
+                                            forceComponent:true,
+                                        }
+                                    }else{
+                                        return {...di, value:(di.type==='rate' &&  di.value && di.value!=='--')?`${di.value}`:di.value,readOnly:true};
+                                    }
+                                }))}
+                                valueRenderer={(cell) => cell ? cell.value : ''}
                                 onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
+                                // onCellsChanged={this.onCellsChanged}
                             />
                         </div>
                     </Spin>

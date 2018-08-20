@@ -45,18 +45,13 @@
 }
 
 .from-search{
-  margin:16px 0;
+  margin:8px 0;
   height:32px;
 
   .ant-form-item{
     margin-bottom: 0;
   }
 }
-
-.set-search-width{
-  float:right;
-}
-
 .ant-menu-submenu-title{
   .avatarImg{
     .anticon{
@@ -67,11 +62,12 @@
 }
 
 .header {
-  height: 64px;
+  height: 48px;
   padding: 0 12px 0 0;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   position: relative;
+  line-height: 48px;
 }
 
 /*:global {
@@ -81,17 +77,40 @@
   }
 }*/
 
+.vtax-custom-trigger {
+  overflow: hidden;
+
+  .ant-layout-sider-children {
+    position: fixed;
+    transition: all .2s;
+  }
+}
+
+
+.vtax-custom-trigger {
+  .ant-layout-sider-children {
+    width:200px;
+  }
+}
+
+.vtax-custom-trigger.ant-layout-sider-collapsed{
+  .ant-layout-sider-children {
+    width: @menu-collapsed-width;
+  }
+}
+
 .logo {
-  height: 64px;
-  line-height: 58px;
+  height: 48px;
+  line-height: 32px;
   vertical-align: top;
   display: inline-block;
-  padding: 0 0 0 24px;
+  padding: 6px 0 0 24px;
   cursor: pointer;
   font-size: 20px;
   img {
     display: inline-block;
     vertical-align: middle;
+    height:42px;
   }
 }
 
@@ -106,7 +125,7 @@
 
 i.trigger {
   font-size: 20px;
-  line-height: 64px;
+  line-height: 48px;
   cursor: pointer;
   transition: all 0.3s, padding 0s;
   padding: 0 24px;
@@ -143,7 +162,7 @@ i.trigger {
   }
   .account {
     .avatar {
-      margin: 20px 8px 20px 0;
+      margin: 9px 8px 11px 0;
       color: @primary-color;
       background: rgba(255, 255, 255, 0.85);
       vertical-align: middle;
@@ -194,7 +213,6 @@ i.trigger {
   }
 }
 
-
 /* 智能手机 (纵向 和 横向) ----------- */
 @media only screen
 and (min-device-width : 320px)
@@ -210,7 +228,7 @@ and (max-device-width : 480px) {
 and (min-width : 321px) {
   /* Styles */
   .set-search-width{
-    width:300px;
+    width:450px;
   }
 }
 
@@ -229,7 +247,7 @@ and (min-device-width : 768px)
 and (max-device-width : 1024px) {
   /* Styles */
   .set-search-width{
-    width:300px;
+    width:450px;
   }
 }
 
@@ -240,7 +258,7 @@ and (max-device-width : 1024px)
 and (orientation : landscape) {
   /* Styles */
   .set-search-width{
-    width:300px;
+    width:450px;
   }
 }
 
@@ -260,7 +278,7 @@ and (orientation : portrait) {
 and (min-width : 1224px) {
   /* Styles */
   .set-search-width{
-    width:500px;
+    width:600px;
   }
 }
 
@@ -269,7 +287,7 @@ and (min-width : 1224px) {
 and (min-width : 1824px) {
   /* Styles */
   .set-search-width{
-    width:500px;
+    width:600px;
   }
 }
 
@@ -279,7 +297,8 @@ only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5) {
   /* Styles */
   .set-search-width{
-    width:300px;
+    width:500px;
   }
 }
+
 

@@ -27,6 +27,7 @@ let Search = (props) => {
                             label: '纳税主体',
                             type: 'taxMain',
                             fieldName: 'mainId',
+                            span:8,
                             componentProps:{
                                 disabled:props.disabled
                             },
@@ -43,6 +44,7 @@ let Search = (props) => {
                             label: `查询月份`,
                             fieldName: 'authMonth',
                             type: 'monthPicker',
+                            span:8,
                             componentProps: {
                                 format: 'YYYY-MM',
                                 disabled:props.disabled
@@ -56,7 +58,7 @@ let Search = (props) => {
                             }
                         }])
                     }
-                    <Col span={7} offset={1} style={{textAlign:'right'}}>
+                    <Col span={8}  style={{textAlign:'right'}}>
                         <FormItem>
                             <Button size='small' type='primary' htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                             <Button size='small' onClick={reset.bind(undefined,props)}>重置</Button>

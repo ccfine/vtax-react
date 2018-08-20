@@ -46,22 +46,8 @@ class TreeTable extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
-
         if(this.props.tableOption.key !== nextProps.tableOption.key){
-            /*this.setState({
-                tableUpDateKey:nextProps.tableOption.key,
-            })*/
             this.handleSubmit()
-        }
-
-        if(nextProps.searchOption){
-            for(let key in nextProps.searchOption.filters){
-                if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
-                    this.setState({
-                        filters:nextProps.searchOption.filters
-                    })
-                }
-            }
         }
     }
     handleSubmit = e => {
@@ -89,7 +75,6 @@ class TreeTable extends Component{
                 this.setState(prevState=>({
                     selectedRowKeys:null,
                     filters:{
-                        ...prevState.filters,
                         ...values
                     }
                 }),()=>{
@@ -109,13 +94,11 @@ class TreeTable extends Component{
     }
     componentDidMount(){
         !this.props.doNotFetchDidMount && this.updateTable()
-        this.props.searchOption && this.props.searchOption.filters && this.setState({
-            filters:this.props.searchOption.filters
-        })
     }
     render() {
         const {tableUpDateKey,filters,expand} = this.state;
-        const {searchOption,cardTableOption,treeCardOption,treeOption,tableOption,children,form,spinning,style} = this.props;
+        const {searchOption,cardTableOption,treeCardOption,treeOption,tableOption,children,form,spinning,style} = this.props,
+        {filters:propsFilter} =searchOption;
         return(
             <Layout style={{background:'transparent',...style}} >
                 <Spin spinning={spinning}>
@@ -124,7 +107,7 @@ class TreeTable extends Component{
                             <Card
                                 className="search-card"
                                 bodyStyle={{
-                                    padding:expand?'12px 16px':'0 16px'
+                                    padding:expand?'6px 16px 0 16px':'0 16px'
                                 }}
                                 /*extra={
                                  <Icon
@@ -142,17 +125,14 @@ class TreeTable extends Component{
                                         <Col style={{width:'100%',textAlign:'right'}}>
                                             {/* onSubmit={this.handleSubmit} htmlType="submit" */}
                                             <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary"
-                                                    onClick={()=>{
-                                                        this.handleSubmit()
-                                                        this.props.refreshTree();
-                                                    }}
+                                                    onClick={this.handleSubmit}
                                             >查询</Button>
                                             <Button size='small' style={{marginTop:5,marginLeft:10}} onClick={()=>{
                                                 form.resetFields()
                                                 this.setState({
                                                     filters : { }
                                                 })
-                                                //this.props.refreshTree();
+                                                // this.props.refreshTree();
                                                 searchOption.onResetFields && searchOption.onResetFields();
 
                                                 //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
@@ -168,11 +148,12 @@ class TreeTable extends Component{
 
                     <Card
                         extra={cardTableOption.extra || null}
-                        style={{marginTop:10}}
+                        style={{marginTop:6}}
+                        bodyStyle={{padding:'6px 8px'}}
                         {...cardTableOption.cardProps}
                     >
                         <Row gutter={24}>
-                            <Col span={6}>
+                            <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[0]) || 6}>
                                 <Card
                                     extra={treeCardOption.extra || null}
                                     //style={{marginTop:10}}
@@ -181,8 +162,9 @@ class TreeTable extends Component{
                                     <TreeList
                                         url={treeOption.url}
                                         showLine={treeOption.showLine}
+                                        isShowCode={treeOption.isShowCode}
                                         updateKey={treeOption.key}
-                                        id={filters.id || 0}
+                                        id={propsFilter.id || 0} // 这里的id作用是什么？？？filter.id修改为propsFilter.id
                                         treeOption={{
                                             isLoadDate:treeOption.isLoadDate || true,
                                             onSuccess:treeOption.onSuccess || undefined,
@@ -191,19 +173,20 @@ class TreeTable extends Component{
                                     />
                                 </Card>
                             </Col>
-                            <Col span={18}>
+                            <Col span={(cardTableOption.rowCol && cardTableOption.rowCol[1]) || 18}>
                                 <Card
                                     extra={tableOption.extra || null}
-                                    //style={{marginTop:10}}
+                                    //style={{marginTop:6}}
                                     {...tableOption.cardProps}
+                                    bodyStyle={{paddingBottom:(tableOption.pagination || tableOption.pageSize)?0:8}}
                                 >
                                     <AsyncTable url={tableOption.url}
                                                 updateKey={tableUpDateKey}
-                                                filters={filters}
+                                                filters={{...filters,...propsFilter}} // 将外部传递的filter和内部表单查询域中的条件分开，最终在这里合并
                                                 tableProps={{
-                                                    rowKey:record=>record.id,
-                                                    pagination:true,
-                                                    pageSize:tableOption.pageSize || 10,
+                                                    rowKey:record=>record[tableOption.rowKey] || record.id,
+                                                    pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
+                                                    pageSize:tableOption.pageSize || 100,
                                                     size:'small',
                                                     onRow:tableOption.onRow || undefined,
                                                     rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
@@ -212,6 +195,7 @@ class TreeTable extends Component{
                                                     onSuccess:tableOption.onSuccess || undefined,
                                                     scroll:tableOption.scroll || undefined,
                                                     onDataChange:tableOption.onDataChange || undefined,
+                                                    onTotalSource:tableOption.onTotalSource || undefined,
                                                     renderFooter:tableOption.renderFooter || undefined
                                                 }} />
                                 </Card>

@@ -7,34 +7,53 @@ import RoomTransactionFilePage from './roomTransactionFile'
 import InvoiceDataMatching from './invoiceDataMatching'
 import UnmatcedData from './unmatchedData'
 import NeedNotMatchInvoices from './needNotMatchInvoices'
+// import { getUrlParam } from 'utils'
 const TabPane = Tabs.TabPane;
-
-export default class SalesInvoiceMatching extends Component{
+class SalesInvoiceMatching extends Component{
     state = {
-        activeKey:'1'
+        activeKey:'1',
+        tabsKey:Date.now()
     }
     onTabChange = activeKey =>{
         this.setState({
             activeKey
         })
     }
+    componentDidMount(){
+        this.setState({activeKey:this.props.activeTab || '1'})
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.activeTab && nextProps.activeTab!==this.props.activeTab){
+            this.setState({activeKey:nextProps.activeTab})
+        }
+    }
+
+    refreshTabs = ()=>{
+        this.setState({
+            tabsKey:Date.now()
+        })
+    }
+
     render(){
-        const {activeKey} = this.state;
+        const {tabsKey,activeKey} = this.state,
+        {declare} = this.props;
         return(
-            <Tabs onChange={this.onTabChange} type="card" activeKey={activeKey}>
+            <Tabs key={tabsKey} onChange={this.onTabChange} type={!!declare?'line':"card"} tabBarStyle={!!declare?{backgroundColor:'#FFF'}:{}} activeKey={activeKey}>
                 <TabPane tab="房间交易档案" key="1">
-                    <RoomTransactionFilePage />
+                    <RoomTransactionFilePage declare={declare}/>
                 </TabPane>
-                <TabPane tab="销项发票数据匹配列表" key="2">
-                    <InvoiceDataMatching />
+                <TabPane tab="销项发票数据匹配" key="2">
+                    <InvoiceDataMatching refreshTabs={this.refreshTabs} declare={declare}/>
                 </TabPane>
                 <TabPane tab="未匹配的发票列表" key="3">
-                    <UnmatcedData />
+                    <UnmatcedData refreshTabs={this.refreshTabs} declare={declare}/>
                 </TabPane>
                 <TabPane tab="无需匹配的发票列表" key="4">
-                    <NeedNotMatchInvoices />
+                    <NeedNotMatchInvoices  refreshTabs={this.refreshTabs} declare={declare}/>
                 </TabPane>
             </Tabs>
         )
     }
 }
+
+export default SalesInvoiceMatching

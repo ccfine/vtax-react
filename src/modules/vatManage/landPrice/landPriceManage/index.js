@@ -1,2 +1,1 @@
-import LandPriceManage from './LandPriceManage.r'
-export default LandPriceManage
+export { default } from './LandPriceManage.r'

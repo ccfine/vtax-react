@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules} from '../../../../../utils'
+import {request,getFields,regRules,setFormat} from '../../../../../utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -29,7 +29,12 @@ class PopModal extends Component{
                     this.setState({
                         initData:data.data
                     })
+                    !Number.isNaN(parseInt(data.data.businessType,10)) && this.fetchTypeList(data.data.businessType)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
     updateRecord = data =>{
@@ -44,6 +49,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`更新失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
 
@@ -60,32 +69,33 @@ class PopModal extends Component{
                     message.error(`新增失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
+    fetchTypeList=(type)=>{
+        request.get(`sys/taxrate/list/commonlyTaxRate/${type}`).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({
+                    commonlyTaxRateList:setFormat(data.data),
+                });
             }
         })
-    }
-    fetchTypeList=()=>{
-        request.get('/sys/taxrate/list/1').then(({data}) => {
+        .catch(err => {
+            message.error(err.message)
+        })
+
+        request.get(`sys/taxrate/list/simpleTaxRate/${type}`).then(({data}) => {
             if (data.code === 200) {
                 this.setState({
-                    commonlyTaxRateList:this.setFormat(data.data),
+                    simpleTaxRateList:setFormat(data.data),
                 });
             }
-        });
-        request.get('/sys/taxrate/list/2').then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    simpleTaxRateList:this.setFormat(data.data),
-                });
-            }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -119,9 +129,6 @@ class PopModal extends Component{
         });
 
     }
-    componentDidMount(){
-        this.fetchTypeList()
-    }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
             /**
@@ -129,7 +136,10 @@ class PopModal extends Component{
              * */
             nextProps.form.resetFields();
             this.setState({
-                initData:{}
+                initData:{},
+                commonlyTaxRateList:[],
+                simpleTaxRateList:[],
+
             })
         }
         if(nextProps.modalConfig.type === 'add'){
@@ -139,7 +149,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             this.fetchReportById(nextProps.modalConfig.id)
         }
@@ -155,7 +165,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -221,35 +231,52 @@ class PopModal extends Component{
                                                 }
                                             ]
                                         },
-                                    }, {
+                                    },{
+                                        label:'业务类型',
+                                        fieldName:'businessType',
+                                        type:'select',
+                                        span:12,
+                                        options:[{value:'0',text:'业务类型-非房地产建筑'},{value:'1',text:'业务类型-房地产建筑'}],
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData['businessType'],
+                                            rules:[
+                                                {
+                                                    required:true,
+                                                    message:'请输入业务类型'
+                                                }
+                                            ]
+                                        },
+                                        componentProps:{
+                                            onChange:value=>{
+                                                this.props.form.setFieldsValue({commonlyTaxRate:undefined,simpleTaxRate:undefined})
+                                                this.fetchTypeList(value)
+                                            }
+                                        }
+                                    },{
                                         label:'一般计税税率',
                                         fieldName:'commonlyTaxRate',
                                         type:'select',
                                         span:'12',
+                                        whetherShowAll:true,
                                         options:this.state.commonlyTaxRateList,
+                                        componentProps:{
+                                            allowClear:true,
+                                        },
                                         fieldDecoratorOptions:{
                                             initialValue:initData['commonlyTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入一般计税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'简易计税税率',
                                         fieldName:'simpleTaxRate',
                                         type:'select',
                                         span:'12',
+                                        whetherShowAll:true,
                                         options:this.state.simpleTaxRateList,
+                                        componentProps:{
+                                            allowClear:true,
+                                        },
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],
-                                            rules:[
-                                                {
-                                                    required:true,
-                                                    message:'请输入简易计税税率'
-                                                }
-                                            ]
                                         },
                                     }, {
                                         label:'填报说明',

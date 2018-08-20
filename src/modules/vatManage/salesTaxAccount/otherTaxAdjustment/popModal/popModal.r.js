@@ -1,8 +1,9 @@
 import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
-import {getFields,request,accMul} from '../../../../../utils'
+import {getFields,request} from 'utils'
 import moment from 'moment'
 import find from 'lodash/find'
+import { BigNumber } from "bignumber.js";
 const formItemLayout = {
     labelCol: {
       xs: { span: 12 },
@@ -13,23 +14,6 @@ const formItemLayout = {
       sm: { span: 16 },
     },
   };
-const setComItem=(initialValue,readonly=false,required=true,message)=>({
-    span:'12',
-    type:'input',
-    formItemStyle:formItemLayout,
-    fieldDecoratorOptions:{
-        initialValue,
-        rules:[
-        {
-            required:required,
-            message:message
-        }
-        ]
-    },
-    componentProps:{
-        disabled:readonly
-    }
-});
 class PopModal extends Component{
     state={
         loading:false,
@@ -49,7 +33,11 @@ class PopModal extends Component{
                         }
                         this.setState({formLoading:false,record:data.data});
                     }
-                });
+                })
+                .catch(err => {
+                    message.error(err.message)
+                    this.setState({formLoading:false});
+                })
             }else{
                 this.props.form.resetFields();
                 this.setState({formLoading:false,record:{},typelist:[]});
@@ -74,15 +62,16 @@ class PopModal extends Component{
             if (data.code === 200) {
                 this.setState({typelist:data.data});
             }
-        });
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
     }
     autoCalTax = (amount,tax)=>{
-        // 计算公式：销售额（不含税）*税率 
-        if(!(amount === undefined ||amount === null || tax === undefined || tax === null)){
-            let res = Number(accMul(amount,tax)/100);
-            if(!isNaN(res)){
-                this.props.form.setFieldsValue({taxAmountWithTax:res.toFixed(2)});
-            }
+        // 计算公式：销售额（不含税）*税率
+        try{
+            this.props.form.setFieldsValue({taxAmountWithTax:(new BigNumber(amount)).multipliedBy(tax).dividedBy(100).toFixed(2)});
+        }catch(err){
         }
     }
     handleOk(){
@@ -100,17 +89,17 @@ class PopModal extends Component{
                 if(values.main){
                     values.mainId = values.main.key;
                     values.mainName = values.main.label;
-                    values.main = undefined;
+                    delete values.main;
                 }
                 // 处理应税项目
                 if(values.taxableProject){
                     values.taxableProjectId = values.taxableProject.key;
                     values.taxableProjectName = values.taxableProject.taxableProjectName;
-                    values.taxableProject = undefined;
+                    delete values.taxableProject;
                 }
 
                 let obj = Object.assign({},this.state.record,values);
-                
+
                 let result ,
                 sucessMsg ;
                 if(this.props.action==="modify"){
@@ -140,19 +129,31 @@ class PopModal extends Component{
             }
         });
     }
+    disabledDate = (value)=>{
+        let {declare} = this.props;
+        if(declare && declare.authMonth){
+            return moment(declare.authMonth).format('YYYY-MM') !== value.format('YYYY-MM');
+        }else{
+            return false;
+        }
+    }
     render(){
         const readonly = (this.props.action ==='look');
         const NotModifyWhenEdit = (this.props.action === 'modify');
         let {record={}} = this.state;
         const form= this.props.form;
+
         let title = "查看";
         if(this.props.action==="add"){
-            title = "添加";
+            title = "新增";
         }else if(this.props.action==="modify"){
-            title="修改"
+            title="编辑"
         }
+
+        const { declare } = this.props;
+        let disabled = !!declare;
         return (
-            <Modal 
+            <Modal
             title={title}
             visible={this.props.visible}
             width='700px'
@@ -161,7 +162,7 @@ class PopModal extends Component{
             onCancel={this.hideSelfModal}
             footer={[
                 <Button key="back" onClick={this.hideSelfModal}>取消</Button>,
-                <Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
+                readonly?null:<Button key="submit" type="primary" loading={this.state.loading} onClick={()=>{this.handleOk()}}>
                   确认
                 </Button>,
               ]}
@@ -173,20 +174,42 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.mainId?{key:record.mainId,label:record.mainName}:undefined,readonly || NotModifyWhenEdit,true,'请选择纳税主体'),
                             label:'纳税主体',
                             fieldName:'main',
                             type:'taxMain',
+                            span:'12',
+                            formItemStyle:formItemLayout,
                             componentProps:{
                                 labelInValue:true,
-                                disabled:readonly || NotModifyWhenEdit
-                            }
+                                disabled:readonly || NotModifyWhenEdit || disabled
+                            },
+                            fieldDecoratorOptions:{
+                                initialValue:record.mainId?{key:record.mainId,label:record.mainName}:(declare?{key:declare.mainId,label:declare.mainName}:undefined),
+                                rules:[
+                                {
+                                    required:true,
+                                    message:'请选择纳税主体'
+                                }
+                                ]
+                            },
                         },
                         {
-                            ...setComItem(moment(record.adjustDate),readonly,true,'请选择调整日期'),
                             label:'调整日期',
                             fieldName:'adjustDate',
                             type:'datePicker',
+                            span:'12',
+                            formItemStyle:formItemLayout,
+                            fieldDecoratorOptions:{
+                                initialValue:(record.adjustDate && moment(record.adjustDate)) || (declare && declare.authMonth && moment(declare.authMonth)),
+                                rules:[{
+                                    required:true,
+                                    message:'请选择调整日期'
+                                }]
+                            },
+                            componentProps:{
+                                disabled:readonly,
+                                disabledDate:this.disabledDate
+                            }
                         }
                     ])
                         }
@@ -194,11 +217,30 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.project,readonly,true,'请选择项目'),
                             label:'项目',
                             fieldName:'project',
                             type:'select',
-                            options:[{text:'涉税调整',value:'1'},{text:'纳税检查调整',value:'2'}]
+                            options:[{text:'涉税调整',value:'1'},{text:'纳税检查调整',value:'2'}],
+                            formItemStyle:formItemLayout,
+                            span:'12',
+                            fieldDecoratorOptions:{
+                                initialValue:record.project,
+                                rules:[
+                                {
+                                    required:true,
+                                    message:'请选择项目'
+                                }
+                                ]
+                            },
+                            componentProps:{
+                                disabled:readonly,
+                                onChange:(data)=>{
+                                    //项目选择纳税检查调整时，调整原因默认为纳税检查调整
+                                    if(data === '2'){
+                                        this.props.form.setFieldsValue({adjustReason:'5'})
+                                    }
+                                }
+                            }
                         },
                         {
                             label:'应税项目',
@@ -233,7 +275,8 @@ class PopModal extends Component{
                     <Row>
                             {
                             getFields(form,[{
-                                ...setComItem(record.businessType,readonly,true,'请选择业务类型'),
+                                span:'12',
+                                formItemStyle:formItemLayout,
                                 label:'业务类型',
                                 fieldName:'businessType',
                                 type:'select',
@@ -248,15 +291,29 @@ class PopModal extends Component{
                                             this.setState({record:{...record, businessType:value, taxRateName:obj.name,taxRate:obj.taxRate}})
                                              // 计算公式：销售额（不含税）*税率
                                              this.autoCalTax(record.amountWithoutTax,obj.taxRate);
-                                        }                                        
+                                        }
                                     }
-                                }
+                                },
+                                fieldDecoratorOptions:{
+                                    initialValue:record.businessType,
+                                    rules:[{
+                                        required:true,
+                                        message:'请选择业务类型'
+                                    }]
+                                },
                             },
                             {
-                                ...setComItem(record.taxRate,true,false),
                                 label:'税率',
                                 fieldName:'taxRate',
-                                type:'numeric'
+                                type:'numeric',
+                                span:'12',
+                                formItemStyle:formItemLayout,
+                                fieldDecoratorOptions:{
+                                    initialValue:record.taxRate,
+                                },
+                                componentProps:{
+                                    disabled:true
+                                }
                             }
                         ])
                             }
@@ -264,7 +321,8 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.amountWithoutTax,readonly,true,'请输入销售额（不含税）'),
+                            span:'12',
+                            formItemStyle:formItemLayout,
                             label:'销售额（不含税）',
                             fieldName:'amountWithoutTax',
                             type:'numeric',
@@ -273,20 +331,35 @@ class PopModal extends Component{
                                 allowNegative:true,
                                 onChange:(value)=>{
                                     this.setState({record:{...record, amountWithoutTax:value}});
-                                    // 计算公式：销售额（不含税）*税率 
-                                    this.autoCalTax(value,record.taxRate);                                      
+                                    // 计算公式：销售额（不含税）*税率
+                                    this.autoCalTax(value,record.taxRate);
                                 }
-                            }
+                            },
+                            fieldDecoratorOptions:{
+                                initialValue:record.amountWithoutTax,
+                                rules:[{
+                                    required:true,
+                                    message:'请输入销售额（不含税）',
+                                }]
+                            },
                         },
                         {
-                            ...setComItem(record.taxAmountWithTax,readonly,true,'请输入销项（应纳）税额'),
+                            span:'12',
+                            formItemStyle:formItemLayout,
                             label:'销项（应纳）税额',
                             fieldName:'taxAmountWithTax',
                             type:'numeric',
                             componentProps:{
                                 disabled:readonly,
                                 allowNegative:true
-                            }
+                            },
+                            fieldDecoratorOptions:{
+                                initialValue:record.taxAmountWithTax,
+                                rules:[{
+                                    required:true,
+                                    message:'请输入销项（应纳）税额',
+                                }]
+                            },
                         }
                     ])
                         }
@@ -294,7 +367,6 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.deductionAmount,readonly,false),
                             formItemStyle:{
                                 labelCol: {
                                   xs: { span: 12 },
@@ -312,7 +384,10 @@ class PopModal extends Component{
                             componentProps:{
                                 disabled:readonly,
                                 allowNegative:true,
-                            }
+                            },
+                            fieldDecoratorOptions:{
+                                initialValue:record.deductionAmount,
+                            },
                         }
                     ])
                         }
@@ -320,19 +395,42 @@ class PopModal extends Component{
                     <Row>
                     {
                         getFields(form,[{
-                            ...setComItem(record.adjustReason,readonly,true,'请选择调整原因'),
+                            span:16,
+                            formItemStyle:{
+                                labelCol: {
+                                  xs: { span: 12 },
+                                  sm: { span: 6 },
+                                },
+                                wrapperCol: {
+                                  xs: { span: 12 },
+                                  sm: { span: 18 },
+                                },
+                              },
                             label:'调整原因',
                             fieldName:'adjustReason',
                             type:'select',
-                            options:[{text:'尾款调整',value:'1'},{text:'非地产业务（租金，水电费等）相关调整',value:'2'},{text:'未开票收入差异调整',value:'3'}]
-                            }
+                            options:[{text:'尾款调整',value:'1'},
+                            {text:'非地产业务（租金，水电费等）相关调整',value:'2'},
+                            {text:'未开票收入差异调整',value:'3'},
+                            {text:'其他涉税调整',value:'4'},
+                            {text:'纳税检查调整',value:'5'}],
+                            fieldDecoratorOptions:{
+                                initialValue:record.adjustReason,
+                                rules:[{
+                                    required:true,
+                                    message:'请选择调整原因'
+                                }]
+                            },
+                            componentProps:{
+                                disabled:readonly
+                            }    
+                        }
                         ])
                     }
                     </Row>
                     <Row>
                         {
                         getFields(form,[{
-                            ...setComItem(record.adjustDescription,readonly,false),
                             label:'具体调整说明',
                             fieldName:'adjustDescription',
                             type:'textArea',
@@ -347,6 +445,12 @@ class PopModal extends Component{
                                   sm: { span: 18 },
                                 },
                               },
+                              fieldDecoratorOptions:{
+                                initialValue:record.adjustDescription,
+                            },
+                            componentProps:{
+                                disabled:readonly
+                            }    
                             }
                         ])
                         }

@@ -1,12 +1,13 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/5 15:43
- * description  : 
+ * description  :
  */
 @maxWidth:1240px;
+@minWidth:1024px;
 #login-container{
   background: #fff; //f0f2f5
-  position:fixed;
+  // position:fixed;
   width: 100%;
   min-height: 100%;
   background-size: 100%;
@@ -17,38 +18,52 @@
     padding:0 20px;
     border-bottom:3px solid #4F88B3;
     background-color:#fff;
-    >.login-header-content{
-      max-width: @maxWidth;
-      line-height: 140px;
-      margin:0 auto;
-      overflow: hidden;
-      font-size:24px;
-      color:#426e97;
-      >img{
-        margin-top:10px;
-        float: left;
-      }
-      >span{
-        float:left;
-        line-height:31px;
-        font-weight: 700;
-        margin-top:22px;
-      }
-      >p{
-        float: right;
-        font-size:30px;
-        color:#108ee9;
-        line-height:140px;
-      }
-      @media(max-width: 1200px){
-        >p{
-          float: right;
-          font-size:20px;
-          color:#108ee9;
-          line-height:140px;
-        }
+
+
+    @media (min-width:1200px){//>=1200px的设备
+      .login-header-content {
+        max-width:  @maxWidth;
+        line-height: 140px;
+        margin: 0 auto;
+        overflow: hidden;
+        font-size: 24px;
+        color: #426e97;
       }
     }
+    @media (max-width: 1024px){//<=1024px
+      .login-header-content {
+        max-width:  @minWidth;
+        line-height: 140px;
+        margin: 0 auto;
+        overflow: hidden;
+        font-size: 24px;
+        color: #426e97;
+      }
+    }
+      img {
+        margin-top: 10px;
+        float: left;
+      }
+      span {
+        float: left;
+        line-height: 31px;
+        font-weight: 700;
+        margin-top: 22px;
+      }
+      p {
+        float: right;
+        font-size: 30px;
+        color: #108ee9;
+        line-height: 140px;
+      }
+      @media (max-width: 1200px) {
+        p {
+          float: right;
+          font-size: 20px;
+          color: #108ee9;
+          line-height: 140px;
+        }
+      }
   }
   .login-footer{
     background-color:#fff;
@@ -62,10 +77,20 @@
     margin:auto;
     background-image: url('./images/bg.png');
     overflow: hidden;
-    >.ant-row{
-      width:@maxWidth;
-      margin:0 auto;
-      padding:40px 20px 50px 20px;
+
+    @media (min-width:1200px){//>=1200px的设备
+      >.ant-row{
+        width:@maxWidth;
+        margin:0 auto;
+        padding:40px 20px 50px 20px;
+      }
+    }
+    @media (max-width: 1024px){//<=1024px
+      >.ant-row{
+        width:@minWidth;
+        margin:0 auto;
+        padding:40px 20px 50px 20px;
+      }
     }
   }
   .loginForm{
@@ -115,4 +140,10 @@
     bottom:10px;left:0;
     /*margin-top:15px;*/
   }
+}
+
+// 消除Chrome记住密码输入框黄色背景的问题
+input:-webkit-autofill ,input:focus:-webkit-autofill{
+-webkit-box-shadow: 0 0 0px 1000px white inset;
+border: 1px solid #CCC!important;
 }

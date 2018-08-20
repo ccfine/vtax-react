@@ -2,20 +2,30 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React,{Component} from 'react';
-import {Button,Modal,Row,Col,message,Card,Input} from 'antd';
-import {request,fMoney} from '../../../../../../utils'
+import {Button,Modal,Row,Col,message,Card,Input,Icon} from 'antd';
+import {request,fMoney} from 'utils'
 import {SearchTable} from 'compoments'
-const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
+
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
+const searchFields = selectedData=> (getFieldValue)=> {
     return [
         {
             label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
-                doNotFetchDidMount:true,
+                doNotFetchDidMount:false,
                 fetchAble:selectedData['mainId'] || false,
                 url:`/project/list/${selectedData['mainId']}`,
             }
@@ -25,6 +35,7 @@ const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
             fieldName:'stagesId',
             type:'asyncSelect',
             span:6,
+            formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
@@ -37,31 +48,43 @@ const searchFields = selectedData=> (getFieldValue,setFieldsValue)=> {
             label:'楼栋名称',
             fieldName:'buildingName',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
         },
         {
             label:'单元',
             fieldName:'element',
             type:'element',
-            span:6
+            span:6,
+            formItemStyle,
         },
         {
             label:'房号',
             fieldName:'roomNumber',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
+        },
+        {
+            label:'路址',
+            fieldName:'htRoomName',
+            type:'input',
+            span:6,
+            formItemStyle,
         },
         {
             label:'客户名称',
             fieldName:'customerName',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
         },
         {
             label:'纳税识别号',
             fieldName:'taxIdentificationCode',
             type:'input',
-            span:6
+            span:6,
+            formItemStyle,
         }
     ]
 }
@@ -70,10 +93,10 @@ const getColumns = context => [
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:'60px',
+        width:'50px',
         className:'text-center',
         render: (text, record) => (
-            <span style={{
+            <span title='匹配' style={{
                 color:'#1890ff',
                 cursor:'pointer'
             }} onClick={()=>{
@@ -91,7 +114,7 @@ const getColumns = context => [
                     },
                 });
             }}>
-                匹配
+                <Icon type="check-circle-o" />
             </span>
         )
     },
@@ -118,6 +141,10 @@ const getColumns = context => [
     {
         title:'房间编码',
         dataIndex:'roomCode'
+    },
+    {
+        title:'路址',
+        dataIndex:'htRoomName',
     },
     {
         title:'成交总价',
@@ -174,12 +201,13 @@ class ManualMatchRoomModal extends Component{
                 }
             })
             .catch(err=>{
+                message.error(err.message)
                 this.toggleMatching(false)
             })
     }
     putDataWithoutMatch = ids =>{
         this.toggleMatching(true)
-        request.put(`/output/invoice/marry/append/determine`,[ids])
+        request.put(`/output/invoice/marry/manual/add`,[ids])
             .then(({data})=>{
                 this.toggleMatching(false)
                 if(data.code===200){
@@ -191,6 +219,7 @@ class ManualMatchRoomModal extends Component{
                 }
             })
             .catch(err=>{
+                message.error(err.message)
                 this.toggleMatching(false)
             })
     }
@@ -232,10 +261,10 @@ class ManualMatchRoomModal extends Component{
             children.push(
                 <Col key={i} span={6}>
                     <Row style={{height:35,lineHeight:'35px'}}>
-                        <Col span={6} style={{textAlign:'right'}}>
-                            {item.label}:
+                        <Col span={8} style={{textAlign:'right'}}>
+                            {item.label}：
                         </Col>
-                        <Col span={18}>
+                        <Col span={16}>
                             <Input value={item.initialValue} disabled/>
                         </Col>
                     </Row>
@@ -258,10 +287,13 @@ class ManualMatchRoomModal extends Component{
                 width={1000}
                 destroyOnClose={true}
                 bodyStyle={{
-                    backgroundColor:'#fafafa'
+                    backgroundColor:'#fafafa',
+                    maxHeight:420,
+                    overflowY:'auto',
                 }}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    top:'5%',
                 }}
                 visible={props.visible}
                 footer={
@@ -310,9 +342,9 @@ class ManualMatchRoomModal extends Component{
                         }
                     }}
                     tableOption={{
-                        pageSize:10,
+                        pageSize:100,
                         columns:getColumns(this),
-                        url:'/output/invoice/marry/manual/list',
+                        url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}`,
                     }}
                 >
                 </SearchTable>

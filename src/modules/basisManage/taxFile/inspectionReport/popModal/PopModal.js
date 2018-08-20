@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, Button, message, Spin, Row, Divider } from 'antd'
-import { getFields, request } from 'utils'
+import { getFields, request,composeBotton } from 'utils'
 import {ButtonWithFileUploadModal} from 'compoments'
 import moment from 'moment'
 const formItemLayout = {
@@ -29,6 +29,10 @@ class PopModal extends Component {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data });
                     }
+                })
+                .catch(err => {
+                    this.setState({ formLoading: false });
+                    message.error(err.message)
                 });
             } else {
                 this.props.form.resetFields();
@@ -103,10 +107,10 @@ class PopModal extends Component {
                     sucessMsg;
                 if (this.props.action === "modify") {
                     result = request.put('/report/update', obj);
-                    sucessMsg = '修改成功';
+                    sucessMsg = '编辑成功';
                 } else if (this.props.action === "add") {
                     result = request.post('/report/save', obj);
-                    sucessMsg = '添加成功';
+                    sucessMsg = '增加成功';
                 }
 
                 this.setState({ loading: true });
@@ -134,52 +138,73 @@ class PopModal extends Component {
         const form = this.props.form;
         let title = "查看";
         if (this.props.action === "add") {
-            title = "添加";
+            title = "新增";
         } else if (this.props.action === "modify") {
-            title = "修改"
+            title = "编辑"
         }
         let buttons = [];
 
         record && record.id
-        && buttons.push(<ButtonWithFileUploadModal
-            title="附件信息"
-            style={{
-                marginRight:10
-            }}
-            key="fileInfo" 
-            readOnly = {readonly}
-            size='default'
-            id={record.id}
-            deleteUrl={`/report/delete/file/${record.id}`}
-            uploadUrl={`/report/upload/${record.id}`}
-        />)
+        && buttons.push(composeBotton([{
+            type:'self',
+            userPermissions:['1091005'],
+            component:(
+                <ButtonWithFileUploadModal
+                            title="附件"
+                            style={{
+                                marginRight:10
+                            }}
+                            readOnly={readonly}
+                            size='default'
+                            id={record.id}
+                            deleteUrl={`/report/delete/file/${record.id}`}
+                            uploadUrl={`/report/upload/${record.id}`}
+                        />
+            )
+        }]))
 
-        this.props.action !== "look" 
-        && buttons.push(<Button 
-            key="submit" 
-            type="primary" 
-            loading={this.state.loading} 
+        this.props.action !== "look"
+        && buttons.push(<Button
+            key="submit"
+            type="primary"
+            loading={this.state.loading}
             onClick={() => { this.handleOk() }}>保存</Button>)
-        this.props.action === "modify" 
-        && buttons.push(<Button 
-            type="danger" 
-            key="delete" 
-            onClick={this.showConfirm}>删除</Button>)
-        this.props.action !== "look" 
-            && buttons.push(<Button 
-            key="back" 
+        this.props.action !== "look"
+        && buttons.push(<Button
+            key="back"
             onClick={this.hideSelfModal}>取消</Button>)
-
-        this.props.action === "look" 
-            && buttons.push(<Button 
-            key="close" 
+        this.props.action === "modify"
+        && buttons.push(composeBotton([{
+            type:'delete',
+            btnType:'danger',
+            size:'default',
+            text:'删除',
+            userPermissions:['1171008'],
+            onClick:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>this.showConfirm(),
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]))
+        this.props.action === "look"
+        && buttons.push(<Button
+            key="close"
             onClick={this.hideSelfModal}>关闭</Button>)
         return (
             <Modal
                 title={title}
                 visible={this.props.visible}
                 width='900px'
-                bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
+                style={{top:'5%'}}
+                bodyStyle={{ maxHeight: 450, overflow: "auto" }}
                 onCancel={this.hideSelfModal}
                 footer={buttons}
                 maskClosable={false}

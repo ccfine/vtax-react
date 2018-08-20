@@ -156,9 +156,12 @@ form .ant-pagination .ant-select{
 
 /*amount table class*/
 .footer-total{
-  padding-top: 10px;
   zoom: 1;
   line-height: 25px;
+  color: #FF9700;
+
+  max-width: 800px;
+
 }
 .footer-total-meta {
   zoom: 1;
@@ -171,8 +174,15 @@ form .ant-pagination .ant-select{
 }
 .footer-total-meta-detail {
   overflow: hidden;
-  padding-bottom: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
 }
+
+.footer-total-meta-detail .footer-amount{
+  flex: 0 0 auto;
+}
+
 .footer-total-meta-detail .amount-code{
   margin: 0 1px;
   background: #f2f4f5;
@@ -184,6 +194,27 @@ form .ant-pagination .ant-select{
   line-height: 20px;
 }
 
+/* 表格右上方的总计样式 */
+.popover-total-container{
+  margin-left:15px;
+  color:#FF9700;
+  max-width:300px;
+  display: inline-block;
+  vertical-align:middle;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.popover-total-container>*>.anticon{
+  font-size: 16px;
+  color: #1890ff;
+  margin-right:5px;
+  vertical-align:middle;
+}
+
+.popover-total-container .total-amount{
+  vertical-align:middle;
+  margin-right: 15px;
+}
 
 /*data grid*/
 table.data-grid{
@@ -202,6 +233,12 @@ table.data-grid{
 .ant-form-item-label, .ant-form-item-control{
   height: 48px;
 }
+
+ /* 表格收索中距离缩小 */
+/* .table-search-form .ant-form-item-label,.table-search-form .ant-form-item-control{
+  height: auto;
+} */
+
 .fix-ie10-formItem-fileUpload .ant-form-item-label, .fix-ie10-formItem-fileUpload .ant-form-item-control {
   min-height: 48px;
   margin-top: 0;
@@ -222,4 +259,86 @@ table.data-grid{
   display: block;
   height: 30px;
   line-height: 30px;
+}
+
+/* Table中操作变成图标 */
+.table-operate .anticon{
+  margin:0 3px;
+  font-size: 12px;
+}
+
+/* switch 为small时文字太大  不协调*/
+.ant-switch-small.ant-switch .ant-switch-inner{
+  font-size: 10px;
+}
+
+/* 设置table 表格有tab标签页的情况 */
+.tab-breadcrumb{
+  color:rgba(0,0,0,.45)
+}
+
+/* 纳税申报表输入框高度设置*/
+.data-grid-container .data-grid .cell > input{
+  height:20px;
+}
+
+/*组织树选择定位专用*/
+.certain-category-search-dropdown .ant-select-dropdown-menu .ant-select-dropdown-menu-item {
+  padding:0;
+}
+.certain-category-search-dropdown .ant-select-dropdown-menu .ant-select-dropdown-menu-item>a{
+  padding:5px 12px;
+  display: block;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.word-wrap{
+  word-break:break-all;word-wrap:break-word
+}
+
+/* 设置火狐的滚动条背景基本样式 */
+@-moz-document url-prefix() {
+  .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+    -moz-appearance: none !important;
+    background-color: transparent !important; /* 滚动条背景透明 */
+    background-image: none !important; /* 滚动条背景图案不显示 */
+    /*position: relative !important;*/ /* 更改滚动条的定位方式为相对 */
+    overflow: hidden !important;
+    z-index: 999999999 !important; /* 把滚动条提到Z轴最上层 */
+    height: 41px;
+    margin-right: 17px;
+  }
+
+  .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header th{
+    height: 24px;
+  }
+}
+
+/*申报办理tabs*/
+.declare-card-container.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-nav-container{
+  height: 34px;
+}
+.declare-card-container.ant-tabs-editable-card>.ant-tabs-bar {
+  border: 0;
+  padding-top:10px;
+  padding-left:10px;
+}
+.declare-card-container.ant-tabs-editable-card > .ant-tabs-bar .ant-tabs-nav{
+  /* padding-top:10px; */
+  display: flex;
+}
+.declare-card-container.ant-tabs-editable-card > .ant-tabs-bar .ant-tabs-tab {
+  border: 0;
+  line-height: 34px;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  background: #F8F8F8;
+}
+.declare-card-container.ant-tabs-editable-card > .ant-tabs-bar .ant-tabs-tab:nth-child(1){
+  background: #FFF;
+}
+
+.declare-card-container.ant-tabs-editable-card > .ant-tabs-bar .ant-tabs-tab-active {
+  border: 0;
+  padding-bottom: 0;
 }

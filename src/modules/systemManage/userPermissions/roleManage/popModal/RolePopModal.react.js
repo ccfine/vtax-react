@@ -1,434 +1,194 @@
 /**
  * author       : liuliyuan
- * createTime   : 2018/4/20
+ * createTime   : 2018/1/26 18:10
  * description  :
  */
 import React,{Component} from 'react';
-import {Form,Checkbox,Row,Button,Col,message,Modal,Input,Switch} from 'antd'
-import {request} from 'utils'
-const FormItem = Form.Item;
-const dataList ={
-    "code" : 200,
-    "msg" : "OK",
-    "data" : [ {
-        "code" : "basicInfo",
-        "name" : "基础管理",
-        "description" : "",
-        "permissions" : [ {
-            "code" : "aubjectOfTaxPayment",
-            "name" : "纳税主体",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        }, {
-            "code" : "taxIncentives",
-            "name" : "税收优惠",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        }, {
-            "code" : "declareParameter",
-            "name" : "申报参数",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        } ,
-            {
-                "code" : "declareFile",
-                "name" : "申报档案",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "inspectionReport",
-                "name" : "稽查报告",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "filingMaterial",
-                "name" : "备案资料",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "licenseManage",
-                "name" : "证照管理",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
-            {
-                "code" : "otherFiles",
-                "name" : "其他档案",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },
+import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
+import {request,getFields,regRules} from 'utils'
 
-        ]
-    }, {
-        "code" : "vatManage",
-        "name" : "增值税管理",
-        "description" : "",
-        "permissions" : [ {
-            "code" : "salesManag",
-            "name" : "销项管理",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        },{
-            "code" : "entryManag",
-            "name" : "进项管理",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        },{
-            "code" : "landPrice",
-            "name" : "土地价款",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        },{
-            "code" : "otherAccount",
-            "name" : "其他台账",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        }
-        ]
-    }, {
-        "code" : "taxDeclare",
-        "name" : "纳税申报",
-        "description" : "",
-        "permissions" : [ {
-            "code" : "createADeclare",
-            "name" : "创建申报",
-            "description" : "",
-            "grantedByCurrentRole" : 0
-        },{
-            "code" : "searchDeclare",
-            "name" : "查询申报",
-            "description" : "",
-            "grantedByCurrentRole" : 1
-        } ]
-    },
-        {
-            "code" : "userManage",
-            "name" : "用户管理",
-            "description" : "",
-            "permissions" : [ {
-                "code" : "lookUserInfo",
-                "name" : "查看用户信息",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },{
-                "code" : "createUser",
-                "name" : "新增用户",
-                "description" : "",
-                "grantedByCurrentRole" : 0
-            },
-                {
-                    "code" : "modifiUserInfo",
-                    "name" : "修改用户信息",
-                    "description" : "",
-                    "grantedByCurrentRole" : 1
-                }, ]
-        },{
-            "code" : "roleManage",
-            "name" : "角色管理",
-            "description" : "",
-            "permissions" : [ {
-                "code" : "lookRolePermission",
-                "name" : "查看角色权限",
-                "description" : "",
-                "grantedByCurrentRole" : 1
-            },{
-                "code" : "createRole",
-                "name" : "添加角色",
-                "description" : "",
-                "grantedByCurrentRole" : 0
-            },
-                {
-                    "code" : "modifiRolePermission",
-                    "name" : "修改角色权限",
-                    "description" : "",
-                    "grantedByCurrentRole" : 1
-                }, ]
-        },
-
-    ]
-}
-class RoleModal extends Component{
+class PopModal extends Component{
+    static defaultProps={
+        type:'edit',
+        visible:true
+    }
     state={
-        editAble:true,
-        submitLoading:false,
-        showEditButton:false,
-        data:[],
-        visible:false
+        initData:{},
+        loaded:false,
     }
-    handleCancel = (e) => {
-        this.setState({
-            visible: false,
-        });
-    }
-    handleSubmit = (e) => {
+
+    toggleLoaded = loaded => this.setState({loaded})
+
+    handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
+
             if (!err) {
-                console.log(values)
-
-                /*this.setState({
-                    submitLoading:true
-                })
-                let permissionCodes = [];
-                for(let key in values){
-                    if(values[key] && key !=='remark' && key !== 'roleName' && key !== 'enabled'){
-                        permissionCodes.push(key)
+                const type = this.props.modalConfig.type;
+                this.toggleLoaded(false)
+                if(type==='edit'){
+                    if(this.props.id){
+                        values['id'] = this.props.id;
                     }
+                    this.updateRecord(values)
+                }else if(type==='add'){
+                    this.createRecord(values)
                 }
-                let params = {
-                    permissionCodes,
-                    remark:values.remark,
-                    roleName:values.roleName,
-                    enabled:values.enabled ? 1 : 0
-                }
-                if(this.props.type==='edit'){
-
-                    request.put(`/roles/${this.props.roleId}`,params)
-                        .then(({data})=>{
-                            this.setState({
-                                submitLoading:false
-                            })
-                            if(data.code===200){
-                                if(this.mounted){
-                                    message.success('角色编辑成功!');
-                                    this.props.setData({
-                                        roleName:params.roleName,
-                                        enabled:params.enabled,
-                                        remark:params.remark
-                                    });
-                                    this.setState({
-                                        visible:false
-                                    })
-                                    this.props.refresh()
-                                }
-
-                            }else{
-                                message.error(data.msg)
-                            }
-                        })
-                }else{
-                    request.post('/roles',params)
-                        .then(({data})=>{
-                            this.setState({
-                                submitLoading:false
-                            })
-                            if(data.code===200){
-                                if(this.mounted){
-                                    message.success('角色添加成功!');
-                                    this.setState({
-                                        visible:false
-                                    })
-                                    this.props.refresh()
-                                }
-
-                            }else{
-                                message.error(data.msg)
-                            }
-                        })
-                }*/
-
             }
         });
+
     }
-    fetchList(){
-        let url = '/permissions'
-        if(this.props.type==='edit'){
-            url = `/roles/${this.props.roleId}/permissions`
-        }
-        request.get(url)
+    updateRecord = data =>{
+        request.put('/sysRole/update',data)
             .then(({data})=>{
+                this.toggleLoaded(true)
                 if(data.code===200){
-                    this.mounted && this.setState({
-                        data: dataList.data //data.data ||
-                    })
+                    const props = this.props;
+                    message.success('更新成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
                 }else{
-                    message.error(data.msg)
+                    message.error(`更新失败:${data.msg}`)
                 }
             })
-    }
-    componentDidMount(){
-        this.fetchList()
-    }
-    onCheckAllChange = item => e => {
-        const {setFieldsValue} = this.props.form;
-        let newItems = [...item.permissions]
-        if (e.target.checked) {
-            newItems.forEach(item => {
-                setFieldsValue({
-                    [item.code]:true
-                })
-                return item;
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
-        } else {
-            newItems.forEach(item => {
-                setFieldsValue({
-                    [item.code]:false
-                })
-                return item;
-            })
-        }
-    }
-    checkAllChecked= (allCode, code) => e =>{
-        const data = this.state.data;
-        const {setFieldsValue,getFieldValue} = this.props.form;
-        setFieldsValue({
-            [code]:e.target.checked
-        })
-        for(let i = 0 ;i<data.length;i++){
-            if(data[i].code === allCode){
-                let arr = [];
-                data[i].permissions.forEach(item=>{
-                    arr.push( getFieldValue(item.code) )
-                })
-                setFieldsValue({
-                    [allCode]: arr.filter(item=>!item).length === 0
-                })
-                break;
-            }
-        }
-
     }
 
-    mounted=true;
-    componentWillUnmount(){
-        this.mounted=null
+    createRecord = data =>{
+        request.post('/sysRole/add',data)
+            .then(({data})=>{
+                this.toggleLoaded(true)
+                if(data.code===200){
+                    const props = this.props;
+                    message.success('新增成功!');
+                    props.toggleModalVisible(false);
+                    props.refreshTable()
+                }else{
+                    message.error(`新增失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
+    }
+
+    componentWillReceiveProps(nextProps){
+
+        if(!nextProps.visible){
+            /**
+             * 关闭的时候清空表单
+             * */
+            nextProps.form.resetFields();
+            this.setState({
+                initData:{}
+            })
+        }
+        if(nextProps.modalConfig.type === 'add'){
+            this.setState({
+                loaded:true
+            })
+        }
+        if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
+            this.setState({
+                loaded:true,
+                initData:nextProps.modalConfig.record
+            })
+        }
     }
     render(){
-        const { getFieldDecorator,resetFields} = this.props.form;
-        const {data} = this.state;
+        const {toggleModalVisible,modalConfig,visible,form} = this.props;
+        const {loaded,initData} = this.state;
+
+        let title='';
+        const type = modalConfig.type;
+        switch (type){
+            case 'add':
+                title = '新增';
+                break;
+            case 'edit':
+                title = '编辑';
+                break;
+            default :
+            //no default
+        }
+
+        const formItemStyle={
+            labelCol:{
+                span:4
+            },
+            wrapperCol:{
+                span:20
+            }
+        }
         return(
-            <div style={{display:'inline-block',marginLeft:15}}>
-                <Button type="primary" style={{marginBottom:15,width:'100%'}} onClick={()=>{
-                    resetFields();
-                    this.setState({
-                        visible:true
-                    })
-                }}>{this.props.buttonTxt}</Button>
-                <Modal title={this.props.title} onCancel={this.handleCancel} width={800} visible={this.state.visible} confirmLoading={this.state.submitLoading} onOk={this.handleSubmit}>
-                    <Form
-                        layout="inline" onSubmit={this.handleSubmit}>
+            <Modal
+                maskClosable={false}
+                destroyOnClose={true}
+                onCancel={()=>toggleModalVisible(false)}
+                width={600}
+                style={{
+                    maxWidth:'90%'
+                }}
+                visible={visible}
+                footer={
+                    <Row>
+                        <Col span={12}></Col>
+                        <Col span={12}>
+                            <Button onClick={()=>toggleModalVisible(false)}>取消</Button>
+                            <Button type="primary" loading={!loaded} onClick={this.handleSubmit}>确定</Button>
+                        </Col>
+                    </Row>
+                }
+                title={title}>
+                <Spin spinning={!loaded}>
+                    <Form style={{height:'200px'}}>
                         <Row>
-                            <Col span={8}>
-                                <FormItem>
+                            {
+                                getFields(form,[
                                     {
-                                        getFieldDecorator('roleName',{
-                                            initialValue:this.props.type==='edit'? this.props.data.roleName : '',
+                                        label:'角色名称',
+                                        fieldName:'roleName',
+                                        type:'input',
+                                        span:24,
+                                        formItemStyle,
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData.roleName,
                                             rules:[
+                                                regRules.trim,
                                                 {
                                                     required:true,
                                                     message:'请输入角色名称'
-                                                },{
-                                                    pattern:/^[^ ]+$/,message:'不能包含空格'
                                                 }
                                             ]
-                                        })(
-                                            <Input placeholder="请输入角色名称" />
-                                        )
+                                        },
+                                    }, {
+                                        label:'备注',
+                                        fieldName:'remark',
+                                        type:'textArea',
+                                        span:24,
+                                        formItemStyle,
+                                        fieldDecoratorOptions:{
+                                            initialValue:initData.remark,
+                                        },
+                                        componentProps:{
+                                            autosize:{
+                                                minRows:5
+                                            }
+                                        }
                                     }
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-                        <div style={{
-                            width:'100%',
-                            backgroundColor:'#F8F8F8',
-                            padding:'20px 0',
-                            margin:'20px 0'
-                        }}>
-                            {
-                                data.map((item,i)=>{
-                                    return (
-                                        <Row key={i}>
-                                            <Col style={{
-                                                textAlign:'right',
-                                                lineHeight:'32px',
-                                                paddingRight:15
-                                            }} span={3}>
-                                                {item.name}:
-                                            </Col>
-                                            <Col span={21}>
-                                                <FormItem>
-                                                    {
-                                                        getFieldDecorator(item.code,{
-                                                            initialValue:item.permissions.filter(item=>!item.grantedByCurrentRole).length === 0,
-                                                            valuePropName: 'checked',
-                                                            onChange:this.onCheckAllChange(item)
-                                                        })(
-                                                            <Checkbox>全选</Checkbox>
-                                                        )
-                                                    }
-
-                                                </FormItem>
-                                                {
-                                                    item.permissions.map((fieldItem,j)=>{
-                                                        return(
-                                                            <FormItem key={j}>
-                                                                {
-                                                                    getFieldDecorator(fieldItem.code,{
-                                                                        initialValue:parseInt(fieldItem.grantedByCurrentRole,0)===1,
-                                                                        valuePropName: 'checked',
-                                                                        onChange:this.checkAllChecked(item.code, fieldItem.code)
-                                                                    })(
-                                                                        <Checkbox disabled={!this.state.editAble}>{fieldItem.name}</Checkbox>
-                                                                    )
-                                                                }
-                                                            </FormItem>
-                                                        )
-                                                    })
-                                                }
-                                            </Col>
-                                        </Row>
-                                    )
-                                })
+                                ])
                             }
-                            <Row>
-                            <span style={{
-                                display:'inline-block',
-                                width:100,
-                                lineHeight:'32px',
-                                textAlign:'right',
-                                paddingRight:15
-                            }}>状态:</span>
-                                {
-                                    getFieldDecorator('enabled', {
-                                        initialValue:this.props.type==='edit'? parseInt(this.props.data.enabled,0)===1 : true,
-                                        valuePropName: 'checked' ,
-                                    })(
-                                        <Switch checkedChildren="启用" unCheckedChildren="禁用" />
-                                    )}
-                            </Row>
-                            <Row style={{marginTop:10}}>
-                            <span style={{
-                                display:'inline-block',
-                                width:100,
-                                lineHeight:'32px',
-                                textAlign:'right',
-                                paddingRight:15
-                            }}>备注:</span>
-                                <FormItem>
-                                    {
-                                        getFieldDecorator('remark', {
-                                        })(
-                                            <Input.TextArea style={{width:500}} autosize={
-                                                {
-                                                    minRows:3
-                                                }
-                                            } placeholder="请输入备注" />
-                                        )}
-                                </FormItem>
-
-                            </Row>
-
-                        </div>
+                        </Row>
                     </Form>
-                </Modal>
-            </div>
+                </Spin>
 
+            </Modal>
         )
     }
 }
 
-export default  Form.create()(RoleModal)
+export default Form.create()(PopModal)

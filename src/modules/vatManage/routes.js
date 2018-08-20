@@ -18,28 +18,33 @@ import LandPrice_Routes from './landPrice/routes'
 /*import SalesTax_Routes from './salesTaxAccount/routes'
 import EntryTax_Routes from './entryTaxAccount/routes'*/
 import OtherAccount_Routes from './otherAccount/routes'
+import { getChildOptions } from 'config/routingAuthority.config'
 
 
 const PATH = '/web/vatManage';
+
 const VatManage_Routes = [
             {
                 path:`${PATH}/salesManag`,
                 component:wrapPage('销项管理',SalesManag),
                 name:'销项管理',
                 exact:true,
-                children:SalesManag_Routes
+                children:SalesManag_Routes,
+                authorityInfo:getChildOptions('vatManage','salesManag'),
             },{
                 path:`${PATH}/entryManag`,
                 component:wrapPage('进项管理',EntryManag),
                 name:'进项管理',
                 exact:true,
-                children:EntryManag_Routes
+                children:EntryManag_Routes,
+                authorityInfo:getChildOptions('vatManage','entryManag'),
             },{
                 path:`${PATH}/landPrice`,
                 component:wrapPage('土地价款',LandPrice),
                 name:'土地价款',
                 exact:true,
-                children:LandPrice_Routes
+                children:LandPrice_Routes,
+                authorityInfo:getChildOptions('vatManage','landPrice'),
             /*},{
                 path:`${PATH}/salesTaxAccount`,
                 component:wrapPage('销项税台账',SalesTaxAccount),
@@ -54,10 +59,11 @@ const VatManage_Routes = [
                 children:EntryTax_Routes*/
             },{
                 path:`${PATH}/otherAccount`,
-                component:wrapPage('其它台账',OtherAccount),
-                name:'其它台账',
+                component:wrapPage('其他台账',OtherAccount),
+                name:'其他台账',
                 exact:true,
-                children:OtherAccount_Routes
+                children:OtherAccount_Routes,
+                authorityInfo:getChildOptions('vatManage','otherAccount'),
             },{
                 path:`${PATH}`,
                 redirect:true,

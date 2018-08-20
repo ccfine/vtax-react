@@ -2,8 +2,13 @@
  * Created by liurunbin on 2018/2/7.
  */
 import React from 'react';
+import moment from 'moment';
 import ButtonModalWithForm from './index'
+
 const SubmitOrRecall = props => {
+    let {initialValue={}} = props,
+    monthFieldName = props.monthFieldName || 'taxMonth';
+
     const fields = [
         {
             label:'纳税主体',
@@ -19,6 +24,7 @@ const SubmitOrRecall = props => {
                 }
             },
             fieldDecoratorOptions:{
+                initialValue: initialValue['mainId'] || undefined,
                 rules:[
                     {
                         required:true,
@@ -29,8 +35,11 @@ const SubmitOrRecall = props => {
         },
         {
             label:'查询期间',
-            fieldName:props.monthFieldName || 'taxMonth',
+            fieldName:monthFieldName,
             type:'monthPicker',
+            componentProps:{
+                format:'YYYY-MM',
+            },
             span:20,
             formItemStyle:{
                 labelCol:{
@@ -41,6 +50,7 @@ const SubmitOrRecall = props => {
                 }
             },
             fieldDecoratorOptions:{
+                initialValue:initialValue[monthFieldName] && moment(initialValue[monthFieldName]),
                 rules:[
                     {
                         required:true,
@@ -55,6 +65,7 @@ const SubmitOrRecall = props => {
             type:props.method || 'post',
             url:props.url,
             fields,
+            children:props.children || null,
             disabled:props.disabled,
             onSuccess:props.onSuccess,
         },

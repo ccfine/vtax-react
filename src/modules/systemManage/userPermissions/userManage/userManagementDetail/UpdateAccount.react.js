@@ -6,7 +6,6 @@ import {Modal,Form,message,Row} from 'antd';
 import {request,getFields} from 'utils'
 
 class UpdateAccount extends Component{
-
     state = {
         assignmentModalKey:Date.now(),
         confirmLoading:false,
@@ -46,7 +45,7 @@ class UpdateAccount extends Component{
 
                 this.toggleConfirmLoading()
 
-                request.put(`/users/${this.props.userId}/passwords`,{
+                request.put(`/sysUser/users/${this.props.userId}/passwords`,{
                     ...values
                 })
                     .then(({data})=>{
@@ -58,6 +57,10 @@ class UpdateAccount extends Component{
                         }else{
                             message.error(data.msg)
                         }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleConfirmLoading()
                     })
 
             }
@@ -72,6 +75,15 @@ class UpdateAccount extends Component{
         }
     }
     render(){
+      const formItemStyle={
+          labelCol:{
+            offset:1,
+              span:6
+          },
+          wrapperCol:{
+              span:12
+          }
+      }
         return(
             <Modal
                 maskClosable={false}
@@ -93,6 +105,7 @@ class UpdateAccount extends Component{
                                 fieldName:'newPassword',
                                 type:'input',
                                 span:24,
+                                formItemStyle,
                                 componentProps:{
                                     type:'password',
                                     onBlur:()=>this.handleConfirmBlur
@@ -114,6 +127,7 @@ class UpdateAccount extends Component{
                                 fieldName:'renewPassword',
                                 type:'input',
                                 span:24,
+                                formItemStyle,
                                 componentProps:{
                                     type:'password',
                                 },

@@ -4,21 +4,21 @@
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import PopModal from './popModal'
+import {composeBotton} from 'utils';
 const getColumns = context=>[
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'modify',oprecord:record});
-                }}>修改</a>
-                </span>
-            );
-        },
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.setState({visible:true,action:'modify',oprecord:record})
+        }]),
         fixed:'left',
         width:'45px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center',
     },
     {
         title: '项目分期代码',
@@ -53,12 +53,10 @@ export default class TabPage extends Component{
     render(){
         const props = this.props;
         return(
-            <div style={{margin:'0 15px'}}>
             <SearchTable
                 searchOption={null}
                 tableOption={{
                     columns:getColumns(this),
-                    scroll:{x:'100%'},
                     key:this.state.updateKey,
                     url:`/project/stage/list/${props.projectId}`,
                     cardProps:{
@@ -67,16 +65,14 @@ export default class TabPage extends Component{
                     }
                 }}
             >
+                <PopModal
+                    record={this.state.oprecord}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
             </SearchTable>
-            
-            <PopModal 
-                record={this.state.oprecord}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal>
-            </div>
         )
     }
 }

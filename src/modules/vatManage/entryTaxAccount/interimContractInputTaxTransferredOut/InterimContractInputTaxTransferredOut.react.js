@@ -5,14 +5,21 @@
  */
 import React,{Component} from 'react'
 import {Form,Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,FileImportModal} from 'compoments'
+import {SearchTable,FileExport,FileImportModal,TableTotal} from 'compoments'
 import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
 import {fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import PageTwo from './TabPage2.r'
 import PopModal from './popModal'
-
+const formItemStyle={
+    labelCol:{
+        span:8
+    },
+    wrapperCol:{
+        span:16
+    }
+}
 const fields = [
     {
         label:'纳税主体',
@@ -65,7 +72,8 @@ const searchFields =(disabled)=> {
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
                 disabled
             },
@@ -82,7 +90,8 @@ const searchFields =(disabled)=> {
             label:'认证月份',
             fieldName:'authMonth',
             type:'monthPicker',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
                 format:'YYYY-MM',
                 disabled
@@ -100,7 +109,8 @@ const searchFields =(disabled)=> {
             label:'合同编号',
             fieldName:'contractNum',
             type:'input',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
             },
             fieldDecoratorOptions:{
@@ -109,7 +119,8 @@ const searchFields =(disabled)=> {
             label:'结算单/产值单',
             fieldName:'bill',
             type:'input',
-            span:8,
+            span:6,
+            formItemStyle,
             componentProps:{
             },
             fieldDecoratorOptions:{
@@ -123,7 +134,7 @@ const getColumns =context =>[
         render:(text,record,index)=> (context.state.statusParam && parseInt(context.state.statusParam.status, 0)) === 1 && (
             <span style={{
                 color:'#f5222d',
-                cursor:'pointer'
+                cursor:'pointer',
             }} onClick={()=>{
                 const modalRef = Modal.confirm({
                     title: '友情提醒',
@@ -147,7 +158,8 @@ const getColumns =context =>[
         ),
         fixed:'left',
         width:'50px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center'
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',
@@ -233,6 +245,7 @@ class InterimContractInputTaxTransferredOut extends Component {
          * */
         statusParam: {},
         dataSource: [],
+        totalSource:undefined,
     }
     refreshTable = () => {
         this.setState({
@@ -261,7 +274,11 @@ class InterimContractInputTaxTransferredOut extends Component {
                         }else{
                             message.error(`重算失败:${data.msg}`)
                         }
-                    });
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             }
         })
     }
@@ -272,6 +289,9 @@ class InterimContractInputTaxTransferredOut extends Component {
                     statusParam: data.data,
                 })
             }
+        })
+        .catch(err => {
+            message.error(err.message)
         })
     }
     deleteRecord = (id,cb) => {
@@ -318,7 +338,7 @@ class InterimContractInputTaxTransferredOut extends Component {
     }
 
     render() {
-        const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam} = this.state;
+        const {updateKey, pageTwoKey, modalUpDateKey, visible, searchTableLoading, selectedRowKeys,selectedRows, filters, dataSource, statusParam,totalSource} = this.state;
         const {mainId, authMonth} = this.state.filters;
         const disabled1 = statusParam && parseInt(statusParam.status, 0) === 1;
         const disabled2 = statusParam && parseInt(statusParam.status, 0) === 2;
@@ -368,7 +388,7 @@ class InterimContractInputTaxTransferredOut extends Component {
                 backCondition={this.updateStatus}
                 tableOption={{
                     key: updateKey,
-                    pageSize: 10,
+                    pageSize: 100,
                     columns: getColumns(this),
                     cardProps: {
                         title: '进项转出差异调整表'
@@ -447,28 +467,29 @@ class InterimContractInputTaxTransferredOut extends Component {
                         </Button>
                         <SubmitOrRecall type={1} disabled={disabled2} url="/account/income/taxContract/adjustment/submit" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
                         <SubmitOrRecall type={2} disabled={disabled1} url="/account/income/taxContract/adjustment/revoke" monthFieldName='authMonth'  onSuccess={this.refreshTable} />
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '金额', dataIndex: 'pageAmount'},
+                                        {title: '税额', dataIndex: 'pageTaxAmount'},
+                                        {title: '价税合计', dataIndex: 'pageTotalAmount'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
                     onDataChange: (dataSource) => {
                         this.setState({
                             dataSource
                         })
                     },
-                    renderFooter:data=>{
-                        return (
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        价税合计：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    }
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
+                    },
                 }}
             >
 

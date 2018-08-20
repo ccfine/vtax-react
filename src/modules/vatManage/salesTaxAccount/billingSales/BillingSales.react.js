@@ -4,12 +4,30 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Card,Row,Col,Form,Button,message,Icon,Modal} from 'antd'
-import {FileExport,SynchronizeTable} from 'compoments'
-import {getFields,fMoney,request,getUrlParam,listMainResultStatus} from 'utils'
+import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
+import {SynchronizeTable} from 'compoments'
+import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import PopInvoiceInformationModal from './popModal'
-import { withRouter } from 'react-router'
 import moment from 'moment';
+
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:8
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:16
+        }
+    }
+}
 const columns = context => [
     {
         title: '项目',
@@ -21,13 +39,14 @@ const columns = context => [
         title: '开具增值税专用发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text  : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
+                            isEstate:1,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -47,13 +66,14 @@ const columns = context => [
         title: '开具其他发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
+                            isEstate:1,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -77,21 +97,22 @@ const notColumns = context =>[
         title: '项目',
         dataIndex: 'taxMethod',
         render: (text, row, index) => {
+            let count1 = context.state.notDataSource.filter(ele=>ele.type==='1').length,
+                count2 = context.state.notDataSource.filter(ele=>ele.type==='2').length,
+                count3 = context.state.notDataSource.filter(ele=>ele.type==='3').length;
+
             const obj = {
                 children: text,
-                props: {},
+                props: {}
             };
+
             if (index === 0) {
-                obj.props.rowSpan = 6;
-            }
-            if (index === 6) {
-                obj.props.rowSpan = 4;
-            }
-            if (index === 10) {
-                obj.props.rowSpan = 1;
-            }
-            // These two are merged into above cell
-            if (index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 7 || index === 8 || index === 9  || index === 11 ) {
+                obj.props.rowSpan = count1;
+            }else if (index === count1) {
+                obj.props.rowSpan = count2;
+            }else if (index === count1 + count2) {
+                obj.props.rowSpan = count3;
+            }else{
                 obj.props.rowSpan = 0;
             }
             return obj;
@@ -103,13 +124,14 @@ const notColumns = context =>[
         title: '开具增值税专用发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'specialInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'s',
+                            isEstate:0,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -129,13 +151,14 @@ const notColumns = context =>[
         title: '开具其他发票',
         children: [
             {
-                title: '数量',
+                title: '发票明细数量',
                 dataIndex: 'otherInvoiceCount',
                 render:(text,record)=>(
                     parseInt(text, 0) === 0 ? text : <a onClick={()=>{
                         context.setState({
                             sysTaxRateId:record.sysTaxRateId,
                             invoiceType:'c',
+                            isEstate:0,
                         },()=>{
                             context.toggleModalVisible(true)
                         })
@@ -158,9 +181,7 @@ class BillingSales extends Component {
         /**
          * params条件，给table用的
          * */
-        filters:{
-            pageSize:20
-        },
+        filters:{},
 
         /**
          * 控制table刷新，要让table刷新，只要给这个值设置成新值即可
@@ -169,6 +190,7 @@ class BillingSales extends Component {
         visible:false,
         loaded:true,
         sysTaxRateId:undefined,
+        isEstate:undefined,
         invoiceType:undefined,
         statusParam:{},
         dataSource:[],
@@ -186,47 +208,22 @@ class BillingSales extends Component {
             this.fetch()
         })
     }
-    handleSubmit = (e,type) => {
+    handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.authMonth){
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
-                let url= null;
-                switch (type){
-                    case '提交':
-                        url = '/account/output/billingSale/submit';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '撤回':
-                        url = '/account/output/billingSale/revoke';
-                        this.requestPost(url,type,values);
-                        break;
-                    case '重算':
-                        Modal.confirm({
-                            title: '友情提醒',
-                            content: '确定要重算吗',
-                            onOk : ()=> {
-                                request.put('/account/output/billingSale/reset',values)
-                                    .then(({data})=>{
-                                        if(data.code===200){
-                                            message.success(`${type}成功!`);
-                                            this.refreshTable();
-                                        }else{
-                                            message.error(`${type}失败:${data.msg}`)
-                                        }
-                                    })
-                            }
-                        })
-                        break;
-                    default:
-                        this.setState({
-                            filters:values
-                        },()=>{
-                            this.refreshTable();
-                        });
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
                 }
+                this.setState({
+                    filters:values
+                },()=>{
+                    this.refreshTable();
+                });
             }
         });
     }
@@ -251,6 +248,7 @@ class BillingSales extends Component {
                 });
             }
         }).catch(err=>{
+            message.error(err)
             this.setState({
                 loaded: true
             });
@@ -258,39 +256,23 @@ class BillingSales extends Component {
 
     }
 
-    requestPost=(url,type,value={})=>{
-        request.post(url,value)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${type}成功!`);
-                    this.refreshTable();
-                    //this.props.form.resetFields()
-                }else{
-                    message.error(`${type}失败:${data.msg}`)
-                }
-            })
-    }
     updateStatus=()=>{
-        request.get('/account/output/billingSale/listMain',{params:this.state.filters}).then(({data}) => {
-            if (data.code === 200) {
-                this.setState({
-                    statusParam: data.data
-                })
-            }
+        requestResultStatus('/account/output/billingSale/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
         })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.handleSubmit();
+        const { declare } = this.props;
+        if (!!declare) {
+            this.handleSubmit()
         }
     }
     render(){
-        const {tableUpDateKey,filters,dataSource,notDataSource,visible,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
-        const disabled1 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 1));
-        const disabled2 = !((filters.mainId && filters.authMonth) && (statusParam && parseInt(statusParam.status, 0) === 2));
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -305,14 +287,15 @@ class BillingSales extends Component {
                                 getFields(this.props.form,[
                                     {
                                         label:'纳税主体',
-                                        fieldName:'mainId',
+                                        fieldName:'main',
                                         type:'taxMain',
-                                        span:6,
                                         componentProps:{
+                                            labelInValue:true,
                                             disabled:disabled
                                         },
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                                            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -324,13 +307,13 @@ class BillingSales extends Component {
                                         label:'查询期间',
                                         fieldName:'authMonth',
                                         type:'monthPicker',
-                                        span:6,
                                         componentProps:{
                                             format:'YYYY-MM',
                                             disabled:disabled
                                         },
+                                        formItemStyle,
                                         fieldDecoratorOptions:{
-                                            initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                                            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
@@ -342,54 +325,50 @@ class BillingSales extends Component {
                                 ])
                             }
 
-                            <Col span={12} style={{textAlign:'right'}}>
+                            <Col span={8} style={{textAlign:'right'}}>
                                 <Form.Item>
-                                <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
-                                <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
+                                    <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
+                                    <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
                                 </Form.Item>
                             </Col>
                         </Row>
                     </Form>
                 </Card>
-                <Card title="开票销售统计表-房地产"
+                <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-房地产</span>}
                       extra={<div>
                           {
-                              dataSource.length>0 && listMainResultStatus(statusParam)
+                              listMainResultStatus(statusParam)
                           }
-                          <FileExport
-                              url={`account/output/billingSale/export`}
-                              title='导出'
-                              setButtonStyle={{marginRight:5}}
-                              disabled={disabled1 || !dataSource.length>0}
-                              params={{
-                                  isEstate:1,
-                                  ...filters
-                              }}
-                          />
-                          <Button
-                              size='small'
-                              style={{marginRight:5}}
-                              disabled={disabled1}
-                              onClick={(e)=>this.handleSubmit(e,'重算')}>
-                              <Icon type="retweet" />
-                              重算
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled1}
-                              onClick={(e) => this.handleSubmit(e,'提交')}>
-                              <Icon type="check"/>
-                              提交
-                          </Button>
-                          <Button
-                              size='small'
-                              style={{marginRight: 5}}
-                              disabled={disabled2}
-                              onClick={(e) => this.handleSubmit(e,'撤回')}>
-                              <Icon type="rollback"/>
-                              撤回提交
-                          </Button>
+                          {
+                              JSON.stringify(filters) !=='{}' && composeBotton([{
+                                  type:'fileExport',
+                                  url:'account/output/billingSale/export',
+                                  params:filters,
+                                  title:'导出',
+                                  userPermissions:['1221007'],
+                              }],statusParam)
+                          }
+                          {
+                              (disabled && declare.decAction==='edit') && composeBotton([{
+                                  type:'reset',
+                                  url:'/account/output/billingSale/reset',
+                                  params:filters,
+                                  userPermissions:['1221009'],
+                                  onSuccess:this.refreshTable
+                              },{
+                                  type:'submit',
+                                  url:'/account/output/billingSale/submit',
+                                  params:filters,
+                                  userPermissions:['1221010'],
+                                  onSuccess:this.refreshTable
+                              },{
+                                  type:'revoke',
+                                  url:'/account/output/billingSale/revoke',
+                                  params:filters,
+                                  userPermissions:['1221011'],
+                                  onSuccess:this.refreshTable,
+                              }],statusParam)
+                          }
                       </div>
                       }
                       style={{marginTop:10}}>
@@ -406,31 +385,19 @@ class BillingSales extends Component {
                         }} />
 
                 </Card>
-                <Card title="开票销售统计表-非地产"
-                      extra={<div>
-                                <FileExport
-                                    url={`account/output/billingSale/export`}
-                                    title='导出'
-                                    setButtonStyle={{marginRight:5}}
-                                    disabled={disabled1 || !(notDataSource && notDataSource.length>0)}
-                                    params={{
-                                        isEstate:0,
-                                        ...filters
-                                    }}
-                                />
-                            </div>}
+                <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-非地产</span>}
                       style={{marginTop:10}}>
 
-                      <SynchronizeTable
-                            data={notDataSource}
-                            updateKey={tableUpDateKey}
-                            loaded={loaded}
-                            tableProps={{
-                                rowKey:record=>record.sysTaxRateId,
-                                pagination:false,
-                                size:'small',
-                                columns:notColumns(this),
-                            }} />
+                    <SynchronizeTable
+                        data={notDataSource}
+                        updateKey={tableUpDateKey}
+                        loaded={loaded}
+                        tableProps={{
+                            rowKey:record=>record.sysTaxRateId,
+                            pagination:false,
+                            size:'small',
+                            columns:notColumns(this),
+                        }} />
                 </Card>
 
                 <PopInvoiceInformationModal
@@ -438,8 +405,9 @@ class BillingSales extends Component {
                     visible={visible}
                     filters={{
                         ...filters,
+                        sysTaxRateId,
                         invoiceType,
-                        taxRateId:sysTaxRateId
+                        isEstate,
                     }}
                     toggleModalVisible={this.toggleModalVisible}
                 />
@@ -447,4 +415,5 @@ class BillingSales extends Component {
         )
     }
 }
-export default Form.create()(withRouter(BillingSales))
+
+export default Form.create()(BillingSales);

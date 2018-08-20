@@ -39,6 +39,10 @@ class PopModal extends Component{
                     })
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -57,7 +61,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             this.fetchReportById(nextProps.modalConfig.id,nextProps)
         }
@@ -115,6 +119,10 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
 
     createRecord = data =>{
@@ -129,6 +137,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`新增失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
             })
     }
 
@@ -145,6 +157,10 @@ class PopModal extends Component{
                     message.error(`删除失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
 
     render(){
@@ -155,7 +171,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -248,7 +264,7 @@ class PopModal extends Component{
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['mainId'],
+                                            initialValue:initData['mainName'],
                                             rules:[
                                                 {
                                                     required:true,

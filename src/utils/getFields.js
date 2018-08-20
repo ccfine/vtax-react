@@ -55,6 +55,12 @@ const getFields = (form,fieldsData=[]) =>{
             case 'asyncSelect':
                 CusComponent = CusFormItem.AsyncSelect;
                 break;
+            case 'asyncTreeSelect':
+                CusComponent = CusFormItem.AsyncTreeSelect;
+                break;
+            case 'asyncTree':
+                CusComponent = CusFormItem.AsyncTree;
+                break;
             case 'monthPicker':
                 CusComponent = MonthPicker;
                 break;
@@ -107,25 +113,34 @@ const getFields = (form,fieldsData=[]) =>{
                 CusComponent = Input
         }
 
-        if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect' || type==='monthRangePicker'){
-            return <Col key={i} span={item['span'] || 8}>
+        if(type ==='taxMain' || type === 'asyncSelect' || type === 'yearSelect' || type === 'asyncTreeSelect' || type === 'asyncTree' || type==='monthRangePicker'){
+            return <Col key={i} span={item['span'] || 8} className={ item['className'] || ''}>
                 <CusComponent label={item['label']} fieldName={item['fieldName']} fieldDecoratorOptions={item.fieldDecoratorOptions} decoratorOptions={item.fieldDecoratorOptions} formItemStyle={formItemStyle} form={form} {...item['componentProps']} componentProps={item['componentProps']} />
             </Col>
         }else if(type==='select'){
-            //TODO:为了设置所有不是必填的select都加上一个全部默认选项
-            const isShowAll = item['fieldDecoratorOptions'] && item['fieldDecoratorOptions'].rules && item['fieldDecoratorOptions'].rules.map(item=>item.required)[0] === true,
-                newData =  item.options.length>0 ? [{text:'全部', value:''}].concat(item.options) : item.options,
-                selectOptions = isShowAll ? item.options : newData;
+            //TODO:为了设置所有不是必填的select都加上一个全部默认选项  notShowAll:是否添加无或者全部
+            let optionsData = [], initialValues;
+            if(item['notShowAll'] === true){
+                optionsData = item.options;
+            }else{
+                const isShowAll = (item['fieldDecoratorOptions'] && item['fieldDecoratorOptions'].rules && item['fieldDecoratorOptions'].rules.map(item => item.required)[0] === true),
+                    newData = item.options.length > 0 ? [{
+                        text: item['whetherShowAll'] ? '无' : '全部',
+                        value: ''
+                    }].concat(item.options) : item.options;
+                    initialValues = (item['fieldDecoratorOptions'] && item['fieldDecoratorOptions'].initialValue) || (isShowAll ? undefined : '');
+                    optionsData = isShowAll ? item.options : newData;
+            }
             return (
                 <Col key={i} span={item['span'] || 8}>
                     <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
                         {getFieldDecorator(item['fieldName'],{
-                            initialValue:'',
+                            initialValue:initialValues,
                             ...item['fieldDecoratorOptions'],
                         })(
                             <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
                                 {
-                                    selectOptions.map((option,i)=>(
+                                    optionsData.map((option,i)=>(
                                         <Option key={i} value={option.value}>{option.text}</Option>
                                     ))
                                 }
@@ -134,6 +149,7 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
+
         }else if(type==='taxableProject' || type==='taxClassCodingSelect' || type==='industry'){
             // 给这个税收分类编码特殊对待，因为他的弹出窗组件需要修改这个值，就把setFieldsValue传到子组件下
             return (
@@ -213,6 +229,19 @@ const getFields = (form,fieldsData=[]) =>{
                     </FormItem>
                 </Col>
             )
+        }else if(type==='switch'){
+            return (
+                <Col key={i} span={item['span'] || 8}>
+                    <FormItem label={item['notLabel'] === true ? null : item['label']} {...formItemStyle}>
+                        {getFieldDecorator(item['fieldName'],{
+                            valuePropName: 'checked' ,
+                            ...item['fieldDecoratorOptions']
+                        })(
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } />
+                        )}
+                    </FormItem>
+                </Col>
+            )
         }else{
             return (
                 <Col key={i} span={item['span'] || 8} className={type==='textArea' ? 'fix-ie10-formItem-textArea' : ''}>
@@ -220,7 +249,7 @@ const getFields = (form,fieldsData=[]) =>{
                         {getFieldDecorator(item['fieldName'],{
                             ...item['fieldDecoratorOptions']
                         })(
-                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } style={{width: type !=='switch' ? '100%' : 'auto'}} />
+                            <CusComponent {...item['componentProps']} placeholder={ (item['componentProps'] && item['componentProps'].placeholder) || `请输入${item['label']}` } style={{width:'100%'}} />
                         )}
                     </FormItem>
                 </Col>

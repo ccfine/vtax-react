@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Tree,Spin } from 'antd';
+import { Tree,Spin,message } from 'antd';
 import PropTypes from 'prop-types'
 import {request} from 'utils'
 
@@ -50,22 +50,38 @@ class TreeList extends Component {
                         resolve();
                    // }, 1000);
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+            });;
 
         });
     }
 
     renderTreeNodes = data => {
-        return data.map((item) => {
-            if (item.children) {
-                return (
-                    <TreeNode title={item.name}  key={item.id} dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
-                    </TreeNode>
-                );
-            }
-            return <TreeNode key={item.id} {...item} title={item.name} dataRef={item} />;
-        });
+        if(this.props.isShowCode){ //判断是否显示code
+            return data.map((item) => {
+                if (item.children) {
+                    return (
+                        <TreeNode title={`${item.code && item.code}${item.name}`}  key={item.id} dataRef={item}>
+                            {this.renderTreeNodes(item.children)}
+                        </TreeNode>
+                    );
+                }
+                return <TreeNode key={item.id} {...item} title={`${item.code && item.code}${item.name}`} dataRef={item} />;
+            });
+        }else{
+            return data.map((item) => {
+                if (item.children) {
+                    return (
+                        <TreeNode title={item.name}  key={item.id} dataRef={item}>
+                            {this.renderTreeNodes(item.children)}
+                        </TreeNode>
+                    );
+                }
+                return <TreeNode key={item.id} {...item} title={item.name} dataRef={item} />;
+            });
+        }
     }
 
     fetchTree = (props) => {
@@ -81,6 +97,10 @@ class TreeList extends Component {
                     eidtLoading: false,
                 })
             }
+        })
+        .catch(err => {
+            this.mounted && this.setState({ eidtLoading: false });
+            message.error(err.message)
         });
     }
 
@@ -125,7 +145,7 @@ class TreeList extends Component {
         const {treeData} = this.state;  //,selectedKeys,expandedKeys,autoExpandParent
         return (
             <Spin spinning={this.state.eidtLoading}>
-                <div style={{overflow:'scroll',height: '600px'}}>
+                {/* <div style={{overflow:'auto',height: "auto"}}> */}
 
                     <Tree
                         key={props.updateKey}
@@ -141,7 +161,7 @@ class TreeList extends Component {
                         {this.renderTreeNodes(treeData)}
                     </Tree>
 
-                </div>
+                {/* </div> */}
             </Spin>
 
         );

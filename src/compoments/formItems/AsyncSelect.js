@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Form,Select,Spin} from 'antd'
+import {Form,Select,Spin,message} from 'antd'
 import PropTypes from 'prop-types'
 import {request} from 'utils'
 import debounce from 'lodash/debounce'
@@ -20,6 +20,8 @@ export default class AsyncSelect extends Component{
         url:PropTypes.string.isRequired,
         selectOptions:PropTypes.object,
         doNotFetchDidMount:PropTypes.bool,
+        whetherShowAll:PropTypes.bool,
+        notShowAll:PropTypes.bool,
         decoratorOptions:PropTypes.object,
 
         //外部条件，用来提供给外部控制该组件是否要异步获取信息的条件，可选
@@ -38,6 +40,8 @@ export default class AsyncSelect extends Component{
         },
         initialValue:'',
         label:'field',
+        whetherShowAll:false,
+        notShowAll:false,
         selectOptions:{
 
         },
@@ -92,7 +96,10 @@ export default class AsyncSelect extends Component{
                         dataSource:this.props.transformData(result)
                     })
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     mounted = true
     componentWillUnmount(){
@@ -119,22 +126,56 @@ export default class AsyncSelect extends Component{
                                 dataSource: result
                             })
                         }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
                     });
-            }
+            }/*else{
+                this.fetch(undefined,{
+                    name:value,
+                })
+            }*/
 
+        }
+    }
+    // onChange=(value)=>{
+    //     const { selectOptions:{ showSearch }, searchType } = this.props;
+    //     // 当选中某条数据后，查询条件清空，将所有数据获取出来（缺点：如果用户想选择查询出来的数据中的多条就没办法了） 后期调研下searchType!=='itemName'
+    //     if(showSearch && searchType!=='itemName'){
+    //         this.fetch()
+    //     }
+    // }
+    onChange=(...args)=>{
+        // 将数据相关的信息全部返回
+        const {dataSource } = this.state,
+            {selectOptions,fieldValueName} = this.props;
+        if(selectOptions && selectOptions.onChange){
+            let item=undefined;
+            if(dataSource && dataSource.length>0){
+                item = dataSource.find(ele=>ele[fieldValueName] === (selectOptions.labelInValue?args[0].key:args[0]))
+            }
+            selectOptions.onChange(...args,item)
         }
     }
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions} = this.props;
-        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
-        const newData =  dataSource.length > 0 ? [{itemName:'全部', id:''}].concat(dataSource) : dataSource;
+        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll,notShowAll} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项  notShowAll:是否添加无或者全部
+        let optionsData = [], initialValues;
+        if(notShowAll === true){
+            optionsData = dataSource;
+        }else{
+            const isShowAll = decoratorOptions && decoratorOptions.rules && decoratorOptions.rules.map(item=>item.required)[0] === true,
+            newData = dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
+        initialValues = initialValue || (isShowAll ? undefined : '');
+        optionsData = isShowAll ? dataSource :  newData;
+    }
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
                     {getFieldDecorator(fieldName,{
-                        initialValue,
+                        initialValue: initialValues,
                         ...decoratorOptions
                     })(
                         <Select
@@ -142,9 +183,10 @@ export default class AsyncSelect extends Component{
                             onSearch={this.onSearch}
                             placeholder={`请选择${label}`}
                             {...selectOptions}
+                            onChange={this.onChange}
                         >
                             {
-                                newData.map((item,i)=>(
+                                optionsData.map((item,i)=>(
                                     <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
                                 ))
                             }

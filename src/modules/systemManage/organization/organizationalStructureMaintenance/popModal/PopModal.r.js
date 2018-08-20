@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
-import {request,getFields,regRules} from 'utils'
+import {request,getFields} from 'utils'
 
 class PopModal extends Component{
     static defaultProps={
@@ -22,7 +22,7 @@ class PopModal extends Component{
     toggleLoaded = loaded => this.setState({loaded})
     fetchReportById = (id)=>{
         this.toggleLoaded(false)
-        request.get(`/org/find/${id}`)
+        request.get(`/sysOrganization/find/${id}`)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -30,6 +30,10 @@ class PopModal extends Component{
                         initData:data.data
                     })
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
             })
     }
     componentWillReceiveProps(nextProps){
@@ -49,7 +53,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             this.fetchReportById(nextProps.modalConfig.id)
         }
@@ -74,7 +78,7 @@ class PopModal extends Component{
                 }else if(type==='add'){
                     const data = {
                         ...values,
-                        orgParentId:this.props.selectedNodes && this.props.selectedNodes.id
+                        parentId:this.props.selectedNodes && this.props.selectedNodes.id
                     }
                     this.createRecord(data)
                 }
@@ -84,7 +88,7 @@ class PopModal extends Component{
     }
 
     updateRecord = data =>{
-        request.put('/org/update',data)
+        request.put('/sysOrganization/update',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -96,10 +100,14 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
 
     createRecord = data =>{
-        request.post('/org/add',data)
+        request.post('/sysOrganization/add',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -111,6 +119,10 @@ class PopModal extends Component{
                     message.error(`新增失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+                this.toggleLoaded(true)
+            })
     }
     render(){
         const props = this.props;
@@ -119,7 +131,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -154,47 +166,33 @@ class PopModal extends Component{
                                 getFields(props.form,[
                                     {
                                         label:'上级机构代码',
-                                        fieldName:'orgParentCode',
+                                        fieldName:'parentCode',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:(props.selectedNodes && props.selectedNodes.code) || initData['orgParentCode'],
-                                            rules:[
-                                                regRules.input_length_25,
-                                                {
-                                                    required:true,
-                                                    message:'请输入上级机构代码'
-                                                }
-                                            ]
+                                            initialValue:props.modalConfig.type === 'add'?(props.selectedNodes && (props.selectedNodes.code)):initData['parentCode'],
                                         },
                                         componentProps:{
                                             disabled: true
                                         }
                                     }, {
                                         label:'上级机构名称',
-                                        fieldName:'orgParentName',
+                                        fieldName:'parentName',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:(props.selectedNodes && props.selectedNodes.name) || initData['orgParentName'],
-                                            rules:[
-                                                regRules.input_length_25,
-                                                {
-                                                    required:true,
-                                                    message:'请输入上级机构名称'
-                                                }
-                                            ]
+                                            initialValue:props.modalConfig.type === 'add'?(props.selectedNodes && (props.selectedNodes.name)):initData['parentName'],
                                         },
                                         componentProps:{
                                             disabled: true
                                         }
                                     }, {
                                         label:'机构代码',
-                                        fieldName:'orgCode',
+                                        fieldName:'code',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['orgCode'],
+                                            initialValue:initData['code'],
                                             rules:[
                                                 {
                                                     required:true,
@@ -204,11 +202,11 @@ class PopModal extends Component{
                                         },
                                     }, {
                                         label:'机构名称',
-                                        fieldName:'orgName',
+                                        fieldName:'name',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['orgName'],
+                                            initialValue:initData['name'],
                                             rules:[
                                                 {
                                                     required:true,
@@ -218,11 +216,11 @@ class PopModal extends Component{
                                         },
                                     }, {
                                         label:'机构简称',
-                                        fieldName:'orgShortName',
+                                        fieldName:'shortName',
                                         type:'input',
                                         span:'12',
                                         fieldDecoratorOptions:{
-                                            initialValue:initData['orgShortName'],
+                                            initialValue:initData['shortName'],
                                         },
                                     }, {
                                         label: '经营地址',
@@ -242,14 +240,18 @@ class PopModal extends Component{
                                         },
                                     }, {
                                         label: '本级序号',
-                                        fieldName: 'orgLevel',
+                                        fieldName: 'level',
                                         type: 'numeric',
                                         span: '12',
                                         fieldDecoratorOptions: {
                                             initialValue: type==='add' ?
-                                                ((parseInt(props.selectedNodes && props.selectedNodes.orgLevel, 0)+1) || (parseInt(initData['orgLevel'], 0)+1) )
+                                                (
+                                                    isNaN(parseInt(props.selectedNodes && props.selectedNodes.level, 0)+1) ? 1 : parseInt(props.selectedNodes && props.selectedNodes.level , 0)+1
+                                                    ||
+                                                    (parseInt(initData['level'], 0)+1)
+                                                )
                                                 :
-                                                ((props.selectedNodes && props.selectedNodes.orgLevel) || initData['orgLevel']),
+                                                ((props.selectedNodes && props.selectedNodes.level) || initData['level']),
                                             rules: [
                                                 {
                                                     required: true,

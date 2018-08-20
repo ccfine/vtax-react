@@ -6,6 +6,7 @@ import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields} from 'utils'
 import moment from 'moment'
 import { ButtonWithFileUploadModal } from 'compoments'
+import {composeBotton} from 'utils'
 const formItemStyle = {
     labelCol:{
         span:10
@@ -38,6 +39,10 @@ class PopModal extends Component{
                     })
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            });
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -56,7 +61,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             this.fetchReportById(nextProps.modalConfig.id,nextProps)
         }
@@ -114,6 +119,10 @@ class PopModal extends Component{
                     message.error(`更新失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
 
     createRecord = data =>{
@@ -128,6 +137,10 @@ class PopModal extends Component{
                 }else{
                     message.error(`新增失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
             })
     }
 
@@ -144,6 +157,10 @@ class PopModal extends Component{
                     message.error(`删除失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                this.toggleLoaded(true)
+                message.error(err.message)
+            })
     }
 
     render(){
@@ -154,7 +171,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -183,18 +200,22 @@ class PopModal extends Component{
                         <Col span={12}></Col>
                         <Col span={12}>
                             {
-                                type !== 'add' && (
-                                    <ButtonWithFileUploadModal
-                                        title="附件"
-                                        style={{
-                                            marginRight:10
-                                        }}
-                                        readOnly={type==='view'}
-                                        size='default'
-                                        id={props.modalConfig.id}
-                                        uploadUrl={`/tax/preferences/file/upload/${props.modalConfig.id}`}
-                                    />
-                                )
+                                type !== 'add' && composeBotton([{
+                                    type:'self',
+                                    userPermissions:['1091005'],
+                                    component:(
+                                        <ButtonWithFileUploadModal
+                                                    title="附件"
+                                                    style={{
+                                                        marginRight:10
+                                                    }}
+                                                    readOnly={type==='view'}
+                                                    size='default'
+                                                    id={props.modalConfig.id}
+                                                    uploadUrl={`/tax/preferences/file/upload/${props.modalConfig.id}`}
+                                                />
+                                    )
+                                }])
                             }
                             {
                                 type !== 'view' && (
@@ -203,12 +224,17 @@ class PopModal extends Component{
                             }
                             {
                                 type !== 'view' && (
-                                    <Button onClick={()=>props.toggleModalVisible(false)}>取消</Button>
+                                    <Button style={{marginRight:10}} onClick={()=>props.toggleModalVisible(false)}>取消</Button>
                                 )
                             }
                             {
-                                type === 'edit' && <Button
-                                    onClick={()=>{
+                                type === 'edit' && composeBotton([{
+                                    type:'delete',
+                                    btnType:'danger',
+                                    size:'default',
+                                    text:'删除',
+                                    userPermissions:['1091008'],
+                                    onClick:()=>{
                                         const modalRef = Modal.confirm({
                                             title: '友情提醒',
                                             content: '该删除后将不可恢复，是否删除？',
@@ -223,10 +249,8 @@ class PopModal extends Component{
                                                 modalRef.destroy()
                                             },
                                         });
-                                    }}
-                                    type='danger'>
-                                    删除
-                                </Button>
+                                    }
+                                }])
                             }
                         </Col>
                     </Row>

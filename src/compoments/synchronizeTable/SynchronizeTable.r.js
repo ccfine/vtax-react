@@ -49,11 +49,13 @@ export default class SynchronizeTable extends Component{
         this.setState({
             pagination: pager,
         });
+        //设置去掉排序默认设置的值
+        let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
         this.getDate({
             results: pagination.pageSize,
             current: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sorter.order,
+            orderByField: sorter.field,
+            isAsc: sor ? sor === 'asc' : undefined,
             ...filters,
         });
     }

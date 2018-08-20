@@ -2,7 +2,7 @@
  * Created by liurunbin on 2017/12/21.
  */
 import React,{Component} from 'react';
-import {Button,Input,Modal,Form,Row,Col,Select,DatePicker} from 'antd';
+import {Button,Input,Modal,Form,Row,Col,Select,DatePicker,message} from 'antd';
 import {request} from 'utils'
 import {CusFormItem} from 'compoments'
 import moment from 'moment';
@@ -38,7 +38,10 @@ function fetchTaxMain(value, callback) {
                     });
                     callback(newData);
                 }
-            });
+            })
+            .catch(err => {
+                message.error(err.message)
+            });;
     }
 
     timeout = setTimeout(fetch, 300);
@@ -84,6 +87,9 @@ class PopModal extends Component{
                     }]
                 })
             })
+            .catch(err => {
+                message.error(err.message)
+            });
     }
     componentWillReceiveProps(nextProps){
         if(!nextProps.visible){
@@ -97,7 +103,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             this.fetchReportById(nextProps.modalConfig.id)
         }
@@ -123,7 +129,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';

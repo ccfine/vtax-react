@@ -7,8 +7,9 @@ import React, { Component } from 'react'
 import {Modal,Tabs,Form,Button,Row,Col,message,Spin} from 'antd'
 import BasicInfo from './BasicInfo.react'
 import TaxIdentification from './TaxIdentification.react'
-import Shareholding from './Shareholding.react'
-import EquityRelation from './EquityRelation.react'
+//import Shareholding from './Shareholding.react'
+//import EquityRelation from './EquityRelation.react'
+import ParameterSettings from './ParameterSettings.react'
 import {request} from 'utils'
 const TabPane = Tabs.TabPane;
 
@@ -25,10 +26,11 @@ class Add extends Component {
         activeKey:'1',
         submitLoading:false,
 
-        gdjcg:[],
-        gqgx:[],
+        //gdjcg:[],
+        //gqgx:[],
         jbxx:{},
         szjd: null,
+        taxSubjectConfigBO:null,
         status:1,
         id:null,
     }
@@ -60,11 +62,6 @@ class Add extends Component {
         this.handleSubmit()
     }
 
-    handleCancel = (e) => {
-        this.props.changeVisable(false);
-        this.props.updateTable();
-    }
-
     checkeGqgxId = (data)=>{
         return data.map((item)=>{
             return {
@@ -84,16 +81,16 @@ class Add extends Component {
     }
 
     handleSubmit = (e) => {
-        e && e && e.preventDefault();
+        e && e && e.preventDefault();//编辑成功，关闭当前窗口,刷新父级组件
          this.props.form.validateFieldsAndScroll((err, values) => {
          if (!err) {
-             if(values.jbxx.industry.label && values.jbxx.industry.key){
-                 values.jbxx.industry = values.jbxx.industry.key
-             }
 
+             /*if(values.jbxx.industry && values.jbxx.industry.label && values.jbxx.industry.key){
+                 values.jbxx.industry = values.jbxx.industry.key
+             }*/
              const type = this.props.modalConfig.type;
-             const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
-             const gqgx = this.checkeGqgxId(this.state.gqgx);
+             //const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
+             //const gqgx = this.checkeGqgxId(this.state.gqgx);
              const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
              const data = {
                 ...values,
@@ -101,7 +98,7 @@ class Add extends Component {
                    ...values.jbxx,
                    status:this.state.status,
                    id:  type=== 'add' ? null : this.props.selectedRowKeys[0],
-                   operatingProvince: values.jbxx.operatingProvince[0],
+                   /*operatingProvince: values.jbxx.operatingProvince[0],
                    operatingCity:values.jbxx.operatingProvince[1],
                    operatingArea:values.jbxx.operatingProvince[2],
                    nationalTaxProvince:values.jbxx.nationalTaxProvince[0],
@@ -110,16 +107,25 @@ class Add extends Component {
 
                    localTaxProvince:values.jbxx.localTaxProvince[0],
                    localTaxCity:values.jbxx.localTaxProvince[1],
-                   localTaxArea:values.jbxx.localTaxProvince[2],
+                   localTaxArea:values.jbxx.localTaxProvince[2],*/
                    registrationDate:values.jbxx.registrationDate && values.jbxx.registrationDate.format('YYYY-MM-DD'),
                    openingDate:values.jbxx.openingDate && values.jbxx.openingDate.format('YYYY-MM-DD'),
                 },
-                gdjcg:gdjcg ,
-                gqgx:gqgx,
+                //gdjcg:gdjcg,
+                //gqgx:gqgx,
                 szjd:szjd,
-             }
+                taxSubjectConfigBO: type === 'add' ? {
+                    prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0'
+                } : {
+                    id:this.state.taxSubjectConfigBO.id,
+                    parentId:this.state.taxSubjectConfigBO.parentId,
+                    prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
+                    //unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
+                    //unusedInvoicePlatform: values.taxSubjectConfigBO.unusedInvoicePlatform === true ? '1' : '0',
+                    //offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
+                }
 
-            //console.log(data);
+             }
 
             this.mounted && this.setState({
                submitLoading: true
@@ -130,10 +136,11 @@ class Add extends Component {
                    .then(({data}) => {
                        if (data.code === 200) {
                            message.success('新增成功！', 4)
+
                            //编辑成功，关闭当前窗口,刷新父级组件
                            this.props.toggleModalVisible(false);
                            this.props.updateTable();
-                           this.setStatus(2);
+
                            this.mounted && this.setState({
                                submitLoading: false,
                                id:data.data,
@@ -156,40 +163,40 @@ class Add extends Component {
 
             if (type === 'edit') {
 
-               request.put('/taxsubject/update', data
-               )
-                   .then(({data}) => {
+                   request.put('/taxsubject/update', data
+                   )
+                       .then(({data}) => {
 
-                       if (data.code === 200) {
-                           message.success('编辑成功！', 4);
-                           //编辑成功，关闭当前窗口,刷新父级组件
-                           this.props.toggleModalVisible(false);
-                           this.props.updateTable();
-                           this.mounted && this.setState({
-                               submitLoading: false
-                           })
-                       } else {
-                           message.error(data.msg, 4);
-                           this.mounted && this.setState({
-                               submitLoading: false
-                           })
-                       }
-                   })
-                   .catch(err => {
-                       message.error(err.message)
-                       this.mounted && this.setState({
-                           submitLoading: false
+                           if (data.code === 200) {
+                               message.success('编辑成功！', 4);
+                               //编辑成功，关闭当前窗口,刷新父级组件
+                               this.props.toggleModalVisible(false);
+                               this.props.updateTable();
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           } else {
+                               message.error(data.msg, 4);
+                               this.mounted && this.setState({
+                                   submitLoading: false
+                               })
+                           }
                        })
-                   })
-            }
+                       .catch(err => {
+                           message.error(err.message)
+                           this.mounted && this.setState({
+                               submitLoading: false
+                           })
+                       })
+                }
             }else{
-            if(err.jbxx){
-                this.setState({ activeKey:'1' });
-            }
+                if(err.jbxx){
+                    this.setState({ activeKey:'1' });
+                }
             }
         })
     }
-    handleDelete=()=>{
+    /*handleDelete=()=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '该删除后将不可恢复，是否删除？',
@@ -207,12 +214,15 @@ class Add extends Component {
                             message.error(data.msg)
                         }
                     })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
             },
         });
-    }
+    }*/
 
     handleSetStatus=(mes,status)=>{
         request.put(`/taxsubject/update/${(this.props.selectedRowKeys && this.props.selectedRowKeys[0]) || this.state.id}/${status}`
@@ -246,10 +256,11 @@ class Add extends Component {
             .then(({data}) => {
                 if(data.code===200){
                     this.setState({
-                        gdjcg:[...data.data.gdjcg],
-                        gqgx:[...data.data.gqgx],
+                        //gdjcg:[...data.data.gdjcg],
+                        //gqgx:[...data.data.gqgx],
                         jbxx:{...data.data.jbxx},
                         szjd: data.data.szjd,
+                        taxSubjectConfigBO:data.data.taxSubjectConfigBO,
                         submitLoading: false
                     })
                 }else{
@@ -258,6 +269,12 @@ class Add extends Component {
                         submitLoading: false
                     })
                 }
+            })
+            .catch(err => {
+                this.setState({
+                    submitLoading: false
+                })
+                message.error(err.message)
             });
     }
     mounted = true;
@@ -271,17 +288,17 @@ class Add extends Component {
              * */
             nextProps.form.resetFields();
             this.setState({
-                gdjcg:[],
-                gqgx:[],
+                //gdjcg:[],
+                //gqgx:[],
                 jbxx:{},
                 szjd: null,
                 activeKey:'1',
             })
         }
-
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
+
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             if(nextProps.selectedRowKeys && nextProps.selectedRowKeys.length>0){
                 this.fetch(nextProps.selectedRowKeys[0])
@@ -295,13 +312,13 @@ class Add extends Component {
     render() {
         const {modalConfig,visible,form,selectedRowKeys} = this.props;
 
-        const {jbxx,szjd,gdjcg,gqgx,status} = this.state;
+        const {jbxx,szjd,taxSubjectConfigBO} = this.state; //gdjcg,gqgx
 
         let title='';
         const type = modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -320,37 +337,35 @@ class Add extends Component {
                     destroyOnClose={true}
                     onCancel={()=>this.props.toggleModalVisible(false)}
                     width={900}
-                    style={{ top: 40 }}
+                    style={{ top: '5%' }}
                     visible={visible}
                     footer={
                         <Row>
                             <Col span={12}></Col>
-                            {
-                                (type ==='add') &&
-                                <Col span={12}>
-                                    {
-                                        parseInt(status,0) === 1 ?  <Button type="primary" onClick={this.handleSubmit}>保存</Button> : <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button>
-                                    }
-                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                                </Col>
-                            }
-                            {
-                                (type ==='edit') && parseInt(status,0) === 1 &&
-                                <Col span={12}>
-                                    <Button type="primary" onClick={this.handleSubmit}>保存</Button>
-                                    <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                                    <Button type="danger" onClick={this.handleDelete}>删除</Button>
-                                </Col>
-                            }
-                           {
-                                type === 'view' &&
-                               <Col span={12}>
-                               {
-                                   parseInt(status,0) === 1 ? <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button> : <Button type="primary" onClick={()=>this.handleSetStatus('撤销',1)}>撤销</Button>
-                               }
-                               <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
-                               </Col>
-                            }
+
+                            <Col span={12}>
+                                {
+                                    (type ==='add' || type ==='edit') && <span>
+                                        <Button type="primary" onClick={this.handleSubmit}>保存</Button>
+                                        {/* {
+                                            (type ==='edit') && parseInt(status,0) === 1 &&
+                                            <Button type="danger" onClick={this.handleDelete}>删除</Button>
+                                        } */}
+                                        <Button onClick={()=>this.props.toggleModalVisible(false)}>取消</Button>
+                                    </span>
+                                }
+                                {/* {
+                                    type === 'view'  && <span>
+                                        {
+                                            parseInt(status,0) === 1
+                                                ?
+                                                <Button type="primary" onClick={()=>this.handleSetStatus('提交',2)}>提交</Button>
+                                                :
+                                                <Button type="primary" onClick={()=>this.handleSetStatus('撤销',1)}>撤销</Button>
+                                        }
+                                    </span>
+                                } */}
+                            </Col>
                         </Row>
                     }
                     title={title}
@@ -376,7 +391,7 @@ class Add extends Component {
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
-                                <TabPane tab="股东及持股" key="3">
+                                {/*<TabPane tab="股东及持股" key="3">
                                     <Shareholding
                                         type={type}
                                         defaultData={gdjcg}
@@ -390,6 +405,14 @@ class Add extends Component {
                                         defaultData={gqgx}
                                         selectedRowKeys={selectedRowKeys}
                                         setGqgxDate={this.setGqgxDate.bind(this)}
+                                    />
+                                </TabPane>*/}
+                                <TabPane tab="参数设置" key="5" forceRender={true}>
+                                    <ParameterSettings
+                                        form={form}
+                                        type={type}
+                                        defaultData={taxSubjectConfigBO}
+                                        selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
                             </Tabs>

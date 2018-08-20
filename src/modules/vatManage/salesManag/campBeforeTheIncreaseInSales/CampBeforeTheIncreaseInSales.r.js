@@ -117,7 +117,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             formItemStyle,
             componentProps:{
                 fieldTextName:'buildingName',
-                fieldValueName:'buildingName',
+                fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('stagesId') || false,
                 url:`/output/room/files/queryListByStagesId?stagesId=${getFieldValue('stagesId') || ''}`,
@@ -182,7 +182,7 @@ const getColumns = context =>[
                                 },()=>{
                                     context.toggleModalVisible(true)
                                 })
-                            }}>修改</span>
+                            }}>编辑</span>
                         )
                     }
                     <span style={{
@@ -317,6 +317,9 @@ class CampBeforeTheIncreaseInSales extends Component{
                     message.error(`列表主信息查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
         const {visible,modalConfig,tableKey,searchFieldsValues,hasData,dataStatus,submitDate} = this.state;
@@ -333,7 +336,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                 }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
+                    pageSize:100,
                     columns:getColumns(this),
                     url:'/output/sellinghouse/list',
                     onSuccess:(params,data)=>{
@@ -347,7 +350,7 @@ class CampBeforeTheIncreaseInSales extends Component{
                     extra:<div>
                         {
                             dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
+                                <span style={{marginRight:20}}>状态：<label style={{color:'#f5222d'}}>{
                                     transformDataStatus(dataStatus)
                                 }</label></span>
                                 {

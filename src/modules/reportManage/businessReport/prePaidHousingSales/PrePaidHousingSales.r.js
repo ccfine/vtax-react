@@ -3,7 +3,7 @@
  * 售房预缴台账
  */
 import React,{Component} from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney} from '../../../../utils'
 const searchFields = (getFieldValue)=> {
     return [
@@ -273,7 +273,11 @@ const columns = [
 ];
 
 export default class PrePaidHousingSales extends Component{
+    state = {
+        totalSource:undefined,
+    }
     render(){
+        const {totalSource} = this.state;
         return(
             <SearchTable
                 searchOption={{
@@ -287,33 +291,38 @@ export default class PrePaidHousingSales extends Component{
                     pageSize:100,
                     columns:columns,
                     url:'/account/salehouse/list',
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        累计结转收入金额：<span className="amount-code">{fMoney(data.pageCumulativeIncomeAmount)}</span>
-                                        累计预收价款：<span className="amount-code">{fMoney(data.pageCumulativePrepaidPayment)}</span>
-                                        当期结转收入金额：<span className="amount-code">{fMoney(data.pageCurrentIncomeAmount)}</span>
-                                        当期预收价款：<span className="amount-code">{fMoney(data.pageCurrentPrepaidPayment)}</span>
-                                        预缴销售额：<span className="amount-code">{fMoney(data.pagePrepaidSales)}</span>
-                                        <div className="footer-total-meta-title">
-                                            <label>总计：</label>
-                                        </div>
-                                        <div className="footer-total-meta-detail">
-                                            累计结转收入金额：<span className="amount-code">{fMoney(data.totalCumulativeIncomeAmount)}</span>
-                                            累计预收价款：<span className="amount-code">{fMoney(data.totalCumulativePrepaidPayment)}</span>
-                                            当期结转收入金额：<span className="amount-code">{fMoney(data.totalCurrentIncomeAmount)}</span>
-                                            当期预收价款：<span className="amount-code">{fMoney(data.totalCurrentPrepaidPayment)}</span>
-                                            预缴销售额：<span className="amount-code">{fMoney(data.totalPrepaidSales)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )
+                    cardProps:{
+                        title:'售房预缴查询'
+                    },
+                    extra: <div>
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'本页合计',
+                                    total:[
+                                        {title: '累计结转收入金额', dataIndex: 'pageCumulativeIncomeAmount'},
+                                        {title: '累计预收价款', dataIndex: 'pageCumulativePrepaidPayment'},
+                                        {title: '当期结转收入金额', dataIndex: 'pageCurrentIncomeAmount'},
+                                        {title: '当期预收价款', dataIndex: 'pageCurrentPrepaidPayment'},
+                                        {title: '预缴销售额', dataIndex: 'pagePrepaidSales'},
+                                    ],
+                                },{
+                                    title:'总计',
+                                    total:[
+                                        {title: '累计结转收入金额', dataIndex: 'totalCumulativeIncomeAmount'},
+                                        {title: '累计预收价款', dataIndex: 'totalCumulativePrepaidPayment'},
+                                        {title: '当期结转收入金额', dataIndex: 'totalCurrentIncomeAmount'},
+                                        {title: '当期预收价款', dataIndex: 'totalCurrentPrepaidPayment'},
+                                        {title: '预缴销售额', dataIndex: 'totalPrepaidSales'},
+                                    ],
+                                }
+                            ]
+                        } />
+                    </div>,
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
                         x:'1430px',

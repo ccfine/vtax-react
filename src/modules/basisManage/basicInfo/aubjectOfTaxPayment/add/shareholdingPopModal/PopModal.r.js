@@ -86,7 +86,7 @@ class PopModal extends Component{
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             /**
-             * 弹出的时候如果类型不为添加，则异步请求数据
+             * 弹出的时候如果类型不为新增，则异步请求数据
              * */
             this.setState({
                 defaultData:{...nextProps.selectedRows[0]}
@@ -106,7 +106,7 @@ class PopModal extends Component{
         const type = props.modalConfig.type;
         switch (type){
             case 'add':
-                title = '添加';
+                title = '新增';
                 break;
             case 'edit':
                 title = '编辑';
@@ -132,6 +132,13 @@ class PopModal extends Component{
                 destroyOnClose={true}
                 onCancel={()=>props.toggleModalVisible(false)}
                 width={900}
+                style={{
+                    top:'5%'
+                }}
+                bodyStyle={{
+                    maxHeight:450,
+                    overflowY:'auto',
+                }}
                 visible={props.visible}
                 footer={
                     type !== 'view' && <Row>

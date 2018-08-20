@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import {Row,Card} from 'antd'
 import moment from 'moment';
-import {request,getFields,regRules,requestDict} from 'utils'
+import {getFields,requestDict,setFormat} from 'utils'
 import './styles.less'
 
 class BasicInfo extends Component {
@@ -18,24 +18,14 @@ class BasicInfo extends Component {
         registrationType:[],
         taxpayerQualification:[],
         maximumLimit:[],
-        selectOptions:[],
-    }
-    //设置select值名不同
-    setFormat=data=>{
-        return data.map(item=>{
-            return{
-                ...item,
-                value:item.id,
-                text:item.name
-            }
-        })
+        //selectOptions:[],
     }
 
     //注册类型:取基础资料DJZCLX
     getRegistrationType=()=>{
         requestDict('DJZCLX',result=>{
             this.setState({
-                registrationType:this.setFormat(result)
+                registrationType:setFormat(result)
             })
         })
     }
@@ -43,7 +33,7 @@ class BasicInfo extends Component {
     getTaxpayerQualification=()=>{
         requestDict('NSRLX',result=>{
             this.setState({
-                taxpayerQualification:this.setFormat(result)
+                taxpayerQualification:setFormat(result)
             })
         })
     }
@@ -51,13 +41,13 @@ class BasicInfo extends Component {
     getMaximumLimit=()=>{
         requestDict('ZZS_ZYFP_ZGXE',result=>{
             this.setState({
-                maximumLimit:this.setFormat(result)
+                maximumLimit:setFormat(result)
             })
         })
     }
 
     //省市区联动
-    getlistArea=()=>{
+    /*getlistArea=()=>{
         request.get('/taxsubject/list/area')
             .then(({data})=>{
                 if(data.code ===200){
@@ -66,13 +56,16 @@ class BasicInfo extends Component {
                     })
                 }
             })
-    }
+            .catch(err => {
+                message.error(err.message)
+            });
+    }*/
 
     componentDidMount() {
         this.getRegistrationType()
         this.getTaxpayerQualification()
         this.getMaximumLimit()
-        this.getlistArea()
+        //this.getlistArea()
     }
 
     componentWillReceiveProps(nextProps){
@@ -87,9 +80,9 @@ class BasicInfo extends Component {
     render() {
 
         const {defaultData} = this.props;
-        const {getFieldValue} = this.props.form
+        //const {getFieldValue} = this.props.form
         const dateFormat = 'YYYY-MM-DD';
-        let disabled = this.props.type ==='view';
+        let disabled = this.props.type ==='view' ||  this.props.type ==='edit' ;
         let shouldShowDefaultData = false;
         if(this.props.type==='edit' || this.props.type==='view'){
             shouldShowDefaultData = true;
@@ -103,7 +96,7 @@ class BasicInfo extends Component {
             }
         }
         return (
-            <div className="basicInfo" style={{height:'390px',overflow:'hidden',overflowY:'scroll'}}>
+            <div className="basicInfo" style={{height:'350px',overflow:'hidden',overflowY:'auto'}}>
 
                 <Card style={{marginBottom:16}}>
                     <Row>
@@ -123,11 +116,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入编码',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -144,11 +137,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入纳税主体',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -165,11 +158,11 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入社会信用代码',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -186,14 +179,14 @@ class BasicInfo extends Component {
                                         rules: [
                                             {
                                                 required: true, message: '请输入管理单位公司注册证书营业执照号',
-                                            },{
+                                            },/*{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
-                                },{
+                                /*},{
                                     label:'所属行业',
                                     fieldName:'jbxx.industry',
                                     type:'industry',
@@ -204,12 +197,12 @@ class BasicInfo extends Component {
                                             label:defaultData['industry'] || '',
                                             key:defaultData['industry'] || ''
                                         } : undefined,
-                                        rules:[
+                                        /!*rules:[
                                             {
                                                 required:true,
                                                 message:'请选择所属行业'
                                             }
-                                        ]
+                                        ]*!/
                                     },
                                     componentProps:{
                                         disabled,
@@ -218,7 +211,7 @@ class BasicInfo extends Component {
                                         } : {
                                             industry:defaultData['industry']
                                         },
-                                    }
+                                    }*/
 
                                 },{
                                     label:'注册类型',
@@ -232,11 +225,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.registrationType,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择注册类型',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'收入规模',
@@ -281,11 +274,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.taxpayerQualification,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择纳税人资质',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'注册日期',
@@ -297,12 +290,12 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:shouldShowDefaultData ? moment(defaultData.registrationDate, dateFormat) : undefined,
-                                        rules: [
+                                        initialValue:(shouldShowDefaultData && defaultData.registrationDate) ? moment(defaultData.registrationDate, dateFormat) : undefined,
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择注册日期',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'开业日期',
@@ -314,12 +307,12 @@ class BasicInfo extends Component {
                                         disabled
                                     },
                                     fieldDecoratorOptions:{
-                                        initialValue:shouldShowDefaultData ? moment(defaultData.openingDate, dateFormat) : undefined,
-                                        rules: [
+                                        initialValue:(shouldShowDefaultData && defaultData.openingDate) ? moment(defaultData.openingDate, dateFormat) : undefined,
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择开业日期',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'经营期限',
@@ -333,11 +326,11 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operatingPeriod,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true, message: '请输入经营期限',
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -358,13 +351,13 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operatingStatus,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请选择营业状态',
                                             }
-                                        ],
+                                        ],*/
                                     }
-                                },{
+                                /*},{
                                     label:'生产经营地址',
                                     fieldName:'jbxx.operatingProvince',
                                     type:'cascader',
@@ -393,7 +386,7 @@ class BasicInfo extends Component {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                             }
                                         ],
-                                    }
+                                    }*/
                                 },{
                                     label:'办公电话',
                                     fieldName:'jbxx.officePhone',
@@ -412,11 +405,11 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.officePhone,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请输入办公电话',
                                             }
-                                        ],
+                                        ],*/
                                     }
                                 },{
                                     label:'开户银行',
@@ -430,11 +423,11 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.openingBank,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true, message: '请输入开户银行',
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -449,13 +442,13 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.bankAccount,
                                         rules: [
-                                            {
+                                            /*{
                                                 required: true, message: '请输入银行账号',
                                             },{
                                                 pattern: regRules.number.pattern, message: regRules.number.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -470,9 +463,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.legalPerson,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -487,11 +480,11 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.idCard,
                                         rules: [
-                                            {
+                                            /*{
                                                 pattern: regRules.not_chinese.pattern, message: regRules.not_chinese.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -506,9 +499,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.financialOfficer,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -523,9 +516,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.operater,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -572,9 +565,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.machineType,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -589,9 +582,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.currencyType,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -618,9 +611,9 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.receiptCurrencyType,
                                         rules: [
-                                            {
+                                            /*{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }
+                                            }*/
                                         ],
                                     }
                                 },{
@@ -636,7 +629,7 @@ class BasicInfo extends Component {
                                         initialValue:defaultData.receiptCurrencyAmount,
                                     }
                                 },{
-                                    label:'是否协同（喜盈佳）',
+                                    label:'是否协同',
                                     fieldName:'synergy',
                                     type:'checkbox',
                                     span:24,
@@ -654,7 +647,7 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.synergy,
                                     }
-                                },{
+                                /*},{
                                     label:'主管国税机关',
                                     fieldName:'jbxx.nationalTaxProvince',
                                     type:'cascader',
@@ -683,7 +676,7 @@ class BasicInfo extends Component {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                             }
                                         ],
-                                    }
+                                    }*/
                                 },{
                                     label:'联系电话',
                                     fieldName:'nationalTaxPhone',
@@ -703,7 +696,7 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.nationalTaxPhone,
                                     }
-                                },{
+                                /*},{
                                     label:'主管地税机关',
                                     fieldName:'jbxx.localTaxProvince',
                                     type:'cascader',
@@ -732,7 +725,7 @@ class BasicInfo extends Component {
                                                 max:regRules.input_length_50.max, message: regRules.input_length_50.message
                                             }
                                         ],
-                                    }
+                                    }*/
                                 },{
                                     label:'联系电话',
                                     fieldName:'jbxx.localTaxPhone',
@@ -758,7 +751,7 @@ class BasicInfo extends Component {
 
                         {
                             this.props.type !== 'add' && getFields(this.props.form,[
-                                {
+                                {/*
                                     label:'更新人',
                                     fieldName:'jbxx.lastModifiedBy',
                                     type:'input',
@@ -782,7 +775,7 @@ class BasicInfo extends Component {
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.lastModifiedDate,
                                     }
-                                },{
+                                },{*/
                                     label:'当前状态',
                                     fieldName:'jbxx.status',
                                     type:'select',

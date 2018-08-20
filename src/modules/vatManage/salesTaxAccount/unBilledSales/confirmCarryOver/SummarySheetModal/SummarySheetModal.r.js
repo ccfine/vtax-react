@@ -25,6 +25,7 @@ const columns = [
     {
         title:'税率',
         dataIndex:'taxRate',
+        className:'text-right',
         render:text=>text? `${text}%`: text,
     },
     {
@@ -67,6 +68,9 @@ class SummarySheetModal extends Component{
                 }else{
                     message.error(`汇总表数据获取失败:${data.msg}`)
                 }
+            })
+            .catch(err => {
+                message.error(err.message)
             })
     }
     componentWillReceiveProps(nextProps){

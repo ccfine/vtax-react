@@ -1,387 +1,462 @@
 /**
  * Created by liurunbin on 2018/1/2.
  */
-import React, { Component } from 'react'
-import {Button,Icon,Modal,message} from 'antd'
-import {SearchTable,FileExport} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import {request,fMoney,getUrlParam} from 'utils'
-import FileImportModal from './fileImportModal'
-import PopModal from './popModal'
-import { withRouter } from 'react-router'
-import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
+import React, { Component } from "react";
+import { SearchTable,TableTotal } from "compoments";
+import {message,Modal} from 'antd';
+import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
+import PopModal from "./popModal";
+import moment from "moment";
+
 const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
-const formItemStyle={
-    labelCol:{
-        span:8
+    cursor: "pointer",
+    color: "#1890ff"
+};
+const formItemStyle = {
+    labelCol: {
+        span: 8
     },
-    wrapperCol:{
-        span:16
+    wrapperCol: {
+        span: 16
     }
-}
-const searchFields=(disabled)=> {
-    return [
-        {
-            label:'纳税主体',
-            type:'taxMain',
-            fieldName:'mainId',
-            componentProps:{
-                disabled,
+};
+const fields = (disabled,declare)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
             },
-            formItemStyle,
-            fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            },
-        },
-        {
-            label:'开票月份',
-            type:'monthPicker',
-            formItemStyle,
-            fieldName:'billingDate',
-            componentProps:{
-                disabled,
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择开票月份'
-                    }
-                ]
+            wrapperCol:{
+                span:14
             }
         },
-        {
-            label:'发票号码',
-            type:'input',
-            fieldName:'invoiceNum',
-            formItemStyle,
-            fieldDecoratorOptions:{},
-            componentProps:{}
+        componentProps:{
+            //labelInValue:true,
         },
-        {
-            label:'税收分类编码',
-            type:'input',
-            formItemStyle,
-            fieldName:'taxClassificationCoding',
-            fieldDecoratorOptions:{}
-        },
-        {
-            label:'税率',
-            type:'numeric',
-            formItemStyle,
-            fieldName:'taxRate',
-            componentProps:{
-                valueType:'int'
-            },
-            fieldDecoratorOptions:{}
-        },
-        {
-            label:'商品名称',
-            type:'input',
-            formItemStyle,
-            fieldName:'commodityName',
-        },
-        {
-            label:'发票类型',
-            fieldName:'invoiceType',
-            formItemStyle,
-            type:'select',
-            options:[
+        fieldDecoratorOptions:{
+            initialValue: (disabled && declare.mainId) || undefined,
+            //initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+            rules:[
                 {
-                    text:'专票',
-                    value:'s'
-                },
-                {
-                    text:'普票',
-                    value:'c'
+                    required:true,
+                    message:'请选择纳税主体'
                 }
             ]
         },
-    ]
-}
-const getColumns = context =>[
-    {
-        title:'操作',
-        key:'actions',
-        render:(text,record)=>(
-            <div style={{textAlign:'center'}}>
+    },
+]
+
+const searchFields = (disabled,declare) => {
+    return [
+        {
+            label: "纳税主体",
+            type: "taxMain",
+            fieldName: "main",
+            span: 8,
+            componentProps: {
+                labelInValue:true,
+                disabled
+            },
+            formItemStyle,
+            fieldDecoratorOptions: {
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+                rules: [
+                    {
+                        required: true,
+                        message: "请选择纳税主体"
+                    }
+                ]
+            }
+        },
+        {
+            label: "开票月份",
+            type: "monthPicker",
+            formItemStyle,
+            span: 8,
+            fieldName: "authMonth",
+            componentProps: {
+                disabled
+            },
+            fieldDecoratorOptions: {
+                initialValue:
+                (disabled && moment(declare.authMonth, "YYYY-MM")) ||
+                undefined,
+                rules: [
+                    {
+                        required: true,
+                        message: "请选择开票月份"
+                    }
+                ]
+            }
+        },
+        {
+            label: "发票号码",
+            type: "input",
+            fieldName: "invoiceNum",
+            span: 8,
+            formItemStyle,
+            fieldDecoratorOptions: {},
+            componentProps: {}
+        },
+        {
+            label: "税率",
+            type: "numeric",
+            span: 8,
+            formItemStyle,
+            fieldName: "taxRate",
+            componentProps: {
+                valueType: "int"
+            },
+            fieldDecoratorOptions: {}
+        },
+        {
+            label: "发票类型",
+            fieldName: "invoiceType",
+            span: 8,
+            formItemStyle,
+            type: "select",
+            options: [
                 {
-                    parseInt(context.state.dataStatus,0) === 1 && (
-                        <span style={pointerStyle} onClick={()=>{
-                            const type = parseInt(record.sourceType,0);
-                            if(type!==1){
-                                Modal.warning({
-                                    title: '友情提示',
-                                    content: '只能修改手工新增的数据',
-                                });
-                                return false;
-                            }
-
-                            context.setState({
-                                modalConfig:{
-                                    type:'edit',
-                                    id:record.id
-                                }
-                            },()=>{
-                                context.toggleModalVisible(true)
-                            })
-                        }}>编辑</span>
-                    )
+                    text: "专票",
+                    value: "s"
+                },
+                {
+                    text: "普票",
+                    value: "c"
                 }
-
-                <span style={{
-                    ...pointerStyle,
-                    marginLeft:5
-                }} onClick={()=>{
-                    context.setState({
-                        modalConfig:{
-                            type:'view',
-                            id:record.id
-                        }
-                    },()=>{
-                        context.toggleModalVisible(true)
-                    })
-                }}>
-                    查看
-                </span>
-            </div>
-        ),
-        fixed:'left',
-        width:'70px'
-
-    },{
-        title: '纳税主体',
-        dataIndex: 'mainName',
-    }, {
-        title: '发票类型',
-        dataIndex: 'invoiceType'
-    },{
-        title: '发票代码',
-        dataIndex: 'invoiceCode',
-    },{
-        title: '发票号码',
-        dataIndex: 'invoiceNum'
-    },{
-        title: '发票明细号',
-        dataIndex: 'invoiceDetailNum',
-    },{
-        title: '开票日期',
-        dataIndex: 'billingDate',
-        width:'75px'
-    },{
-        title: '购货单位',
-        dataIndex: 'purchaseName',
-    },{
-        title: '购方税号',
-        dataIndex: 'purchaseTaxNum',
-    },{
-        title: '商品名称',
-        dataIndex: 'commodityName',
-    },{
-        title: '金额',
-        dataIndex: 'amount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },{
-        title: '税额',
-        dataIndex: 'taxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },{
-        title: '价税合计',
-        dataIndex: 'totalAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },{
-        title: '税收分类编码',
-        dataIndex: 'taxClassificationCoding',
-    },{
-        title: '数据来源',
-        dataIndex: 'sourceType',
-        width:'60px',
-        render:text=>{
-            text = parseInt(text,0);
-            if(text===1){
-                return '手工采集'
-            }
-            if(text===2){
-                return '外部导入'
-            }
-            return text
+            ]
         }
-    }
-];
-class SalesInvoiceCollection extends Component{
-    state={
-        visible:false,
-        modalConfig:{
-            type:''
-        },
-        tableKey:Date.now(),
-        searchFieldsValues:{
+    ];
+};
+const getColumns = (context) => [{
+    title: "纳税主体",
+    dataIndex: "mainName",
+    width:'200px',
+},
+    {
+        title: '发票类型',
+        dataIndex: "invoiceType",
+        width:'100px',
+    },
+    {
+        title: '发票代码',
+        dataIndex: "invoiceCode",
+        width:'150px',
+    },
+    {
+        title: '发票号码',
+        dataIndex: "invoiceNum",
+        width:'150px',
+        render: (text, record) => (
+            <a title='查看详情'
+               style={{
+                   ...pointerStyle
+               }}
+               onClick={() => {
+                   context.setState(
+                       {
+                           modalConfig: {
+                               type: "view",
+                               id: record.id
+                           }
+                       },
+                       () => {
+                           context.toggleModalVisible(true);
+                       }
+                   );
+               }}>
+                {text}
+            </a>
+        )
+    },
+    {
+        title: '备注',
+        dataIndex: 'remark',
+        //width:'500px',
+    },
+    {
+        title: '金额',
+        dataIndex: "amount",
+        className:'table-money',
+        width:'100px',
+        render: (text, record) => fMoney(text)
+    },
+    {
+        title: "税率",
+        dataIndex: "taxRate",
+        width:'100px',
+        render: text => text?`${text}%`:text
+    },
+    {
+        title: "税额",
+        dataIndex: "taxAmount",
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'100px',
+    },
+    {
+        title: "价税合计",
+        dataIndex: "totalAmount",
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'100px',
+    },
+    {
+        title: "开票日期",
+        dataIndex: "billingDate",
+        width:'100px',
+    },
+    {
+        title: '购货单位',
+        dataIndex: "purchaseName",
+        width:'200px',
+    },
+    {
+        title: "数据来源",
+        dataIndex: "sourceType",
+        width:'100px',
+        render: text => {
+            text = parseInt(text, 0);
+            if (text === 1) {
+                return "手工采集";
+            }
+            if (text === 2) {
+                return "外部导入";
+            }
+            return text;
+        }
+    },
+    /*,
+     {
+     title: '购方税号',
+     dataIndex: "purchaseTaxNum",
+     width:'150px',
+     },
+     {
+     title: '项目名称',
+     dataIndex: "projectName",
+     width:'150px',
+     },
+     {
+     title: '项目编码',
+     dataIndex: "projectNum",
+     width:'150px',
+     },
+     */
 
-        },
+]
 
+class SalesInvoiceCollection extends Component {
+    state = {
+        visible: false,
+        deleteLoading:false,
+        modalConfig: {
+            type: ""
+        },
+        tableKey: Date.now(),
+        filters: {},
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
-        submitDate:'',
-
-        hasData:false
-    }
-    fetchResultStatus = ()=>{
-        request.get('/output/invoice/collection/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
+        statusParam: {},
+        totalSource: undefined,
+        selectedRowKeys:[],
+    };
+    fetchResultStatus = () => {
+        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
+        })
+    };
+    toggleDeleteLoading=(val)=>{
+        this.setState({deleteLoading:val})
     }
-    toggleModalVisible=visible=>{
+    deleteData = () =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要删除选中的记录？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleDeleteLoading(true)
+                request.post(`/output/invoice/collection/deleteByIds`,this.state.selectedRowKeys)
+                    .then(({data})=>{
+                        this.toggleDeleteLoading(false)
+                        if(data.code===200){
+                            message.success('删除成功！');
+                            this.refreshTable();
+                        }else{
+                            message.error(`删除失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    message.error(err.message)
+                    this.toggleDeleteLoading(false)
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
+
+    toggleModalVisible = visible => {
         this.setState({
             visible
-        })
-    }
-    showModal=type=>{
-        this.toggleModalVisible(true)
+        });
+    };
+    showModal = type => {
+        this.toggleModalVisible(true);
         this.setState({
-            modalConfig:{
-                type:type
+            modalConfig: {
+                type: type
             }
-        })
-    }
-    refreshTable = ()=>{
+        });
+    };
+    refreshTable = () => {
         this.setState({
-            tableKey:Date.now()
-        })
-    }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
-    }
-    render(){
-        const {visible,modalConfig,tableKey,searchFieldsValues,hasData,submitDate,dataStatus} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
-        return(
-            <SearchTable
-                doNotFetchDidMount={true}
-                searchOption={{
-                    fields:searchFields(disabled),
-                    cardProps:{
-                        className:''
-                    },
-                }}
-                tableOption={{
-                    key:tableKey,
-                    pageSize:20,
-                    columns:getColumns(this),
-                    url:'/output/invoice/collection/list',
-                    onSuccess:(params,data)=>{
-                        this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !==0
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
-                    extra:<div>
-                        {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+            tableKey: Date.now(),
+            selectedRowKeys:[],
+        });
+    };
+    render() {
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare,
+            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+        return (
+            <div className='oneLine'>
+                <SearchTable
+                    doNotFetchDidMount={!disabled}
+                    searchOption={{
+                        fields: searchFields(disabled,declare),
+                        cardProps: {
+                            className: "",
+                            style:{borderTop:0},
                         }
-                        <Button size='small' style={{marginRight:5}} onClick={()=>this.showModal('add')} >
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <FileImportModal style={{marginRight:5}} />
-                        <FileExport
-                            url={`output/invoice/collection/export`}
-                            title="导出"
-                            size="small"
-                            disabled={!hasData}
-                            params={
-                                searchFieldsValues
-                            }
-                            setButtonStyle={{marginRight:5}}
-                        />
-                        <FileExport
-                            url='output/invoice/collection/download'
-                            title="下载导入模板"
-                            size="small"
-                            setButtonStyle={{marginRight:5}}
-                        />
-                        <SubmitOrRecall type={1} url="/output/invoice/collection/submit" onSuccess={this.refreshTable} />
-                        <SubmitOrRecall type={2} url="/output/invoice/collection/revoke" onSuccess={this.refreshTable} />
-                    </div>,
-                    scroll:{
-                        x:'180%'
-                    },
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                        总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                        总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                    </div>
+                    }}
+                    backCondition={(filters) => {
+                        this.setState({
+                            filters,
+                        },() => {
+                            this.fetchResultStatus();
+                        });
+                    }}
+                    tableOption={{
+                        key: tableKey,
+                        pageSize: 100,
+                        columns: getColumns(this),
+                        url: "/output/invoice/collection/list",
+                        // rowSelection:{
+                        //     type: 'checkbox',
+                        // },
+                        onRowSelect:isCheck?(selectedRowKeys)=>{
+                            this.setState({
+                                selectedRowKeys
+                            })
+                        }:undefined,
+                        cardProps: {
+                            title: "销项发票采集",
+                            extra: (
+                                <div>
+                                    {
+                                        listMainResultStatus(statusParam)
+                                    }
+                                    {
+                                        JSON.stringify(filters)!=='{}' && composeBotton([{
+                                            type:'fileExport',
+                                            url:'output/invoice/collection/export',
+                                            params:filters,
+                                            title:'导出',
+                                            userPermissions:['1061007'],
+                                        }])
+                                    }
+                                    {
+                                        composeBotton([{
+                                            type:'fileExport',
+                                            url:'output/invoice/collection/download',
+                                            onSuccess:this.refreshTable
+                                        }])
+                                    }
+                                    {
+                                        (disabled && declare.decAction==='edit') && composeBotton([{
+                                            type:'fileImport',
+                                            url:'/output/invoice/collection/upload/',
+                                            onSuccess:this.refreshTable,
+                                            fields:fields(disabled,declare),
+                                            userPermissions:['1061005'],
+                                        },{
+                                            type:'revokeImport',
+                                            url:'/output/invoice/collection/revocation',
+                                            params:filters,
+                                            monthFieldName:"authMonth",
+                                            onSuccess:this.refreshTable,
+                                            userPermissions:['1065000'],
+                                        },{
+                                            type:'delete',
+                                            icon:'delete',
+                                            text:'删除',
+                                            btnType:'danger',
+                                            loading:deleteLoading,
+                                            selectedRowKeys:selectedRowKeys,
+                                            userPermissions:['1061008'],
+                                            onClick:this.deleteData
+                                        },{
+                                            type:'submit',
+                                            url:'/output/invoice/collection/submit',
+                                            params:filters,
+                                            onSuccess:this.refreshTable,
+                                            userPermissions:['1061010'],
+                                        },{
+                                            type:'revoke',
+                                            url:'/output/invoice/collection/revoke',
+                                            params:filters,
+                                            onSuccess:this.refreshTable,
+                                            userPermissions:['1061011'],
+                                        }],statusParam)
+                                    }
+                                    <TableTotal type={3} totalSource={totalSource} data={
+                                        [
+                                            {
+                                                title:'合计',
+                                                total:[
+                                                    {title: '发票金额', dataIndex: 'allAmount'},
+                                                    {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                                    {title: '价税合计', dataIndex: 'allTotalAmount'},
+                                                ],
+                                            }
+                                        ]
+                                    } />
                                 </div>
-                            </div>
-                        )
-                    },
-                }}
-            >
-                <PopModal refreshTable={this.refreshTable} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
-            </SearchTable>
-        )
+                            )
+                        },
+                        scroll:{
+                            x:1900,
+                            y:window.screen.availHeight-400,
+                        },
+                        onTotalSource: totalSource => {
+                            this.setState({
+                                totalSource
+                            });
+                        }
+                    }}
+                >
+                    <PopModal
+                        refreshTable={this.refreshTable}
+                        visible={visible}
+                        modalConfig={modalConfig}
+                        statusParam={statusParam}
+                        toggleModalVisible={this.toggleModalVisible}
+                    />
+                </SearchTable>
+            </div>
+        );
     }
 }
-export default withRouter(SalesInvoiceCollection)
+export default SalesInvoiceCollection

@@ -2,51 +2,43 @@
  * Created by liurunbin on 2017/12/22.
  */
 import React,{Component} from 'react'
-import {Form,Select} from 'antd'
+import {Form,Select,message} from 'antd'
 import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
 import {request} from 'utils'
 const FormItem = Form.Item;
 const Option = Select.Option
-let timeout;
-let currentValue;
 function fetchTaxMain(value, callback) {
-
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-    }
-    currentValue = value;
-
-    const fetch = ()=> {
-        request.get(`/taxsubject/listByName`,{
-            params:{
-                name:value,
-                size:100
+    request.get(`/taxsubject/listByName`,{
+        params:{
+            name:value,
+            ///size:100
+        }
+    })
+        .then(({data}) => {
+            if(data.code===200){
+                const result = data.data.records || data.data;;
+                const newData = [];
+                result.forEach((r) => {
+                    newData.push({
+                        value: `${r.id}`,
+                        text: r.name,
+                    });
+                });
+                callback(newData);
             }
         })
-            .then(({data}) => {
-                if(data.code===200 && currentValue === value){
-
-                    const result = data.data.records;
-                    const newData = [];
-                    result.forEach((r) => {
-                        newData.push({
-                            value: `${r.id}`,
-                            text: r.name,
-                        });
-                    });
-                    callback(newData);
-                }
-            });
-    }
-
-    timeout = setTimeout(fetch, 300);
+        .catch(err => {
+            message.error(err.message)
+        });
 }
-export default class TaxMain extends Component{
+class TaxMain extends Component{
     static propTypes={
         form:PropTypes.object.isRequired,
         formItemStyle:PropTypes.object,
         fieldName:PropTypes.string,
+        whetherShowAll:PropTypes.bool,
+        notShowAll:PropTypes.bool,
         fieldDecoratorOptions:PropTypes.object,
         componentProps:PropTypes.object
     }
@@ -60,28 +52,32 @@ export default class TaxMain extends Component{
             }
         },
         fieldName:'mainId',
+        whetherShowAll:false,
+        notShowAll:false,
         fieldDecoratorOptions:{
         }
     }
     state={
         mainTaxItems:[]
     }
-    onSearch = (value) => {
+    /*onSearch = (value) => {
         this.props.onSearch && this.props.onSearch(value)
-        if(value){
+        if(typeof value !== 'undefined' && value !== null){
             fetchTaxMain(value, data => {
                 this.mounted && this.setState({
                     mainTaxItems:data
                 })
             });
         }
-    }
+    }*/
     componentDidMount(){
-        fetchTaxMain('',data => {
-            this.mounted && this.setState({
-                mainTaxItems: data
-            })
-        });
+        if(this.props.isAuthed){
+            fetchTaxMain('',data => {
+                this.mounted && this.setState({
+                    mainTaxItems: data
+                })
+            });
+        }
     }
     mounted = true
     componentWillUnmount(){
@@ -90,27 +86,40 @@ export default class TaxMain extends Component{
     render(){
         const {mainTaxItems}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps} = this.props;
-        //TODO:为了设置所有不是必填的select都加上一个全部默认选项
-        const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true;
-        const newData =  mainTaxItems.length>0 ? [{text:'全部', value:''}].concat(mainTaxItems) : mainTaxItems;
-        const optionItem = isShowAll ? mainTaxItems :  newData;
+        const {formItemStyle,fieldName,fieldDecoratorOptions,componentProps,whetherShowAll,notShowAll} = this.props;
+        //TODO:为了设置所有不是必填的select都加上一个全部默认选项   notShowAll:是否添加无或者全部
+        let optionsData = [], initialValue;
+        if(notShowAll === true){
+            optionsData = mainTaxItems;
+        }else{
+            const isShowAll = fieldDecoratorOptions && fieldDecoratorOptions.rules && fieldDecoratorOptions.rules.map(item=>item.required)[0] === true,
+                newData =  mainTaxItems.length>0 ? [{text: whetherShowAll ? '无' : '全部', value:''}].concat(mainTaxItems) : mainTaxItems;
+            if(componentProps && componentProps.labelInValue === true){
+                initialValue = (fieldDecoratorOptions && fieldDecoratorOptions.initialValue) || (isShowAll ? undefined : {key:'',label:'全部'});
+            }else{
+                initialValue = (fieldDecoratorOptions && fieldDecoratorOptions.initialValue) || (isShowAll ? undefined : '');
+            }
+            optionsData = isShowAll ? mainTaxItems : newData;
+        }
+
         return(
             <FormItem label='纳税主体' {...formItemStyle}>
                 {getFieldDecorator(fieldName,{
-                    initialValue:'',
+                    initialValue:initialValue,
                     ...fieldDecoratorOptions,
                 })(
                     <Select
                         showSearch
                         style={{ width: '100%' }}
-                        optionFilterProp="children"
-                        onSearch={this.onSearch}
                         placeholder="请选择纳税主体"
+                        optionFilterProp="children"
+                        //filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        // onSearch={this.onSearch}
+                        //labelInValue={true}
                         {...componentProps}
                     >
                         {
-                            optionItem.map((item,i)=>(
+                            optionsData.map((item,i)=>(
                                 <Option key={i} value={item.value}>{item.text}</Option>
                             ))
                         }
@@ -120,3 +129,6 @@ export default class TaxMain extends Component{
         )
     }
 }
+export default connect(state=>({
+    isAuthed:state.user.get('isAuthed'),
+}))(TaxMain)

@@ -3,29 +3,33 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Form, Row, Col, Button} from 'antd'
-import {getFields,getUrlParam} from '../../../../utils'
+import {Form, Row, Col, Button,Card,message} from 'antd'
+import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
 class SheetWithSearchFields extends Component{
     static propTypes={
+        tab:PropTypes.string,
         grid:PropTypes.array,
         url:PropTypes.string,
-        composeGrid:PropTypes.func
+        composeGrid:PropTypes.func,
+        action:PropTypes.bool,
     }
     static defaultProps = {
         grid:[],
-        searchFields:[
+        searchFields:(disabled,declare,defaultParams={})=>[
             {
                 label:'纳税主体',
-                fieldName:'mainId',
+                fieldName:'main',
                 type:'taxMain',
+                span:8,
                 componentProps:{
-                    disabled: !!getUrlParam('mainId'),
+                    labelInValue:true,
+                    disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: getUrlParam('mainId') || undefined,
+                    initialValue: (disabled && declare.mainId) ? {key:declare.mainId,label:declare.mainName} : JSON.stringify(defaultParams) !== "{}" ? (defaultParams && {key:defaultParams.mainId,label:''}) : undefined ,
                     rules:[
                         {
                             required:true,
@@ -37,13 +41,14 @@ class SheetWithSearchFields extends Component{
             {
                 label:'月份',
                 fieldName:'taxMonth',
+                span:8,
                 type:'monthPicker',
                 componentProps:{
-                    disabled: !!getUrlParam('authMonth')
+                    disabled,
                 },
                 fieldDecoratorOptions:{
-                    initialValue: (!!getUrlParam('authMonth') && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
-                    //initialValue: moment(getUrlParam('authMonth'), 'YYYY-MM') || undefined,
+
+                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.taxMonth && moment(defaultParams.taxMonth)),
                     rules:[
                         {
                             required:true,
@@ -56,50 +61,84 @@ class SheetWithSearchFields extends Component{
     }
     state={
         params:{},
-        updateKey:Date.now()
+        updateKey:Date.now(),
+        /**
+         *修改状态和时间
+         * */
+        statusParam:'',
+        saveLoding:false,
+    }
+    refreshTable = ()=>{
+        this.mounted && this.setState({
+            updateKey:Date.now()
+        },()=>{
+            this.fetchResultStatus()
+        })
+    }
+    fetchResultStatus = ()=>{
+        requestResultStatus('/tax/decConduct/main/listMain',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
+            this.mounted && this.setState({
+                statusParam: result,
+            })
+        })
     }
     componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.setState({
+        const { declare } = this.props;
+        if (!!declare) {
+            this.mounted && this.setState({
                 params:{
-                    mainId:getUrlParam('mainId') || undefined,
-                    taxMonth:moment(getUrlParam('authMonth'), 'YYYY-MM').format('YYYY-MM') || undefined,
+                    mainId:declare.mainId || undefined,
+                    taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
-                this.setState({
-                    updateKey:Date.now()
-                })
+                this.refreshTable()
             });
         }
-    }
-    toggleLoading = loading =>{
-        this.setState({
-            loading
-        })
     }
     onSubmit = e =>{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
-                for(let key in values){
-                    if(Array.isArray( values[key] ) && values[key].length === 2 && moment.isMoment(values[key][0])){
-                        //当元素为数组&&长度为2&&是moment对象,那么可以断定其是一个rangePicker
-                        values[`${key}Start`] = values[key][0].format('YYYY-MM-DD');
-                        values[`${key}End`] = values[key][1].format('YYYY-MM-DD');
-                        values[key] = undefined;
-                    }
-                    if(moment.isMoment(values[key])){
-                        //格式化一下时间 YYYY-MM类型
-                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM');
-                        }
-                    }
+                values.taxMonth = values.taxMonth.format('YYYY-MM');
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
                 }
-                this.setState({
-                    params:values,
+                this.mounted && this.setState({
+                    params: values,
                     updateKey:Date.now()
                 })
+                this.props.onParamsChange && this.props.onParamsChange(values); //{taxMonth:values.taxMonth,main:values.main}
+            }
+        })
+    }
+    save=(e)=>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                for(let key in values.map){
+                    values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
+                }
+                values.taxMonth = values.taxMonth.format('YYYY-MM');
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
+                }
+                this.mounted && this.setState({saveLoding:true})
+                request.post(this.props.saveUrl,{...values})
+                    .then(({data})=>{
+                        this.mounted && this.setState({saveLoding:false})
+                        if(data.code===200){
+                            message.success('保存成功!');
+                            this.onSubmit();
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.mounted && this.setState({saveLoding:false})
+                    })
             }
         })
     }
@@ -108,20 +147,21 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        console.log(this.props.location.search);
-        const { grid, url , searchFields, form, composeGrid,scroll} = this.props;
-        const { params,updateKey } = this.state;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
+        let disabled = !!declare;
+        const { params,updateKey,statusParam,saveLoding } = this.state;
+        const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
         return(
+            <Form onSubmit={this.onSubmit}>
             <div>
                 <div style={{
                     backgroundColor:'#fff',
                     padding:'10px 10px 0 0',
                     marginBottom:10
                 }}>
-                    <Form onSubmit={this.onSubmit}>
                         <Row>
                             {
-                                getFields(form, searchFields)
+                                getFields(form, searchFields(disabled,declare,defaultParams))
                             }
                             <Col style={{width:'100%',textAlign:'right'}}>
                                 <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>
@@ -130,14 +170,74 @@ class SheetWithSearchFields extends Component{
                                     this.setState({
                                         params:{}
                                     })
+                                    this.props.onParamsChange && this.props.onParamsChange({});
                                 }}>重置</Button>
                             </Col>
                         </Row>
-
-                    </Form>
                 </div>
-                <Sheet scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey}/>
+                <Card
+                    bordered={false}
+                    extra={
+                        <div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
+                                JSON.stringify(params)!=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'report/tax/declare/export',
+                                    params:{...params,authMonth:params.taxMonth},
+                                    title:'导出',
+                                    userPermissions:['1911007'],
+                                }])
+                            }
+                            {
+                                composeBotton([{
+                                    type:'fileExport',
+                                    url:'tax/decConduct/main/download',
+                                    title:'下载附件',
+                                    onSuccess:this.refreshTable
+                                }])
+                            }
+                            {
+                                action ? (disabled && declare.decAction==='edit') && composeBotton([{
+                                    type:'submit',
+                                    url:'/tax/decConduct/main/submit',
+                                    params:params,
+                                    userPermissions:['1911010'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/tax/decConduct/main/revoke',
+                                    params:params,
+                                    userPermissions:['1911011'],
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
+                                : null
+                            }
+                            {
+                                saveUrl && !readOnly && composeBotton([{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    userPermissions:['1911003'],
+                                    onClick:this.save,
+                                    loading:saveLoding
+                                }])
+                            }
+                        </div>
+                    }
+                    title={<span><label className="tab-breadcrumb">纳税申报表 / </label>{tab}</span>}
+                    bodyStyle={{
+                        padding:10
+                    }}
+                >
+                    <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form}/>
+                </Card>
             </div>
+        
+
+        </Form>
         )
     }
 }

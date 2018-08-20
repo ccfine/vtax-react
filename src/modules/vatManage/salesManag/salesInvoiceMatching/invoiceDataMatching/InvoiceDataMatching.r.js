@@ -2,22 +2,10 @@
  * Created by liurunbin on 2018/1/9.
  */
 import React, { Component } from 'react'
-import {Button,Icon,Modal,message} from 'antd'
-import {request,fMoney,getUrlParam} from 'utils'
-import {SearchTable,FileExport} from 'compoments'
-import SubmitOrRecall from 'compoments/buttonModalWithForm/SubmitOrRecall.r'
-import { withRouter } from 'react-router'
+import {Modal,message} from 'antd'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
-}
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -36,19 +24,20 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
+const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
     return [
         {
             label:'纳税主体',
-            fieldName:'mainId',
+            fieldName:'main',
             type:'taxMain',
             span:6,
             componentProps:{
+                labelInValue:true,
                 disabled,
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -59,7 +48,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
         },
         {
             label:'开票月份',
-            fieldName:'billingDate',
+            fieldName:'authMonth',
             type:'monthPicker',
             span:6,
             componentProps:{
@@ -67,7 +56,7 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             },
             formItemStyle,
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
@@ -86,8 +75,8 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('mainId') || false,
-                url:`/project/list/${getFieldValue('mainId')}`,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
             }
         },
         {
@@ -112,15 +101,15 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
             formItemStyle
         },
         {
-            label:'单元',
-            fieldName:'element',
-            type:'element',
+            label:'房间编码',
+            fieldName:'roomCode',
+            type:'input',
             span:6,
             formItemStyle
         },
         {
-            label:'房号',
-            fieldName:'roomNumber',
+            label:'路址',
+            fieldName:'htRoomName',
             type:'input',
             span:6,
             formItemStyle
@@ -165,183 +154,203 @@ const searchFields=(disabled)=>(getFieldValue,setFieldsValue)=> {
         }
     ]
 }
-const getColumns = context => [
-    {
+const getColumns = (context,disabled) => {
+    let operates = (disabled && parseInt(context.state.statusParam.status,0)===1)?[{
         title: '操作',
         key: 'actions',
         fixed:true,
-        width:parseInt(context.state.dataStatus,0) === 1 ? '60px' : '40px',
-        render: (text, record) => {
-            return parseInt(context.state.dataStatus,0)===1 && (
-                    <span style={{
-                        color:'#f5222d',
-                        cursor:'pointer'
-                    }} onClick={()=>{
-                        const modalRef = Modal.confirm({
-                            title: '友情提醒',
-                            content: '是否要解除匹配？',
-                            okText: '确定',
-                            okType: 'danger',
-                            cancelText: '取消',
-                            onOk:()=>{
-                                context.deleteRecord(record.id,()=>{
-                                    modalRef && modalRef.destroy();
-                                    context.refreshTable()
-                                })
-                            },
-                            onCancel() {
-                                modalRef.destroy()
-                            },
-                        });
-                    }}>
-                解除匹配
-            </span>
-                )
+        className:'text-center',
+        width:'50px',
+        render: (text, record) => composeBotton([{
+                type:'action',
+                title:'解除匹配',
+                icon:'disconnect',
+                style:{color:'#f5222d'},
+                userPermissions:['1215003'],
+                onSuccess:()=>{
+                    const modalRef = Modal.confirm({
+                        title: '友情提醒',
+                        content: '是否要解除匹配？',
+                        okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
+                        onOk:()=>{
+                            context.deleteRecord(record.id,()=>{
+                                modalRef && modalRef.destroy();
+                                context.props.refreshTabs()
+                            })
+                        },
+                        onCancel() {
+                            modalRef.destroy()
+                        },
+                    });
+                }}])
+    }]:[];
+    return [...operates,
+        {
+            title:'纳税人识别号',
+            dataIndex:'purchaseTaxNum',
+            width:'200px',
+            /*render:(text,record)=>{
+                let color = '#333';
+                if(record.taxIdentificationCode !== record.purchaseTaxNum){
+                    /!**销项发票的纳税识别号与房间交易档案中的纳税识别号出现不完全匹配时，销项发票的纳税识别号标记为红色字体；*!/
+                    color = '#f5222d';
+                }
+                if(record.customerName !== record.purchaseName){
+                    /!**销项发票的购货单位与房间交易档案中的客户，不一致时，销项发票中的购货单位标记为蓝色字体；*!/
+                    color = '#1890ff';
+                }
+                if(record.totalAmount !== record.totalPrice){
+                    /!** 销项发票的价税合计与房间交易档案中的成交总价不一致时，销项发票中的价税合计标记为紫色字体；*!/
+                    color = '#6f42c1'
+                }
+                return <span style={{color}}>{text}</span>
+            }*/
+        },
+        {
+            title:'发票代码',
+            dataIndex:'invoiceCode',
+            width:'150px',
+        },
+        {
+            title:'发票号码',
+            dataIndex:'invoiceNum',
+            width:'150px',
+        },
+        {
+            title:'发票类型',
+            dataIndex:'invoiceType',
+            width:'100px',
+            render: (text) => {
+                let txt = '';
+                if(text==='s'){
+                    txt = '专票'
+                }
+                if(text==='c'){
+                    txt = '普票'
+                }
+                return txt
+            },
+        },
+        {
+            title: '备注',
+            dataIndex: 'remark',
+            //width:'500px',
+        },
+        {
+            title:'金额',
+            dataIndex:'amount',
+            width:'100px',
+            className:'table-money',
+            render:text=>fMoney(text),
+        },
+        {
+            title:'税率',
+            dataIndex:'taxRate',
+            className:'text-right',
+            width:'100px',
+            render:text=>text? `${text}%`: text,
+        },
+        {
+            title:'税额',
+            dataIndex:'taxAmount',
+            width:'100px',
+            className:'table-money',
+            render:text=>fMoney(text),
+        },
+        {
+            title:'价税合计',
+            dataIndex:'totalAmount',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'开票日期',
+            dataIndex:'billingDate',
+            width:'100px',
+        },
+        {
+            title:'购货单位名称',
+            dataIndex:'purchaseName',
+            width:'200px',
+        },
+        {
+            title:'路址',
+            dataIndex:'htRoomName',
+            width:'200px',
+        },
+        {
+            title:'成交金额',
+            dataIndex:'totalPrice',
+            render:text=>fMoney(text),
+            className:'table-money',
+            width:'100px',
+        },
+        {
+            title:'楼栋名称',
+            dataIndex:'buildingName',
+            width:'200px',
+        },
+        {
+            title:'单元',
+            dataIndex:'element',
+            width:'100px',
+        },
+        {
+            title:'房号',
+            dataIndex:'roomNumber',
+            width:'100px',
+        },
+        {
+            title:'房间编码',
+            dataIndex:'roomCode',
+            width:'100px',
+        },
+        {
+            title:'客户名称',
+            dataIndex:'customerName',
+            width:'100px',
+        },
+        {
+            title:'身份证号/纳税识别号',
+            dataIndex:'taxIdentificationCode',
+            width:'200px',
+        },
+        {
+            title:'匹配时间',
+            dataIndex:'marryTime',
+            width:'100px',
+        },
+        {
+            title:'匹配方式',
+            dataIndex:'matchingWay',
+            width:'100px',
+            render:text=>{
+                text = parseInt(text,0);//0:手动匹配,1:自动匹配
+                if(text === 0){
+                    return '手动匹配';
+                }else if(text ===1){
+                    return '自动匹配';
+                }else{
+                    return ''
+                }
+            }
         }
-    },
-    {
-        title:'纳税人识别号',
-        dataIndex:'purchaseTaxNum',
-        render:(text,record)=>{
-            let color = '#333';
-            if(record.taxIdentificationCode !== record.purchaseTaxNum){
-                /**销项发票的纳税识别号与房间交易档案中的纳税识别号出现不完全匹配时，销项发票的纳税识别号标记为红色字体；*/
-                color = '#f5222d';
-            }
-            if(record.customerName !== record.purchaseName){
-                /**销项发票的购货单位与房间交易档案中的客户，不一致时，销项发票中的购货单位标记为蓝色字体；*/
-                color = '#1890ff';
-            }
-            if(record.totalAmount !== record.totalPrice){
-                /** 销项发票的价税合计与房间交易档案中的成交总价不一致时，销项发票中的价税合计标记为紫色字体；*/
-                color = '#6f42c1'
-            }
-            return <span style={{color}}>{text}</span>
-        }
-    },
-    {
-        title:'购货单位名称',
-        dataIndex:'purchaseName'
-    },
-    {
-        title:'发票代码',
-        dataIndex:'invoiceCode'
-    },
-    {
-        title:'发票号码',
-        dataIndex:'invoiceNum'
-    },
-    {
-        title:'发票类型',
-        dataIndex:'invoiceType',
-        render:text=>{
-            if(text==='s'){
-                return '专票'
-            }
-            if(text==='c'){
-                return '普票'
-            }
-            return text;
-        }
-    },
-    {
-        title:'货物名称',
-        dataIndex:'commodityName'
-    },
-    {
-        title:'开票日期',
-        dataIndex:'billingDate',
-        width:'75px'
-    },
-    {
-        title:'金额',
-        dataIndex:'amount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'税率',
-        dataIndex:'taxRate',
-        render:text=>text? `${text}%`: text,
-    },
-    {
-        title:'税额',
-        dataIndex:'taxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'价税合计',
-        dataIndex:'totalAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'规格型号',
-        dataIndex:'specificationModel'
-    },
-    {
-        title:'匹配时间',
-        dataIndex:'marryTime'
-    },
-    {
-        title:'客户名称',
-        dataIndex:'customerName'
-    },
-    {
-        title:'身份证号/纳税识别码',
-        dataIndex:'taxIdentificationCode'
-    },
-    {
-        title:'楼栋名称',
-        dataIndex:'buildingName'
-    },
-    {
-        title:'单元',
-        dataIndex:'element'
-    },
-    {
-        title:'房号',
-        dataIndex:'roomNumber'
-    },
-    {
-        title:'房间编码',
-        dataIndex:'roomCode'
-    },
-    {
-        title:'成交总价',
-        dataIndex:'totalPrice',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'匹配方式',
-        dataIndex:'matchingWay',
-        render:text=>{
-            text = parseInt(text,0);//0:手动匹配,1:自动匹配
-            if(text === 0){
-                return '手动匹配';
-            }else if(text ===1){
-                return '自动匹配';
-            }else{
-                return ''
-            }
-        }
-    },
-]
+    ]
+}
 class InvoiceDataMatching extends Component{
     state={
         tableKey:Date.now(),
-        searchFieldsValues:{
+        filters:{
         },
-        matching:false,
-        hasData:false,
 
         /**
-         *修改状态和时间
+         *修改状态
          * */
-        dataStatus:'',
-        submitDate:'',
+        statusParam:'',
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -349,19 +358,11 @@ class InvoiceDataMatching extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        request.get('/output/invoice/marry/listMain',{
-            params:this.state.searchFieldsValues
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
+        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
             })
+        })
     }
     deleteRecord = (id,cb) => {
         request.delete(`/output/invoice/marry/already/delete/${id}`)
@@ -373,47 +374,39 @@ class InvoiceDataMatching extends Component{
                     message.error(`解除匹配失败:${data.msg}`)
                 }
             })
-    }
-    toggleMatching = matching =>{
-        this.setState({
-            matching
-        })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     matchData = ()=>{
-        //数据匹配
-        this.toggleMatching(true);
-        request.get('/output/invoice/marry/already/automatic')
+        const {filters} = this.state;
+        request.put(`/output/invoice/marry/already/automatic`,filters)
             .then(({data})=>{
-                this.toggleMatching(false);
                 if(data.code===200){
-                    message.success('数据匹配完毕');
-                    this.refreshTable();
+                    message.success(data.msg);
+                    this.props.refreshTabs()
                 }else{
                     message.error(`数据匹配失败:${data.msg}`)
                 }
-            }).catch(err=>{
-            message.error(`数据匹配失败:${err.message}`)
-        })
-    }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
     }
     render(){
-        const {tableKey,searchFieldsValues,matching,hasData,submitDate,dataStatus} = this.state;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {tableKey,filters,matching,statusParam,totalSource} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
+            <div className='oneLine'>
             <SearchTable
-                doNotFetchDidMount={true}
+                doNotFetchDidMount={!disabled}
                 style={{
                     marginTop:-16
                 }}
                 spinning={matching}
                 searchOption={{
-                    fields:searchFields(disabled),
+                    fields:searchFields(disabled,declare),
                     cardProps:{
                         style:{
                             borderTop:0
@@ -421,85 +414,87 @@ class InvoiceDataMatching extends Component{
                         className:''
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
-                    pageSize:10,
-                    columns:getColumns(this),
-                    onSuccess:(params,data)=>{
-                        this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
+                    pageSize:100,
+                    columns:getColumns(this,disabled),
                     url:'/output/invoice/marry/already/list',
                     extra:<div>
                         {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
+                            listMainResultStatus(statusParam)
                         }
-                        <Button
-                            onClick={this.matchData}
-                            size='small'
-                            style={{marginRight:5}}>
-                            <Icon type="copy" />
-                            数据匹配
-                        </Button>
-                        <FileExport
-                            url={`output/invoice/marry/already/export`}
-                            title="导出匹配列表"
-                            size="small"
-                            disabled={!hasData}
-                            setButtonStyle={{
-                                marginRight:5
-                            }}
-                            params={
-                                searchFieldsValues
-                            }
-                        />
-                        <SubmitOrRecall type={1} url="/output/invoice/marry/submit" onSuccess={this.refreshTable} />
-                        <SubmitOrRecall type={2} url="/output/invoice/marry/revoke" onSuccess={this.refreshTable} />
+                        {
+                            JSON.stringify(filters)!=='{}' && composeBotton([{
+                                type:'fileExport',
+                                url:'output/invoice/marry/already/export',
+                                params:filters,
+                                title:'导出',
+                                userPermissions:['1211007'],
+                            }])
+                        }
+                        {
+                            (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                type:'match',
+                                icon:'copy',
+                                text:'数据匹配',
+                                btnType:'default',
+                                userPermissions:['1215002'],
+                                onClick:this.matchData
+                            },{
+                                type:'submit',
+                                url:'/output/invoice/marry/submit',
+                                params:filters,
+                                userPermissions:['1215000'],
+                                onSuccess:()=>{
+                                    this.props.refreshTabs()
+                                }
+                            },{
+                                type:'revoke',
+                                url:'output/invoice/marry/revoke',
+                                params:filters,
+                                userPermissions:['1215001'],
+                                onSuccess:()=>{
+                                    this.props.refreshTabs()
+                                }
+                            }],statusParam)
+                        }
+                        <TableTotal type={3} totalSource={totalSource} data={
+                            [
+                                {
+                                    title:'合计',
+                                    total:[
+                                        {title: '发票金额', dataIndex: 'allAmount'},
+                                        {title: '发票税额', dataIndex: 'allTaxAmount'},
+                                        {title: '房间成交金额', dataIndex: 'allTotalPrice'},
+                                    ],
+                                }
+                            ]
+                        } />
                     </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>本页合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        本页金额：<span className="amount-code">{fMoney(data.pageAmount)}</span>
-                                        本页税额：<span className="amount-code">{fMoney(data.pageTaxAmount)}</span>
-                                        本页价税：<span className="amount-code">{fMoney(data.pageTotalAmount)}</span>
-                                        本页总价：<span className="amount-code">{fMoney(data.pageTotalPrice)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>总计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        总金额：<span className="amount-code">{fMoney(data.allAmount)}</span>
-                                        总税额：<span className="amount-code">{fMoney(data.allTaxAmount)}</span>
-                                        总价税：<span className="amount-code">{fMoney(data.allTotalAmount)}</span>
-                                        全部总价：<span className="amount-code">{fMoney(data.allTotalPrice)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
-                        x:'180%'
-                    }
+                        x: 3050,
+                        y:window.screen.availHeight-480-(disabled?50:0),
+                    },
+                    cardProps:{
+                        title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配</span>,
+                    },
                 }}
             >
             </SearchTable>
+            </div>
         )
     }
 }
-export default withRouter(InvoiceDataMatching)
+export default InvoiceDataMatching

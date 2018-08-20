@@ -1,20 +1,23 @@
 /**
  * Created by liurunbin on 2018/1/18.
+ * @Last Modified by: liuchunxiu
+ * @Last Modified time: 2018-08-09 16:32:52
+ *
  */
 import React,{Component} from 'react'
-import {Button,Icon,message,Modal} from 'antd'
-import {SearchTable,FileExport,ButtonWithFileUploadModal} from 'compoments'
-import {fMoney,request,getUrlParam} from 'utils'
-import { withRouter } from 'react-router'
+import {Form,message} from 'antd'
+import {SearchTable,TableTotal} from 'compoments'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
-
-const searchFields =(disabled)=> (getFieldValue)=> {
+import { NumericInputCell } from 'compoments/EditableCell'
+const searchFields =(disabled,declare)=> {
     return [
         {
             label:'纳税主体',
-            fieldName:'mainId',
+            fieldName:'main',
             type:'taxMain',
-            span:6,
+            span:8,
             formItemStyle:{
                 labelCol:{
                     span:8
@@ -24,10 +27,11 @@ const searchFields =(disabled)=> (getFieldValue)=> {
                 }
             },
             componentProps:{
+                labelInValue:true,
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && getUrlParam('mainId')) || undefined,
+                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
                     {
                         required:true,
@@ -37,10 +41,10 @@ const searchFields =(disabled)=> (getFieldValue)=> {
             }
         },
         {
-            label:'查询期间',
-            fieldName:'receiveMonth',
+            label:'纳税申报期',
+            fieldName:'authMonth',
             type:'monthPicker',
-            span:6,
+            span:8,
             formItemStyle:{
                 labelCol:{
                     span:8
@@ -54,160 +58,155 @@ const searchFields =(disabled)=> (getFieldValue)=> {
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && moment(getUrlParam('authMonth'), 'YYYY-MM')) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
-                        message:'请选查询期间'
+                        message:'请选择纳税申报期'
                     }
                 ]
             },
         },
-        {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:6,
-            formItemStyle:{
-                labelCol:{
-                    span:8
-                },
-                wrapperCol:{
-                    span:16
-                }
-            },
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('mainId') || false,
-                url:`/project/list/${getFieldValue('mainId')}`,
-            }
-        },
     ]
 }
-const getColumns = ({state}) => [
+const getColumns = (context,disabled) => {
+    let lastStegesId1 = '',lastStegesId2 = '',{dataSource} = context.state;
+    return [
     {
-        title:'项目编号',
-        dataIndex:'projectNum',
-    },
-    {
-        title:'项目名称',
-        dataIndex:'projectName',
-    },
-    {
-        title:'项目地址',
-        dataIndex:'projectAddress',
-    },
-    {
+        title:'纳税主体',
+        dataIndex:'mainName',
+        width:'15%',
+        render:(text, row, index) => {
+            let rowSpan = 0;
+            if(lastStegesId1 !== row.stagesId){
+                lastStegesId1 = row.stagesId;
+                rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
+            }
+            return {
+              children: text,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          },
+    },{
+        title:'项目分期',
+        dataIndex:'stagesName',
+        width:'15%',
+        render:(text, row, index) => {
+            let rowSpan = 0;
+            if(lastStegesId2 !== row.stagesId){
+                lastStegesId2 = row.stagesId;
+                rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
+            }
+            return {
+              children: text,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          },
+    },{
         title:'预征项目',
         dataIndex:'preProject',
-    },
-    {
-        title:'销售额（含税）',
-        dataIndex:'amountWithTax',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'销售额（不含税）',
-        dataIndex:'amountWithoutTax',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'实际销售额（不含税）',
-        dataIndex:'actualAmountWithoutTax',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'实际预征税额',
-        dataIndex:'actualPreTaxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'计税方法',
-        dataIndex:'taxMethod',
-        className:'text-center',
-        render:text=>{
-            text = parseInt(text,0);
-            if(text===1){
-                return '一般计税方法'
+        width:'20%',
+    }, {
+        title:'金额（不含税）',
+        dataIndex:'withOutAmount',
+        render:(text,record)=>{
+            const {getFieldDecorator} = context.props.form;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产'){
+                return <NumericInputCell
+                        fieldName={`list[${record.id}].withOutAmount`}
+                        initialValue={text==='0' ? '0.00' : fMoney(text)}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            onFocus:(e)=>context.handleFocus(e,`list[${record.id}].withOutAmount`),
+                            onBlur:(e)=>context.handleBlur(e,`list[${record.id}].withOutAmount`),
+                        }}
+                    />
+            }else{
+                return fMoney(text)
             }
-            if(text===2){
-                return '简易计税方法'
+        },
+        className:'table-money',
+        width:'15%',
+    }, {
+        title:'金额（含税）',
+        dataIndex:'withTaxAmount',
+        render:(text,record)=>{
+            const {getFieldDecorator} = context.props.form;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产'){
+                return <NumericInputCell
+                        fieldName={`list[${record.id}].withTaxAmount`}
+                        initialValue={text==='0' ? '0.00' : fMoney(text)}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            onFocus:(e)=>context.handleFocus(e,`list[${record.id}].withTaxAmount`),
+                            onBlur:(e)=>context.handleBlur(e,`list[${record.id}].withTaxAmount`)
+                        }}
+                    />
+            }else{
+                return fMoney(text)
             }
-            return text;
-        }
-    },
-    {
-        title:'扣除金额',
-        dataIndex:'deductAmount',
+        },
+        className:'table-money',
+        width:'15%',
+    }, {
+        title:'预缴税率（%）',
+        dataIndex:'taxRate',
+        className:'text-right',
+        render:(text,record,index)=>{
+            const {getFieldDecorator,setFieldsValue} = context.props.form,
+            {dataSource} = context.state;
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1 && record.preProject !=='销售不动产'){
+                return <NumericInputCell
+                        fieldName={`list[${record.id}].taxRate`}
+                        initialValue={text}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            valueType:'int',
+                            onChange:(value)=>{
+                                let values = {};
+                                dataSource.forEach(ele=>{
+                                    if(record.preProject === ele.preProject){
+                                        values[`list[${ele.id}].taxRate`] = value;
+                                    }
+                                })
+                                setFieldsValue(values)
+                            }
+                        }}
+                    />
+            }else{
+                return text
+            }
+        },
+        // width:80,
+    }, {
+        title:'预缴税款',
+        dataIndex:'prepayAmount',
         render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'预征率',
-        dataIndex:'rate',
-        render:text=>text ? `${text}%` : text
-    },
-    {
-        title:'上期未退税（负数）',
-        dataIndex:'taxRebates',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'预征税额',
-        dataIndex:'preTaxAmount',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'调整销售额（不含税）',
-        dataIndex:'adjustSales',
-        render:text=>fMoney(text),
-        className:'table-money'
-    },
-    {
-        title:'调整备注',
-        dataIndex:'adjustRemark',
+        className:'table-money',
+        width:'10%',
     }
 ];
-const transformDataStatus = status =>{
-    status = parseInt(status,0)
-    if(status===1){
-        return '暂存';
-    }
-    if(status===2){
-        return '提交'
-    }
-    return status
 }
+
+
 class PrepayTax extends Component{
     state={
         tableKey:Date.now(),
         searchTableLoading:false,
-        searchFieldsValues:{
-
-        },
-
-        resultFieldsValues:{
-
-        },
-
-        tableUrl:'/account/prepaytax/list',
+        visibleView:false,
+        voucherNum:undefined,
+        filters:{},
         /**
          *修改状态和时间
          * */
-        dataStatus:'',
-        submitDate:'',
-        resultStatusId:'',
-
-
-        hasData:false
+        statusParam:{},
+        totalSource:undefined,
+        dataSource:[],
+        saveLoding:false,
     }
     refreshTable = ()=>{
         this.setState({
@@ -219,205 +218,193 @@ class PrepayTax extends Component{
             searchTableLoading
         })
     }
-    recount = ()=>{
-        Modal.confirm({
-            title: '友情提醒',
-            content: '确定要重算吗',
-            onOk : ()=> {
-                this.toggleSearchTableLoading(true)
-                request.put('/account/prepaytax/reset',this.state.resultFieldsValues)
-                    .then(({data})=>{
-                        this.toggleSearchTableLoading(false)
-                        if(data.code===200){
-                            message.success('重算成功!');
-                            this.refreshTable()
-                        }else{
-                            message.error(`重算失败:${data.msg}`)
-                        }
-                    })
-            }
+    toggleViewModalVisible=visibleView=>{
+        this.setState({
+            visibleView
         })
-    }
-    handleClickActions = action => ()=>{
-        let actionText,
-            actionUrl;
-
-        if(action ==='recount'){
-            this.recount();
-            return false;
-        }
-        switch (action){
-            case 'submit':
-                actionText='提交';
-                actionUrl='/account/prepaytax/submit';
-                break;
-            case 'restore':
-                actionText='撤回';
-                actionUrl='/account/prepaytax/restore';
-                break;
-            default:
-                break;
-        }
-        this.toggleSearchTableLoading(true)
-        request.post(actionUrl,this.state.resultFieldsValues)
-            .then(({data})=>{
-                this.toggleSearchTableLoading(false)
-                if(data.code===200){
-                    message.success(`${actionText}成功！`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${actionText}失败:${data.msg}`)
-                }
-            }).catch(err=>{
-            this.toggleSearchTableLoading(false)
-        })
-    }
-    componentDidMount(){
-        const {search} = this.props.location;
-        if(!!search){
-            this.refreshTable()
-        }
     }
     fetchResultStatus = ()=>{
-        request.get('/account/prepaytax/listMain',{
-            params:{
-                ...this.state.searchFieldsValues,
-                authMonth:this.state.searchFieldsValues.month
+        requestResultStatus('/account/prepaytax/listMain',this.state.filters,result=>{
+            this.setState({
+                statusParam: result,
+            })
+        })
+    }
+    save=(e)=>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                const {dataSource} = this.state;
+                let params = dataSource.filter(ele=>ele.preProject!=='销售不动产').map(ele=>{
+                    let res = {};
+                    res.id = ele.id;
+                    res.withOutAmount = values.list[ele.id].withOutAmount.replace(/,/g,'') || 0;
+                    res.withTaxAmount = values.list[ele.id].withTaxAmount.replace(/,/g,'') || 0;
+                    res.taxRate = values.list[ele.id].taxRate || 0;
+                    return res;
+                });
+
+                this.setState({saveLoding:true})
+                request.post('/account/prepaytax/save',params)
+                    .then(({data})=>{
+                        this.setState({saveLoding:false})
+                        if(data.code===200){
+                            message.success('保存成功!');
+                            // this.props.form.resetFields(this.state.dataSource.map((ele,index)=>`outTaxAmount[${index}]`))
+                            this.refreshTable()
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.setState({saveLoding:false})
+                    })
             }
         })
-            .then(({data})=>{
-                if(data.code===200){
-                    this.setState({
-                        dataStatus:data.data.status,
-                        submitDate:data.data.lastModifiedDate,
-                        resultStatusId:data.data.id
-                    })
-                }else{
-                    message.error(`列表主信息查询失败:${data.msg}`)
-                }
+    }
+    
+    handleFocus = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value === '0.00'){
+            setFieldsValue({
+                [fieldName]:''
             })
+        }else{
+            setFieldsValue({
+                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
+            })
+        }
+    }
+
+    handleBlur = (e,fieldName) => {
+        e && e.preventDefault()
+        const {setFieldsValue,getFieldValue} = this.props.form;
+        let value = getFieldValue(fieldName);
+        if(value !== ''){
+            setFieldsValue({
+                [fieldName]:fMoney(value)
+            })
+        }else{
+            setFieldsValue({
+                [fieldName]:'0.00'
+            })
+        }
     }
     render(){
-        const {searchTableLoading,tableKey,submitDate,dataStatus,tableUrl,searchFieldsValues,hasData,resultStatusId,resultFieldsValues} = this.state;
-        const {mainId,receiveMonth} = resultFieldsValues;
-        const {search} = this.props.location;
-        let disabled = !!search;
+        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters,totalSource,saveLoding} = this.state;
+        const { declare } = this.props;
+        let disabled = !!declare;
         return(
-            <SearchTable
-                searchOption={{
-                    fields:searchFields(disabled),
-                    cardProps:{
-                        className:''
-                    },
-                    /*onResetFields:()=>{
+            <div className="oneLine">
+                    <SearchTable
+                    searchOption={{
+                        fields:searchFields(disabled,declare),
+                        cardProps:{
+                            className:'',
+                            style:{
+                                borderTop:0
+                            }
+                        },
+                    }}
+                    doNotFetchDidMount={!disabled}
+                    spinning={searchTableLoading}
+                    backCondition={(filters) => {
                         this.setState({
-                            submitDate:'',
-                            dataStatus:''
-                        })
-                    },*/
-                    onFieldsChange:values=>{
-                        if(JSON.stringify(values) === "{}"){
+                            filters,
+                        },() => {
+                            this.fetchResultStatus();
+                        });
+                        this.props.form.resetFields();
+                    }}
+                    tableOption={{
+                        key:tableKey,
+                        onDataChange:(dataSource)=>{
                             this.setState({
-                                searchFieldsValues:{
-                                    mainId:undefined,
-                                    receiveMonth:undefined
-                                }
+                                dataSource
                             })
-                        }else if(values.mainId || values.receiveMonth){
-                            if(values.receiveMonth){
-                                values.receiveMonth = values.receiveMonth.format('YYYY-MM')
+                        },
+                        cardProps: {
+                            title: "预缴税款台账",
+                        },
+                        // pageSize:100,
+                        pagination:false,
+                        columns:getColumns(this,disabled),
+                        url:'/account/prepaytax/prepayTaxList',
+                        extra:<div>
+                            {
+                                listMainResultStatus(statusParam)
+                            }{
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/prepaytax/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1331007'],
+                                }],statusParam)
                             }
-                            this.setState(prevState=>({
-                                searchFieldsValues:{
-                                    ...prevState.searchFieldsValues,
-                                    ...values
-                                }
-                            }))
-                        }
-                    }
-                }}
-                doNotFetchDidMount={true}
-                spinning={searchTableLoading}
-                tableOption={{
-                    key:tableKey,
-                    onSuccess:(params,data)=>{
-                        this.setState({
-                            searchFieldsValues:params,
-                            hasData:data.length !== 0,
-                            resultFieldsValues:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
-                    pageSize:100,
-                    columns:getColumns(this),
-                    url:tableUrl,
-                    extra:<div>
-                        {
-                            dataStatus && <div style={{marginRight:30,display:'inline-block'}}>
-                                <span style={{marginRight:20}}>状态：<label style={{color:'red'}}>{
-                                    transformDataStatus(dataStatus)
-                                }</label></span>
-                                {
-                                    submitDate && <span>提交时间：{submitDate}</span>
-                                }
-                            </div>
-                        }
-                        <ButtonWithFileUploadModal
-                            id={resultStatusId}
-                            disabled={parseInt(dataStatus,0) !== 2}
-                            uploadUrl={`/account/prepaytax/upload/${resultStatusId}`}
-                            style={{marginRight:5}} title='附件' />
-                        <FileExport
-                            url={`account/prepaytax/export`}
-                            title="导出"
-                            size="small"
-                            setButtonStyle={{marginRight:5}}
-                            disabled={!hasData}
-                            params={
-                                searchFieldsValues
+                            {
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/prepaytax/submit',
+                                    params:filters,
+                                    userPermissions:['1331010'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    userPermissions:['1331003'],
+                                    onClick:this.save,
+                                    loading:saveLoding
+                                },{
+                                    type:'reset',
+                                    url:'/account/prepaytax/reset',
+                                    params:filters,
+                                    userPermissions:['1331009'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'revoke',
+                                    url:'/account/prepaytax/revoke',
+                                    params:filters,
+                                    userPermissions:['1331011'],
+                                    onSuccess:this.refreshTable,
+                                }],statusParam)
                             }
-                        />
-                        <Button onClick={this.handleClickActions('recount')} disabled={parseInt(dataStatus,0)!==1} size='small' style={{marginRight:5}}>
-                            <Icon type="retweet" />
-                            重算
-                        </Button>
-                        <Button size="small" style={{marginRight:5}} onClick={this.handleClickActions('submit')} disabled={!(mainId && receiveMonth && (parseInt(dataStatus,0) === 1) )}><Icon type="check" />提交</Button>
-                        <Button size="small" onClick={this.handleClickActions('restore')} disabled={!(mainId && receiveMonth && ( parseInt(dataStatus,0)===2 ))}><Icon type="rollback" />撤回提交</Button>
-                    </div>,
-                    renderFooter:data=>{
-                        return(
-                            <div className="footer-total">
-                                <div className="footer-total-meta">
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        销售额（含税）：<span className="amount-code">{fMoney(data.amountWithTax)}</span>
-                                        销售额（不含税）：<span className="amount-code">{fMoney(data.amountWithoutTax)}</span>
-                                        实际销售额（不含税）：<span className="amount-code">{fMoney(data.actualAmountWithoutTax)}</span>
-                                        实际预征税额：<span className="amount-code">{fMoney(data.actualPreTaxAmount)}</span>
-                                    </div>
-                                    <div className="footer-total-meta-title">
-                                        <label>合计：</label>
-                                    </div>
-                                    <div className="footer-total-meta-detail">
-                                        扣除金额 ：<span className="amount-code">{fMoney(data.deductAmount)}</span>
-                                        上期未退税（负数）：<span className="amount-code">{fMoney(data.taxRebates)}</span>
-                                        预征税额 ：<span className="amount-code">{fMoney(data.preTaxAmount)}</span>
-                                        调整销售额（不含税）：<span className="amount-code">{fMoney(data.adjustSales)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    },
-                    scroll:{
-                        x:'1400px',
-                    },
-                }}
-            >
-            </SearchTable>
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '预缴税款', dataIndex: 'prepayAmount'},
+                                            {title: '金额（不含税）', dataIndex: 'withOutAmount'},
+                                            {title: '金额（含税）', dataIndex: 'withTaxAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
+                        </div>,
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            })
+                        },
+                        scroll:{
+                            x:1000,
+                            y:window.screen.availHeight-380-(disabled?50:0),
+                        },
+                    }}
+                >
+                    <ViewDocumentDetails
+                        title="查看凭证详情"
+                        visible={visibleView}
+                        voucherNum={voucherNum}
+                        toggleViewModalVisible={this.toggleViewModalVisible} />
+                </SearchTable>
+            </div>
         )
     }
 }
-export default withRouter(PrepayTax)
+export default Form.create()(PrepayTax)

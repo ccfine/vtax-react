@@ -3,52 +3,57 @@
  */
 import React, { Component } from 'react'
 import SearchTable from '../SearchTableTansform.react'
-import {Button,Modal,message,Icon} from 'antd'
+import {Modal,message} from 'antd'
 import PopModal from './popModal'
-import {request} from '../../../../../../utils'
+import {request,composeBotton} from 'utils'
 const getColumns = context=>[
     {
         title:'操作',
-        render(text, record, index){
-            return(
-                <span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'modify',opid:record.id});
-                }}>修改</a>
-                <span style={{
-                    color:'#f5222d',
-                    cursor:'pointer'
-                }} onClick={()=>{
-                    const modalRef = Modal.confirm({
-                        title: '友情提醒',
-                        content: '该删除后将不可恢复，是否删除？',
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk:()=>{
-                            context.deleteRecord(record)
-                            modalRef && modalRef.destroy();
-                        },
-                        onCancel() {
-                            modalRef.destroy()
-                        },
-                    });
-                }}>
-                    删除
-                </span>
-                <a style={{margin:"0 5px"}} onClick={()=>{
-                    context.setState({visible:true,action:'look',opid:record.id});
-                }}>查看</a>
-                </span>
-            );
-        },
+        render:(text, record, index)=>composeBotton([{
+            type:'action',
+            title:'编辑',
+            icon:'edit',
+            userPermissions:[],
+            onSuccess:()=>context.setState({visible:true,action:'modify',opid:record.id})
+        },{
+            type:'action',
+            title:'删除',
+            icon:'delete',
+            userPermissions:[],
+            style:{color:'#f5222d'},
+            onSuccess:()=>{
+                const modalRef = Modal.confirm({
+                    title: '友情提醒',
+                    content: '该删除后将不可恢复，是否删除？',
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk:()=>{
+                        context.deleteRecord(record)
+                        modalRef && modalRef.destroy();
+                    },
+                    onCancel() {
+                        modalRef.destroy()
+                    },
+                });
+            }
+        }]),
         fixed:'left',
         width:'100px',
-        dataIndex:'action'
+        dataIndex:'action',
+        className:'text-center',
     },
     {
         title: '建设用地规划许可证',
         dataIndex: 'licenseKey',
+        render:(text,record)=>(
+            <a title="查看详情"
+                onClick={() => {
+                    context.setState({visible:true,action:'look',opid:record.id});
+                }}>
+                {text}
+            </a>
+        )
     }, {
         title: '用地位置',
         dataIndex: 'position',
@@ -106,33 +111,43 @@ export default class TabPage extends Component{
     render(){
         const props = this.props;
         return(
-            <div style={{padding:"0 15px"}}>
             <SearchTable
                 actionOption={{
-                    body:(<Button size='small' onClick={()=>{
-                        this.setState({visible:true,action:'add',opid:undefined});
-                    }}><Icon type="plus" />新增</Button>)
+                    body:(
+                        <span>
+                            {
+                                composeBotton([{
+                                    type:'add',
+                                    icon:'plus',
+                                    userPermissions:[],
+                                    onClick:()=>{
+                                        this.setState({visible:true,action:'add',opid:undefined});
+                                    }
+                                }])
+                            }
+                        </span>
+                    )
                 }}
                 searchOption={undefined}
                 tableOption={{
                     columns:getColumns(this),
                     url:`/card/build/list/${props.projectId}`,
-                    scroll:{x:'100%'},
                     key:this.state.updateKey,
                     cardProps:{
-                        bordered:false
+                        bordered:false,
+                        style:{marginTop:"0px"}
                     }
                 }}
             >
+                <PopModal
+                    projectid={props.projectId}
+                    id={this.state.opid}
+                    action={this.state.action}
+                    visible={this.state.visible}
+                    hideModal={()=>{this.hideModal()}}
+                    update={()=>{this.update()}}
+                />
             </SearchTable>
-             <PopModal 
-                projectid={props.projectId}
-                id={this.state.opid}
-                action={this.state.action} 
-                visible={this.state.visible} 
-                hideModal={()=>{this.hideModal()}}
-                update={()=>{this.update()}}
-                ></PopModal> 
-            </div>)
+        )
     }
 }

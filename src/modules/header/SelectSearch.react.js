@@ -4,64 +4,66 @@
  * description  :
  */
 import React,{Component} from 'react'
-import { Form,Select,Spin } from 'antd'
+import { Form,message,Row } from 'antd'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom';
-import {request} from 'utils'
-import {saveOrgId,saveToken} from '../../redux/ducks/user'
+import {request,getFields} from 'utils'
+import {saveOrg,saveToken,savePersonal,saveArea} from '../../redux/ducks/user'
 
-const Option = Select.Option;
-const FormItem = Form.Item;
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 12 },
+        sm: { span: 6 },
+    },
+    wrapperCol: {
+        xs: { span: 12 },
+        sm: { span: 18 },
+    },
+};
 class SelectSearch extends Component {
     state = {
         data:[],
-        orgId:undefined,
-        coreCompanyLoaded:true
+        org:undefined,
+        area:undefined,
     }
-
+    handleAreaChange=(value)=>{
+        this.props.saveArea({areaId:value.key,areaName:value.label})
+    }
     handleChange = (value) => {
-        const { saveOrgId } = this.props;
+        const { saveOrg, org } = this.props;
         this.mounted && this.setState({
-            value ,
-            coreCompanyLoaded:false
+            value 
         },()=>{
-           saveOrgId(value);
-           this.renderSwitchGroupSearch(value)
-            this.mounted && this.setState(prevState=>({
-               coreCompanyLoaded:true
-           }),()=>{
-                //判断权限
-                if(saveOrgId !== this.props.orgId){
-                    this.props.changeRefresh(Date.now());
-                    this.props.history.replace('/web');
-                }
-           })
+            saveOrg({orgId:value.key,orgName:value.label});
+            if(this.mounted && value.key !== org.orgId){
+                this.renderSwitchGroupSearch(value.key);
+            }
         });
     }
 
     renderSwitchGroupSearch=(orgId)=>{
-        const { saveToken } = this.props;
+        const { saveToken,savePersonal } = this.props;
         request.get(`/oauth/switch_group/${orgId}`)
             .then(({data})=>{
                 if(data.code ===200){
                     saveToken(data.data.token)
-                }
-            })
-    }
+                    savePersonal(data.data)
+                    // console.log('savePersonal')
+                    // this.props.history.replace('/web');
 
-    componentDidMount(){
-        request.get('/org/user_belong_organizations')
-            .then(({data})=>{
-                if(data.code ===200){
-                    this.setState({
-                        data: data.data
-                    },()=>{
-                        this.setState({
-                            orgId:this.props.orgId
-                        })
-                    });
+                    //保证redux保存成功后更新数据
+                    // setTimeout(()=>{
+                    //     // this.props.changeRefresh(Date.now()+1)
+                    //     // console.log('renderSwitchGroupSearch setTimeout',Date.now())
+                    //     this.props.history.replace('/web');
+                    // },300)
+                }else{
+                    message.error(`查询失败:${data.msg}`)
                 }
             })
+            .catch(err => {
+                message.error(err.message);
+            });
     }
 
     mounted = true;
@@ -70,41 +72,63 @@ class SelectSearch extends Component {
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24 },
-                sm: { span: 8 },
-            },
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 16 },
-            },
-        };
+        const { getFieldValue } = this.props.form;
+        const { area,org} = this.props;
         return (
-            <Form onSubmit={this.handleSubmit} className="from-search">
-                <FormItem
-                    {...formItemLayout}
-                    label="切换组织"
-                >
-                    <Spin size='small' spinning={!this.state.coreCompanyLoaded}>
-                        {getFieldDecorator('select', {
-                            initialValue: this.state.orgId,
-                        })(
-                            <Select
-                                showSearch
-                                placeholder="请选择供应商"
-                                optionFilterProp="children"
-                                notFoundContent="无法找到"
-                                onChange={this.handleChange}
-                            >
-                                {
-                                    this.state.data.map(d => <Option key={d.orgId}>{d.orgName}</Option>)
-                                }
-                            </Select>
-                        )}
-                    </Spin>
-                </FormItem>
+            <Form onSubmit={this.handleSubmit} className="from-search set-search-width" >
+                <Row>
+                {
+                    getFields(this.props.form,[{
+                        label:'区域',
+                        fieldName:'area',
+                        type:'asyncSelect',
+                        span:8,
+                        formItemStyle:formItemLayout,
+                        componentProps:{
+                            fieldTextName:'name',
+                            fieldValueName:'id',
+                            doNotFetchDidMount:false,
+                            notShowAll:true,
+                            url:`/sysOrganization/queryLoginAreas`,
+                            selectOptions:{
+                                labelInValue:true,
+                                onChange:this.handleAreaChange,
+                                defaultActiveFirstOption:true,
+                                showSearch:true,
+                                optionFilterProp:'children',
+                            },
+                        },
+                        fieldDecoratorOptions: {
+                            initialValue: (area && {key: area.areaId,label: area.areaName}) || undefined,
+                        }
+                    },
+                    {
+                        label:'组织',
+                        fieldName:'org',
+                        type:'asyncSelect',
+                        span:16,
+                        formItemStyle:formItemLayout,
+                        componentProps:{
+                            fieldTextName:'name',
+                            fieldValueName:'id',
+                            doNotFetchDidMount:!(area && area.areaId),
+                            notShowAll:true,
+                            fetchAble:(getFieldValue('area') && getFieldValue('area').key ) || (area && area.areaId),
+                            url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('area') && getFieldValue('area').key) || (area && area.areaId)}`,
+                            selectOptions:{
+                                labelInValue:true,
+                                onChange:this.handleChange,
+                                defaultActiveFirstOption:true,
+                                showSearch:true,
+                                optionFilterProp:'children',
+                            },
+                        },
+                        fieldDecoratorOptions: {
+                            initialValue: (org && {key: org.orgId,label: org.orgName}) || undefined,
+                        }
+                    }])
+                }
+                </Row>
             </Form>
         )
     }
@@ -113,8 +137,11 @@ class SelectSearch extends Component {
 const FormSelectSearch =  Form.create()(SelectSearch)
 
 export default withRouter(connect(state=>({
-    orgId:state.user.get('orgId')
-}),dispatch=>({
-    saveOrgId:saveOrgId(dispatch),
+    org:state.user.get('org'),
+    area:state.user.get('area'),
+}),dispatch=>( {
+    saveOrg:saveOrg(dispatch),
+    saveArea:saveArea(dispatch),
     saveToken:saveToken(dispatch),
+    savePersonal:savePersonal(dispatch)
 }))(FormSelectSearch))

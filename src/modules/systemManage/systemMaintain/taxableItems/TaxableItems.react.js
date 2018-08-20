@@ -4,14 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {Form,Button,Icon,Modal,message} from 'antd';
+import { compose } from 'redux';
+import {connect} from 'react-redux'
+import {Form,Modal,message} from 'antd';
 import {TreeTable} from 'compoments'
 import PopModal from './popModal'
-import {request} from '../../../../utils'
+import {request,composeBotton} from 'utils'
 
-const buttonStyle={
-    marginRight:5
-}
 const searchFields = [
     {
         label:'应税项目名称',
@@ -25,15 +24,40 @@ const columns =[
     {
         title: '应税项目编号',
         dataIndex: 'num',
+        width:'10%',
+        className:'word-wrap',
     },{
         title: '应税项目名称',
         dataIndex: 'name',
+        width:'10%',
+    },{
+        title: '业务类型',
+        dataIndex: 'businessType',
+        render:(text)=>{
+            let res='';
+            switch(parseInt(text,10)){
+                case 0:
+                    res = '业务类型-非房地产建筑';
+                    break;
+                case 1:
+                    res = '业务类型-房地产建筑';
+                    break;
+                default:
+                    res='';
+                    break;
+            }
+            return res;
+        },
+        width:'10%',
     },{
         title: '一般计税税率',
         dataIndex: 'commonlyTaxRate',
+        width:'10%',
+
     },{
         title: '简易计税税率',
         dataIndex: 'simpleTaxRate',
+        width:'10%',
     },{
         title: '填报说明',
         dataIndex: 'description',
@@ -75,6 +99,7 @@ class TaxableItems extends Component {
     refreshTable = ()=>{
         this.setState({
             updateTable:Date.now(),
+            //id:undefined,
         })
     }
     refreshAll = ()=>{
@@ -112,8 +137,9 @@ class TaxableItems extends Component {
                             message.error(`删除失败:${data.msg}`)
                         }
                     }).catch(err=>{
-                    this.toggleSearchTableLoading(false)
-                })
+                        message.error(err.message)
+                        this.toggleSearchTableLoading(false)
+                    })
             },
             onCancel() {
                 modalRef.destroy()
@@ -122,83 +148,117 @@ class TaxableItems extends Component {
     }
     render() {
         const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,filters} = this.state;
+
         return (
-            <TreeTable
-                spinning={searchTableLoading}
-                refreshTree={this.refreshTree}
-                searchOption={{
-                    fields:searchFields,
-                    filters:filters,
-                    getFieldsValues:values=>{
-                        this.setState({
-                            searchFieldsValues:values
-                        })
-                    },
-                    cardProps:{
-                        style:{
-                            borderTop:0
-                        }
-                    }
-                }}
-                cardTableOption={{
-                    extra:<div>
-                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('add')} >
-                            <Icon type="plus" />
-                            新增
-                        </Button>
-                        <Button size="small" disabled={!id} style={buttonStyle} onClick={()=>this.showModal('edit')}>
-                            <Icon type="edit" />
-                            编辑
-                        </Button>
-                        <Button size="small" style={buttonStyle} disabled={!id} type='danger' onClick={this.deleteData}>
-                            <Icon type="delete" />
-                            删除
-                        </Button>
-                    </div>
-                }}
-                treeCardOption={{
-                    cardProps:{
-                        title:'应税项目树',
-                    }
-                }}
-                treeOption={{
-                    key:updateTree,
-                    showLine:false,
-                    url:"/taxable/project/tree",
-                    onSuccess:(selectedKeys,selectedNodes)=>{
-                        this.setState({
-                            id:selectedNodes.id,
-                            filters:{
-                                id:selectedNodes.id
+            <div className="oneLine">
+                <TreeTable
+                    spinning={searchTableLoading}
+                    refreshTree={this.refreshTree}
+                    searchOption={{
+                        fields:searchFields,
+                        filters:filters,
+                        getFieldsValues:values=>{
+                            this.setState({
+                                searchFieldsValues:values
+                            })
+                        },
+                        cardProps:{
+                            style:{
+                                borderTop:0
                             }
-                        },()=>{
-                            this.refreshTable()
-                        })
-                    }
-                }}
-                tableOption={{
-                    key:updateTable,
-                    pageSize:10,
-                    columns:columns,
-                    cardProps:{
-                        title:'下级列表信息'
-                    },
-                    url:'/taxable/project/list',
-                    clearSelectedRowAfterFetch:false,
-                    onRowSelect:(selectedRowKeys,selectedRows)=>{
-                        this.setState({
-                            id:selectedRowKeys[0],
-                            selectedRows,
-                        })
-                    },
-                    rowSelection:{
-                        type:'radio',
-                    },
-                }}
-            >
-                <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
-            </TreeTable>
+                        }
+                    }}
+                    cardTableOption={{
+                        cardProps:{
+                            title:'应税项目',
+                        },
+                        extra:<div>
+                            {
+                                id && composeBotton([{
+                                    type: 'add',
+                                    icon:'plus',
+                                    userPermissions: [],
+                                    onClick: () => {
+                                        this.showModal('add')
+                                    }
+                                },{
+                                    type:'edit',
+                                    icon:'edit',
+                                    text:'编辑',
+                                    btnType:'default',
+                                    onClick:()=>{
+                                        this.showModal('edit')
+                                    }
+                                }])
+                            }
+                            {
+                                (id && parseInt(id,0)!==-1) && composeBotton([{
+                                    type:'delete',
+                                    icon:'delete',
+                                    text:'删除',
+                                    btnType:'danger',
+                                    onClick:()=>{
+                                        this.deleteData()
+                                    }
+                                }])
+                            }
+                        </div>
+                    }}
+                    treeCardOption={{
+                        cardProps:{
+                            title:'应税项目树',
+                            bodyStyle:{overflow:'auto',height:window.screen.availHeight-310},
+                        }
+                    }}
+                    treeOption={{
+                        key:updateTree,
+                        showLine:false,
+                        url:"/taxable/project/tree",
+                        onSuccess:(selectedKeys,selectedNodes)=>{
+                            this.setState({
+                                id:selectedNodes.id,
+                                filters:{
+                                    id:selectedNodes.id
+                                }
+                            },()=>{
+                                this.refreshTable()
+                            })
+                        }
+                    }}
+                    tableOption={{
+                        key:updateTable,
+                        pageSize:100,
+                        columns:columns,
+                        cardProps:{
+                            title:'下级列表信息',
+                        },
+                        url:'/taxable/project/list',
+                        clearSelectedRowAfterFetch:false,
+                        onRowSelect:(selectedRowKeys)=>{
+                            this.setState({
+                                id:selectedRowKeys[0],
+                            })
+                        },
+                        rowSelection:{
+                            type:'radio',
+                        },
+                        scroll:{
+                            x:'150%',
+                            y:window.screen.availHeight-400,
+                        },
+                    }}
+                >
+                    <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
+                </TreeTable>
+            </div>
         )
     }
 }
-export default Form.create()(TaxableItems)
+
+const enhance = compose(
+    Form.create(),
+    connect( (state) => ({
+        declare:state.user.get('declare')
+    }))
+);
+export default enhance(TaxableItems);

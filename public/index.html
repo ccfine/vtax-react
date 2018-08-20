@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="theme-color" content="#000000">
     <!--
       manifest.json provides metadata used when your web app is added to the
@@ -21,41 +22,46 @@
     -->
     <title>碧桂园增值税管理系统</title>
     <script>
-        var baseURL = 'http://dev-vscloud.servingcloud.com:8080/'
-        //var baseURL = 'http://120.76.217.179:8081/';
+        //var baseURL = 'http://dev-vscloud.servingcloud.com:8080/'
+        //var baseURL = 'http://112.74.41.25:8080/'
+        var baseURL = 'http://120.76.217.179:8080/';
         //var baseURL = 'http://rap2api.taobao.org/app/mock/4589/GET/';
         //var baseURL = 'http://192.168.3.190/';
-        //var baseURL = 'http://192.168.3.118/';
-        //var baseURL = 'http://112.74.41.25:8080/'
+        // var baseURL = 'http://192.168.3.53/'; //康博强
+        //var baseURL = 'http://my-vscloud2.tunnel.qydev.com/'; //http://192.168.3.170/谢安庆
+        // var baseURL = 'http://192.168.3.127/';
+        //var baseURL = 'http://192.168.3.132:8081/'; //邓傅生
+        // var baseURL = 'http://t-vs.tunnel.qydev.com'
+        // var baseURL = 'http://my-vscloud2.tunnel.qydev.com';
+        // var baseURL = 'http://jceshi.tunnel.qydev.com/' 蒋大伟
         //http://120.78.146.155/login 自动上传地址
-        //var baseURL = '/'
+        //var baseURL = 'http://192.168.3.228/' //安庆
+        //var baseURL = 'http://192.168.3.143:8080/' //大伟
+        //var baseURL = 'http://10.187.63.122/'
+        //var baseURL = '/';
+        var wsURL = 'ws://10.10.179.67:82/';
+        var isProd = false;  //TODO: 判断是否是正式环境
+        var isIE = !!window.ActiveXObject || "ActiveXObject" in window; //IE11  "ActiveXObject" in window 没有引号不识别
+        if(isIE){
+            document.documentElement.className += ' ie' + document.documentMode
+        }
     </script>
     <!-- Polyfills -->
     <script type="text/javascript" src="/libs/polyfill.min.js"></script>
 
-    <!--[if lt IE 10]>
     <style>
-      #ieTip{
+      .ie11 #root{
         display:block!important;
       }
-      #root{
+      .ie11 #ieTip{
         display: none!important;
       }
-    </style>
-    <![endif]-->
-    <style>
-      #root-loading{
-        transition: all .5s;
-        position:fixed;
-        left:0;
-        top:0;
-        width:100%;
-        height:100%;
-        display: flex;
-        z-index:9999;
-        justify-content: center;
-        background: #0099cc;
-        opacity:1
+
+      .ie10 #root, .ie9 #root, .ie8 #root, .ie7 #root, .ie6 #root, .ie5 #root{
+        display:none!important;
+      }
+      .ie10 #ieTip, .ie9 #ieTip, .ie8 #ieTip, .ie7 #ieTip, .ie6 #ieTip, .ie5 #ieTip{
+        display: block!important;
       }
     </style>
 
@@ -64,9 +70,10 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+
     <div id="root" class="ant-layout"></div>
     <div id="ieTip" style='display:none'>
-      不支持IE10以下版本浏览器，请使用IE10及以上版本
+      不支持IE11以下版本浏览器，请使用IE11及以上版本
     </div>
     <!--
       This HTML file is a template.
