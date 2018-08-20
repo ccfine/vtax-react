@@ -92,7 +92,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}beginningNotTaxSalesEstate.svg`,
             backgroundColor:'#7ED530'
         },
-        authorityInfo:salesManag['unBilledSalesEstate'].options,
+        authorityInfo:salesManag['beginningNotTaxSalesEstate'].options,
         exact:true,
     },{
         path:`${PATH}/unBilledSalesEstate`,

@@ -371,6 +371,11 @@ class unBilledSalesEstate extends Component{
                             selectedRowKeys
                         })
                     }:undefined,
+                    rowSelection:{
+                        getCheckboxProps: record => ({
+                            disabled: parseInt(record.doCheck, 0)  === 1, // Column configuration not to be checked
+                        }),
+                    },
                     url:'/accountInitialUntaxedSales/list',
                     onSuccess:(params)=>{
                         this.setState({
@@ -398,7 +403,7 @@ class unBilledSalesEstate extends Component{
                                         url: "/accountInitialUntaxedSales/check",
                                         fields: markFieldsData,
                                         onSuccess: this.refreshTable,
-                                        userPermissions: ['1545000'],
+                                        userPermissions: ['1955000'],
                                     }
                                 },
                                 {
@@ -406,7 +411,7 @@ class unBilledSalesEstate extends Component{
                                     url:'accountInitialUntaxedSales/export',
                                     params:filters,
                                     title:'导出',
-                                    userPermissions:['1351007'],
+                                    userPermissions:['1951007'],
                                 }
                             ],statusParam)
                         }
@@ -417,20 +422,21 @@ class unBilledSalesEstate extends Component{
                                     url:'/accountInitialUntaxedSales/reset',
                                     params:filters,
                                     onSuccess:this.refreshTable,
+                                    userPermissions:['1951009'],
                                 },
                                 {
                                     type:'submit',
                                     url:'/accountInitialUntaxedSales/submit',
                                     params:filters,
                                     onSuccess:this.refreshTable,
-                                    userPermissions:['1351010'],
+                                    userPermissions:['1951010'],
                                 },
                                 {
                                     type:'revoke',
                                     url:'/accountInitialUntaxedSales/revoke',
                                     params:filters,
                                     onSuccess:this.refreshTable,
-                                    userPermissions:['1351011'],
+                                    userPermissions:['1951011'],
                                 }
                             ],statusParam)
                         }

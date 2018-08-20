@@ -225,7 +225,7 @@ class AccountBalanceSheet extends Component{
                         key:updateKey,
                         pageSize:100,
                         columns:getColumns(this),
-                        url:'/inter/financial/voucher/report/list',
+                        //url:'/inter/financial/voucher/report/list',
                         scroll:{ x: 1600,y:window.screen.availHeight-450 },
                         onSuccess: (params) => {
                             this.setState({
