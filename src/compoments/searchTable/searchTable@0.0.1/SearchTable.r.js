@@ -84,14 +84,16 @@ class SearchTable extends Component{
                     }
 
                     if(moment.isMoment(values[key])){
-                        //格式化一下时间 YYYY-MM类型
-                        if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM');
+                        if(key === 'taxMonth' || key === 'authMonth'){
+                            //格式化一下时间 YYYY-MM类型
+                            if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
+                                values[key] = values[key].format('YYYY-MM');
+                            }
+                        }else{
+                            if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
+                                values[key] = values[key].format('YYYY-MM-DD');
+                            }
                         }
-
-                        /*if(moment(values[key].format('YYYY-MM-DD'),'YYYY-MM-DD',true).isValid()){
-                            values[key] = values[key].format('YYYY-MM-DD');
-                        }*/
                     }
                 }
 
@@ -118,7 +120,10 @@ class SearchTable extends Component{
         this.handleSubmit()
     }
     componentDidMount(){
-        !this.props.doNotFetchDidMount && this.updateTable()
+        /** 延迟100ms是因为如果这个弹窗里面如果包含SearchTable,并且table里有radio单选
+         * 就会出现radio对不齐的情况出现，因为radio外层是动态计算位置，可能原因是modal弹出时需要时间导致计算的举距离有偏差
+         */
+        !this.props.doNotFetchDidMount && setTimeout(this.updateTable, 100);
         this.props.searchOption && this.props.searchOption.filters && this.setState({
             filters:this.props.searchOption.filters
         })
@@ -200,7 +205,7 @@ class SearchTable extends Component{
                     </Card>
                 </Spin>
                 {
-                    children? children : null
+                    children ? children : null
                 }
             </Layout>
         )

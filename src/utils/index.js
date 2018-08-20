@@ -109,7 +109,7 @@ const listMainResultStatus = (statusParam) =>{
                                     transformDataStatus(statusParam.status)
                                 }</label></span>
         {
-            statusParam.lastModifiedDate && <span>提交时间：{statusParam.lastModifiedDate}</span>
+            ( statusParam && parseInt(statusParam.status, 0)===2 && statusParam.lastModifiedDate) && <span>提交时间：{statusParam.lastModifiedDate}</span>
         }
     </div>
 }

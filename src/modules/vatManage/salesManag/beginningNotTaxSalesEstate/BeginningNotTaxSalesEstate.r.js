@@ -3,7 +3,6 @@
  * 期初未纳税销售额台账-地产
  */
 import React, { Component } from 'react'
-import {Button,Icon} from 'antd'
 import {SearchTable} from 'compoments'
 import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import moment from 'moment';
@@ -48,7 +47,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             },
         },
         {
-            label:'房间交付日期',
+            label:'纳税申报期',
             fieldName:'authMonth',
             type:'monthPicker',
             span:8,
@@ -69,6 +68,31 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'利润中心',
+            fieldName:'profitCenter',
+            // type:'asyncSelect',
+            type:'select',
+            span:8,
+            formItemStyle,
+            options:[
+                {
+                    text:'',
+                    value:'0'
+                },
+                {
+                    text:'',
+                    value:'1'
+                }
+            ]
+            /*componentProps:{
+             fieldTextName:'itemName',
+             fieldValueName:'id',
+             doNotFetchDidMount:true,
+             fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+             url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
+             }*/
+        },
+        {
+            label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
             span:8,
@@ -78,7 +102,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
+                url: `/project/list/${getFieldValue('main') && getFieldValue('main').key}`
             }
         },
         {
@@ -96,25 +120,32 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             }
         },
         {
-            label: '房间号',
-            fieldName: 'commodityName',
+            label:'确收时点',
+            fieldName:'confirmedDate',
+            type:'datePicker',
+            span:8,
+            formItemStyle,
+        },
+        {
+            label: '房间编码',
+            fieldName: 'roomCode',
             formItemStyle,
             span:8,
             type: 'input',
         },
         {
             label:'状态',
-            fieldName:'matchingStatus',
+            fieldName:'status',
             type:'select',
             formItemStyle,
             span:8,
             options:[
                 {
-                    text:'未匹配',
+                    text:'未缴税',
                     value:'0'
                 },
                 {
-                    text:'已匹配',
+                    text:'已缴税',
                     value:'1'
                 }
             ]
@@ -124,21 +155,26 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
 const columns = [
     {
         title:'利润中心',
-        dataIndex:'projectName',
+        dataIndex:'profitCenter',
         width:'150px',
     },
     {
         title:'项目分期',
-        dataIndex:'itemName',
+        dataIndex:'stagesName',
         width:'150px',
     },
     {
-        title:'房间号',
+        title:'房间路址',
+        dataIndex:'htRoomName',
+        width:'100px',
+    },
+    {
+        title:'房间编码',
         dataIndex:'roomCode',
         width:'100px',
     },{
-        title:'房间交付日期',
-        dataIndex:'htRoomName',
+        title:'确收时点',
+        dataIndex:'confirmedDate',
         width:'150px',
     },
     {
@@ -149,66 +185,118 @@ const columns = [
         width:'100px',
     },
     {
-        title:'结算价',
+        title:'应申报销售额',
+        dataIndex:'reportSalesAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'100px',
+        width:'150px',
     },
+    // {
+    //     title:'结算价',
+    //     render:text=>fMoney(text),
+    //     className:'table-money',
+    //     width:'100px',
+    // },
     {
         title:'期初增值税已纳税销售额',
-        dataIndex:'sumTotalPrice',
+        dataIndex:'initialTaxableSales',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
     },
     {
         title:'期初已纳税金',
-        dataIndex:'sumTotalAmount',
+        dataIndex:'initialTaxableTaxAmount',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
     },
     {
         title:'期初已开票金额',
-        dataIndex:'sumNoInvoiceSales',
+        dataIndex:'initialTaxableTotalAmount',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
     },
     {
         title:'本期开票金额',
-        dataIndex:'totalPrice',
+        dataIndex:'currentTaxableTotalAmount',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
     },
     {
-        title:'期初未纳税销售额',
-        dataIndex:'totalAmount',
+        title:'未纳税销售额',
+        dataIndex:'noTaxableSales',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
     },
     {
         title:'本期申报的未纳税销售额',
-        dataIndex:'noInvoiceSales',
+        dataIndex:'currentNoTaxableSales',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
     },
     {
         title:'本期申报的未纳税销项税额',
-        dataIndex:'endTotalPrice',
+        dataIndex:'currentNoTaxableTaxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'150px',
+        width:'200px',
     },
     {
         title:'状态',
-        dataIndex:'endTotalAmount',
+        dataIndex:'status',
         width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.status,10) === 0 ? "未缴税":"已缴税";
+        }
+    },
+    {
+        title:'是否勾选',
+        dataIndex:'check',
+        width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.check,10) === 0 ? "未勾选":"已勾选";
+        }
     }
 ];
+const markFieldsData = [
+    {
+        label:'作为本期缴税房间凭证',
+        fieldName:'check',
+        type:'select',
+        notShowAll:true,
+        formItemStyle:{
+            labelCol:{
+                span:10
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        span:22,
+        options:[  //1-标记;0-不标记；不传则所有状态
+            {
+                text:'是',
+                value:'1'
+            },{
+                text:'否',
+                value:'0'
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择标记类型'
+                }
+            ]
+        }
+    }
+]
 class unBilledSalesEstate extends Component{
     state={
         tableKey:Date.now(),
@@ -220,7 +308,7 @@ class unBilledSalesEstate extends Component{
         resultFieldsValues:{
 
         },
-
+        selectedRowKeys:[],
         statusParam:undefined,
     }
     toggleSearchTableLoading = searchTableLoading =>{
@@ -235,20 +323,22 @@ class unBilledSalesEstate extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            tableKey:Date.now()
+            tableKey:Date.now(),
+            selectedRowKeys:[]
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/output/notInvoiceSale/realty/listMain',this.state.filters,result=>{
+        requestResultStatus('/accountInitialUntaxedSales/listMain',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
         })
     }
     render(){
-        const {tableKey,filters={},statusParam={},searchTableLoading} = this.state;
+        const {tableKey,filters={},statusParam={},searchTableLoading,selectedRowKeys} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -260,6 +350,14 @@ class unBilledSalesEstate extends Component{
                         }
                     }
                 }}
+                backCondition={(filters)=>{
+                    this.setState({
+                        filters,
+                        selectedRowKeys:[],
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 spinning={searchTableLoading}
                 tableOption={{
                     cardProps:{
@@ -268,7 +366,12 @@ class unBilledSalesEstate extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/account/output/notInvoiceSale/realty/list',
+                    onRowSelect:isCheck?(selectedRowKeys)=>{
+                        this.setState({
+                            selectedRowKeys
+                        })
+                    }:undefined,
+                    url:'/accountInitialUntaxedSales/list',
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params,
@@ -282,42 +385,58 @@ class unBilledSalesEstate extends Component{
                             listMainResultStatus(statusParam)
                         }
                         {
-                            JSON.stringify(filters) !== "{}" && <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
-                        }
-                        {
-                            JSON.stringify(filters)!=='{}' && composeBotton([{
-                                type:'fileExport',
-                                url:'account/output/notInvoiceSale/realty/export',
-                                params:filters,
-                                title:'导出',
-                                userPermissions:['1351007'],
-                            }])
+                            JSON.stringify(filters)!=='{}' &&composeBotton([
+                                {
+                                    type:'mark',
+                                    buttonOptions:{
+                                        text:'本期缴税房间',
+                                        icon:'pushpin-o'
+                                    },
+                                    formOptions: {
+                                        filters: filters,
+                                        selectedRowKeys: selectedRowKeys,
+                                        url: "/accountInitialUntaxedSales/check",
+                                        fields: markFieldsData,
+                                        onSuccess: this.refreshTable,
+                                        userPermissions: ['1545000'],
+                                    }
+                                },
+                                {
+                                    type:'fileExport',
+                                    url:'accountInitialUntaxedSales/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1351007'],
+                                }
+                            ],statusParam)
                         }
                         {
                             (disabled && declare.decAction==='edit') && composeBotton([
-                            {
-                                type:'reset',
-                                url:'/account/output/notInvoiceSale/realty/reset',
-                                params:filters,
-                                onSuccess:this.refreshTable,
-                                userPermissions:['1351009'],
-                            },{
-                                type:'submit',
-                                url:'/account/output/notInvoiceSale/realty/submit',
-                                params:filters,
-                                onSuccess:this.refreshTable,
-                                userPermissions:['1351010'],
-                            },{
-                                type:'revoke',
-                                url:'/account/output/notInvoiceSale/realty/revoke',
-                                params:filters,
-                                onSuccess:this.refreshTable,
-                                userPermissions:['1351011'],
-                            }],statusParam)
+                                {
+                                    type:'reset',
+                                    url:'/accountInitialUntaxedSales/reset',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                },
+                                {
+                                    type:'submit',
+                                    url:'/accountInitialUntaxedSales/submit',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                    userPermissions:['1351010'],
+                                },
+                                {
+                                    type:'revoke',
+                                    url:'/accountInitialUntaxedSales/revoke',
+                                    params:filters,
+                                    onSuccess:this.refreshTable,
+                                    userPermissions:['1351011'],
+                                }
+                            ],statusParam)
                         }
                     </div>,
                     scroll:{
-                        x:1950,
+                        x:2050,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}
