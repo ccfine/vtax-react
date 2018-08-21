@@ -9,6 +9,7 @@ import AubjectOfTaxPayment from './aubjectOfTaxPayment'
 // import TaxIncentives from './taxIncentives'
 // import DeclareParameter from './declareParameter'
 import BeginDataCollect from './beginDataCollect'
+import ProjectManagement from './projectManagement'
 /*import TableSum from '../../../compoments/tableSum'*/
 /*import FinancialDocumentsBeginData from './financialDocumentsBeginData'
 // import RoomTransactionFile from './roomTransactionFile'*/
@@ -30,7 +31,15 @@ const BasicInfo_Routes = [
         },
         authorityInfo:basicInfo['aubjectOfTaxPayment'].options,
         exact:true,
-    },/*{
+    },
+    {
+        path:`${PATHS}/aubjectOfTaxPayment/:id`,
+        component:wrapPage('项目管理',ProjectManagement),
+        name:'项目管理',
+        //authorityInfo:basicInfo['aubjectOfTaxPayment'].options,
+        exact:true,
+    },
+    /*{
         path:`${PATHS}/taxIncentives`,
         component:wrapPage('税收优惠',TaxIncentives),
         name:'税收优惠',
