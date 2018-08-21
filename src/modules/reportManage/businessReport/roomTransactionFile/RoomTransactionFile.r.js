@@ -236,7 +236,7 @@ const columns = [{
         width:'100px',
     },{
         title:'装修款（不含税）',
-        dataIndex:'decorationValorem ',
+        dataIndex:'decorationValorem',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',

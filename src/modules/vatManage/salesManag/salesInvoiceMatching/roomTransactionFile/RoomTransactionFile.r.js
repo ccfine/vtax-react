@@ -84,7 +84,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     },
     {
         label:'房间编码',
-        fieldName:'roomNumber',
+        fieldName:'roomCode',
         type:'input',
         formItemStyle,
         span:6
@@ -119,6 +119,9 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         type:'monthPicker',
         formItemStyle,
         span:6,
+        componentProps:{
+            format:'YYYY-MM-DD',
+        }
     },
 ];
 
@@ -268,7 +271,7 @@ const getColumns = (context,disabled) => {
             },
         },{
             title:'装修款（不含税）',
-            dataIndex:'decorationValorem ',
+            dataIndex:'decorationValorem',
             render:text=>fMoney(text),
             className:'table-money',
             width:'150px',

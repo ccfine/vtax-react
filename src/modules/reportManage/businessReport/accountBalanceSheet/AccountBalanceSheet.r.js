@@ -225,7 +225,7 @@ class AccountBalanceSheet extends Component{
                         key:updateKey,
                         pageSize:100,
                         columns:getColumns(this),
-                        url:'/inter/financial/voucher/report/list',
+                        url:'/inter/financial/voucher/report/list2',//'/inter/financial/voucher/report/list',
                         scroll:{ x: 1600,y:window.screen.availHeight-450 },
                         onSuccess: (params) => {
                             this.setState({
@@ -244,7 +244,7 @@ class AccountBalanceSheet extends Component{
                                     {
                                         JSON.stringify(filters)!=='{}' && composeBotton([{
                                             type:'fileExport',
-                                            url:'inter/financial/voucher/report/export',
+                                            //url:'inter/financial/voucher/report/export',
                                             params:filters,
                                             title:'导出',
                                             userPermissions:['1891007'],
@@ -253,7 +253,7 @@ class AccountBalanceSheet extends Component{
                                     {
                                         composeBotton([{
                                             type:'modal',
-                                            url:'/inter/financial/voucher/report/sendApi',
+                                            //url:'/inter/financial/voucher/report/sendApi',
                                             title:'抽数',
                                             icon:'usb',
                                             fields:apiFields,
