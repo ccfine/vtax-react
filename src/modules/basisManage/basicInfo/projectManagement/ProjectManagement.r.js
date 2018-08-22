@@ -4,8 +4,25 @@ import {Card,message,Form,Row,Col,Button,Modal} from 'antd'
 import {request} from 'utils'
 import {AsyncTable} from 'compoments'
 import { SelectCell } from 'compoments/EditableCell'
-import TreeList from 'compoments/treeTable/TreeList.r'
+const pointerStyle = {
+    cursor:'pointer',
+    color:'#1890ff'
+}
+const columns = (context) =>[{
+    title: '利润中心名称',
+    dataIndex: 'profitName',
+    width:'100%',
 
+    render:(text,record)=>{
+        return <span style={pointerStyle} onClick={()=>{
+            context.mounted && context.setState({
+                    profitCenterId:record.id
+                },()=>{
+                    context.refreshTableTwo()
+                })
+            }}>{text}</span>;
+    }
+}];
 const table_1_columns = [{
     title: '项目名称',
     dataIndex: 'itemName',
@@ -80,19 +97,13 @@ const table_2_columns = (context, getFieldDecorator) =>[{
 
 class ProjectManagement extends Component{
     state = {
-        updateTree:Date.now(),
+        updateKey:Date.now(),
         selectedRowKeys:null,
         tableUpDateKey1:Date.now(),
         tableUpDateKey2:Date.now()+1,
         deleteLoading:false,
+        profitCenterId:null,
     }
-    /*componentWillReceiveProps(nextProps){
-        if(nextProps.visible && !this.props.visible){
-            setTimeout(()=>{
-                this.refreshTable()
-            },300)
-        }
-    }*/
     componentDidMount(){
        const taxSubjectId = this.props.match.params.id;
         taxSubjectId && setTimeout(()=>{
@@ -100,41 +111,28 @@ class ProjectManagement extends Component{
         },300)
     }
     refreshTable=()=>{
-        this.setState({
+        this.mounted && this.setState({
+            updateKey:Date.now(),
+            tableUpDateKey1:Date.now(),
+            tableUpDateKey2:Date.now(),
+            selectedRowKeys:null
+        })
+    }
+    refreshTableTwo=()=>{
+        this.mounted && this.setState({
             tableUpDateKey1:Date.now(),
             tableUpDateKey2:Date.now(),
             selectedRowKeys:null
         })
     }
     onChange=(selectedRowKeys) => {
-        this.setState({
+        this.mounted && this.setState({
             selectedRowKeys,
             tableUpDateKey2:Date.now(),
         })
     }
-    deleteData=()=>{
-        if(!this.state.selectedRowKeys || this.state.selectedRowKeys.length===0){
-            message.error('请选择')
-            return;
-        }
-        this.toggleDeleteLoading(true)
-        request.delete(`/project/delete/${this.state.selectedRowKeys[0]}`)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success('删除成功!');
-                    this.refreshTable()
-                }else{
-                    message.error(data.msg)
-                }
-                this.toggleDeleteLoading(false)
-            })
-            .catch(err => {
-                message.error(err.message)
-                this.toggleDeleteLoading(false)
-            })
-    }
     toggleDeleteLoading=(deleteLoading)=>{
-        this.setState({deleteLoading})
+        this.mounted && this.setState({deleteLoading})
     }
     handleSubmit = e => {
         e && e.preventDefault();
@@ -164,7 +162,7 @@ class ProjectManagement extends Component{
                         modalRef && modalRef.destroy();
                         request.put('/project/stage/update',{
                             list:list,//.filter(item=>!!item.taxMethod)
-                            mainId: this.props.taxSubjectId[0]
+                            mainId: this.props.match.params.id
                         })
                             .then(({data})=>{
                                 this.toggleDeleteLoading(false)
@@ -194,8 +192,12 @@ class ProjectManagement extends Component{
             }
         })
     }
+    mounted=true
+    componentWillUnmount(){
+        this.mounted=null
+    }
     render(){
-        const {updateTree,selectedRowKeys,tableUpDateKey1,tableUpDateKey2} = this.state,
+        const {updateKey,selectedRowKeys,tableUpDateKey1,tableUpDateKey2,profitCenterId} = this.state,
             taxSubjectId = this.props.match.params.id;
         const {getFieldDecorator} = this.props.form;
         return(
@@ -207,63 +209,35 @@ class ProjectManagement extends Component{
                 title='项目信息管理'
             >
                 <Row gutter={24}>
-                    <Col span={8}>
+                    <Col span={4}>
                         <Card
                             title={'利润中心'}
-                            bodyStyle={{overflow:'auto',height:window.screen.availHeight-280}}
                         >
-                            <TreeList
-                                url={'/sysOrganization/tree'}
-                                showLine={false}
-                                isShowCode={false}
-                                updateKey={updateTree}
-                                treeOption={{
-                                    isLoadDate:true,
-                                    onSuccess:(selectedKeys,selectedNodes)=>{
-                                        this.setState({
-                                            id:selectedNodes.id,
-                                            filters:{
-                                                id:selectedNodes.id
+                            <AsyncTable url={`/taxsubject/profitCenterList/${taxSubjectId}`}
+                                        updateKey={updateKey}
+                                        tableProps={{
+                                            rowKey:record=>record.id,
+                                            //pageSize:100,
+                                            size:'small',
+                                            /*rowSelection:{
+                                                type:'radio',
+                                                onChange: this.onChange,
+                                                selectedRowKeys:selectedRowKeys,
+                                            },*/
+                                            columns:columns(this),
+                                            pagination:false,
+                                            scroll:{
+                                                x:200,
+                                                y:window.screen.availHeight-280,
                                             },
-                                            selectedNodes:selectedNodes,
-                                            onlyAdd:true,
-                                        },()=>{
-                                            this.refreshTable()
-                                        })
-                                    },
-                                }}
-
-                            />
+                                        }} />
                         </Card>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Card
-                            extra={
-                                <div>
-                                    {/*
-                                     composeBotton([{
-                                     type: 'fileExport',
-                                     url: 'project/download',
-                                     },{
-                                     type:'autoFileImport',
-                                     url:`project/upload/${this.props.taxSubjectId}`,
-                                     userPermissions:['1581005'],
-                                     onSuccess:this.refreshTable,
-                                     },{
-                                     type:'delete',
-                                     icon:'delete',
-                                     text:'删除',
-                                     btnType:'danger',
-                                     userPermissions:['1581008'],
-                                     loading:deleteLoading,
-                                     onClick:this.deleteData
-                                     }])
-                                     */}
-                                </div>
-                            }
                             bodyStyle={{padding: '10px 20px'}}
                             title="项目信息">
-                            <AsyncTable url={`/taxsubject/projectList/${taxSubjectId}`}
+                            <AsyncTable url={`/taxsubject/projectByProfitCenter/${profitCenterId}`}
                                         updateKey={tableUpDateKey1}
                                         tableProps={{
                                             rowKey:record=>record.id,
@@ -283,7 +257,7 @@ class ProjectManagement extends Component{
                                         }} />
                         </Card>
                     </Col>
-                    <Col span={10}>
+                    <Col span={12}>
                         <Card title="分期信息" bodyStyle={{padding: '10px 20px'}}>
                             <Form onSubmit={this.handleSubmit}>
                                 <AsyncTable url={`/taxsubject/stages/${selectedRowKeys && selectedRowKeys[0]}`}
