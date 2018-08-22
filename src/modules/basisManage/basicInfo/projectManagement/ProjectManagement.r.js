@@ -98,7 +98,7 @@ const table_2_columns = (context, getFieldDecorator) =>[{
 class ProjectManagement extends Component{
     state = {
         updateKey:Date.now(),
-        selectedRowKeys:null,
+        selectedRowKeys:[],
         tableUpDateKey1:Date.now(),
         tableUpDateKey2:Date.now()+1,
         deleteLoading:false,
@@ -115,14 +115,14 @@ class ProjectManagement extends Component{
             updateKey:Date.now(),
             tableUpDateKey1:Date.now(),
             tableUpDateKey2:Date.now(),
-            selectedRowKeys:null
+            selectedRowKeys:[]
         })
     }
     refreshTableTwo=()=>{
         this.mounted && this.setState({
             tableUpDateKey1:Date.now(),
             tableUpDateKey2:Date.now(),
-            selectedRowKeys:null
+            selectedRowKeys:[]
         })
     }
     onChange=(selectedRowKeys) => {
@@ -140,7 +140,6 @@ class ProjectManagement extends Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 //if(JSON.stringify(values) !=='{}'){
-                console.log(values)
                 let list = [];
                 for(let key in values){
                     for(let nKey in values[key]){
@@ -203,13 +202,10 @@ class ProjectManagement extends Component{
         return(
             <Card
                 className="search-card"
-                extra={
-                    <Button size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
-                 }
                 title='项目信息管理'
             >
                 <Row gutter={24}>
-                    <Col span={4}>
+                    <Col span={6}>
                         <Card
                             title={'利润中心'}
                         >
@@ -219,11 +215,6 @@ class ProjectManagement extends Component{
                                             rowKey:record=>record.id,
                                             //pageSize:100,
                                             size:'small',
-                                            /*rowSelection:{
-                                                type:'radio',
-                                                onChange: this.onChange,
-                                                selectedRowKeys:selectedRowKeys,
-                                            },*/
                                             columns:columns(this),
                                             pagination:false,
                                             scroll:{
@@ -257,8 +248,14 @@ class ProjectManagement extends Component{
                                         }} />
                         </Card>
                     </Col>
-                    <Col span={12}>
-                        <Card title="分期信息" bodyStyle={{padding: '10px 20px'}}>
+                    <Col span={10}>
+                        <Card
+                            title="分期信息"
+                            bodyStyle={{padding: '10px 20px'}}
+                            extra={
+                                <Button disabled={selectedRowKeys.length<1} size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
+                            }
+                        >
                             <Form onSubmit={this.handleSubmit}>
                                 <AsyncTable url={`/taxsubject/stages/${selectedRowKeys && selectedRowKeys[0]}`}
                                             updateKey={tableUpDateKey2}
