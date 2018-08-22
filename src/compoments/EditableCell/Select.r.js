@@ -16,7 +16,7 @@ export default class SelectCell extends React.Component {
                         ...fieldDecoratorOptions
                     })(
 
-                        <Select {...componentProps} style={{width:'100%',textAlign:'right',backgroundColor: '#E2F6FF'}} >
+                        <Select {...componentProps} style={{textAlign:'right',backgroundColor: '#E2F6FF'}} >
                             {
                                 options.map((option,i)=>(
                                     <Option key={i} value={option.value}>{option.text}</Option>

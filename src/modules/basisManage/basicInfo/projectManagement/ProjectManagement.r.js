@@ -12,7 +12,6 @@ const columns = (context) =>[{
     title: '利润中心名称',
     dataIndex: 'profitName',
     width:'100%',
-
     render:(text,record)=>{
         return <span style={pointerStyle} onClick={()=>{
             context.mounted && context.setState({
@@ -35,15 +34,15 @@ const table_1_columns = [{
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
     dataIndex: 'itemName',
-    width:'250px',
+    width:'25%',
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'200px',
+    width:'20%',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'250px',
+    width:'25%',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
         text = parseInt(text,0);
@@ -112,23 +111,29 @@ class ProjectManagement extends Component{
     }
     refreshTable=()=>{
         this.mounted && this.setState({
-            updateKey:Date.now(),
-            tableUpDateKey1:Date.now(),
-            tableUpDateKey2:Date.now(),
+            updateKey: Date.now(),
+            tableUpDateKey1: Date.now(),
+            tableUpDateKey2: Date.now(),
             selectedRowKeys:[]
         })
     }
     refreshTableTwo=()=>{
         this.mounted && this.setState({
-            tableUpDateKey1:Date.now(),
-            tableUpDateKey2:Date.now(),
-            selectedRowKeys:[]
+            tableUpDateKey1: Date.now(),
+            tableUpDateKey2: Date.now(),
+            //selectedRowKeys:[]
+        })
+    }
+    refreshTableThree=()=>{
+        this.mounted && this.setState({
+            tableUpDateKey2: Date.now(),
+            //selectedRowKeys:[]
         })
     }
     onChange=(selectedRowKeys) => {
         this.mounted && this.setState({
             selectedRowKeys,
-            tableUpDateKey2:Date.now(),
+            tableUpDateKey2: Date.now(),
         })
     }
     toggleDeleteLoading=(deleteLoading)=>{
@@ -172,7 +177,7 @@ class ProjectManagement extends Component{
                                         message.success(`所有数据全部保存成功！`);
                                     }
                                     this.props.form.resetFields();
-                                    this.refreshTable();
+                                    this.refreshTableThree();
                                 }else{
                                     message.error(`保存失败:${data.msg}`)
                                 }
@@ -219,7 +224,7 @@ class ProjectManagement extends Component{
                                             pagination:false,
                                             scroll:{
                                                 x:200,
-                                                y:window.screen.availHeight-280,
+                                                y:window.screen.availHeight-320,
                                             },
                                         }} />
                         </Card>
@@ -243,7 +248,7 @@ class ProjectManagement extends Component{
                                             pagination:false,
                                             scroll:{
                                                 x:200,
-                                                y:window.screen.availHeight-280,
+                                                y:window.screen.availHeight-320,
                                             },
                                         }} />
                         </Card>
@@ -267,7 +272,7 @@ class ProjectManagement extends Component{
                                                 pagination:false,
                                                 scroll:{
                                                     //x:700,
-                                                    y:window.screen.availHeight-280,
+                                                    y:window.screen.availHeight-320,
                                                 },
                                             }} />
                             </Form>
