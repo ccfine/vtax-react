@@ -1,26 +1,14 @@
 // Created by liuliyuan on 2018/8/21
 import React, { Component } from 'react'
-import {Card,message,Form,Row,Col,Button,Modal} from 'antd'
+import {Card,message,Form,Row,Col,Button,Modal,Icon} from 'antd'
 import {request} from 'utils'
 import {AsyncTable} from 'compoments'
 import { SelectCell } from 'compoments/EditableCell'
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
+
 const columns = (context) =>[{
     title: '利润中心名称',
     dataIndex: 'profitName',
     width:'100%',
-    render:(text,record)=>{
-        return <span style={pointerStyle} onClick={()=>{
-            context.mounted && context.setState({
-                    profitCenterId:record.id
-                },()=>{
-                    context.refreshTableTwo()
-                })
-            }}>{text}</span>;
-    }
 }];
 const table_1_columns = [{
     title: '项目名称',
@@ -34,15 +22,16 @@ const table_1_columns = [{
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
     dataIndex: 'itemName',
-    width:'25%',
+    width:'100px',
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'20%',
+    width:'100px',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'25%',
+    width:'180px',
+    className:'text-center',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
         text = parseInt(text,0);
@@ -98,10 +87,10 @@ class ProjectManagement extends Component{
     state = {
         updateKey:Date.now(),
         selectedRowKeys:[],
+        selectedRowTaxSubjectKeys:[],
         tableUpDateKey1:Date.now(),
         tableUpDateKey2:Date.now()+1,
-        deleteLoading:false,
-        profitCenterId:null,
+        loading:false,
     }
     componentDidMount(){
        const taxSubjectId = this.props.match.params.id;
@@ -114,6 +103,7 @@ class ProjectManagement extends Component{
             updateKey: Date.now(),
             tableUpDateKey1: Date.now(),
             tableUpDateKey2: Date.now(),
+            selectedRowTaxSubjectKeys:[],
             selectedRowKeys:[]
         })
     }
@@ -121,27 +111,20 @@ class ProjectManagement extends Component{
         this.mounted && this.setState({
             tableUpDateKey1: Date.now(),
             tableUpDateKey2: Date.now(),
-            //selectedRowKeys:[]
+            selectedRowKeys:[]
         })
     }
     refreshTableThree=()=>{
         this.mounted && this.setState({
             tableUpDateKey2: Date.now(),
-            //selectedRowKeys:[]
         })
     }
-    onChange=(selectedRowKeys) => {
-        this.mounted && this.setState({
-            selectedRowKeys,
-            tableUpDateKey2: Date.now(),
-        })
-    }
-    toggleDeleteLoading=(deleteLoading)=>{
-        this.mounted && this.setState({deleteLoading})
+    toggleLoading=(loading)=>{
+        this.mounted && this.setState({loading})
     }
     handleSubmit = e => {
         e && e.preventDefault();
-        this.toggleDeleteLoading(true)
+        this.toggleLoading(true)
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 //if(JSON.stringify(values) !=='{}'){
@@ -169,12 +152,14 @@ class ProjectManagement extends Component{
                             mainId: this.props.match.params.id
                         })
                             .then(({data})=>{
-                                this.toggleDeleteLoading(false)
+                                this.toggleLoading(false)
                                 if(data.code===200){
                                     if(parseInt(data.data, 0) > 0 ){
-                                        message.success(`当前数据保存成功，您还有${data.data}条数据未保存！`);
+                                        message.success(
+                                            <span>当前项目下还有<span style={{color:'red'}}> {data.data} </span>个项目分期的计税方法未维护！</span>
+                                        );
                                     }else{
-                                        message.success(`所有数据全部保存成功！`);
+                                        message.success(`保存成功！`);
                                     }
                                     this.props.form.resetFields();
                                     this.refreshTableThree();
@@ -183,7 +168,7 @@ class ProjectManagement extends Component{
                                 }
                             }).catch(err=>{
                             message.error(err.message)
-                            this.toggleDeleteLoading(false)
+                            this.toggleLoading(false)
                         })
                     },
                     onCancel() {
@@ -201,86 +186,113 @@ class ProjectManagement extends Component{
         this.mounted=null
     }
     render(){
-        const {updateKey,selectedRowKeys,tableUpDateKey1,tableUpDateKey2,profitCenterId} = this.state,
+        const {updateKey,selectedRowKeys,selectedRowTaxSubjectKeys,tableUpDateKey1,tableUpDateKey2} = this.state,
             taxSubjectId = this.props.match.params.id;
         const {getFieldDecorator} = this.props.form;
         return(
-            <Card
-                className="search-card"
-                title='项目信息管理'
-            >
-                <Row gutter={24}>
-                    <Col span={6}>
-                        <Card
-                            title={'利润中心'}
-                        >
-                            <AsyncTable url={`/taxsubject/profitCenterList/${taxSubjectId}`}
-                                        updateKey={updateKey}
-                                        tableProps={{
-                                            rowKey:record=>record.id,
-                                            //pageSize:100,
-                                            size:'small',
-                                            columns:columns(this),
-                                            pagination:false,
-                                            scroll:{
-                                                x:200,
-                                                y:window.screen.availHeight-320,
-                                            },
-                                        }} />
-                        </Card>
-                    </Col>
-                    <Col span={8}>
-                        <Card
-                            bodyStyle={{padding: '10px 20px'}}
-                            title="项目信息">
-                            <AsyncTable url={`/taxsubject/projectByProfitCenter/${profitCenterId}`}
-                                        updateKey={tableUpDateKey1}
-                                        tableProps={{
-                                            rowKey:record=>record.id,
-                                            //pageSize:100,
-                                            size:'small',
-                                            rowSelection:{
-                                                type:'radio',
-                                                onChange: this.onChange,
-                                                selectedRowKeys:selectedRowKeys,
-                                            },
-                                            columns:table_1_columns,
-                                            pagination:false,
-                                            scroll:{
-                                                x:200,
-                                                y:window.screen.availHeight-320,
-                                            },
-                                        }} />
-                        </Card>
-                    </Col>
-                    <Col span={10}>
-                        <Card
-                            title="分期信息"
-                            bodyStyle={{padding: '10px 20px'}}
-                            extra={
-                                <Button disabled={selectedRowKeys.length<1} size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
-                            }
-                        >
-                            <Form onSubmit={this.handleSubmit}>
-                                <AsyncTable url={`/taxsubject/stages/${selectedRowKeys && selectedRowKeys[0]}`}
-                                            updateKey={tableUpDateKey2}
+            <div>
+                <div style={{ margin: "0px 0 6px 6px" }}>
+                    <span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12,cursor: 'pointer'}}
+                        onClick={() => {
+                            this.props.history.goBack();
+                        }}
+                    >
+                        <Icon type="left" /><span>返回</span>
+                    </span>
+                </div>
+                <Card
+                    className="search-card"
+                    title='项目信息管理'
+                >
+                    <Row gutter={8}>
+                        <Col span={6}>
+                            <Card
+                                title={'利润中心'}
+                            >
+                                <AsyncTable url={`/taxsubject/profitCenterList/${taxSubjectId}`}
+                                            updateKey={updateKey}
                                             tableProps={{
                                                 rowKey:record=>record.id,
                                                 //pageSize:100,
                                                 size:'small',
-                                                columns:table_2_columns(this,getFieldDecorator),
+                                                columns:columns(this),
                                                 pagination:false,
+                                                rowSelection:{
+                                                    type: 'radio',
+                                                },
+                                                onRowSelect:(selectedRowKeys)=>{
+                                                    this.mounted && this.setState({
+                                                        selectedRowTaxSubjectKeys:selectedRowKeys,
+                                                    },()=>{
+                                                        this.refreshTableTwo()
+                                                    })
+                                                },
                                                 scroll:{
-                                                    //x:700,
+                                                    x:200,
                                                     y:window.screen.availHeight-320,
                                                 },
                                             }} />
-                            </Form>
-                        </Card>
-                    </Col>
-                </Row>
-            </Card>
-
+                            </Card>
+                        </Col>
+                        <Col span={8}>
+                            <Card
+                                bodyStyle={{padding: '10px 20px'}}
+                                title="项目信息">
+                                <AsyncTable url={`/taxsubject/projectByProfitCenter/${selectedRowTaxSubjectKeys && selectedRowTaxSubjectKeys[0]}`}
+                                            updateKey={tableUpDateKey1}
+                                            tableProps={{
+                                                rowKey:record=>record.id,
+                                                //pageSize:100,
+                                                size:'small',
+                                                rowSelection:{
+                                                    type: 'radio',
+                                                },
+                                                onRowSelect:(selectedRowKeys)=>{
+                                                    this.mounted && this.setState({
+                                                        selectedRowKeys,
+                                                    },()=>{
+                                                        this.mounted && this.setState({
+                                                            tableUpDateKey2: Date.now(),
+                                                        })
+                                                    })
+                                                },
+                                                columns:table_1_columns,
+                                                pagination:false,
+                                                scroll:{
+                                                    x:200,
+                                                    y:window.screen.availHeight-320,
+                                                },
+                                            }} />
+                            </Card>
+                        </Col>
+                        <Col span={10}>
+                            <Card
+                                title="分期信息"
+                                bodyStyle={{padding: '10px 20px'}}
+                                extra={
+                                    <Button disabled={selectedRowKeys.length<1} size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
+                                }
+                            >
+                                <Form onSubmit={this.handleSubmit}>
+                                    <AsyncTable url={`/taxsubject/stages/${selectedRowKeys && selectedRowKeys[0]}`}
+                                                updateKey={tableUpDateKey2}
+                                                tableProps={{
+                                                    rowKey:record=>record.id,
+                                                    //pageSize:100,
+                                                    size:'small',
+                                                    columns:table_2_columns(this,getFieldDecorator),
+                                                    pagination:false,
+                                                    scroll:{
+                                                        //x:700,
+                                                        y:window.screen.availHeight-320,
+                                                    },
+                                                }} />
+                                </Form>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Card>
+            </div>
         )
     }
 }

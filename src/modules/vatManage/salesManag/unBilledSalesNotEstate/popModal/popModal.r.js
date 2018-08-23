@@ -33,13 +33,12 @@ class PopModal extends Component {
         request.get('/incomeAndTaxRateCorrespondence/loadUnRealtyList')
             .then(({data})=>{
                 if(data.code ===200){
-
                     this.setState({
                         creditSubjectList:data.data.map(item=>{
                             return {
                                 ...item,
                                 text: item.name,
-                                value: item.code
+                                value: item.id
                             }
                         })
                     })
@@ -50,12 +49,12 @@ class PopModal extends Component {
             });
     }
     //查询未开票-非地产的科目列表
-    getStagesList=(projectId,stagesId,creditSubjectCode,cb)=>{
+    /*getStagesList=(projectId,stagesId,creditSubjectId,cb)=>{
         request.get(`/project/stages/${projectId}`)
             .then(({data})=>{
                 if(data.code ===200){
                     let taxMethod = data.data.records.filter(item=>item.id === stagesId)[0].taxMethod;
-                    let nList = this.state.creditSubjectList.filter(item=>item.code === creditSubjectCode)[0];
+                    let nList = this.state.creditSubjectList.filter(item=>item.id === creditSubjectId)[0];
                     let taxRate = 0;
                     if(parseInt(taxMethod, 0) === 1){
                         taxRate = nList.commonlyTaxRate
@@ -68,7 +67,7 @@ class PopModal extends Component {
             .catch(err => {
                 message.error(err.message)
             });
-    }
+    }*/
     componentDidMount() {
         this.getLoadUnRealtyList()
     }
@@ -138,7 +137,7 @@ class PopModal extends Component {
                 }
                 // 科目
                 if(values.creditSubject){
-                    values.creditSubjectCode = values.creditSubject.key;
+                    values.creditSubjectId = values.creditSubject.key;
                     values.creditSubjectName = values.creditSubject.label;
                     delete values.creditSubject
                 }
@@ -146,49 +145,49 @@ class PopModal extends Component {
 
                // 当项目分期的taxMethod=2 取 科目税率对应表的simpleTaxRate为税率。 项目分期的taxMethod=1 取 科目税率对应表的commonlyTaxRate为税率。
 
-                this.getStagesList(values.projectId,values.stagesId,values.creditSubjectCode,(taxRate)=>{
+                //this.getStagesList(values.projectId,values.stagesId,values.creditSubjectId,(taxRate)=>{
 
-                    let obj = Object.assign({}, this.state.record, {...values,taxRate:taxRate});
+                let obj = Object.assign({}, this.state.record, {...values}); //taxRate:taxRate
+                let result, sucessMsg;
+                if (this.props.action === "modify") {
+                    result = request.put(
+                        "/account/notInvoiceUnSale/realty/update",
+                        obj
+                    );
+                    sucessMsg = "修改成功";
+                } else if (this.props.action === "add") {
+                    result = request.post(
+                        "/account/notInvoiceUnSale/realty/add",
+                        obj
+                    );
+                    sucessMsg = "添加成功";
+                }
 
-                    let result, sucessMsg;
-                    if (this.props.action === "modify") {
-                        result = request.put(
-                            "/account/notInvoiceUnSale/realty/update",
-                            obj
-                        );
-                        sucessMsg = "修改成功";
-                    } else if (this.props.action === "add") {
-                        result = request.post(
-                            "/account/notInvoiceUnSale/realty/add",
-                            obj
-                        );
-                        sucessMsg = "添加成功";
-                    }
-
-                    this.setState({ loading: true, formLoading: true });
-                    result &&
-                    result
-                        .then(({ data }) => {
-                            if (data.code === 200) {
-                                message.success(sucessMsg, 4);
-                                this.props.update && this.props.update();
-                                this.props.hideModal();
-                            } else {
-                                message.error(data.msg, 4);
-                            }
-                            this.setState({
-                                loading: false,
-                                formLoading: false
-                            });
-                        })
-                        .catch(err => {
-                            message.error(err.message);
-                            this.setState({
-                                loading: false,
-                                formLoading: false
-                            });
+                this.setState({ loading: true, formLoading: true });
+                result &&
+                result
+                    .then(({ data }) => {
+                        if (data.code === 200) {
+                            message.success(sucessMsg, 4);
+                            this.props.update && this.props.update();
+                            this.props.hideModal();
+                        } else {
+                            message.error(data.msg, 4);
+                        }
+                        this.setState({
+                            loading: false,
+                            formLoading: false
                         });
-                });
+                    })
+                    .catch(err => {
+                        message.error(err.message);
+                        this.setState({
+                            loading: false,
+                            formLoading: false
+                        });
+                    });
+
+                //});
 
             }
         });
@@ -359,7 +358,7 @@ class PopModal extends Component {
                                         disabled:readonly
                                     },
                                     fieldDecoratorOptions: {
-                                        initialValue:record.creditSubjectCode ? { key: record.creditSubjectCode, label: record.creditSubjectName } : undefined,
+                                        initialValue:record.creditSubjectId ? { key: record.creditSubjectId, label: record.creditSubjectName } : undefined,
                                         rules: [
                                             {
                                                 required: true,

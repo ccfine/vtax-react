@@ -68,28 +68,17 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'利润中心',
-            fieldName:'profitCenter',
-            // type:'asyncSelect',
-            type:'select',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
             span:8,
             formItemStyle,
-            options:[
-                {
-                    text:'',
-                    value:'0'
-                },
-                {
-                    text:'',
-                    value:'1'
-                }
-            ]
-            /*componentProps:{
-             fieldTextName:'itemName',
+            componentProps:{
+             fieldTextName:'profitName',
              fieldValueName:'id',
              doNotFetchDidMount:true,
              fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-             url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
-             }*/
+             url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+             }
         },
         {
             label:'项目名称',
@@ -101,8 +90,8 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url: `/project/list/${getFieldValue('main') && getFieldValue('main').key}`
+                fetchAble:getFieldValue('profitCenterId') || false,
+                url: `/taxsubject/projectByProfitCenter/${getFieldValue('profitCenterId') || ''}`
             }
         },
         {
@@ -116,7 +105,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+                url:`/taxsubject/stages/${getFieldValue('projectId') || ''}`,
             }
         },
         {
@@ -155,8 +144,8 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
 const columns = [
     {
         title:'利润中心',
-        dataIndex:'profitCenter',
-        width:'150px',
+        dataIndex:'profitCenterName',
+        width:'180px',
     },
     {
         title:'项目分期',
@@ -442,7 +431,7 @@ class unBilledSalesEstate extends Component{
                         }
                     </div>,
                     scroll:{
-                        x:2050,
+                        x:2100,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}

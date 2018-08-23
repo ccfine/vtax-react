@@ -3,8 +3,8 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
-import moment from 'moment';
+import {fMoney,composeBotton} from 'utils'
+//import moment from 'moment';
 const formItemStyle={
     labelCol:{
         span:8
@@ -37,7 +37,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             },
         },
         {
-            label:'查询期间',
+            label:'截至月份',
             fieldName:'authMonth',
             type:'monthPicker',
             span:6,
@@ -46,7 +46,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 disabled:disabled
             },
             formItemStyle,
-            fieldDecoratorOptions:{
+            /*fieldDecoratorOptions:{
                 initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
@@ -54,21 +54,21 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                         message:'请选择查询期间'
                     }
                 ]
-            },
+            },*/
 
         },
         {
             label:'利润中心',
-            fieldName:'profitCenter',
+            fieldName:'profitCenterId',
             type:'asyncSelect',
             span:6,
             formItemStyle,
             componentProps:{
-                fieldTextName:'itemName',
+                fieldTextName:'profitName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/stages/${getFieldValue('main') && getFieldValue('main').key}`,
+                url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
             }
         },
         {
@@ -81,8 +81,8 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
+                fetchAble:getFieldValue('profitCenterId') || false,
+                url: `/taxsubject/projectByProfitCenter/${getFieldValue('profitCenterId') || ''}`
             }
         },
         {
@@ -96,7 +96,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+                url:`/taxsubject/stages/${getFieldValue('projectId') || ''}`,
             }
         },
         {
@@ -108,7 +108,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'是否存在差异',
-            fieldName:'matchingStatus',
+            fieldName:'dif',
             type:'select',
             formItemStyle,
             span:6,
@@ -128,17 +128,17 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
 const columns=[
     {
         title:'利润中心',
-        dataIndex:'profitCenter',
+        dataIndex:'profitCenterName',
         width:'200px',
     },
     {
         title:'项目名称',
-        dataIndex:'projectName',
+        dataIndex:'itemName',
         width:'200px',
     },
     {
         title:'项目分期',
-        dataIndex:'projectStagesName',
+        dataIndex:'stagesName',
         width:'150px',
     },
     {
@@ -153,51 +153,33 @@ const columns=[
     },
     {
         title: "确收时间",
-        dataIndex: "accountDate",
+        dataIndex: "confirmedDate",
         width:'100px',
     },
     {
-        title:'财务确认收入',
-        children:[
-            {
-                title:'科目名称',
-                dataIndex:'creditSubjectName',
-                width:'200px',
-            },
-            {
-                title:'科目代码',
-                dataIndex:'creditSubjectCode',
-                width:'150px',
-            },
-            {
-                title:'收入金额',
-                dataIndex: 'creditAmount',
-                render:text=>fMoney(text),
-                className: "table-money",
-                width:'150px',
-            },
-        ]
+        title:'增值税申报销售额',
+        dataIndex: "newSdValorem",
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'150px',
     },
     {
-        title:'税务确认收入',
-        children:[
-            {
-                title:'确收日期',
-                dataIndex:'confirmedDate',
-                width:'100px',
-            },
-            {
-                title:'结算价',
-                dataIndex:'sdValorem',
-                render: text => fMoney(text),
-                className: "table-money",
-                width:'150px',
-            },
-        ]
+        title:'财务确认收入金额',
+        dataIndex: "amount",
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'150px',
+    },
+    {
+        title: "差异金额",
+        dataIndex: "difAmount",
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'150px',
     },
     {
         title:'是否存在差异',
-        dataIndex:'acquisitionMode',
+        dataIndex:'dif',
         render:(text)=>{
             // 0-否  1-是
             let res = "";
@@ -214,23 +196,12 @@ const columns=[
             return res;
         },
         width:'100px',
-    },
-    {
-        title: "差异金额",
-        dataIndex: "gainValue",
-        render: text => fMoney(text),
-        className: "table-money",
-        width:'150px',
     }
 ];
-class IncomeCheck extends Component{
+export default class IncomeCheck extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam: {},
         totalSource:undefined,
     }
     refreshTable = ()=>{
@@ -238,15 +209,8 @@ class IncomeCheck extends Component{
             updateKey:Date.now()
         })
     }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
-        })
-    }
     render(){
-        const {updateKey,filters,statusParam,totalSource} = this.state;
+        const {updateKey,filters,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -263,46 +227,26 @@ class IncomeCheck extends Component{
                     }}
                     backCondition={(filters)=>{
                         this.setState({
-                            filters,
-                        },()=>{
-                            this.fetchResultStatus()
+                            filters
                         })
                     }}
                     tableOption={{
                         key:updateKey,
                         pageSize:100,
                         columns:columns,
-                        url:'/fixedAssetCard/manageList',
+                        url:'/output/income/check/list',
                         cardProps: {
                             title: "收入检查",
                             extra: (
                                 <div>
                                     {
-                                        listMainResultStatus(statusParam)
-                                    }
-                                    {
                                         JSON.stringify(filters)!=='{}' && composeBotton([{
                                             type:'fileExport',
-                                            url:'fixedAssetCard/export',
+                                            url:'output/income/check/export',
                                             params:filters,
                                             title:'导出',
                                             userPermissions:['1511007'],
                                         }])
-                                    }
-                                    {
-                                        (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                            type:'submit',
-                                            url:'/fixedAssetCard/submit',
-                                            params:filters,
-                                            userPermissions:['1511010'],
-                                            onSuccess:this.refreshTable
-                                        },{
-                                            type:'revoke',
-                                            url:'/fixedAssetCard/revoke',
-                                            params:filters,
-                                            userPermissions:['1511011'],
-                                            onSuccess:this.refreshTable,
-                                        }],statusParam)
                                     }
                                     <TableTotal type={3} totalSource={totalSource} data={
                                         [
@@ -325,7 +269,7 @@ class IncomeCheck extends Component{
                             })
                         },
                         scroll:{
-                            x:2200,
+                            x:1600,
                             y:window.screen.availHeight-380-(disabled?50:0),
                         },
                     }}
@@ -334,4 +278,3 @@ class IncomeCheck extends Component{
         )
     }
 }
-export default IncomeCheck

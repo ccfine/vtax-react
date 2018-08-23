@@ -39,7 +39,7 @@ export default class ParameterSettings extends Component{
                                 componentProps: {
                                     disabled,
                                 },
-                           /* },
+                            },
                             {
 
                                 label: '未使用营销系统',
@@ -103,7 +103,7 @@ export default class ParameterSettings extends Component{
                                 },
                                 componentProps: {
                                     disabled,
-                                },*/
+                                },
                             }
                         ])
                     }

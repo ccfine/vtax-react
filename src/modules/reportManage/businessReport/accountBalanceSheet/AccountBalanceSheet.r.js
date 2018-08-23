@@ -88,16 +88,16 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label:'利润中心',
-            fieldName:'profitCenter',
+            fieldName:'profitCenterId',
             type:'asyncSelect',
             span:8,
             formItemStyle,
             componentProps:{
-                fieldTextName:'itemName',
+                fieldTextName:'profitName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/stages/${getFieldValue('main') && getFieldValue('main').key}`,
+                url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
             }
         },
         {
@@ -114,7 +114,35 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             span:8,
             type: 'input',
 
-        }
+        },
+        /*{
+            label:'项目名称',
+            fieldName:'projectId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('profitCenterId') || false,
+                url: `/taxsubject/projectByProfitCenter/${getFieldValue('profitCenterId') || ''}`
+            }
+        },
+        {
+            label:'项目分期',
+            fieldName:'stagesId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('projectId') || false,
+                url:`/taxsubject/stages/${getFieldValue('projectId') || ''}`,
+            }
+        }*/
     ]
 }
 const getColumns = context =>[
@@ -154,6 +182,11 @@ const getColumns = context =>[
         width:'100px',
     },
     {
+        title: '方向',
+        dataIndex: 'billingDate',
+        width:'100px',
+    },
+    {
         title: '期初余额',
         dataIndex: 'voucherNum',
         render: text => fMoney(text),
@@ -165,14 +198,33 @@ const getColumns = context =>[
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
         className: "table-money",
-        width:'100px',
+        width:'150px',
     },
     {
         title: '本期贷方发生额',
         dataIndex: 'debitAmount',
         render: text => fMoney(text),
         className: "table-money",
-        width:'100px',
+        width:'150px',
+    },
+    {
+        title: '累计贷方发生额',
+        dataIndex: 'debitAmount',
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'150px',
+    },
+    {
+        title: '累计借方发生额',
+        dataIndex: 'debitAmount',
+        render: text => fMoney(text),
+        className: "table-money",
+        width:'150px',
+    },
+    {
+        title: '方向',
+        dataIndex: 'debitProjectName',
+        width:'150px',
     },
     {
         title: '期末余额',
@@ -180,11 +232,11 @@ const getColumns = context =>[
         render: text => fMoney(text),
         className: "table-money",
         width:'100px',
-    },
+    /*},
     {
         title: '科目余额表id',
         dataIndex: 'debitProjectName',
-        width:'150px',
+        width:'150px',*/
     }
 ];
 class AccountBalanceSheet extends Component{
@@ -226,7 +278,7 @@ class AccountBalanceSheet extends Component{
                         pageSize:100,
                         columns:getColumns(this),
                         url:'/inter/financial/voucher/report/list2',//'/inter/financial/voucher/report/list',
-                        scroll:{ x: 1600,y:window.screen.availHeight-450 },
+                        scroll:{ x: 2050,y:window.screen.availHeight-450 },
                         onSuccess: (params) => {
                             this.setState({
                                 filters: params,

@@ -219,7 +219,7 @@ class PopModal extends Component {
                 title={title}
                 visible={this.props.visible}
                 width="500px"
-                bodyStyle={{ maxHeight: "400px", overflow: "auto" }}
+                bodyStyle={{ maxHeight: "420px", overflow: "auto" }}
                 style={{top:'5%'}}
                 onCancel={this.hideSelfModal}
                 footer={buttons}
@@ -297,6 +297,20 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {getFields(form, [
+                                {
+                                    span: 24,
+                                    formItemStyle: formItemLayout,
+                                    fieldDecoratorOptions: {
+                                        initialValue: record.accountingEntries
+                                    },
+                                    label: "辅助核算项",
+                                    fieldName: "accountingEntries",
+                                    type: "input",
+                                    componentProps: {
+                                        disabled: readonly,
+                                        placeholder:readonly?' ':'请输入辅助核算项'
+                                    }
+                                },
                                 {
                                     span: 24,
                                     formItemStyle: formItemLayout,
