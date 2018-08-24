@@ -36,7 +36,7 @@ class Add extends Component {
     }
 
     onChange = (activeKey) => {
-        this.setState({ activeKey });
+        this.mounted && this.setState({ activeKey });
         //this.props.setSelectedRowKeysAndselectedRows(null,{});
     }
 
@@ -122,7 +122,7 @@ class Add extends Component {
                     prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
                     unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
                     unusedInvoicePlatform: values.taxSubjectConfigBO.unusedInvoicePlatform === true ? '1' : '0',
-                    offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
+                    //offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
                 }
 
              }
@@ -191,7 +191,7 @@ class Add extends Component {
                 }
             }else{
                 if(err.jbxx){
-                    this.setState({ activeKey:'1' });
+                    this.mounted && this.setState({ activeKey:'1' });
                 }
             }
         })
@@ -248,14 +248,14 @@ class Add extends Component {
             })
     }
     fetch = (id)=> {
-        this.setState({
+        this.mounted && this.setState({
             submitLoading: true
         })
         request.get(`/taxsubject/get/${id}`,{
         })
             .then(({data}) => {
                 if(data.code===200){
-                    this.setState({
+                    this.mounted && this.setState({
                         //gdjcg:[...data.data.gdjcg],
                         //gqgx:[...data.data.gqgx],
                         jbxx:{...data.data.jbxx},
@@ -265,13 +265,13 @@ class Add extends Component {
                     })
                 }else{
                     message.error(data.msg, 4);
-                    this.setState({
+                    this.mounted && this.setState({
                         submitLoading: false
                     })
                 }
             })
             .catch(err => {
-                this.setState({
+                this.mounted && this.setState({
                     submitLoading: false
                 })
                 message.error(err.message)
@@ -287,7 +287,7 @@ class Add extends Component {
              * 关闭的时候清空表单
              * */
             nextProps.form.resetFields();
-            this.setState({
+            this.mounted && this.setState({
                 //gdjcg:[],
                 //gqgx:[],
                 jbxx:{},

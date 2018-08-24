@@ -5,9 +5,10 @@
  *
  */
 import React,{Component} from 'react'
-import {message,Alert} from 'antd'
+import {message,Alert,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
+import moment from "moment";
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -26,6 +27,55 @@ const formItemStyle = {
         }
     }
 }
+const importFeilds = (filters,disabled,declare)=>[
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        fieldDecoratorOptions:{
+            initialValue: (filters && filters["mainId"]) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        },
+    }, {
+        label: '认证月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+            //initialValue: (filters && moment(declare["authMonth"], "YYYY-MM")) || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: '请选择认证月份'
+                }
+            ]
+        },
+    }
+]
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'纳税主体',
@@ -315,7 +365,7 @@ class RoomTransactionFile extends Component{
          * */
         tableUpDateKey:Date.now(),
 
-        selectedRowKeys:null,
+        selectedRowKeys:[],
 
         /**
          *修改状态和时间
@@ -323,41 +373,75 @@ class RoomTransactionFile extends Component{
         statusParam:'',
 
         filters:{},
+        deleteLoading:false,
         totalSource:undefined,
+        isShowImport:null,
     }
 
     refreshTable = ()=>{
-        this.setState({
-            tableUpDateKey:Date.now()
+        this.mounted && this.setState({
+            tableUpDateKey:Date.now(),
+            selectedRowKeys:[]
         })
     }
-    deleteRecord = (id,cb) => {
-        request.delete(`/output/room/files/delete/${id}`)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success('删除成功!');
-                    cb && cb()
-                }else{
-                    message.error(`删除失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
+    toggleDeleteLoading=(val)=>{
+        this.mounted && this.setState({deleteLoading:val})
+    }
+    deleteData = () =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要删除选中的记录？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleDeleteLoading(true)
+                request.post(`/output/room/files/delete/deleteByIds`,this.state.selectedRowKeys)
+                    .then(({data})=>{
+                        this.toggleDeleteLoading(false)
+                        if(data.code===200){
+                            message.success('删除成功！');
+                            this.refreshTable();
+                        }else{
+                            message.error(`删除失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                    message.error(err.message)
+                    this.toggleDeleteLoading(false)
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
     }
     fetchResultStatus = ()=>{
         const { declare } = this.props;
         if(!declare){return}
         requestResultStatus('/output/room/files/listMain',{...this.state.filters,authMonth:this.props.declare.authMonth},result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
     }
+    fetchTaxSubjectConfig = () =>{
+        //根据纳税主体那边的参数设置来判断是否展示导入；并且删除的时候需要加上如果是从接口来的数据不能删除
+        requestTaxSubjectConfig(this.state.filters && this.state.filters.mainId, result=>{
+            this.mounted && this.setState({
+                isShowImport: typeof result === 'undefined' ? 0 : result.unusedMarketingSystem
+            })
+        })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render(){
-        const {tableUpDateKey,statusParam,totalSource,filters={}} = this.state;
+        const {tableUpDateKey,statusParam,totalSource,filters={},deleteLoading,selectedRowKeys,isShowImport} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return(
             <div className='oneLine'>
                 <SearchTable
@@ -379,6 +463,7 @@ class RoomTransactionFile extends Component{
                             filters,
                         },()=>{
                             this.fetchResultStatus()
+                            this.fetchTaxSubjectConfig()
                         })
                     }}
                     tableOption={{
@@ -390,7 +475,6 @@ class RoomTransactionFile extends Component{
                         columns:getColumns(this,(disabled && declare.decAction==='edit')),
                         url: '/output/room/files/list',
                         key:tableUpDateKey,
-
                         extra: <div>
                             {
                                 listMainResultStatus(statusParam)
@@ -404,16 +488,35 @@ class RoomTransactionFile extends Component{
                                     userPermissions:['1211007'],
                                 }])
                             }
-                            {/*
+                            {
                              composeBotton([{
-                             type:'fileExport',
-                             url:'output/room/files/download',
-                             onSuccess:this.refreshTable
-                             }],statusParam)
-                             */}
+                                 type:'fileExport',
+                                 url:'output/room/files/download',
+                                 onSuccess:this.refreshTable
+                                 }],statusParam)
+                             }
+                            {
+                                (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                    type:'fileImport',
+                                    url:'/output/room/files/upload',
+                                    onSuccess:this.refreshTable,
+                                    userPermissions:['1211005'],
+                                    fields:importFeilds(filters,disabled,declare)
+                                }],statusParam)
+                            }
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([
                                     {
+
+                                        type:'delete',
+                                        icon:'delete',
+                                        text:'删除',
+                                        btnType:'danger',
+                                        loading:deleteLoading,
+                                        selectedRowKeys:selectedRowKeys,
+                                        userPermissions:['1211008'],
+                                        onClick:this.deleteData
+                                    },{
                                         type:'submit',
                                         url:'/output/room/files/submit',
                                         params:{...filters,authMonth:declare.authMonth},
@@ -459,6 +562,17 @@ class RoomTransactionFile extends Component{
                             x: 3950,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
+                        rowSelection:{
+                            getCheckboxProps: record => ({
+                                disabled: parseInt(record.sourceType, 0)  === 2 || parseInt(record.matchingStatus, 0)  === 1, // Column configuration not to be checked
+                            }),
+                        },
+                        onRowSelect:isCheck?(selectedRowKeys)=>{
+                            console.log(selectedRowKeys)
+                            this.mounted && this.setState({
+                                selectedRowKeys
+                            })
+                        }:undefined,
                     }}
                 >
                 </SearchTable>

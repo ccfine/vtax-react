@@ -164,6 +164,27 @@ const isEmpty = val=> {
     return val === null || val === undefined || val.trim() === ''
 }
 
+////根据纳税主体那边的参数设置来判断是否展示导入；并且删除的时候需要加上如果是从接口来的数据不能删除
+const getTaxSubjectConfig = (taxSubjectId)=>{
+    return new Promise(function(resolve, reject) {
+        request.get(`/taxsubject/get/taxSubjectConfig/${taxSubjectId}`)
+            .then(({data}) => {
+                if(data.code===200){
+                    resolve(data.data)
+                }else{
+                    reject(`获取参数设置失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    })
+}
+const requestTaxSubjectConfig = async (taxSubjectId,callback)=>{
+    let result = await getTaxSubjectConfig(taxSubjectId);
+    callback(result)
+}
+
 export {
     regRules,
     request,
@@ -181,4 +202,5 @@ export {
     parseJsonToParams,
     requestResultStatus,
     isEmpty,
+    requestTaxSubjectConfig
 }
