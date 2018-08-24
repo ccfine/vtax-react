@@ -20,28 +20,6 @@ export default class ParameterSettings extends Component{
                 <Row>
                     {
                         getFields(this.props.form,[{
-                                label: '非地产收入不参与预缴税款抵减',
-                                fieldName: 'taxSubjectConfigBO.prepayTaxesDeduction',
-                                type: 'checkbox',
-                                span: 6,
-                                formItemStyle:{
-                                    labelCol:{
-                                        span:20
-                                    },
-                                    wrapperCol:{
-                                        span:4
-                                    }
-                                },
-                                fieldDecoratorOptions: {
-                                    initialValue: defaultData!==null && parseInt(defaultData.prepayTaxesDeduction,0) === 1,
-                                    valuePropName: 'checked',
-                                },
-                                componentProps: {
-                                    disabled,
-                                },
-                            },
-                            {
-
                                 label: '未使用营销系统',
                                 fieldName: 'taxSubjectConfigBO.unusedMarketingSystem',
                                 type: 'checkbox',
@@ -61,12 +39,13 @@ export default class ParameterSettings extends Component{
                                 componentProps: {
                                     disabled,
                                 },
-                            },{
+                            },
+                            {
 
                                 label: '未使用喜盈佳发票平台',
                                 fieldName: 'taxSubjectConfigBO.unusedInvoicePlatform',
                                 type: 'checkbox',
-                                span: 6,
+                                span: 8,
                                 formItemStyle:{
                                     labelCol:{
                                         span:20
@@ -82,9 +61,33 @@ export default class ParameterSettings extends Component{
                                 componentProps: {
                                     disabled,
                                 },
+
+
                             },
                             {
 
+                                label: '非地产收入不参与预缴税款抵减',
+                                fieldName: 'taxSubjectConfigBO.prepayTaxesDeduction',
+                                type: 'checkbox',
+                                span: 8,
+                                formItemStyle:{
+                                    labelCol:{
+                                        span:20
+                                    },
+                                    wrapperCol:{
+                                        span:4
+                                    }
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: defaultData!==null && parseInt(defaultData.prepayTaxesDeduction,0) === 1,
+                                    valuePropName: 'checked',
+                                },
+                                componentProps: {
+                                    disabled,
+                                },
+
+                            /*},
+                            {
                                 label: '线下开票（服务器版开票）',
                                 fieldName: 'taxSubjectConfigBO.offlineBillingInvoice',
                                 type: 'checkbox',
@@ -103,7 +106,7 @@ export default class ParameterSettings extends Component{
                                 },
                                 componentProps: {
                                     disabled,
-                                },
+                                },*/
                             }
                         ])
                     }

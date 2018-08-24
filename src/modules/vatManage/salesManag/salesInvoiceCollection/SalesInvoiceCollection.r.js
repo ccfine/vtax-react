@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
-import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
+import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request,requestTaxSubjectConfig } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
 
@@ -265,16 +265,17 @@ class SalesInvoiceCollection extends Component {
         statusParam: {},
         totalSource: undefined,
         selectedRowKeys:[],
+        isShowImport:null,
     };
     fetchResultStatus = () => {
         requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
     };
     toggleDeleteLoading=(val)=>{
-        this.setState({deleteLoading:val})
+        this.mounted && this.setState({deleteLoading:val})
     }
     deleteData = () =>{
         const modalRef = Modal.confirm({
@@ -307,26 +308,38 @@ class SalesInvoiceCollection extends Component {
     }
 
     toggleModalVisible = visible => {
-        this.setState({
+        this.mounted && this.setState({
             visible
         });
     };
     showModal = type => {
         this.toggleModalVisible(true);
-        this.setState({
+        this.mounted && this.setState({
             modalConfig: {
                 type: type
             }
         });
     };
     refreshTable = () => {
-        this.setState({
+        this.mounted && this.setState({
             tableKey: Date.now(),
             selectedRowKeys:[],
         });
     };
+    fetchTaxSubjectConfig = () =>{
+        //根据纳税主体那边的参数设置来判断是否展示导入；并且删除的时候需要加上如果是从接口来的数据不能删除
+        requestTaxSubjectConfig(this.state.filters && this.state.filters.mainId, result=>{
+            this.mounted && this.setState({
+                isShowImport: typeof result === 'undefined' ? 0 : result.unusedInvoicePlatform
+            })
+        })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading,isShowImport } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
@@ -346,6 +359,7 @@ class SalesInvoiceCollection extends Component {
                             filters,
                         },() => {
                             this.fetchResultStatus();
+                            this.fetchTaxSubjectConfig()
                         });
                     }}
                     tableOption={{
@@ -356,8 +370,13 @@ class SalesInvoiceCollection extends Component {
                         // rowSelection:{
                         //     type: 'checkbox',
                         // },
+                        rowSelection:{
+                            getCheckboxProps: record => ({
+                                disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
+                            }),
+                        },
                         onRowSelect:isCheck?(selectedRowKeys)=>{
-                            this.setState({
+                            this.mounted && this.setState({
                                 selectedRowKeys
                             })
                         }:undefined,
@@ -385,13 +404,16 @@ class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        (disabled && declare.decAction==='edit') && composeBotton([{
+                                        (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
                                             type:'fileImport',
-                                            url:'/output/invoice/collection/upload/',
+                                            url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,
                                             fields:fields(disabled,declare),
                                             userPermissions:['1061005'],
-                                        },{
+                                        }],statusParam)
+                                    }
+                                    {
+                                        (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'revokeImport',
                                             url:'/output/invoice/collection/revocation',
                                             params:filters,
