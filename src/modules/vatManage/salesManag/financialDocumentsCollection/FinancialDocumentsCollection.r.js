@@ -37,25 +37,55 @@ const searchFields = (disabled,declare) => {
                 ]
             }
         },
-    {
-            label:'查询期间',
-            fieldName:'authMonth',
-            type:'monthPicker',
-            formItemStyle,
+        {
+                label:'查询期间',
+                fieldName:'authMonth',
+                type:'monthPicker',
+                formItemStyle,
+                span:8,
+                componentProps:{
+                    format:'YYYY-MM',
+                    disabled
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+                    rules:[
+                        {
+                            required:true,
+                            message:'请选择查询期间'
+                        }
+                    ]
+                },
+        },
+        {
+            label:'借方科目名称',
+            fieldName:'debitSubjectName',
             span:8,
-            componentProps:{
-                format:'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择查询期间'
-                    }
-                ]
-            },
+            formItemStyle,
+        },
+        {
+            label:'借方科目代码',
+            fieldName:'debitSubjectCode',
+            span:8,
+            formItemStyle,
+        },
+        {
+            label:'贷方科目名称',
+            fieldName:'creditSubjectName',
+            span:8,
+            formItemStyle,
+        },
+        {
+            label:'贷方科目代码',
+            fieldName:'creditSubjectCode',
+            span:8,
+            formItemStyle,
+        },
+        {
+            label:'凭证号',
+            fieldName:'voucherNum',
+            span:8,
+            formItemStyle,
         }
     ]
 }
@@ -209,7 +239,7 @@ class FinancialDocumentsCollection extends Component{
                     pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 3200 ,y:window.screen.availHeight-360-(disabled?50:0)},
+                    scroll:{ x: 3200 ,y:window.screen.availHeight-450-(disabled?50:0)},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params
