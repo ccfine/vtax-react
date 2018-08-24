@@ -116,12 +116,12 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'monthPicker',
+        type:'datePicker',
         formItemStyle,
         span:6,
-        componentProps:{
+        /*componentProps:{
             format:'YYYY-MM-DD',
-        }
+        }*/
     },
 ];
 

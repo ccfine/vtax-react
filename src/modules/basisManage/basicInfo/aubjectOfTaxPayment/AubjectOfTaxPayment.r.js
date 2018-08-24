@@ -31,10 +31,10 @@ const getColumns = context=>[
             title:'项目信息管理',
             icon:'file-add',
             userPermissions:['1055000'], //计税方法维护
-            /*onSuccess:()=>{
+            onSuccess:()=>{
                 context.props.history.push(`/web/basisManage/basicInfo/aubjectOfTaxPayment/${record.id}`)
-            }*/
-            onSuccess:()=>context.showModal('project',record)
+            }
+            //onSuccess:()=>context.showModal('project',record)
         },{
             type:'action',
             title:'编辑',

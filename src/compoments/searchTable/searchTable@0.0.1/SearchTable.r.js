@@ -60,6 +60,7 @@ class SearchTable extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+
                 for(let key in values){
                     if(typeof values[key] === 'object' && values[key]!==null){
                         if(("key" in values[key]) && ("label" in values[key])){

@@ -92,6 +92,11 @@ const authMonth = [
                 importUrl:'/project/upload/',
                 fields:mainId,
             },
+            {
+                title: '利润中心',
+                importUrl:'/profitCenter/upload',
+                fields:mainId,
+            },
         ];
 
         return(

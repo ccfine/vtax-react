@@ -9,8 +9,8 @@ import SalesInvoiceMatching from './salesInvoiceMatching'
 /*
 import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
 import UnBilledSales from '../salesTaxAccount/unBilledSales'
-import IncomeCheck from './incomeCheck'
  * */
+import IncomeCheck from './incomeCheck'
 import BillingSales from '../salesTaxAccount/billingSales'
 import BeginningNotTaxSalesEstate from './beginningNotTaxSalesEstate'
 import UnBilledSalesEstate from './unBilledSalesEstate'
@@ -54,7 +54,7 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['campBeforeTheIncreaseInSales'].options,
         exact:true,*/
-    /*},{
+    },{
         path:`${PATH}/incomeCheck`,
         component:wrapPage('收入检查',IncomeCheck),
         name:'收入检查',
@@ -63,7 +63,7 @@ const SalesManag_Routes = [
             backgroundColor:'#FFBE06'
         },
         authorityInfo:salesManag['incomeCheck'].options,
-        exact:true,*/
+        exact:true,
     },{
         path:`${PATH}/billingSales`,
         component:wrapPage('开票销售台账',BillingSales),
