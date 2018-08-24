@@ -9,16 +9,9 @@
  */
 import Axios from 'axios';
 import {message} from 'antd'
-import moment from 'moment';
+import isTokenExpired from '../utils/tokenAnalysis';
 import { store } from 'redux/store';
 import {logout} from 'redux/ducks/user'
-
-const parseJwt = (token) =>{
-    let base64Url = token.split('.')[1];
-    let base64 = base64Url.replace('-', '+').replace('_', '/');
-    return JSON.parse(window.atob(base64));
-    // return JSON.parse(decodeURIComponent(escape($window.atob(base64))));
-}
 
 const request = Axios.create({
     baseURL:window.baseURL,
@@ -36,16 +29,14 @@ request.testSuccess = (data,success,fail) => {
         return message.error(`${data.msg}`,4)
     }
 };
+// http request 拦截器
 request.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     if(request.getToken()){
-        const jwt = parseJwt(request.getToken());
-        let d = new Date(0); // The 0 here is the key, which sets the date to the epoch
-        d.setUTCSeconds(jwt.exp);
-        //console.log(jwt);
-        //console.log(d, moment(d).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss'))
-        //console.log(moment(d).isBefore(moment(), 'seconds'))
-        if(!moment(d).isBefore(moment(), 'seconds')){
+        // 检查看token是否已经过期
+        let token = request.getToken();
+        let expired = isTokenExpired(token);
+        if (expired) {
             config.headers={
                 Authorization:request.getToken(),
                 'X-Requested-With': 'XMLHttpRequest'
@@ -82,8 +73,9 @@ request.interceptors.request.use(function (config) {
              _t: Date.parse(new Date())/1000,
              }*/
         }else{
+            // 如果token已经过期，则要更新token 或者跳转到登录页
             store.dispatch && logout(store.dispatch)()
-            message.error('登录超时,请重新登录')
+            //message.error('登录超时,请重新登录')
         }
 
     }
@@ -94,7 +86,7 @@ request.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-// 添加响应拦截器
+// 添加响应拦截器  http response 拦截器
 request.interceptors.response.use(function (response) {
 
     return response;

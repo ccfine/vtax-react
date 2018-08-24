@@ -77,6 +77,10 @@ const getColumns = (context) => [
         dataIndex: "name",
     },
     {
+        title: "辅助核算项",
+        dataIndex: "accountingEntries",
+    },
+    {
         title: "税目",
         dataIndex: "taxItem",
     },
