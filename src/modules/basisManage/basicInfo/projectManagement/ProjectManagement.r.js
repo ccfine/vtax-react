@@ -177,7 +177,7 @@ class ProjectManagement extends Component{
                 });
                 //}
             }else{
-                message.error(`分期信息的计税方法不能为空！`)
+                message.error(`当前项目下还有项目分期的计税方法未维护！`)
             }
         })
     }

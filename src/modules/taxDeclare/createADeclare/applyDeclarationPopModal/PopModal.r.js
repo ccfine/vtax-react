@@ -103,6 +103,16 @@ const steps = [
 ]
 
 class ApplyDeclarationPopModal extends Component {
+    constructor (props) {
+        super(props)
+        this.handleCurrent = this.handleCurrent.bind(this)
+        this.state = {
+            loading: false,
+            data: [],
+            current: 0,
+            path:'',
+        }
+    }
     static propTypes = {
         onSuccess: PropTypes.func,
         url:PropTypes.string,
@@ -110,12 +120,6 @@ class ApplyDeclarationPopModal extends Component {
     static defaultProps = {
         title: '申报办理',
         url:'/tax/decConduct/list',
-    }
-    state = {
-        loading: false,
-        data: [],
-        current: 0,
-        path:'',
     }
     toggleLoading = loading => {
         this.setState({
@@ -293,7 +297,7 @@ class ApplyDeclarationPopModal extends Component {
                                     key={item.title}
                                     title={item.title}
                                     icon={item.icon}
-                                    onClick={() => this.handleCurrent(i)}
+                                    onClick={this.handleCurrent(i)}
                                 />
                             )
                         })}

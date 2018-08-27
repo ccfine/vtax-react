@@ -76,7 +76,7 @@ const getColumns = (context,hasOperate) => {
     let operates = hasOperate?[{
         title:'操作',
         render:(text, record)=>(
-            (record.voucherType === '前期认证相符且本期申报抵扣' || record.voucherType === '前期入账本期申报抵扣')
+            (parseInt(record.invoiceType, 0) !== 1)
             &&  composeBotton([{
                 type:'action',
                 title:'编辑',
@@ -106,10 +106,10 @@ const getColumns = (context,hasOperate) => {
         title: '凭据份数',
         dataIndex: 'num',
         render:(text,record)=>{
-            if(record.voucherType === '前期认证相符且本期申报抵扣' || record.voucherType === '前期入账本期申报抵扣'){
+            if(parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0){
                 return text
             }
-            if(parseInt(text,0) > 0 ){
+            if(parseInt(record.invoiceType, 0) === 1 ){
                 return (
                     <span>
                         {
