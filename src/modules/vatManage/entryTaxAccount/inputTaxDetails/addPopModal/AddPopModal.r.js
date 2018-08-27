@@ -176,9 +176,9 @@ class AddPopModal extends Component{
                                             },{
                                                 text:'代扣代缴税收缴款凭证',
                                                 value:'4'
-                                            },{
+                                            /*},{
                                                 text:'外贸企业进项税额抵扣证明',
-                                                value:'5'
+                                                value:'5'*/
                                             },{
                                                 text:'其他允许抵扣证明',
                                                 value:'6'
