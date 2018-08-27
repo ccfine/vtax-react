@@ -121,7 +121,7 @@ const columns=[
         width:'100px',
     },
     {
-        title: '记账日期',
+        title: '过账日期',
         dataIndex: 'billingDate',
         width:'100px',
     },
