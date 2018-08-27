@@ -4,8 +4,9 @@
  * description  :
  */
 import React,{Component} from 'react'
+import {Modal,message} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import PopInvoiceInformationModal from './popModal'
 import VoucherPopModal from './voucherPopModal'
 import AddPopModal from './addPopModal'
@@ -76,7 +77,7 @@ const getColumns = (context,hasOperate) => {
     let operates = hasOperate?[{
         title:'操作',
         render:(text, record)=>(
-            (record.voucherType === '前期认证相符且本期申报抵扣' || record.voucherType === '前期入账本期申报抵扣')
+            (parseInt(record.invoiceType, 0) !== 1)
             &&  composeBotton([{
                 type:'action',
                 title:'编辑',
@@ -87,6 +88,28 @@ const getColumns = (context,hasOperate) => {
                     action:'edit',
                     record:record
                 })
+            },{
+                type:'action',
+                title:'删除',
+                icon:'delete',
+                style:{color:'#f5222d'},
+                userPermissions:['1381008'],
+                onSuccess:()=>{
+                    const modalRef = Modal.confirm({
+                        title: '友情提醒',
+                        content: '该删除后将不可恢复，是否删除？',
+                        okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
+                        onOk:()=>{
+                            context.deleteRecord(record)
+                            modalRef && modalRef.destroy();
+                        },
+                        onCancel() {
+                            modalRef.destroy()
+                        },
+                    });
+                }
             }])
         ),
         fixed:'left',
@@ -106,10 +129,10 @@ const getColumns = (context,hasOperate) => {
         title: '凭据份数',
         dataIndex: 'num',
         render:(text,record)=>{
-            if(record.voucherType === '前期认证相符且本期申报抵扣' || record.voucherType === '前期入账本期申报抵扣'){
+            if(parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0){
                 return text
             }
-            if(parseInt(text,0) > 0 ){
+            if(parseInt(record.invoiceType, 0) === 1 ){
                 return (
                     <span>
                         {
@@ -198,8 +221,17 @@ class InputTaxDetails extends Component{
             })
         })
     }
-    formatData=data=>{
-        return data.filter(d=>d.voucherType === '前期认证相符且本期申报抵扣')
+    deleteRecord(record){
+        request.delete(`/account/income/taxDetail/delete/${record.id}`).then(({data}) => {
+            if (data.code === 200) {
+                message.success('删除成功', 4);
+                this.refreshTable();
+            } else {
+                message.error(data.msg, 4);
+            }
+        }).catch(err => {
+            message.error(err.message);
+        })
     }
     render(){
         const {searchTableLoading,tableKey,visible,voucherVisible,addVisible,params,statusParam={},filters,totalSource,record,action} = this.state;

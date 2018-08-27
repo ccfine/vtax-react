@@ -139,7 +139,7 @@ const getColumns = context =>[
     },{
         title: <div className="apply-form-list-th">
             <p className="apply-form-list-p1">凭证日期</p>
-            <p className="apply-form-list-p2">记账日期</p>
+            <p className="apply-form-list-p2">过账日期</p>
         </div>,
         dataIndex: 'voucherDate',
         render:(text,record)=>(

@@ -59,24 +59,24 @@ const columns = (context,isEdit) =>[
         width:'100px',
     },
     /*{
-        title: "建筑面积",
-        dataIndex: "areaCovered"
-    },*/
+     title: "建筑面积",
+     dataIndex: "areaCovered"
+     },*/
     {
         title: "税率（%）",
         dataIndex: "intaxRate",
         render:(text,record,index)=>{
             if(isEdit && record.intaxRateEdit){
                 return <NumericInputCell
-                            initialValue={text==='0' ? '0.00' : text}
-                            getFieldDecorator={context.props.form.getFieldDecorator}
-                            fieldName={`list[${index}].intaxRate`}
-                            editAble={true}
-                            componentProps={{decimalPlaces:10}}
-                        />
-             }else{
+                    initialValue={text==='0' ? '0.00' : text}
+                    getFieldDecorator={context.props.form.getFieldDecorator}
+                    fieldName={`list[${index}].intaxRate`}
+                    editAble={true}
+                    componentProps={{decimalPlaces:10}}
+                />
+            }else{
                 return text && `${text}%`
-             }
+            }
         },
         width:'100px',
     },
@@ -117,7 +117,7 @@ const columns = (context,isEdit) =>[
 class FixedAssetsInputTaxDetails extends Component{
     state={
         tableKey:Date.now(),
-		filters: {},
+        filters: {},
         statusParam:{},
         dataSource:[],
 
@@ -125,11 +125,11 @@ class FixedAssetsInputTaxDetails extends Component{
         totalSource:undefined,
     }
     toggoleSaveLoading=(saveLoading)=>{
-        this.setState({saveLoading})
+        this.mounted && this.setState({saveLoading})
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
@@ -144,20 +144,24 @@ class FixedAssetsInputTaxDetails extends Component{
                 })
                 this.toggoleSaveLoading(true)
                 request.post('/account/income/estate/save',params)
-                .then(({data})=>{
-                    this.toggoleSaveLoading(false)
-                    if(data.code===200){
-                        message.success(`保存成功！`);
-                        this.props.refreshTabs();
-                    }else{
-                        message.error(`保存失败:${data.msg}`)
-                    }
-                }).catch(err=>{
+                    .then(({data})=>{
+                        this.toggoleSaveLoading(false)
+                        if(data.code===200){
+                            message.success(`保存成功！`);
+                            this.props.refreshTabs();
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
                     this.toggoleSaveLoading(false)
                     message.error(`保存失败:${err.message}`)
                 })
             }
         })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
     }
     render(){
         const {tableKey,statusParam,filters,saveLoading,totalSource} = this.state;
@@ -165,126 +169,126 @@ class FixedAssetsInputTaxDetails extends Component{
         let disabled = !!declare;
         return(
             <div className='oneLine'>
-            <SearchTable
-                style={{
-                    marginTop:-16
-                }}
-                doNotFetchDidMount={!disabled}
-                searchOption={{
-                    fields:searchFields,
-                    cardProps:{
-                        style:{
-                            borderTop:0
+                <SearchTable
+                    style={{
+                        marginTop:-16
+                    }}
+                    doNotFetchDidMount={!disabled}
+                    searchOption={{
+                        fields:searchFields,
+                        cardProps:{
+                            style:{
+                                borderTop:0
+                            }
                         }
-                    }
-                }}
-                backCondition={(filters)=>{
-                    this.setState({
-                        filters,
-                    },()=>{
-                        this.fetchResultStatus()
-                    })
-                    this.props.form.resetFields();
-                }}
-                tableOption={{
-                    key:tableKey,
-                    pageSize:100,
-                    columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
-                    url:'/account/income/estate/fixedList',
-                    cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
-                    },
-                    // onSuccess: (params,dataSource) => {
-                    //     this.setState({
-                    //         filters: params,
-                    //         dataSource
-                    //     },()=>{
-                    //         this.fetchResultStatus()
-                    //     })
-                    //     this.props.form.resetFields();
-                    // },
-                    extra: (
-                        <div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
-                                disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1 && composeBotton([{
-                                    type:'save',
-                                    text:'保存',
-                                    icon:'save',
-                                    userPermissions:['1251003'],
-                                    onClick:this.save,
-                                    loading:saveLoading
-                                }],statusParam)
-                            }
-                            {
-                                JSON.stringify(filters) !=='{}' && composeBotton([{
-                                    type:'fileExport',
-                                    url:'account/income/estate/fixed/export',
-                                    params:filters,
-                                    title:'导出',
-                                    userPermissions:['1251007'],
-                                }],statusParam)
-                            }
-                            {
-                                (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'submit',
-                                    url:'/account/income/estate/submit',
-                                    params:filters,
-                                    userPermissions:['1251010'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type: 'reset',
-                                    url:'/account/income/estate/reset',
-                                    params:filters,
-                                    userPermissions:['1251009'],
-                                    onSuccess:()=>{
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type:'revoke',
-                                    url:'/account/income/estate/revoke',
-                                    params:filters,
-                                    userPermissions:['1251011'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                }],statusParam)
-                            }
-                            <TableTotal type={3} totalSource={totalSource} data={
-                                [
-                                    {
-                                        title:'合计',
-                                        total:[
-                                            {title: '当期抵扣的进项税额', dataIndex: 'taxAmount'},
-                                            {title: '待抵扣的进项税额', dataIndex: 'deductedTaxAmount'},
-                                        ],
-                                    }
-                                ]
-                            } />
-                        </div>
-                    ),
-                    onTotalSource: (totalSource) => {
-                        this.setState({
-                            totalSource
+                    }}
+                    backCondition={(filters)=>{
+                        this.mounted && this.setState({
+                            filters,
+                        },()=>{
+                            this.fetchResultStatus()
                         })
-                    },
-                    onDataChange: (dataSource) => {
-                        this.setState({
-                            dataSource
-                        })
-                    },
-                    scroll:{
-                         x:1700,
-                         y:window.screen.availHeight-430,
-                    },
-                }}
-            />
+                        this.props.form.resetFields();
+                    }}
+                    tableOption={{
+                        key:tableKey,
+                        pageSize:100,
+                        columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
+                        url:'/account/income/estate/fixedList',
+                        cardProps: {
+                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>固定资产进项税额明细</span>,
+                        },
+                        // onSuccess: (params,dataSource) => {
+                        //     this.setState({
+                        //         filters: params,
+                        //         dataSource
+                        //     },()=>{
+                        //         this.fetchResultStatus()
+                        //     })
+                        //     this.props.form.resetFields();
+                        // },
+                        extra: (
+                            <div>
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
+                                    disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1 && composeBotton([{
+                                        type:'save',
+                                        text:'保存',
+                                        icon:'save',
+                                        userPermissions:['1251003'],
+                                        onClick:this.save,
+                                        loading:saveLoading
+                                    }],statusParam)
+                                }
+                                {
+                                    JSON.stringify(filters) !=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'account/income/estate/fixed/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1251007'],
+                                    }],statusParam)
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                        type:'submit',
+                                        url:'/account/income/estate/submit',
+                                        params:filters,
+                                        userPermissions:['1251010'],
+                                        onSuccess:()=>{
+                                            //this.refreshTable();
+                                            this.props.refreshTabs()
+                                        },
+                                    },{
+                                        type: 'reset',
+                                        url:'/account/income/estate/reset',
+                                        params:filters,
+                                        userPermissions:['1251009'],
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs()
+                                        },
+                                    },{
+                                        type:'revoke',
+                                        url:'/account/income/estate/revoke',
+                                        params:filters,
+                                        userPermissions:['1251011'],
+                                        onSuccess:()=>{
+                                            //this.refreshTable();
+                                            this.props.refreshTabs()
+                                        },
+                                    }],statusParam)
+                                }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '当期抵扣的进项税额', dataIndex: 'taxAmount'},
+                                                {title: '待抵扣的进项税额', dataIndex: 'deductedTaxAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
+                            </div>
+                        ),
+                        onTotalSource: (totalSource) => {
+                            this.mounted && this.setState({
+                                totalSource
+                            })
+                        },
+                        onDataChange: (dataSource) => {
+                            this.mounted && this.setState({
+                                dataSource
+                            })
+                        },
+                        scroll:{
+                            x:1700,
+                            y:window.screen.availHeight-430,
+                        },
+                    }}
+                />
             </div>
         )
     }

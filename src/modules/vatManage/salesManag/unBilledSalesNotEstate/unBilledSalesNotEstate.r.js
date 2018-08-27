@@ -54,8 +54,8 @@ const columns = (context) => [
         },
     }, {
         title: "税率",
-        dataIndex: "taxRate",
-        render: text => `${text}${text ? "%" : ""}`
+        dataIndex: "taxRateName",
+        //render: text => `${text}${text ? "%" : ""}`
     }, {
         title: "金额",
         dataIndex: "creditAmount",
@@ -151,8 +151,8 @@ const columns2=(context,hasOperate) => {
             dataIndex: "creditSubjectName"
         }, {
             title: "税率",
-            dataIndex: "taxRate",
-            render: text => `${text}${text ? "%" : ""}`
+            dataIndex: "taxRateName",
+            //render: text => `${text}${text ? "%" : ""}`
         }, {
             title: "金额",
             dataIndex: "creditAmount",
@@ -192,20 +192,20 @@ class UnBilledSalesNotEstate extends Component {
 
     }
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             tableUpDateKey:Date.now()
         })
     }
 
     updateStatus = () => {
         requestResultStatus('/account/notInvoiceUnSale/realty/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
     };
     hideModal() {
-        this.setState({ visible: false });
+        this.mounted && this.setState({ visible: false });
     }
     deleteRecord = (id, cb) => {
         request
@@ -235,7 +235,7 @@ class UnBilledSalesNotEstate extends Component {
                     values.main = undefined;
                 }
 
-                this.setState({
+                this.mounted && this.setState({
                     filters: values
                 }, () => {
                     this.refreshTable();
@@ -247,7 +247,7 @@ class UnBilledSalesNotEstate extends Component {
     componentDidMount(){
         const { declare } = this.props;
         if (!!declare) {
-            this.setState({
+            this.mounted && this.setState({
                 filters:{
                     mainId:declare.mainId || undefined,
                     authMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
@@ -256,6 +256,10 @@ class UnBilledSalesNotEstate extends Component {
                 this.refreshTable()
             });
         }
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
     }
     render(){
         const {tableUpDateKey,filters,statusParam,totalSource} = this.state;

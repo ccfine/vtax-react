@@ -6,7 +6,7 @@
 import {wrapPage} from 'compoments'
 import InvoiceCollection from './invoiceCollection'
 import FixedAssetCollection from './fixedAssetCollection'
-import OtherDeductionVoucher from './otherDeductionVoucher'
+//import OtherDeductionVoucher from './otherDeductionVoucher'
 import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
 import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
@@ -64,7 +64,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['inputTaxDetails'].options,
         exact:true,
-    },{
+        /* },{
         path:`${PATH}/otherDeductionVoucher`,
         component:wrapPage('其他扣税凭证',OtherDeductionVoucher),
         name:'其他扣税凭证',
@@ -74,7 +74,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['otherDeductionVoucher'].options,
         exact:true,
-  /*},{
+    },{
         path:`${PATH}/inputTaxStructure`,
         component:wrapPage('进项税额结构台账',InputTaxStructure),
         name:'进项税额结构台账',

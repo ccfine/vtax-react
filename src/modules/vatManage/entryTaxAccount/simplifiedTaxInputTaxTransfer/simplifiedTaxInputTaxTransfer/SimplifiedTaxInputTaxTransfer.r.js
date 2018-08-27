@@ -40,7 +40,7 @@ const columns = context =>[
         dataIndex: 'voucherNum',
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
-                context.setState({
+                context.mounted && context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
                     }
@@ -88,21 +88,25 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         statusParam:{},
     }
     toggleViewModalVisible=visibleView=>{
-        this.setState({
+        this.mounted && this.setState({
             visibleView
         })
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/incomeSimpleOut/controller/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
     }
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             tableKey:Date.now()
         })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
     }
     render(){
         const {tableKey,visibleView,voucherInfo,filters,statusParam} = this.state;
@@ -124,7 +128,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                     }
                 }}
                 backCondition={(filters)=>{
-                    this.setState({
+                    this.mounted && this.setState({
                         filters,
                     },()=>{
                         this.fetchResultStatus()

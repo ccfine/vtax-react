@@ -67,16 +67,20 @@ class SimpleTaxInputTaxTransferredToTheAccount extends Component{
         tabsKey:Date.now()
     }
     onTabChange = activeKey =>{
-        this.setState({
+        this.mounted && this.setState({
             activeKey,
         },()=>{
             this.refreshTabs()
         })
     }
     refreshTabs = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             tabsKey:Date.now()
         })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
     }
     render(){
         const {tabsKey,activeKey} = this.state;
