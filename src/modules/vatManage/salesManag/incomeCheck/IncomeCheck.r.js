@@ -253,9 +253,9 @@ export default class IncomeCheck extends Component{
                                             {
                                                 title:'合计',
                                                 total:[
-                                                    {title: '差异金额', dataIndex: 'allTotalNoInvoiceSales'},
-                                                    {title: '收入金额', dataIndex: 'allSumTotalPrice'},
-                                                    {title: '结算价', dataIndex: 'allSumTotalAmount'},
+                                                    {title: '差异金额', dataIndex: 'allDifAmount'},
+                                                    {title: '收入金额', dataIndex: 'allAmount'},
+                                                    {title: '结算价', dataIndex: 'allNewSdValorem'},
                                                 ],
                                             }
                                         ]
