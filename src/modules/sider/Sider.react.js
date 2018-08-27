@@ -43,7 +43,7 @@ class VTaxSider extends Component {
             return [];
         }
         return menusData.map((item) => {
-            if (!item.name  || item.path === '/web'|| item.isProd) {
+            if (!item.name  || item.path === '/web'|| item.isProd === 'true') {
                 return null;
             }
             //系统管理员 ： 8192  如果是管理员用户直接给系统管理员权限
