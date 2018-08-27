@@ -197,7 +197,7 @@ class AddPopModal extends Component{
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:record.type,
+                                            initialValue:record.invoiceType,
                                             rules:[
                                                 {
                                                     required:true,

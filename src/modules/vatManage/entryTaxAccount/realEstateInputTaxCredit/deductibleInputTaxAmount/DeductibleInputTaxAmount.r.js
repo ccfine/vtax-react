@@ -6,57 +6,57 @@ import {SearchTable} from 'compoments'
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 // import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 /*
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
+ const pointerStyle = {
+ cursor:'pointer',
+ color:'#1890ff'
+ }
 
-const columns = context =>[
-    {
-        title: '纳税主体名称',
-        dataIndex: 'mainName',
-    },{
-        title: '项目分期代码',
-        dataIndex: 'stagesNum',
-    },{
-        title: '项目分期名称',
-        dataIndex: 'stagesName',
-    },{
-        title: '凭证日期',
-        dataIndex: 'voucherDate',
-    },{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
-    },{
-        title: '凭证号',
-        dataIndex: 'voucherNum',
-        render:(text,record)=>(
-            <span title="查看凭证详情" onClick={()=>{
-                context.setState({
-                    voucherNum:text,
-                },()=>{
-                    context.toggleViewModalVisible(true)
-                })
-            }} style={pointerStyle}>
-                {text}
-            </span>
-        )
-    },{
-        title: '凭证摘要',
-        dataIndex: 'voucherAbstract',
-    },{
-        title: '借方科目代码',
-        dataIndex: 'debitSubjectCode',
-    },{
-        title: '借方科目名称',
-        dataIndex: 'debitSubjectName',
-    },{
-        title: '借方金额',
-        dataIndex: 'debitAmount',
-        render: text => fMoney(text),
-        className: "table-money"
-    }
-];*/
+ const columns = context =>[
+ {
+ title: '纳税主体名称',
+ dataIndex: 'mainName',
+ },{
+ title: '项目分期代码',
+ dataIndex: 'stagesNum',
+ },{
+ title: '项目分期名称',
+ dataIndex: 'stagesName',
+ },{
+ title: '凭证日期',
+ dataIndex: 'voucherDate',
+ },{
+ title: '凭证类型',
+ dataIndex: 'voucherType',
+ },{
+ title: '凭证号',
+ dataIndex: 'voucherNum',
+ render:(text,record)=>(
+ <span title="查看凭证详情" onClick={()=>{
+ context.setState({
+ voucherNum:text,
+ },()=>{
+ context.toggleViewModalVisible(true)
+ })
+ }} style={pointerStyle}>
+ {text}
+ </span>
+ )
+ },{
+ title: '凭证摘要',
+ dataIndex: 'voucherAbstract',
+ },{
+ title: '借方科目代码',
+ dataIndex: 'debitSubjectCode',
+ },{
+ title: '借方科目名称',
+ dataIndex: 'debitSubjectName',
+ },{
+ title: '借方金额',
+ dataIndex: 'debitAmount',
+ render: text => fMoney(text),
+ className: "table-money"
+ }
+ ];*/
 
 const columns = context =>[
     {
@@ -93,26 +93,30 @@ const columns = context =>[
 export default class DeductibleInputTaxAmount extends Component{
     state={
         tableKey:Date.now(),
-		filters: {},
-		statusParam:{}
+        filters: {},
+        statusParam:{}
     }
     toggleViewModalVisible=visibleView=>{
-        this.setState({
+        this.mounted && this.setState({
             visibleView
         })
     }
 
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             tableKey:Date.now()
         })
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
     }
     render(){
         const {tableKey,statusParam,filters} = this.state;
@@ -134,7 +138,7 @@ export default class DeductibleInputTaxAmount extends Component{
                         }
                     }}
                     backCondition={(filters)=>{
-                        this.setState({
+                        this.mounted && this.setState({
                             filters,
                         },()=>{
                             this.fetchResultStatus()
@@ -164,29 +168,29 @@ export default class DeductibleInputTaxAmount extends Component{
                                 }
                                 {
                                     (disabled && declare.decAction==='edit') && composeBotton([{
-                                            type: 'reset',
-                                            url:'/account/income/estate/reset',
-                                            params:filters,
-                                            userPermissions:['1251009'],
-                                            onSuccess:()=>{
-                                                this.props.refreshTabs()
-                                            },
-                                        }
+                                        type: 'reset',
+                                        url:'/account/income/estate/reset',
+                                        params:filters,
+                                        userPermissions:['1251009'],
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs()
+                                        },
+                                    }
                                     ],statusParam)
                                 }
                             </div>
                         ),
                         scroll:{
-                         x:1000,
-                         y:window.screen.availHeight-430,
-                         },
+                            x:1000,
+                            y:window.screen.availHeight-430,
+                        },
                     }}
                 >
                     {/* <ViewDocumentDetails
-                        title="查看凭证详情"
-                        visible={visibleView}
-                        voucherNum={voucherNum}
-                        toggleViewModalVisible={this.toggleViewModalVisible} /> */}
+                     title="查看凭证详情"
+                     visible={visibleView}
+                     voucherNum={voucherNum}
+                     toggleViewModalVisible={this.toggleViewModalVisible} /> */}
                 </SearchTable>
             </div>
         )

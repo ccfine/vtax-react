@@ -134,23 +134,26 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
         statusParam:{},
     }
     toggleViewModalVisible=visibleView=>{
-        this.setState({
+        this.mounted && this.setState({
             visibleView
         })
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })
     }
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             tableKey:Date.now()
         })
     }
-
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render(){
         const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
         const { declare,searchFields } = this.props;
@@ -170,7 +173,7 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                     }
                 }}
                 backCondition={(filters)=>{
-                    this.setState({
+                    this.mounted && this.setState({
                         filters,
                     },()=>{
                         this.fetchResultStatus()
