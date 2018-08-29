@@ -259,7 +259,7 @@ class TaxableProjectTreeForm extends Component{
                                             ]*/
                                         }
                                     },{
-                                        label:'征税率（简易计税）',
+                                        label:'征收率（简易计税）',
                                         fieldName:'simpleTaxRate',
                                         type:'input',
                                         span:12,
@@ -272,7 +272,7 @@ class TaxableProjectTreeForm extends Component{
                                             /*rules:[
                                                 {
                                                     required:true,
-                                                    message:'选择征税率（简易计税）'
+                                                    message:'选择征收率（简易计税）'
                                                 }
                                             ]*/
                                         }

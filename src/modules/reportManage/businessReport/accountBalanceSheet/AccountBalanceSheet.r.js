@@ -14,7 +14,7 @@ const formItemStyle={
     }
 }
 
-const apiFields = (getFieldValue)=> [
+/*const apiFields = (getFieldValue)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -39,7 +39,7 @@ const apiFields = (getFieldValue)=> [
             }]
         },
     },
-]
+]*/
 
 const searchFields =(disabled,declare)=>(getFieldValue)=> {
     return [

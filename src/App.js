@@ -19,6 +19,14 @@ message.config({
     maxCount: 1,  //最大显示数, 超过限制时，最早的消息会被自动关闭
 });
 
+window.onresize = function() {
+    message.config({
+        top: 50,
+        duration: 2,
+        maxCount: 1,
+    });
+};
+
 const history = createHistory();
 const onBeforeLift = () => {
     // take some action before the gate lifts

@@ -241,7 +241,7 @@ const columns = [{
         className:'table-money',
         width:'150px',
     },{
-        title:'毛胚结算价（不含税）',
+        title:'毛坯结算价（不含税）',
         dataIndex:'embryoSdValorem',
         render:text=>fMoney(text),
         className:'table-money',

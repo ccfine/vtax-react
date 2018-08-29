@@ -445,18 +445,18 @@ class InvoiceCollection extends Component {
                                         userPermissions:['1491005'],
                                         onSuccess:this.refreshTable,
                                         fields:getFields(filters)
-                                    }],statusParam)
-                                }
-
-                                {
-                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                    },{
                                         type:'revokeImport',
                                         url:'/income/invoice/collection/revocation',
                                         params:filters,
                                         monthFieldName:"authMonth",
                                         onSuccess:this.refreshTable,
                                         userPermissions:['1495000'],
-                                    },{
+                                    }],statusParam)
+                                }
+
+                                {
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'delete',
                                         icon:'delete',
                                         text:'删除',
