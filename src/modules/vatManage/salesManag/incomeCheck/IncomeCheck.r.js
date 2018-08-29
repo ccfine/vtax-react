@@ -245,7 +245,7 @@ export default class IncomeCheck extends Component{
                                             url:'output/income/check/export',
                                             params:filters,
                                             title:'导出',
-                                            userPermissions:['1511007'],
+                                            userPermissions:['1921007'],
                                         }])
                                     }
                                     <TableTotal type={3} totalSource={totalSource} data={
