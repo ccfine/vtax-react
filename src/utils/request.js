@@ -14,7 +14,7 @@ import { store } from 'redux/store';
 import {logout} from 'redux/ducks/user'
 
 const request = Axios.create({
-    baseURL:window.baseURL,
+    baseURL:window.baseURL+'vscloud/',
     timeout:20000,
 });
 request.getToken = ()=>{

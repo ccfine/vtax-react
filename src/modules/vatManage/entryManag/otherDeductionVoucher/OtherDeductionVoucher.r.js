@@ -121,7 +121,7 @@ const columns = context =>[
         width:'100px',
     },
     {
-        title: '记账日期',
+        title: '过账日期',
         dataIndex: 'billingDate',
         width:'100px',
     },
@@ -187,7 +187,7 @@ const columns = context =>[
         width:'100px',
     }
 ];
-class SalesInvoiceCollection extends Component{
+export default class OtherDeductionVoucher extends Component{
     state={
 
         tableKey:Date.now(),
@@ -320,5 +320,3 @@ class SalesInvoiceCollection extends Component{
         )
     }
 }
-
-export default SalesInvoiceCollection;

@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/23.
  */
 import React,{Component} from 'react';
-import {Button,Modal,Form,Row,Col,Spin,message,Alert} from 'antd';
+import {Button,Modal,Form,Row,Col,Spin,message} from 'antd';
 import {request,getFields} from 'utils'
 const formItemStyle = {
     labelCol:{
@@ -115,7 +115,7 @@ class AddPopModal extends Component{
 
     render(){
         const props = this.props;
-        const { getFieldValue } = props.form;
+        const {getFieldValue} = props.form;
         const {record,loaded} = this.state;
         let title='';
         const action = props.action;
@@ -160,24 +160,45 @@ class AddPopModal extends Component{
                                 getFields(props.form,[
                                     {
                                         label:'抵扣凭据类型',
-                                        fieldName:'type',
+                                        fieldName:'invoiceType',
                                         type:'select',
                                         span:22,
                                         formItemStyle,
-                                        options:[  //抵扣凭据类型：1:前期认证相符且本期申报抵扣 , 2: 前期入账本期申报抵扣
+                                        options:[  //抵扣凭据类型： 1增值税专用发票 2农产品收购发票或者销售发票 3海关进口增值税专用缴款书 4代扣代缴税收缴款凭证 5外贸企业进项税额抵扣证明 6其他允许抵扣证明 7加计扣除农产品进项税额 8前期入账本期申报抵扣 9前期认证相符且本期申报抵扣"
                                             {
-                                                text:'前期认证相符且本期申报抵扣',
+                                            /*    text:'增值税专用发票',
                                                 value:'1'
-                                            },{
-                                                text:'前期入账本期申报抵扣',
+                                            },{*/
+                                                text:'农产品收购发票或者销售发票',
                                                 value:'2'
+                                            },{
+                                                text:'海关进口增值税专用缴款书',
+                                                value:'3'
+                                            },{
+                                                text:'代扣代缴税收缴款凭证',
+                                                value:'4'
+                                            /*},{
+                                                text:'外贸企业进项税额抵扣证明',
+                                                value:'5'*/
+                                            },{
+                                                text:'其他允许抵扣证明',
+                                                value:'6'
+                                            },{
+                                                text:'加计扣除农产品进项税额',
+                                                value:'7'
+                                            /*},{
+                                                text:'前期入账本期申报抵扣',
+                                                value:'8'*/
+                                            },{
+                                                text:'前期认证相符且本期申报抵扣',
+                                                value:'9'
                                             }
                                         ],
                                         componentProps:{
                                             disabled
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:record.type,
+                                            initialValue:record.invoiceType,
                                             rules:[
                                                 {
                                                     required:true,
@@ -193,8 +214,8 @@ class AddPopModal extends Component{
                                         formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:record.num,
-                                            rules:[
-                                                {
+                                            rules: [
+                                                (parseInt(getFieldValue('invoiceType'), 0) !== 7 ) && {
                                                     required:true,
                                                     message:'请输入凭据份数'
                                                 }
@@ -208,8 +229,8 @@ class AddPopModal extends Component{
                                         formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:record.amount,
-                                            rules:[
-                                                {
+                                            rules: [
+                                                (parseInt(getFieldValue('invoiceType'), 0) !== 4 && parseInt(getFieldValue('invoiceType'), 0) !== 7  ) && {
                                                     required:true,
                                                     message:'请输入金额'
                                                 }
@@ -234,14 +255,6 @@ class AddPopModal extends Component{
                                 ])
                             }
                         </Row>
-                        {
-                            getFieldValue('type') && <Row>
-                                <Col>
-                                    <Alert message={`凭证类型： ${getFieldValue('type')==='1'? '前期认证相符且本期申报抵扣' : '前期入账本期申报抵扣' }`} type="warning" showIcon />
-                                </Col>
-                            </Row>
-                        }
-
                     </Form>
                 </Spin>
 

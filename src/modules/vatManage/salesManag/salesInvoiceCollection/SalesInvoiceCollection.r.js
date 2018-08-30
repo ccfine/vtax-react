@@ -410,17 +410,17 @@ class SalesInvoiceCollection extends Component {
                                             onSuccess:this.refreshTable,
                                             fields:fields(disabled,declare),
                                             userPermissions:['1061005'],
-                                        }],statusParam)
-                                    }
-                                    {
-                                        (disabled && declare.decAction==='edit') && composeBotton([{
+                                        },{
                                             type:'revokeImport',
                                             url:'/output/invoice/collection/revocation',
                                             params:filters,
                                             monthFieldName:"authMonth",
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1065000'],
-                                        },{
+                                        }],statusParam)
+                                    }
+                                    {
+                                        (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'delete',
                                             icon:'delete',
                                             text:'删除',

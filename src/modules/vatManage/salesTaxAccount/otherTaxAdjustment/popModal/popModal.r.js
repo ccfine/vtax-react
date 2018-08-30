@@ -277,7 +277,7 @@ class PopModal extends Component{
                             getFields(form,[{
                                 span:'12',
                                 formItemStyle:formItemLayout,
-                                label:'业务类型',
+                                label:'适用税率',
                                 fieldName:'businessType',
                                 type:'select',
                                 options:this.state.typelist.map(ele=>({value:ele.id,text:ele.name})),
@@ -298,7 +298,7 @@ class PopModal extends Component{
                                     initialValue:record.businessType,
                                     rules:[{
                                         required:true,
-                                        message:'请选择业务类型'
+                                        message:'请选择适用税率'
                                     }]
                                 },
                             },
