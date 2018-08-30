@@ -1,4 +1,4 @@
-#用ngnix 独立部署
+
 #user  nobody;
 worker_processes  1;
 
@@ -33,29 +33,23 @@ http {
     gzip  on;
 
     server {
-        listen       80;
+        listen       8080;
         server_name  localhost;
 
-        root C:/Users/DELL/Desktop/nginx-1.15.3/html/;
-        #root /usr/nginx/html/;  服务器地址
-        #index index.html index.htm;
+        root /usr/nginx/html/;
 
         #charset koi8-r;
 
         #access_log  logs/host.access.log  main;
 
         location / {
-        	try_files $uri $uri/ /index.html;
+            try_files $uri $uri/ /index.html;
         }
 
         location /vscloud {
-            proxy_pass http://192.168.3.143;
+            proxy_pass http://120.76.217.179:8090;
             ##代理的后端服务地址
         }
-
-        #location ~* \.(eot|ttf|woff|woff2)$ {
-		#    add_header Access-Control-Allow-Origin *;
-		#}
 
         #error_page  404              /404.html;
 
