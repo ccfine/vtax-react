@@ -51,31 +51,6 @@ const searchFields = (getFieldValue)=>[
         }
     }
 ];
-/*
-const importFeilds = [
-    {
-        label: "纳税主体",
-        type: "taxMain",
-        fieldName: "mainId",
-        span: 24,
-        formItemStyle: {
-            labelCol: {
-                span: 6
-            },
-            wrapperCol: {
-                span: 17
-            }
-        },
-        fieldDecoratorOptions: {
-            rules: [
-                {
-                    required: true,
-                    message: "请选择纳税主体"
-                }
-            ]
-        }
-    }
-];*/
 
 const apiFields = (getFieldValue)=> [
     {
@@ -210,9 +185,6 @@ class AvailableArea extends Component {
         saveLoding:false,
         totalSource:{},
     }
-    update = () => {
-        this.setState({ updateKey: Date.now() });
-    }
     save=(e)=>{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
@@ -286,15 +258,6 @@ class AvailableArea extends Component {
                     },
                     extra:(
                         <span>
-                            {/*{
-                                JSON.stringify(filters) !== "{}" &&  composeBotton([{
-                                    type:'fileImport',
-                                    url:'/interAvailableBuildingAreaInformation/upload',
-                                    onSuccess:this.update,
-                                    // userPermissions:['1531005'],
-                                    fields:importFeilds
-                                }])
-                            }*/}
                             {
                                 composeBotton([{
                                     type: 'fileExport',
