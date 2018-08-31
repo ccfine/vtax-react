@@ -228,7 +228,7 @@ class AccountBalanceSheet extends Component{
                                             url:'reportAccountBalance/export',
                                             params:filters,
                                             title:'导出',
-                                            userPermissions:['1891007'],
+                                            userPermissions:['1981007'],
                                         }])
                                     }
                                     {/*{

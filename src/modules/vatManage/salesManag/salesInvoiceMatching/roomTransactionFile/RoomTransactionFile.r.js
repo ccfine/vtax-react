@@ -514,7 +514,7 @@ class RoomTransactionFile extends Component{
                                         btnType:'danger',
                                         loading:deleteLoading,
                                         selectedRowKeys:selectedRowKeys,
-                                        userPermissions:['1211008'],
+                                        userPermissions:['1215013'],
                                         onClick:this.deleteData
                                     },{
                                         type:'submit',
