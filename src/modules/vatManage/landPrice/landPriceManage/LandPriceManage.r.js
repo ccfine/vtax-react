@@ -21,7 +21,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields=(disabled,declare)=> {
+const searchFields=(disabled,declare)=> (getFieldValue) =>{
     return [
         {
             label:'纳税主体',
@@ -60,6 +60,19 @@ const searchFields=(disabled,declare)=> {
                         message:'请选择凭证月份'
                     }
                 ]
+            }
+        }, {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
             }
         }, {
             label:'可抵扣土地价款',
@@ -115,20 +128,25 @@ const markFieldsData = [
 ]
 const getColumns = (context,disabled,getFieldDecorator) =>[
     {
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'150px',
+    },
+    /*{
         title: '纳税主体名称',
         dataIndex: 'mainName',
         width:'150px',
-    },
+    },*/
     {
         title: '项目分期名称',
         dataIndex: 'stagesName',
         width:'150px',
     },
-    {
+    /*{
         title: '项目分期代码',
         dataIndex: 'stagesNum',
         width:'150px',
-    },
+    },*/
     {
         title: '凭证日期',
         dataIndex: 'voucherDate',

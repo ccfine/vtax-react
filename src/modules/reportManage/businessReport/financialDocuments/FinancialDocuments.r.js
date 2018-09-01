@@ -89,7 +89,7 @@ const apiFields = (getFieldValue)=> [
         },
     },
 ]
-const searchFields =[
+const searchFields = (getFieldValue) =>[
         {
             label:'纳税主体',
             fieldName:'mainId',
@@ -102,7 +102,8 @@ const searchFields =[
                     message:'请选择纳税主体',
                 }]
             },
-        },{
+        },
+        {
             label:'查询期间',
             fieldName:'authMonth',
             type:'monthPicker',
@@ -111,27 +112,46 @@ const searchFields =[
             componentProps:{
                 format:'YYYY-MM',
             }
-        },{
+        },
+        {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('mainId') || false,
+                url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
+            }
+        },
+        {
             label:'借方科目名称',
             fieldName:'debitSubjectName',
             span:8,
             formItemStyle,
-        },{
+        },
+        {
             label:'借方科目代码',
             fieldName:'debitSubjectCode',
             span:8,
             formItemStyle,
-        },{
+        },
+        {
             label:'贷方科目名称',
             fieldName:'creditSubjectName',
             span:8,
             formItemStyle,
-        },{
+        },
+        {
             label:'贷方科目代码',
             fieldName:'creditSubjectCode',
             span:8,
             formItemStyle,
-        },{
+        },
+        {
             label:'凭证号',
             fieldName:'voucherNum',
             span:8,
@@ -169,7 +189,7 @@ const getColumns = context =>[
         dataIndex:'action',
         className:'text-center',
     },*/
-    {
+    /*{
         title: '纳税主体名称',
         dataIndex: 'mainName',
         width:'200px',
@@ -183,17 +203,22 @@ const getColumns = context =>[
         title: '项目名称',
         dataIndex: 'projectName',
         width:'200px',
+    },*/
+    {
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width: '200px',
     },
     {
         title: '项目分期名称',
         dataIndex: 'stagesName',
         width:'200px',
     },
-    {
+    /*{
         title: '项目分期代码',
         dataIndex: 'stagesNum',
         width:'100px',
-    },
+    },*/
     {
         title: '凭证日期',
         dataIndex: 'voucherDate',
@@ -310,7 +335,7 @@ class FinancialDocuments extends Component{
                     pageSize:100,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
-                    scroll:{ x: 3200,y:window.screen.availHeight-450 },
+                    scroll:{ x: 2800,y:window.screen.availHeight-450 },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,

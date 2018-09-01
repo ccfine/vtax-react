@@ -7,7 +7,7 @@
 import React,{Component} from 'react'
 import {message,Alert,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig,parseJsonToParams} from 'utils'
 import moment from "moment";
 const formItemStyle = {
     labelCol:{
@@ -98,6 +98,20 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         },
     },
     {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:6,
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:false,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+        }
+    },
+    {
         label:'交易月份',
         fieldName:'authMonth',
         type:'monthPicker',
@@ -113,9 +127,9 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
-            doNotFetchDidMount:true,
+            doNotFetchDidMount:false,
             fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-            url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
+            url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
         }
     },
     {
@@ -128,8 +142,12 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
             fieldTextName:'itemName',
             fieldValueName:'id',
             doNotFetchDidMount:true,
-            fetchAble:getFieldValue('projectId') || false,
-            url:`/project/stages/${getFieldValue('projectId') || ''}`,
+            fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+            url:`/project/stage/list?${parseJsonToParams({
+                profitCenterId:getFieldValue('profitCenterId') || '',
+                projectId:getFieldValue('projectId') || '',
+                size:1000,
+            })}`,
         }
     },
     {
@@ -177,10 +195,15 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
 
 const getColumns = (context,disabled) => {
     return [{
-        title:'项目名称',
-        dataIndex:'projectName',
-        width:'150px',
-    },
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width:'200px',
+        },
+        {
+            title:'项目名称',
+            dataIndex:'projectName',
+            width:'150px',
+        },
         {
             title:'项目分期名称',
             dataIndex:'stagesName',
@@ -559,7 +582,7 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 3950,
+                            x: 4150,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                         rowSelection:{
