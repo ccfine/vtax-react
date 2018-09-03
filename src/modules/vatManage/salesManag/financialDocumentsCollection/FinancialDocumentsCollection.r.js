@@ -15,82 +15,95 @@ const formItemStyle={
     }
 }
 
-const searchFields = (disabled,declare) => {
-    return [
-        {
-            label:'纳税主体',
-            fieldName:'main',
-            type:'taxMain',
-            span:8,
+const searchFields = (disabled,declare) =>(getFieldValue)=>[
+    {
+        label:'纳税主体',
+        fieldName:'main',
+        type:'taxMain',
+        span:8,
+        formItemStyle,
+        componentProps:{
+            labelInValue:true,
+            disabled
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
+        }
+    },
+    {
+            label:'查询期间',
+            fieldName:'authMonth',
+            type:'monthPicker',
             formItemStyle,
+            span:8,
             componentProps:{
-                labelInValue:true,
+                format:'YYYY-MM',
                 disabled
             },
             fieldDecoratorOptions:{
-                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                 rules:[
                     {
                         required:true,
-                        message:'请选择纳税主体'
+                        message:'请选择查询期间'
                     }
                 ]
-            }
-        },
-        {
-                label:'查询期间',
-                fieldName:'authMonth',
-                type:'monthPicker',
-                formItemStyle,
-                span:8,
-                componentProps:{
-                    format:'YYYY-MM',
-                    disabled
-                },
-                fieldDecoratorOptions:{
-                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-                    rules:[
-                        {
-                            required:true,
-                            message:'请选择查询期间'
-                        }
-                    ]
-                },
-        },
-        {
-            label:'借方科目名称',
-            fieldName:'debitSubjectName',
-            span:8,
-            formItemStyle,
-        },
-        {
-            label:'借方科目代码',
-            fieldName:'debitSubjectCode',
-            span:8,
-            formItemStyle,
-        },
-        {
-            label:'贷方科目名称',
-            fieldName:'creditSubjectName',
-            span:8,
-            formItemStyle,
-        },
-        {
-            label:'贷方科目代码',
-            fieldName:'creditSubjectCode',
-            span:8,
-            formItemStyle,
-        },
-        {
-            label:'凭证号',
-            fieldName:'voucherNum',
-            span:8,
-            formItemStyle,
-        }
-    ]
-}
-const columns=[
+            },
+    },
     {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:8,
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+        }
+    },
+    {
+        label:'借方科目名称',
+        fieldName:'debitSubjectName',
+        span:8,
+        formItemStyle,
+    },
+    {
+        label:'借方科目代码',
+        fieldName:'debitSubjectCode',
+        span:8,
+        formItemStyle,
+    },
+    {
+        label:'贷方科目名称',
+        fieldName:'creditSubjectName',
+        span:8,
+        formItemStyle,
+    },
+    {
+        label:'贷方科目代码',
+        fieldName:'creditSubjectCode',
+        span:8,
+        formItemStyle,
+    },
+    {
+        label:'凭证号',
+        fieldName:'voucherNum',
+        span:8,
+        formItemStyle,
+    }
+]
+
+const columns=[
+    /*{
         title: '纳税主体名称',
         dataIndex: 'mainName',
         width:'200px',
@@ -99,6 +112,11 @@ const columns=[
         title: '纳税主体编码',
         dataIndex: 'mainNum',
         width:'100px',
+    },*/
+    {
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'200px',
     },
     {
         title: '项目名称',
@@ -110,11 +128,11 @@ const columns=[
         dataIndex: 'stagesName',
         width:'200px',
     },
-    {
+    /*{
         title: '项目分期代码',
         dataIndex: 'stagesNum',
         width:'100px',
-    },
+    },*/
     {
         title: '凭证日期',
         dataIndex: 'voucherDate',

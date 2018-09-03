@@ -47,8 +47,8 @@ const getColumns =context=>{
         className:'text-center',
     }]
     return [...operates,{
-        title: '项目名称',
-        dataIndex: 'projectName',
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
     },{
         title: '项目分期',
         dataIndex: 'stageName',
@@ -63,7 +63,7 @@ const getColumns =context=>{
         render:text=>fMoney(text),
         className:'table-money'
     }
-];
+    ];
 }
 
 export default class TabPage extends Component{
@@ -99,8 +99,8 @@ export default class TabPage extends Component{
                 message.error(data.msg, 4);
             }
         }).catch(err => {
-                message.error(err.message);
-            })
+            message.error(err.message);
+        })
     }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){

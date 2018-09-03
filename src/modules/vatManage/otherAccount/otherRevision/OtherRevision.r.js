@@ -111,7 +111,7 @@ const getColumns = (context,hasOperate) => {
   ,
   {
     title: "利润中心",
-    dataIndex: "profitCenter",
+    dataIndex: "profitCenterName",
     width:'200px',
   },
   {

@@ -22,15 +22,15 @@ const table_1_columns = [{
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
     dataIndex: 'itemName',
-    width:'100px',
+    width:'30%',
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'100px',
+    width:'30%',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'180px',
+    width:'40%',
     className:'text-center',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
@@ -93,7 +93,7 @@ class ProjectManagement extends Component{
         loading:false,
     }
     componentDidMount(){
-       const taxSubjectId = this.props.match.params.id;
+        const taxSubjectId = this.props.match.params.id;
         taxSubjectId && setTimeout(()=>{
             this.refreshTable()
         },300)
@@ -193,9 +193,9 @@ class ProjectManagement extends Component{
             <div>
                 <div style={{ margin: "0px 0 6px 6px" }}>
                     <span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12,cursor: 'pointer'}}
-                        onClick={() => {
-                            this.props.history.goBack();
-                        }}
+                          onClick={() => {
+                              this.props.history.goBack();
+                          }}
                     >
                         <Icon type="left" /><span>返回</span>
                     </span>
@@ -234,37 +234,6 @@ class ProjectManagement extends Component{
                                             }} />
                             </Card>
                         </Col>
-                        <Col span={8}>
-                            <Card
-                                bodyStyle={{padding: '10px 20px'}}
-                                title="项目信息">
-                                <AsyncTable url={`/taxsubject/projectByProfitCenter/${selectedRowTaxSubjectKeys && selectedRowTaxSubjectKeys[0]}`}
-                                            updateKey={tableUpDateKey1}
-                                            tableProps={{
-                                                rowKey:record=>record.id,
-                                                //pageSize:100,
-                                                size:'small',
-                                                rowSelection:{
-                                                    type: 'radio',
-                                                },
-                                                onRowSelect:(selectedRowKeys)=>{
-                                                    this.mounted && this.setState({
-                                                        selectedRowKeys,
-                                                    },()=>{
-                                                        this.mounted && this.setState({
-                                                            tableUpDateKey2: Date.now(),
-                                                        })
-                                                    })
-                                                },
-                                                columns:table_1_columns,
-                                                pagination:false,
-                                                scroll:{
-                                                    x:200,
-                                                    y:window.screen.availHeight-320,
-                                                },
-                                            }} />
-                            </Card>
-                        </Col>
                         <Col span={10}>
                             <Card
                                 title="分期信息"
@@ -274,20 +243,51 @@ class ProjectManagement extends Component{
                                 }
                             >
                                 <Form onSubmit={this.handleSubmit}>
-                                    <AsyncTable url={`/taxsubject/stages/${selectedRowKeys && selectedRowKeys[0]}`}
-                                                updateKey={tableUpDateKey2}
+                                    <AsyncTable url={`/taxsubject/projectStagesList/${selectedRowTaxSubjectKeys && selectedRowTaxSubjectKeys[0]}`}
+                                                updateKey={tableUpDateKey1}
                                                 tableProps={{
                                                     rowKey:record=>record.id,
                                                     //pageSize:100,
                                                     size:'small',
                                                     columns:table_2_columns(this,getFieldDecorator),
                                                     pagination:false,
+                                                    rowSelection:{
+                                                        type: 'radio',
+                                                    },
+                                                    onRowSelect:(selectedRowKeys)=>{
+                                                        this.mounted && this.setState({
+                                                            selectedRowKeys,
+                                                        },()=>{
+                                                            this.mounted && this.setState({
+                                                                tableUpDateKey2: Date.now(),
+                                                            })
+                                                        })
+                                                    },
                                                     scroll:{
-                                                        //x:700,
+                                                        //x:400,
                                                         y:window.screen.availHeight-320,
                                                     },
                                                 }} />
                                 </Form>
+                            </Card>
+                        </Col>
+                        <Col span={8}>
+                            <Card
+                                bodyStyle={{padding: '10px 20px'}}
+                                title="项目信息">
+                                <AsyncTable url={`/project/projectList/${selectedRowKeys && selectedRowKeys[0]}`}
+                                            updateKey={tableUpDateKey2}
+                                            tableProps={{
+                                                rowKey:record=>record.id,
+                                                //pageSize:100,
+                                                size:'small',
+                                                columns:table_1_columns,
+                                                pagination:false,
+                                                scroll:{
+                                                    x:200,
+                                                    y:window.screen.availHeight-320,
+                                                },
+                                            }} />
                             </Card>
                         </Col>
                     </Row>

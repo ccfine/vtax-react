@@ -12,24 +12,6 @@ import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestRe
 import moment from 'moment';
 import PopModal from "./popModal";
 
-const formItemStyle = {
-    labelCol:{
-        sm:{
-            span:10,
-        },
-        xl:{
-            span:8
-        }
-    },
-    wrapperCol:{
-        sm:{
-            span:14
-        },
-        xl:{
-            span:16
-        }
-    }
-}
 const columns = (context) => [
     {
         title: "计税方法",
@@ -124,6 +106,21 @@ const columns2=(context,hasOperate) => {
     return [
         ...operates
         , {
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width:'200px',
+            render: (text, record) => {
+                return <a title='查看详情' onClick={() => {
+                    context.setState({
+                        visible: true,
+                        action: "look",
+                        opid: record.id
+                    });
+                }}>
+                    {text}
+                </a>
+            }
+        /*},{
             title: "纳税主体",
             dataIndex: "mainName",
             render: (text, record) => {
@@ -139,7 +136,7 @@ const columns2=(context,hasOperate) => {
             }
         }, {
             title: '项目',
-            dataIndex: 'projectName',
+            dataIndex: 'projectName',*/
         }, {
             title: '项目分期',
             dataIndex: 'stagesName',
@@ -263,6 +260,7 @@ class UnBilledSalesNotEstate extends Component {
     }
     render(){
         const {tableUpDateKey,filters,statusParam,totalSource} = this.state;
+        const { getFieldValue } = this.props.form;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
@@ -288,7 +286,7 @@ class UnBilledSalesNotEstate extends Component {
                                             labelInValue:true,
                                             disabled:disabled
                                         },
-                                        formItemStyle,
+                                        span:8,
                                         fieldDecoratorOptions:{
                                             initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                                             rules:[
@@ -306,7 +304,7 @@ class UnBilledSalesNotEstate extends Component {
                                             format:'YYYY-MM',
                                             disabled:disabled
                                         },
-                                        formItemStyle,
+                                        span:8,
                                         fieldDecoratorOptions: {
                                             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
                                             rules: [
@@ -316,11 +314,23 @@ class UnBilledSalesNotEstate extends Component {
                                                 }
                                             ]
                                         }
-                                    }
+                                    },{
+                                        label:'利润中心',
+                                        fieldName:'profitCenterId',
+                                        type:'asyncSelect',
+                                        span:8,
+                                        componentProps:{
+                                            fieldTextName:'profitName',
+                                            fieldValueName:'id',
+                                            doNotFetchDidMount:true,
+                                            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                                            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+                                        }
+                                    },
                                 ])
                             }
 
-                            <Col span={8} style={{textAlign:'right'}}>
+                            <Col span={24} style={{textAlign:'right'}}>
                                 <Form.Item>
                                     <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                     <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>
