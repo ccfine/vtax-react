@@ -67,7 +67,8 @@ class PopModal extends Component{
                 // 处理利润中心
                 if(values.profitCenter){
                     values.profitCenterId = values.profitCenter.key;
-                    values.profitCenter = values.profitCenter.label;
+                    values.profitCenterName = values.profitCenter.label;
+                    delete values.profitCenter;
                 }
                 // 处理项目
                 if(values.project){
