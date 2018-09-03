@@ -3,15 +3,11 @@
  * createTime   : 2017/12/15 18:09
  * description  :
  */
-import {wrapPage} from 'compoments'
+import {AsyncComponent} from 'compoments'
 
-import Organization from './organization'
-import UserPermissions from './userPermissions'
 //import InterfaceManage from './interfaceManage'
 /*import ProcessManage from './processManage'
 import SystemMonitor from './systemMonitor'*/
-import SystemMaintain from './systemMaintain'
-import ImportData from './importData'
 import Organization_Routes from './organization/routes'
 import UserPermissions_Routes from './userPermissions/routes'
 import SystemMaintain_Routes from './systemMaintain/routes'
@@ -19,23 +15,28 @@ import SystemMaintain_Routes from './systemMaintain/routes'
 /*import ProcessManage_Routes from './processManage/routes'
 import SystemMonitor_Routes from './systemMonitor/routes'*/
 
+const Organization = AsyncComponent(() => import('./organization'), '组织架构')
+const UserPermissions = AsyncComponent(() => import('./userPermissions'), '用户权限')
+const SystemMaintain = AsyncComponent(() => import('./systemMaintain'), '系统维护')
+const ImportData = AsyncComponent(() => import('./importData'), '导入')
+
 const PATH = `/web/systemManage`;
 let SystemManage_Routes = [
     {
         path:`${PATH}/organization`,
-        component:wrapPage('组织架构',Organization),
+        component:Organization,
         name:'组织架构',
         exact:true,
         children:Organization_Routes,
     },{
         path:`${PATH}/userPermissions`,
-        component:wrapPage('用户权限',UserPermissions),
+        component:UserPermissions,
         name:'用户权限',
         exact:true,
         children:UserPermissions_Routes,
     },{
         path:`${PATH}/systemMaintain`,
-        component:wrapPage('系统维护',SystemMaintain),
+        component:SystemMaintain,
         name:'系统维护',
         exact:true,
         children:SystemMaintain_Routes,
@@ -62,7 +63,7 @@ let SystemManage_Routes = [
     },
     {
         path:`${PATH}/importData`,
-        component:wrapPage('导入',ImportData),
+        component:ImportData,
         name:'导入',
         exact:true,
         isProd:window.isProd,

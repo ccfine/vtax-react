@@ -3,18 +3,19 @@
  * createTime   : 2017/12/15 18:09
  * description  :
  */
-import {wrapPage} from 'compoments'
-import BasicInfo from './basicInfo'
+import {AsyncComponent} from 'compoments'
 // import TaxFile from './taxFile'
 import BasicInfo_Routes from './basicInfo/routes'
 // import TaxFile_Routes from './taxFile/routes'
 import { getChildOptions } from 'config/routingAuthority.config'
 
+const BasicInfo = AsyncComponent(() => import('./basicInfo'), '基础信息')
+
 const PATH = `/web/basisManage`;
 const BasisManage_Routes = [
     {
         path:`${PATH}/basicInfo`,
-        component:wrapPage('基础信息',BasicInfo),
+        component:BasicInfo,
         name:'基础信息',
         exact:true,
         children:BasicInfo_Routes,

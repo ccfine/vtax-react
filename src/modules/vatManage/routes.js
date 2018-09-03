@@ -3,14 +3,10 @@
  * createTime   : 2017/12/15 18:09
  * description  :
  */
-import {wrapPage} from 'compoments'
+import {AsyncComponent} from 'compoments'
 
-import SalesManag from './salesManag'
-import EntryManag from './entryManag'
-import LandPrice from './landPrice'
 /*import SalesTaxAccount from './salesTaxAccount'
 import EntryTaxAccount from './entryTaxAccount'*/
-import OtherAccount from './otherAccount'
 
 import SalesManag_Routes from './salesManag/routes'
 import EntryManag_Routes from './entryManag/routes'
@@ -20,27 +16,31 @@ import EntryTax_Routes from './entryTaxAccount/routes'*/
 import OtherAccount_Routes from './otherAccount/routes'
 import { getChildOptions } from 'config/routingAuthority.config'
 
+const SalesManag = AsyncComponent(() => import('./salesManag'), '销项管理')
+const EntryManag = AsyncComponent(() => import('./entryManag'), '进项管理')
+const LandPrice = AsyncComponent(() => import('./landPrice'), '土地价款')
+const OtherAccount = AsyncComponent(() => import('./otherAccount'), '其他台账')
 
 const PATH = '/web/vatManage';
 
 const VatManage_Routes = [
             {
                 path:`${PATH}/salesManag`,
-                component:wrapPage('销项管理',SalesManag),
+                component:SalesManag,
                 name:'销项管理',
                 exact:true,
                 children:SalesManag_Routes,
                 authorityInfo:getChildOptions('vatManage','salesManag'),
             },{
                 path:`${PATH}/entryManag`,
-                component:wrapPage('进项管理',EntryManag),
+                component:EntryManag,
                 name:'进项管理',
                 exact:true,
                 children:EntryManag_Routes,
                 authorityInfo:getChildOptions('vatManage','entryManag'),
             },{
                 path:`${PATH}/landPrice`,
-                component:wrapPage('土地价款',LandPrice),
+                component:LandPrice,
                 name:'土地价款',
                 exact:true,
                 children:LandPrice_Routes,
@@ -59,7 +59,7 @@ const VatManage_Routes = [
                 children:EntryTax_Routes*/
             },{
                 path:`${PATH}/otherAccount`,
-                component:wrapPage('其他台账',OtherAccount),
+                component:OtherAccount,
                 name:'其他台账',
                 exact:true,
                 children:OtherAccount_Routes,

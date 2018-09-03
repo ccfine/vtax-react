@@ -3,9 +3,7 @@
  * createTime   : 2017/12/7 15:38
  * description  :
  */
-import {wrapPage} from 'compoments'
-import Home from './home'
-import TaxDeclare from './taxDeclare'
+import {AsyncComponent} from 'compoments'
 import VatManage_Routes from './vatManage'
 import ReportManage_Routes from './reportManage'
 import BasisManage_Routes from './basisManage'
@@ -13,11 +11,14 @@ import SystemManage_Routes from './systemManage'
 import Children_Routes from './taxDeclare/children/routes'
 import { getParentOptions } from 'config/routingAuthority.config'
 
+const Home = AsyncComponent(() => import('./home'), '首页')
+const TaxDeclare = AsyncComponent(() => import('./taxDeclare'), '纳税申报')
+
 const PATH = '/web';
 const routes = [
     {
         path:`${PATH}`,
-        component:wrapPage('首页',Home),
+        component:Home,
         name:'首页',
         icon:'user',
         exact:true,
@@ -49,7 +50,7 @@ const routes = [
         icon:'form',
         exact:true,
         permissions:false,
-        component:wrapPage('纳税申报',TaxDeclare),
+        component:TaxDeclare,
         children:Children_Routes,
         authorityInfo:getParentOptions('taxDeclare'),
     },{

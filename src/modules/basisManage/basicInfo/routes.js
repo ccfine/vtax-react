@@ -3,13 +3,9 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import AsyncComponent from '../../../compoments/asyncComponent';
-// import {wrapPage} from 'compoments'
-// import AubjectOfTaxPayment from './aubjectOfTaxPayment'
+import {AsyncComponent} from 'compoments'
 // import TaxIncentives from './taxIncentives'
 // import DeclareParameter from './declareParameter'
-// import BeginDataCollect from './beginDataCollect'
-// import ProjectManagement from './projectManagement'
 /*import TableSum from '../../../compoments/tableSum'*/
 /*import FinancialDocumentsBeginData from './financialDocumentsBeginData'
 // import RoomTransactionFile from './roomTransactionFile'*/
@@ -25,7 +21,7 @@ const basicInfo = strategies['basisManage']['basicInfo'];
 const BasicInfo_Routes = [
     {
         path:`${PATHS}/aubjectOfTaxPayment`,
-        component: AubjectOfTaxPayment, //wrapPage('纳税主体',AubjectOfTaxPayment),
+        component: AubjectOfTaxPayment,
         name:'纳税主体',
         icon:{
             url:`${ICON_URL_PATH}mainTax.svg`,
@@ -36,7 +32,7 @@ const BasicInfo_Routes = [
     },
     {
         path:`${PATHS}/aubjectOfTaxPayment/:id`,
-        component: ProjectManagement, //wrapPage('项目管理',ProjectManagement),
+        component: ProjectManagement,
         name:'项目管理',
         //authorityInfo:basicInfo['aubjectOfTaxPayment'].options,
         exact:true,
@@ -63,7 +59,7 @@ const BasicInfo_Routes = [
         exact:true,
     },*/{
         path:`${PATHS}/beginDataCollect`,
-        component: BeginDataCollect, //wrapPage('期初数据采集',BeginDataCollect),
+        component: BeginDataCollect,
         name:'期初数据采集',
         icon:{
             url:`${ICON_URL_PATH}beginDataCollect.svg`,

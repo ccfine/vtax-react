@@ -3,21 +3,22 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
-import SalesInvoiceCollection from './salesInvoiceCollection'
-import SalesInvoiceMatching from './salesInvoiceMatching'
+import {AsyncComponent} from 'compoments'
 /*
 import CampBeforeTheIncreaseInSales from './campBeforeTheIncreaseInSales'
 import UnBilledSales from '../salesTaxAccount/unBilledSales'
  * */
-import IncomeCheck from './incomeCheck'
-import BillingSales from '../salesTaxAccount/billingSales'
-import BeginningNotTaxSalesEstate from './beginningNotTaxSalesEstate'
-import UnBilledSalesEstate from './unBilledSalesEstate'
-import UnBilledSalesNotEstate from './unBilledSalesNotEstate'
-import OtherTaxAdjustment from '../salesTaxAccount/otherTaxAdjustment'
-import FinancialDocumentsCollection from './financialDocumentsCollection'
 import strategies from 'config/routingAuthority.config'
+
+const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollection'), '销项发票采集')
+const SalesInvoiceMatching = AsyncComponent(() => import('./salesInvoiceMatching'), '销项发票匹配')
+const IncomeCheck = AsyncComponent(() => import('./incomeCheck'), '收入检查')
+const BillingSales = AsyncComponent(() => import('../salesTaxAccount/billingSales'), '开票销售台账')
+const BeginningNotTaxSalesEstate = AsyncComponent(() => import('./beginningNotTaxSalesEstate'), '期初未纳税销售额台账-地产')
+const UnBilledSalesEstate = AsyncComponent(() => import('./unBilledSalesEstate'), '未开票销售台账-地产')
+const UnBilledSalesNotEstate = AsyncComponent(() => import('./unBilledSalesNotEstate'), '未开票销售台账-非地产')
+const OtherTaxAdjustment = AsyncComponent(() => import('../salesTaxAccount/otherTaxAdjustment'), '其他涉税调整台账')
+const FinancialDocumentsCollection = AsyncComponent(() => import('./financialDocumentsCollection'), '财务凭证采集')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/salesManag`;
@@ -26,7 +27,7 @@ const salesManag = strategies['vatManage']['salesManag'];
 const SalesManag_Routes = [
     {
         path:`${PATH}/salesInvoiceCollection`,
-        component:wrapPage('销项发票采集',SalesInvoiceCollection),
+        component:SalesInvoiceCollection,
         name:'销项发票采集',
         icon:{
             url:`${ICON_URL_PATH}salesInvoiceCollection.svg`,
@@ -36,7 +37,7 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/salesInvoiceMatching`,
-        component:wrapPage('销项发票匹配',SalesInvoiceMatching),
+        component:SalesInvoiceMatching,
         name:'销项发票匹配',
         icon:{
             url:`${ICON_URL_PATH}salesInvoiceMatching.svg`,
@@ -56,7 +57,7 @@ const SalesManag_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/incomeCheck`,
-        component:wrapPage('收入检查',IncomeCheck),
+        component:IncomeCheck,
         name:'收入检查',
         icon:{
             url:`${ICON_URL_PATH}incomeCheck.svg`,
@@ -66,7 +67,7 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/billingSales`,
-        component:wrapPage('开票销售台账',BillingSales),
+        component:BillingSales,
         name:'开票销售台账',
         icon:{
             url:`${ICON_URL_PATH}billingSales.svg`,
@@ -86,7 +87,7 @@ const SalesManag_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/beginningNotTaxSalesEstate`,
-        component:wrapPage('期初未纳税销售额台账-地产',BeginningNotTaxSalesEstate),
+        component:BeginningNotTaxSalesEstate,
         name:'期初未纳税销售额台账-地产',
         icon:{
             url:`${ICON_URL_PATH}beginningNotTaxSalesEstate.svg`,
@@ -96,7 +97,7 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/unBilledSalesEstate`,
-        component:wrapPage('未开票销售台账-地产',UnBilledSalesEstate),
+        component:UnBilledSalesEstate,
         name:'未开票销售台账-地产',
         icon:{
             url:`${ICON_URL_PATH}unBilledSalesEstate.svg`,
@@ -106,7 +107,7 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/unBilledSalesNotEstate`,
-        component:wrapPage('未开票销售台账-非地产',UnBilledSalesNotEstate),
+        component:UnBilledSalesNotEstate,
         name:'未开票销售台账-非地产',
         icon:{
             url:`${ICON_URL_PATH}unBilledSalesNotEstate.svg`,
@@ -116,7 +117,7 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/otherTaxAdjustment`,
-        component:wrapPage('其他涉税调整台账',OtherTaxAdjustment),
+        component:OtherTaxAdjustment,
         name:'其他涉税调整台账',
         icon:{
             url:`${ICON_URL_PATH}otherTaxAdjustment.svg`,
@@ -126,7 +127,7 @@ const SalesManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/financialDocumentsCollection`,
-        component:wrapPage('财务凭证采集',FinancialDocumentsCollection),
+        component:FinancialDocumentsCollection,
         name:'财务凭证采集',
         icon:{
             url:`${ICON_URL_PATH}financialDocumentsCollection.svg`,

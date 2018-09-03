@@ -3,21 +3,23 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
-import InvoiceCollection from './invoiceCollection'
-import FixedAssetCollection from './fixedAssetCollection'
+import {AsyncComponent} from 'compoments'
 //import OtherDeductionVoucher from './otherDeductionVoucher'
-import InputTaxDetails from '../entryTaxAccount/inputTaxDetails'
 /*
 import InputTaxStructure from '../entryTaxAccount/inputTaxStructure'
 import InvoiceMatching from './invoiceMatching'
 import InterimContractInputTaxTransferredOut from '../entryTaxAccount/interimContractInputTaxTransferredOut'
 import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
  * */
-import OtherBusinessInputTaxRollOut from '../entryTaxAccount/otherBusinessInputTaxRollOut'
-import SimplifiedTaxInputTaxTransfer from '../entryTaxAccount/simplifiedTaxInputTaxTransfer'
-import RealEstateInputTaxCredit from '../entryTaxAccount/realEstateInputTaxCredit'
 import strategies from 'config/routingAuthority.config'
+
+const InvoiceCollection = AsyncComponent(() => import('./invoiceCollection'), '进项发票采集')
+const FixedAssetCollection = AsyncComponent(() => import('./fixedAssetCollection'), '固定资产信息采集')
+const InputTaxDetails = AsyncComponent(() => import('../entryTaxAccount/inputTaxDetails'), '进项税额明细台账')
+const OtherBusinessInputTaxRollOut = AsyncComponent(() => import('../entryTaxAccount/otherBusinessInputTaxRollOut'), '其他类型进项税额转出台账')
+const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
+const RealEstateInputTaxCredit = AsyncComponent(() => import('../entryTaxAccount/realEstateInputTaxCredit'), '不动产进项税额抵扣台账')
+
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/entryManag`;
@@ -26,7 +28,7 @@ const entryManag = strategies['vatManage']['entryManag'];
 const EntryManag_Routes = [
     {
         path: `${PATH}/invoiceCollection`,
-        component: wrapPage('进项发票采集', InvoiceCollection),
+        component:InvoiceCollection,
         name: '进项发票采集',
         icon: {
             url: `${ICON_URL_PATH}invoiceCollection.svg`,
@@ -36,7 +38,7 @@ const EntryManag_Routes = [
         exact: true,
     },{
         path:`${PATH}/fixedAssetCollection`,
-        component:wrapPage('固定资产信息采集',FixedAssetCollection),
+        component:FixedAssetCollection,
         name:'固定资产信息采集',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCollection.svg`,
@@ -56,7 +58,7 @@ const EntryManag_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/inputTaxDetails`,
-        component:wrapPage('进项税额明细台账',InputTaxDetails),
+        component:InputTaxDetails,
         name:'进项税额明细台账',
         icon:{
             url:`${ICON_URL_PATH}inputTaxDetails.svg`,
@@ -105,7 +107,7 @@ const EntryManag_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/otherBusinessInputTaxRollOut`,
-        component:wrapPage('其他类型进项税额转出台账',OtherBusinessInputTaxRollOut),
+        component:OtherBusinessInputTaxRollOut,
         name:'其他类型进项税额转出台账',
         icon:{
             url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
@@ -115,7 +117,7 @@ const EntryManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/simplifiedTaxInputTaxTransfer`,
-        component:wrapPage('简易计税进项税额转出台账',SimplifiedTaxInputTaxTransfer),
+        component:SimplifiedTaxInputTaxTransfer,
         name:'简易计税进项税额转出台账',
         icon:{
             url:`${ICON_URL_PATH}simplifiedTaxInputTaxTransfer.svg`,
@@ -125,7 +127,7 @@ const EntryManag_Routes = [
         exact:true,
     },{
         path:`${PATH}/realEstateInputTaxCredit`,
-        component:wrapPage('不动产进项税额抵扣台账',RealEstateInputTaxCredit),
+        component:RealEstateInputTaxCredit,
         name:'不动产进项税额抵扣台账',
         icon:{
             url:`${ICON_URL_PATH}realEstateInputTaxCredit.svg`,

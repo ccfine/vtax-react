@@ -3,14 +3,15 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
+import {AsyncComponent} from 'compoments'
 
-import DataDictionaryMaintain from './dataDictionaryMaintain'
 /*import TaxReturnsCustom from './taxReturnsCustom'
 import OtherReportsAreCustom from './otherReportsAreCustom'*/
-import TaxClassificationCode from './taxClassificationCode'
-import TaxableItems from './taxableItems'
-import SubjectRateRela from './subjectRateRela'
+
+const DataDictionaryMaintain = AsyncComponent(() => import('./dataDictionaryMaintain'), '数据字典维护')
+const TaxClassificationCode = AsyncComponent(() => import('./taxClassificationCode'), '税收分类编码')
+const TaxableItems = AsyncComponent(() => import('./taxableItems'), '应税项目')
+const SubjectRateRela = AsyncComponent(() => import('./subjectRateRela'), '科目税率对应表')
 
 const ICON_URL_PATH = '/assets/routes_avatar/';
 const PATHS = '/web/systemManage/systemMaintain';
@@ -38,7 +39,7 @@ const SystemMaintain_Routes = [
         exact:true,
     },{*/
         path:`${PATHS}/dataDictionaryMaintain`,
-        component:wrapPage('数据字典维护',DataDictionaryMaintain),
+        component:DataDictionaryMaintain,
         name:'数据字典维护',
         icon:{
             url:`${ICON_URL_PATH}dataDictionaryMaintain.svg`,
@@ -47,7 +48,7 @@ const SystemMaintain_Routes = [
         exact:true,
     },{
         path:`${PATHS}/taxClassificationCode`,
-        component:wrapPage('税收分类编码',TaxClassificationCode),
+        component:TaxClassificationCode,
         name:'税收分类编码',
         icon:{
             url:`${ICON_URL_PATH}taxClassificationCode.svg`,
@@ -56,7 +57,7 @@ const SystemMaintain_Routes = [
         exact:true,
     },{
         path:`${PATHS}/taxableItems`,
-        component:wrapPage('应税项目',TaxableItems),
+        component:TaxableItems,
         name:'应税项目',
         icon:{
             url:`${ICON_URL_PATH}taxableItems.svg`,
@@ -66,7 +67,7 @@ const SystemMaintain_Routes = [
     },
     {
         path:`${PATHS}/subjectRateRela`,
-        component:wrapPage('科目税率对应表',SubjectRateRela),
+        component:SubjectRateRela,
         name:'科目税率对应表',
         icon:{
             url:`${ICON_URL_PATH}subjectRateRela.svg`,
