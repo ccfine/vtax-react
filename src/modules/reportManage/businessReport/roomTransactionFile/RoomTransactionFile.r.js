@@ -122,9 +122,9 @@ const searchFields = (getFieldValue)=> [
     //     ]
     // },
     {
-        label:'房间交付期间',
+        label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'monthPicker',
+        type:'datePicker',
         span:6,
         formItemStyle,
     },
