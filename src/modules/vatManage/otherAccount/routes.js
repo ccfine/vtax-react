@@ -3,11 +3,8 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
+import {AsyncComponent} from 'compoments'
 // import LandPriceDeductionDetails from './landPriceDeductionDetails'
-import TaxExemptionDetails from './taxExemptionDetails'
-import PrepayTax from './prepayTax'
-import OtherRevision from './otherRevision'
 // import TaxCalculation from './taxCalculation'
 /*
 import DeductProjectSummary from './deductProjectSummary'
@@ -15,6 +12,10 @@ import PrePaidHousingSales from './prePaidHousingSales'
 import BusinessTaxChangeTaxAnalysisNegative from './businessTaxChangeTaxAnalysisNegative'
 */
 import strategies from 'config/routingAuthority.config'
+
+const PrepayTax = AsyncComponent(() => import('./prepayTax'), '预缴税款台账')
+const TaxExemptionDetails = AsyncComponent(() => import('./taxExemptionDetails'), '减免税明细台账')
+const OtherRevision = AsyncComponent(() => import('./otherRevision'), '其他事项调整台账')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/otherAccount`
@@ -33,7 +34,7 @@ const OtherAccount_Routes = [
         exact:true,
     },{*/
         path:`${PATH}/prepayTax`,
-        component:wrapPage('预缴税款台账',PrepayTax),
+        component:PrepayTax,
         name:'预缴税款台账',
         icon:{
             url:`${ICON_URL_PATH}prepayTax.svg`,
@@ -63,7 +64,7 @@ const OtherAccount_Routes = [
         exact:true,
     },{*/
         path:`${PATH}/taxExemptionDetails`,
-        component:wrapPage('减免税明细台账',TaxExemptionDetails),
+        component:TaxExemptionDetails,
         name:'减免税明细台账',
         icon:{
             url:`${ICON_URL_PATH}taxExemptionDetails.svg`,
@@ -93,7 +94,7 @@ const OtherAccount_Routes = [
         exact:true,
     }*/,{
         path:`${PATH}/otherRevision`,
-        component:wrapPage('其他事项调整台账',OtherRevision),
+        component:OtherRevision,
         name:'其他事项调整台账',
         icon:{
             url:`${ICON_URL_PATH}otherRevision.svg`,

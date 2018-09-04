@@ -3,18 +3,19 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
-import RoomTransactionFile from './roomTransactionFile'
+import {AsyncComponent} from 'compoments'
 //import PrePaidSalesQuery from './prePaidHousingSales'
-import TaxReturnForm from './taxReturnForm'
-import FixedAssetCard from './fixedAssetCard'
-import FinancialDocuments from './financialDocuments'
-import IncomingInvoiceCollection from './incomingInvoiceCollection'
-import SalesInvoiceCollection from './salesInvoiceCollection'
-import AvailableArea from './availableArea'
-import AccountBalanceSheet from './accountBalanceSheet'
 
 import strategies from 'config/routingAuthority.config'
+
+const RoomTransactionFile = AsyncComponent(() => import('./roomTransactionFile'), '房间交易档案')
+const TaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '纳税申报表')
+const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '固定资产卡片')
+const FinancialDocuments = AsyncComponent(() => import('./financialDocuments'), '财务凭证')
+const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoiceCollection'), '进项发票采集')
+const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollection'), '销项发票采集')
+const AvailableArea = AsyncComponent(() => import('./availableArea'), '可售面积')
+const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), '科目余额表')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -34,7 +35,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{*/
         path:`${PATH}/roomTransactionFile`,
-        component:wrapPage('房间交易档案',RoomTransactionFile),
+        component:RoomTransactionFile,
         name:'房间交易档案',
         icon:{
             url:`${ICON_URL_PATH}roomTransactionFile.svg`,
@@ -55,7 +56,7 @@ const BusinessReport_Routes = [
         */
     },{
         path:`${PATH}/taxReturn`,
-        component:wrapPage('纳税申报表',TaxReturnForm),
+        component:TaxReturnForm,
         name:'纳税申报表',
         icon:{
             url:`${ICON_URL_PATH}taxReturn.svg`,
@@ -65,7 +66,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/fixedAssetCard`,
-        component:wrapPage('固定资产卡片',FixedAssetCard),
+        component:FixedAssetCard,
         name:'固定资产卡片',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCard.svg`,
@@ -75,7 +76,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/financialDocuments`,
-        component:wrapPage('财务凭证',FinancialDocuments),
+        component:FinancialDocuments,
         name:'财务凭证',
         icon:{
             url:`${ICON_URL_PATH}financialDocuments.svg`,
@@ -85,7 +86,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/incomingInvoiceCollection`,
-        component:wrapPage('进项发票采集',IncomingInvoiceCollection),
+        component:IncomingInvoiceCollection,
         name:'进项发票采集',
         icon:{
             url:`${ICON_URL_PATH}businessReportIncomingInvoiceCollection.svg`,
@@ -95,7 +96,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/salesInvoiceCollection`,
-        component:wrapPage('销项发票采集',SalesInvoiceCollection),
+        component:SalesInvoiceCollection,
         name:'销项发票采集',
         icon:{
             url:`${ICON_URL_PATH}businessReportSalesInvoiceCollection.svg`,
@@ -105,7 +106,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/availableArea`,
-        component:wrapPage('可售面积',AvailableArea),
+        component:AvailableArea,
         name:'可售面积',
         icon:{
             url:`${ICON_URL_PATH}availableArea.svg`,
@@ -115,7 +116,7 @@ const BusinessReport_Routes = [
         exact:true,
     },{
         path:`${PATH}/accountBalanceSheet`,
-        component:wrapPage('科目余额表',AccountBalanceSheet),
+        component:AccountBalanceSheet,
         name:'科目余额表',
         icon:{
             url:`${ICON_URL_PATH}accountBalanceSheet.svg`,

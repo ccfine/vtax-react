@@ -3,8 +3,8 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
-import OrganizationalStructureMaintenance from './organizationalStructureMaintenance'
+import {AsyncComponent} from 'compoments'
+const OrganizationalStructureMaintenance = AsyncComponent(() => import('./organizationalStructureMaintenance'), '组织架构维护')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/systemManage/organization`
@@ -12,7 +12,7 @@ const PATH = `/web/systemManage/organization`
 const Organization_Routes = [
     {
         path:`${PATH}/organizationalStructureMaintenance`,
-        component:wrapPage('组织架构维护',OrganizationalStructureMaintenance),
+        component:OrganizationalStructureMaintenance,
         name:'组织架构维护',
         icon:{
             url:`${ICON_URL_PATH}organizationalStructureMaintenance.svg`,

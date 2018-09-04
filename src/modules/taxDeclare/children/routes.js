@@ -4,21 +4,22 @@
  * description  :
  */
 //import LoadAble from 'react-loadable'
-import {wrapPage} from 'compoments'
+import {AsyncComponent} from 'compoments'
 import strategies from 'config/routingAuthority.config'
-
-import CreateADeclare from '../../taxDeclare/createADeclare'
-import SearchDeclare from '../../taxDeclare/searchDeclare'
-import DeclareHandle from '../../taxDeclare/declareHandle'
-import Create_LookDeclare from '../createADeclare/lookDeclare'
-import Handle_LookDeclare from '../declareHandle/lookDeclare'
-import Search_LookDeclare from '../searchDeclare/lookDeclare'
-import Handle_HandleDeclare from '../declareHandle/handleDeclare'
-import Handle_RevokeDeclare from '../declareHandle/revokeDeclare'
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/taxDeclare`
 const taxDeclare = strategies['taxDeclare'];
+
+const CreateADeclare = AsyncComponent(() => import('../../taxDeclare/createADeclare'), '创建申报')
+const DeclareHandle = AsyncComponent(() => import('../../taxDeclare/declareHandle'), '申报办理')
+const SearchDeclare = AsyncComponent(() => import('../../taxDeclare/searchDeclare'), '查询申报')
+
+const Create_LookDeclare = AsyncComponent(() => import('../createADeclare/lookDeclare'), '查看申报')
+const Handle_LookDeclare = AsyncComponent(() => import('../declareHandle/lookDeclare'), '查看申报')
+const Search_LookDeclare = AsyncComponent(() => import('../searchDeclare/lookDeclare'), '查看申报')
+const Handle_HandleDeclare = AsyncComponent(() => import('../declareHandle/handleDeclare'), '申报办理')
+const Handle_RevokeDeclare = AsyncComponent(() => import('../declareHandle/revokeDeclare'), '申报撤回')
 
 /*const AsyncCreateADeclare = LoadAble({
     loader: () => import('../../taxDeclare/createADeclare'),
@@ -38,7 +39,7 @@ const AsyncDeclareHandle = LoadAble({
 const Children_Routes = [
     {
         path:`${PATH}/createADeclare`,
-        component:wrapPage('创建申报',CreateADeclare),
+        component:CreateADeclare,
         name:'创建申报',
         icon:{
             url:`${ICON_URL_PATH}createADeclare.svg`,
@@ -48,13 +49,13 @@ const Children_Routes = [
         exact:true,
         children:[{
             path:`${PATH}/createADeclare/lookDeclare/:id`,
-            component:wrapPage('查看申报',Create_LookDeclare),
+            component:Create_LookDeclare,
             name:'查看申报',
             exact:true,
         }],
     },{
         path:`${PATH}/declareHandle`,
-        component:wrapPage('申报办理',DeclareHandle),
+        component:DeclareHandle,
         name:'申报办理',
         icon:{
             url:`${ICON_URL_PATH}declareHandle.svg`,
@@ -64,23 +65,23 @@ const Children_Routes = [
         exact:true,
         children:[{
             path:`${PATH}/declareHandle/lookDeclare/:id`,
-            component:wrapPage('查看申报',Handle_LookDeclare),
+            component:Handle_LookDeclare,
             name:'查看申报',
             exact:true,
         },{
             path:`${PATH}/declareHandle/handleDeclare/:id`,
-            component:wrapPage('申报办理',Handle_HandleDeclare),
+            component:Handle_HandleDeclare,
             name:'申报办理',
             exact:true,
         },{
             path:`${PATH}/declareHandle/revokeDeclare/:id`,
-            component:wrapPage('申报撤回',Handle_RevokeDeclare),
+            component:Handle_RevokeDeclare,
             name:'申报撤回',
             exact:true,
         }],
     },{
         path:`${PATH}/searchDeclare`,
-        component:wrapPage('查询申报',SearchDeclare),
+        component:SearchDeclare,
         name:'查询申报',
         icon:{
             url:`${ICON_URL_PATH}searchDeclare.svg`,
@@ -90,7 +91,7 @@ const Children_Routes = [
         exact:true,
         children:[{
             path:`${PATH}/searchDeclare/lookDeclare/:id`,
-            component:wrapPage('查看申报',Search_LookDeclare),
+            component:Search_LookDeclare,
             name:'查看申报',
             exact:true,
         }],
