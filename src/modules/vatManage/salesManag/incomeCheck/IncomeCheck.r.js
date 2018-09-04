@@ -157,7 +157,7 @@ const columns=[
         width:'100px',
     },
     {
-        title:'增值税申报销售额',
+        title:'结算价',
         dataIndex: "newSdValorem",
         render: text => fMoney(text),
         className: "table-money",
