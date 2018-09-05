@@ -260,12 +260,6 @@ class AvailableArea extends Component {
                         <span>
                             {
                                 composeBotton([{
-                                    type: 'fileExport',
-                                    url: 'interAvailableBuildingAreaInformation/download',
-                                }])
-                            }
-                            {
-                                composeBotton([{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
