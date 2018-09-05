@@ -395,7 +395,9 @@ class RoomTransactionFile extends Component{
          * */
         statusParam:'',
 
-        filters:{},
+        filters:{
+
+        },
         deleteLoading:false,
         totalSource:undefined,
         isShowImport:null,
@@ -496,7 +498,7 @@ class RoomTransactionFile extends Component{
                             })
                         },
                         columns:getColumns(this,(disabled && declare.decAction==='edit')),
-                        url: '/output/room/files/list',
+                        url: `/output/room/files/list?month=${this.props.declare.authMonth}`,
                         key:tableUpDateKey,
                         extra: <div>
                             {
@@ -571,7 +573,7 @@ class RoomTransactionFile extends Component{
                                     {
                                         title:'合计',
                                         total:[
-                                            {title: '结算价合计（不含税）', dataIndex: 'allTotalPrice'},
+                                            {title: '结算价合计（不含税）', dataIndex: 'allOldSdValorem'},
                                             {title: '已开票金额', dataIndex: 'allInvoicedAmount'},
                                         ],
                                     }
@@ -587,7 +589,7 @@ class RoomTransactionFile extends Component{
                         },
                         rowSelection:{
                             getCheckboxProps: record => ({
-                                disabled: parseInt(record.sourceType, 0)  === 2 || parseInt(record.matchingStatus, 0)  === 1, // Column configuration not to be checked
+                                disabled: parseInt(record.delete , 0) === 0 , // Column configuration not to be checked
                             }),
                         },
                         onRowSelect:isCheck?(selectedRowKeys)=>{

@@ -386,7 +386,7 @@ class RoomTransactionFile extends Component{
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '结算价合计（不含税）', dataIndex: 'allTotalPrice'},
+                                        {title: '结算价合计（不含税）', dataIndex: 'allOldSdValorem'},
                                         {title: '已开票金额', dataIndex: 'allInvoicedAmount'},
                                     ],
                                 }
