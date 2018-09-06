@@ -112,8 +112,8 @@ const getColumns = context => [/*{
         dataIndex: "mainName",
         width:'150px',
     },{
-        title: "纳税主体代码",
-        dataIndex: "mainId",
+        title: "纳税主体编码",
+        dataIndex: "mainNum",
         width:'150px',
     },{
         title: "NC公司名称",
