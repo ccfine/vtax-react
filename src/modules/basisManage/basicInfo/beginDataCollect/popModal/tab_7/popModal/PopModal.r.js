@@ -151,13 +151,13 @@ class PopModal extends Component {
                                     componentProps: {
                                         selectOptions:{
                                             labelInValue:true,
-                                            disabled: readonly,
+                                            disabled: readonly || isModify,
                                         },
                                         fieldTextName: "profitName",
                                         fieldValueName: "id",
-                                        doNotFetchDidMount: isModify,
+                                        doNotFetchDidMount: readonly,
                                         fetchAble:false,
-                                        url: `/taxsubject/profitCenterList/${this.props.mainId}?size=1000`,
+                                        url: `/taxsubject/profitCenterList/${this.props && this.props.mainId}?size=1000`,
                                     }
                                 }]
                             )
@@ -182,14 +182,14 @@ class PopModal extends Component {
                                 componentProps: {
                                     selectOptions:{
                                         labelInValue:true,
-                                        disabled: readonly ,
+                                        disabled: readonly || isModify,
                                     },
                                     fieldTextName: "itemName",
                                     fieldValueName: "id",
-                                    doNotFetchDidMount: !record.projectId,
-                                    fetchAble: (form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || record.projectId,
+                                    doNotFetchDidMount: !record.profitCenterId,
+                                    fetchAble: (form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId),
                                     url:`/project/stage/list?${parseJsonToParams({
-                                        profitCenterId:(form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || "",
+                                        profitCenterId:(form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId) || "",
                                         size:1000,
                                     })}`,
                                 }
