@@ -23,21 +23,20 @@ const table_1_columns = [{
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
     dataIndex: 'itemName',
-    width:'180px',
+    //width:'150px',
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'180px',
+    width:'150px',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'200px',
-    className:'text-center',
+    width:'150px',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
         text = parseInt(text,0);
         let selectCell = <SelectCell
-            //style={{ width:'120px' }}
+            style={{ width:'120px', margin: '0 auto' }}
             fieldName={`list[${record.id}].taxMethod`}
             options={[
                 {
@@ -268,7 +267,7 @@ class ProjectManagement extends Component{
                                                         })
                                                     },
                                                     scroll:{
-                                                        x:560,
+                                                        x:520,
                                                         y:window.screen.availHeight-320,
                                                     },
                                                 }} />
