@@ -405,11 +405,11 @@ class InvoiceCollection extends Component {
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         scroll: { x: 2140, y:window.screen.availHeight-380},
-                        rowSelection:{
+                        rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.mounted && this.setState({
                                 selectedRowKeys

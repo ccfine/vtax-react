@@ -370,11 +370,11 @@ class SalesInvoiceCollection extends Component {
                         // rowSelection:{
                         //     type: 'checkbox',
                         // },
-                        rowSelection:{
+                        rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.mounted && this.setState({
                                 selectedRowKeys

@@ -498,7 +498,7 @@ class RoomTransactionFile extends Component{
                             })
                         },
                         columns:getColumns(this,(disabled && declare.decAction==='edit')),
-                        url: `/output/room/files/list?month=${this.props.declare.authMonth}`,
+                        url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}`,
                         key:tableUpDateKey,
                         extra: <div>
                             {
@@ -587,13 +587,12 @@ class RoomTransactionFile extends Component{
                             x: 4150,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
-                        rowSelection:{
+                        rowSelection: isCheck ? {
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.delete , 0) === 0 , // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
-                            console.log(selectedRowKeys)
                             this.mounted && this.setState({
                                 selectedRowKeys
                             })

@@ -364,11 +364,11 @@ class unBilledSalesEstate extends Component{
                             selectedRowKeys
                         })
                     }:undefined,
-                    rowSelection:{
+                    rowSelection:isCheck?{
                         getCheckboxProps: record => ({
                             disabled: parseInt(record.doCheck, 0)  === 1, // Column configuration not to be checked
                         }),
-                    },
+                    }:undefined,
                     url:'/accountInitialUntaxedSales/list',
                     onSuccess:(params)=>{
                         this.setState({
