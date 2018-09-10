@@ -379,7 +379,21 @@ const getColumns = (context,disabled) => {
                 width:'150px',
             }
             ]
-        },
+        },{
+            title: '数据来源',
+            dataIndex: 'sourceType',
+            width: '100px',
+            render: text => {
+                text = parseInt(text, 0);
+                if (text === 1) {
+                    return '手工采集'
+                }
+                if (text === 2) {
+                    return '外部导入'
+                }
+                return text
+            }
+        }
     ]}
 class RoomTransactionFile extends Component{
     state={
@@ -584,7 +598,7 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 4150,
+                            x: 4250,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                         rowSelection: isCheck ? {
