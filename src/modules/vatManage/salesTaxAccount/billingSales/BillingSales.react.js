@@ -125,6 +125,10 @@ const notColumns = context =>[
         title: '栏次',
         dataIndex: 'name',
     },{
+        title: '税率',
+        dataIndex: 'taxRate',
+        render:text=>text? `${text}%`: text,
+    },{
         title: '开具增值税专用发票',
         children: [
             {

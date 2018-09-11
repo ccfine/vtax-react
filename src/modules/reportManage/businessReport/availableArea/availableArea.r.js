@@ -185,6 +185,9 @@ class AvailableArea extends Component {
         saveLoding:false,
         totalSource:{},
     }
+    update(){
+        this.setState({updateKey:Date.now()})
+    }
     save=(e)=>{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
