@@ -82,11 +82,12 @@ class SelectSearch extends Component {
                         label:'区域',
                         fieldName:'area',
                         type:'asyncSelect',
-                        span:8,
+                        span:10,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',
                             fieldValueName:'id',
+                            fieldOtherName:'code',
                             doNotFetchDidMount:false,
                             notShowAll:true,
                             url:`/sysOrganization/queryLoginAreas`,
@@ -106,7 +107,7 @@ class SelectSearch extends Component {
                         label:'组织',
                         fieldName:'org',
                         type:'asyncSelect',
-                        span:16,
+                        span:14,
                         formItemStyle:formItemLayout,
                         componentProps:{
                             fieldTextName:'name',

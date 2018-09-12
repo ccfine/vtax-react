@@ -203,7 +203,16 @@ export default class AsyncSelect extends Component{
                         >
                             {
                                 optionsData.map((item,i)=>(
-                                    <Option key={i} value={item[fieldValueName]}>
+                                    <Option title={
+                                            (fieldOtherName && fieldOtherName !== '')
+                                                ?
+                                                `${item[fieldOtherName]}-${item[fieldTextName]}`
+                                                :
+                                                item[fieldTextName]
+                                            }
+                                            key={i}
+                                            value={item[fieldValueName]}
+                                    >
                                         {
                                             (fieldOtherName && fieldOtherName !== '')
                                                 ?
