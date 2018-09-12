@@ -158,6 +158,20 @@ export default class AsyncSelect extends Component{
             selectOptions.onChange(...args,item)
         }
     }
+    onPopupScroll = (e)=>{
+        let target = e.target;
+        if (target.scrollHeight - target.scrollTop - target.offsetHeight < 1) {
+            let optionData = this.state.dataSource.concat([
+                111,
+                222,
+                333,
+                444,
+                555,
+                666
+            ]);
+            console.log(optionData)
+        }
+    }
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
@@ -169,9 +183,9 @@ export default class AsyncSelect extends Component{
         }else{
             const isShowAll = decoratorOptions && decoratorOptions.rules && decoratorOptions.rules.map(item=>item.required)[0] === true,
             newData = dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
-        initialValues = initialValue || (isShowAll ? undefined : '');
-        optionsData = isShowAll ? dataSource :  newData;
-    }
+            initialValues = initialValue || (isShowAll ? undefined : '');
+            optionsData = isShowAll ? dataSource :  newData;
+        }
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
@@ -185,6 +199,7 @@ export default class AsyncSelect extends Component{
                             placeholder={`请选择${label}`}
                             {...selectOptions}
                             onChange={this.onChange}
+                            //onPopupScroll={this.onPopupScroll} 滚动分页加载
                         >
                             {
                                 optionsData.map((item,i)=>(
