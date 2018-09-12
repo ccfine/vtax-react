@@ -159,6 +159,7 @@ class UserDetail extends Component {
                                 },
                                 componentProps:{
                                     fieldTextName:'name',
+                                    fieldOtherName:'code',
                                     fieldValueName:'id',
                                     doNotFetchDidMount:false,
                                     notShowAll:true,

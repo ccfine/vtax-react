@@ -111,6 +111,7 @@ class SelectSearch extends Component {
                         componentProps:{
                             fieldTextName:'name',
                             fieldValueName:'id',
+                            fieldOtherName:'code',
                             doNotFetchDidMount:!(area && area.areaId),
                             notShowAll:true,
                             fetchAble:(getFieldValue('area') && getFieldValue('area').key ) || (area && area.areaId),

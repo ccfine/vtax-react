@@ -15,6 +15,7 @@ export default class AsyncSelect extends Component{
         fieldName:PropTypes.string,
         initialValue:PropTypes.any,
         fieldTextName:PropTypes.string.isRequired,
+        fieldOtherName:PropTypes.string,  //给组织拼接显示的第一展示字段 code
         fieldValueName:PropTypes.string.isRequired,
         label:PropTypes.string.isRequired,
         url:PropTypes.string.isRequired,
@@ -160,7 +161,7 @@ export default class AsyncSelect extends Component{
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll,notShowAll} = this.props;
+        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll,notShowAll,fieldOtherName} = this.props;
         //TODO:为了设置所有不是必填的select都加上一个全部默认选项  notShowAll:是否添加无或者全部
         let optionsData = [], initialValues;
         if(notShowAll === true){
@@ -187,7 +188,15 @@ export default class AsyncSelect extends Component{
                         >
                             {
                                 optionsData.map((item,i)=>(
-                                    <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
+                                    <Option key={i} value={item[fieldValueName]}>
+                                        {
+                                            (fieldOtherName && fieldOtherName !== '')
+                                                ?
+                                                `${item[fieldOtherName]}-${item[fieldTextName]}`
+                                                :
+                                                item[fieldTextName]
+                                        }
+                                    </Option>
                                 ))
                             }
                         </Select>

@@ -173,10 +173,16 @@ class PermissionModal extends Component {
                                 },
                                 componentProps: {
                                     fieldTextName: "name",
+                                    fieldOtherName:'code',
                                     fieldValueName: "id",
                                     doNotFetchDidMount:!userId,
                                     fetchAble:userId,
                                     url: `/sysOrganization/queryOrgsByUserId/${userId}`,
+                                    selectOptions:{
+                                        defaultActiveFirstOption:true,
+                                        showSearch:true,
+                                        optionFilterProp:'children',
+                                    },
                                 },
                                 fieldDecoratorOptions: {
                                     initialValue: orgId,

@@ -25,6 +25,7 @@ const getSearchFields = (context,params) => [
         span: 8,
         componentProps: {
             fieldTextName: "name",
+            fieldOtherName:'code',
             fieldValueName: "id",
             url: `/sysOrganization/getOrganizations`,
             selectOptions:{
