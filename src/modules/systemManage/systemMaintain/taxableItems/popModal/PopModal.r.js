@@ -224,7 +224,7 @@ class PopModal extends Component{
                                         fieldDecoratorOptions:{
                                             initialValue:initData['name'],
                                             rules:[
-                                                regRules.input_length_25,
+                                                regRules.input_length_50,
                                                 {
                                                     required:true,
                                                     message:'请输入应税项目名称'
