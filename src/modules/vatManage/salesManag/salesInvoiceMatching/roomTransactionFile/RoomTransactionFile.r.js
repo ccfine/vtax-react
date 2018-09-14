@@ -7,7 +7,7 @@
 import React,{Component} from 'react'
 import {message,Alert,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig,parseJsonToParams} from 'utils'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
 import moment from "moment";
 const formItemStyle = {
     labelCol:{
@@ -98,6 +98,13 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         },
     },
     {
+        label:'交易月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        formItemStyle,
+        span:6,
+    },
+    {
         label:'利润中心',
         fieldName:'profitCenterId',
         type:'asyncSelect',
@@ -112,27 +119,6 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         }
     },
     {
-        label:'交易月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        formItemStyle,
-        span:6,
-    },
-    {
-        label:'项目名称',
-        fieldName:'projectId',
-        type:'asyncSelect',
-        span:6,
-        formItemStyle,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-            url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-        }
-    },
-    {
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
@@ -143,11 +129,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
             fieldValueName:'id',
             doNotFetchDidMount:true,
             fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-            url:`/project/stage/list?${parseJsonToParams({
-                profitCenterId:getFieldValue('profitCenterId') || '',
-                projectId:getFieldValue('projectId') || '',
-                size:1000,
-            })}`,
+            url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
     },
     {

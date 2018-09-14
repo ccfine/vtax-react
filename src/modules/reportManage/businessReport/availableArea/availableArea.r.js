@@ -12,44 +12,66 @@ import { NumericInputCell } from 'compoments/EditableCell'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
 import TableTitle from 'compoments/tableTitleWithTime'
+const formItemStyle = {
+    labelCol:{
+        sm:{
+            span:12,
+        },
+        xl:{
+            span:8
+        }
+    },
+    wrapperCol:{
+        sm:{
+            span:14
+        },
+        xl:{
+            span:16
+        }
+    }
+}
 const searchFields = (getFieldValue)=>[
     {
         label: "纳税主体",
+        fieldName: "mainId",
         type: "taxMain",
         span:8,
-        fieldName: "mainId",
+        formItemStyle,
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
                 message:'请选择纳税主体',
             }]
         }
-    },{
-        label: "项目名称",
-        fieldName: "projectId",
-        type: "asyncSelect",
+    },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
         span:8,
-        componentProps: {
-            fieldTextName: "itemName",
-            fieldValueName: "id",
-            doNotFetchDidMount: true,
-            fetchAble: getFieldValue("mainId"),
-            url: `/project/list/${getFieldValue("mainId")}`
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:false,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
         }
     },
     {
-        label: "项目分期",
-        fieldName: "stageId",
-        type: "asyncSelect",
+        label:'项目分期',
+        fieldName:'stagesId',
+        type:'asyncSelect',
         span:8,
-        componentProps: {
-            fieldTextName: "itemName",
-            fieldValueName: "id",
-            doNotFetchDidMount: true,
-            fetchAble: getFieldValue("projectId"),
-            url: `/project/stages/${getFieldValue("projectId") || ""}`
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+            url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
-    }
+    },
 ];
 
 const apiFields = (getFieldValue)=> [

@@ -9,7 +9,7 @@ import React from 'react'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
 import { SearchTable,TableTotal } from 'compoments'
-import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request,parseJsonToParams} from 'utils'
+import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
 import PopModal from './popModal'
 
 const formItemStyle = {
@@ -81,20 +81,6 @@ const searchFields = (disabled,declare) => getFieldValue => {
             }
         },
         {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:8,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        },
-        {
             label:'项目分期',
             fieldName:'stagesId',
             type:'asyncSelect',
@@ -105,11 +91,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stage/list?${parseJsonToParams({
-                    profitCenterId:getFieldValue('profitCenterId') || '',
-                    projectId:getFieldValue('projectId') || '',
-                    size:1000,
-                })}`,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },
     ]

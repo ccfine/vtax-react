@@ -32,8 +32,8 @@ const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
             type:'taxMain',
             span:6,
             componentProps:{
-                labelInValue:true,
                 disabled,
+                labelInValue:true,
             },
             formItemStyle,
             fieldDecoratorOptions:{
@@ -66,17 +66,17 @@ const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
             }
         },
         {
-            label:'项目名称',
-            fieldName:'projectId',
+            label:'利润中心',
+            fieldName:'profitCenterId',
             type:'asyncSelect',
             span:6,
             formItemStyle,
             componentProps:{
-                fieldTextName:'itemName',
+                fieldTextName:'profitName',
                 fieldValueName:'id',
-                doNotFetchDidMount:true,
+                doNotFetchDidMount:false,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
@@ -89,8 +89,8 @@ const searchFields=(disabled,declare)=>(getFieldValue,setFieldsValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },
         {
