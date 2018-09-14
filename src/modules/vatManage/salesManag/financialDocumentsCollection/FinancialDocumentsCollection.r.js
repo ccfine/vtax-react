@@ -118,11 +118,11 @@ const columns=[
         dataIndex: 'profitCenterName',
         width:'200px',
     },
-    {
+    /*{
         title: '项目名称',
         dataIndex: 'projectName',
         width:'200px',
-    },
+    },*/
     {
         title: '项目分期名称',
         dataIndex: 'stagesName',
@@ -212,7 +212,27 @@ const columns=[
         title: '贷方辅助核算代码',
         dataIndex: 'creditProjectNum',
         width:'150px',
-    }
+    },
+    {
+        title:'辅助核算明细',
+        children:[
+            {
+                title:'房间编码',
+                dataIndex:'invoiceNum',
+                width:'150px',
+            },
+            {
+                title:'能源转售类型',
+                dataIndex:'invoiceCode',
+                width:'150px',
+            },
+            {
+                title:'付款成本项目',
+                dataIndex:'invoiceCode',
+                width:'150px',
+            }
+        ]
+    },
 ];
 class FinancialDocumentsCollection extends Component{
     state={

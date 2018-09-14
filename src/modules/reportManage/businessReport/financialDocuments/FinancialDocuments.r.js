@@ -298,6 +298,26 @@ const getColumns = context =>[
         dataIndex: 'creditProjectNum',
         width:'150px',
     },
+    {
+        title:'辅助核算明细',
+        children:[
+            {
+                title:'房间编码',
+                dataIndex:'invoiceNum',
+                width:'150px',
+            },
+            {
+                title:'能源转售类型',
+                dataIndex:'invoiceCode',
+                width:'150px',
+            },
+            {
+                title:'付款成本项目',
+                dataIndex:'invoiceCode',
+                width:'150px',
+            }
+        ]
+    },
 ];
 class FinancialDocuments extends Component{
     state={

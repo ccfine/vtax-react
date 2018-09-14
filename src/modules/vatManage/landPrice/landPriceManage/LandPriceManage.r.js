@@ -223,6 +223,11 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         width:'150px',
     },
     {
+        title: '付款成本项目',
+        dataIndex: 'debitProjectNum',
+        width:'150px',
+    },
+    {
         title: '作为土地价款抵扣的凭证',
         dataIndex: 'deductionFlag',
         width:'150px',
