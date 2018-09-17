@@ -265,6 +265,7 @@ class NeedNotMatchInvoices extends Component{
                 backCondition={(filters)=>{
                     this.setState({
                         filters,
+                        selectedRowKeys:[],
                     },()=>{
                         this.fetchResultStatus()
                     })
