@@ -224,7 +224,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
     },
     {
         title: '付款成本项目',
-        dataIndex: 'debitProjectNum',
+        dataIndex: 'paymentItem',
         width:'150px',
     },
     {

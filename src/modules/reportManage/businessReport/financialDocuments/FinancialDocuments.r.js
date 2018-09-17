@@ -303,17 +303,17 @@ const getColumns = context =>[
         children:[
             {
                 title:'房间编码',
-                dataIndex:'invoiceNum',
+                dataIndex:'roomCode',
                 width:'150px',
             },
             {
                 title:'能源转售类型',
-                dataIndex:'invoiceCode',
+                dataIndex:'energyType',
                 width:'150px',
             },
             {
                 title:'付款成本项目',
-                dataIndex:'invoiceCode',
+                dataIndex:'paymentItem',
                 width:'150px',
             }
         ]
@@ -356,7 +356,7 @@ class FinancialDocuments extends Component{
                     pageSize:100,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
-                    scroll:{ x: 2800,y:window.screen.availHeight-450 },
+                    scroll:{ x: 3200,y:window.screen.availHeight-450 },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,

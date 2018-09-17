@@ -218,17 +218,17 @@ const columns=[
         children:[
             {
                 title:'房间编码',
-                dataIndex:'invoiceNum',
+                dataIndex:'roomCode',
                 width:'150px',
             },
             {
                 title:'能源转售类型',
-                dataIndex:'invoiceCode',
+                dataIndex:'energyType',
                 width:'150px',
             },
             {
                 title:'付款成本项目',
-                dataIndex:'invoiceCode',
+                dataIndex:'paymentItem',
                 width:'150px',
             }
         ]
