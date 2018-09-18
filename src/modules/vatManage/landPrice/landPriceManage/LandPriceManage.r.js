@@ -212,11 +212,11 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         },
         width:'100px',
     },
-    {
+    /*{
         title: '借方辅助核算名称',
         dataIndex: 'debitProjectName',
         width:'150px',
-    },
+    },*/
     {
         title: '借方辅助核算代码',
         dataIndex: 'debitProjectNum',
