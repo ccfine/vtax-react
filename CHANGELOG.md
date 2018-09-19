@@ -1,3 +1,4 @@
+test
 
 <a name="0.1.8"></a>
 ## [0.1.8](https://github.com/Slebee/vtax/compare/0.1.7...0.1.8) (2018-03-27)
