@@ -1,3 +1,11 @@
+<a name="0.3.2"></a>
+## [0.1.8](https://github.com/Slebee/vtax/compare/0.1.8...0.3.2) (2018-09-19)
+
+
+### Bug Fixes
+
+* **系统管理-用户权限-用户管理:** 修正组织查询条件为全部时，显示编码为undefined的bug ([0ef5caa](https://github.com/Slebee/vtax/commit/0ef5caa)), closes [#12362](http://120.76.154.196/zentao/bug-view-12362.html)
+
 <a name="0.1.8"></a>
 ## [0.1.8](https://github.com/Slebee/vtax/compare/0.1.7...0.1.8) (2018-03-27)
 
