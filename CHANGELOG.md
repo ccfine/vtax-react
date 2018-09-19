@@ -1,5 +1,5 @@
 <a name="0.3.2"></a>
-## [0.1.8](https://github.com/Slebee/vtax/compare/0.1.8...0.3.2) (2018-09-19)
+## [0.3.2](https://github.com/Slebee/vtax/compare/0.1.8...0.3.2) (2018-09-19)
 
 
 ### Bug Fixes
