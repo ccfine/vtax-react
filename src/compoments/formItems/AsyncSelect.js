@@ -216,7 +216,7 @@ export default class AsyncSelect extends Component{
                                         {
                                             (fieldOtherName && fieldOtherName !== '')
                                                 ?
-                                                `${item[fieldOtherName]}-${item[fieldTextName]}`
+                                                item['name'] === '全部' ? `${item[fieldTextName]}` : `${item[fieldOtherName] }-${item[fieldTextName]}`
                                                 :
                                                 item[fieldTextName]
                                         }
