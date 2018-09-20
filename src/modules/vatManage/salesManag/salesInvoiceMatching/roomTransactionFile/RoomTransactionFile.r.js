@@ -166,7 +166,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'datePicker',
+        type:'rangePicker',
         formItemStyle,
         span:6,
         /*componentProps:{
