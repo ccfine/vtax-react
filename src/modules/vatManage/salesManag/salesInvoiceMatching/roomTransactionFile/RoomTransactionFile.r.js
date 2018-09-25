@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-16 14:33:49
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-09-25 16:35:05
  *
  */
 import React,{Component} from 'react'
@@ -166,13 +166,20 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'datePicker',
+        type:'rangePicker',
         formItemStyle,
         span:6,
         /*componentProps:{
             format:'YYYY-MM-DD',
         }*/
     },
+    {
+        label:'确收时点',
+        fieldName:'agreeDate',
+        type:'datePicker',
+        formItemStyle,
+        span:6,
+    }
 ];
 
 const getColumns = (context,disabled) => {

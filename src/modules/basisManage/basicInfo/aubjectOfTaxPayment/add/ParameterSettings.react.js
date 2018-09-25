@@ -40,30 +40,30 @@ export default class ParameterSettings extends Component{
                                     disabled,
                                 },
                             },
-                            {
+                            // {
 
-                                label: '未使用喜盈佳发票平台',
-                                fieldName: 'taxSubjectConfigBO.unusedInvoicePlatform',
-                                type: 'checkbox',
-                                span: 8,
-                                formItemStyle:{
-                                    labelCol:{
-                                        span:20
-                                    },
-                                    wrapperCol:{
-                                        span:4
-                                    }
-                                },
-                                fieldDecoratorOptions: {
-                                    initialValue: defaultData!==null && parseInt(defaultData.unusedInvoicePlatform,0) === 1,
-                                    valuePropName: 'checked',
-                                },
-                                componentProps: {
-                                    disabled,
-                                },
+                            //     label: '未使用喜盈佳发票平台',
+                            //     fieldName: 'taxSubjectConfigBO.unusedInvoicePlatform',
+                            //     type: 'checkbox',
+                            //     span: 8,
+                            //     formItemStyle:{
+                            //         labelCol:{
+                            //             span:20
+                            //         },
+                            //         wrapperCol:{
+                            //             span:4
+                            //         }
+                            //     },
+                            //     fieldDecoratorOptions: {
+                            //         initialValue: defaultData!==null && parseInt(defaultData.unusedInvoicePlatform,0) === 1,
+                            //         valuePropName: 'checked',
+                            //     },
+                            //     componentProps: {
+                            //         disabled,
+                            //     },
 
 
-                            },
+                            // },
                             {
 
                                 label: '非地产收入不参与预缴税款抵减',
