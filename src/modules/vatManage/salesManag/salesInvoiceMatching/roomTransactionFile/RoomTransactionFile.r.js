@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-09-25 16:35:05
+ * @Last Modified time: 2018-09-26 12:15:08
  *
  */
 import React,{Component} from 'react'
@@ -175,8 +175,8 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     },
     {
         label:'确收时点',
-        fieldName:'agreeDate',
-        type:'datePicker',
+        fieldName:'confirmedDate',
+        type:'rangePicker',
         formItemStyle,
         span:6,
     }
@@ -526,7 +526,7 @@ class RoomTransactionFile extends Component{
                             {
                                 (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
                                     type:'fileImport',
-                                    url:'/output/room/files/upload',
+                                    url:'/output/room/files/upload/pre',
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1211005'],
                                     fields:importFeilds(filters,disabled,declare)
