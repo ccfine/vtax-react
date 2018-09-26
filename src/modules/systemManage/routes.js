@@ -18,6 +18,7 @@ import SystemMonitor_Routes from './systemMonitor/routes'*/
 const Organization = AsyncComponent(() => import('./organization'), '组织架构')
 const UserPermissions = AsyncComponent(() => import('./userPermissions'), '用户权限')
 const SystemMaintain = AsyncComponent(() => import('./systemMaintain'), '系统维护')
+const QueryLog = AsyncComponent(() => import("./queryLog"), "查询日志")
 const ImportData = AsyncComponent(() => import('./importData'), '导入')
 
 const PATH = `/web/systemManage`;
@@ -60,6 +61,12 @@ let SystemManage_Routes = [
          exact:true,
          children:SystemMonitor_Routes,
          authorityInfo:systemManage['systemMonitor'].options,*/
+    },
+    {
+      path: `${PATH}/queryLog`,
+      component: QueryLog,
+      name: "查询日志",
+      exact: true
     },
     {
         path:`${PATH}/importData`,
