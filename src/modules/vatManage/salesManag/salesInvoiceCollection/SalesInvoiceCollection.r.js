@@ -48,6 +48,30 @@ const fields = (disabled,declare)=> [
             ]
         },
     },
+    {
+        label: '开票月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: '请选择开票月份'
+                }
+            ]
+        },
+    }
 ]
 
 const searchFields = (disabled,declare) => {
