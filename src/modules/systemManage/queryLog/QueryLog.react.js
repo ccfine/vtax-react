@@ -36,7 +36,7 @@ const searchFields = () => {
     },
     {
       label: "纳税主体",
-      fieldName: "taxSubjectName",
+      fieldName: "mainName",
       type: "taxMain",
       span: 8,
       formItemStyle
@@ -49,7 +49,7 @@ const getColumns = () => {
     {
       title: "日志序号",
       dataIndex: "id",
-      width: "100px"
+      width: "150px"
     },
     {
       title: "时间",
@@ -57,13 +57,13 @@ const getColumns = () => {
       width: "200px"
     },
     {
-      title: "用户名",
+      title: "用户名/BIP账号",
       dataIndex: "username",
       width: "200px"
     },
     {
       title: "纳税主体",
-      dataIndex: "taxSubjectName",
+      dataIndex: "mainName",
       width: "300px"
     },
     {
