@@ -96,7 +96,7 @@ export default class QueryLog extends Component {
             columns: getColumns(),
             url: "/sysLog/list",
             cardProps: {
-              title: "登入日志"
+              title: "查询日志"
             }
           }}
         />
