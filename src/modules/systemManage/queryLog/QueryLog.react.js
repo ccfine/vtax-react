@@ -37,11 +37,7 @@ const searchFields = () => {
     {
       label: "纳税主体",
       fieldName: "mainName",
-<<<<<<< HEAD
-      type: "taxMain",
-=======
       type: "input",
->>>>>>> new_dev_930_version
       span: 8,
       formItemStyle
     }
@@ -51,14 +47,11 @@ const searchFields = () => {
 const getColumns = () => {
   return [
     {
-<<<<<<< HEAD
       title: "日志序号",
       dataIndex: "id",
       width: "150px"
     },
     {
-=======
->>>>>>> new_dev_930_version
       title: "时间",
       dataIndex: "createTime",
       width: "200px"
