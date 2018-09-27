@@ -150,6 +150,11 @@ const columns=[
         sorter: true,
     },
     {
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNumSap',
+        width:'100px',
+    },
+    {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
         width:'500px',
@@ -277,7 +282,7 @@ class FinancialDocumentsCollection extends Component{
                     pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 3200 ,y:window.screen.availHeight-450-(disabled?50:0)},
+                    scroll:{ x: 3300 ,y:window.screen.availHeight-450-(disabled?50:0)},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params

@@ -177,6 +177,11 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         width:'100px',
     },
     {
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNumSap',
+        width:'100px',
+    },
+    {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
         //width:'300px',
@@ -411,7 +416,7 @@ class LandPriceManage extends Component{
                         })
                     },
                     scroll:{
-                         x:2000,
+                         x:2100,
                          y:window.screen.availHeight-400-(disabled?50:0),
                     },
                 }}
