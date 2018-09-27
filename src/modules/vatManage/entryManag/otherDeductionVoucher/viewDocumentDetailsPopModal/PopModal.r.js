@@ -120,7 +120,7 @@ export default class ViewDocumentDetails extends Component{
                             项目分期：{record.stagesName}
                         </Col>
                     </Row>
-                    <Row gutter={24} style={{marginBottom: 20}}>
+                    <Row gutter={24} style={{marginBottom: 10}}>
                         <Col span={8}>
                             凭证日期：{record.voucherDate}
                         </Col>
@@ -129,6 +129,11 @@ export default class ViewDocumentDetails extends Component{
                         </Col>
                         <Col span={8}>
                             凭证号：{record.voucherNum}
+                        </Col>
+                    </Row>
+                    <Row gutter={24} style={{marginBottom: 20}}>
+                        <Col span={8}>
+                            SAP凭证号：{record.voucherNumSap}
                         </Col>
                     </Row>
 

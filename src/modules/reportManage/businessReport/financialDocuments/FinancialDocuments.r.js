@@ -236,6 +236,11 @@ const getColumns = context =>[
         sorter: true,
     },
     {
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNumSap',
+        width:'100px',
+    },
+    {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
         width:'500px',
@@ -356,7 +361,7 @@ class FinancialDocuments extends Component{
                     pageSize:100,
                     columns:getColumns(this),
                     url:'/inter/financial/voucher/report/list',
-                    scroll:{ x: 3200,y:window.screen.availHeight-450 },
+                    scroll:{ x: 3300,y:window.screen.availHeight-450 },
                     onSuccess: (params) => {
                         this.setState({
                             filters: params,
