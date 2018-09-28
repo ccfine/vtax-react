@@ -289,7 +289,7 @@ class SalesInvoiceCollection extends Component {
         statusParam: {},
         totalSource: undefined,
         selectedRowKeys:[],
-        isShowImport:null,
+        //isShowImport:null,
     };
     fetchResultStatus = () => {
         requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
@@ -363,7 +363,7 @@ class SalesInvoiceCollection extends Component {
         this.mounted = null;
     }
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading,isShowImport } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
@@ -383,7 +383,7 @@ class SalesInvoiceCollection extends Component {
                             filters,
                         },() => {
                             this.fetchResultStatus();
-                            this.fetchTaxSubjectConfig()
+                            //this.fetchTaxSubjectConfig()
                         });
                     }}
                     tableOption={{
@@ -428,7 +428,7 @@ class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
                                             type:'fileImport',
                                             url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,

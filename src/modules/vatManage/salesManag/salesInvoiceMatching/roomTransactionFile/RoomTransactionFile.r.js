@@ -50,7 +50,7 @@ const importFeilds = (filters,disabled,declare)=>[
                 }
             ]
         },
-    }, {
+    /*}, {
         label: '认证月份',
         fieldName: 'authMonth',
         type: 'monthPicker',
@@ -73,7 +73,7 @@ const importFeilds = (filters,disabled,declare)=>[
                     message: '请选择认证月份'
                 }
             ]
-        },
+        },*/
     }
 ]
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
