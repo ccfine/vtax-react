@@ -106,10 +106,17 @@ const searchFields = (getFieldValue)=> [
     {
         label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'datePicker',
+        type:'rangePicker',
         span:6,
         formItemStyle,
     },
+    {
+        label:'确收时点',
+        fieldName:'confirmedDate',
+        type:'rangePicker',
+        formItemStyle,
+        span:6,
+    }
 ]
 const columns = [{
         title:'纳税主体名称',
@@ -175,6 +182,11 @@ const columns = [{
         title:'合同约定交付日期',
         dataIndex:'agreeDate',
         width:'120px',
+    },
+    {
+        title:'确收时点',
+        dataIndex:'confirmedDate',
+        width:'100px',
     },
     {
         title:'楼栋名称',
