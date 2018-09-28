@@ -1,14 +1,14 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-09-26 12:15:08
+ * @Last Modified time: 2018-09-28 14:20:09
  *
  */
 import React,{Component} from 'react'
 import {message,Alert,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
-import moment from "moment";
+// import moment from "moment";
 const formItemStyle = {
     labelCol:{
         sm:{
