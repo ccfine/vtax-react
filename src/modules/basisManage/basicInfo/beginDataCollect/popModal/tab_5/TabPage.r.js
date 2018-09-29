@@ -53,12 +53,12 @@ const getColumns = context=>{
             <a
                 onClick={() => context.showModal('look',record.id)}
                 title="查看详情">
-                    {text}
+                {text}
             </a>
         )
     }, {
-        title: '项目',
-        dataIndex: 'projectName',
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
     }, {
         title: '项目分期',
         dataIndex: 'stagesName',
@@ -76,7 +76,7 @@ const getColumns = context=>{
         title: '累计销售土地面积',
         dataIndex: 'salesArea',
     }
-];
+    ];
 }
 
 export default class TabPage extends Component{
@@ -112,8 +112,8 @@ export default class TabPage extends Component{
                 message.error(data.msg, 4);
             }
         }).catch(err => {
-                message.error(err.message);
-            })
+            message.error(err.message);
+        })
     }
     componentWillReceiveProps(props){
         if(props.updateKey !== this.props.updateKey){

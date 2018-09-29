@@ -77,6 +77,7 @@ class PermissionFeilds extends React.Component {
         });
     }
     checkDisabled = permissionId => {
+        //TODO: 角色里面分配出来的不能选
         return this.props.disabledPermission.indexOf(permissionId) > -1;
     };
     initCheckboxAll = (data) => {

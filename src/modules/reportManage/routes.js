@@ -3,17 +3,18 @@
  * createTime   : 2017/12/15 18:09
  * description  :
  */
-import {wrapPage} from 'compoments'
-import BusinessReport from './businessReport'
+import {AsyncComponent} from 'compoments'
 
 import BusinessReport_Routes from './businessReport/routes'
 import { getChildOptions } from 'config/routingAuthority.config'
+
+const BusinessReport = AsyncComponent(() => import('./businessReport'), '业务报表')
 
 const PATH = `/web/reportManage`;
 const ReportManage_Routes = [
     {
         path:`${PATH}/businessReport`,
-        component:wrapPage('业务报表',BusinessReport),
+        component:BusinessReport,
         name:'业务报表',
         exact:true,
         children:BusinessReport_Routes,

@@ -3,11 +3,12 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
-import RoleManage from './roleManage'
-import UserManage from './userManage'
-import UserManagementDetail from './userManage/userManagementDetail'
-import RoleManagementDetail from './roleManage/roleManagementDetail'
+import {AsyncComponent} from 'compoments'
+
+const RoleManage = AsyncComponent(() => import('./roleManage'), '角色管理')
+const UserManage = AsyncComponent(() => import('./userManage'), '用户管理')
+const RoleManagementDetail = AsyncComponent(() => import('./roleManage/roleManagementDetail'), '角色管理详情')
+const UserManagementDetail = AsyncComponent(() => import('./userManage/userManagementDetail'), '用户管理详情')
 
 const ICON_URL_PATH = '/assets/routes_avatar/';
 const PATH = `/web/systemManage/userPermissions`;
@@ -15,7 +16,7 @@ const PATH = `/web/systemManage/userPermissions`;
 const UserPermissions_Routes = [
     {
         path:`${PATH}/roleManage`,
-        component:wrapPage('角色管理',RoleManage),
+        component:RoleManage,
         name:'角色管理',
         icon:{
             url:`${ICON_URL_PATH}roleManage.svg`,
@@ -24,7 +25,7 @@ const UserPermissions_Routes = [
         exact:true,
     },{
         path:`${PATH}/userManage`,
-        component:wrapPage('用户管理',UserManage),
+        component:UserManage,
         name:'用户管理',
         icon:{
             url:`${ICON_URL_PATH}userManage.svg`,
@@ -43,12 +44,12 @@ const UserPermissions_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/roleManage/:id`,
-        component:wrapPage('角色管理详情',RoleManagementDetail),
+        component:RoleManagementDetail,
         name:'角色管理详情',
         exact:true
     },{
         path:`${PATH}/userManage/:id`,
-        component:wrapPage('用户管理详情',UserManagementDetail),
+        component:UserManagementDetail,
         name:'用户管理详情',
         exact:true
     },{

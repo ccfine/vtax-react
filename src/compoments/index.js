@@ -24,6 +24,9 @@ import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
 
+
+/**react懒加载组件*/
+import AsyncComponent from './asyncComponent'
 export {
     RouteWithSubRoutes,
     wrapPage,
@@ -44,4 +47,5 @@ export {
     TreeTable,
     LoadingPage,
     TableTotal,
+    AsyncComponent,
 }

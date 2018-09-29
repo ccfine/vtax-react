@@ -9,7 +9,7 @@ import React from 'react'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
 import { SearchTable,TableTotal } from 'compoments'
-import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
+import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request,parseJsonToParams} from 'utils'
 import PopModal from './popModal'
 
 const formItemStyle = {
@@ -67,33 +67,51 @@ const searchFields = (disabled,declare) => getFieldValue => {
             }
         },
         {
-            label: '项目名称',
-            fieldName: 'projectId',
-            type: 'asyncSelect',
-            span: 8,
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
             formItemStyle,
-            componentProps: {
-                fieldTextName: 'itemName',
-                fieldValueName: 'id',
-                doNotFetchDidMount: true,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url: `/project/list/${getFieldValue('main') && getFieldValue('main').key}`
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
-            label: '项目分期',
-            fieldName: 'stagesId',
-            type: 'asyncSelect',
-            span: 8,
+            label:'项目名称',
+            fieldName:'projectId',
+            type:'asyncSelect',
+            span:8,
             formItemStyle,
-            componentProps: {
-                fieldTextName: 'itemName',
-                fieldValueName: 'id',
-                doNotFetchDidMount: true,
-                fetchAble: getFieldValue('projectId') || false,
-                url: `/project/stages/${getFieldValue('projectId') || ''}`
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
-        }
+        },
+        {
+            label:'项目分期',
+            fieldName:'stagesId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                url:`/project/stage/list?${parseJsonToParams({
+                    profitCenterId:getFieldValue('profitCenterId') || '',
+                    projectId:getFieldValue('projectId') || '',
+                    size:1000,
+                })}`,
+            }
+        },
     ]
 }
 
@@ -130,11 +148,16 @@ const searchFields = (disabled,declare) => getFieldValue => {
 
 
 const columns = [
-	{
+    {
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'200px',
+    },
+	/*{
 		title: '纳税主体',
         dataIndex: 'mainName',
         width:'200px',
-	},
+	},*/
 	{
 		title: '项目分期名称',
 		dataIndex: 'stagesName',

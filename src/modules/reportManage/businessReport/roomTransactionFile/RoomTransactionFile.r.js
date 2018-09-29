@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton} from 'utils'
+import {fMoney,composeBotton,parseJsonToParams} from 'utils'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
 import TableTitle from 'compoments/tableTitleWithTime'
@@ -40,6 +40,20 @@ const searchFields = (getFieldValue)=> [
         },
     },
     {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:6,
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:false,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
+        }
+    },
+    {
         label:'项目名称',
         fieldName:'projectId',
         type:'asyncSelect',
@@ -48,7 +62,7 @@ const searchFields = (getFieldValue)=> [
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
-            doNotFetchDidMount:true,
+            doNotFetchDidMount:false,
             fetchAble:getFieldValue('mainId') || false,
             url:`/project/list/${getFieldValue('mainId')}`,
         }
@@ -63,8 +77,12 @@ const searchFields = (getFieldValue)=> [
             fieldTextName:'itemName',
             fieldValueName:'id',
             doNotFetchDidMount:true,
-            fetchAble:getFieldValue('projectId') || false,
-            url:`/project/stages/${getFieldValue('projectId') || ''}`,
+            fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+            url:`/project/stage/list?${parseJsonToParams({
+                profitCenterId:getFieldValue('profitCenterId') || '',
+                projectId:getFieldValue('projectId') || '',
+                size:1000,
+            })}`,
         }
     },
     {
@@ -104,9 +122,9 @@ const searchFields = (getFieldValue)=> [
     //     ]
     // },
     {
-        label:'房间交付期间',
+        label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'monthPicker',
+        type:'datePicker',
         span:6,
         formItemStyle,
     },
@@ -115,55 +133,73 @@ const columns = [{
         title:'纳税主体名称',
         dataIndex:'mainName',
         width:'150px',
-    },{
+    },
+    {
         title:'纳税主体编码',
         dataIndex:'mainCode',
         width:'100px',
-    },{
+    },
+    {
         title:'客户名称',
         dataIndex:'customerName',
         width:'150px',
-    },{
+    },
+    {
         title:'身份证号/纳税识别号',
         dataIndex:'taxIdentificationCode',
         width:'150px',
-    },{
+    /*},
+    {
         title:'项目名称',
         dataIndex:'projectName',
         width:'150px',
-    },{
+    },
+    {
         title:'项目编码',
         dataIndex:'projectCode',
-        width:'100px',
-    },{
+        width:'100px',*/
+    },
+    {
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'200px',
+    },
+    {
         title:'项目分期名称',
         dataIndex:'stagesName',
         width:'150px',
-    },{
+    },
+    {
         title:'项目分期编码',
         dataIndex:'stagesCode',
         width:'100px',
-    },{
+    },
+    {
         title:'交易月份',
         dataIndex:'authMonth',
         width:'100px',
-    },{
+    },
+    {
         title:'交易日期',
         dataIndex:'transactionDate',
         width:'100px',
-    },{
+    },
+    {
         title:'房间交付期间',
         dataIndex:'deliveryDate',
         width:'100px',
-    },{
+    },
+    {
         title:'合同约定交付日期',
         dataIndex:'agreeDate',
         width:'120px',
-    },{
+    },
+    {
         title:'楼栋名称',
         dataIndex:'buildingName',
         width:'200px',
-    },{
+    },
+    {
         title:'单元',
         dataIndex:'element',
         width:'100px',
@@ -186,7 +222,8 @@ const columns = [{
         title:'房间编码',
         dataIndex:'roomCode',
         width:'100px',
-    },{
+    },
+    {
         title:'成交金额',
         className:'table-money',
         dataIndex:'dealPrice',
@@ -228,37 +265,42 @@ const columns = [{
         className:'text-right',
         render:text=>text? `${text}%`: text,
         width:'100px',
-    },{
+    },
+    {
         title:'价税合计',
         dataIndex:'sdValorem',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
-    },{
+    },
+    {
         title:'装修款（不含税）',
         dataIndex:'decorationValorem',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
-    },{
-        title:'毛胚结算价（不含税）',
+    },
+    {
+        title:'毛坯结算价（不含税）',
         dataIndex:'embryoSdValorem',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
-    },{
+    },
+    {
         title:'结算价合计（不含税）',
         dataIndex:'oldSdValorem',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
-    },{
+    },
+    {
         title:'发票信息',
         children:[{
             title:'发票号码集',
             dataIndex:'invoiceNum',
             width:'150px',
-        },{
+        }, {
             title:'发票代码集',
             dataIndex:'invoiceCode',
             width:'150px',

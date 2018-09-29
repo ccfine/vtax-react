@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Modal,Form,Button,message,Spin,Row} from 'antd'
-import {getFields,request} from 'utils'
+import {getFields,request,parseJsonToParams} from 'utils'
 import moment from 'moment'
 const formItemLayout = {
     labelCol: {
@@ -67,7 +67,8 @@ class PopModal extends Component{
                 // 处理利润中心
                 if(values.profitCenter){
                     values.profitCenterId = values.profitCenter.key;
-                    values.profitCenter = values.profitCenter.label;
+                    values.profitCenterName = values.profitCenter.label;
+                    delete values.profitCenter;
                 }
                 // 处理项目
                 if(values.project){
@@ -191,15 +192,15 @@ class PopModal extends Component{
                             formItemStyle:formItemLayout,
                             fieldDecoratorOptions:{
                                 initialValue: (record && record.profitCenterId) ? {
-                                    label:record.profitCenter,
+                                    label:record.profitCenterName,
                                     key:record.profitCenterId
                                 } : undefined,
-                                // rules:[
-                                //     {
-                                //         required:true,
-                                //         message:'请选择利润中心'
-                                //     }
-                                // ]
+                                rules:[
+                                    {
+                                        required:true,
+                                        message:'请选择利润中心'
+                                    }
+                                ]
                             },
                             componentProps:{
                                 selectOptions:{
@@ -207,11 +208,11 @@ class PopModal extends Component{
                                     disabled:readonly,
                                     placeholder:readonly?'':'请选择利润中心',
                                 },
-                                fieldTextName:'itemName',
+                                fieldTextName:'profitName',
                                 fieldValueName:'id',
-                                doNotFetchDidMount:true,
+                                doNotFetchDidMount:false,
                                 fetchAble:false,
-                                url:`/project/stages/${getFieldValue('project') && getFieldValue('project').key}`,
+                                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key) || (declare && declare.mainId)}`,
                             }
                         }
                     ])
@@ -220,7 +221,7 @@ class PopModal extends Component{
                     <Row>
                         {
                         getFields(form,[{
-                            label:'项目名称',
+                            /*label:'项目名称',
                             fieldName:'project',
                             type:'asyncSelect',
                             span:12,
@@ -249,7 +250,7 @@ class PopModal extends Component{
                                 url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key) || (declare && declare.mainId)}`,
                             }
                         },
-                        {
+                        {*/
                             label:'项目分期',
                             fieldName:'stages',
                             type:'asyncSelect',
@@ -274,9 +275,12 @@ class PopModal extends Component{
                                 },
                                 fieldTextName:'itemName',
                                 fieldValueName:'id',
-                                doNotFetchDidMount:!(record && record.projectId),
-                                fetchAble:getFieldValue('project') || (record && record.projectId) || false,
-                                url:`/project/stages/${(getFieldValue('project') && getFieldValue('project').key) || (record && record.projectId)}`,
+                                doNotFetchDidMount:!(record && record.profitCenterId),
+                                fetchAble:getFieldValue('profitCenter') || (record && record.profitCenterId) || false,
+                                url:`/project/stage/list?${parseJsonToParams({
+                                    profitCenterId:(getFieldValue('profitCenter') && getFieldValue('profitCenter').key) || (record && record.profitCenterId),
+                                    size:1000,
+                                })}`,
                             }
                         }
                     ])

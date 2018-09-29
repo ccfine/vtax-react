@@ -115,6 +115,7 @@ class AddPopModal extends Component{
 
     render(){
         const props = this.props;
+        const {getFieldValue} = props.form;
         const {record,loaded} = this.state;
         let title='';
         const action = props.action;
@@ -213,8 +214,8 @@ class AddPopModal extends Component{
                                         formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:record.num,
-                                            rules:[
-                                                {
+                                            rules: [
+                                                (parseInt(getFieldValue('invoiceType'), 0) !== 7 ) && {
                                                     required:true,
                                                     message:'请输入凭据份数'
                                                 }
@@ -228,8 +229,8 @@ class AddPopModal extends Component{
                                         formItemStyle,
                                         fieldDecoratorOptions:{
                                             initialValue:record.amount,
-                                            rules:[
-                                                {
+                                            rules: [
+                                                (parseInt(getFieldValue('invoiceType'), 0) !== 4 && parseInt(getFieldValue('invoiceType'), 0) !== 7  ) && {
                                                     required:true,
                                                     message:'请输入金额'
                                                 }

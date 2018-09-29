@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 import moment from 'moment';
 const formItemStyle = {
@@ -69,6 +69,20 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             },
         },
         {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            }
+        },
+        {
             label:'项目名称',
             fieldName:'projectId',
             type:'asyncSelect',
@@ -77,9 +91,9 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
-                doNotFetchDidMount:true,
+                doNotFetchDidMount:false,
                 fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${getFieldValue('main') && getFieldValue('main').key}`,
+                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
@@ -92,13 +106,22 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                url:`/project/stage/list?${parseJsonToParams({
+                    profitCenterId:getFieldValue('profitCenterId') || '',
+                    projectId:getFieldValue('projectId') || '',
+                    size:1000,
+                })}`,
             }
-        }
+        },
     ]
 }
 const columns = [
+    {
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'200px',
+    },
     {
         title:'房间交易档案',
         children:[ {
@@ -360,7 +383,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:1950,
+                        x:2150,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     onTotalSource: (totalSource) => {

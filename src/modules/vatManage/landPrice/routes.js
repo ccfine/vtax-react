@@ -3,12 +3,14 @@
  * createTime   : 2017/12/15 18:04
  * description  :
  */
-import {wrapPage} from 'compoments'
-import LandPriceManage from './landPriceManage'
+import {AsyncComponent} from 'compoments'
 /*import LandArea from './landArea'*/
-import OtherTaxableItemsDeduct from './otherTaxableItemsDeduct'
 import strategies from 'config/routingAuthority.config'
-import LandPriceDeductionDetails from './landPriceDeductionDetails'
+
+
+const LandPriceManage = AsyncComponent(() => import('./landPriceManage'), '土地价款管理')
+const LandPriceDeductionDetails = AsyncComponent(() => import('./landPriceDeductionDetails'), '土地价款扣除明细台账')
+const OtherTaxableItemsDeduct = AsyncComponent(() => import('./otherTaxableItemsDeduct'), '其他应税项目扣除台账')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/landPrice`;
@@ -17,7 +19,7 @@ const landPrice = strategies['vatManage']['landPrice'];
 const LandPrice_Routes = [
     {
         path:`${PATH}/landPriceManage`,
-        component:wrapPage('土地价款管理',LandPriceManage),
+        component:LandPriceManage,
         name:'土地价款管理',
         icon:{
             url:`${ICON_URL_PATH}landPriceManage.svg`,
@@ -37,7 +39,7 @@ const LandPrice_Routes = [
         exact:true,*/
     },{
         path:`${PATH}/landPriceDeductionDetails`,
-        component:wrapPage('土地价款扣除明细台账',LandPriceDeductionDetails),
+        component:LandPriceDeductionDetails,
         name:'土地价款扣除明细台账',
         icon:{
             url:`${ICON_URL_PATH}landPriceDeductionDetails.svg`,
@@ -47,7 +49,7 @@ const LandPrice_Routes = [
         exact:true,
     },{
         path:`${PATH}/otherTaxableItemsDeduct`,
-        component:wrapPage('其他应税项目扣除台账',OtherTaxableItemsDeduct),
+        component:OtherTaxableItemsDeduct,
         name:'其他应税项目扣除台账',
         icon:{
             url:`${ICON_URL_PATH}otherTaxableItemsDeduct.svg`,
