@@ -95,8 +95,8 @@ const searchFields = (disabled,declare) =>(getFieldValue)=>[
         formItemStyle,
     },
     {
-        label:'凭证号',
-        fieldName:'voucherNum',
+        label:'SAP凭证号',
+        fieldName:'voucherNumSap',
         span:8,
         formItemStyle,
     }
@@ -142,17 +142,18 @@ const columns=[
         title: '过账日期',
         dataIndex: 'billingDate',
         width:'100px',
-    },
+    /*},
     {
         title: '凭证号',
         dataIndex: 'voucherNum',
         width:'100px',
-        sorter: true,
+        sorter: true,*/
     },
     {
         title: 'SAP凭证号',
         dataIndex: 'voucherNumSap',
         width:'100px',
+        sorter: true,
     },
     {
         title: '凭证摘要',
@@ -282,7 +283,7 @@ class FinancialDocumentsCollection extends Component{
                     pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 3300 ,y:window.screen.availHeight-450-(disabled?50:0)},
+                    scroll:{ x: 3200 ,y:window.screen.availHeight-450-(disabled?50:0)},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params
