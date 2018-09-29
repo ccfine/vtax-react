@@ -35,7 +35,7 @@ const searchFields = () => {
       formItemStyle
     },
     {
-      label: "纳税主体",
+      label: "组织",
       fieldName: "mainName",
       type: "input",
       span: 8,
@@ -62,7 +62,7 @@ const getColumns = () => {
       width: "200px"
     },
     {
-      title: "纳税主体",
+      title: "组织",
       dataIndex: "mainName",
       width: "300px"
     },
