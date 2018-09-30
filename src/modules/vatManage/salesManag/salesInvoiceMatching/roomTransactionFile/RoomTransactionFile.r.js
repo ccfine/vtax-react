@@ -527,6 +527,7 @@ class RoomTransactionFile extends Component{
                                 (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
                                     type:'fileImport',
                                     url:'/output/room/files/upload/pre',
+                                    uploadUrl:'/output/room/files/upload',
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1211005'],
                                     fields:importFeilds(filters,disabled,declare)
