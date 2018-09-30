@@ -50,7 +50,7 @@ class SearchTable extends Component{
             for(let key in nextProps.searchOption.filters){
                 if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
                     this.mounted && this.setState({
-                        filters:nextProps.searchOption.filters
+                        filters:nextProps.searchOption.filters,
                     })
                 }
             }

@@ -91,13 +91,14 @@ export default class QueryLog extends Component {
             fields: searchFields()
           }}
           tableOption={{
-            key: this.state.updateKey,
-            pageSize: 100,
-            columns: getColumns(),
-            url: "/sysLog/list",
-            cardProps: {
-              title: "查询日志"
-            }
+              key: this.state.updateKey,
+              pageSize: 100,
+              columns: getColumns(),
+              url: "/sysLog/list",
+              scroll:{ y:window.screen.availHeight-350},
+              cardProps: {
+                title: "查询日志"
+              },
           }}
         />
       </div>
