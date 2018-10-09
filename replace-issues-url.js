@@ -10,6 +10,7 @@ const CHANDAO_ISSUES_URL = 'http://120.76.154.196/zentao/bug-view-',
     nextStr = text.replace(reg,($1,$2,$3)=>{
         return `${CHANDAO_ISSUES_URL}${$3}.html`;
     })
+
 fs.writeFile("CHANGELOG.md",nextStr,function(err){
     if(err){
         console.log(err);
