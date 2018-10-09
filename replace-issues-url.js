@@ -5,7 +5,6 @@
 "use strict"
 let fs = require("fs");
 const CHANDAO_ISSUES_URL = 'http://120.76.154.196/zentao/bug-view-',
-
     text = fs.readFileSync("CHANGELOG.md","utf-8"),
     reg = /(http:\/\/git\.servingcloud\.com\/web\/vtax\/issues\/)(\d*)/g,
     nextStr = text.replace(reg,($1,$2,$3)=>{
