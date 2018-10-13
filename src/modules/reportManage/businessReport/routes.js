@@ -16,6 +16,8 @@ const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoice
 const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollection'), '销项发票采集')
 const AvailableArea = AsyncComponent(() => import('./availableArea'), '可售面积')
 const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), '科目余额表')
+const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
+const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "自持类产品关联清单")
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -124,7 +126,30 @@ const BusinessReport_Routes = [
         },
         authorityInfo:businessReport['accountBalanceSheet'].options,
         exact:true,
-    },{
+    },
+    {
+        path: `${PATH}/selfContainedProductAssociation`,
+        component: SelfContainedProductAssociation,
+        name: "自持类产品关联进项发票",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductAssociation.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["selfContainedProductAssociation"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/selfContainedProductList`,
+        component: SelfContainedProductList,
+        name: "自持类产品清单",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductList.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["selfContainedProductList"].options,
+        exact: true
+    },
+    {
         path:`${PATH}`,
         redirect:true,
         to:`${PATH}/generalTaxpayerVATReturn`,
