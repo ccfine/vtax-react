@@ -6,8 +6,9 @@
 
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import { message, Modal } from "antd"
 import { SearchTable, TableTotal } from "compoments"
-import { listMainResultStatus, composeBotton } from "util"
+import { listMainResultStatus, composeBotton, request, requestResultStatus } from "utils"
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -120,158 +121,215 @@ const searchFields = getFieldValue => [
   }
 ]
 
-const columns = [
-  {
-    title: "利润中心",
-    dataIndex: "profitCenterName",
-    width: "200px"
-  },
-  {
-    title: "项目分期名称",
-    dataIndex: "stagesName",
-    width: "200px"
-  },
-  {
-    title: "产品名称",
-    dataIndex: "productName",
-    width: "200px"
-  },
-  {
-    title: "产品编码",
-    dataIndex: "productCode",
-    width: "200px"
-  },
-  {
-    title: "产品类型",
-    dataIndex: "productType",
-    width: "200px"
-  },
-  {
-    title: "发票号码",
-    dataIndex: "invoiceNumber",
-    width: "200px"
-  },
-  {
-    title: "发票代码",
-    dataIndex: "invoiceCode",
-    width: "200px"
-  },
-  {
-    title: "认证标记",
-    dataIndex: "certificationMark",
-    width: "200px"
-  },
-  {
-    title: "认证月份",
-    dataIndex: "certificationMonth",
-    width: "200px"
-  },
-  {
-    title: "拆分前发票号码",
-    dataIndex: "boforeInvoiceCode",
-    width: "200px"
-  },
-  {
-    title: "开票日期",
-    dataIndex: "makeOutInvoiceDate",
-    width: "200px"
-  },
-  {
-    title: "发票类型",
-    dataIndex: "invoiceType",
-    width: "200px"
-  },
-  {
-    title: "不含税金额",
-    dataIndex: "noTaxAmount",
-    width: "200px"
-  },
-  {
-    title: "税率",
-    dataIndex: "rate",
-    width: "100px"
-  },
-  {
-    title: "进项税额",
-    dataIndex: "inputTax",
-    width: "200px"
-  },
-  {
-    title: "价税合计",
-    dataIndex: "taxTotal",
-    width: "200px"
-  },
-  {
-    title: "拆分比例",
-    dataIndex: "splitRatio",
-    width: "200px"
-  },
-  {
-    title: "已拆分金额",
-    dataIndex: "amountSplit",
-    width: "200px"
-  },
-  {
-    title: "最新更新日期",
-    dataIndex: "lastUpdateDate",
-    width: "200px"
-  }
-]
-
-const apiFields = getFieldValue => [
-  {
-      label: "纳税主体",
-      fieldName: "mainId",
-      type: "taxMain",
-      span: 20,
-      fieldDecoratorOptions: {
-          rules: [{
-              required: true,
-              message: "请选择纳税主体"
-          }]
-      }
-  },
-  {
-      label: "抽取月份",
-      fieldName: "authMonth",
-      type: "monthPicker",
-      span: 20,
-      fieldDecoratorOptions: {
-          rules: [{
-              required: true,
-              message: "请选择抽取月份"
-          }]
-      }
-  }
-]
+const getColumns = (context, disabled) => {
+  let operates = (disabled && parseInt(context.state.statusParam.status,0) ===1 )?[{
+      title: "操作",
+      key: "actions",
+      fixed: true,
+      className: "text-center",
+      width: "50px",
+      render: (text, record) => composeBotton([{
+              type: "action",
+              title: "解除匹配",
+              icon: "disconnect",
+              style: { color: "#f5222d"},
+              userPermissions: [],
+              onSuccess: () => {
+                  const modalRef = Modal.confirm({
+                      title: "友情提醒",
+                      content: "是否要解除匹配？",
+                      okText: "确定",
+                      okType: "danger",
+                      cancelText: "取消",
+                      onOk: () => {
+                          context.deleteRecord(record.id, () => {
+                              modalRef && modalRef.destroy()
+                              context.props.refreshTabs()
+                          })
+                      },
+                      onCancel () {
+                          modalRef.destroy()
+                      }
+                  })
+              }}])
+  }]:[]
+  return [...operates,
+    {
+      title: "利润中心",
+      dataIndex: "profitCenterName",
+      width: "200px"
+    },
+    {
+      title: "项目分期名称",
+      dataIndex: "stagesName",
+      width: "200px"
+    },
+    {
+      title: "产品名称",
+      dataIndex: "productName",
+      width: "200px"
+    },
+    {
+      title: "产品编码",
+      dataIndex: "productCode",
+      width: "200px"
+    },
+    {
+      title: "产品类型",
+      dataIndex: "productType",
+      width: "200px"
+    },
+    {
+      title: "发票号码",
+      dataIndex: "invoiceNumber",
+      width: "200px"
+    },
+    {
+      title: "发票代码",
+      dataIndex: "invoiceCode",
+      width: "200px"
+    },
+    {
+      title: "认证标记",
+      dataIndex: "certificationMark",
+      width: "200px"
+    },
+    {
+      title: "认证月份",
+      dataIndex: "certificationMonth",
+      width: "200px"
+    },
+    {
+      title: "拆分前发票号码",
+      dataIndex: "boforeInvoiceCode",
+      width: "200px"
+    },
+    {
+      title: "开票日期",
+      dataIndex: "makeOutInvoiceDate",
+      width: "200px"
+    },
+    {
+      title: "发票类型",
+      dataIndex: "invoiceType",
+      width: "200px"
+    },
+    {
+      title: "不含税金额",
+      dataIndex: "noTaxAmount",
+      width: "200px"
+    },
+    {
+      title: "税率",
+      dataIndex: "rate",
+      width: "100px"
+    },
+    {
+      title: "进项税额",
+      dataIndex: "inputTax",
+      width: "200px"
+    },
+    {
+      title: "价税合计",
+      dataIndex: "taxTotal",
+      width: "200px"
+    },
+    {
+      title: "拆分比例",
+      dataIndex: "splitRatio",
+      width: "200px"
+    },
+    {
+      title: "已拆分金额",
+      dataIndex: "amountSplit",
+      width: "200px"
+    },
+    {
+      title: "最新更新日期",
+      dataIndex: "lastUpdateDate",
+      width: "200px"
+    }   
+  ]
+}
 
 class SelfContainedProductAssociation extends Component {
   constructor () {
     super()
     this.state = {
+      tableKey: Date.now(),
       filters: {},
       totalSource: undefined,
       statusParam: ""
     }
   }
 
+  refreshTable = () => {
+    this.setState({
+        tableKey: Date.now()
+    })
+  }
+
+  fetchResultStatus = () => {
+    requestResultStatus("", this.state.filters,result => {
+        this.setState({
+            statusParam: result,
+        })
+    })
+  }
+
+  deleteRecord = (id, cb) => {
+    request.delete("")
+        .then(({data}) => {
+            if (data.code === 200) {
+                message.success('解除成功!')
+                cb && cb()
+            } else {
+                message.error(`解除匹配失败:${data.msg}`)
+            }
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
+  }
+
+  matchData = () => {
+    const { filters } = this.state
+    request.put("", filters)
+        .then(({data}) => {
+            if (data.code === 200) {
+                message.success(data.msg);
+                this.props.refreshTabs()
+            } else {
+                message.error(`数据匹配失败:${data.msg}`)
+            }
+        })
+        .catch(err => {
+            message.error(err.message)
+        })
+  }
+
   render () {
-    const { totalSource, statusParam, filters } = this.state
+    const { tableKey, totalSource, statusParam, filters } = this.state
+    const { declare } = this.props
+    let disabled = !!declare 
     return (
       <div className="oneline">
         <SearchTable 
-          doNotFetchDidMount={ true }
+          doNotFetchDidMount={ !disabled }
           searchOption={{
             fields: searchFields
           }}
+          backCondition={ filters => {
+            this.setState({
+                filters,
+            }, () => {
+                this.fetchResultStatus()
+            })
+          }}
           tableOption={{
+            key: tableKey,
             pageSize: 100,
-            columns,
-            onSuccess: params => {
-              this.setState({
-                  filters: params
-              })
-            },
+            columns: getColumns(this, disabled),
             cardProps: {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项的发票</TableTitle>
             },
@@ -309,7 +367,7 @@ class SelfContainedProductAssociation extends Component {
                         type: "revoke",
                         url: "",
                         params: filters,
-                        userPermissions: [""],
+                        userPermissions: [],
                         onSuccess: () => {
                             this.props.refreshTabs()
                         }
@@ -337,7 +395,7 @@ class SelfContainedProductAssociation extends Component {
             },
             scroll: {
               x: 4000,
-              y: window.screen.availHeight - 400
+              y: window.screen.availHeight - 480 - (disabled? 50: 0) 
             }
           }}
         />
