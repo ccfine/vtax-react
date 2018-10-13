@@ -2,89 +2,13 @@
  * @Author: zhouzhe 
  * @Date: 2018-10-13 11:47:06 
  * @Description: '' 
- * @Last Modified by:   zhouzhe 
- * @Last Modified time: 2018-10-13 11:47:06 
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-13 17:46:13
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
-import moment from 'moment';
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
 
-const searchFields =  (disabled,declare) => (getFieldValue) => {
-    return [
-        {
-            label:'纳税主体',
-            fieldName:'main',
-            type:'taxMain',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                labelInValue:true,
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            }
-        }, {
-            label: '纳税申报期',
-            fieldName: 'authMonth',
-            type: 'monthPicker',
-            formItemStyle,
-            span: 6,
-            componentProps: {
-                format: 'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions: {
-                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
-                rules: [
-                    {
-                        required: true,
-                        message: '请选择查询期间'
-                    }
-                ]
-            },
-        }, {
-            label:'利润中心',
-            fieldName:'profitCenterId',
-            type:'asyncSelect',
-            span:6,
-            componentProps:{
-                fieldTextName:'profitName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        }, {
-            label:'项目分期',
-            fieldName:'stagesId',
-            type:'asyncSelect',
-            span:6,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
-            }
-        }
-    ]
-}
 const columns=[
     {
         title: '利润中心',
@@ -196,14 +120,14 @@ const columns=[
     }
     render(){
         const {updateKey,filters,statusParam} = this.state;
-        const { declare } = this.props;
+        const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
             <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled,declare),
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -221,7 +145,7 @@ const columns=[
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/fixedAssetCard/manageList',
+                    url:'/fixedAssetCard/externalList',
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">固定资产信息采集 / </label>外部获取固定资产</span>,
                         extra: (

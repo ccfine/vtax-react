@@ -3,82 +3,12 @@
  * @Date: 2018-10-13 11:47:47 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-13 11:48:09
+ * @Last Modified time: 2018-10-13 17:46:02
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
-import moment from 'moment';
-const formItemStyle={
-    labelCol:{
-        span:8
-    },
-    wrapperCol:{
-        span:16
-    }
-}
 
-const searchFields =  (disabled,declare) => (getFieldValue) => {
-    return [
-        {
-            label:'纳税主体',
-            fieldName:'main',
-            type:'taxMain',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                labelInValue:true,
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            }
-        }, {
-            label: '报建日期',
-            fieldName: 'authMonth',
-            type: 'monthPicker',
-            formItemStyle,
-            span: 6,
-            componentProps: {
-                format: 'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions: {
-                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
-            },
-        }, {
-            label:'利润中心',
-            fieldName:'profitCenterId',
-            type:'asyncSelect',
-            span:6,
-            componentProps:{
-                fieldTextName:'profitName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        }, {
-            label:'项目分期',
-            fieldName:'stagesId',
-            type:'asyncSelect',
-            span:6,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
-            }
-        }
-    ]
-}
 const columns=[
     {
         title: '利润中心',
@@ -87,44 +17,39 @@ const columns=[
     },
     {
         title:'项目分期名称',
-        dataIndex:'stageName',
+        dataIndex:'stagesName',
         width:'150px',
     },
     {
         title:'产品名称',
-        dataIndex:'assetName',
+        dataIndex:'productName',
         width:'100px',
     },
     {
         title:'产品编号',
-        dataIndex:'assetNo',
+        dataIndex:'productNum',
         width:'100px',
     },
     {
         title: "产品类型",
-        dataIndex: "assetType",
+        dataIndex: "productType",
         width:'100px',
     },
     {
         title: "占地面积",
-        dataIndex: "areaCovered",
+        dataIndex: "coveredArea",
         width:'100px',
     },
-    {
-        title: "报建日期",
-        dataIndex: "accountDate",
-        width:'100px',
-    },
-    {
-        title: "产品状态",
-        dataIndex: "assetsState",
-        width:'100px',
-    },
-    {
-        title: "最新更新时间",
-        dataIndex: "accountDate1",
-        width:'100px',
-    },
+    // {
+    //     title: "产品状态",
+    //     dataIndex: "assetsState",
+    //     width:'100px',
+    // },
+    // {
+    //     title: "最新更新时间",
+    //     dataIndex: "accountDate1",
+    //     width:'100px',
+    // },
 ];
 
 class NewBuildCollection extends Component{
@@ -150,14 +75,14 @@ class NewBuildCollection extends Component{
     }
     render(){
         const {updateKey,filters,statusParam} = this.state;
-        const { declare } = this.props;
+        const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
             <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 searchOption={{
-                    fields:searchFields(disabled,declare),
+                    fields:searchFields,
                     cardProps:{
                         style:{
                             borderTop:0
@@ -175,7 +100,7 @@ class NewBuildCollection extends Component{
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/fixedAssetCard/manageList',
+                    url:'/fixedAssetCard/separateList',
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">固定资产信息采集 / </label>单独新建固定资产</span>,
                         extra: (
