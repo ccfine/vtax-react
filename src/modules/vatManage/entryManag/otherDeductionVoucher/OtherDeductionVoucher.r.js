@@ -4,7 +4,8 @@
 import React, { Component } from 'react'
 import {requestResultStatus,fMoney,requestDict,listMainResultStatus,composeBotton,setFormat} from 'utils'
 import {SearchTable} from 'compoments'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from './viewDocumentDetailsPopModal'
+import PopInvoiceInformationModal from 'modules/vatManage/entryTaxAccount/inputTaxDetails/popModal'
 
 import moment from 'moment';
 const pointerStyle = {
@@ -94,107 +95,101 @@ const markFieldsData = context => [
         }
     }
 ]
-const columns = context =>[
-    {
-        title: '纳税主体名称',
-        dataIndex: 'mainName',
-        width:'200px',
-    },
-    {
-        title: '纳税主体代码',
-        dataIndex: 'mainNum',
-        width:'100px',
-    },
-    {
-        title: '项目分期名称',
-        dataIndex: 'stagesName',
-        width:'200px',
-    },
-    {
-        title: '项目分期代码',
-        dataIndex: 'stagesNum',
-        width:'100px',
-    },
-    {
-        title: '凭证日期',
-        dataIndex: 'voucherDate',
-        width:'100px',
-    },
-    {
-        title: '过账日期',
-        dataIndex: 'billingDate',
-        width:'100px',
-    },
-    {
-        title: '凭证号',
-        dataIndex: 'voucherNum',
-        render:(text,record)=>(
-            <span title="查看凭证详情" onClick={()=>{
-                    context.setState({
-                        voucherInfo:{
-                            voucherId:record.voucherId,
+const columns = context => {
+    let lastStegesId = '';
+    const {dataSource} = context.state;
+    return [
+        {
+            title: '利润中心',
+            dataIndex: 'mainNum',
+            width:'200px',
+            render:(text, row, index) => {
+                let rowSpan = 0;
+                if(lastStegesId !== row.stagesId){
+                    lastStegesId = row.stagesId;
+                    rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
+                }
+                return {
+                    children: text,
+                    props: {
+                        rowSpan: rowSpan,
+                    },
+                };
+            },
+        },
+        {
+            title: '其他扣税凭证',
+            dataIndex: 'mainName',
+            width:'200px',
+        },
+        {
+            title: '凭据数量',
+            className:'text-center',
+            dataIndex: 'sort',
+            width:'100px',
+            render:(text,record)=>{
+                // if(parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0){
+                //     return text
+                // }
+                // if(parseInt(record.invoiceType, 0) === 1 ){
+                if(true){
+                    return (
+                        <span>
+                        {
+                            record.invoiceType
+                                ?
+                                <span title="查看发票信息详情" onClick={()=>{
+                                    context.toggleModalVisible(true)
+                                }} style={pointerStyle}>
+                                    {text}
+                                </span>
+                                :
+                                <span title="查看凭证信息详情" onClick={()=>{
+                                    const params= {
+                                        sysDictId:record.sysDictId,
+                                    }
+                                    context.setState({
+                                        params:params
+                                    },()=>{
+                                        context.toggleModalVoucherVisible(true)
+                                    })
+                                }} style={pointerStyle}>
+                                    {text}
+                                </span>
                         }
-                    },()=>{
-                        context.toggleViewModalVisible(true)
-                    })
-            }} style={pointerStyle}>
-                {text}
-            </span>
-        ),
-        sorter: true,
-        width:'100px',
-    },
-    {
-        title: '凭证摘要',
-        dataIndex: 'voucherAbstract',
-        width:'500px',
-    },
-    /*{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
-        width:'100px',
-    },*/
-    {
-        title: '借方科目名称',
-        dataIndex: 'debitSubjectName',
-        width:'300px',
-    },
-    {
-        title: '借方科目代码',
-        dataIndex: 'debitSubjectCode',
-        width:'100px',
-    },
-    {
-        title: '借方金额',
-        dataIndex: 'debitAmount',
-        width:'100px',
-        render: text => fMoney(text),
-        className: "table-money"
-    },
-    {
-        title: '借方辅助核算名称',
-        dataIndex: 'debitProjectName',
-        width:'200px',
-    },
-    {
-        title: '借方辅助核算代码',
-        dataIndex: 'debitProjectNum',
-        width:'200px',
-    },
-    {
-        title: '标记',
-        dataIndex: 'sysDictName',
-        width:'100px',
-    }
-];
+                    </span>
+                    )
+                }else{
+                    return text
+                }
+            }
+
+        },
+        {
+            title: '金额',
+            dataIndex: 'prepayAmount',
+            className:'table-money',
+            render: text=>fMoney(text)
+        },
+        {
+            title: '税额',
+            dataIndex: 'withOutAmount',
+            className:'table-money',
+            render: text=>fMoney(text)
+        }
+    ];
+};
 export default class OtherDeductionVoucher extends Component{
     state={
 
         tableKey:Date.now(),
         visible:false,
+        voucherVisible:false,
         voucherInfo:{},
         filters:{},
+        dataSource:[],
         selectedRowKeys:[],
+        params: {},
         /**
          *修改状态和时间
          * */
@@ -209,9 +204,15 @@ export default class OtherDeductionVoucher extends Component{
             })
         })
     }
-    toggleViewModalVisible=visible=>{
+
+    toggleModalVisible=visible=>{
         this.setState({
             visible
+        })
+    }
+    toggleModalVoucherVisible=voucherVisible=>{
+        this.setState({
+            voucherVisible
         })
     }
 
@@ -231,7 +232,7 @@ export default class OtherDeductionVoucher extends Component{
         });
     }
     render(){
-        const {visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam} = this.state;
+        const {visible,tableKey,filters,selectedRowKeys,voucherVisible,statusParam, params} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -256,12 +257,17 @@ export default class OtherDeductionVoucher extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:columns(this),
-                    url:'/income/financeDetails/controller/list',
+                    url:'/account/prepaytax/prepayTaxList',
                     onRowSelect:(disabled && declare.decAction==='edit')?(selectedRowKeys)=>{
                         this.setState({
                             selectedRowKeys
                         })
                     }:undefined,
+                    onDataChange:(dataSource)=>{
+                        this.setState({
+                            dataSource
+                        })
+                    },
                     cardProps: {
                         title: "其他扣税凭证",
                         extra:<div>
@@ -305,16 +311,24 @@ export default class OtherDeductionVoucher extends Component{
                         </div>,
                     },
                     scroll:{
-                     x:2400,
+                     // x:2400,
                      y:window.screen.availHeight-390-(disabled?50:0),
                      },
                 }}
             >
-                <ViewDocumentDetails
-                    title="查看凭证详情"
+                <PopInvoiceInformationModal
+                    title="发票信息"
                     visible={visible}
-                    {...voucherInfo}
-                    toggleViewModalVisible={this.toggleViewModalVisible} />
+                    filters={{mainId:filters.mainId,authMonth:filters.authMonth}}
+                    toggleModalVisible={this.toggleModalVisible}
+                />
+                <ViewDocumentDetails
+                    title="凭证信息"
+                    visible={voucherVisible}
+                    params={params}
+                    filters={{mainId:filters.mainId,authMonth:filters.authMonth}}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                />
             </SearchTable>
             </div>
         )
