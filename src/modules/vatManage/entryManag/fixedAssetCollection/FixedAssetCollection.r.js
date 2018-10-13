@@ -1,26 +1,40 @@
 /**
  * Created by liuliyuan on 2018/5/24.
  */
-import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
-import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import React, { Component } from 'react';
 import moment from 'moment';
-const formItemStyle={
+import {Tabs} from 'antd';
+import External from './external';
+import SelfUse from './selfUse';
+import NewBuild from './newBuild';
+
+const TabPane = Tabs.TabPane;
+
+const formItemStyle = {
     labelCol:{
-        span:8
+        sm:{
+            span:10,
+        },
+        xl:{
+            span:8
+        }
     },
     wrapperCol:{
-        span:16
+        sm:{
+            span:14
+        },
+        xl:{
+            span:16
+        }
     }
 }
-
-const searchFields =  (disabled,declare) => {
+const searchFields =  (disabled,declare) => (getFieldValue) => {
     return [
         {
             label:'纳税主体',
             fieldName:'main',
             type:'taxMain',
-            span:8,
+            span:6,
             formItemStyle,
             componentProps:{
                 labelInValue:true,
@@ -36,11 +50,11 @@ const searchFields =  (disabled,declare) => {
                 ]
             }
         }, {
-            label: '查询期间',
+            label: '纳税申报期',
             fieldName: 'authMonth',
             type: 'monthPicker',
             formItemStyle,
-            span: 8,
+            span: 6,
             componentProps: {
                 format: 'YYYY-MM',
                 disabled
@@ -54,232 +68,97 @@ const searchFields =  (disabled,declare) => {
                     }
                 ]
             },
-        },{
-            label: "取得方式",
-            fieldName: "acquisitionMode",
-            span: 8,
-            formItemStyle,
-            type: "select",
-            options: [ //0-外部获取,1-单独新建，2-自建转自用
-                {
-                    text: "外部获取",
-                    value: "0"
-                },
-                {
-                    text: "单独新建",
-                    value: "1"
-                },
-                {
-                    text: "自建转自用",
-                    value: "2"
-                }
-            ]
-
+        }, {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:6,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            }
+        }, {
+            label:'项目分期',
+            fieldName:'stageId',
+            type:'asyncSelect',
+            span:6,
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
+            }
         }
     ]
 }
-const columns=[
-    {
-        title:'纳税主体名称',
-        dataIndex:'taxSubjectName',
-        width:'150px',
-    },
-    {
-        title:'纳税主体代码',
-        dataIndex:'taxSubjectNum',
-        width:'100px',
-    },
-    {
-        title:'项目分期名称',
-        dataIndex:'stageName',
-        width:'150px',
-    },
-    {
-        title:'项目分期代码',
-        dataIndex:'stageNum',
-        width:'100px',
-    },
-    {
-        title:'固定资产名称',
-        dataIndex:'assetName',
-        width:'100px',
-    },
-    {
-        title:'固定资产编号',
-        dataIndex:'assetNo',
-        width:'100px',
-    },
-    {
-        title: "入账日期",
-        dataIndex: "accountDate",
-        width:'100px',
-    },
-    {
-        title:'取得方式',
-        dataIndex:'acquisitionMode',
-        render:(text)=>{
-            // 0-外部获取
-            // 1-单独新建
-            // 2-自建转自用
-            let res = "";
-            switch (parseInt(text, 0)) {
-                case 0:
-                    res = "外部获取";
-                    break;
-                case 1:
-                    res = "单独新建";
-                    break;
-                case 2:
-                    res = "自建转自用";
-                    break;
-                default:
-                    break;
-            }
-            return res;
-        },
-        width:'100px',
-    },
-    {
-        title: "取得价值",
-        dataIndex: "gainValue",
-        render: text => fMoney(text),
-        className: "table-money",
-        width:'100px',
-    },
-    {
-        title: "建筑面积",
-        dataIndex: "areaCovered",
-        width:'100px',
-    },
-    {
-        title: "购进税额",
-        dataIndex: "inTax",
-        render: text => fMoney(text),
-        className: "table-money",
-        width:'100px',
-    },
-    {
-        title: "购进税率",
-        dataIndex: "intaxRate",
-        render:text=>text && `${text}%`,
-        width:'100px',
-    },
-    {
-        title: "当期抵扣的进项税额",
-        dataIndex: "taxAmount",
-        render:(text)=>fMoney(text),
-        className: "table-money",
-        width:'150px',
-    },
-    {
-        title: "待抵扣的进项税额",
-        dataIndex: "deductedTaxAmount",
-        className: "table-money",
-        render:(text)=>fMoney(text),
-        width:'150px',
-    },
-    {
-        title: "资产类别",
-        dataIndex: "assetType",
-        width:'100px',
-    },
-    {
-        title: "资产状态",
-        dataIndex: "assetsState",
-        width:'100px',
-    },
-];
+
+const tabList = [{
+    key: 'tab1',
+    tab: '外部获取固定资产',
+}, {
+    key: 'tab2',
+    tab: '自建转自用固定资产',
+}, {
+    key: 'tab3',
+    tab: '单独新建固定资产',
+}];
+
+const getContent = (key,updateKey,disabled,declare,context) => {
+    const contentList = {
+        tab1: <External updateKey={updateKey} declare={declare} searchFields={ searchFields(disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab2: <SelfUse updateKey={updateKey} declare={declare} searchFields={ searchFields(disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab3: <NewBuild updateKey={updateKey} declare={declare} searchFields={ searchFields(disabled,declare) } refreshTabs={context.refreshTabs}/>,
+    };
+    return contentList[key]
+}
  class FixedAssetCollection extends Component{
-    state={
-        updateKey:Date.now(),
-        filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam: {},
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeKey: 'tab1',
+            tabsKey:Date.now(),
+        };
+        this.mounted = true;
     }
-    refreshTable = ()=>{
-        this.setState({
-            updateKey:Date.now()
-        })
+
+    onTabChange = key => {
+        this.mounted && this.setState({
+            activeKey: key
+        });
     }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
-        })
+
+    refreshTabs = ()=>{
+        this.mounted && this.setState({
+            tabsKey:Date.now()
+        });
     }
+
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
     render(){
-        const {updateKey,filters,statusParam} = this.state;
+        const { tabsKey, activeKey, updateKey } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
-            <SearchTable
-                doNotFetchDidMount={!disabled}
-                searchOption={{
-                    fields:searchFields(disabled,declare),
-                    cardProps:{
-                        style:{
-                            borderTop:0
-                        }
-                    }
-                }}
-                backCondition={(filters)=>{
-                    this.setState({
-                        filters,
-                    },()=>{
-                        this.fetchResultStatus()
-                    })
-                }}
-                tableOption={{
-                    key:updateKey,
-                    pageSize:100,
-                    columns:columns,
-                    url:'/fixedAssetCard/manageList',
-                    cardProps: {
-                        title: "固定资产信息采集",
-                        extra: (
-                            <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
-                                    JSON.stringify(filters)!=='{}' && composeBotton([{
-                                        type:'fileExport',
-                                        url:'fixedAssetCard/export',
-                                        params:filters,
-                                        title:'导出',
-                                        userPermissions:['1511007'],
-                                    }])
-                                }
-                                {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'submit',
-                                        url:'/fixedAssetCard/submit',
-                                        params:filters,
-                                        userPermissions:['1511010'],
-                                        onSuccess:this.refreshTable
-                                    },{
-                                        type:'revoke',
-                                        url:'/fixedAssetCard/revoke',
-                                        params:filters,
-                                        userPermissions:['1511011'],
-                                        onSuccess:this.refreshTable,
-                                    }],statusParam)
-                                }
-                            </div>
-                        )
-                    },
-                    scroll:{
-                     x:1800,
-                     y:window.screen.availHeight-380-(disabled?50:0),
-                     },
-                }}
-            />
-            </div>
+            <Tabs key={tabsKey} onChange={this.onTabChange} activeKey={activeKey} type={'line'} tabBarStyle={{backgroundColor:'#FFF'}}>
+                {
+                    tabList.map(ele=>(
+                        <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
+                            {
+                                getContent(ele.key, updateKey, disabled, declare, this)
+                            }
+                        </TabPane>
+                    ))
+                }
+            </Tabs>
         )
     }
 }
 export default FixedAssetCollection
+
