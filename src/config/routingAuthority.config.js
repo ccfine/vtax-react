@@ -327,6 +327,20 @@ const strategies = {
                 ],
             },
 
+            //合作方的纳税申报
+            partnersTaxReturn:{
+                options:[
+
+                ],
+            },
+
+            //纳税申报合并计算表
+            taxReturnMergeCalculationTable:{
+                options:[
+
+                ],
+            },
+
             //固定资产卡片报表  查看-'1871002'  抽数-'1875001'
             fixedAssetCard:{
                 options:[

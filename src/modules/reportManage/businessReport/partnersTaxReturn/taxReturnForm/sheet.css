@@ -1,0 +1,3 @@
+.data-grid-container .data-grid .cell, .data-grid-container .data-grid.wrap .cell{
+    vertical-align: middle;
+}
