@@ -363,6 +363,12 @@ const strategies = {
                     '1981002','1981007'
                 ],
             },
+            //票据池
+            billPool:{
+                options:[
+
+                ],
+            }
         },
     },
 }
