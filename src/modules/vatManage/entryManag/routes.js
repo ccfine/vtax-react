@@ -19,7 +19,7 @@ const InputTaxDetails = AsyncComponent(() => import('../entryTaxAccount/inputTax
 const OtherBusinessInputTaxRollOut = AsyncComponent(() => import('../entryTaxAccount/otherBusinessInputTaxRollOut'), '其他类型进项税额转出台账')
 const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
 const RealEstateInputTaxCredit = AsyncComponent(() => import('../entryTaxAccount/realEstateInputTaxCredit'), '不动产进项税额抵扣台账')
-
+const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/entryManag`;
@@ -135,7 +135,19 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['realEstateInputTaxCredit'].options,
         exact:true,
-    },{
+    },
+    {
+        path: `${PATH}/selfContainedProductAssociation`,
+        component: SelfContainedProductAssociation,
+        name: "自持类产品关联进项发票",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductAssociation.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: entryManag["selfContainedProductAssociation"].options,
+        exact: true
+    },
+    {
         exact:true,
         path:`${PATH}`,
         redirect:true,
