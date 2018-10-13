@@ -152,14 +152,10 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         dataIndex: 'voucherDate',
         width:'100px',
     },
-    /*{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
-        width:'6%',
-    },*/
     {
-        title: '凭证号',
-        dataIndex: 'voucherNum',
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNumSap',
+        width:'100px',
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
@@ -174,7 +170,6 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             </span>
         ),
         sorter: true,
-        width:'100px',
     },
     {
         title: '凭证摘要',
@@ -212,14 +207,19 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         },
         width:'100px',
     },
-    {
+    /*{
         title: '借方辅助核算名称',
         dataIndex: 'debitProjectName',
         width:'150px',
-    },
+    },*/
     {
         title: '借方辅助核算代码',
         dataIndex: 'debitProjectNum',
+        width:'150px',
+    },
+    {
+        title: '付款成本项目',
+        dataIndex: 'paymentItem',
         width:'150px',
     },
     {
@@ -406,7 +406,7 @@ class LandPriceManage extends Component{
                         })
                     },
                     scroll:{
-                         x:2000,
+                         x:2100,
                          y:window.screen.availHeight-400-(disabled?50:0),
                     },
                 }}

@@ -196,7 +196,7 @@ class PopModal extends Component {
                                     span:24,
                                     formItemStyle:formItemLayout,
                                     fieldDecoratorOptions: {
-                                        initialValue:record && record.profitCenterId ? {label:record.profitCenterName,key:record.profitCenterId} : undefined,
+                                        initialValue:(record && record.profitCenterId) ? {label:record.profitCenterName,key:record.profitCenterId} : undefined,
                                         rules: [
                                             {
                                                 required: true,
@@ -213,7 +213,7 @@ class PopModal extends Component {
                                         fieldValueName: "id",
                                         doNotFetchDidMount: false,
                                         fetchAble:false,
-                                        url: `/taxsubject/profitCenterList/${this.props.mainId}`,
+                                        url: `/taxsubject/profitCenterList/${this.props && this.props.mainId}`,
                                     }
                                 }]
                                 )
@@ -244,9 +244,9 @@ class PopModal extends Component {
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
                                         doNotFetchDidMount: true,
-                                        fetchAble: form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key,
+                                        fetchAble: (form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId),
                                         url:`/project/stage/list?${parseJsonToParams({
-                                            profitCenterId:(form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || "",
+                                            profitCenterId:(form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId) || "",
                                             size:1000,
                                         })}`,
                                     }

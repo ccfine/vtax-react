@@ -121,7 +121,7 @@ class Add extends Component {
                     parentId:this.state.taxSubjectConfigBO.parentId,
                     prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
                     unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
-                    unusedInvoicePlatform: values.taxSubjectConfigBO.unusedInvoicePlatform === true ? '1' : '0',
+                    // unusedInvoicePlatform: values.taxSubjectConfigBO.unusedInvoicePlatform === true ? '1' : '0',
                     //offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
                 }
 

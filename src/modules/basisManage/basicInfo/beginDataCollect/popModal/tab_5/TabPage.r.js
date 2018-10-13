@@ -145,7 +145,11 @@ export default class TabPage extends Component{
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,
-                        style:{marginTop:"0px"}
+                        style:{
+                            marginTop:0,
+                            maxHeight:400,
+                            overflowY:'auto',
+                        }
                     },
                     pagination:true,
                     pageSize:100,

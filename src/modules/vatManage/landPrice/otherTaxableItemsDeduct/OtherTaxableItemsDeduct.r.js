@@ -47,10 +47,11 @@ const searchFields =(disabled,declare)=> [
 const columns = [{
     title: '纳税主体',
     dataIndex: 'mainName',
+    width:'200px',
 }, {
     title: '应税项目',
     dataIndex: 'taxableProjectName',
-    width:'16%',
+    width:'200px',
 },{
     title: '计税方法',
     dataIndex: 'taxMethod',
@@ -68,54 +69,54 @@ const columns = [{
         }
         return res;
     },
-    width:90,
+    width:'150px',
 },{
     title: '税率',
-    dataIndex: 'taxRate',
-    render:text=>text? `${text}%`: text,
-    width:50,
+    dataIndex: 'taxRateName',
+    //render:text=>text? `${text}%`: text,
+    width:'200px',
 },{
     title: '价税合计 ',
     dataIndex: 'totalAmount',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 },{
     title: '期初余额',
     dataIndex: 'initialBalance',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 },{
     title: '本期发生额',
     dataIndex: 'currentAmount',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 },{
     title: '本期应扣除金额',
     dataIndex: 'currentDeductAmount',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 },{
     title: '本期实际扣除金额',
     dataIndex: 'actualDeductAmount',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 },{
     title: '期末余额',
     dataIndex: 'endingBalance',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 },{
     title: '销项税额',
     dataIndex: 'outputTax',
     render:text=>fMoney(text),
     className:'table-money',
-    width:'8%',
+    width:'150px',
 }];
 // 总计数据结构，用于传递至TableTotal中
 const totalData =  [{
@@ -191,7 +192,7 @@ class OtherTaxableItemsDeduct extends Component{
                         key:updateKey,
                         pagination:true,
                         size:'small',
-                        scroll:{x:1200,y:window.screen.availHeight-380-(disabled?50:0)},
+                        scroll:{x:1800,y:window.screen.availHeight-380-(disabled?50:0)},
                         columns:columns,
                         cardProps:{
                             title:'其他应税项目扣除台账'

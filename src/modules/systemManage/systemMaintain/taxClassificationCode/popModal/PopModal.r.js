@@ -330,7 +330,7 @@ class PopModal extends Component{
                                         type:'select',
                                         span:12,
                                         formItemStyle,
-                                        whetherShowAll:true,
+                                        notShowAll:true,
                                         options:this.state.simpleTaxRate,
                                         fieldDecoratorOptions:{
                                             initialValue:initData['simpleTaxRateId'],

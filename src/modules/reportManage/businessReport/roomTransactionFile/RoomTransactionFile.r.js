@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,parseJsonToParams} from 'utils'
+import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
 import createSocket from '../socket'
 import TableTitle from 'compoments/tableTitleWithTime'
@@ -40,6 +40,13 @@ const searchFields = (getFieldValue)=> [
         },
     },
     {
+        label:'交易月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        span:6,
+        formItemStyle,
+    },
+    {
         label:'利润中心',
         fieldName:'profitCenterId',
         type:'asyncSelect',
@@ -54,20 +61,6 @@ const searchFields = (getFieldValue)=> [
         }
     },
     {
-        label:'项目名称',
-        fieldName:'projectId',
-        type:'asyncSelect',
-        span:6,
-        formItemStyle,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:getFieldValue('mainId') || false,
-            url:`/project/list/${getFieldValue('mainId')}`,
-        }
-    },
-    {
         label:'项目分期',
         fieldName:'stagesId',
         type:'asyncSelect',
@@ -78,19 +71,8 @@ const searchFields = (getFieldValue)=> [
             fieldValueName:'id',
             doNotFetchDidMount:true,
             fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-            url:`/project/stage/list?${parseJsonToParams({
-                profitCenterId:getFieldValue('profitCenterId') || '',
-                projectId:getFieldValue('projectId') || '',
-                size:1000,
-            })}`,
+            url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
-    },
-    {
-        label:'交易月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:6,
-        formItemStyle,
     },
     {
         label:'房间编码',
@@ -124,10 +106,17 @@ const searchFields = (getFieldValue)=> [
     {
         label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'datePicker',
+        type:'rangePicker',
         span:6,
         formItemStyle,
     },
+    {
+        label:'确收时点',
+        fieldName:'confirmedDate',
+        type:'rangePicker',
+        formItemStyle,
+        span:6,
+    }
 ]
 const columns = [{
         title:'纳税主体名称',
@@ -193,6 +182,11 @@ const columns = [{
         title:'合同约定交付日期',
         dataIndex:'agreeDate',
         width:'120px',
+    },
+    {
+        title:'确收时点',
+        dataIndex:'confirmedDate',
+        width:'100px',
     },
     {
         title:'楼栋名称',
@@ -386,7 +380,8 @@ class RoomTransactionFile extends Component{
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '成交金额', dataIndex: 'allTotalPrice'},
+                                        {title: '结算价合计（不含税）', dataIndex: 'allOldSdValorem'},
+                                        {title: '已开票金额', dataIndex: 'allInvoicedAmount'},
                                     ],
                                 }
                             ]

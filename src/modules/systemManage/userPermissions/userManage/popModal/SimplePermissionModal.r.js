@@ -318,10 +318,16 @@ class SimPlePermissionModal extends React.Component{
                             },
                             componentProps: {
                                 fieldTextName: "name",
+                                fieldOtherName:'code',
                                 fieldValueName: "id",
                                 doNotFetchDidMount:!userId,
                                 fetchAble:userId,
                                 url: `/sysOrganization/queryOrgsByUserId/${userId}?refresh=${_orgFetch}`,
+                                selectOptions:{
+                                    defaultActiveFirstOption:true,
+                                    showSearch:true,
+                                    optionFilterProp:'children',
+                                },
                             },
                             fieldDecoratorOptions: {
                                 initialValue: orgId,

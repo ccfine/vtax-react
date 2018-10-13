@@ -95,8 +95,8 @@ const searchFields = (disabled,declare) =>(getFieldValue)=>[
         formItemStyle,
     },
     {
-        label:'凭证号',
-        fieldName:'voucherNum',
+        label:'SAP凭证号',
+        fieldName:'voucherNumSap',
         span:8,
         formItemStyle,
     }
@@ -118,11 +118,11 @@ const columns=[
         dataIndex: 'profitCenterName',
         width:'200px',
     },
-    {
+    /*{
         title: '项目名称',
         dataIndex: 'projectName',
         width:'200px',
-    },
+    },*/
     {
         title: '项目分期名称',
         dataIndex: 'stagesName',
@@ -142,10 +142,16 @@ const columns=[
         title: '过账日期',
         dataIndex: 'billingDate',
         width:'100px',
-    },
+    /*},
     {
         title: '凭证号',
         dataIndex: 'voucherNum',
+        width:'100px',
+        sorter: true,*/
+    },
+    {
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNumSap',
         width:'100px',
         sorter: true,
     },
@@ -212,7 +218,27 @@ const columns=[
         title: '贷方辅助核算代码',
         dataIndex: 'creditProjectNum',
         width:'150px',
-    }
+    },
+    {
+        title:'辅助核算明细',
+        children:[
+            {
+                title:'房间编码',
+                dataIndex:'roomCode',
+                width:'150px',
+            },
+            {
+                title:'能源转售类型',
+                dataIndex:'energyType',
+                width:'150px',
+            },
+            {
+                title:'付款成本项目',
+                dataIndex:'paymentItem',
+                width:'150px',
+            }
+        ]
+    },
 ];
 class FinancialDocumentsCollection extends Component{
     state={

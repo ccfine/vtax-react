@@ -303,7 +303,7 @@ class InvoiceCollection extends Component {
         deleteLoading:false,
         selectedRowKeys:[],
 
-        isShowImport:null,
+        // isShowImport:null,
     };
     refreshTable = () => {
         this.mounted && this.setState(
@@ -378,7 +378,7 @@ class InvoiceCollection extends Component {
         this.mounted = null;
     }
     render() {
-        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys,isShowImport } = this.state;
+        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
@@ -397,7 +397,7 @@ class InvoiceCollection extends Component {
                             filters,
                         },()=>{
                             this.fetchResultStatus()
-                            this.fetchTaxSubjectConfig()
+                            // this.fetchTaxSubjectConfig()
                         })
                     }}
                     tableOption={{
@@ -405,11 +405,11 @@ class InvoiceCollection extends Component {
                         url: "/income/invoice/collection/list",
                         key: tableUpDateKey,
                         scroll: { x: 2140, y:window.screen.availHeight-380},
-                        rowSelection:{
+                        rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.mounted && this.setState({
                                 selectedRowKeys
@@ -439,7 +439,7 @@ class InvoiceCollection extends Component {
                                 }
 
                                 {
-                                    (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         userPermissions:['1491005'],

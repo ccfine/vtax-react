@@ -17,7 +17,7 @@ const transformData =function transformData(arr,fieldValueName,fieldTextName){
         let res = {
             key:ele[fieldValueName],
             value:ele[fieldValueName],
-            title:ele[fieldTextName],
+            title:`${ele.code}-${ele[fieldTextName]}`,
             parentId:ele["parentId"],
         };
         if(ele.children && ele.children.length>0){

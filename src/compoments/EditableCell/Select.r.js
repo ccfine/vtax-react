@@ -7,9 +7,9 @@ const Option = Select.Option;
 
 export default class SelectCell extends React.Component {
     render() {
-        const {getFieldDecorator,fieldName,initialValue,componentProps,options=[],fieldDecoratorOptions} = this.props;
+        const {getFieldDecorator,fieldName,initialValue,componentProps,options=[],fieldDecoratorOptions,style} = this.props;
         return (
-            <div className="editable-cell-input-wrapper">
+            <div className="editable-cell-input-wrapper" style={style}>
                 {
                     getFieldDecorator(`${fieldName}`,{
                         initialValue:initialValue,

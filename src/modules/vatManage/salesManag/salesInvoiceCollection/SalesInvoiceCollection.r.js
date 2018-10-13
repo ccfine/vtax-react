@@ -48,6 +48,30 @@ const fields = (disabled,declare)=> [
             ]
         },
     },
+    {
+        label: '开票月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {},
+        fieldDecoratorOptions: {
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: '请选择开票月份'
+                }
+            ]
+        },
+    }
 ]
 
 const searchFields = (disabled,declare) => {
@@ -265,7 +289,7 @@ class SalesInvoiceCollection extends Component {
         statusParam: {},
         totalSource: undefined,
         selectedRowKeys:[],
-        isShowImport:null,
+        //isShowImport:null,
     };
     fetchResultStatus = () => {
         requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
@@ -339,7 +363,7 @@ class SalesInvoiceCollection extends Component {
         this.mounted = null;
     }
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading,isShowImport } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
@@ -359,7 +383,7 @@ class SalesInvoiceCollection extends Component {
                             filters,
                         },() => {
                             this.fetchResultStatus();
-                            this.fetchTaxSubjectConfig()
+                            //this.fetchTaxSubjectConfig()
                         });
                     }}
                     tableOption={{
@@ -370,11 +394,11 @@ class SalesInvoiceCollection extends Component {
                         // rowSelection:{
                         //     type: 'checkbox',
                         // },
-                        rowSelection:{
+                        rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.mounted && this.setState({
                                 selectedRowKeys
@@ -404,7 +428,7 @@ class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
                                             type:'fileImport',
                                             url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,

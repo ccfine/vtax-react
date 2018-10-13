@@ -9,7 +9,7 @@ import React from 'react'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
 import { SearchTable,TableTotal } from 'compoments'
-import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request,parseJsonToParams} from 'utils'
+import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
 import PopModal from './popModal'
 
 const formItemStyle = {
@@ -81,20 +81,6 @@ const searchFields = (disabled,declare) => getFieldValue => {
             }
         },
         {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:8,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        },
-        {
             label:'项目分期',
             fieldName:'stagesId',
             type:'asyncSelect',
@@ -105,11 +91,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stage/list?${parseJsonToParams({
-                    profitCenterId:getFieldValue('profitCenterId') || '',
-                    projectId:getFieldValue('projectId') || '',
-                    size:1000,
-                })}`,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },
     ]
@@ -170,6 +152,27 @@ const columns = [
 		className: 'table-money',
         width:'150px',
 	},
+    {
+        title: '项目分期抵扣的土地价款',
+        dataIndex: 'deductibleLandPrice',
+        render: text => fMoney(text),
+        className: 'table-money',
+        width:'200px',
+    },
+    {
+        title: '累计扣除土地价款',
+        dataIndex: 'actualDeductibleLandPrice',
+        render: text => fMoney(text),
+        className: 'table-money',
+        width:'150px',
+    },
+    {
+        title: '未抵扣土地价款',
+        dataIndex: 'unDeductedLandPrice',
+        render: text => fMoney(text),
+        className: 'table-money',
+        width:'100px',
+    },
 	{
 		title: '分期可售建筑面积',
         dataIndex: 'upAreaSale',
@@ -186,28 +189,7 @@ const columns = [
         width:'100px',
 	},
 	{
-		title: '项目分期抵扣的土地价款',
-		dataIndex: 'deductibleLandPrice',
-		render: text => fMoney(text),
-		className: 'table-money',
-        width:'200px',
-	},
-	{
-		title: '累计扣除土地价款',
-		dataIndex: 'actualDeductibleLandPrice',
-		render: text => fMoney(text),
-		className: 'table-money',
-        width:'150px',
-	},
-	{
-		title: '未抵扣土地价款',
-		dataIndex: 'unDeductedLandPrice',
-		render: text => fMoney(text),
-		className: 'table-money',
-        width:'100px',
-	},
-	{
-		title: '土地单方成本',
+		title: '土地单方价款',
 		dataIndex: 'singleLandCost',
 		render: text => fMoney(text),
 		className: 'table-money',

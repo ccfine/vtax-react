@@ -5,9 +5,9 @@ import React from 'react'
 import {CusFormItem} from 'compoments'
 export default class NumericInputCell extends React.Component {
     render() {
-        const {getFieldDecorator,fieldName,initialValue,componentProps} = this.props;
+        const {getFieldDecorator,fieldName,initialValue,componentProps,style} = this.props;
         return (
-            <div className="editable-cell-input-wrapper">
+            <div className="editable-cell-input-wrapper" style={style}>
                 {
                     getFieldDecorator(`${fieldName}`,{
                         initialValue:initialValue

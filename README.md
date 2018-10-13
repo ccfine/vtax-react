@@ -64,6 +64,8 @@
 
 ```sh
 $ npm install -g commitizen
+$ npm install -g conventional-changelog --``不包含命令行工具
+$ npm install -g conventional-changelog-cli  --``含命令行工具
 ```
 
 cd vtax

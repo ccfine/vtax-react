@@ -3,6 +3,7 @@
  */
 import React,{Component} from 'react'
 import 'react-datasheet/lib/react-datasheet.css';
+import './sheet.css'
 import { Tabs } from 'antd';
 import sheet_0 from './sheetData/sheet0'
 import sheet_1 from './sheetData/sheet1'

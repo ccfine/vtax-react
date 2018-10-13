@@ -120,9 +120,9 @@ const getColumns = (context,hasOperate) => {
     return [
         ...operates
     ,{
-        title: '纳税主体',
+    /*    title: '纳税主体',
         dataIndex: 'mainName',
-    }, {
+    }, {*/
         title: '抵扣凭据类型',
         dataIndex: 'voucherType',
     },{
