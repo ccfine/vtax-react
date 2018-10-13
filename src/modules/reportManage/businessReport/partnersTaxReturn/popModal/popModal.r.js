@@ -16,7 +16,7 @@ class PopModal extends Component{
         visible:true
     }
     state={
-        initData:{},
+        record:{},
         loaded:false,
     }
 
@@ -25,8 +25,12 @@ class PopModal extends Component{
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-
             if (!err) {
+                if (values.main) {
+                    values.mainId = values.main.key;
+                    values.mainName = values.main.label;
+                    values.main = undefined;
+                }
                 const type = this.props.modalConfig.type;
                 this.toggleLoaded(false)
                 if(type==='edit'){
@@ -42,7 +46,7 @@ class PopModal extends Component{
 
     }
     updateRecord = data =>{
-        request.put('/sysRole/update',data)
+        request.put('/parnter/taxPartner/update',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -61,7 +65,7 @@ class PopModal extends Component{
     }
 
     createRecord = data =>{
-        request.post('/sysRole/add',data)
+        request.post('/parnter/taxPartner/add',data)
             .then(({data})=>{
                 this.toggleLoaded(true)
                 if(data.code===200){
@@ -87,7 +91,7 @@ class PopModal extends Component{
              * */
             nextProps.form.resetFields();
             this.setState({
-                initData:{}
+                record:{}
             })
         }
         if(nextProps.modalConfig.type === 'add'){
@@ -98,13 +102,13 @@ class PopModal extends Component{
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalConfig.type !== 'add'){
             this.setState({
                 loaded:true,
-                initData:nextProps.modalConfig.record
+                record:nextProps.modalConfig.record
             })
         }
     }
     render(){
-        const {toggleModalVisible,modalConfig,visible,form} = this.props;
-        const {loaded,initData} = this.state;
+        const {toggleModalVisible,modalConfig,visible,form,declare} = this.props;
+        const {loaded,record} = this.state;
         let title='';
         const type = modalConfig.type;
         const readonly = type === "look";
@@ -167,7 +171,7 @@ class PopModal extends Component{
                                             disabled: readonly,
                                         },
                                         fieldDecoratorOptions: {
-                                            initialValue:initData.mainId, //record.mainId ? {key: record.mainId,label: record.mainName}: (declare ? {key:declare.mainId,label:declare.mainName} : undefined),
+                                            initialValue:record.mainId ? {key: record.mainId,label: record.mainName}: (declare ? {key:declare.mainId,label:declare.mainName} : undefined),
                                             rules: [
                                                 {
                                                     required: true,
@@ -177,7 +181,7 @@ class PopModal extends Component{
                                         }
                                     },{
                                         label:'合作方公司名称',
-                                        fieldName:'taxNum',
+                                        fieldName:'name',
                                         type:'input',
                                         span:24,
                                         formItemStyle,
@@ -185,7 +189,7 @@ class PopModal extends Component{
                                             disabled: readonly,
                                         },
                                         fieldDecoratorOptions:{
-                                            initialValue:initData.taxNum,
+                                            initialValue:record.name,
                                             rules:[
                                                 {
                                                     required:true,
