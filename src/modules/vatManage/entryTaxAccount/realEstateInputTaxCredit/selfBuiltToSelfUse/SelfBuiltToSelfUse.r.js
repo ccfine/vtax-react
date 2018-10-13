@@ -4,93 +4,88 @@
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
-// import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
-/*
- const pointerStyle = {
- cursor:'pointer',
- color:'#1890ff'
- }
 
- const columns = context =>[
- {
- title: '纳税主体名称',
- dataIndex: 'mainName',
- },{
- title: '项目分期代码',
- dataIndex: 'stagesNum',
- },{
- title: '项目分期名称',
- dataIndex: 'stagesName',
- },{
- title: '凭证日期',
- dataIndex: 'voucherDate',
- },{
- title: '凭证类型',
- dataIndex: 'voucherType',
- },{
- title: '凭证号',
- dataIndex: 'voucherNum',
- render:(text,record)=>(
- <span title="查看凭证详情" onClick={()=>{
- context.setState({
- voucherNum:text,
- },()=>{
- context.toggleViewModalVisible(true)
- })
- }} style={pointerStyle}>
- {text}
- </span>
- )
- },{
- title: '凭证摘要',
- dataIndex: 'voucherAbstract',
- },{
- title: '借方科目代码',
- dataIndex: 'debitSubjectCode',
- },{
- title: '借方科目名称',
- dataIndex: 'debitSubjectName',
- },{
- title: '借方金额',
- dataIndex: 'debitAmount',
- render: text => fMoney(text),
- className: "table-money"
- }
- ];*/
-
-const columns = context =>[
+const columns = context =>[{
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        //width:'200px',
+    },{
+        title:'项目分期名称',
+        dataIndex:'stageName',
+        width:'200px',
+    },{
+        title:'固定资产名称',
+        dataIndex:'assetName',
+        width:'200px',
+    },{
+        title:'固定资产编号',
+        dataIndex:'assetNo',
+        width:'200px',
+    },{
+        title: "入账日期",
+        dataIndex: "accountDate",
+        width:'200px',
+    },{
+        title:'取得方式',
+        dataIndex:'acquisitionMode',
+        width:'200px',
+    },{
+        title:'取得价值',
+        dataIndex:'gainValue',
+        width:'200px',
+    },
     {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-        width:'250px',
-    },{
-        title: '固定资产取得价值',
-        dataIndex: 'gainValue',
-        render: text => fMoney(text),
-        className: "table-money",
+        title: "资产类别",
+        dataIndex: "areaCovered",
         width:'200px',
-    },{
-        title: '当期凭证待抵扣进项税额',
-        dataIndex: 'deductedVoucherTaxAmount',
-        render: text => fMoney(text),
-        className: "table-money",
+    },
+    {
+        title: "资产状态",
+        dataIndex: "intaxRate",
         width:'200px',
-    },{
-        title: '当期固定资产待抵扣进项税额',
-        dataIndex: 'deductedFixedTaxAmount',
-        render: text => fMoney(text),
-        className: "table-money",
-        width:'200px',
-    },{
-        title: '差异金额',
-        dataIndex: 'difAmount',
-        render: text => fMoney(text),
+    },
+    {
+        title: "占地面积",
+        dataIndex: "inTax",
+        width:'100px',
+    },
+    {
+        title: "税率",
+        dataIndex: "taxAmount",
+        width:'100px',
+    },
+    {
+        title: "税额",
+        dataIndex: "deductedTaxAmount",
+        render:(text)=>fMoney(text),
         className: "table-money",
         width:'150px',
-    }
+    },{
+        title: "期初待抵扣进项税额",
+        dataIndex: "deductedPeriod",
+        width:'100px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
+    },{
+        title: "当期抵扣进项税额",
+        dataIndex: "assetType",
+        width:'150px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
+    },{
+        title: "期末待抵扣进项税额",
+        dataIndex: "assetsState",
+        width:'100px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
+    },{
+        title: "待抵扣期间",
+        dataIndex: "assetsState",
+        width:'100px',
+    },
 ];
 
-export default class DeductibleInputTaxAmount extends Component{
+export default class SelfBuiltToSelfUse extends Component{
     state={
         tableKey:Date.now(),
         filters: {},
@@ -150,7 +145,7 @@ export default class DeductibleInputTaxAmount extends Component{
                         columns:columns(this),
                         url:'/account/income/estate/stayDedList',
                         cardProps: {
-                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>待抵扣进项税额</span>,
+                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>自建转自用自固定资产进项税额抵扣</span>,
                         },
                         extra: (
                             <div>
@@ -181,17 +176,11 @@ export default class DeductibleInputTaxAmount extends Component{
                             </div>
                         ),
                         scroll:{
-                            x:1000,
+                            x:2700,
                             y:window.screen.availHeight-430,
                         },
                     }}
-                >
-                    {/* <ViewDocumentDetails
-                     title="查看凭证详情"
-                     visible={visibleView}
-                     voucherNum={voucherNum}
-                     toggleViewModalVisible={this.toggleViewModalVisible} /> */}
-                </SearchTable>
+                />
             </div>
         )
     }
