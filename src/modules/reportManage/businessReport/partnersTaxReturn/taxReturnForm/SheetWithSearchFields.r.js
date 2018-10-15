@@ -179,7 +179,8 @@ class SheetWithSearchFields extends Component{
         const { tab, grid, url , searchFields,type, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
-        const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
+        const readOnly = !(disabled && declare.decAction==='edit');
+        const btnReadOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
                 <div>
@@ -245,7 +246,7 @@ class SheetWithSearchFields extends Component{
                                         : null
                                 }
                                 {
-                                    saveUrl && !readOnly && composeBotton([{
+                                    saveUrl && !btnReadOnly && composeBotton([{
                                         type:'save',
                                         text:'保存',
                                         icon:'save',

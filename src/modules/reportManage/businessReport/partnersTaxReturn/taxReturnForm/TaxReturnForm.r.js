@@ -2,7 +2,6 @@
  * Created by liuliyuan on 2018/10/11.
  */
 import React,{Component} from 'react'
-import { Icon } from "antd";
 import 'react-datasheet/lib/react-datasheet.css';
 import './sheet.css'
 import { Tabs } from 'antd';
@@ -26,33 +25,46 @@ const sheetData = [
     {
         tab:'主表',
         grid:sheet_0,
-        url:'/parnter/taxDeclarationReportPartner/list/0',
-        action:true
+        url:'/taxDeclarationReport/partner/find?reportType=0',
+        action:true,
+        scroll:{
+            x:'100%',
+            y:window.screen.availHeight-350,
+        }
     }, {
         tab:'附表一',
         grid:sheet_1,
-        url:'/parnter/taxDeclarationReportPartner/list/1',
+        url:'/taxDeclarationReport/partner/find?reportType=1',
         scroll:{
-            x:1800
+            x:1800,
+            y:window.screen.availHeight-320,
         }
     }, {
         tab:'附表二',
         grid:sheet_2,
-        url:'/parnter/taxDeclarationReportPartner/list/2',
+        url:'/taxDeclarationReport/partner/find?reportType=2',
+        scroll:{
+            //x:1800,
+            y:window.screen.availHeight-320,
+        }
     }, {
         tab:'附表三',
         grid:sheet_3,
-        url:'/parnter/taxDeclarationReportPartner/list/3',
+        url:'/taxDeclarationReport/partner/find?reportType=3',
         saveUrl:'/tax/declaration/addendum/three/save',
+        scroll:{
+            //x:1800,
+            y:window.screen.availHeight-320,
+        }
     }, {
         tab:'附表四',
         grid:sheet_4,
-        url:'/parnter/taxDeclarationReportPartner/list/4',
+        url:'/taxDeclarationReport/partner/find?reportType=4',
         //saveUrl:'/tax/declaration/addendum/four/save',
     }, {
         tab:'附表五',
         grid:sheet_5,
-        url:'/parnter/taxDeclarationReportPartner/list/5',
+        url:'/taxDeclarationReport/partner/find?reportType=5',
         saveUrl:'/tax/declaration/addendum/five/save',
         /*}, {
          tab:'固定资产表',
@@ -65,13 +77,13 @@ const sheetData = [
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
-        url:'/parnter/taxDeclarationReportPartner/list/6',
+        url:'/taxDeclarationReport/partner/find?reportType=6',
         saveUrl:'/tax/decConduct/prepayTax/save',
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
-        url:'/parnter/taxDeclarationReportPartner/list/7',
-        composeGrid:composeGrid_8
+        url:'/taxDeclarationReport/partner/find?reportType=7',
+        composeGrid:composeGrid_8,
     },
     // {
     //     tab:'营改增税负分析测算明细表',
@@ -101,16 +113,14 @@ export default class TaxReturnForm extends Component{
             {declare,type} = this.props;
         return (
             <React.Fragment>
-                <div style={{ margin: "0px 0 6px 6px" }}>
-                    <span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12,cursor: 'pointer'}}
-                          onClick={() => {
-                              this.props.history.goBack();
-                          }}
-                    >
-                        <Icon type="left" /><span>返回</span>
-                    </span>
-                </div>
-                <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}} onChange={this.onChange} activeKey={activeKey}>
+                <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}}
+                      onChange={this.onChange}
+                      activeKey={activeKey}
+                      tabBarExtraContent={
+                          <button aria-label="Close" className="ant-drawer-close" onClose={()=>this.props.togglesDrawerVisible(false)}>
+                          </button>
+                      }
+                >
                     {
                         sheetData.map((item,i)=>(
                             <TabPane tab={item.tab} key={i}>

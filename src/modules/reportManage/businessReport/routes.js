@@ -10,7 +10,7 @@ import strategies from 'config/routingAuthority.config'
 
 const RoomTransactionFile = AsyncComponent(() => import('./roomTransactionFile'), '房间交易档案')
 const TaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '纳税申报表')
-const PartnersTaxReturn = AsyncComponent(() => import('./partnersTaxReturn'), '合作方的纳税申报表')
+const PartnersTaxReturn = AsyncComponent(() => import('./partnersTaxReturn'), '合作方纳税申报表')
 const PartnersTaxReturnForm = AsyncComponent(() => import('./partnersTaxReturn/taxReturnForm'), '合作方的纳税申报-纳税申报表')
 const TaxReturnMergeCalculationTable = AsyncComponent(() => import('./taxReturnMergeCalculationTable'), '纳税申报合并计算表')
 const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '固定资产卡片')
@@ -70,7 +70,7 @@ const BusinessReport_Routes = [
     },{
         path:`${PATH}/partnersTaxReturn`,
         component:PartnersTaxReturn,
-        name:'合作方的纳税申报表',
+        name:'合作方纳税申报表',
         icon:{
             url:`${ICON_URL_PATH}taxReturn.svg`,
             backgroundColor:'#2E8A57'
@@ -78,9 +78,9 @@ const BusinessReport_Routes = [
         authorityInfo:businessReport['partnersTaxReturn'].options,
         exact:true,
     },{
-        path:`${PATH}/partnersTaxReturnForm`,
+        path:`${PATH}/partnersTaxReturn/partnersTaxReturnForm`,
         component:PartnersTaxReturnForm,
-        name:'合作方的纳税申报信息-纳税申报表',
+        name:'合作方纳税申报信息-纳税申报表',
         exact:true
     },{
         path:`${PATH}/taxReturnMergeCalculationTable`,
