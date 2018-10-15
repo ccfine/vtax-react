@@ -3,6 +3,9 @@
  * createTime   : 2018/1/10 14:39
  * description  :
  */
+
+// 其他扣税凭证 使用了该组件 columns 可配置
+
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
@@ -149,7 +152,7 @@ export default class PopInvoiceInformationModal extends Component{
                                 title: "发票信息列表",
                             },
                             pageSize:100,
-                            columns:columns,
+                            columns: this.props.columns || columns,
                             url:`/income/invoice/collection/detailList?${parseJsonToParams(props.filters)}`,
                             scroll:{ x: '200%', y: 200},
                         }}
