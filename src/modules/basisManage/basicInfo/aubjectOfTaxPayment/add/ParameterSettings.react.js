@@ -87,7 +87,7 @@ export default class ParameterSettings extends Component{
                             },{
 
                                 label: '合作方共同开发',
-                                fieldName: 'taxSubjectConfigBO.partnerDevelopment',
+                                fieldName: 'taxSubjectConfigBO.jointDevelopment',
                                 type: 'checkbox',
                                 span: 6,
                                 formItemStyle:{
@@ -99,7 +99,7 @@ export default class ParameterSettings extends Component{
                                     }
                                 },
                                 fieldDecoratorOptions: {
-                                    initialValue: defaultData!==null && parseInt(defaultData.partnerDevelopment,0) === 1,
+                                    initialValue: defaultData!==null && parseInt(defaultData.jointDevelopment,0) === 1,
                                     valuePropName: 'checked',
                                 },
                                 componentProps: {
@@ -130,7 +130,7 @@ export default class ParameterSettings extends Component{
                             },
                             {
                                 label:'确收时点',
-                                fieldName:'fieldName',
+                                fieldName:'taxSubjectConfigBO.confirmType',
                                 type:'radioGroup',
                                 span:24,
                                 formItemStyle:{
@@ -161,7 +161,7 @@ export default class ParameterSettings extends Component{
                                     disabled,
                                 },
                                 fieldDecoratorOptions:{
-                                    initialValue:defaultData!==null && parseInt(defaultData.fieldName,0) === 1,
+                                    initialValue:(defaultData!==null && defaultData.confirmType) || undefined,
                                 }
                             }
                         ])
