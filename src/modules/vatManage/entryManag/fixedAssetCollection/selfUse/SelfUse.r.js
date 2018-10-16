@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:48:33 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-16 16:47:33
+ * @Last Modified time: 2018-10-16 17:45:22
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -160,7 +160,7 @@ const columns=[
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
-                                    }])
+                                    }], statusParam)
                                 }
                             </div>
                         )
