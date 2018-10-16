@@ -157,7 +157,7 @@ const BusinessReport_Routes = [
     {
         path: `${PATH}/taxReturnProgressTrackTable`,
         component: TaxReturnProgressTrackTable,
-        name: "纳税申报跟踪进度表",
+        name: "纳税申报进度跟踪表",
         icon: {
             url: `${ICON_URL_PATH}taxReturnProgressTrackTable.svg`,
             backgroundColor: "#2E8A57"

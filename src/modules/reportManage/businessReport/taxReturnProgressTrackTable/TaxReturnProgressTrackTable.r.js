@@ -19,13 +19,7 @@ const searchFields = [
         fieldName:'mainId',
         type:'taxMain',
         span:8,
-        formItemStyle,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择纳税主体',
-            }]
-        }
+        formItemStyle
     },{
         label:'查询期间',
         fieldName:'month',
@@ -44,20 +38,30 @@ const searchFields = [
       formItemStyle,
       options: [ 
           {
-              
+              text: "未完成",
+              value: -1
+          },
+          {
+              text: "已完成",
+              value: 1
           }
       ]
     },
     {
       label: "申报归档",
-      fieldName: "archive",
+      fieldName: "fileStatus",
       span: 8,
       type: "select",
       formItemStyle,
       options: [ 
-          {
-              
-          }
+        {
+            text: "未完成",
+            value: -1
+        },
+        {
+            text: "已完成",
+            value: 1
+        }
       ]
     }
 ]
@@ -121,6 +125,11 @@ export default class TaxReturnProgressTrackTable extends Component{
                         title:'纳税申报进度跟踪表'
                     },
                     url:'/taxDeclarationTrack/report/list',
+                    onSuccess: (params) => {
+                        this.setState({
+                            filters: params,
+                        });
+                    },
                     extra:<div>
                         {
                             JSON.stringify(filters) !=='{}' && composeBotton([{
