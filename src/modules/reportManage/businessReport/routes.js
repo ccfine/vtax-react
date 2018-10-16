@@ -19,6 +19,7 @@ const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoice
 const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollection'), '销项发票采集')
 const AvailableArea = AsyncComponent(() => import('./availableArea'), '可售面积')
 const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), '科目余额表')
+const TaxReturnProgressTrackTable = AsyncComponent(() => import("./taxReturnProgressTrackTable"), "纳税申报进度跟踪表")
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -152,7 +153,19 @@ const BusinessReport_Routes = [
         },
         authorityInfo:businessReport['accountBalanceSheet'].options,
         exact:true,
-    },{
+    },
+    {
+        path: `${PATH}/taxReturnProgressTrackTable`,
+        component: TaxReturnProgressTrackTable,
+        name: "纳税申报跟踪进度表",
+        icon: {
+            url: `${ICON_URL_PATH}taxReturnProgressTrackTable.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["taxReturnProgressTrackTable"].options,
+        exact: true
+    },
+    {
         path:`${PATH}`,
         redirect:true,
         to:`${PATH}/generalTaxpayerVATReturn`,

@@ -377,6 +377,12 @@ const strategies = {
                     '1981002','1981007'
                 ],
             },
+            //纳税申报跟踪进度表
+            taxReturnProgressTrackTable: {
+                options: [
+                    
+                ]
+            }
         },
     },
 }
