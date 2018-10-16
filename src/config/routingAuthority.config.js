@@ -223,7 +223,12 @@ const strategies = {
                     '1251002','1251003','1251007','1251009','1251010','1251011',
                 ],
             },
-
+            //自持类产品关联进项发票
+            selfContainedProductAssociation: {
+                options: [                
+                    
+                ]
+            },
         },
 
         //土地价款
@@ -369,6 +374,18 @@ const strategies = {
                     '1981002','1981007'
                 ],
             },
+            //自持类产品关联进项发票
+            selfContainedProductAssociation: {
+                options: [                
+                    
+                ]
+            },
+            //自持类产品清单
+            selfContainedProductList: {
+                options: [                
+                    
+                ]
+            }
         },
     },
 }
