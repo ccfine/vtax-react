@@ -182,8 +182,7 @@ const getColumns = (context, hasOperate) => {
             dataIndex: 'amount',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                //todo
-                if (!record.editable) {
+                if (record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].amount`}
                         initialValue={text === '0' ? '0.00' : fMoney(text)}
