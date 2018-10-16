@@ -8,6 +8,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { message, Modal } from "antd"
 import { SearchTable, TableTotal } from "compoments"
+import moment from "moment"
 import { listMainResultStatus, composeBotton, request, requestResultStatus } from "utils"
 import TableTitle from "compoments/tableTitleWithTime"
 
@@ -20,14 +21,19 @@ const formItemStyle = {
   }
 }
 
-const searchFields = getFieldValue => [
+const searchFields =  (disabled,declare) => (getFieldValue) => [
   {
     label: "纳税主体",
     fieldName: "mainId",
     type: "taxMain",
     span: 8,
     formItemStyle,
+    componentProps:{
+      labelInValue:true,
+      disabled
+    },
     fieldDecoratorOptions: {
+        initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
         rules: [{
             required: true,
             message: "请选择纳税主体"
@@ -41,7 +47,17 @@ const searchFields = getFieldValue => [
     span: 8,
     formItemStyle,
     componentProps: {
-        format: "YYYY-MM"
+        format: "YYYY-MM",
+        disabled
+    },
+    fieldDecoratorOptions: {
+      initialValue: (disabled && moment(declare["authMonth"], "YYYY-MM")) || undefined,
+      rules: [
+          {
+              required: true,
+              message: '请选择查询期间'
+          }
+      ]
     }
   },
   {
@@ -66,7 +82,7 @@ const searchFields = getFieldValue => [
         fieldTextName: "profitName",
         fieldValueName: "id",
         doNotFetchDidMount: false,
-        fetchAble: getFieldValue("mainId") || false,
+        fetchAble: (getFieldValue('mainId') && getFieldValue('mainId').key) || false,
         url: `/taxsubject/profitCenterList/${getFieldValue("mainId")}`
     }
   },
@@ -98,24 +114,24 @@ const searchFields = getFieldValue => [
   },
   {
     label: "发票号码",
-    fieldName: "invoiceNumber",
+    fieldName: "invoiceNum",
     span: 8,
     formItemStyle
   },
   {
     label: "认证标记",
-    fieldName: "certificationMark",
+    fieldName: "authStatus",
     type: "select",
     span: 8,
     formItemStyle,
     options: [
       {
         text: "认证成功",
-        value: "0"
+        value: "1"
       },
       {
         text: "未认证",
-        value: "1"
+        value: "2"
       }
     ]
   }
@@ -171,7 +187,7 @@ const getColumns = (context, disabled) => {
     },
     {
       title: "产品编码",
-      dataIndex: "productCode",
+      dataIndex: "productNum",
       width: "200px"
     },
     {
@@ -181,7 +197,7 @@ const getColumns = (context, disabled) => {
     },
     {
       title: "发票号码",
-      dataIndex: "invoiceNumber",
+      dataIndex: "invoiceNum",
       width: "200px"
     },
     {
@@ -191,22 +207,22 @@ const getColumns = (context, disabled) => {
     },
     {
       title: "认证标记",
-      dataIndex: "certificationMark",
+      dataIndex: "authStatus",
       width: "200px"
     },
     {
       title: "认证月份",
-      dataIndex: "certificationMonth",
+      dataIndex: "authMonth",
       width: "200px"
     },
     {
       title: "拆分前发票号码",
-      dataIndex: "boforeInvoiceCode",
+      dataIndex: "splitInvoiceNum",
       width: "200px"
     },
     {
       title: "开票日期",
-      dataIndex: "makeOutInvoiceDate",
+      dataIndex: "billingDate",
       width: "200px"
     },
     {
@@ -216,37 +232,37 @@ const getColumns = (context, disabled) => {
     },
     {
       title: "不含税金额",
-      dataIndex: "noTaxAmount",
+      dataIndex: "withoutTax",
       width: "200px"
     },
     {
       title: "税率",
-      dataIndex: "rate",
+      dataIndex: "taxRate",
       width: "100px"
     },
     {
       title: "进项税额",
-      dataIndex: "inputTax",
+      dataIndex: "inTaxAmount",
       width: "200px"
     },
     {
       title: "价税合计",
-      dataIndex: "taxTotal",
+      dataIndex: "totalAmount",
       width: "200px"
     },
     {
       title: "拆分比例",
-      dataIndex: "splitRatio",
+      dataIndex: "splitProportion",
       width: "200px"
     },
     {
       title: "已拆分金额",
-      dataIndex: "amountSplit",
+      dataIndex: "splitAmount",
       width: "200px"
     },
     {
       title: "最新更新日期",
-      dataIndex: "lastUpdateDate",
+      dataIndex: "updateDate",
       width: "200px"
     }   
   ]
@@ -294,7 +310,7 @@ class SelfContainedProductAssociation extends Component {
 
   matchData = () => {
     const { filters } = this.state
-    request.put("", filters)
+    request.put("/accountReceiptsInvoice/automatic", filters)
         .then(({data}) => {
             if (data.code === 200) {
                 message.success(data.msg);
@@ -317,7 +333,7 @@ class SelfContainedProductAssociation extends Component {
         <SearchTable 
           doNotFetchDidMount={ !disabled }
           searchOption={{
-            fields: searchFields
+            fields: searchFields(disabled, declare)
           }}
           backCondition={ filters => {
             this.setState({
@@ -333,7 +349,7 @@ class SelfContainedProductAssociation extends Component {
             cardProps: {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项的发票</TableTitle>
             },
-            url: "",
+            url: "/accountReceiptsInvoice/list",
             extra: <div>
               {
                   listMainResultStatus(statusParam)
@@ -341,7 +357,7 @@ class SelfContainedProductAssociation extends Component {
               {
                   JSON.stringify(filters) !== "{}" && composeBotton([{
                       type: "fileExport",
-                      url: "",
+                      url: "/accountReceiptsInvoice/export",
                       params: filters,
                       title: "导出",
                       userPermissions: []
@@ -357,7 +373,7 @@ class SelfContainedProductAssociation extends Component {
                         onClick: this.matchData
                     },{
                         type: "submit",
-                        url: "",
+                        url: "/accountReceiptsInvoice/submit",
                         params: filters,
                         userPermissions: [],
                         onSuccess: () => {
@@ -365,7 +381,7 @@ class SelfContainedProductAssociation extends Component {
                         }
                     },{
                         type: "revoke",
-                        url: "",
+                        url: "/accountReceiptsInvoice/revoke",
                         params: filters,
                         userPermissions: [],
                         onSuccess: () => {
@@ -378,10 +394,10 @@ class SelfContainedProductAssociation extends Component {
                           {
                               title: "合计",
                               total: [
-                                  { title: "已拆分金额", dataIndex: "" },
-                                  { title: "不含税金额", dataIndex: "" },
-                                  { title: "进项税", dataIndex: "" },
-                                  { title: "价税合计", dataIndex: "" }
+                                  { title: "已拆分金额", dataIndex: "splitAmount" },
+                                  { title: "不含税金额", dataIndex: "withoutTax" },
+                                  { title: "进项税", dataIndex: "inTaxAmount" },
+                                  { title: "价税合计", dataIndex: "totalAmount" }
                               ]
                           }
                       ]
