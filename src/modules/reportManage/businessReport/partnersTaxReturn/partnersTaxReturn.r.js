@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {message,Modal,Icon,Drawer} from 'antd'
 import {withRouter} from 'react-router-dom';
 import {SearchTable,AsyncComponent} from 'compoments'
-import {request,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
+import {request,composeBotton,requestResultStatus,parseJsonToParams,listMainResultStatus} from 'utils'
 import PopModal from './popModal'
 import moment from "moment";
 const PartnersTaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '合作方的纳税申报-纳税申报表')
@@ -271,7 +271,7 @@ class PartnersTaxReturn extends Component{
             });
     };
     updateStatus = (values) => {
-        requestResultStatus('/account/output/othertax/listMain',values,result=>{
+        requestResultStatus('/taxDeclarationReport/partner/listMain',values,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -314,6 +314,9 @@ class PartnersTaxReturn extends Component{
                         cardProps:{
                             title:'合作方纳税申报信息表',
                             extra:<div>
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
                                 {
                                     composeBotton([{ //(disabled && declare.decAction==='edit') &&
                                         type:'add',
