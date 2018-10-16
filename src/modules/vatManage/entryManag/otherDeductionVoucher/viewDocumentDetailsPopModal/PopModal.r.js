@@ -2,25 +2,36 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, {Component} from 'react';
-import {Modal, Row, Col, Spin, Card, message} from 'antd';
-import {SynchronizeTable} from 'compoments';
-import {request, fMoney} from 'utils';
+import {Modal, Spin} from 'antd';
+import {SearchTable} from 'compoments';
+import {fMoney, parseJsonToParams} from 'utils';
+
+
+const searchFields = [
+    {
+        label:'SAP凭证号',
+        fieldName:'voucherNumSap',
+        type:'input',
+        span:8,
+        componentProps:{ }
+    }
+]
 
 const columns = [{
     title: '利润中心',
-    dataIndex: 'voucherAbstract',
+    dataIndex: 'profitCenterName',
     width: 200
 }, {
     title: '项目分期',
-    dataIndex: 'voucherAbstract',
+    dataIndex: 'stagesNum',
     width: 200
 }, {
     title: '凭证日期',
-    dataIndex: 'voucherAbstract',
+    dataIndex: 'voucherDate',
     width: 200
 }, {
     title: 'SAP凭证号',
-    dataIndex: 'voucherAbstract',
+    dataIndex: 'voucherNumSap',
     width: 200
 }, {
     title: '凭证摘要',
@@ -28,7 +39,7 @@ const columns = [{
     width: 200
 }, {
     title: '借方科目名称',
-    dataIndex: 'voucherAbstract',
+    dataIndex: 'debitSubjectName',
     width: 200
 }, {
     title: '科目名称',
@@ -68,24 +79,24 @@ export default class ViewDocumentDetails extends Component {
 
     toggleLoaded = loaded => this.setState({loaded});
 
-    fetchReportByVoucherNum = ({voucherId}) => {
-        this.toggleLoaded(false);
-        request.get('/inter/financial/voucher/listByVoucher', {params: {voucherId}})
-        .then(({data}) => {
-            this.toggleLoaded(true);
-            if (data.code === 200) {
-                this.setState({
-                    record: data.data,
-                    dataSource: data.data.page.records,
-                    tableUpDateKey: Date.now()
-                });
-            }
-        })
-        .catch(err => {
-            this.toggleLoaded(true);
-            message.error(err.message);
-        });
-    };
+    // fetchReportByVoucherNum = ({params}) => {
+    //     this.toggleLoaded(false);
+    //     request.get('/other/tax/deduction/vouchers/list/voucher', {params})
+    //     .then(({data}) => {
+    //         this.toggleLoaded(true);
+    //         if (data.code === 200) {
+    //             this.setState({
+    //                 record: data.data,
+    //                 dataSource: data.data.records,
+    //                 tableUpDateKey: Date.now()
+    //             });
+    //         }
+    //     })
+    //     .catch(err => {
+    //         this.toggleLoaded(true);
+    //         message.error(err.message);
+    //     });
+    // };
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.visible) {
@@ -98,13 +109,13 @@ export default class ViewDocumentDetails extends Component {
             /**
              * 弹出的时候如果类型不为新增，则异步请求数据
              * */
-            this.fetchReportByVoucherNum(nextProps);
+            // this.fetchReportByVoucherNum(nextProps);
         }
     }
 
     render() {
         const props = this.props;
-        const {loaded, tableUpDateKey, record, dataSource} = this.state;
+        const {loaded, tableUpDateKey} = this.state;
         return (
             <Modal
                 maskClosable={false}
@@ -123,59 +134,23 @@ export default class ViewDocumentDetails extends Component {
                 footer={null}
                 title={props.title}>
                 <Spin spinning={!loaded}>
-                    <Row gutter={24} style={{marginBottom: 10}}>
-                        <Col span={8}>
-                            纳税主体：{record.mainName}
-                        </Col>
-                        <Col span={8}>
-                            纳税申报期：{record.authMonth}
-                        </Col>
-                        <Col span={8}>
-                            项目分期：{record.stagesName}
-                        </Col>
-                    </Row>
-                    <Row gutter={24} style={{marginBottom: 10}}>
-                        <Col span={8}>
-                            凭证日期：{record.voucherDate}
-                        </Col>
-                        <Col span={8}>
-                            凭证类型：{record.voucherType}
-                        </Col>
-                        <Col span={8}>
-                            SAP凭证号：{record.voucherNumSap}
-                        </Col>
-                    </Row>
-
-                    <Card title={`${props.title}列表`} style={{marginTop: 10}}>
-                        <SynchronizeTable data={dataSource}
-                                          updateKey={tableUpDateKey}
-                                          tableProps={{
-                                              rowKey: record => record.id,
-                                              pagination: false,
-                                              bordered: true,
-                                              size: 'small',
-                                              columns: columns
-                                              //   scroll:{ x: 800, y: 300 }
-                                          }}/>
-
-                        {/*<AsyncTable url="/inter/financial/voucher/listByVoucher"
-                                    updateKey={tableUpDateKey}
-                                    filters={{voucherNum:props.voucherNum}}
-                                    tableProps={{
-                                        rowKey:record=>record.id,
-                                        pagination:true,
-                                        size:'small',
-                                        columns:columns,
-                                        onDataChange:(dataSource)=>{
-                                            console.log(dataSource)
-                                            this.setState({
-                                                record:dataSource[0]
-                                            })
-                                        },
-                                    }}
-                        />*/}
-                    </Card>
-
+                    <SearchTable
+                        searchOption={{
+                            fields:searchFields,
+                        }}
+                        doNotFetchDidMount={false}
+                        spinning={false}
+                        tableOption={{
+                            key:tableUpDateKey,
+                            cardProps: {
+                                title: "凭证信息列表",
+                            },
+                            pageSize:100,
+                            columns: columns,
+                            url:`/other/tax/deduction/vouchers/list/voucher/${this.props.id}?${parseJsonToParams({...props.filters})}`,
+                            scroll:{ x: '200%', y: 200},
+                        }}
+                    />
                 </Spin>
 
             </Modal>

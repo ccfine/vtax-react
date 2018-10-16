@@ -4,7 +4,7 @@
 import React, {Component} from 'react';
 import {requestResultStatus, fMoney, requestDict, listMainResultStatus, composeBotton, setFormat} from 'utils';
 import {SearchTable} from 'compoments';
-import PopInvoiceInformationModal from 'modules/vatManage/entryTaxAccount/inputTaxDetails/popModal';
+import PopInvoiceInformationModal from './popModal';
 import ViewDocumentDetails from './viewDocumentDetailsPopModal';
 
 import moment from 'moment';
@@ -62,19 +62,12 @@ const searchFields = (context, disabled, declare) => {
                 ]
             }
         }, {
-            label: '标记类型',
-            fieldName: 'sysDictId',
+            label: '利润中心',
+            fieldName: 'profitCenterName',
             span: 8,
             formItemStyle,
             type: 'select',
             options: context.state.sysDictIdList.concat({value: '0', text: '无'})
-        }, {
-            label: '凭证摘要',
-            type: 'input',
-            fieldName: 'voucherAbstract',
-            span: 8,
-            formItemStyle
-
         }
     ];
 };
@@ -96,13 +89,30 @@ const markFieldsData = context => [
         }
     }
 ];
+
+/*
+ amount: "1001.00"
+createdBy: ""
+createdDate: ""
+id: "10002"
+lastModifiedBy: ""
+lastModifiedDate: ""
+mainId: "1034790889526788098"
+month: "2018-10"
+profitCenterId: "111111"
+profitCenterName: "测试的利润中心"
+taxAmount: "20001.00"
+voucherCount: 2
+voucherType: "代扣代缴税收缴款凭证"
+* */
+
 const columns = context => {
     let lastStegesId = '';
     const {dataSource} = context.state;
     return [
         {
             title: '利润中心',
-            dataIndex: 'mainNum',
+            dataIndex: 'profitCenterName',
             width: '200px',
             render: (text, row, index) => {
                 let rowSpan = 0;
@@ -120,45 +130,32 @@ const columns = context => {
         },
         {
             title: '其他扣税凭证',
-            dataIndex: 'mainName',
-            width: '200px'
+            dataIndex: 'voucherType'
         },
         {
             title: '凭据数量',
             className: 'text-center',
-            dataIndex: 'sort',
-            width: '100px',
+            dataIndex: 'voucherCount',
+            width: '150px',
             render: (text, record) => {
-                if (parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0) {
-                    return text;
-                }
-                if (parseInt(record.invoiceType, 0) === 1) {
-                    return (
-                        <span>
-                        {
-                            record.invoiceType
-                                ?
-                                <span title="查看发票信息详情" onClick={() => {
-                                    context.toggleModalVisible(true);
-                                }} style={pointerStyle}>
-                                    {text}
-                                </span>
-                                :
-                                <span title="查看凭证信息详情" onClick={() => {
-                                    const params = {
-                                        sysDictId: record.sysDictId
-                                    };
-                                    context.setState({
-                                        params: params
-                                    }, () => {
-                                        context.toggleViewModalVisible(true);
-                                    });
-                                }} style={pointerStyle}>
-                                    {text}
-                                </span>
-                        }
-                    </span>
-                    );
+                if (record.voucherType === '代扣代缴税收缴款凭证') {
+                    //凭证
+                    return <span title="查看凭证信息详情" onClick={() => {
+                        context.setState({
+                            paramsId: record.id
+                        }, () => {
+                            context.toggleViewModalVisible(true);
+                        });
+                    }} style={pointerStyle}>{text}</span>;
+                } else if (record.voucherType) {
+                    //发票
+                    return <span title="查看发票信息详情" onClick={() => {
+                        context.setState({
+                            paramsId: record.id
+                        }, () => {
+                            context.toggleModalVisible(true);
+                        });
+                    }} style={pointerStyle}>{text}</span>;
                 } else {
                     return text;
                 }
@@ -167,79 +164,20 @@ const columns = context => {
         },
         {
             title: '金额',
-            dataIndex: 'prepayAmount',
+            dataIndex: 'amount',
             className: 'table-money',
+            width: '150px',
             render: text => fMoney(text)
         },
         {
             title: '税额',
-            dataIndex: 'withOutAmount',
+            dataIndex: 'taxAmount',
+            width: '150px',
             className: 'table-money',
             render: text => fMoney(text)
         }
     ];
 };
-
-//发票 table 参数
-const invoiceColumns = [
-    {
-        title: '发票类型',
-        dataIndex: 'invoiceType',
-        width: '5%',
-        render: text => {
-            if (text === 's') {
-                return '专票';
-            }
-            if (text === 'c') {
-                return '普票';
-            }
-            return text;
-        }
-    }, {
-        title: '发票代码',
-        dataIndex: 'invoiceCode',
-        width: '5%'
-    }, {
-        title: '发票号码',
-        dataIndex: 'invoiceNum',
-        width: '10%'
-    }, {
-        title: '开票日期',
-        dataIndex: 'billingDate',
-        width: '5%'
-    }, {
-        title: '认证所属期',
-        dataIndex: 'mainName',
-        width: '15%'
-    }, {
-        title: '认证时间',
-        dataIndex: 'authDate',
-        width: '5%'
-    }, {
-        title: '购买方纳税人识别号',
-        dataIndex: 'mainName',
-        width: '15%'
-    }, {
-        title: '金额',
-        dataIndex: 'amount',
-        className: "table-money",
-        width: '5%',
-        render: text => fMoney(text)
-    }, {
-        title: '税额',
-        dataIndex: 'taxAmount',
-        className: "table-money",
-        width: '8%',
-        render: text => fMoney(text)
-
-    }, {
-        title: '含税金额',
-        dataIndex: 'totalAmount',
-        className: "table-money",
-        width: '8%',
-        render: text => fMoney(text)
-    }
-];
 
 export default class OtherDeductionVoucher extends Component {
     state = {
@@ -251,7 +189,7 @@ export default class OtherDeductionVoucher extends Component {
         filters: {},
         dataSource: [],
         selectedRowKeys: [],
-        params: {},
+        paramsId: '', //点击的item id
         /**
          *修改状态和时间
          * */
@@ -295,7 +233,7 @@ export default class OtherDeductionVoucher extends Component {
     }
 
     render() {
-        const {visible, tableKey, filters, selectedRowKeys, voucherVisible, statusParam, voucherInfo, params} = this.state;
+        const {visible, tableKey, filters, selectedRowKeys, voucherVisible, statusParam, paramsId} = this.state;
         const {declare} = this.props;
         let disabled = !!declare;
         return (
@@ -320,7 +258,7 @@ export default class OtherDeductionVoucher extends Component {
                         key: tableKey,
                         pageSize: 100,
                         columns: columns(this),
-                        url: '/account/prepaytax/prepayTaxList',
+                        url: '/other/tax/deduction/vouchers/list',
                         onRowSelect: (disabled && declare.decAction === 'edit') ? (selectedRowKeys) => {
                             this.setState({
                                 selectedRowKeys
@@ -381,18 +319,14 @@ export default class OtherDeductionVoucher extends Component {
                 >
                     <PopInvoiceInformationModal
                         title="发票信息"
-                        columns={invoiceColumns}
                         visible={visible}
-                        filters={{mainId: filters.mainId, authMonth: filters.authMonth}}
+                        id={paramsId}
                         toggleModalVisible={this.toggleModalVisible}
                     />
-
                     <ViewDocumentDetails
                         title="凭证信息"
                         visible={voucherVisible}
-                        {...voucherInfo}
-                        params={params}
-                        filters={{mainId: filters.mainId, authMonth: filters.authMonth}}
+                        id={paramsId}
                         toggleViewModalVisible={this.toggleViewModalVisible}
                     />
                 </SearchTable>

@@ -4,6 +4,8 @@
  * description  :
  */
 
+// 其他扣税凭证 使用了该组件 columns 可配置
+
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
@@ -18,85 +20,79 @@ const searchFields = [
         componentProps:{ }
     }
 ]
+
+/*
+
+invoiceCode: "12334"
+invoiceNum: "12334"
+zebhsje: ""
+zefplx: "专票"
+zegmfnsrsbh: ""
+zehsje: ""
+zekprq: "2018-10-10 12:04:38.0"
+zerzshq: ""
+zese: ""
+
+
+ */
+
 const columns = [
     {
-        title: '数据来源',
-        dataIndex: 'sourceType',
-        width:'5%',
-        render:text=>{
-            text = parseInt(text,0)
-            if(text===1){
-                return '手工采集'
-            }
-            if(text===2){
-                return '外部导入'
-            }
-            return ''
-        },
-    },{
-        title: '纳税主体',
-        dataIndex: 'mainName',
-        width:'15%',
-    }, {
         title: '发票类型',
-        dataIndex: 'invoiceType',
-        width:'5%',
-        render:text=>{
-            if(text==='s'){
-                return '专票'
+        dataIndex: 'zefplx',
+        width: '80px',
+        render: text => {
+            if (text === 's') {
+                return '专票';
             }
-            if(text==='c'){
-                return '普票'
+            if (text === 'c') {
+                return '普票';
             }
             return text;
         }
-    },{
+    }, {
         title: '发票代码',
         dataIndex: 'invoiceCode',
-        width:'5%',
-    },{
+        width: '100px'
+    }, {
         title: '发票号码',
         dataIndex: 'invoiceNum',
-        width:'10%',
-    },{
+        width: '100px'
+    }, {
         title: '开票日期',
-        dataIndex: 'billingDate',
-        width:'5%',
-    },{
-        title: '认证月份',
-        dataIndex: 'authMonth',
-        width:'5%',
-    },{
+        dataIndex: 'zekprq',
+        width: '200px'
+    }, {
+        title: '认证所属期',
+        dataIndex: 'zerzshq',
+        width: '200px'
+    }, {
         title: '认证时间',
-        dataIndex: 'authDate',
-        width:'5%',
-    },{
-        title: '销售单位名称',
-        dataIndex: 'sellerName',
-        width:'15%',
-    },{
-        title: '纳税人识别号',
-        dataIndex: 'sellerTaxNum',
-        width:'10%',
-    },{
+        dataIndex: 'zerzsj',
+        width: '200px'
+    }, {
+        title: '购买方纳税人识别号',
+        dataIndex: 'zegmfnsrsbh',
+        width: '100px'
+    }, {
         title: '金额',
-        dataIndex: 'amount',
+        dataIndex: 'zebhsje',
         className: "table-money",
-        width:'5%',
-        render:text=>fMoney(text),
-    },{
+        width: '80px',
+        render: text => fMoney(text)
+    }, {
         title: '税额',
-        dataIndex: 'taxAmount',
+        dataIndex: 'zese',
         className: "table-money",
-        width:'8%',
-        render:text=>fMoney(text),
+        width: '80px',
+        render: text => fMoney(text)
 
-    },{
-        title: '价税合计',
-        dataIndex: 'totalAmount',
+    }, {
+        title: '含税金额',
+        dataIndex: 'zehsje',
         className: "table-money",
-        width:'8%',
-        render:text=>fMoney(text),
+        width: '80px',
+        render: text => fMoney(text)
     }
 ];
 
@@ -104,19 +100,19 @@ export default class PopInvoiceInformationModal extends Component{
     state={
         tableKey:Date.now(),
     }
-    refreshTable = ()=>{
-        this.setState({
-            tableKey:Date.now()
-        })
-    }
-    componentWillReceiveProps(nextProps){
-        if(!this.props.visible && nextProps.visible){
-            //TODO: Modal在第一次弹出的时候不会被初始化，所以需要延迟加载
-            setTimeout(()=>{
-                this.refreshTable()
-            },200)
-        }
-    }
+    // refreshTable = ()=>{
+    //     this.setState({
+    //         tableKey:Date.now()
+    //     })
+    // }
+    // componentWillReceiveProps(nextProps){
+    //     if(!this.props.visible && nextProps.visible){
+    //         //TODO: Modal在第一次弹出的时候不会被初始化，所以需要延迟加载
+    //         setTimeout(()=>{
+    //             this.refreshTable()
+    //         },200)
+    //     }
+    // }
     render(){
         const {searchTableLoading,tableKey} = this.state;
         const props = this.props;
@@ -142,7 +138,7 @@ export default class PopInvoiceInformationModal extends Component{
                         searchOption={{
                             fields:searchFields,
                         }}
-                        doNotFetchDidMount={true}
+                        doNotFetchDidMount={false}
                         spinning={searchTableLoading}
                         tableOption={{
                             key:tableKey,
@@ -151,7 +147,7 @@ export default class PopInvoiceInformationModal extends Component{
                             },
                             pageSize:100,
                             columns: columns,
-                            url:`/income/invoice/collection/detailList?${parseJsonToParams(props.filters)}`,
+                            url:`/other/tax/deduction/vouchers/list/pools/${this.props.id}?${parseJsonToParams(props.filters)}`,
                             scroll:{ x: '200%', y: 200},
                         }}
                     />
