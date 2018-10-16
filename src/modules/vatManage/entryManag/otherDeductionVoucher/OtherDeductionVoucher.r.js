@@ -71,40 +71,6 @@ const searchFields = (context, disabled, declare) => {
         }
     ];
 };
-const markFieldsData = context => [
-    {
-        label: '标记类型',
-        fieldName: 'sysDictId',
-        type: 'select',
-        notShowAll: true,
-        span: '22',
-        options: context.state.sysDictIdList.concat({value: '0', text: '无'}),
-        fieldDecoratorOptions: {
-            rules: [
-                {
-                    required: true,
-                    message: '请选择标记类型'
-                }
-            ]
-        }
-    }
-];
-
-/*
- amount: "1001.00"
-createdBy: ""
-createdDate: ""
-id: "10002"
-lastModifiedBy: ""
-lastModifiedDate: ""
-mainId: "1034790889526788098"
-month: "2018-10"
-profitCenterId: "111111"
-profitCenterName: "测试的利润中心"
-taxAmount: "20001.00"
-voucherCount: 2
-voucherType: "代扣代缴税收缴款凭证"
-* */
 
 const columns = context => {
     let lastStegesId = '';
@@ -116,9 +82,9 @@ const columns = context => {
             width: '200px',
             render: (text, row, index) => {
                 let rowSpan = 0;
-                if (lastStegesId !== row.stagesId) {
-                    lastStegesId = row.stagesId;
-                    rowSpan = dataSource.filter(ele => ele.stagesId === row.stagesId).length;
+                if (lastStegesId !== row.profitCenterId) {
+                    lastStegesId = row.profitCenterId;
+                    rowSpan = dataSource.filter(ele => ele.profitCenterId === row.profitCenterId).length;
                 }
                 return {
                     children: text,
@@ -198,7 +164,7 @@ export default class OtherDeductionVoucher extends Component {
         sysDictIdList: []
     };
     fetchResultStatus = () => {
-        requestResultStatus('/income/financeDetails/controller/listMain', this.state.filters, result => {
+        requestResultStatus('/other/tax/deduction/vouchers/listMain', this.state.filters, result => {
             this.setState({
                 statusParam: result
             });
@@ -233,7 +199,7 @@ export default class OtherDeductionVoucher extends Component {
     }
 
     render() {
-        const {visible, tableKey, filters, selectedRowKeys, voucherVisible, statusParam, paramsId} = this.state;
+        const {visible, tableKey, filters, voucherVisible, statusParam, paramsId} = this.state;
         const {declare} = this.props;
         let disabled = !!declare;
         return (
@@ -259,11 +225,6 @@ export default class OtherDeductionVoucher extends Component {
                         pageSize: 100,
                         columns: columns(this),
                         url: '/other/tax/deduction/vouchers/list',
-                        onRowSelect: (disabled && declare.decAction === 'edit') ? (selectedRowKeys) => {
-                            this.setState({
-                                selectedRowKeys
-                            });
-                        } : undefined,
                         onDataChange: (dataSource) => {
                             this.setState({
                                 dataSource
@@ -278,7 +239,7 @@ export default class OtherDeductionVoucher extends Component {
                                 {
                                     JSON.stringify(filters) !== '{}' && composeBotton([{
                                         type: 'fileExport',
-                                        url: 'income/financeDetails/controller/export',
+                                        url: '/other/tax/deduction/vouchers/export',
                                         params: filters,
                                         title: '导出',
                                         userPermissions: ['1521007']
@@ -286,24 +247,22 @@ export default class OtherDeductionVoucher extends Component {
                                 }
                                 {
                                     (disabled && declare.decAction === 'edit') && composeBotton([{
-                                        type: 'mark',
-                                        formOptions: {
-                                            filters: filters,
-                                            selectedRowKeys: selectedRowKeys,
-                                            url: "/income/financeDetails/controller/upFlag",
-                                            fields: markFieldsData(this),
-                                            onSuccess: this.refreshTable,
-                                            userPermissions: ['1525000']
-                                        }
+
+                                        type:'reset',
+                                        url:'/account/income/taxout/reset',
+                                        params:filters,
+                                        userPermissions:['1525000'],
+                                        onSuccess:this.refreshTable,
+
                                     }, {
                                         type: 'submit',
-                                        url: '/income/financeDetails/controller/submit',
+                                        url: '/other/tax/deduction/vouchers/submit',
                                         params: filters,
                                         onSuccess: this.refreshTable,
                                         userPermissions: ['1521010']
                                     }, {
                                         type: 'revoke',
-                                        url: '/income/financeDetails/controller/revoke',
+                                        url: '/other/tax/deduction/vouchers/revoke',
                                         params: filters,
                                         onSuccess: this.refreshTable,
                                         userPermissions: ['1521011']
