@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:47:47 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-16 16:47:39
+ * @Last Modified time: 2018-10-16 17:46:21
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -115,7 +115,7 @@ class NewBuildCollection extends Component{
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
-                                    }])
+                                    }], statusParam)
                                 }
                             </div>
                         )

@@ -93,6 +93,13 @@ export default class Tab3 extends Component{
                 searchOption={{
                     fields:searchFields
                 }}
+                backCondition={(filters)=>{
+                    this.mounted && this.setState({
+                        filters,
+                    },()=>{
+                        this.fetchResultStatus()
+                    })
+                }}
                 tableOption={{
                     key:tableKey,
                     pageSize:100,
@@ -108,29 +115,11 @@ export default class Tab3 extends Component{
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'submit',
-                                    url:'/account/income/fixedAssets/submit',
-                                    params:filters,
-                                    userPermissions:['1251010'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                },{
                                     type: 'reset',
                                     url:'/account/income/fixedAssets/reset',
                                     params:filters,
                                     userPermissions:['1251009'],
                                     onSuccess:()=>{
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type:'revoke',
-                                    url:'/account/income/fixedAssets/revoke',
-                                    params:filters,
-                                    userPermissions:['1251011'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
                                         this.props.refreshTabs()
                                     },
                                 }],statusParam)
