@@ -7,8 +7,8 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { SearchTable, TableTotal } from "compoments"
-import { composeBotton } from 'utils'
-import createSocket from "../socket"
+// import { composeBotton } from 'utils'
+// import createSocket from "../socket"
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -63,26 +63,10 @@ const searchFields = getFieldValue => [
     }
   },
   {
-    label: "报建期间",
-    fieldName: "authMonth",
-    type: "monthPicker",
+    label: "产品名称",
+    fieldName: "productName",
     span: 8,
-    formItemStyle,
-    componentProps: {
-        format: "YYYY-MM"
-    }
-  },
-  {
-    label: "产品类型",
-    fieldName: "productType",
-    type: "select",
-    span: 8,
-    formItemStyle,
-    options: [
-      {
-
-      }
-    ]
+    formItemStyle
   }
 ]
 
@@ -104,7 +88,7 @@ const columns = [
   },
   {
     title: "产品编码",
-    dataIndex: "productCode",
+    dataIndex: "productNum",
     width: "200px"
   },
   {
@@ -114,22 +98,12 @@ const columns = [
   },
   {
     title: "建筑面积",
-    dataIndex: "buildingArea",
-    width: "200px"
-  },
-  {
-    title: "报建日期",
-    dataIndex: "establishDate",
-    width: "200px"
-  },
-  {
-    title: "产品状态",
-    dataIndex: "productState",
+    dataIndex: "coveredArea",
     width: "200px"
   },
   {
     title: "最新更新时间",
-    dataIndex: "lastUpdateDate",
+    dataIndex: "lastModifiedDate",
     width: "200px"
   }
 ]
@@ -190,9 +164,9 @@ class SelfContainedProductList extends Component {
             cardProps: {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品清单</TableTitle>
             },
-            url: "",
+            url: "/interProductList/list",
             extra: <div>
-              {
+              {/* {
                   composeBotton([{
                       type: "modal",
                       url: "",
@@ -204,7 +178,7 @@ class SelfContainedProductList extends Component {
                           createSocket(this.props.userid)
                       }
                   }])
-              }
+              } */}
             </div>,
             onTotalSource: totalSource => {
               this.setState({
@@ -212,7 +186,7 @@ class SelfContainedProductList extends Component {
               })
             },
             scroll: {
-              x: 2000,
+              x: 1000,
               y: window.screen.availHeight - 400
             }
           }}

@@ -98,24 +98,24 @@ const searchFields = getFieldValue => [
   },
   {
     label: "发票号码",
-    fieldName: "invoiceNumber",
+    fieldName: "invoiceNum",
     span: 8,
     formItemStyle
   },
   {
     label: "认证标记",
-    fieldName: "certificationMark",
+    fieldName: "authStatus",
     type: "select",
     span: 8,
     formItemStyle,
     options: [
       {
         text: "认证成功",
-        value: "0"
+        value: "1"
       },
       {
         text: "未认证",
-        value: "1"
+        value: "2"
       }
     ]
   }
@@ -139,7 +139,7 @@ const columns = [
   },
   {
     title: "产品编码",
-    dataIndex: "productCode",
+    dataIndex: "productNum",
     width: "200px"
   },
   {
@@ -149,7 +149,7 @@ const columns = [
   },
   {
     title: "发票号码",
-    dataIndex: "invoiceNumber",
+    dataIndex: "invoiceNum",
     width: "200px"
   },
   {
@@ -159,22 +159,22 @@ const columns = [
   },
   {
     title: "认证标记",
-    dataIndex: "certificationMark",
+    dataIndex: "authStatus",
     width: "200px"
   },
   {
     title: "认证月份",
-    dataIndex: "certificationMonth",
+    dataIndex: "authMonth",
     width: "200px"
   },
   {
     title: "拆分前发票号码",
-    dataIndex: "boforeInvoiceCode",
+    dataIndex: "splitInvoiceNum",
     width: "200px"
   },
   {
     title: "开票日期",
-    dataIndex: "makeOutInvoiceDate",
+    dataIndex: "month",
     width: "200px"
   },
   {
@@ -184,37 +184,37 @@ const columns = [
   },
   {
     title: "不含税金额",
-    dataIndex: "noTaxAmount",
+    dataIndex: "withoutTax",
     width: "200px"
   },
   {
     title: "税率",
-    dataIndex: "rate",
+    dataIndex: "taxRate",
     width: "100px"
   },
   {
     title: "进项税额",
-    dataIndex: "inputTax",
+    dataIndex: "inTaxAmount",
     width: "200px"
   },
   {
     title: "价税合计",
-    dataIndex: "taxTotal",
+    dataIndex: "totalAmount",
     width: "200px"
   },
   {
     title: "拆分比例",
-    dataIndex: "splitRatio",
+    dataIndex: "splitProportion",
     width: "200px"
   },
   {
     title: "已拆分金额",
-    dataIndex: "amountSplit",
+    dataIndex: "splitAmount",
     width: "200px"
   },
   {
     title: "最新更新日期",
-    dataIndex: "lastUpdateDate",
+    dataIndex: "updateDate",
     width: "200px"
   }
 ]
@@ -275,9 +275,9 @@ class SelfContainedProductAssociation extends Component {
             cardProps: {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项的发票</TableTitle>
             },
-            url: "",
+            url: "/ReceiptsInvoiceReport/list",
             extra: <div>
-              {
+              {/* {
                   composeBotton([{
                       type: "modal",
                       url: "",
@@ -289,16 +289,16 @@ class SelfContainedProductAssociation extends Component {
                           createSocket(this.props.userid)
                       }
                   }])
-              }
+              } */}
               <TableTotal type={ 3 } totalSource={ totalSource } data={
                       [
                           {
                               title: "合计",
                               total: [
-                                  { title: "已拆分金额", dataIndex: "" },
-                                  { title: "不含税金额", dataIndex: "" },
-                                  { title: "进项税", dataIndex: "" },
-                                  { title: "价税合计", dataIndex: "" }
+                                  { title: "已拆分金额", dataIndex: "splitAmount" },
+                                  { title: "不含税金额", dataIndex: "withoutTax" },
+                                  { title: "进项税", dataIndex: "inTaxAmount" },
+                                  { title: "价税合计", dataIndex: "totalAmount" }
                               ]
                           }
                       ]
