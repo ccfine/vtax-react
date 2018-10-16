@@ -309,18 +309,18 @@ class BillPool extends Component{
             updateKey:Date.now(),
         })
     }
-    deleteRecord(record){
-        request.delete(`/interInvoicePools/delete/${record.id}`).then(({data}) => {
-            if (data.code === 200) {
-                message.success('删除成功', 4);
-                this.refreshTable();
-            } else {
-                message.error(data.msg, 4);
-            }
-        }).catch(err => {
-            message.error(err.message);
-        })
-    }
+    // deleteRecord(record){
+    //     request.delete(``).then(({data}) => {
+    //         if (data.code === 200) {
+    //             message.success('删除成功', 4);
+    //             this.refreshTable();
+    //         } else {
+    //             message.error(data.msg, 4);
+    //         }
+    //     }).catch(err => {
+    //         message.error(err.message);
+    //     })
+    // }
     render(){
         const {updateKey,filters,totalSource} = this.state;
         return(
@@ -334,7 +334,7 @@ class BillPool extends Component{
                         key:updateKey,
                         pageSize:100,
                         columns:getColumns(this),
-                        url:'/inter-invoice-pools-controller',
+                        url:'/interInvoicePools/list',
                         scroll:{ x: 5800,y:window.screen.availHeight-450 },
                         onSuccess: (params) => {
                             this.setState({
@@ -359,7 +359,7 @@ class BillPool extends Component{
                                             userPermissions:[],
                                         }])
                                     } */}
-                                    {
+                                    {/* {
                                         composeBotton([{
                                             type:'modal',
                                             url:'',
@@ -371,7 +371,7 @@ class BillPool extends Component{
                                                 createSocket(this.props.userid)
                                             }
                                         }])
-                                    }
+                                    } */}
                                     <TableTotal totalSource={totalSource} type={3} data={[
                                         {
                                             title:'总计',
