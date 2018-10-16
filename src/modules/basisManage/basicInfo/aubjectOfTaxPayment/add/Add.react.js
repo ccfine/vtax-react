@@ -61,8 +61,7 @@ class Add extends Component {
     handleOk = (e) => {
         this.handleSubmit()
     }
-
-    checkeGqgxId = (data)=>{
+    dataFormat = (data) =>{
         return data.map((item)=>{
             return {
                 ...item,
@@ -70,27 +69,16 @@ class Add extends Component {
             }
         })
     }
-
-    checkeGdjcgId = (data)=> {
-        return data.map((item) => {
-            return {
-                ...item,
-                id: (item.id.indexOf('t') > -1) ? null : item.id
-            }
-        })
-    }
-
     handleSubmit = (e) => {
         e && e && e.preventDefault();//编辑成功，关闭当前窗口,刷新父级组件
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-
                 /*if(values.jbxx.industry && values.jbxx.industry.label && values.jbxx.industry.key){
                  values.jbxx.industry = values.jbxx.industry.key
                  }*/
                 const type = this.props.modalConfig.type;
-                //const gdjcg = this.checkeGdjcgId(this.state.gdjcg);
-                //const gqgx = this.checkeGqgxId(this.state.gqgx);
+                //const gdjcg = this.dataFormat(this.state.gdjcg);
+                //const gqgx = this.dataFormat(this.state.gqgx);
                 const szjd = type === 'add' ? {...values.szjd} : {...values.szjd,id:this.state.szjd.id,parentId:this.state.szjd.parentId}
                 const data = {
                     ...values,
@@ -121,13 +109,13 @@ class Add extends Component {
                         parentId:this.state.taxSubjectConfigBO.parentId,
                         prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
                         unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
-                        partnerDevelopment:values.taxSubjectConfigBO.partnerDevelopment === true ? '1' : '0',
+                        jointDevelopment:values.taxSubjectConfigBO.jointDevelopment === true ? '1' : '0',
+                        confirmType:values.taxSubjectConfigBO.confirmType,
                         // unusedInvoicePlatform: values.taxSubjectConfigBO.unusedInvoicePlatform === true ? '1' : '0',
                         //offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
                     }
 
                 }
-
                 this.mounted && this.setState({
                     submitLoading: true
                 })
