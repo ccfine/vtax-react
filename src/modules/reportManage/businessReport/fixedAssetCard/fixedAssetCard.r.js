@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-13 11:36:34
+ * @Last Modified time: 2018-10-16 15:24:28
  */
 import React, { Component } from "react";
 import {message} from 'antd';
@@ -15,7 +15,7 @@ const searchFields = (getFieldValue) => [
     {
         label: "纳税主体",
         type: "taxMain",
-        fieldName: "taxSubjectId",
+        fieldName: "mainId",
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
@@ -26,7 +26,7 @@ const searchFields = (getFieldValue) => [
     {
         label: "入账月份",
         type: "monthPicker",
-        fieldName: "taxMonth"
+        fieldName: "authMonth"
     },
     {
         label: "取得方式",

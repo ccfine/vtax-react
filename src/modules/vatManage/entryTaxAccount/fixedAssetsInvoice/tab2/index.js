@@ -3,84 +3,121 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,composeBotton} from 'utils';
+import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 
 const getColumns = context =>[
     {
         title: '利润中心',
-        dataIndex: 'mainName',
+        dataIndex: 'profitCenterName',
         //width:'200px',
     }, {
         title: '项目分期名称',
-        dataIndex: 'taxNum',
+        dataIndex: 'stagesName',
         width:'200px',
     },{
         title: '固定资产名称',
-        dataIndex: 'finish1',
+        dataIndex: 'assetName',
         width:'200px',
     },{
         title: '固定资产编号',
-        dataIndex: 'finish2',
+        dataIndex: 'assetNo',
         width:'200px',
     },{
         title: '入账日期',
-        dataIndex: 'finish3',
+        dataIndex: 'accountDate',
         width:'100px',
     },{
         title: '取得方式',
-        dataIndex: 'finish4',
+        dataIndex: 'acquisitionMode',
         width:'100px',
+        render: (text) => {
+            // 0-外部获取
+            // 1-单独新建
+            // 2-自建转自用
+            let res = "";
+            switch (parseInt(text, 0)) {
+                case 0:
+                    res = "外部获取";
+                    break;
+                case 1:
+                    res = "单独新建";
+                    break;
+                case 2:
+                    res = "自建转自用";
+                    break;
+                default:
+                    break;
+            }
+            return res
+        },
     },{
         title: '取得价值',
-        dataIndex: 'finish5',
+        dataIndex: 'gainValue',
         width:'100px',
     },{
         title: '资产类别',
-        dataIndex: 'finish6',
+        dataIndex: 'assetType',
         width:'100px',
     },{
         title: '资产状态',
-        dataIndex: 'finish7',
+        dataIndex: 'assetsState',
         width:'100px',
     },{
         title: '建筑面积',
-        dataIndex: 'finish8',
+        dataIndex: 'areaCovered',
         width:'100px',
     },{
         title: '税率',
-        dataIndex: 'finish9',
+        dataIndex: 'fixedTaxRate',
         width:'100px',
     },{
         title: '税额',
-        dataIndex: 'finish10',
+        dataIndex: 'fixedTaxAmount',
         width:'150px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '发票号码/发票代码',
-        dataIndex: 'finish11',
+        dataIndex: 'invoiceNum',
         width:'200px',
+        render: (text, record) => <span>{record.invoiceNum}/{record.invoiceCode}</span>,
     },{
         title: '开票日期',
-        dataIndex: 'finish12',
+        dataIndex: 'billingDate',
         width:'100px',
     },{
         title: '发票类型',
-        dataIndex: 'finish13',
+        dataIndex: 'invoiceType',
         width:'100px',
+        render: (text) => {
+            // s-专票
+            // c-普票
+            let res = "";
+            switch (text) {
+                case "s":
+                    res = "专票";
+                    break;
+                case "c":
+                    res = "普票";
+                    break;
+                default:
+                    break;
+            }
+            return res
+        }
     },{
         title: '不含税金额',
-        dataIndex: 'finish14',
+        dataIndex: 'withoutTax',
         width:'150px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '税率',
-        dataIndex: 'finish15',
+        dataIndex: 'invoiceTaxRate',
         width:'100px',
     },{
         title: '进项税额',
-        dataIndex: 'finish16',
+        dataIndex: 'incomeTaxAmount',
         width:'150px',
         className:'table-money',
         render:text=>fMoney(text),
@@ -91,6 +128,7 @@ export default class Tab2 extends Component{
     state={
         visible:false,
         filters: {},
+        statusParam: {},
         modalConfig:{
             type:''
         },
@@ -114,8 +152,19 @@ export default class Tab2 extends Component{
             }
         })
     }
+    fetchResultStatus = ()=>{
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.mounted && this.setState({
+                statusParam: result,
+            })
+        })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render(){
-        const {tableKey,filters} = this.state;
+        const {tableKey,filters, statusParam} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -131,22 +180,43 @@ export default class Tab2 extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this),
-                    url:'/dataCollection/list',
+                    url:'/account/income/fixedAssets/incomeBuildList',
                     cardProps:{
                         title: <span><label className="tab-breadcrumb">固定资产进项发票台账 / </label>自建转自用自持类进项发票</span>,
                     },
                     extra: (
                         <div>
                             {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/income/fixedAssets/submit',
+                                    params:filters,
+                                    userPermissions:['1251010'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                },{
                                     type: 'reset',
-                                    url:'/account/income/estate/reset',
+                                    url:'/account/income/fixedAssets/reset',
                                     params:filters,
                                     userPermissions:['1251009'],
                                     onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
-                                }])
+                                },{
+                                    type:'revoke',
+                                    url:'/account/income/fixedAssets/revoke',
+                                    params:filters,
+                                    userPermissions:['1251011'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                }],statusParam)
                             }
                         </div>
                     ),

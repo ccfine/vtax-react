@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:48:33 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-13 17:45:43
+ * @Last Modified time: 2018-10-16 16:47:33
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -156,34 +156,19 @@ const columns=[
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'fixedAssetCard/export',
+                                        url:'fixedAssetCard/build/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
                                     }])
                                 }
-                                {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'submit',
-                                        url:'/fixedAssetCard/submit',
-                                        params:filters,
-                                        userPermissions:['1511010'],
-                                        onSuccess:this.refreshTable
-                                    },{
-                                        type:'revoke',
-                                        url:'/fixedAssetCard/revoke',
-                                        params:filters,
-                                        userPermissions:['1511011'],
-                                        onSuccess:this.refreshTable,
-                                    }],statusParam)
-                                }
                             </div>
                         )
                     },
                     scroll:{
-                     x:1800,
-                     y:window.screen.availHeight-380-(disabled?50:0),
-                     },
+                        x:1800,
+                        y:window.screen.availHeight-380-(disabled?50:0),
+                    },
                 }}
             />
             </div>
