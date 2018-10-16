@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:47:06 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-16 16:46:58
+ * @Last Modified time: 2018-10-16 17:53:26
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -160,7 +160,7 @@ const columns=[
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
-                                    }])
+                                    }], statusParam)
                                 }
                                 {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{

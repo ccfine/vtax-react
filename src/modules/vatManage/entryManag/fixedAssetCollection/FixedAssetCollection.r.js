@@ -121,20 +121,21 @@ const getContent = (key,updateKey,disabled,declare,context) => {
         this.state = {
             activeKey: 'tab1',
             tabsKey:Date.now(),
+            updateKey:Date.now(),
         };
         this.mounted = true;
     }
 
-    onTabChange = key => {
-        this.mounted && this.setState({
-            activeKey: key
+    onTabChange = (key) => {
+        this.mounted && this.setState({ activeKey: key }, () => {
+            this.refreshTabs();
         });
     }
 
     refreshTabs = ()=>{
         this.mounted && this.setState({
             tabsKey:Date.now()
-        });
+        })
     }
 
     componentWillUnmount(){
