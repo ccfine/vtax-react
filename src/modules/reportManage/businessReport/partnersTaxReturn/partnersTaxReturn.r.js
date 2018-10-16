@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {message,Modal,Icon,Drawer} from 'antd'
 import {withRouter} from 'react-router-dom';
 import {SearchTable,AsyncComponent} from 'compoments'
-import {request,composeBotton,requestResultStatus} from 'utils'
+import {request,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import PopModal from './popModal'
 import moment from "moment";
 const PartnersTaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '合作方的纳税申报-纳税申报表')
@@ -59,7 +59,7 @@ const searchFields = (disabled,declare) => {
     ];
 };
 const getColumns = (context,hasOperate) => {
-    let operates = hasOperate?[{
+    let operates = (hasOperate && parseInt(context.state.statusParam.status, 0) === 1)?[{
         title:'合作方公操作',
         key:'actions',
         width:'160px',
@@ -119,12 +119,12 @@ const getColumns = (context,hasOperate) => {
                 return (
                     <div>
                         {
-                            hasOperate ? composeBotton([{
+                            (hasOperate && parseInt(context.state.statusParam.status, 0) === 1) ? composeBotton([{
                                 type: 'action',
                                 icon: 'edit',
                                 title: '编辑',
                                 onSuccess: () => {
-                                    context.togglesDrawerVisible(true)
+                                    context.togglesDrawerVisible(true,record.id)
                                 }
                             }, {
                                 type: 'action',
@@ -144,7 +144,12 @@ const getColumns = (context,hasOperate) => {
                                         okType: "danger",
                                         cancelText: "取消",
                                         onOk: () => {
-                                            context.deleteRecord(`/parnter/taxPartner/delete/${record.id}`, () => {
+                                            const params = {
+                                                mainId:record.mainId,
+                                                taxMonth:context.props.declare.authMonth,
+                                                partnerId:record.id
+                                            }
+                                            context.deleteRecord(`/taxDeclarationReport/partner/delete?${parseJsonToParams(params)}`,() => {
                                                 modalRef && modalRef.destroy();
                                                 context.refreshTable();
                                             });
@@ -229,9 +234,10 @@ class PartnersTaxReturn extends Component{
             visible
         })
     }
-    togglesDrawerVisible = (drawerVisible) => {
+    togglesDrawerVisible = (drawerVisible,partnerId) => {
         this.mounted && this.setState({
-            drawerVisible
+            drawerVisible,
+            partnerId
         });
     };
     refreshTable = ()=>{
@@ -280,7 +286,7 @@ class PartnersTaxReturn extends Component{
 
     }
     render(){
-        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig} = this.state;
+        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,partnerId,filters} = this.state;
         const { declare,type } = this.props;
         let disabled = !!declare;
 
@@ -316,6 +322,21 @@ class PartnersTaxReturn extends Component{
                                         onClick:()=>this.showModal('add',{})
                                     }],statusParam)
                                 }
+                                {
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                            type:'submit',
+                                            url:'/taxDeclarationReport/partner/submit',
+                                            params:filters,
+                                            userPermissions:['1911010'],
+                                            onSuccess:this.refreshTable
+                                        },{
+                                            type:'revoke',
+                                            url:'/taxDeclarationReport/partner/revoke',
+                                            params:filters,
+                                            userPermissions:['1911011'],
+                                            onSuccess:this.refreshTable,
+                                        }],statusParam)
+                                }
                             </div>,
                         },
                         url:'/parnter/taxPartner/list',
@@ -347,7 +368,7 @@ class PartnersTaxReturn extends Component{
 
                     }}
                 >
-                    { drawerVisible ? <PartnersTaxReturnForm declare={declare} togglesDrawerVisible={this.togglesDrawerVisible} type={type} /> : ''}
+                    { drawerVisible ? <PartnersTaxReturnForm declare={declare} togglesDrawerVisible={this.togglesDrawerVisible} type={type} partnerId={partnerId} /> : ''}
                 </Drawer>
             </div>
         )

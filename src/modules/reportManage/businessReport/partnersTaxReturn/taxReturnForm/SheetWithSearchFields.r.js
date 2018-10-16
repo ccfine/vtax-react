@@ -60,32 +60,32 @@ class SheetWithSearchFields extends Component{
     static defaultProps = {
         grid:[],
         /*searchFields:(disabled,declare,defaultParams={},type)=>(getFieldValue)=> {
-            return type === 1 ? list(disabled,declare,defaultParams,type) : [
-                ...list(disabled,declare,defaultParams,type),
-                {
-                    label:'利润中心',
-                    fieldName:'profitCenterId',
-                    type:'asyncSelect',
-                    span:6,
-                    fieldDecoratorOptions:{
-                        //initialValue: ,
-                        rules:[
-                            {
-                                required:true,
-                                message:'请选择月份'
-                            }
-                        ]
-                    },
-                    componentProps:{
-                        fieldTextName:'profitName',
-                        fieldValueName:'id',
-                        doNotFetchDidMount:false,
-                        fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                        url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-                    }
-                },
-            ]
-        }*/
+         return type === 1 ? list(disabled,declare,defaultParams,type) : [
+         ...list(disabled,declare,defaultParams,type),
+         {
+         label:'利润中心',
+         fieldName:'profitCenterId',
+         type:'asyncSelect',
+         span:6,
+         fieldDecoratorOptions:{
+         //initialValue: ,
+         rules:[
+         {
+         required:true,
+         message:'请选择月份'
+         }
+         ]
+         },
+         componentProps:{
+         fieldTextName:'profitName',
+         fieldValueName:'id',
+         doNotFetchDidMount:false,
+         fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+         url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+         }
+         },
+         ]
+         }*/
         searchFields:(disabled,declare,defaultParams={})=>(getFieldValue)=>list(disabled,declare,defaultParams)
     }
     state={
@@ -105,19 +105,21 @@ class SheetWithSearchFields extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/tax/decConduct/main/listMain',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
+        requestResultStatus('/taxDeclarationReport/partner/listMain',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
         })
     }
     componentDidMount(){
-        const { declare } = this.props;
+        const { declare,partnerId,reportType } = this.props;
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
                     mainId:declare.mainId || undefined,
                     taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
+                    partnerId:partnerId,
+                    reportType:reportType
                 }
             },()=>{
                 this.refreshTable()
@@ -128,10 +130,16 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
+
+                values.reportType = this.props.reportType;
+                values.partnerId = this.props.partnerId;
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
                     values.mainId = values.main.key
                     delete values.main
+                }
+                if(values.map){
+                    delete values.map
                 }
                 this.mounted && this.setState({
                     params: values,
@@ -145,8 +153,12 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
+                values.reportType = this.props.reportType;
+                values.partnerId = this.props.partnerId;
                 for(let key in values.map){
-                    values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
+                    if(values.map[key] !== 0){
+                        values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
+                    }
                 }
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
@@ -154,7 +166,7 @@ class SheetWithSearchFields extends Component{
                     delete values.main
                 }
                 this.mounted && this.setState({saveLoding:true})
-                request.post(this.props.saveUrl,{...values})
+                request.post(this.props.saveUrl,values)
                     .then(({data})=>{
                         this.mounted && this.setState({saveLoding:false})
                         if(data.code===200){
@@ -179,8 +191,7 @@ class SheetWithSearchFields extends Component{
         const { tab, grid, url , searchFields,type, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
-        const readOnly = !(disabled && declare.decAction==='edit');
-        const btnReadOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
+        const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
                 <div>
@@ -212,7 +223,7 @@ class SheetWithSearchFields extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {
+                                {/*{
                                     JSON.stringify(params)!=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'report/tax/declare/export',
@@ -228,36 +239,24 @@ class SheetWithSearchFields extends Component{
                                         title:'下载附件',
                                         onSuccess:this.refreshTable
                                     }])
-                                }
+                                }*/}
+
                                 {
-                                    action ? (disabled && declare.decAction==='edit') && composeBotton([{
-                                            type:'submit',
-                                            url:'/tax/decConduct/main/submit',
-                                            params:params,
-                                            userPermissions:['1911010'],
-                                            onSuccess:this.refreshTable
-                                        },{
-                                            type:'revoke',
-                                            url:'/tax/decConduct/main/revoke',
-                                            params:params,
-                                            userPermissions:['1911011'],
-                                            onSuccess:this.refreshTable,
-                                        }],statusParam)
-                                        : null
-                                }
-                                {
-                                    saveUrl && !btnReadOnly && composeBotton([{
+                                    saveUrl && !readOnly && composeBotton([{
                                         type:'save',
                                         text:'保存',
                                         icon:'save',
                                         userPermissions:['1911003'],
                                         onClick:this.save,
-                                        loading:saveLoding
+                                        loading:saveLoding,
+                                        style:{
+                                            marginLeft:action ? 10 : 0
+                                        }
                                     }])
                                 }
                             </div>
                         }
-                        title={<span><label className="tab-breadcrumb">纳税申报表 / </label>{tab}</span>}
+                        title={<span><label className="tab-breadcrumb">合作方的纳税申报-纳税申报表 / </label>{tab}</span>}
                         bodyStyle={{
                             padding:10
                         }}
@@ -265,8 +264,6 @@ class SheetWithSearchFields extends Component{
                         <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form}/>
                     </Card>
                 </div>
-
-
             </Form>
         )
     }

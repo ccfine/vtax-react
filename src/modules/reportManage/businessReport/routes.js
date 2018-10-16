@@ -12,7 +12,7 @@ const RoomTransactionFile = AsyncComponent(() => import('./roomTransactionFile')
 const TaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '纳税申报表')
 const PartnersTaxReturn = AsyncComponent(() => import('./partnersTaxReturn'), '合作方纳税申报表')
 const PartnersTaxReturnForm = AsyncComponent(() => import('./partnersTaxReturn/taxReturnForm'), '合作方的纳税申报-纳税申报表')
-const TaxReturnMergeCalculationTable = AsyncComponent(() => import('./taxReturnMergeCalculationTable'), '纳税申报合并计算表')
+const TaxReturnMergeCalculation = AsyncComponent(() => import('./taxReturnMergeCalculation'), '纳税申报合并计算表')
 const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '固定资产卡片')
 const FinancialDocuments = AsyncComponent(() => import('./financialDocuments'), '财务凭证')
 const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoiceCollection'), '进项发票采集')
@@ -83,14 +83,14 @@ const BusinessReport_Routes = [
         name:'合作方纳税申报信息-纳税申报表',
         exact:true
     },{
-        path:`${PATH}/taxReturnMergeCalculationTable`,
-        component:TaxReturnMergeCalculationTable,
+        path:`${PATH}/taxReturnMergeCalculation`,
+        component:TaxReturnMergeCalculation,
         name:'纳税申报合并计算表',
         icon:{
             url:`${ICON_URL_PATH}taxReturn.svg`,
             backgroundColor:'#2E8A57'
         },
-        authorityInfo:businessReport['taxReturnMergeCalculationTable'].options,
+        authorityInfo:businessReport['taxReturnMergeCalculation'].options,
         exact:true,
     },{
         path:`${PATH}/fixedAssetCard`,

@@ -18,15 +18,14 @@ import {sheet_8,composeGrid_8} from 'modules/reportManage/businessReport/taxRetu
 
 // import sheet_9 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet9'
 import sheet_10 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet10'
-import SheetWithSearchFields from '../taxReturnForm/SheetWithSearchFields.r'
+import SheetWithSearchFields from './SheetWithSearchFields.r'
 const TabPane = Tabs.TabPane;
 
 const sheetData = [
     {
         tab:'主表',
         grid:sheet_0,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=0',
         action:true,
         scroll:{
             x:'100%',
@@ -35,8 +34,7 @@ const sheetData = [
     }, {
         tab:'附表一',
         grid:sheet_1,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=1',
         scroll:{
             x:1800,
             y:window.screen.availHeight-320,
@@ -44,8 +42,7 @@ const sheetData = [
     }, {
         tab:'附表二',
         grid:sheet_2,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=2',
         scroll:{
             //x:1800,
             y:window.screen.availHeight-320,
@@ -53,8 +50,7 @@ const sheetData = [
     }, {
         tab:'附表三',
         grid:sheet_3,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=3',
         scroll:{
             //x:1800,
             y:window.screen.availHeight-320,
@@ -62,13 +58,11 @@ const sheetData = [
     }, {
         tab:'附表四',
         grid:sheet_4,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=4',
     }, {
         tab:'附表五',
         grid:sheet_5,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=5',
         /*}, {
          tab:'固定资产表',
          grid:sheet_6,
@@ -80,14 +74,12 @@ const sheetData = [
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url:'/taxDeclarationReport/merge/list?reportType=6',
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
-        url:'/taxDeclarationReport/partner/find',
+        url:'/taxDeclarationReport/merge/list?reportType=7',
         composeGrid:composeGrid_8,
-        saveUrl:'/taxDeclarationReport/partner/update',
     },
     // {
     //     tab:'营改增税负分析测算明细表',
@@ -99,7 +91,7 @@ const sheetData = [
     // }
 ]
 
-export default class TaxReturnForm extends Component{
+export default class TaxReturnMergeCalculation extends Component{
     state={
         activeKey:'0',
         params:{}
@@ -120,17 +112,13 @@ export default class TaxReturnForm extends Component{
                 <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}}
                       onChange={this.onChange}
                       activeKey={activeKey}
-                      tabBarExtraContent={
-                          <button aria-label="Close" className="ant-drawer-close" onClose={()=>this.props.togglesDrawerVisible(false)}>
-                          </button>
-                      }
                 >
                     {
                         sheetData.map((item,i)=>(
                             <TabPane tab={item.tab} key={i}>
                                 {
                                     parseInt(activeKey,0) === i ?
-                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} reportType={i} partnerId={partnerId}/>
+                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} partnerId={partnerId}/>
                                         : ''
                                 }
                             </TabPane>
