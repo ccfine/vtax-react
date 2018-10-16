@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:47:06 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-13 17:46:13
+ * @Last Modified time: 2018-10-16 16:46:58
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -156,7 +156,7 @@ const columns=[
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'fixedAssetCard/export',
+                                        url:'fixedAssetCard/external/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
@@ -181,9 +181,9 @@ const columns=[
                         )
                     },
                     scroll:{
-                     x:1800,
-                     y:window.screen.availHeight-380-(disabled?50:0),
-                     },
+                        x:1800,
+                        y:window.screen.availHeight-380-(disabled?50:0),
+                    },
                 }}
             />
             </div>
