@@ -10,7 +10,7 @@ const columns = (context,isEdit) =>[{
         //width:'200px',
     },{
         title:'项目分期名称',
-        dataIndex:'stageName',
+        dataIndex:'stagesName',
         width:'200px',
     },{
         title:'固定资产名称',
@@ -28,6 +28,26 @@ const columns = (context,isEdit) =>[{
         title:'取得方式',
         dataIndex:'acquisitionMode',
         width:'200px',
+        render: (text) => {
+            // 0-外部获取
+            // 1-单独新建
+            // 2-自建转自用
+            let res = "";
+            switch (parseInt(text, 0)) {
+                case 0:
+                    res = "外部获取";
+                    break;
+                case 1:
+                    res = "单独新建";
+                    break;
+                case 2:
+                    res = "自建转自用";
+                    break;
+                default:
+                    break;
+            }
+            return res;
+        },
     },{
         title:'取得价值',
         dataIndex:'gainValue',
@@ -35,51 +55,51 @@ const columns = (context,isEdit) =>[{
     },
     {
         title: "资产类别",
-        dataIndex: "areaCovered",
+        dataIndex: "assetType",
         width:'200px',
     },
     {
         title: "资产状态",
-        dataIndex: "intaxRate",
+        dataIndex: "assetsState",
         width:'200px',
     },
     {
         title: "占地面积",
-        dataIndex: "inTax",
+        dataIndex: "areaCovered",
         width:'100px',
     },
     {
         title: "税率",
-        dataIndex: "taxAmount",
+        dataIndex: "intaxRate",
         width:'100px',
     },
     {
         title: "税额",
-        dataIndex: "deductedTaxAmount",
+        dataIndex: "inTax",
         render:(text)=>fMoney(text),
         className: "table-money",
         width:'150px',
     },{
         title: "期初待抵扣进项税额",
-        dataIndex: "deductedPeriod",
+        dataIndex: "initialTaxAmount",
         width:'100px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "当期抵扣进项税额",
-        dataIndex: "assetType",
+        dataIndex: "taxAmount",
         width:'150px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "期末待抵扣进项税额",
-        dataIndex: "assetsState",
+        dataIndex: "deductedTaxAmount",
         width:'100px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "待抵扣期间",
-        dataIndex: "assetsState",
+        dataIndex: "deductedPeriod",
         width:'100px',
     },
 ];
@@ -132,7 +152,7 @@ export default class ExternalAccess extends Component{
                         key:tableKey,
                         pageSize:100,
                         columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
-                        url:'/account/income/estate/fixedList',
+                        url:'/account/income/estate/externalList',
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>外部获取固定资产进项税额抵扣</span>,
                         },
@@ -149,7 +169,7 @@ export default class ExternalAccess extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {
+                                {/* {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'account/income/estate/fixed/export',
@@ -157,7 +177,7 @@ export default class ExternalAccess extends Component{
                                         title:'导出',
                                         userPermissions:['1251007'],
                                     }],statusParam)
-                                }
+                                } */}
                                 {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'submit',
