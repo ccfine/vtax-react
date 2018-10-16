@@ -3,40 +3,40 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,composeBotton} from 'utils';
+import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 
 const getColumns = context =>[
     {
         title: '利润中心',
-        dataIndex: 'mainName',
+        dataIndex: 'profitCenterName',
         //width:'200px',
     }, {
         title: '项目分期名称',
-        dataIndex: 'taxNum',
+        dataIndex: 'stagesName',
         width:'200px',
     },{
         title: '固定资产名称',
-        dataIndex: 'finish1',
+        dataIndex: 'assetName',
         width:'200px',
     },{
         title: '固定资产编号',
-        dataIndex: 'finish2',
+        dataIndex: 'assetNo',
         width:'200px',
     },{
         title: '进项税额',
-        dataIndex: 'finish3',
+        dataIndex: 'incomeTaxAmount',
         width:'200px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '不含税金额',
-        dataIndex: 'finish4',
+        dataIndex: 'withoutTax',
         width:'200px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '综合税率',
-        dataIndex: 'finish5',
+        dataIndex: 'taxRate',
         width:'200px',
     }
 ];
@@ -45,6 +45,7 @@ export default class Tab3 extends Component{
     state={
         visible:false,
         filters: {},
+        statusParam: {},
         modalConfig:{
             type:''
         },
@@ -68,8 +69,19 @@ export default class Tab3 extends Component{
             }
         })
     }
+    fetchResultStatus = ()=>{
+        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+            this.mounted && this.setState({
+                statusParam: result,
+            })
+        })
+    }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render(){
-        const {tableKey,filters} = this.state;
+        const {tableKey,filters, statusParam} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -85,22 +97,43 @@ export default class Tab3 extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this),
-                    url:'/dataCollection/list',
+                    url:'/account/income/fixedAssets/buildRateList',
                     cardProps:{
                         title: <span><label className="tab-breadcrumb">固定资产进项发票台账 / </label>自建转自用综合税率</span>,
                     },
                     extra: (
                         <div>
                             {
+                                listMainResultStatus(statusParam)
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'submit',
+                                    url:'/account/income/fixedAssets/submit',
+                                    params:filters,
+                                    userPermissions:['1251010'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                },{
                                     type: 'reset',
-                                    url:'/account/income/estate/reset',
+                                    url:'/account/income/fixedAssets/reset',
                                     params:filters,
                                     userPermissions:['1251009'],
                                     onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
-                                }])
+                                },{
+                                    type:'revoke',
+                                    url:'/account/income/fixedAssets/revoke',
+                                    params:filters,
+                                    userPermissions:['1251011'],
+                                    onSuccess:()=>{
+                                        //this.refreshTable();
+                                        this.props.refreshTabs()
+                                    },
+                                }],statusParam)
                             }
                         </div>
                     ),
