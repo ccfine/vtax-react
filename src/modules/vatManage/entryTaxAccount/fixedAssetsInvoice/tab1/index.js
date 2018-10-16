@@ -8,95 +8,131 @@ import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'uti
 const getColumns = context =>[
     {
         title: '利润中心',
-        dataIndex: 'mainName',
+        dataIndex: 'profitCenterName',
         //width:'200px',
     }, {
         title: '项目分期名称',
-        dataIndex: 'taxNum',
+        dataIndex: 'stagesName',
         width:'200px',
     },{
         title: '产品编码',
-        dataIndex: 'finish1',
+        dataIndex: 'productNum',
         width:'200px',
     },{
         title: '产品名称',
-        dataIndex: 'finish2',
+        dataIndex: 'productName',
         width:'200px',
     },{
         title: '产品类型',
-        dataIndex: 'finish3',
+        dataIndex: 'productType',
         width:'100px',
     },{
         title: '发票号码',
-        dataIndex: 'finish4',
+        dataIndex: 'invoiceNum',
         width:'200px',
     },{
         title: '发票代码',
-        dataIndex: 'finish5',
+        dataIndex: 'invoiceCode',
         width:'200px',
     },{
         title: '拆分前发票号码',
-        dataIndex: 'finish6',
+        dataIndex: 'splitInvoiceNum',
         width:'200px',
     },{
         title: '拆分前发票代码',
-        dataIndex: 'finish7',
+        dataIndex: 'splitInvoiceCode',
         width:'200px',
     },{
         title: '开票日期',
-        dataIndex: 'finish8',
+        dataIndex: 'billingDate',
         width:'100px',
     },{
         title: '发票类型',
-        dataIndex: 'finish9',
+        dataIndex: 'invoiceType',
         width:'100px',
+        render: (text) => {
+            // s-专票
+            // c-普票
+            let res = "";
+            switch (text) {
+                case "s":
+                    res = "专票";
+                    break;
+                case "c":
+                    res = "普票";
+                    break;
+                default:
+                    break;
+            }
+            return res
+        }
     },{
         title: '不含税金额',
-        dataIndex: 'finish10',
+        dataIndex: 'withoutTax',
         width:'100px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '税率',
-        dataIndex: 'finish11',
+        dataIndex: 'taxRate',
         width:'100px',
     },{
         title: '进项税额',
-        dataIndex: 'finish12',
+        dataIndex: 'inTaxAmount',
         width:'100px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '价税合计',
-        dataIndex: 'finish13',
+        dataIndex: 'totalAmount',
         width:'100px',
     },{
         title: '拆分规则',
-        dataIndex: 'finish14',
+        dataIndex: 'splitRule',
         width:'100px',
     },{
         title: '拆分比例',
-        dataIndex: 'finish15',
+        dataIndex: 'splitProportion',
         width:'100px',
     },{
         title: '已拆分金额',
-        dataIndex: 'finish16',
+        dataIndex: 'splitAmount',
         width:'100px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '已拆分税额',
-        dataIndex: 'finish17',
+        dataIndex: 'splitTaxAmount',
         width:'100px',
         className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '认证状态',
-        dataIndex: 'finish18',
+        dataIndex: 'authStatus',
         width:'100px',
+        render: text => {
+            // 0-无需认证
+            // 1-认证成功
+            // 2-认证失败
+            let res = "";
+            switch (parseInt(text, 0)) {
+                case 0:
+                    res = "无需认证";
+                    break;
+                case 1:
+                    res = "认证成功";
+                    break;
+                case 2:
+                    res = "认证失败";
+                    break;
+                default:
+                    break;
+            }
+            return res
+        }
     },{
         title: '认证日期',
-        dataIndex: 'finish19',
+        dataIndex: 'authDate',
         width:'100px',
     }
 ];
@@ -164,7 +200,7 @@ export default class Tab1 extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this),
-                    url:'/dataCollection/list',
+                    url:'/account/income/fixedAssets/incomeSeparateList',
                     cardProps:{
                         title: <span><label className="tab-breadcrumb">固定资产进项发票台账 / </label>单独新建自持类进项发票</span>,
                     },
@@ -173,7 +209,7 @@ export default class Tab1 extends Component{
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {
+                            {/* {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/income/estate/fixed/export',
@@ -181,11 +217,11 @@ export default class Tab1 extends Component{
                                     title:'导出',
                                     userPermissions:['1251007'],
                                 }],statusParam)
-                            }
+                            } */}
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'submit',
-                                    url:'/account/income/estate/submit',
+                                    url:'/account/income/fixedAssets/submit',
                                     params:filters,
                                     userPermissions:['1251010'],
                                     onSuccess:()=>{
@@ -194,7 +230,7 @@ export default class Tab1 extends Component{
                                     },
                                 },{
                                     type: 'reset',
-                                    url:'/account/income/estate/reset',
+                                    url:'/account/income/fixedAssets/reset',
                                     params:filters,
                                     userPermissions:['1251009'],
                                     onSuccess:()=>{
@@ -202,7 +238,7 @@ export default class Tab1 extends Component{
                                     },
                                 },{
                                     type:'revoke',
-                                    url:'/account/income/estate/revoke',
+                                    url:'/account/income/fixedAssets/revoke',
                                     params:filters,
                                     userPermissions:['1251011'],
                                     onSuccess:()=>{
