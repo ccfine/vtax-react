@@ -374,13 +374,13 @@ const strategies = {
                     '1981002','1981007'
                 ],
             },
-            //自持类产品关联进项发票  查看-"2071002"
+            //自持类产品关联进项发票  查看-"2071002"  抽数-""
             selfContainedProductAssociation: {
                 options: [                
                     "2071002"
                 ]
             },
-            //自持类产品清单  查看-"2061002"
+            //自持类产品清单  查看-"2061002"  抽数-""
             selfContainedProductList: {
                 options: [                
                     "2061002"
