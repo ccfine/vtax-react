@@ -237,7 +237,7 @@ class InputTaxDetails extends Component {
         saveLoading: false
     };
     toggoleSaveLoading=(saveLoading)=>{
-        this.mounted && this.setState({saveLoading})
+        this.setState({saveLoading})
     }
     refreshTable = () => {
         this.setState({
@@ -327,6 +327,7 @@ class InputTaxDetails extends Component {
                 }
 
                 this.toggoleSaveLoading(true)
+
                 request.post('/account/income/taxDetail/update/amount', list)
                 .then(({data})=>{
                     this.toggoleSaveLoading(false)
@@ -419,7 +420,7 @@ class InputTaxDetails extends Component {
                                 icon:'save',
                                 userPermissions: ['1381024'],
                                 onClick:this.save,
-                                // loading:saveLoading
+                                loading:saveLoading
                             }, {
                                 type: 'reset',
                                 url: '/account/income/taxDetail/reset',
