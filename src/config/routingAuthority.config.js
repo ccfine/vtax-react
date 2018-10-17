@@ -394,6 +394,12 @@ const strategies = {
                     '1981002','1981007'
                 ],
             },
+            //纳税申报跟踪进度表  查看-"2121002"  导出-"2121007"
+            taxReturnProgressTrackTable: {
+                options: [
+                    "2121002", "2121007"
+                ]
+            },
             //自持类产品关联进项发票  查看-"2071002"  抽数-""
             selfContainedProductAssociation: {
                 options: [
