@@ -3,7 +3,6 @@
  * createTime   : 2018/1/10 14:39
  * description  :
  */
-
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
@@ -150,7 +149,7 @@ export default class PopInvoiceInformationModal extends Component{
                                 title: "发票信息列表",
                             },
                             pageSize:100,
-                            columns: columns,
+                            columns:columns,
                             url:`/income/invoice/collection/detailList?${parseJsonToParams(props.filters)}`,
                             scroll:{ x: '200%', y: 200},
                         }}
