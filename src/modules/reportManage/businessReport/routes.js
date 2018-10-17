@@ -10,9 +10,6 @@ import strategies from 'config/routingAuthority.config'
 
 const RoomTransactionFile = AsyncComponent(() => import('./roomTransactionFile'), '房间交易档案')
 const TaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '纳税申报表')
-const PartnersTaxReturn = AsyncComponent(() => import('./partnersTaxReturn'), '合作方纳税申报表')
-const PartnersTaxReturnForm = AsyncComponent(() => import('./partnersTaxReturn/taxReturnForm'), '合作方的纳税申报-纳税申报表')
-const TaxReturnMergeCalculation = AsyncComponent(() => import('./taxReturnMergeCalculation'), '纳税申报合并计算表')
 const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '固定资产卡片')
 const FinancialDocuments = AsyncComponent(() => import('./financialDocuments'), '财务凭证')
 const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoiceCollection'), '进项发票采集')
@@ -20,7 +17,6 @@ const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollec
 const AvailableArea = AsyncComponent(() => import('./availableArea'), '可售面积')
 const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), '科目余额表')
 const BillPool = AsyncComponent(() => import("./billPool"), "票据池")
-const TaxReturnProgressTrackTable = AsyncComponent(() => import("./taxReturnProgressTrackTable"), "纳税申报进度跟踪表")
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -68,31 +64,6 @@ const BusinessReport_Routes = [
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['taxReturn'].options,
-        exact:true,
-    },{
-        path:`${PATH}/partnersTaxReturn`,
-        component:PartnersTaxReturn,
-        name:'合作方纳税申报表',
-        icon:{
-            url:`${ICON_URL_PATH}taxReturn.svg`,
-            backgroundColor:'#2E8A57'
-        },
-        authorityInfo:businessReport['partnersTaxReturn'].options,
-        exact:true,
-    },{
-        path:`${PATH}/partnersTaxReturn/partnersTaxReturnForm`,
-        component:PartnersTaxReturnForm,
-        name:'合作方纳税申报信息-纳税申报表',
-        exact:true
-    },{
-        path:`${PATH}/taxReturnMergeCalculation`,
-        component:TaxReturnMergeCalculation,
-        name:'纳税申报合并计算表',
-        icon:{
-            url:`${ICON_URL_PATH}taxReturn.svg`,
-            backgroundColor:'#2E8A57'
-        },
-        authorityInfo:businessReport['taxReturnMergeCalculation'].options,
         exact:true,
     },{
         path:`${PATH}/fixedAssetCard`,
@@ -164,16 +135,6 @@ const BusinessReport_Routes = [
             backgroundColor: "#2E8A57"
         },
         authorityInfo: businessReport["billPool"].options,
-    },
-    {
-        path: `${PATH}/taxReturnProgressTrackTable`,
-        component: TaxReturnProgressTrackTable,
-        name: "纳税申报进度跟踪表",
-        icon: {
-            url: `${ICON_URL_PATH}taxReturnProgressTrackTable.svg`,
-            backgroundColor: "#2E8A57"
-        },
-        authorityInfo: businessReport["taxReturnProgressTrackTable"].options,
         exact: true
     },
     {

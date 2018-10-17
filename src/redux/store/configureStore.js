@@ -10,9 +10,9 @@ import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
 import rootReducer from '../reducers'
 import immutableTransform from 'redux-persist-transform-immutable'
-//import { createLogger } from 'redux-logger';
+import { createLogger } from 'redux-logger';
 
-//const logger = createLogger();
+const logger = createLogger();
 const config = {
     transforms: [immutableTransform()],
     key: 'root', // key is required
@@ -21,7 +21,7 @@ const config = {
 
 const persistedReducer = persistReducer(config, rootReducer);
 // 创建一个中间件集合
-const middleware = applyMiddleware(thunk,promiseMiddleware); //,logger
+const middleware = applyMiddleware(thunk,promiseMiddleware,logger);
 
 // 利用compose增强store，这个 store 与 applyMiddleware 和 redux-devtools 一起使用
 const configureStore = preloadedState => {

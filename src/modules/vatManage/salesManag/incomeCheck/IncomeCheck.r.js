@@ -143,8 +143,8 @@ const columns=[
         width:'100px',
     },
     {
-        title:'确收金额',
-        dataIndex: "confirmedPrice",
+        title:'结算价',
+        dataIndex: "newSdValorem",
         render: text => fMoney(text),
         className: "table-money",
         width:'150px',

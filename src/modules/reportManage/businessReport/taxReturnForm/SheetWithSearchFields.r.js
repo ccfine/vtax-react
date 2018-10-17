@@ -235,7 +235,7 @@ class SheetWithSearchFields extends Component{
                     <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form}/>
                 </Card>
             </div>
-
+        
 
         </Form>
         )
