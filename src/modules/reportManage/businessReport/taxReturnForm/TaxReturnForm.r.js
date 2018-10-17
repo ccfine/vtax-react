@@ -12,8 +12,8 @@ import sheet_3 from './sheetData/sheet3'
 import sheet_4 from './sheetData/sheet4'
 import sheet_5 from './sheetData/sheet5'
 /*
-import sheet_6 from './sheetData/sheet6'
-import sheet_7 from './sheetData/sheet7'*/
+ import sheet_6 from './sheetData/sheet6'
+ import sheet_7 from './sheetData/sheet7'*/
 import {sheet_8,composeGrid_8} from './sheetData/sheet8'
 
 // import sheet_9 from './sheetData/sheet9'
@@ -54,14 +54,14 @@ const sheetData = [
         grid:sheet_5,
         url:'/tax/declaration/addendum/five/list',
         saveUrl:'/tax/declaration/addendum/five/save',
-    /*}, {
-        tab:'固定资产表',
-        grid:sheet_6,
-        url:'/tax/decConduct/fixedAssets/list'
-    }, {
-        tab:'进项结构明细',
-        grid:sheet_7,
-        url:'/tax/declaration/tax/structure/list'*/
+        /*}, {
+         tab:'固定资产表',
+         grid:sheet_6,
+         url:'/tax/decConduct/fixedAssets/list'
+         }, {
+         tab:'进项结构明细',
+         grid:sheet_7,
+         url:'/tax/declaration/tax/structure/list'*/
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
@@ -102,16 +102,16 @@ class TaxReturnForm extends Component{
         const {activeKey,params} = this.state,
             {declare} = this.props;
         return (
-            <Tabs tabBarStyle={{marginBottom:0,backgroundColor:!!declare?'#FFF':'transparent'}} onChange={this.onChange} activeKey={activeKey}  type={!!declare?'line':"card"}>
+            <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}} onChange={this.onChange} activeKey={activeKey}>
                 {
                     sheetData.map((item,i)=>(
                         <TabPane tab={item.tab} key={i}>
                             {
                                 parseInt(activeKey,0) === i ? (
-                                item.Component?<item.Component onParamsChange={this.onParamsChange} defaultParams={params}  declare={declare}/>:
-                                <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare}/>
+                                    item.Component?<item.Component onParamsChange={this.onParamsChange} defaultParams={params}  declare={declare}/>:
+                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare}/>
                                 )
-                                 : ''
+                                    : ''
                             }
                         </TabPane>
                     ))

@@ -9,7 +9,7 @@
 // public static final int ACTION_DOWNLOAD = 1006;  下载
 // public static final int ACTION_EXPORT = 1007;  导出
 // public static final int ACTION_DELETE = 1008;  删除
-// public static final int ACTION_RESET = 1009;  撤回
+// public static final int ACTION_RESET = 1009;  重算
 // public static final int ACTION_SUBMIT = 1010;  提交
 // public static final int ACTION_REVOKE = 1011;  撤回
 
@@ -327,6 +327,24 @@ const strategies = {
                 ],
             },
 
+            //合作方纳税申报表
+            partnersTaxReturn:{
+                options:[
+                    //合作方表 查看-'2151002' 新增-'2151003'  修改-'2151004' 删除-'2151008'
+                    '2151002','2151003','2151004','2151008',
+
+                    //合作方-纳税申报表 查看-'2131002' 保存-修改-'2131004' 删除-'2131008'  提交-'2131010'  撤回-'2131011'
+                    '2131002','2131004','2131008','2131010','2131011',
+                ],
+            },
+
+            //纳税申报合并计算表  查看-'2141002' 提交-'2141010'  撤回-'2141011'
+            taxReturnMergeCalculation:{
+                options:[
+                    '2141002','2141010','2141011'
+                ],
+            },
+
             //固定资产卡片报表  查看-'1871002'  抽数-'1875001'
             fixedAssetCard:{
                 options:[
@@ -363,6 +381,12 @@ const strategies = {
                     '1981002','1981007'
                 ],
             },
+            //纳税申报跟踪进度表  查看-"2121002"  导出-"2121007"
+            taxReturnProgressTrackTable: {
+                options: [
+                    "2121002", "2121007"
+                ]
+            }
         },
     },
 }
