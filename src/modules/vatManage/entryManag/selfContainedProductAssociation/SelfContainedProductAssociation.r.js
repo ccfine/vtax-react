@@ -5,8 +5,7 @@
 */
 
 import React, { Component } from "react"
-import { connect } from "react-redux"
-import { message, Modal } from "antd"
+import { message } from "antd"
 import { SearchTable, TableTotal } from "compoments"
 import moment from "moment"
 import { listMainResultStatus, composeBotton, request, requestResultStatus } from "utils"
@@ -24,7 +23,7 @@ const formItemStyle = {
 const searchFields =  (disabled,declare) => (getFieldValue) => [
   {
     label: "纳税主体",
-    fieldName: "mainId",
+    fieldName: "main",
     type: "taxMain",
     span: 8,
     formItemStyle,
@@ -108,7 +107,12 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
     formItemStyle,
     options: [
       {
-
+        text: "增值税专用发票",
+        value: "s"
+      },
+      {
+        text: "增值税普通发票",
+        value:  "c"
       }
     ]
   },
@@ -137,39 +141,7 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
   }
 ]
 
-const getColumns = (context, disabled) => {
-  let operates = (disabled && parseInt(context.state.statusParam.status,0) ===1 )?[{
-      title: "操作",
-      key: "actions",
-      fixed: true,
-      className: "text-center",
-      width: "50px",
-      render: (text, record) => composeBotton([{
-              type: "action",
-              title: "解除匹配",
-              icon: "disconnect",
-              style: { color: "#f5222d"},
-              userPermissions: ["2055003"],
-              onSuccess: () => {
-                  const modalRef = Modal.confirm({
-                      title: "友情提醒",
-                      content: "是否要解除匹配？",
-                      okText: "确定",
-                      okType: "danger",
-                      cancelText: "取消",
-                      onOk: () => {
-                          context.deleteRecord(record.id, () => {
-                              modalRef && modalRef.destroy()
-                              context.props.refreshTabs()
-                          })
-                      },
-                      onCancel () {
-                          modalRef.destroy()
-                      }
-                  })
-              }}])
-  }]:[]
-  return [...operates,
+const columns = [
     {
       title: "利润中心",
       dataIndex: "profitCenterName",
@@ -208,6 +180,22 @@ const getColumns = (context, disabled) => {
     {
       title: "认证标记",
       dataIndex: "authStatus",
+      render: text => {
+        let t = ""
+        switch (parseInt(text, 0)) {
+          case 1: 
+            t = "认证成功"
+            break
+          case 2:
+            t = "认证失败"
+            break
+          case 0:
+            t = "无需认证"
+            break
+          default:  
+        }
+        return t
+      },
       width: "200px"
     },
     {
@@ -265,10 +253,9 @@ const getColumns = (context, disabled) => {
       dataIndex: "updateDate",
       width: "200px"
     }   
-  ]
-}
+]
 
-class SelfContainedProductAssociation extends Component {
+export default class SelfContainedProductAssociation extends Component {
   constructor () {
     super()
     this.state = {
@@ -286,27 +273,27 @@ class SelfContainedProductAssociation extends Component {
   }
 
   fetchResultStatus = () => {
-    requestResultStatus("", this.state.filters,result => {
+    requestResultStatus("/accountReceiptsInvoice/listMain", this.state.filters,result => {
         this.setState({
             statusParam: result,
         })
     })
   }
 
-  deleteRecord = (id, cb) => {
-    request.delete("")
-        .then(({data}) => {
-            if (data.code === 200) {
-                message.success('解除成功!')
-                cb && cb()
-            } else {
-                message.error(`解除匹配失败:${data.msg}`)
-            }
-        })
-        .catch(err => {
-            message.error(err.message)
-        })
-  }
+  // deleteRecord = (id, cb) => {
+  //   request.delete("")
+  //       .then(({data}) => {
+  //           if (data.code === 200) {
+  //               message.success('解除成功!')
+  //               cb && cb()
+  //           } else {
+  //               message.error(`解除匹配失败:${data.msg}`)
+  //           }
+  //       })
+  //       .catch(err => {
+  //           message.error(err.message)
+  //       })
+  // }
 
   matchData = () => {
     const { filters } = this.state
@@ -345,7 +332,7 @@ class SelfContainedProductAssociation extends Component {
           tableOption={{
             key: tableKey,
             pageSize: 100,
-            columns: getColumns(this, disabled),
+            columns,
             cardProps: {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项的发票</TableTitle>
             },
@@ -419,8 +406,3 @@ class SelfContainedProductAssociation extends Component {
     )
   }
 }
-
-
-export default connect(state => ({
-  userid: state.user.getIn(["personal", "id"])
-}))(SelfContainedProductAssociation)

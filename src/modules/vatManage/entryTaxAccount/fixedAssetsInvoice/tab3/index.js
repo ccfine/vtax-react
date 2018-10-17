@@ -70,7 +70,7 @@ export default class Tab3 extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('/account/income/fixedAssets/listMain',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -118,7 +118,7 @@ export default class Tab3 extends Component{
                                     type: 'reset',
                                     url:'/account/income/fixedAssets/reset',
                                     params:filters,
-                                    userPermissions:['1251009'],
+                                    userPermissions:['1241009'],
                                     onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },

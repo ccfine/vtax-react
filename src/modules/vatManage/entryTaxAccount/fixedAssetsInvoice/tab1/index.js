@@ -166,7 +166,7 @@ export default class Tab1 extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('/account/income/fixedAssets/listMain',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -223,7 +223,7 @@ export default class Tab1 extends Component{
                                     type:'submit',
                                     url:'/account/income/fixedAssets/submit',
                                     params:filters,
-                                    userPermissions:['1251010'],
+                                    userPermissions:['1241010'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
                                         this.props.refreshTabs()
@@ -232,7 +232,7 @@ export default class Tab1 extends Component{
                                     type: 'reset',
                                     url:'/account/income/fixedAssets/reset',
                                     params:filters,
-                                    userPermissions:['1251009'],
+                                    userPermissions:['1241009'],
                                     onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
@@ -240,7 +240,7 @@ export default class Tab1 extends Component{
                                     type:'revoke',
                                     url:'/account/income/fixedAssets/revoke',
                                     params:filters,
-                                    userPermissions:['1251011'],
+                                    userPermissions:['1241011'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
                                         this.props.refreshTabs()
