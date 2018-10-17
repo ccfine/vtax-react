@@ -149,7 +149,7 @@ const getColumns = (context, disabled) => {
               title: "解除匹配",
               icon: "disconnect",
               style: { color: "#f5222d"},
-              userPermissions: [],
+              userPermissions: ["2055003"],
               onSuccess: () => {
                   const modalRef = Modal.confirm({
                       title: "友情提醒",
@@ -360,7 +360,7 @@ class SelfContainedProductAssociation extends Component {
                       url: "/accountReceiptsInvoice/export",
                       params: filters,
                       title: "导出",
-                      userPermissions: []
+                      userPermissions: ["2051007"]
                   }])
               }
               {
@@ -369,13 +369,13 @@ class SelfContainedProductAssociation extends Component {
                         icon: "copy",
                         text: "数据匹配",
                         btnType: "default",
-                        userPermissions: [],
+                        userPermissions: ["2055002"],
                         onClick: this.matchData
                     },{
                         type: "submit",
                         url: "/accountReceiptsInvoice/submit",
                         params: filters,
-                        userPermissions: [],
+                        userPermissions: ["2051010"],
                         onSuccess: () => {
                             this.props.refreshTabs()
                         }
@@ -383,7 +383,7 @@ class SelfContainedProductAssociation extends Component {
                         type: "revoke",
                         url: "/accountReceiptsInvoice/revoke",
                         params: filters,
-                        userPermissions: [],
+                        userPermissions: ["2051011"],
                         onSuccess: () => {
                             this.props.refreshTabs()
                         }
