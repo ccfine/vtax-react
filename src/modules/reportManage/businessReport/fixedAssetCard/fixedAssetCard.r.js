@@ -2,11 +2,11 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-16 15:24:28
+ * @Last Modified time: 2018-10-17 14:54:31
  */
 import React, { Component } from "react";
 import {message} from 'antd';
-import { SearchTable} from "compoments";
+import { SearchTable, TableTotal } from "compoments";
 import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
 import TableTitle from 'compoments/tableTitleWithTime'
@@ -342,6 +342,17 @@ class fixedAssetCard extends Component {
                                     }
                                 }])
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '税额', dataIndex: 'inTax'},
+                                            {title: '取得价值', dataIndex: 'gainValue'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </span>
                     )
                 }}
