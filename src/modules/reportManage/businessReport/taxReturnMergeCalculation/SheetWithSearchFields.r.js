@@ -173,13 +173,13 @@ class SheetWithSearchFields extends Component{
                                             type:'submit',
                                             url:'/taxDeclarationReport/merge/submit',
                                             params:params,
-                                            userPermissions:['1911010'],
+                                            userPermissions:['2141010'],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
                                             url:'/taxDeclarationReport/merge/revoke',
                                             params:params,
-                                            userPermissions:['1911011'],
+                                            userPermissions:['2141011'],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                         : null

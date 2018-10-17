@@ -103,7 +103,10 @@ class Add extends Component {
                     //gqgx:gqgx,
                     szjd:szjd,
                     taxSubjectConfigBO: type === 'add' ? {
-                        prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0'
+                        prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
+                        unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
+                        jointDevelopment:values.taxSubjectConfigBO.jointDevelopment === true ? '1' : '0',
+                        confirmType:values.taxSubjectConfigBO.confirmType,
                     } : {
                         id:this.state.taxSubjectConfigBO.id,
                         parentId:this.state.taxSubjectConfigBO.parentId,
@@ -128,7 +131,7 @@ class Add extends Component {
 
                                 //编辑成功，关闭当前窗口,刷新父级组件
                                 this.props.toggleModalVisible(false);
-                                this.props.updateTable();
+                                this.props.refreshTable();
 
                                 this.mounted && this.setState({
                                     submitLoading: false,
@@ -160,7 +163,7 @@ class Add extends Component {
                                 message.success('编辑成功！', 4);
                                 //编辑成功，关闭当前窗口,刷新父级组件
                                 this.props.toggleModalVisible(false);
-                                this.props.updateTable();
+                                this.props.refreshTable();
                                 this.mounted && this.setState({
                                     submitLoading: false
                                 })
@@ -198,7 +201,7 @@ class Add extends Component {
      if(data.code===200){
      message.success('删除成功!');
      this.props.toggleModalVisible(false);
-     this.props.updateTable();
+     this.props.refreshTable();
      }else{
      message.error(data.msg)
      }
@@ -221,7 +224,7 @@ class Add extends Component {
                     message.success(`${mes}成功！`, 4);
                     //编辑成功，关闭当前窗口,刷新父级组件
                     this.props.toggleModalVisible(false);
-                    this.props.updateTable();
+                    this.props.refreshTable();
                 } else {
                     message.error(data.msg, 4);
                     this.mounted && this.setState({
@@ -368,7 +371,7 @@ class Add extends Component {
                                         form={form}
                                         type={type}
                                         visible={visible}
-                                        defaultData={jbxx}
+                                        defaultData={type==='add'?{}:jbxx}
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
@@ -376,7 +379,7 @@ class Add extends Component {
                                     <TaxIdentification
                                         form={form}
                                         type={type}
-                                        defaultData={szjd}
+                                        defaultData={type==='add'?{}:szjd}
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
@@ -400,7 +403,7 @@ class Add extends Component {
                                     <ParameterSettings
                                         form={form}
                                         type={type}
-                                        defaultData={taxSubjectConfigBO}
+                                        defaultData={type==='add'?{}:taxSubjectConfigBO}
                                         selectedRowKeys={selectedRowKeys}
                                     />
                                 </TabPane>
