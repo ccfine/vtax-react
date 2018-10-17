@@ -5,8 +5,8 @@
 */
 
 import React, { Component } from "react"
-import { connect } from "react-redux"
-import { SearchTable, TableTotal } from "compoments"
+// import { connect } from "react-redux"
+import { SearchTable } from "compoments"
 // import { composeBotton } from 'utils'
 // import createSocket from "../socket"
 import TableTitle from "compoments/tableTitleWithTime"
@@ -135,7 +135,7 @@ const columns = [
 //   }
 // ]
 
-class SelfContainedProductList extends Component {
+export default class SelfContainedProductList extends Component {
   constructor () {
     super()
     this.state = {
@@ -165,21 +165,21 @@ class SelfContainedProductList extends Component {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品清单</TableTitle>
             },
             url: "/interProductList/list",
-            extra: <div>
-              {/* {
-                  composeBotton([{
-                      type: "modal",
-                      url: "",
-                      title: "抽数",
-                      icon: "usb",
-                      fields: apiFields,
-                      userPermissions: [],
-                      onSuccess: () => {
-                          createSocket(this.props.userid)
-                      }
-                  }])
-              } */}
-            </div>,
+            // extra: <div>
+            //   {/* {
+            //       composeBotton([{
+            //           type: "modal",
+            //           url: "",
+            //           title: "抽数",
+            //           icon: "usb",
+            //           fields: apiFields,
+            //           userPermissions: [],
+            //           onSuccess: () => {
+            //               createSocket(this.props.userid)
+            //           }
+            //       }])
+            //   } */}
+            // </div>,
             onTotalSource: totalSource => {
               this.setState({
                   totalSource
@@ -195,8 +195,7 @@ class SelfContainedProductList extends Component {
     )
   }
 }
-
-
-export default connect(state => ({
-  userid: state.user.getIn(["personal", "id"])
-}))(SelfContainedProductList)
+ 
+// export default connect(state => ({
+//   userid: state.user.getIn(["personal", "id"])
+// }))(SelfContainedProductList)

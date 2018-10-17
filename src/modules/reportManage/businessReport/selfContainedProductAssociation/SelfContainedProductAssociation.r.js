@@ -5,7 +5,7 @@
 */
 
 import React, { Component } from "react"
-import { connect } from "react-redux"
+// import { connect } from "react-redux"
 import { SearchTable, TableTotal } from "compoments"
 // import { composeBotton } from 'utils'
 // import createSocket from "../socket"
@@ -92,7 +92,12 @@ const searchFields = getFieldValue => [
     formItemStyle,
     options: [
       {
-
+        text: "增值税专用发票",
+        value: "s"
+      },
+      {
+        text: "增值税普通发票",
+        value:  "c"
       }
     ]
   },
@@ -246,7 +251,7 @@ const columns = [
 //   }
 // ]
 
-class SelfContainedProductAssociation extends Component {
+export default class SelfContainedProductAssociation extends Component {
   constructor () {
     super()
     this.state = {
@@ -321,7 +326,6 @@ class SelfContainedProductAssociation extends Component {
   }
 }
 
-
-export default connect(state => ({
-  userid: state.user.getIn(["personal", "id"])
-}))(SelfContainedProductAssociation)
+// export default connect(state => ({
+//   userid: state.user.getIn(["personal", "id"])
+// }))(SelfContainedProductAssociation)
