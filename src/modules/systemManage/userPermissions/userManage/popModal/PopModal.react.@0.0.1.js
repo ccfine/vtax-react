@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React, { Component } from "react";
-import { Form, Modal, message, Row, Col, Alert, Spin } from "antd";
+import { Form, Modal, message, Row, Col, Spin } from "antd";
 import { request, getFields, regRules } from "utils";
 import { connect } from "react-redux";
 
@@ -101,7 +101,7 @@ class PopModal extends Component {
                 width={900}
                 style={{top:'5%'}}
                 bodyStyle={{
-                    height:modalType === "create"?460:420,
+                    height:420, //modalType === "create"?460:420
                     overflowY:'auto',
                 }}
             >
@@ -266,7 +266,7 @@ class PopModal extends Component {
                                 }])
                             }
                             </Col>
-                            {modalType === "create" ? (
+                            {/*{modalType === "create" ? (
                                 <Col span={24}>
                                     <Alert
                                         message="新添加的帐号的初始密码
@@ -275,7 +275,7 @@ class PopModal extends Component {
                                         showIcon
                                     />
                                 </Col>
-                            ) : null}
+                            ) : null}*/}
                         </Row>
                             
                     </Form>
