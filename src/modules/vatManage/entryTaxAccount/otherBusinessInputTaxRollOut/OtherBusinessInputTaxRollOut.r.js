@@ -189,7 +189,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                             y:window.screen.availHeight-380-(disabled?50:0),
                         },
                         cardProps: {
-                            title: "其他类型进项税额转出台账",
+                            title: "进项税额转出台账",
                             extra: (
                                 <div>
                                     {listMainResultStatus(statusParam)}
