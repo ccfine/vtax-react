@@ -71,6 +71,7 @@ const getColumns = (context,hasOperate) => {
                             type: 'action',
                             icon: 'edit',
                             title: '编辑',
+                            userPermissions: ['2151004'],
                             onSuccess: () => {
                                 context.showModal('edit',record)
                             }
@@ -83,7 +84,7 @@ const getColumns = (context,hasOperate) => {
                                 color:'red',
                                 marginRight:10
                             },
-                            userPermissions: ['1361008'],
+                            userPermissions: ['2151008'],
                             onSuccess: () => {
                                 const modalRef = Modal.confirm({
                                     title: "友情提醒",
@@ -123,6 +124,7 @@ const getColumns = (context,hasOperate) => {
                                 type: 'action',
                                 icon: 'edit',
                                 title: '编辑',
+                                userPermissions: ['2131004'],
                                 onSuccess: () => {
                                     context.togglesDrawerVisible(true,record.id)
                                 }
@@ -135,7 +137,7 @@ const getColumns = (context,hasOperate) => {
                                     color: 'red',
                                     marginRight: 10
                                 },
-                                userPermissions: ['1361008'],
+                                userPermissions: ['2131008'],
                                 onSuccess: () => {
                                     const modalRef = Modal.confirm({
                                         title: "友情提醒",
@@ -321,7 +323,7 @@ class PartnersTaxReturn extends Component{
                                     composeBotton([{ //(disabled && declare.decAction==='edit') &&
                                         type:'add',
                                         icon:'plus',
-                                        //userPermissions:['1381003'],
+                                        userPermissions:['2151003'],
                                         onClick:()=>this.showModal('add',{})
                                     }],statusParam)
                                 }
@@ -330,13 +332,13 @@ class PartnersTaxReturn extends Component{
                                             type:'submit',
                                             url:'/taxDeclarationReport/partner/submit',
                                             params:filters,
-                                            userPermissions:['1911010'],
+                                            userPermissions:['2131010'],
                                             onSuccess:this.refreshTable
                                         },{
                                             type:'revoke',
                                             url:'/taxDeclarationReport/partner/revoke',
                                             params:filters,
-                                            userPermissions:['1911011'],
+                                            userPermissions:['2131011'],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                 }

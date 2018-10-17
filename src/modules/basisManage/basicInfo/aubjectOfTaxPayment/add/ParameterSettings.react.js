@@ -148,7 +148,7 @@ export default class ParameterSettings extends Component{
                                         value: '1',
                                     },*/
                                     {
-                                        label: '三者熟早：合同约定交付日、房间交付日期、开票日期',
+                                        label: '三者熟早：合同约定交付日期、房间交付日期、开票日期',
                                         value: '2',
                                     },
                                     {
