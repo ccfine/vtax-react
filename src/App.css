@@ -258,12 +258,11 @@ table.data-grid{
 
 
 /* 为了设置radioGroup 垂直显示的css radioStyle */
-.radioStyle{
+.radioStyle, .radioStyle label.ant-radio-wrapper{
   display: block;
   height: 30px;
   line-height: 30px;
 }
-
 /* Table中操作变成图标 */
 .table-operate .anticon{
   margin:0 3px;
