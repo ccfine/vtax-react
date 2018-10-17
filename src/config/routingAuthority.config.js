@@ -335,7 +335,7 @@ const strategies = {
             },
 
             //纳税申报合并计算表
-            taxReturnMergeCalculationTable:{
+            taxReturnMergeCalculation:{
                 options:[
 
                 ],

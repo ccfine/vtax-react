@@ -34,7 +34,6 @@ export default class Sheet extends Component{
                 ...prevGrid
             ];
             const sheetData = asyncData;
-
             /** sheetData will like this:
              * {
                      *      'A1': {key: 'A1', value: '200', expr: '200'},
@@ -45,6 +44,7 @@ export default class Sheet extends Component{
                      *      'B2': {key: 'B2', value: '', expr: ''},
                      *  }
              * */
+    
             return nextData.map(item=>{
                 return item.map(deepItem=>{
                     if(deepItem.key && sheetData && sheetData[deepItem.key]){
@@ -113,7 +113,6 @@ export default class Sheet extends Component{
         request.get(url,{params})
             .then(({data})=>{
                 if(data.code===200){
-                    //console.log(this.props.grid,data.data, composeGrid(this.props.grid,data.data,readOnly))
                     let nextData = composeGrid(this.props.grid,data.data,readOnly)
                     this.mounted && this.setState({
                         grid:nextData
