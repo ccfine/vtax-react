@@ -178,34 +178,41 @@ const getContent = (key,updateKey,disabled,declare,context) => {
 
 
 export default class FixedAssetsInvoice extends Component{
-    state = {
-        key: 'tab1',
-        tabsKey:Date.now(),
-        updateKey:Date.now(),
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeKey: 'tab1',
+            tabsKey:Date.now(),
+            updateKey:Date.now(),
+        };
+        this.mounted = true;
     }
 
-    onTabChange = (key, type) => {
-        this.setState({ [type]: key });
+    onTabChange = (key) => {
+        this.mounted && this.setState({ activeKey: key }, () => {
+            this.refreshTabs();
+        });
     }
     refreshTabs = ()=>{
         this.mounted && this.setState({
             tabsKey:Date.now()
         })
     }
-    mounted = true;
+
     componentWillUnmount(){
         this.mounted = null;
     }
     render() {
+        const { activeKey, tabsKey, updateKey } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
-            <Tabs tabPosition="top" size="small" tabBarStyle={{backgroundColor:'#FFF'}} key={this.state.tabsKey}>
+            <Tabs key={tabsKey} onChange={this.onTabChange} activeKey={activeKey} tabPosition="top" tabBarStyle={{backgroundColor:'#FFF'}}>
                 {
                     tabList.map(ele=>(
                         <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                             {
-                                getContent(ele.key, this.state.updateKey, disabled, declare, this)
+                                getContent(ele.key, updateKey, disabled, declare, this)
                             }
                         </TabPane>
                     ))

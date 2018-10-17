@@ -12,75 +12,75 @@ const columns = context =>[{
         //width:'200px',
     },{
         title:'项目分期名称',
-        dataIndex:'stageName',
+        dataIndex:'stagesName',
         width:'200px',
     },{
         title:'产品编码',
-        dataIndex:'assetName',
+        dataIndex:'productNum',
         width:'200px',
     },{
         title:'产品名称',
-        dataIndex:'assetNo',
+        dataIndex:'productName',
         width:'200px',
     },{
         title: "产品类型",
-        dataIndex: "accountDate",
+        dataIndex: "productType",
         width:'200px',
     },{
         title:'发票号码',
-        dataIndex:'acquisitionMode',
+        dataIndex:'invoiceNum',
         width:'200px',
     },{
         title:'认证日期',
-        dataIndex:'gainValue',
+        dataIndex:'authDate',
         width:'200px',
     }, {
         title: "不含税金额",
-        dataIndex: "areaCovered",
+        dataIndex: "withoutTax",
         width:'200px',
     }, {
         title: "税率",
-        dataIndex: "intaxRate",
+        dataIndex: "taxRate",
         width:'200px',
     }, {
         title: "进项税额",
-        dataIndex: "inTax",
+        dataIndex: "inTaxAmount",
         width:'100px',
     }, {
         title: "价税合计",
-        dataIndex: "taxAmount",
+        dataIndex: "totalAmount",
         width:'100px',
     }, {
         title: "拆分规则",
-        dataIndex: "deductedTaxAmount",
+        dataIndex: "splitRule",
         width:'150px',
     },{
         title: "拆分比例",
-        dataIndex: "deductedPeriod",
+        dataIndex: "splitProportion",
         width:'100px',
     },{
         title: "已拆分金额",
-        dataIndex: "deductedPeriod",
+        dataIndex: "splitAmount",
         width:'100px',
     },{
         title: "已拆分税额",
-        dataIndex: "deductedPeriod",
+        dataIndex: "splitTaxAmount",
         width:'100px',
     },{
         title: "期初待抵扣进项税额",
-        dataIndex: "deductedPeriod",
+        dataIndex: "initialTaxAmount",
         width:'200px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "当期抵扣进项税额",
-        dataIndex: "assetType",
+        dataIndex: "taxAmount",
         width:'200px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
-        title: "末待抵扣进项税额",
-        dataIndex: "assetsState",
+        title: "期末待抵扣进项税额",
+        dataIndex: "deductedTaxAmount",
         width:'200px',
         render:(text)=>fMoney(text),
         className: "table-money",
@@ -152,14 +152,14 @@ export default class NewlyBuilt extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:columns(this),
-                    url:'/account/income/estate/buildList',
+                    url:'/account/income/estate/aloneBuildList',
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建固定资产进项税额抵扣</span>,
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {
+                            {/* {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/income/estate/build/export',
@@ -167,7 +167,7 @@ export default class NewlyBuilt extends Component{
                                     title:'导出',
                                     userPermissions:['1251007'],
                                 }],statusParam)
-                            }
+                            } */}
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                         type: 'reset',
