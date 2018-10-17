@@ -382,10 +382,11 @@ const strategies = {
                 ],
             },
             //票据池  查看-"2111002"  导出-"2111007"  抽数-""
-            billPool:{
-                options:[
+            billPool: {
+                options: [
                     "2111002"
                 ],
+            },
             //纳税申报跟踪进度表  查看-"2121002"  导出-"2121007"
             taxReturnProgressTrackTable: {
                 options: [
