@@ -73,7 +73,7 @@ const BusinessReport_Routes = [
         component:PartnersTaxReturn,
         name:'合作方纳税申报表',
         icon:{
-            url:`${ICON_URL_PATH}taxReturn.svg`,
+            url:`${ICON_URL_PATH}partnersTaxReturn.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['partnersTaxReturn'].options,
@@ -88,7 +88,7 @@ const BusinessReport_Routes = [
         component:TaxReturnMergeCalculation,
         name:'纳税申报合并计算表',
         icon:{
-            url:`${ICON_URL_PATH}taxReturn.svg`,
+            url:`${ICON_URL_PATH}taxReturnMergeCalculation.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['taxReturnMergeCalculation'].options,
