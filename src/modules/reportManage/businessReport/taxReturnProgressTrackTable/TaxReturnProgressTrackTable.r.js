@@ -137,7 +137,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                                 url:'/taxDeclarationTrack/report/export',
                                 params:filters,
                                 title:'导出',
-                                userPermissions:["1007"],
+                                userPermissions:["2121007"],
                             }],statusParam)
                         }
                     </div>,
