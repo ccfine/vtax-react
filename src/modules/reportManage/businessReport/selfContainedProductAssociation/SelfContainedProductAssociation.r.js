@@ -7,8 +7,8 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { SearchTable, TableTotal } from "compoments"
-import { composeBotton } from 'utils'
-import createSocket from "../socket"
+// import { composeBotton } from 'utils'
+// import createSocket from "../socket"
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -219,32 +219,32 @@ const columns = [
   }
 ]
 
-const apiFields = getFieldValue => [
-  {
-      label: "纳税主体",
-      fieldName: "mainId",
-      type: "taxMain",
-      span: 20,
-      fieldDecoratorOptions: {
-          rules: [{
-              required: true,
-              message: "请选择纳税主体"
-          }]
-      }
-  },
-  {
-      label: "抽取月份",
-      fieldName: "authMonth",
-      type: "monthPicker",
-      span: 20,
-      fieldDecoratorOptions: {
-          rules: [{
-              required: true,
-              message: "请选择抽取月份"
-          }]
-      }
-  }
-]
+// const apiFields = getFieldValue => [
+//   {
+//       label: "纳税主体",
+//       fieldName: "mainId",
+//       type: "taxMain",
+//       span: 20,
+//       fieldDecoratorOptions: {
+//           rules: [{
+//               required: true,
+//               message: "请选择纳税主体"
+//           }]
+//       }
+//   },
+//   {
+//       label: "抽取月份",
+//       fieldName: "authMonth",
+//       type: "monthPicker",
+//       span: 20,
+//       fieldDecoratorOptions: {
+//           rules: [{
+//               required: true,
+//               message: "请选择抽取月份"
+//           }]
+//       }
+//   }
+// ]
 
 class SelfContainedProductAssociation extends Component {
   constructor () {

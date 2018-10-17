@@ -108,32 +108,32 @@ const columns = [
   }
 ]
 
-const apiFields = getFieldValue => [
-  {
-      label: "纳税主体",
-      fieldName: "mainId",
-      type: "taxMain",
-      span: 20,
-      fieldDecoratorOptions: {
-          rules: [{
-              required: true,
-              message: "请选择纳税主体"
-          }]
-      }
-  },
-  {
-      label: "抽取月份",
-      fieldName: "authMonth",
-      type: "monthPicker",
-      span: 20,
-      fieldDecoratorOptions: {
-          rules: [{
-              required: true,
-              message: "请选择抽取月份"
-          }]
-      }
-  }
-]
+// const apiFields = getFieldValue => [
+//   {
+//       label: "纳税主体",
+//       fieldName: "mainId",
+//       type: "taxMain",
+//       span: 20,
+//       fieldDecoratorOptions: {
+//           rules: [{
+//               required: true,
+//               message: "请选择纳税主体"
+//           }]
+//       }
+//   },
+//   {
+//       label: "抽取月份",
+//       fieldName: "authMonth",
+//       type: "monthPicker",
+//       span: 20,
+//       fieldDecoratorOptions: {
+//           rules: [{
+//               required: true,
+//               message: "请选择抽取月份"
+//           }]
+//       }
+//   }
+// ]
 
 class SelfContainedProductList extends Component {
   constructor () {
