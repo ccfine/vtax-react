@@ -20,7 +20,8 @@ const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollec
 const AvailableArea = AsyncComponent(() => import('./availableArea'), '可售面积')
 const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), '科目余额表')
 const TaxReturnProgressTrackTable = AsyncComponent(() => import("./taxReturnProgressTrackTable"), "纳税申报进度跟踪表")
-
+const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
+const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "自持类产品关联清单")
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
 const businessReport = strategies['reportManage']['businessReport'];
@@ -73,7 +74,7 @@ const BusinessReport_Routes = [
         component:PartnersTaxReturn,
         name:'合作方纳税申报表',
         icon:{
-            url:`${ICON_URL_PATH}partnersTaxReturn.svg`,
+            url:`${ICON_URL_PATH}taxReturn.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['partnersTaxReturn'].options,
@@ -88,7 +89,7 @@ const BusinessReport_Routes = [
         component:TaxReturnMergeCalculation,
         name:'纳税申报合并计算表',
         icon:{
-            url:`${ICON_URL_PATH}taxReturnMergeCalculation.svg`,
+            url:`${ICON_URL_PATH}taxReturn.svg`,
             backgroundColor:'#2E8A57'
         },
         authorityInfo:businessReport['taxReturnMergeCalculation'].options,
@@ -163,6 +164,28 @@ const BusinessReport_Routes = [
             backgroundColor: "#2E8A57"
         },
         authorityInfo: businessReport["taxReturnProgressTrackTable"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/selfContainedProductAssociation`,
+        component: SelfContainedProductAssociation,
+        name: "自持类产品关联进项发票",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductAssociation.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["selfContainedProductAssociation"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/selfContainedProductList`,
+        component: SelfContainedProductList,
+        name: "自持类产品清单",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductList.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["selfContainedProductList"].options,
         exact: true
     },
     {
