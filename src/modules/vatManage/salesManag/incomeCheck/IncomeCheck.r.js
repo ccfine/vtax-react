@@ -47,14 +47,14 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             },
             formItemStyle,
             /*fieldDecoratorOptions:{
-                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择查询期间'
-                    }
-                ]
-            },*/
+             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+             rules:[
+             {
+             required:true,
+             message:'请选择查询期间'
+             }
+             ]
+             },*/
 
         },
         {
@@ -143,8 +143,8 @@ const columns=[
         width:'100px',
     },
     {
-        title:'结算价',
-        dataIndex: "newSdValorem",
+        title:'确收金额',
+        dataIndex: "confirmedPrice",
         render: text => fMoney(text),
         className: "table-money",
         width:'150px',
