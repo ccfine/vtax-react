@@ -4,9 +4,9 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 // import {message} from 'antd'
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 // import createSocket from '../socket'
-import {fMoney,composeBotton,request} from 'utils'
+import {fMoney} from 'utils'
 
 const formItemStyle={
     labelCol:{
@@ -104,7 +104,7 @@ const searchFields = (getFieldValue) =>[
         options:[],
     }
 ]
-const getColumns = context =>[
+const columns = [
     {
         title: '利润中心',
         dataIndex: 'profitCenterName',
@@ -298,7 +298,8 @@ const getColumns = context =>[
         width:'150px',
     },
 ];
-class BillPool extends Component{
+
+export default class BillPool extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -322,7 +323,7 @@ class BillPool extends Component{
     //     })
     // }
     render(){
-        const {updateKey,filters,totalSource} = this.state;
+        const {updateKey,totalSource} = this.state;
         return(
             <div className='oneLine'>
                 <SearchTable
@@ -333,7 +334,7 @@ class BillPool extends Component{
                     tableOption={{
                         key:updateKey,
                         pageSize:100,
-                        columns:getColumns(this),
+                        columns,
                         url:'/interInvoicePools/list',
                         scroll:{ x: 5800,y:window.screen.availHeight-450 },
                         onSuccess: (params) => {
@@ -392,6 +393,6 @@ class BillPool extends Component{
     }
 }
 
-export default connect(state=>({
-    userid:state.user.getIn(['personal','id'])
-}))(BillPool);
+// export default connect(state=>({
+//     userid:state.user.getIn(['personal','id'])
+// }))(BillPool);
