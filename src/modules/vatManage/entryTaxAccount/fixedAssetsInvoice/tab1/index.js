@@ -166,7 +166,7 @@ export default class Tab1 extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('/account/income/fixedAssets/listMain',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
