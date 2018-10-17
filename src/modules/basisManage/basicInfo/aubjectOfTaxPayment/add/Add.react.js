@@ -131,7 +131,7 @@ class Add extends Component {
 
                                 //编辑成功，关闭当前窗口,刷新父级组件
                                 this.props.toggleModalVisible(false);
-                                this.props.refreshTable();
+                                this.props.updateTable();
 
                                 this.mounted && this.setState({
                                     submitLoading: false,
@@ -163,7 +163,7 @@ class Add extends Component {
                                 message.success('编辑成功！', 4);
                                 //编辑成功，关闭当前窗口,刷新父级组件
                                 this.props.toggleModalVisible(false);
-                                this.props.refreshTable();
+                                this.props.updateTable();
                                 this.mounted && this.setState({
                                     submitLoading: false
                                 })
@@ -201,7 +201,7 @@ class Add extends Component {
      if(data.code===200){
      message.success('删除成功!');
      this.props.toggleModalVisible(false);
-     this.props.refreshTable();
+     this.props.updateTable();
      }else{
      message.error(data.msg)
      }
@@ -224,7 +224,7 @@ class Add extends Component {
                     message.success(`${mes}成功！`, 4);
                     //编辑成功，关闭当前窗口,刷新父级组件
                     this.props.toggleModalVisible(false);
-                    this.props.refreshTable();
+                    this.props.updateTable();
                 } else {
                     message.error(data.msg, 4);
                     this.mounted && this.setState({
