@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {message} from 'antd'
+// import {message} from 'antd'
 import {connect} from 'react-redux'
-import createSocket from '../socket'
+// import createSocket from '../socket'
 import {fMoney,composeBotton,request} from 'utils'
 
 const formItemStyle={
@@ -16,32 +16,32 @@ const formItemStyle={
         span:16
     }
 }
-const apiFields = (getFieldValue)=> [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择纳税主体',
-            }]
-        },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
-]
+// const apiFields = (getFieldValue)=> [
+//     {
+//         label:'纳税主体',
+//         fieldName:'mainId',
+//         type:'taxMain',
+//         span:20,
+//         fieldDecoratorOptions:{
+//             rules:[{
+//                 required:true,
+//                 message:'请选择纳税主体',
+//             }]
+//         },
+//     },
+//     {
+//         label:'抽取月份',
+//         fieldName:'authMonth',
+//         type:'monthPicker',
+//         span:20,
+//         fieldDecoratorOptions:{
+//             rules:[{
+//                 required:true,
+//                 message:'请选择抽取月份',
+//             }]
+//         },
+//     },
+// ]
 const searchFields = (getFieldValue) =>[
     {
         label:'纳税主体',
@@ -356,7 +356,7 @@ class BillPool extends Component{
                                             url:'',
                                             params:filters,
                                             title:'导出',
-                                            userPermissions:[],
+                                            userPermissions:["2111007"],
                                         }])
                                     } */}
                                     {/* {
