@@ -201,7 +201,7 @@ export default class Tab2 extends Component{
                                     type: 'reset',
                                     url:'/account/income/fixedAssets/reset',
                                     params:filters,
-                                    userPermissions:['1251009'],
+                                    userPermissions:['1241009'],
                                     onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
