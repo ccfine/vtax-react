@@ -100,12 +100,12 @@ const authMonth = [
             {
                 title: '自持类产品清单',
                 importUrl:'/interProductList/upload',
-                fields:mainId,
+                fields:fields,
             },
             {
                 title: '自持类产品关联进项发票',
                 importUrl:'/ReceiptsInvoiceReport/upload',
-                fields:mainId,
+                fields:fields,
             },
         ];
 
