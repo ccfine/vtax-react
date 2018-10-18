@@ -189,6 +189,11 @@ const columns = [{
         width:'100px',
     },
     {
+        title:'确收金额',
+        dataIndex:'confirmedPrice',
+        width:'100px',
+    },
+    {
         title:'楼栋名称',
         dataIndex:'buildingName',
         width:'200px',
@@ -393,7 +398,7 @@ class RoomTransactionFile extends Component{
                         })
                     },
                     scroll:{
-                        x: 4000,
+                        x: 4100,
                         y:window.screen.availHeight-400
                     },
                 }}
