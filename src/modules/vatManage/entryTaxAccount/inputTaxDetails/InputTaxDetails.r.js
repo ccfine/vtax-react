@@ -79,7 +79,7 @@ const getColumns = (context, hasOperate) => {
     let operates = hasOperate ? [{
         title: '操作',
         render: (text, record) => (
-            (parseInt(record.invoiceType, 0) !== 1)
+            (parseInt(record.invoiceType, 0) === 9)
             && composeBotton([{
                 type: 'action',
                 title: '编辑',
@@ -136,11 +136,7 @@ const getColumns = (context, hasOperate) => {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].num`}
                         initialValue={text === '0' ? '0' : text}
-                        getFieldDecorator={getFieldDecorator}
-                        componentProps={{
-                            onFocus: (e) => context.handleFocus(e, `list[${record.id}].num`),
-                            onBlur: (e) => context.handleBlur(e, `list[${record.id}].num`)
-                        }}/>;
+                        getFieldDecorator={getFieldDecorator}/>;
                 }
                 if (parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0) {
                     return text;
@@ -236,9 +232,9 @@ class InputTaxDetails extends Component {
         params: {},
         saveLoading: false
     };
-    toggoleSaveLoading=(saveLoading)=>{
-        this.setState({saveLoading})
-    }
+    toggoleSaveLoading = (saveLoading) => {
+        this.setState({saveLoading});
+    };
     refreshTable = () => {
         this.setState({
             tableKey: Date.now()
@@ -280,35 +276,35 @@ class InputTaxDetails extends Component {
         });
     }
 
-    handleFocus = (e,fieldName) => {
-        e && e.preventDefault()
-        const {setFieldsValue,getFieldValue} = this.props.form;
+    handleFocus = (e, fieldName) => {
+        e && e.preventDefault();
+        const {setFieldsValue, getFieldValue} = this.props.form;
         let value = getFieldValue(fieldName);
-        if(value === '0.00'){
+        if (value === '0.00') {
             setFieldsValue({
-                [fieldName]:''
-            })
-        }else{
+                [fieldName]: ''
+            });
+        } else {
             setFieldsValue({
-                [fieldName]:value.replace(/\$\s?|(,*)/g, '')
-            })
+                [fieldName]: value.replace(/\$\s?|(,*)/g, '')
+            });
         }
-    }
+    };
 
-    handleBlur = (e,fieldName) => {
-        e && e.preventDefault()
-        const {setFieldsValue,getFieldValue} = this.props.form;
+    handleBlur = (e, fieldName) => {
+        e && e.preventDefault();
+        const {setFieldsValue, getFieldValue} = this.props.form;
         let value = getFieldValue(fieldName);
-        if(value !== ''){
+        if (value !== '') {
             setFieldsValue({
-                [fieldName]:fMoney(value)
-            })
-        }else{
+                [fieldName]: fMoney(value)
+            });
+        } else {
             setFieldsValue({
-                [fieldName]:'0.00'
-            })
+                [fieldName]: '0.00'
+            });
         }
-    }
+    };
 
     save = (e) => {
         e && e.preventDefault();
@@ -317,33 +313,33 @@ class InputTaxDetails extends Component {
             if (!err) {
                 let list = [];
 
-                if(values.list){
-                    for(let i in values.list){
-                        for(let x in values.list[i]){
-                            values.list[i][x] = values.list[i][x].replace(/\$\s?|(,*)/g, '')
+                if (values.list) {
+                    for (let i in values.list) {
+                        for (let x in values.list[i]) {
+                            values.list[i][x] = values.list[i][x].replace(/\$\s?|(,*)/g, '');
                         }
                         list.push({id: i, ...values.list[i]});
                     }
                 }
 
-                this.toggoleSaveLoading(true)
+                this.toggoleSaveLoading(true);
 
                 request.post('/account/income/taxDetail/update/amount', list)
-                .then(({data})=>{
-                    this.toggoleSaveLoading(false)
-                    if(data.code===200){
+                .then(({data}) => {
+                    this.toggoleSaveLoading(false);
+                    if (data.code === 200) {
                         message.success(`保存成功！`);
                         this.refreshTable();
-                    }else{
-                        message.error(`保存失败:${data.msg}`)
+                    } else {
+                        message.error(`保存失败:${data.msg}`);
                     }
-                }).catch(err=>{
-                    this.toggoleSaveLoading(false)
-                    message.error(`保存失败:${err.message}`)
-                })
+                }).catch(err => {
+                    this.toggoleSaveLoading(false);
+                    message.error(`保存失败:${err.message}`);
+                });
             }
-        })
-    }
+        });
+    };
 
     render() {
         const {searchTableLoading, tableKey, visible, voucherVisible, addVisible, params, statusParam = {}, filters, totalSource, record, action, saveLoading} = this.state;
@@ -416,11 +412,11 @@ class InputTaxDetails extends Component {
                                 onSuccess: this.refreshTable
                             }, {
                                 type: 'save',
-                                text:'保存',
-                                icon:'save',
+                                text: '保存',
+                                icon: 'save',
                                 userPermissions: ['1381024'],
-                                onClick:this.save,
-                                loading:saveLoading
+                                onClick: this.save,
+                                loading: saveLoading
                             }, {
                                 type: 'reset',
                                 url: '/account/income/taxDetail/reset',
