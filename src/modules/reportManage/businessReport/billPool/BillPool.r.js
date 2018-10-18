@@ -6,7 +6,7 @@ import {SearchTable,TableTotal} from 'compoments'
 // import {message} from 'antd'
 // import {connect} from 'react-redux'
 // import createSocket from '../socket'
-import {fMoney} from 'utils'
+import {fMoney, requestDict, setFormat} from 'utils'
 
 const formItemStyle={
     labelCol:{
@@ -42,7 +42,8 @@ const formItemStyle={
 //         },
 //     },
 // ]
-const searchFields = (getFieldValue) =>[
+
+const searchFields = contxt => getFieldValue =>[
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -93,7 +94,7 @@ const searchFields = (getFieldValue) =>[
         type:'select',
         span:8,
         formItemStyle,
-        options:[],
+        options:contxt.state.zesfdkxm,
     },
     {
         label:'转出项目',
@@ -101,7 +102,7 @@ const searchFields = (getFieldValue) =>[
         type:'select',
         span:8,
         formItemStyle,
-        options:[],
+        options:contxt.state.zcxm,
     }
 ]
 const columns = [
@@ -303,11 +304,27 @@ export default class BillPool extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
+        zesfdkxm:[],
+        zcxm:[],
         totalSource: undefined
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now(),
+        })
+    }
+    componentDidMount(){
+        //请求其他扣税凭证类型options数据
+        requestDict('JXFPLX',result => {
+            this.setState({
+                zesfdkxm: setFormat(result)
+            })
+        })
+        //请求转出项目options数据
+        requestDict('ZCXM',result => {
+            this.setState({
+                zcxm: setFormat(result)
+            })
         })
     }
     // deleteRecord(record){
@@ -329,7 +346,7 @@ export default class BillPool extends Component{
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
-                        fields:searchFields
+                        fields:searchFields(this)
                     }}
                     tableOption={{
                         key:updateKey,
