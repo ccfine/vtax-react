@@ -151,7 +151,7 @@ class SheetWithSearchFields extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {/*{
+                                {
                                     JSON.stringify(params)!=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'report/tax/declare/export',
@@ -160,7 +160,7 @@ class SheetWithSearchFields extends Component{
                                         userPermissions:['1911007'],
                                     }])
                                 }
-                                {
+                                {/*{
                                     composeBotton([{
                                         type:'fileExport',
                                         url:'tax/decConduct/main/download',
