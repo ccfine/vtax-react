@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>taxReturnProgressTrackTable</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="3.875" y="0" width="24.21875" height="26.1818182" rx="1.92"></rect>
+        <rect id="path-2" x="0" y="3.87878788" width="24.21875" height="26.1818182" rx="1.92"></rect>
+    </defs>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="taxReturnProgressTrackTable">
+            <circle id="Oval-Copy" fill="#42CE07" cx="30" cy="30" r="30"></circle>
+            <g id="Group-74" transform="translate(15.000000, 15.000000)">
+                <g id="Rectangle-15">
+                    <use fill="#42CE07" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#FFFFFF" stroke-width="1.5" x="4.625" y="0.75" width="22.71875" height="24.6818182" rx="1.92"></rect>
+                </g>
+                <g id="Rectangle-15-Copy">
+                    <use fill="#42CE07" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <rect stroke="#FFFFFF" stroke-width="1.5" x="0.75" y="4.62878788" width="22.71875" height="24.6818182" rx="1.92"></rect>
+                </g>
+                <rect id="Rectangle-16-Copy" fill="#FFFFFF" x="4" y="9" width="14" height="2" rx="1"></rect>
+                <rect id="Rectangle-16-Copy-3" fill="#FFFFFF" x="4" y="16.1363636" width="14" height="2" rx="1"></rect>
+                <rect id="Rectangle-16-Copy-2" fill="#FFFFFF" x="3.875" y="23.2727273" width="10" height="2" rx="1"></rect>
+                <rect id="Rectangle-28" fill="#42CE07" x="19" y="18" width="12" height="13"></rect>
+                <g id="Group-73" transform="translate(20.000000, 20.000000)">
+                    <path d="M2,1 C2,3.209139 3.11928813,5 4.5,5 C5.88071187,5 7,3.209139 7,1" id="Oval-19" stroke="#FFFFFF" fill="#42CE07" stroke-linecap="round"></path>
+                    <path d="M3,4 C3,4.82842712 3.67157288,5.5 4.5,5.5 C5.32842712,5.5 6,4.82842712 6,4" id="Oval-19" fill-opacity="0.900000036" fill="#FFFFFF" opacity="0.599999964"></path>
+                    <path d="M2,6 C2,7.65685425 3.11928813,9 4.5,9 C5.88071187,9 7,7.65685425 7,6" id="Oval-19-Copy" stroke="#FFFFFF" fill="#42CE07" stroke-linecap="round" transform="translate(4.500000, 7.500000) scale(1, -1) translate(-4.500000, -7.500000) "></path>
+                    <rect id="Rectangle-27" fill="#FFFFFF" x="0" y="0" width="9" height="1" rx="0.5"></rect>
+                    <rect id="Rectangle-27-Copy" fill="#FFFFFF" x="0" y="9" width="9" height="1" rx="0.5"></rect>
+                    <rect id="Rectangle-27-Copy-2" fill-opacity="0.900000036" fill="#FFFFFF" opacity="0.599999964" x="2" y="8" width="5" height="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

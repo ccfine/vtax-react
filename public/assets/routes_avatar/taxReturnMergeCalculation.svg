@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>taxReturnMergeCalculation</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="3.875" y="0" width="24.21875" height="26.1818182" rx="1.92"></rect>
+        <rect id="path-2" x="0" y="3.87878788" width="24.21875" height="26.1818182" rx="1.92"></rect>
+    </defs>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="taxReturnMergeCalculation">
+            <circle id="Oval-Copy" fill="#49A7FF" cx="30" cy="30" r="30"></circle>
+            <g id="Group-67" transform="translate(15.000000, 14.000000)">
+                <g id="Rectangle-15">
+                    <use fill="#49A7FF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#FFFFFF" stroke-width="1.5" x="4.625" y="0.75" width="22.71875" height="24.6818182" rx="1.92"></rect>
+                </g>
+                <g id="Rectangle-15-Copy">
+                    <use fill="#49A7FF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <rect stroke="#FFFFFF" stroke-width="1.5" x="0.75" y="4.62878788" width="22.71875" height="24.6818182" rx="1.92"></rect>
+                </g>
+                <rect id="Rectangle-16-Copy" fill="#FFFFFF" x="4" y="9" width="14" height="2" rx="1"></rect>
+                <rect id="Rectangle-16-Copy-3" fill="#FFFFFF" x="4" y="16.1363636" width="14" height="2" rx="1"></rect>
+                <rect id="Rectangle-16-Copy-2" fill="#FFFFFF" x="3.875" y="23.2727273" width="10" height="2" rx="1"></rect>
+                <ellipse id="Oval-9" fill="#49A7FF" cx="23.96875" cy="24.9608993" rx="6.5" ry="6.50635386"></ellipse>
+                <g id="节点-合并" transform="translate(19.000000, 20.000000)" fill-rule="nonzero" stroke="#FFFFFF">
+                    <path d="M4.79464286,5.20593816 L4.79464286,0 C2.12834821,0.109387208 0,2.30494475 0,4.99720951 C0,7.76091082 2.23995536,10 5.00223214,10 C6.22879464,10 7.3515625,9.55687019 8.22209821,8.82352941 L4.79464286,5.20593816 Z M5.2109375,0 L5.2109375,4.78959705 L10,4.78959705 C9.89397321,2.19220895 7.80803571,0.10603862 5.2109375,0 Z M5.2109375,5.20593816 L5.2109375,5.21710012 L8.44196429,8.62819511 C9.35714286,7.76091082 9.94419643,6.55207054 9.99888393,5.20593816 L5.2109375,5.20593816 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
