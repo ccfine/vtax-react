@@ -17,7 +17,7 @@ const InvoiceCollection = AsyncComponent(() => import('./invoiceCollection'), '�
 const FixedAssetCollection = AsyncComponent(() => import('./fixedAssetCollection'), '固定资产信息采集')
 const InputTaxDetails = AsyncComponent(() => import('../entryTaxAccount/inputTaxDetails'), '进项税额明细台账')
 const OtherBusinessInputTaxRollOut = AsyncComponent(() => import('../entryTaxAccount/otherBusinessInputTaxRollOut'), '其他类型进项税额转出台账')
-const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
+//const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
 const RealEstateInputTaxCredit = AsyncComponent(() => import('../entryTaxAccount/realEstateInputTaxCredit'), '不动产进项税额抵扣台账')
 
 
@@ -115,7 +115,7 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['otherBusinessInputTaxRollOut'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/simplifiedTaxInputTaxTransfer`,
         component:SimplifiedTaxInputTaxTransfer,
         name:'简易计税进项税额转出台账',
@@ -124,7 +124,7 @@ const EntryManag_Routes = [
             backgroundColor:'#3B4A83'
         },
         authorityInfo:entryManag['simplifiedTaxInputTaxTransfer'].options,
-        exact:true,
+        exact:true,*/
     },{
         path:`${PATH}/realEstateInputTaxCredit`,
         component:RealEstateInputTaxCredit,
