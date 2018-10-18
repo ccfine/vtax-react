@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/10/12.
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 
 const getColumns = context =>[
@@ -145,6 +145,7 @@ export default class Tab1 extends Component{
         modalConfig:{
             type:''
         },
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -177,7 +178,7 @@ export default class Tab1 extends Component{
         this.mounted = null;
     }
     render(){
-        const {tableKey,filters,statusParam} = this.state;
+        const {tableKey,filters,statusParam,totalSource} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -247,8 +248,27 @@ export default class Tab1 extends Component{
                                     },
                                 }],statusParam)
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '已拆分税额', dataIndex: 'splitTaxAmount'},
+                                            {title: '已拆分金额', dataIndex: 'splitAmount'},
+                                            {title: '不含税金额', dataIndex: 'withoutTax'},
+                                            {title: '进项税额', dataIndex: 'inTaxAmount'},
+                                            {title: '价税合计', dataIndex: 'totalAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>
                     ),
+                    onTotalSource: (totalSource) => {
+                        this.mounted && this.setState({
+                            totalSource
+                        })
+                    },
                     scroll:{
                         x:3000,
                         y:window.screen.availHeight-430,

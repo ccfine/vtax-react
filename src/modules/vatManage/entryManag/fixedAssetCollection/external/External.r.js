@@ -3,10 +3,10 @@
  * @Date: 2018-10-13 11:47:06 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-16 17:53:26
+ * @Last Modified time: 2018-10-18 17:14:14
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
 
 const columns=[
@@ -105,6 +105,7 @@ const columns=[
          *修改状态和时间
          * */
         statusParam: {},
+        totalSource:undefined,
     }
     refreshTable = ()=>{
         this.setState({
@@ -118,8 +119,12 @@ const columns=[
             })
         })
     }
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
     render(){
-        const {updateKey,filters,statusParam} = this.state;
+        const {updateKey,filters,statusParam,totalSource} = this.state;
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -135,7 +140,7 @@ const columns=[
                     }
                 }}
                 backCondition={(filters)=>{
-                    this.setState({
+                    this.mounted && this.setState({
                         filters,
                     },()=>{
                         this.fetchResultStatus()
@@ -168,17 +173,37 @@ const columns=[
                                         url:'/fixedAssetCard/submit',
                                         params:filters,
                                         userPermissions:['1511010'],
-                                        onSuccess:this.refreshTable
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs();
+                                        },
                                     },{
                                         type:'revoke',
                                         url:'/fixedAssetCard/revoke',
                                         params:filters,
                                         userPermissions:['1511011'],
-                                        onSuccess:this.refreshTable,
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs();
+                                        },
                                     }],statusParam)
                                 }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '税额', dataIndex: 'inTax'},
+                                                {title: '取得价值', dataIndex: 'gainValue'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
                         )
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.mounted && this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
                         x:1800,

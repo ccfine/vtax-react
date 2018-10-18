@@ -213,7 +213,7 @@ export default class ExternalAccess extends Component{
                                             title:'合计',
                                             total:[
                                                 {title: '当期抵扣的进项税额', dataIndex: 'taxAmount'},
-                                                {title: '待抵扣的进项税额', dataIndex: 'deductedTaxAmount'},
+                                                {title: '期末待抵扣进项税额', dataIndex: 'deductedTaxAmount'},
                                             ],
                                         }
                                     ]
