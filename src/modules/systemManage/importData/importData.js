@@ -98,6 +98,16 @@ const authMonth = [
                 fields:mainId,
             },
             {
+                title: '自持类产品清单',
+                importUrl:'/interProductList/upload',
+                fields:fields,
+            },
+            {
+                title: '自持类产品关联进项发票',
+                importUrl:'/ReceiptsInvoiceReport/upload',
+                fields:fields,
+            },
+            {
                 title: '票据池',
                 importUrl:'/interInvoicePools/upload',
                 fields:fields,

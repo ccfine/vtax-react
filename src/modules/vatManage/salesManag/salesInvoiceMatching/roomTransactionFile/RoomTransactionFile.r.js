@@ -224,6 +224,11 @@ const getColumns = (context,disabled) => {
             width:'100px',
         },
         {
+            title:'确收金额',
+            dataIndex:'confirmedPrice',
+            width:'100px',
+        },
+        {
             title:'成交金额',
             dataIndex:'dealPrice',
             width:'100px',
@@ -588,7 +593,7 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 4250,
+                            x: 4350,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                         rowSelection: isCheck ? {

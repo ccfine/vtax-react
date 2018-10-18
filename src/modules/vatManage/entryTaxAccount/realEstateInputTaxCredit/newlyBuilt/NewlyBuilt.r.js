@@ -5,124 +5,93 @@ import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
-/*
-const pointerStyle = {
-    cursor:'pointer',
-    color:'#1890ff'
-}
 
-const columns = context =>[
-    {
-        title: '纳税主体名称',
-        dataIndex: 'mainName',
+const columns = context =>[{
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        //width:'200px',
     },{
-        title: '项目分期代码',
-        dataIndex: 'stagesNum',
+        title:'项目分期名称',
+        dataIndex:'stagesName',
+        width:'200px',
     },{
-        title: '项目分期名称',
-        dataIndex: 'stagesName',
+        title:'产品编码',
+        dataIndex:'productNum',
+        width:'200px',
     },{
-        title: '凭证日期',
-        dataIndex: 'voucherDate',
+        title:'产品名称',
+        dataIndex:'productName',
+        width:'200px',
     },{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
+        title: "产品类型",
+        dataIndex: "productType",
+        width:'200px',
     },{
-        title: '凭证号',
-        dataIndex: 'voucherNum',
-        render:(text,record)=>(
-            <span title="查看凭证详情" onClick={()=>{
-                context.setState({
-                    voucherNum:text,
-                },()=>{
-                    context.toggleViewModalVisible(true)
-                })
-            }} style={pointerStyle}>
-                {text}
-            </span>
-        )
+        title:'发票号码',
+        dataIndex:'invoiceNum',
+        width:'200px',
     },{
-        title: '凭证摘要',
-        dataIndex: 'voucherAbstract',
+        title:'认证日期',
+        dataIndex:'authDate',
+        width:'200px',
+    }, {
+        title: "不含税金额",
+        dataIndex: "withoutTax",
+        width:'200px',
+    }, {
+        title: "税率",
+        dataIndex: "taxRate",
+        width:'200px',
+    }, {
+        title: "进项税额",
+        dataIndex: "inTaxAmount",
+        width:'100px',
+    }, {
+        title: "价税合计",
+        dataIndex: "totalAmount",
+        width:'100px',
+    }, {
+        title: "拆分规则",
+        dataIndex: "splitRule",
+        width:'150px',
     },{
-        title: '借方科目代码',
-        dataIndex: 'debitSubjectCode',
+        title: "拆分比例",
+        dataIndex: "splitProportion",
+        width:'100px',
     },{
-        title: '借方科目名称',
-        dataIndex: 'debitSubjectName',
+        title: "已拆分金额",
+        dataIndex: "splitAmount",
+        width:'100px',
     },{
-        title: '借方金额',
-        dataIndex: 'debitAmount',
-        render: text => fMoney(text),
-        className: "table-money"
-    }
-];*/
-
-
-const columns = context =>[
-    {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-    },/*{
-        title: '项目分期',
-        dataIndex: 'stagesName',
-    },*/{
-        title: '期初',
-        children:[{
-            title: '金额',
-            dataIndex: 'initialAmount',
-            render: text => fMoney(text),
-            className: "table-money"
-        },{
-            title: '税额',
-            dataIndex: 'initialTaxAmount',
-            render: text => fMoney(text),
-            className: "table-money"
-        }]
+        title: "已拆分税额",
+        dataIndex: "splitTaxAmount",
+        width:'100px',
     },{
-        title: '本期',
-        children:[{
-            title: '金额',
-            dataIndex: 'currentAmount',
-            render: text => fMoney(text),
-            className: "table-money",
-        },{
-            title: '税额',
-            dataIndex: 'currentTaxAmount',
-            render: text => fMoney(text),
-            className: "table-money"
-        }]
+        title: "期初待抵扣进项税额",
+        dataIndex: "initialTaxAmount",
+        width:'200px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
     },{
-        title: '累计',
-        children:[{
-            title: '金额',
-            dataIndex: 'countAmount',
-            render: text => fMoney(text),
-            className: "table-money"
-        },{
-            title: '税额',
-            dataIndex: 'countTaxAmount',
-            render: text => fMoney(text),
-            className: "table-money"
-        }]
+        title: "当期抵扣进项税额",
+        dataIndex: "taxAmount",
+        width:'200px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
     },{
-        title: '综合税率',
-        dataIndex: 'taxRate',
-        render: text => text&&`${text}%`
+        title: "期末待抵扣进项税额",
+        dataIndex: "deductedTaxAmount",
+        width:'200px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
     },{
-        title: '进项税额',
-        dataIndex: 'incomeTaxAmount',
-        render: text => fMoney(text),
-        className: "table-money"
-    },{
-        title: '进项税转出额',
-        dataIndex: 'incomeOutAmount',
-        render: text => fMoney(text),
-        className: "table-money"
-    }
+        title: "待抵扣期间",
+        dataIndex: "assetsState",
+        width:'100px',
+    },
 ];
 
-export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Component{
+export default class NewlyBuilt extends Component{
     state={
         tableKey:Date.now(),
         visibleView:false,
@@ -183,14 +152,14 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                     key:tableKey,
                     pageSize:100,
                     columns:columns(this),
-                    url:'/account/income/estate/buildList',
+                    url:'/account/income/estate/aloneBuildList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>自建转自用固定资产进项税额明细</span>,
+                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建固定资产进项税额抵扣</span>,
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {
+                            {/* {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/income/estate/build/export',
@@ -198,7 +167,7 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                                     title:'导出',
                                     userPermissions:['1251007'],
                                 }],statusParam)
-                            }
+                            } */}
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                         type: 'reset',
@@ -213,9 +182,10 @@ export default class SelfBuiltTransferFixedAssetsInputTaxDetails extends Compone
                             }
                         </div>,
                     },
-                    /*scroll:{
-                     x:'180%'
-                     },*/
+                    scroll:{
+                        x:3100,
+                        y:window.screen.availHeight-430,
+                    },
                 }}
             >
                 <ViewDocumentDetails
