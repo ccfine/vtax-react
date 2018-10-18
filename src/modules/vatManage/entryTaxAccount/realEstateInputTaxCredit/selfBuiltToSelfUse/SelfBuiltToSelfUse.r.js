@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
 
 const columns = context =>[{
@@ -109,7 +109,8 @@ export default class SelfBuiltToSelfUse extends Component{
     state={
         tableKey:Date.now(),
         filters: {},
-        statusParam:{}
+        statusParam:{},
+        totalSource:undefined,
     }
     toggleViewModalVisible=visibleView=>{
         this.mounted && this.setState({
@@ -134,7 +135,7 @@ export default class SelfBuiltToSelfUse extends Component{
         this.mounted = null;
     }
     render(){
-        const {tableKey,statusParam,filters} = this.state;
+        const {tableKey,statusParam,filters,totalSource} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -193,8 +194,24 @@ export default class SelfBuiltToSelfUse extends Component{
                                     }
                                     ],statusParam)
                                 }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '当期抵扣的进项税额', dataIndex: 'taxAmount'},
+                                                {title: '期末待抵扣进项税额', dataIndex: 'deductedTaxAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
                             </div>
                         ),
+                        onTotalSource: (totalSource) => {
+                            this.mounted && this.setState({
+                                totalSource
+                            })
+                        },
                         scroll:{
                             x:2700,
                             y:window.screen.availHeight-430,

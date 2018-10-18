@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
-import {SearchTable} from 'compoments'
+import {SearchTable,TableTotal} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
@@ -97,6 +97,7 @@ export default class NewlyBuilt extends Component{
         visibleView:false,
         voucherNum:undefined,
         filters:{},
+        totalSource:undefined,
         /**
          *修改状态和时间
          * */
@@ -124,7 +125,7 @@ export default class NewlyBuilt extends Component{
         this.mounted = null;
     }
     render(){
-        const {tableKey,visibleView,voucherNum,filters,statusParam} = this.state;
+        const {tableKey,visibleView,voucherNum,filters,statusParam,totalSource} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -180,7 +181,23 @@ export default class NewlyBuilt extends Component{
                                     }
                                 ],statusParam)
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '当期抵扣的进项税额', dataIndex: 'taxAmount'},
+                                            {title: '期末待抵扣进项税额', dataIndex: 'deductedTaxAmount'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </div>,
+                    },
+                    onTotalSource: (totalSource) => {
+                        this.mounted && this.setState({
+                            totalSource
+                        })
                     },
                     scroll:{
                         x:3100,

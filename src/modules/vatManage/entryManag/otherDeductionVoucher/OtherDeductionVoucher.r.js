@@ -21,7 +21,7 @@ const formItemStyle = {
         span: 16
     }
 };
-const searchFields = (context, disabled, declare) => {
+const searchFields = (context, disabled, declare) => (getFieldValue) => {
     return [
         {
             label: '纳税主体',
@@ -62,12 +62,18 @@ const searchFields = (context, disabled, declare) => {
                 ]
             }
         }, {
-            label: '利润中心',
-            fieldName: 'profitCenterName',
-            span: 8,
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:6,
             formItemStyle,
-            type: 'select',
-            options: context.state.sysDictIdList.concat({value: '0', text: '无'})
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            }
         }
     ];
 };
