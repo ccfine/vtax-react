@@ -43,8 +43,8 @@ const getFields = (disabled,declare) => [
         },
         fieldDecoratorOptions: {
             initialValue:
-                (disabled && moment(declare["authMonth"], "YYYY-MM")) ||
-                undefined,
+            (disabled && moment(declare["authMonth"], "YYYY-MM")) ||
+            undefined,
             rules: [
                 {
                     required: true,
@@ -57,33 +57,33 @@ const getFields = (disabled,declare) => [
 
 const getColumns = (context,isEdit) => {
     return [
-    {
-        title: "纳税主体",
-        dataIndex: "mainName",
-        width:'40%',
-    },
-    {
-        title: "转出项目",
-        dataIndex: "outProjectName",
-        width:'40%',
-    },
-    {
-        title: "转出税额",
-        dataIndex: "outTaxAmount",
-        render: (text,record,index) => {
-            if(isEdit){
-                return <NumericInputCell
-                fieldName={`outTaxAmount[${index}]`}
-                initialValue={text==='0' ? '0.00' : text}
-                getFieldDecorator={context.props.form.getFieldDecorator} />
-            }else{
-                return fMoney(text);
-            }
+        {
+            title: "纳税主体",
+            dataIndex: "mainName",
+            width:'40%',
         },
-        className: "table-money",
-        width:'20%',
-    }
-];
+        {
+            title: "转出项目",
+            dataIndex: "outProjectName",
+            width:'40%',
+        },
+        {
+            title: "转出税额",
+            dataIndex: "outTaxAmount",
+            render: (text,record,index) => {
+                if(isEdit){
+                    return <NumericInputCell
+                        fieldName={`outTaxAmount[${index}]`}
+                        initialValue={text==='0' ? '0.00' : text}
+                        getFieldDecorator={context.props.form.getFieldDecorator} />
+                }else{
+                    return fMoney(text);
+                }
+            },
+            className: "table-money",
+            width:'20%',
+        }
+    ];
 }
 
 class OtherBusinessInputTaxRollOut extends Component {
@@ -147,7 +147,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         const { totalSource,saveLoding } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        
+
         let { filters, statusParam } = this.state;
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (
@@ -189,7 +189,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                             y:window.screen.availHeight-380-(disabled?50:0),
                         },
                         cardProps: {
-                            title: "其他类型进项税额转出台账",
+                            title: "进项税额转出台账",
                             extra: (
                                 <div>
                                     {listMainResultStatus(statusParam)}
@@ -203,7 +203,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                         }])
                                     }
                                     {
-                                         (disabled && declare.decAction==='edit' && noSubmit) && composeBotton([{
+                                        (disabled && declare.decAction==='edit' && noSubmit) && composeBotton([{
                                             type:'save',
                                             text:'保存',
                                             icon:'save',
@@ -213,7 +213,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                         }],statusParam)
                                     }
                                     {
-                                         (disabled && declare.decAction==='edit') && composeBotton([{
+                                        (disabled && declare.decAction==='edit') && composeBotton([{
                                             type:'submit',
                                             url:'/account/income/taxout/submit',
                                             // monthFieldName:"authMonth",
