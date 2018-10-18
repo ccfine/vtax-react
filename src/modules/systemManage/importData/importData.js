@@ -97,6 +97,11 @@ const authMonth = [
                 importUrl:'/profitCenter/upload',
                 fields:mainId,
             },
+            {
+                title: '票据池',
+                importUrl:'/interInvoicePools/upload',
+                fields:fields,
+            },
         ];
 
         return(
