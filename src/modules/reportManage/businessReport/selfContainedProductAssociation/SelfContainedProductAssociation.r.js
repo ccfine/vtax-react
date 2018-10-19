@@ -153,6 +153,22 @@ const columns = [
   {
     title: "认证标记",
     dataIndex: "authStatus",
+    render: text => {
+      let t = ""
+      switch (parseInt(text, 0)) {
+        case 1: 
+          t = "认证成功"
+          break
+        case 2:
+          t = "认证失败"
+          break
+        case 0:
+          t = "无需认证"
+          break
+        default:  
+      }
+      return t
+    },
     width: "200px"
   },
   {
@@ -178,6 +194,19 @@ const columns = [
   {
     title: "发票类型",
     dataIndex: "invoiceType",
+    render: text => {
+      let t = ""
+      switch (text) {
+        case "s": 
+          t = "增值税专用发票"
+          break
+        case "c":
+          t = "增值税普通发票"
+          break
+        default:  
+      }
+      return t
+    },
     width: "200px"
   },
   {
