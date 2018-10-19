@@ -22,7 +22,7 @@ const searchFields = [
         formItemStyle
     },{
         label:'查询期间',
-        fieldName:'month',
+        fieldName:'authMonth',
         type:'monthPicker',
         formItemStyle,
         span:8,
@@ -42,7 +42,7 @@ const searchFields = [
               value: -1
           },
           {
-              text: "已完成",
+              text: "申报完成",
               value: 1
           }
       ]
@@ -55,11 +55,11 @@ const searchFields = [
       formItemStyle,
       options: [ 
         {
-            text: "未完成",
+            text: "未归档",
             value: -1
         },
         {
-            text: "已完成",
+            text: "已归档",
             value: 1
         }
       ]
@@ -146,7 +146,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 1000,y:window.screen.availHeight-360,},
+                    scroll:{ x: "100%",y:window.screen.availHeight-360,},
                 }}
             />
             </div>
