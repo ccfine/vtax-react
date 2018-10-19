@@ -1,93 +1,93 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="theme-color" content="#000000">
-    <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#000000">
+  <!--
+    manifest.json provides metadata used when your web app is added to the
+    homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+  -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+  <!--
+    Notice the use of %PUBLIC_URL% in the tags above.
+    It will be replaced with the URL of the `public` folder during the build.
+    Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>碧桂园增值税管理系统</title>
-    <script>
-        //var baseURL = 'http://dev-vscloud.servingcloud.com:8080/'
-        //var baseURL = 'http://112.74.41.25:8080/'
-        // var baseURL = 'http://39.108.53.58:8090/';
-        //var baseURL = 'http://rap2api.taobao.org/app/mock/4589/GET/';
-        //var baseURL = 'http://192.168.3.190/';
-        // var baseURL = 'http://192.168.3.53/'; //康博强
-        //var baseURL = 'http://my-vscloud2.tunnel.qydev.com/'; //http://192.168.3.170/谢安庆
-        // var baseURL = 'http://192.168.3.127/';
-        //var baseURL = 'http://192.168.3.132:8081/'; //邓傅生
-        // var baseURL = 'http://t-vs.tunnel.qydev.com'
-        // var baseURL = 'http://my-vscloud2.tunnel.qydev.com';
-        // var baseURL = 'http://jceshi.tunnel.qydev.com/' 蒋大伟
-        //http://120.78.146.155/login 自动上传地址
-        // var baseURL = 'http://192.168.3.48/' //安庆
-        //var baseURL = 'http://192.168.3.143/' //大伟
-        //var baseURL = 'http://192.168.3.50/'  //朱新普
-        //var baseURL = 'http://10.187.63.122/'
+    Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+    work correctly both with client-side routing and a non-root public URL.
+    Learn how to configure a non-root public URL by running `npm run build`.
+  -->
+  <title>碧桂园增值税管理系统</title>
+  <script>
+      //var baseURL = 'http://dev-vscloud.servingcloud.com:8080/'
+      //var baseURL = 'http://112.74.41.25:8080/'
+      // var baseURL = 'http://39.108.53.58:8090/';
+      //var baseURL = 'http://rap2api.taobao.org/app/mock/4589/GET/';
+      //var baseURL = 'http://192.168.3.190/';
+      // var baseURL = 'http://192.168.3.53/'; //康博强
+      //var baseURL = 'http://my-vscloud2.tunnel.qydev.com/'; //http://192.168.3.170/谢安庆
+      // var baseURL = 'http://192.168.3.127/';
+      //var baseURL = 'http://192.168.3.132:8081/'; //邓傅生
+      // var baseURL = 'http://t-vs.tunnel.qydev.com'
+      // var baseURL = 'http://my-vscloud2.tunnel.qydev.com';
+      // var baseURL = 'http://jceshi.tunnel.qydev.com/' 蒋大伟
+      //http://120.78.146.155/login 自动上传地址
+      //var baseURL = 'http://192.168.3.228/' //安庆
+      //var baseURL = 'http://192.168.3.181/' //大伟 181
+      //var baseURL = 'http://192.168.3.50/'  //朱新普
+      //var baseURL = 'http://10.187.63.122/'
+      //var baseURL = 'http://192.168.3.155/' //刘磊
 
-
-        //var baseURL = '/';  //给客户的dev-prod用的地址
-        var wsURL = 'ws://10.10.179.67:82/';
-        var isProd = 'false';  //TODO: 判断是否是正式环境
-        var isShow = isProd === 'false';
-        var isIE = !!window.ActiveXObject || "ActiveXObject" in window; //IE11  "ActiveXObject" in window 没有引号不识别
-        if(isIE){
-            document.documentElement.className += ' ie' + document.documentMode
-        }
-    </script>
-    <!-- Polyfills -->
-    <script type="text/javascript" src="/libs/polyfill.min.js"></script>
-
-    <style>
-      .ie11 #root{
-        display:block!important;
+      //var baseURL = '/';  //给客户的dev-prod用的地址
+      var wsURL = 'ws://10.10.179.67:82/';
+      var isProd = 'false';  //TODO: 判断是否是正式环境
+      var isShow = isProd === 'false';
+      var isIE = !!window.ActiveXObject || "ActiveXObject" in window; //IE11  "ActiveXObject" in window 没有引号不识别
+      if(isIE){
+          document.documentElement.className += ' ie' + document.documentMode
       }
-      .ie11 #ieTip{
-        display: none!important;
-      }
+  </script>
+  <!-- Polyfills -->
+  <script type="text/javascript" src="/libs/polyfill.min.js"></script>
 
-      .ie10 #root, .ie9 #root, .ie8 #root, .ie7 #root, .ie6 #root, .ie5 #root{
-        display:none!important;
-      }
-      .ie10 #ieTip, .ie9 #ieTip, .ie8 #ieTip, .ie7 #ieTip, .ie6 #ieTip, .ie5 #ieTip{
-        display: block!important;
-      }
-    </style>
+  <style>
+    .ie11 #root{
+      display:block!important;
+    }
+    .ie11 #ieTip{
+      display: none!important;
+    }
 
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+    .ie10 #root, .ie9 #root, .ie8 #root, .ie7 #root, .ie6 #root, .ie5 #root{
+      display:none!important;
+    }
+    .ie10 #ieTip, .ie9 #ieTip, .ie8 #ieTip, .ie7 #ieTip, .ie6 #ieTip, .ie5 #ieTip{
+      display: block!important;
+    }
+  </style>
 
-    <div id="root" class="ant-layout"></div>
-    <div id="ieTip" style='display:none'>
-      不支持IE11以下版本浏览器，请使用IE11及以上版本
-    </div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+</head>
+<body>
+<noscript>
+  You need to enable JavaScript to run this app.
+</noscript>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+<div id="root" class="ant-layout"></div>
+<div id="ieTip" style='display:none'>
+  不支持IE11以下版本浏览器，请使用IE11及以上版本
+</div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
+
+  To begin the development, run `npm start` or `yarn start`.
+  To create a production bundle, use `npm run build` or `yarn build`.
+-->
+</body>
 </html>
