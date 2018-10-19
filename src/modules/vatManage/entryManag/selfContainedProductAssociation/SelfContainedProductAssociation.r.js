@@ -69,8 +69,8 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
         fieldTextName: "profitName",
         fieldValueName: "id",
         doNotFetchDidMount: false,
-        fetchAble: (getFieldValue('mainId') && getFieldValue('mainId').key) || false,
-        url: `/taxsubject/profitCenterList/${getFieldValue("mainId")}`
+        fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
+        url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
     }
   },
   {
@@ -209,6 +209,19 @@ const columns = [
     {
       title: "发票类型",
       dataIndex: "invoiceType",
+      render: text => {
+        let t = ""
+        switch (text) {
+          case "s": 
+            t = "增值税专用发票"
+            break
+          case "c":
+            t = "增值税普通发票"
+            break
+          default:  
+        }
+        return t
+      },
       width: "200px"
     },
     {
@@ -255,11 +268,11 @@ export default class SelfContainedProductAssociation extends Component {
       tableKey: Date.now(),
       filters: {},
       totalSource: undefined,
-      statusParam: ""
+      statusParam: {}
     }
   }
 
-  refreshTable = () => {
+  refreshTabs = () => {
     this.setState({
         tableKey: Date.now()
     })
@@ -294,7 +307,7 @@ export default class SelfContainedProductAssociation extends Component {
         .then(({data}) => {
             if (data.code === 200) {
                 message.success(data.msg);
-                this.props.refreshTabs()
+                this.refreshTabs()
             } else {
                 message.error(`数据匹配失败:${data.msg}`)
             }
@@ -357,7 +370,7 @@ export default class SelfContainedProductAssociation extends Component {
                         params: filters,
                         userPermissions: ["2051010"],
                         onSuccess: () => {
-                            this.props.refreshTabs()
+                            this.refreshTabs()
                         }
                     },{
                         type: "revoke",
@@ -365,7 +378,7 @@ export default class SelfContainedProductAssociation extends Component {
                         params: filters,
                         userPermissions: ["2051011"],
                         onSuccess: () => {
-                            this.props.refreshTabs()
+                            this.refreshTabs()
                         }
                     }], statusParam)
                 }
