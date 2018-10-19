@@ -165,12 +165,12 @@ const columns = [
     },
     {
         title: '转出项目',
-        dataIndex: 'zcxm',
+        dataIndex: 'zcxmName',
         width:'100px',
     },
     {
         title: '其他扣税凭证类型',
-        dataIndex: 'zesfdkxm',
+        dataIndex: 'zesfdkxmName',
         width:'200px',
     },
     {
