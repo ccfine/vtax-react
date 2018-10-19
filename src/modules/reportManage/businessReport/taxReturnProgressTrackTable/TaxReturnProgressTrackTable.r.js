@@ -68,7 +68,7 @@ const searchFields=(getFieldValue)=>{
                 fieldValueName: "id",
                 doNotFetchDidMount:true,
                 fetchAble:(getFieldValue('org') && getFieldValue('org').key) || false,
-                url:`/taxsubject/listByName?name=${(getFieldValue('org') && getFieldValue('org').label)}`,
+                url:`/taxsubject/listByOrgId/${(getFieldValue('org') && getFieldValue('org').key)}`,
                 selectOptions:{
                     labelInValue:true,
                     showSearch:true,
