@@ -45,18 +45,6 @@ const searchFields = getFieldValue => [
     }
   },
   {
-    label: "产品类型",
-    fieldName: "productType",
-    type: "select",
-    span: 8,
-    formItemStyle,
-    options: [
-      {
-
-      }
-    ]
-  },
-  {
     label: "利润中心",
     fieldName: "profitCenterId",
     type: "asyncSelect",
@@ -175,6 +163,11 @@ const columns = [
   {
     title: "拆分前发票号码",
     dataIndex: "splitInvoiceNum",
+    width: "200px"
+  },
+  {
+    title: "拆分前发票代码",
+    dataIndex: "splitInvoiceCode",
     width: "200px"
   },
   {
