@@ -22,7 +22,7 @@ const searchFields = [
         formItemStyle
     },{
         label:'查询期间',
-        fieldName:'month',
+        fieldName:'authMonth',
         type:'monthPicker',
         formItemStyle,
         span:8,
