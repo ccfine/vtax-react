@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {composeBotton} from "utils"
 
+
 const formItemStyle={
     labelCol:{
         span:8
@@ -13,58 +14,117 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = [
-    {
-        label:'纳税主体',
-        fieldName:'mainId',
-        type:'taxMain',
-        span:8,
-        formItemStyle
-    },{
-        label:'查询期间',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        formItemStyle,
-        span:8,
-        componentProps:{
-            format:'YYYY-MM',
-        },
-    },
-    {
-      label: "纳税申报表提交",
-      fieldName: "submitStatus",
-      span: 8,
-      type: "select",
-      formItemStyle,
-      options: [ 
-          {
-              text: "未完成",
-              value: -1
-          },
-          {
-              text: "申报完成",
-              value: 1
-          }
-      ]
-    },
-    {
-      label: "申报归档",
-      fieldName: "fileStatus",
-      span: 8,
-      type: "select",
-      formItemStyle,
-      options: [ 
+const searchFields=(getFieldValue)=>{
+    return [
         {
-            text: "未归档",
-            value: -1
+            label: "区域",
+            fieldName: "area",
+            type: "asyncSelect",
+            span: 8,
+            formItemStyle,
+            componentProps: {
+                fieldTextName:'name',
+                fieldValueName:'id',
+                url: `/sysOrganization/queryLoginAreas`,
+                selectOptions:{
+                    labelInValue:true,
+                    showSearch:true,
+                    optionFilterProp:'children',
+                },
+            },
+            fieldDecoratorOptions: {
+                initialValue: {key: '',label:'全部'} ,
+            }
         },
         {
-            text: "已归档",
-            value: 1
+            label: "组织",
+            fieldName: "org",
+            type: "asyncSelect",
+            span: 8,
+            formItemStyle,
+            componentProps: {
+                fieldTextName: "name",
+                fieldValueName: "id",
+                fetchAble:(getFieldValue('area') && getFieldValue('area').key) || false,
+                url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('area') && getFieldValue('area').key)}`,
+                selectOptions:{
+                    labelInValue:true,
+                    showSearch:true,
+                    optionFilterProp:'children',
+                },
+            },
+            fieldDecoratorOptions: {
+                initialValue: {key: '',label:'全部'},
+            }
+        },
+        {
+            label: "纳税主体",
+            fieldName: "main",
+            type: "asyncSelect",
+            span: 8,
+            formItemStyle,
+            componentProps: {
+                fieldTextName: "name",
+                fieldValueName: "id",
+                doNotFetchDidMount:true,
+                fetchAble:(getFieldValue('org') && getFieldValue('org').key) || false,
+                url:`/taxsubject/listByName?name=${(getFieldValue('org') && getFieldValue('org').label)}`,
+                selectOptions:{
+                    labelInValue:true,
+                    showSearch:true,
+                    optionFilterProp:'children',
+                },
+            },
+            fieldDecoratorOptions: {
+                initialValue: {key: '',label:'全部'} ,
+            }
+        },
+        {
+            label:'查询期间',
+            fieldName:'authMonth',
+            type:'monthPicker',
+            formItemStyle,
+            span:8,
+            componentProps:{
+                format:'YYYY-MM',
+            },
+        },
+        {
+            label: "纳税申报表提交",
+            fieldName: "submitStatus",
+            span: 8,
+            type: "select",
+            formItemStyle,
+            options: [
+                {
+                    text: "未完成",
+                    value: -1
+                },
+                {
+                    text: "申报完成",
+                    value: 1
+                }
+            ]
+        },
+        {
+            label: "申报归档",
+            fieldName: "fileStatus",
+            span: 8,
+            type: "select",
+            formItemStyle,
+            options: [
+                {
+                    text: "未归档",
+                    value: -1
+                },
+                {
+                    text: "已归档",
+                    value: 1
+                }
+            ]
         }
-      ]
-    }
-]
+    ]
+}
 const columns = [
     {
       title: "区域",
@@ -96,6 +156,7 @@ const columns = [
       width: "200px"
     }
 ]
+
 export default class TaxReturnProgressTrackTable extends Component{
     state={
         updateKey:Date.now(),
@@ -120,7 +181,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                 tableOption={{
                     key:updateKey,
                     pageSize:100,
-                    columns:columns,
+                    columns,
                     cardProps:{
                         title:'纳税申报进度跟踪表'
                     },
