@@ -59,7 +59,7 @@ const searchFields = contxt => getFieldValue =>[
     },
     {
         label:'查询期间',
-        fieldName:'month',
+        fieldName:'authMonth',
         type:'monthPicker',
         formItemStyle,
         span:8,
