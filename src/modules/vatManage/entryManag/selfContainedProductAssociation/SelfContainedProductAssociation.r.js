@@ -306,7 +306,7 @@ export default class SelfContainedProductAssociation extends Component {
     request.put("/accountReceiptsInvoice/automatic", filters)
         .then(({data}) => {
             if (data.code === 200) {
-                message.success(data.msg);
+                message.success(data.data);
                 this.refreshTabs()
             } else {
                 message.error(`数据匹配失败:${data.msg}`)
