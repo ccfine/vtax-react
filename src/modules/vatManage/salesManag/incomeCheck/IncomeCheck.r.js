@@ -81,7 +81,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                fetchAble:getFieldValue('profitCenterId') || false,
                 url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },

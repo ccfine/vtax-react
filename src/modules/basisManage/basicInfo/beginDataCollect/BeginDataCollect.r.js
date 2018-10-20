@@ -30,7 +30,7 @@ const getColumns = context =>[
                         title:'编辑',
                         icon:'edit',
                         userPermissions:['1121004'],
-                        onSuccess:()=>context.showModal('modify',record.mainId)
+                        onSuccess:()=>context.showModal('modify',record)
                     },
                     {
                         type:'action',
@@ -58,7 +58,7 @@ const getColumns = context =>[
     },{
         title: '纳税主体名称',
         dataIndex: 'mainName',
-        render:(text,record)=>(<span title='查看详情' style={pointerStyle} onClick={()=>context.showModal('look',record.mainId)}>{text}</span>),
+        render:(text,record)=>(<span title='查看详情' style={pointerStyle} onClick={()=>context.showModal('look',record)}>{text}</span>),
     }, {
         title: '统一社会信用代码或纳税人识别号',
         dataIndex: 'taxNum',
@@ -100,12 +100,12 @@ export default class BeginDataCollect extends Component{
             visible
         })
     }
-    showModal=(type,mainId)=>{
+    showModal=(type,record)=>{
         this.toggleModalVisible(true)
         this.setState({
             modalConfig:{
                 type,
-                mainId
+                record
             }
         })
     }

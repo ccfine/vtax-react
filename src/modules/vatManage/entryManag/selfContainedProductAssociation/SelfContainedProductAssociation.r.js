@@ -340,7 +340,7 @@ export default class SelfContainedProductAssociation extends Component {
             pageSize: 100,
             columns,
             cardProps: {
-              title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项的发票</TableTitle>
+              title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项发票</TableTitle>
             },
             url: "/accountReceiptsInvoice/list",
             extra: <div>

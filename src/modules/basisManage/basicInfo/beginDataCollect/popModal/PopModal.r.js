@@ -2,89 +2,95 @@
  * Created by liuliyuan on 2018/5/20.
  */
 import React,{Component} from 'react';
-import {Modal,Tabs} from 'antd';
-import Tab1 from './tab_1';
-import Tab2 from './tab_2';
-import Tab3 from './tab_3';
-import Tab4 from './tab_4';
-import Tab5 from './tab_5';
-import Tab6 from './tab_6';
-import Tab7 from './tab_7';
+import {Form,Drawer,Row} from 'antd';
+import {AsyncTable} from 'compoments'
+import {getFields} from 'utils'
+import TabPage from './tabs.r'
 
-const TabPane = Tabs.TabPane;
-const tabList = [{
-    key: 'tab1',
-    tab: '主表项目期初数据/其他项目期初数据'
-}, {
-    key: 'tab6',
-    tab: '房间交易档案期初信息',
-}, {
-    key: 'tab2',
-    tab: '税额抵减项目期初数据',
-}, {
-    key: 'tab5',
-    tab: '土地价款期初数据',
-}, {
-    key: 'tab7',
-    tab: '自建转自用固定资产期初数据',
-}, {
-    key: 'tab4',
-    tab: '其他应税项目扣除（不含土地价款扣除）期初数据',
-}, {
-    key: 'tab3',
-    tab: '减税项目期初数据',
-}];
-
-const getContent = (key,mainId,disabled,updateKey) => {
-    const contentList = {
-        tab1: <Tab1 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab2: <Tab2 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab3: <Tab3 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab4: <Tab4 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab5: <Tab5 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab6: <Tab6 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab7: <Tab7 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-    };
-    return contentList[key]
-}
+const getColumns = context =>[
+    {
+        title: '利润中心',
+        dataIndex: 'mainName',//profitCenterName
+    },{
+        title: '是否已采集',
+        dataIndex: 'finish',
+        width:'200px',
+        render:text=>{
+            //是否处理1:已采集 0:未采集 ,
+            let t = '';
+            switch (parseInt(text,0)){
+                case 0:
+                    t=<span style={{ color: '#44b973' }}>未采集</span>;
+                    break;
+                case 1:
+                    t=<span style={{ color: '#1795f6' }}>已采集</span>;
+                    break;
+                default:
+                //no default
+            }
+            return t
+        }
+    }
+];
 
 class PopModal extends Component{
     static defaultProps={
         type:'edit',
-        visible:true
+        visible:true,
+        creditSubject:'',
+        selectedRowKeys:[],
+        selectedRows:[],
+        filters:{
+            creditSubject:'',
+        }
     }
 
     state = {
-        key: 'tab1',
-        updateKey:Date.now(),
-        tabPosition: 'top',
+        pageTabsKey:Date.now(),
     }
-    onTabChange = (key, type) => {
-        this.setState({ [type]: key });
+    refreshTable = ()=>{
+        this.mounted && this.setState({
+            tableKey:Date.now()
+        })
     }
-    handleSubmit = e => {
-        e && e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log(values)
-                /*this.props.toggleModalVisible(false);
-                this.props.refreshTable()*/
-            }
+    toggleModalVisible=visible=>{
+        this.mounted && this.setState({
+            visible
+        })
+    }
+    changeState = (value) =>{
+        this.setState({
+            filters:{
+                creditSubject:value
+            },
+        },()=>{
+            value === '1' ?
+                this.setState({
+                    pageTabsKey:Date.now(),
+                })
+                :
+                this.setState({
+                    selectedRows:[],
+                },()=>{
+                    this.refreshTable()
+                });
         })
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.visible && this.props.visible !== nextProps.visible){
             //传进来的是要求打开并且当前是关闭状态的时候，一打开就初始化
-            this.setState({
-                updateKey:Date.now()
-            })
+            this.changeState(nextProps.modalConfig.record.finish)
         }
     }
+    mounted=true;
+    componentWillUnmount(){
+        this.mounted=null
+    }
     render(){
-        const props = this.props;
+        const {tableKey,pageTabsKey,filters,selectedRows} = this.state;
+        const {form,visible,modalConfig:{type,record}} = this.props;
         let title='';
         let disabled = false;
-        const type = props.modalConfig.type;
         switch (type){
             case 'modify':
                 title = '编辑';
@@ -97,41 +103,98 @@ class PopModal extends Component{
             //no default
         }
         return(
-            <Modal
+            <Drawer
                 title={title}
+                placement="top"
+                //closable={false}
+                visible={visible}
+                width={'100%'}
+                onClose={()=>{
+                    this.props.toggleModalVisible(false)
+                    disabled || this.props.refreshTable();
+                }}
                 maskClosable={false}
                 destroyOnClose={true}
-                onCancel={()=>{
-                    props.toggleModalVisible(false)
-                    disabled || props.refreshTable();
-                }}
-                footer={false}
-                width={1920}
-                bodyStyle={{
-                    padding:0,
-                    height:500,
-                    overflowY:'auto'
-                }}
                 style={{
-                    width:'90%',
-                    maxWidth:'900px',
-                    top:'5%'
+                    height:window.screen.availHeight-150,
+                    overflowY:'auto'
+
                 }}
-                visible={props.visible}>
-                    <Tabs tabPosition={this.state.tabPosition} size="small">
+            >
+                <Form>
+                    <Row>
                         {
-                            tabList.map(ele=>(
-                                <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
-                                    {
-                                        getContent(ele.key, this.props.modalConfig.mainId, disabled, this.state.updateKey)
-                                    }
-                                </TabPane>
-                            ))
+                            getFields(form,[
+                                {
+                                    label: "期初数据采集维度",
+                                    fieldName: "creditSubject",
+                                    type: "select",
+                                    options: [
+                                        {
+                                            text: "纳税主体",
+                                            value: '1'
+                                        },
+                                        {
+                                            text: "利润中心",
+                                            value: '2'
+                                        }
+                                    ],
+                                    span: "8",
+                                    componentProps: {
+                                        disabled,
+                                        onChange:value=>{
+                                            this.changeState(value)
+                                        }
+                                    },
+                                    fieldDecoratorOptions: {
+                                        initialValue: (record && record.finish) || undefined,
+                                        rules: [
+                                             {
+                                                 required: true,
+                                                 message: '请选择期初数据采集维度'
+                                             }
+                                         ]
+                                     },
+                                }
+                            ])
                         }
-                    </Tabs>
-            </Modal>
+                    </Row>
+                </Form>
+                {
+                    (filters && filters.creditSubject === '2') && <AsyncTable url='/dataCollection/list'
+                                                                        updateKey={tableKey}
+                                                                        filters={{
+                                                                            ...this.state.filters,
+                                                                        }}
+                                                                        tableProps={{
+                                                                            rowKey:record=>record.id,
+                                                                            pageSize:100,
+                                                                            columns:getColumns(this),
+                                                                            rowSelection:{
+                                                                                type: 'radio',
+                                                                            },
+                                                                            onRowSelect:(selectedRowKeys,selectedRows)=>{
+                                                                                this.setState({
+                                                                                    selectedRowKeys,
+                                                                                    selectedRows,
+                                                                                    pageTabsKey:Date.now(),
+                                                                                })
+                                                                            },
+                                                                            scroll:{
+                                                                                y:150,
+                                                                            },
+                                                                            style:{marginBottom:'20px'}
+                                                                    }} />
+                }
+                {
+                    ((selectedRows && selectedRows.length>0) && (filters && filters.creditSubject === '2')) && <TabPage key={pageTabsKey} selectedRows={selectedRows} mainId={record.mainId} filters={filters} type={type} disabled={disabled} />
+                }
+                {
+                    (filters && filters.creditSubject === '1') && <TabPage key={pageTabsKey} mainId={record.mainId} filters={filters} type={type} disabled={disabled} />
+                }
+            </Drawer>
         )
     }
 }
 
-export default PopModal
+export default Form.create()(PopModal)
