@@ -54,8 +54,8 @@ const searchFields = (getFieldValue) => [
             fieldTextName:'profitName',
             fieldValueName:'id',
             doNotFetchDidMount:false,
-            fetchAble:getFieldValue('taxSubjectId') || false,
-            url:`/taxsubject/profitCenterList/${getFieldValue('taxSubjectId')}`,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
         }
     },
     {
@@ -67,7 +67,7 @@ const searchFields = (getFieldValue) => [
             fieldTextName:'itemName',
             fieldValueName:'id',
             doNotFetchDidMount:true,
-            fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+            fetchAble:getFieldValue('profitCenterId') || false,
             url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
     },

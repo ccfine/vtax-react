@@ -20,7 +20,7 @@ const formItemStyle = {
         span: 16
     }
 };
-const fields = (disabled,declare)=> [
+const fields = (disabled,declare) => [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -71,10 +71,10 @@ const fields = (disabled,declare)=> [
                 }
             ]
         },
-    }
+    },
 ]
 
-const searchFields = (disabled,declare) => {
+const searchFields = (disabled,declare) => getFieldValue => {
     return [
         {
             label: "纳税主体",
@@ -118,6 +118,20 @@ const searchFields = (disabled,declare) => {
             }
         },
         {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            }
+        },
+        {
             label: "发票号码",
             type: "input",
             fieldName: "invoiceNum",
@@ -156,11 +170,12 @@ const searchFields = (disabled,declare) => {
         }
     ];
 };
-const getColumns = (context) => [{
-    title: "纳税主体",
-    dataIndex: "mainName",
-    width:'200px',
-},
+const getColumns = (context) => [
+    {
+        title:'利润中心',
+        dataIndex:'profitCenterName',
+        width:'200px',
+    },
     {
         title: '发票类型',
         dataIndex: "invoiceType",
