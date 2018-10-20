@@ -118,14 +118,13 @@ export default class TabPage extends Component{
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,
-                        style:{
-                            marginTop:0,
-                            maxHeight:400,
-                            overflowY:'auto',
-                        }
                     },
                     pagination:true,
                     pageSize:100,
+                    scroll:{
+                        //x:1800,
+                        y:window.screen.availHeight-380,
+                    },
                 }}
             >
             </SearchTable>

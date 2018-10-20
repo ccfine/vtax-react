@@ -56,9 +56,9 @@ const getColumns = context=>{
                 {text}
             </a>
         )
-    }, {
+    /*}, {
         title: '利润中心',
-        dataIndex: 'profitCenterName',
+        dataIndex: 'profitCenterName',*/
     }, {
         title: '项目分期',
         dataIndex: 'stagesName',

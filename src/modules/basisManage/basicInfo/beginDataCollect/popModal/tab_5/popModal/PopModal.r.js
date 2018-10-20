@@ -187,7 +187,7 @@ class PopModal extends Component {
                                 )
                             }
                         </Row>
-                        <Row>
+                        {/*<Row>
                             {
                                 (eventkey === 3) && getFields(form, [{
                                     label: "利润中心",
@@ -218,7 +218,7 @@ class PopModal extends Component {
                                 }]
                                 )
                             }
-                        </Row>
+                        </Row>*/}
                         <Row>
                             {
                                  (eventkey === 3) && getFields(form, [{
@@ -243,12 +243,18 @@ class PopModal extends Component {
                                         },
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
+                                        fetchAble:  this.props && this.props.mainId,
+                                        url:`/project/stage/list?${parseJsonToParams({
+                                            mainId: (this.props && this.props.mainId) || '',
+                                            size:1000,
+                                        })}`,
+                                        /*
                                         doNotFetchDidMount: true,
-                                        fetchAble: (form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId),
+                                        fetchAble: (form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (this.props && this.props.mainId),
                                         url:`/project/stage/list?${parseJsonToParams({
                                             profitCenterId:(form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId) || "",
                                             size:1000,
-                                        })}`,
+                                        })}`,*/
                                     }
                                 }])
                             }
