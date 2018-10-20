@@ -11,7 +11,7 @@ import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} f
 import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
 import { NumericInputCell } from 'compoments/EditableCell'
-const searchFields =(disabled,declare)=> {
+const searchFields =(disabled,declare)=> getFieldValue => {
     return [
         {
             label:'纳税主体',
@@ -67,29 +67,37 @@ const searchFields =(disabled,declare)=> {
                 ]
             },
         },
+        {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+            }
+        }
     ]
 }
 const getColumns = (context,disabled) => {
     let lastStegesId1 = '',lastStegesId2 = '',{dataSource} = context.state;
     return [
-    {
-        title:'纳税主体',
-        dataIndex:'mainName',
-        width:'15%',
-        render:(text, row, index) => {
-            let rowSpan = 0;
-            if(lastStegesId1 !== row.stagesId){
-                lastStegesId1 = row.stagesId;
-                rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
-            }
-            return {
-              children: text,
-              props: {
-                rowSpan: rowSpan,
-              },
-            };
-          },
-    },{
+        {
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width:'150px',
+        },{
         title:'项目分期',
         dataIndex:'stagesName',
         width:'15%',

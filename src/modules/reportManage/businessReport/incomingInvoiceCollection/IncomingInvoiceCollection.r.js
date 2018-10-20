@@ -12,35 +12,49 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = [
-        {
-            label:'纳税主体',
-            fieldName:'mainId',
-            type:'taxMain',
-            span:8,
-            formItemStyle,
-            fieldDecoratorOptions:{
-                rules:[{
-                    required:true,
-                    message:'请选择纳税主体',
-                }]
-            }
-        },{
-            label:'查询期间',
-            fieldName:'authMonth',
-            type:'monthPicker',
-            formItemStyle,
-            span:8,
-            componentProps:{
-                format:'YYYY-MM',
-            },
+const searchFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:8,
+        formItemStyle,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
         }
-    ]
+    },{
+        label:'查询期间',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        formItemStyle,
+        span:8,
+        componentProps:{
+            format:'YYYY-MM',
+        },
+    },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:8,
+        formItemStyle,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:false,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
+        }
+    },
+]
 const columns = [
     {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-        width:'150px',
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'200px',
     },{
         title: '纳税人识别号',
         dataIndex: 'sellerTaxNum',

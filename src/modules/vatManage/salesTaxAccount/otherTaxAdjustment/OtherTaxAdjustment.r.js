@@ -17,7 +17,7 @@ import {
 } from "utils";
 import moment from "moment";
 
-const searchFields = (disabled,declare) => {
+const searchFields = (disabled,declare) => getFieldValue => {
   return [
     {
       label: "纳税主体",
@@ -58,7 +58,20 @@ const searchFields = (disabled,declare) => {
           }
         ]
       }
-    }
+    },
+    {
+      label:'利润中心',
+      fieldName:'profitCenterId',
+      type:'asyncSelect',
+      span:8,
+      componentProps:{
+          fieldTextName:'profitName',
+          fieldValueName:'id',
+          doNotFetchDidMount:false,
+          fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+          url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+      }
+  },
   ];
 };
 const getColumns = (context,hasOperate) => {
@@ -110,20 +123,9 @@ const getColumns = (context,hasOperate) => {
     ...operates
   ,
   {
-    title: "纳税主体",
-    dataIndex: "mainName",
-    render:(text,record)=>{
-      return <a title='查看详情' onClick={() => {
-                context.setState({
-                  visible: true,
-                  action: "look",
-                  opid: record.id
-                });
-              }} >
-              {text}
-            </a>
-    },
-    width:'150px',
+    title:'利润中心',
+    dataIndex:'profitCenterName',
+    width:'200px',
   },
   {
     title: "调整日期",

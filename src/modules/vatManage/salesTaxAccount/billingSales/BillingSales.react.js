@@ -281,6 +281,7 @@ class BillingSales extends Component {
         const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
+        const { getFieldValue } = this.props.form
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -330,10 +331,24 @@ class BillingSales extends Component {
                                             ]
                                         },
                                     },
+                                    {
+                                        label:'利润中心',
+                                        fieldName:'profitCenterId',
+                                        type:'asyncSelect',
+                                        span:8,
+                                        formItemStyle,
+                                        componentProps:{
+                                            fieldTextName:'profitName',
+                                            fieldValueName:'id',
+                                            doNotFetchDidMount:false,
+                                            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                                            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+                                        }
+                                    },
                                 ])
                             }
 
-                            <Col span={8} style={{textAlign:'right'}}>
+                            <Col span={24} style={{textAlign:'right'}}>
                                 <Form.Item>
                                     <Button style={{marginLeft:20}} size='small' type="primary" htmlType="submit">查询</Button>
                                     <Button style={{marginLeft:10}} size='small' onClick={()=>this.props.form.resetFields()}>重置</Button>

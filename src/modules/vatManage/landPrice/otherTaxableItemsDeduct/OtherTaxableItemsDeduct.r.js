@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {fMoney,requestResultStatus,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
-const searchFields =(disabled,declare)=> [
+const searchFields =(disabled,declare)=> getFieldValue => [
     {
         label:'纳税主体',
         fieldName:'main',
@@ -43,11 +43,24 @@ const searchFields =(disabled,declare)=> [
             ]
         },
     },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:8,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+        }
+    }
 ]
 const columns = [{
-    title: '纳税主体',
-    dataIndex: 'mainName',
-    width:'200px',
+    title: '利润中心',
+    dataIndex: 'profitCenterName',
+    width:'150px',
 }, {
     title: '应税项目',
     dataIndex: 'taxableProjectName',

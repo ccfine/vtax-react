@@ -12,7 +12,7 @@ import moment from "moment";
 import PopModal from "./popModal";
 import { NumericInputCell } from 'compoments/EditableCell'
 
-const getFields = (disabled,declare) => [
+const getFields = (disabled,declare) => getFieldValue => [
     {
         label: "纳税主体",
         type: "taxMain",
@@ -52,15 +52,28 @@ const getFields = (disabled,declare) => [
                 }
             ]
         }
+    },
+    {
+        label: "利润中心",
+        fieldName: "profitCenterId",
+        type: "asyncSelect",
+        span: 8,
+        componentProps: {
+            fieldTextName: "profitName",
+            fieldValueName: "id",
+            doNotFetchDidMount: false,
+            fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+        }
     }
 ];
 
 const getColumns = (context,isEdit) => {
     return [
         {
-            title: "纳税主体",
-            dataIndex: "mainName",
-            width:'40%',
+            title: "利润中心",
+            dataIndex: "profitCenterName",
+            width: "200px"
         },
         {
             title: "转出项目",

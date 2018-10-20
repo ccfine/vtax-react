@@ -64,8 +64,7 @@ const getFields = (filters)=>[
     }
 ]
 
-const getSearchFields = (disabled,declare) => {
-    return [
+const getSearchFields = (disabled,declare) => (getFieldValue) => [
         {
             label: "纳税主体",
             fieldName: "main",
@@ -107,6 +106,19 @@ const getSearchFields = (disabled,declare) => {
             }
         },
         {
+            label: "利润中心",
+            fieldName: "profitCenterId",
+            type: "asyncSelect",
+            span: 8,
+            componentProps: {
+                fieldTextName: "profitName",
+                fieldValueName: "id",
+                doNotFetchDidMount: false,
+                fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            }
+        },
+        {
             label: "发票号码",
             fieldName: "invoiceNum",
             type: "input",
@@ -114,14 +126,13 @@ const getSearchFields = (disabled,declare) => {
             componentProps: {},
             fieldDecoratorOptions: {}
         }
-    ]
-};
+]
 
 const getColumns = (context) => [{
-    title: "纳税主体",
-    dataIndex: "mainName",
-    width:'200px',
-    },
+    title: "利润中心",
+    dataIndex: "profitCenterName",
+    width: "200px"
+  },
     {
         title: "数据来源",
         dataIndex: "sourceType",
@@ -377,6 +388,22 @@ class InvoiceCollection extends Component {
     componentWillUnmount(){
         this.mounted = null;
     }
+
+    matchData = () => {
+        const { filters } = this.state
+        request.put("", filters)
+            .then(({data}) => {
+                if (data.code === 200) {
+                    message.success(data.data);
+                    this.refreshTable()
+                } else {
+                    message.error(`数据匹配失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+      }
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
@@ -439,7 +466,16 @@ class InvoiceCollection extends Component {
                                 }
 
                                 {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([             
+                                    {
+                                        type: "match",
+                                        icon: "copy",
+                                        text: "数据匹配",
+                                        btnType: "default",
+                                        userPermissions: [""],
+                                        onClick: this.matchData
+                                    },
+                                    {
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         userPermissions:['1491005'],

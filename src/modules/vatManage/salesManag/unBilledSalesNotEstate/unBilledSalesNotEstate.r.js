@@ -263,7 +263,7 @@ class UnBilledSalesNotEstate extends Component {
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
-
+        const { getFieldValue } = this.props.form
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -312,6 +312,19 @@ class UnBilledSalesNotEstate extends Component {
                                                     message: '请选择查询期间'
                                                 }
                                             ]
+                                        }
+                                    },
+                                    {
+                                        label:'利润中心',
+                                        fieldName:'profitCenterId',
+                                        type:'asyncSelect',
+                                        span:8,
+                                        componentProps:{
+                                            fieldTextName:'profitName',
+                                            fieldValueName:'id',
+                                            doNotFetchDidMount:false,
+                                            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                                            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
                                         }
                                     },
                                 ])

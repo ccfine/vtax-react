@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
-import {message,Modal} from 'antd';
+import {message,Modal,Form} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request,requestTaxSubjectConfig } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
@@ -20,7 +20,7 @@ const formItemStyle = {
         span: 16
     }
 };
-const fields = (disabled,declare) => [
+const fields = (disabled,declare,getFieldValue) => [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -72,6 +72,36 @@ const fields = (disabled,declare) => [
             ]
         },
     },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:false,
+            fetchAble:(getFieldValue('mainId') && getFieldValue('mainId').key) || false,
+            url:`/taxsubject/profitCenterList/${(getFieldValue('mainId') && getFieldValue('mainId').key ) || (declare && declare.mainId)}`,
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && declare.profitCenterId) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择利润中心'
+                }
+            ]
+        },
+    }
 ]
 
 const searchFields = (disabled,declare) => getFieldValue => {
@@ -382,6 +412,7 @@ class SalesInvoiceCollection extends Component {
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+        const { getFieldValue } = this.props.form 
         return (
             <div className='oneLine'>
                 <SearchTable
@@ -447,7 +478,7 @@ class SalesInvoiceCollection extends Component {
                                             type:'fileImport',
                                             url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,
-                                            fields:fields(disabled,declare),
+                                            fields:fields(disabled,declare,getFieldValue),
                                             userPermissions:['1061005'],
                                         },{
                                             type:'revokeImport',
@@ -520,4 +551,4 @@ class SalesInvoiceCollection extends Component {
         );
     }
 }
-export default SalesInvoiceCollection
+export default Form.create()(SalesInvoiceCollection)

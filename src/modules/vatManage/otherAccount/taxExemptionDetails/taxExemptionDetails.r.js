@@ -13,12 +13,8 @@ import PopModal from "./popModal";
 import moment from 'moment';
 import { NumericInputCell,SelectCell } from 'compoments/EditableCell'
 import { BigNumber } from "bignumber.js";
-const pointerStyle = {
-    cursor: "pointer",
-    color: "#1890ff"
-};
 
-const searchFields =(disabled,declare)=> [
+const searchFields =(disabled,declare)=> getFieldValue => [
     {
         label:'纳税主体',
         fieldName:'main',
@@ -56,30 +52,25 @@ const searchFields =(disabled,declare)=> [
             ]
         },
     },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:8,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+        }
+    }
 ]
 const getColumns = (context,getFieldDecorator,disabled) => {
     return [ {
-            title: '纳税主体',
-            dataIndex: 'mainName',
-            render: (text, record) => (
-                <span
-                    title="查看详情"
-                    style={{
-                        ...pointerStyle,
-                        marginLeft: 5
-                    }}
-                    onClick={() => {
-                        context.setState({
-                            visible: true,
-                            action: 'look',
-                            opid: record.id
-                        });
-                    }}
-                >
-                {text}
-            </span>
-            ),
-            width:'200px',
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'150px',
         }, {
             title: '减税性质代码',
             dataIndex: 'reduceNum',
@@ -416,7 +407,20 @@ class TaxExemptionDetails extends Component{
                             }],statusParam)
                         }
                         {
-                            (disabled && declare.decAction==='edit') &&  composeBotton([{
+                            (disabled && declare.decAction==='edit') &&  composeBotton([
+                            {
+                                type:'add',
+                                icon:'plus',
+                                userPermissions:[''],
+                                onClick: () => {
+                                  this.setState({
+                                    visible: true,
+                                    action: "add",
+                                    opid: undefined
+                                  });
+                                }
+                            }, 
+                            {
                                 type:'save',
                                 text:'保存',
                                 icon:'save',
