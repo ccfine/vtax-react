@@ -300,6 +300,15 @@ const columns = [
     },
 ];
 
+const setFormat = data => {
+    return data.map(item=>{
+        return{
+            value:item.code,
+            text:item.name
+        }
+    })
+}
+
 export default class BillPool extends Component{
     state={
         updateKey:Date.now(),
