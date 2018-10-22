@@ -112,7 +112,7 @@ class SheetWithSearchFields extends Component{
         })
     }
     componentDidMount(){
-        const { declare,partnerId,reportType } = this.props;
+        const { declare,drawerConfig:{partnerId},reportType } = this.props;
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
@@ -132,7 +132,7 @@ class SheetWithSearchFields extends Component{
             if(!err){
 
                 values.reportType = this.props.reportType;
-                values.partnerId = this.props.partnerId;
+                values.partnerId = this.props.drawerConfig.partnerId;
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
                     values.mainId = values.main.key
@@ -154,7 +154,7 @@ class SheetWithSearchFields extends Component{
         this.props.form.validateFields((err, values) => {
             if(!err){
                 values.reportType = this.props.reportType;
-                values.partnerId = this.props.partnerId;
+                values.partnerId = this.props.drawerConfig.partnerId;
                 for(let key in values.map){
                     if(values.map[key] !== 0){
                         values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
@@ -188,10 +188,11 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields,type, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
+        const { tab, grid, url , searchFields,type, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,drawerConfig} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
-        const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
+        console.log(drawerConfig.type)
+        const readOnly = !(disabled && declare.decAction==='edit') || !(drawerConfig && drawerConfig.type==='edit') || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
                 <div>

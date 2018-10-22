@@ -51,12 +51,12 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
     },
     fieldDecoratorOptions: {
       initialValue: (disabled && moment(declare["authMonth"], "YYYY-MM")) || undefined,
-      rules: [
+      rules: disabled ? [
           {
               required: true,
               message: '请选择查询期间'
           }
-      ]
+      ] : []
     }
   },
   {

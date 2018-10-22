@@ -86,7 +86,7 @@ const columns = context =>[{
         className: "table-money",
     },{
         title: "待抵扣期间",
-        dataIndex: "assetsState",
+        dataIndex: "deductedPeriod",
         width:'100px',
     },
 ];
