@@ -51,12 +51,12 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
     },
     fieldDecoratorOptions: {
       initialValue: (disabled && moment(declare["authMonth"], "YYYY-MM")) || undefined,
-      rules: disabled ? [
+      rules: [
           {
               required: true,
               message: '请选择查询期间'
           }
-      ] : []
+      ]
     }
   },
   {
@@ -255,6 +255,11 @@ const columns = [
       width: "200px"
     },
     {
+      title: "已拆分税额",
+      dataIndex: "splitTaxAmount",
+      width: "200px"
+    },
+    {
       title: "最新更新日期",
       dataIndex: "updateDate",
       width: "200px"
@@ -371,7 +376,7 @@ export default class SelfContainedProductAssociation extends Component {
               {
                   JSON.stringify(filters) !== "{}" && composeBotton([{
                       type: "fileExport",
-                      url: "/accountReceiptsInvoice/export",
+                      url: "accountReceiptsInvoice/export",
                       params: filters,
                       title: "导出",
                       userPermissions: ["2051007"]
@@ -432,7 +437,7 @@ export default class SelfContainedProductAssociation extends Component {
               })
             },
             scroll: {
-              x: 4400,
+              x: 4600,
               y: window.screen.availHeight - 480 - (disabled? 50: 0) 
             }
           }}

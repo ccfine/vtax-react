@@ -65,7 +65,7 @@ const searchFields = (context, disabled, declare) => (getFieldValue) => {
             label:'利润中心',
             fieldName:'profitCenterId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'profitName',
@@ -255,7 +255,7 @@ export default class OtherDeductionVoucher extends Component {
                                     (disabled && declare.decAction === 'edit') && composeBotton([{
 
                                         type:'reset',
-                                        url:'/account/income/taxout/reset',
+                                        url:'/other/tax/deduction/vouchers/reset',
                                         params:filters,
                                         userPermissions:['1525000'],
                                         onSuccess:this.refreshTable,
