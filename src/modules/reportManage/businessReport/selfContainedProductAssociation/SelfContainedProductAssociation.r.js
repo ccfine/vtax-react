@@ -338,7 +338,7 @@ export default class SelfContainedProductAssociation extends Component {
               })
             },
             scroll: {
-              x: 4000,
+              x: 4200,
               y: window.screen.availHeight - 400
             }
           }}
