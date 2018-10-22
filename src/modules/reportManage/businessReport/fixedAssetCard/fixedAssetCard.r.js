@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-17 14:54:31
+ * @Last Modified time: 2018-10-22 10:00:53
  */
 import React, { Component } from "react";
 import {message} from 'antd';
@@ -54,8 +54,8 @@ const searchFields = (getFieldValue) => [
             fieldTextName:'profitName',
             fieldValueName:'id',
             doNotFetchDidMount:false,
-            fetchAble:getFieldValue('taxSubjectId') || false,
-            url:`/taxsubject/profitCenterList/${getFieldValue('taxSubjectId')}`,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
         }
     },
     {
