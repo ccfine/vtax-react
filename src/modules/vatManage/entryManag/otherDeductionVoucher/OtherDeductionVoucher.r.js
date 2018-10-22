@@ -65,7 +65,7 @@ const searchFields = (context, disabled, declare) => (getFieldValue) => {
             label:'利润中心',
             fieldName:'profitCenterId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'profitName',
