@@ -61,7 +61,7 @@ const list =(disabled,declare,getFieldValue)=> [
         },
         fieldDecoratorOptions:{
             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-            rules:[
+            rules: [
                 {
                     required:true,
                     message:'请选择查询期间'

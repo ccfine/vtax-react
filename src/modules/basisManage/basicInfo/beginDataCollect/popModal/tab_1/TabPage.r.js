@@ -258,7 +258,7 @@ class TabPage extends Component{
                             bordered:false,
                             style:{
                                 marginTop:0,
-                                maxHeight:400,
+                                //maxHeight:window.screen.availHeight-350,
                                 overflowY:'auto',
                             }
                         },

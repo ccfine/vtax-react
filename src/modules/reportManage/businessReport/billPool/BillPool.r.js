@@ -6,7 +6,7 @@ import {SearchTable,TableTotal} from 'compoments'
 // import {message} from 'antd'
 // import {connect} from 'react-redux'
 // import createSocket from '../socket'
-import {fMoney, requestDict, setFormat} from 'utils'
+import {fMoney, requestDict} from 'utils'
 
 const formItemStyle={
     labelCol:{
@@ -299,6 +299,15 @@ const columns = [
         width:'150px',
     },
 ];
+
+const setFormat = data => {
+    return data.map(item=>{
+        return{
+            value:item.code,
+            text:item.name
+        }
+    })
+}
 
 export default class BillPool extends Component{
     state={
