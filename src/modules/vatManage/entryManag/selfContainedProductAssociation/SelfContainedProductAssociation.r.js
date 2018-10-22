@@ -376,7 +376,7 @@ export default class SelfContainedProductAssociation extends Component {
               {
                   JSON.stringify(filters) !== "{}" && composeBotton([{
                       type: "fileExport",
-                      url: "/accountReceiptsInvoice/export",
+                      url: "accountReceiptsInvoice/export",
                       params: filters,
                       title: "导出",
                       userPermissions: ["2051007"]
