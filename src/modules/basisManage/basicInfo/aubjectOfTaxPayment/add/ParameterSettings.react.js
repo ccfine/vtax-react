@@ -144,15 +144,15 @@ export default class ParameterSettings extends Component{
                                 },
                                 options:[
                                     /*{
-                                        label: '二者熟早：房间交付日期、实际交付日',
+                                        label: '二者孰早：房间交付日期、实际交付日',
                                         value: '1',
                                     },*/
                                     {
-                                        label: '三者熟早：合同约定交付日期、房间交付日期、开票日期',
+                                        label: '三者孰早：合同约定交付日期、房间交付日期、开票日期',
                                         value: '2',
                                     },
                                     {
-                                        label: '二者熟早：房间交付日期、开票日期',
+                                        label: '二者孰早：房间交付日期、开票日期',
                                         value: '3',
                                     }
                                 ],
