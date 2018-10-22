@@ -260,7 +260,7 @@ const columns = [
       width: "200px"
     },
     {
-      title: "数据重算",
+      title: "匹配的不动产类型",
       dataIndex: "matchingStatus",
       render: text => {
         let t = ""
