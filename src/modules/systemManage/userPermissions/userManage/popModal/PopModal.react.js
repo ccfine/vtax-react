@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/4/17.
  */
 import React,{Component} from 'react'
-import { Form,Modal,message,Row,Col,Alert,Spin} from 'antd';
+import { Form,Modal,message,Row,Spin} from 'antd';
 import {request,getFields} from 'utils'
 import {connect} from 'react-redux'
 
@@ -281,14 +281,14 @@ class PopModal extends Component {
                               }
                           ])
                       }
-                      {
+                      {/*{
                           modalType === 'create' ? (
                               <Col span={24}>
                                 <Alert message="新添加的帐号的初始密码
                                 为：888888" type="info" showIcon />
                               </Col>
                           ) : null
-                      }
+                      }*/}
                   </Row>
                 </Form>
               </Spin>
