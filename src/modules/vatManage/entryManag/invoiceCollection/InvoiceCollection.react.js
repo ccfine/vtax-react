@@ -61,6 +61,38 @@ const getFields = (filters)=>[
                 }
             ]
         },
+    },
+    {
+        label: "导入内容",
+        fieldName: "importCentent",
+        type: "select",
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        options: [
+            {
+                text: "进项发票",
+                value: "1"
+            },
+            {
+                text: "进项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择导入内容'
+                }
+            ]
+        },
     }
 ]
 
