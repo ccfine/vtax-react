@@ -6,7 +6,7 @@ import {SearchTable,TableTotal} from 'compoments'
 // import {message} from 'antd'
 // import {connect} from 'react-redux'
 // import createSocket from '../socket'
-import {fMoney, requestDict, setFormat} from 'utils'
+import {fMoney, requestDict} from 'utils'
 
 const formItemStyle={
     labelCol:{
