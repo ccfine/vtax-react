@@ -186,7 +186,7 @@ export default class SelfContainedProductList extends Component {
               })
             },
             scroll: {
-              x: 1000,
+              x: 1500,
               y: window.screen.availHeight - 400
             }
           }}

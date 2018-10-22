@@ -255,8 +255,34 @@ const columns = [
       width: "200px"
     },
     {
+      title: "已拆分税额",
+      dataIndex: "splitTaxAmount",
+      width: "200px"
+    },
+    {
       title: "最新更新日期",
       dataIndex: "updateDate",
+      width: "200px"
+    },
+    {
+      title: "匹配的不动产类型",
+      dataIndex: "matchingStatus",
+      render: text => {
+        let t = ""
+        switch (parseInt(text, 0)) {
+          case 0: 
+            t = "未匹配"
+            break
+          case 1:
+            t = "单独新建"
+            break
+          case 2:
+            t = "自建转自用"
+            break
+          default:  
+        }
+        return t
+      },
       width: "200px"
     }   
 ]
@@ -306,7 +332,7 @@ export default class SelfContainedProductAssociation extends Component {
     request.put("/accountReceiptsInvoice/automatic", filters)
         .then(({data}) => {
             if (data.code === 200) {
-                message.success(data.msg);
+                message.success(data.data);
                 this.refreshTabs()
             } else {
                 message.error(`数据匹配失败:${data.msg}`)
@@ -357,7 +383,15 @@ export default class SelfContainedProductAssociation extends Component {
                   }])
               }
               {
-                    (disabled && declare.decAction === "edit") &&  composeBotton([{
+                    (disabled && declare.decAction === "edit") &&  composeBotton([
+                    {
+                        type:'reset',
+                        url:'/accountReceiptsInvoice/reset',
+                        params:filters,
+                        userPermissions:["2051009"],
+                        onSuccess:this.refreshTabs,
+                    },
+                    {
                         type: "match",
                         icon: "copy",
                         text: "数据匹配",
@@ -403,7 +437,7 @@ export default class SelfContainedProductAssociation extends Component {
               })
             },
             scroll: {
-              x: 4000,
+              x: 4600,
               y: window.screen.availHeight - 480 - (disabled? 50: 0) 
             }
           }}

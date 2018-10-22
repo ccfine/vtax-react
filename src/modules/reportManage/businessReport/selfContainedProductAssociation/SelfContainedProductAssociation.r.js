@@ -240,6 +240,11 @@ const columns = [
     width: "200px"
   },
   {
+    title: "已拆分税额",
+    dataIndex: "splitTaxAmount",
+    width: "200px"
+  },
+  {
     title: "最新更新日期",
     dataIndex: "updateDate",
     width: "200px"
@@ -338,7 +343,7 @@ export default class SelfContainedProductAssociation extends Component {
               })
             },
             scroll: {
-              x: 4000,
+              x: 4400,
               y: window.screen.availHeight - 400
             }
           }}
