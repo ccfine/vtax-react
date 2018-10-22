@@ -20,7 +20,7 @@ const formItemStyle = {
         span: 16
     }
 };
-const fields = (disabled,declare,getFieldValue) => [
+const fields = (disabled,declare) => [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -68,36 +68,6 @@ const fields = (disabled,declare,getFieldValue) => [
                 {
                     required: true,
                     message: '请选择开票月份'
-                }
-            ]
-        },
-    },
-    {
-        label:'利润中心',
-        fieldName:'profitCenterId',
-        type:'asyncSelect',
-        span:24,
-        formItemStyle:{
-            labelCol:{
-                span:6
-            },
-            wrapperCol:{
-                span:14
-            }
-        },
-        componentProps:{
-            fieldTextName:'profitName',
-            fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:(getFieldValue('mainId') && getFieldValue('mainId').key) || false,
-            url:`/taxsubject/profitCenterList/${(getFieldValue('mainId') && getFieldValue('mainId').key ) || (declare && declare.mainId)}`,
-        },
-        fieldDecoratorOptions:{
-            initialValue: (disabled && declare.profitCenterId) || undefined,
-            rules:[
-                {
-                    required:true,
-                    message:'请选择利润中心'
                 }
             ]
         },
@@ -319,7 +289,7 @@ const getColumns = (context) => [
 
 ]
 
-class SalesInvoiceCollection extends Component {
+export default class SalesInvoiceCollection extends Component {
     state = {
         visible: false,
         deleteLoading:false,
@@ -412,7 +382,6 @@ class SalesInvoiceCollection extends Component {
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
-        const { getFieldValue } = this.props.form 
         return (
             <div className='oneLine'>
                 <SearchTable
@@ -478,7 +447,7 @@ class SalesInvoiceCollection extends Component {
                                             type:'fileImport',
                                             url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,
-                                            fields:fields(disabled,declare,getFieldValue),
+                                            fields:fields(disabled,declare),
                                             userPermissions:['1061005'],
                                         },{
                                             type:'revokeImport',
@@ -551,4 +520,3 @@ class SalesInvoiceCollection extends Component {
         );
     }
 }
-export default Form.create()(SalesInvoiceCollection)

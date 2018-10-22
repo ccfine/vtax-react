@@ -472,7 +472,7 @@ class InvoiceCollection extends Component {
                                         icon: "copy",
                                         text: "数据匹配",
                                         btnType: "default",
-                                        userPermissions: [""],
+                                        userPermissions: ["1495002"],
                                         onClick: this.matchData
                                     },
                                     {
