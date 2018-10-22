@@ -196,7 +196,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                         {
                             JSON.stringify(filters) !=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'/taxDeclarationTrack/report/export',
+                                url:'taxDeclarationTrack/report/export',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:["2121007"],
