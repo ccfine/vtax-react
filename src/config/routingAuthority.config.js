@@ -340,6 +340,13 @@ const strategies = {
                 ],
             },
 
+            //利润中心纳税申报表  查看-'1911002'  导出-'1911007'
+            profitCenterTaxReturn:{
+                options:[
+                    '1911002','1911007'
+                ],
+            },
+
             //合作方纳税申报表
             partnersTaxReturn:{
                 options:[

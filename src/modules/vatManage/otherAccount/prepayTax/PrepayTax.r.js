@@ -91,7 +91,7 @@ const searchFields =(disabled,declare)=> getFieldValue => {
     ]
 }
 const getColumns = (context,disabled) => {
-    let lastStegesId1 = '',lastStegesId2 = '',{dataSource} = context.state;
+    let lastStegesId2 = '',{dataSource} = context.state;
     return [
         {
             title: '利润中心',
