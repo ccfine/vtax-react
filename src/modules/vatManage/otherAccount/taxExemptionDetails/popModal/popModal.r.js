@@ -21,14 +21,13 @@ class PopModal extends Component {
         formLoading: false,
         record: {},
         visible: false,
-        reduceNameList:[],
-
+        reduceNameList:[]
     };
     componentDidMount(){
         //减免税性质代码：从数据字典中取出JMS 根据代码获取和类型
         requestDict('JMS',result=>{
             this.setState({
-                reduceNameList : setFormat(result)
+                reduceNameList : setFormat(result),
             })
         });
     }
@@ -56,6 +55,7 @@ class PopModal extends Component {
             }
         }
     }
+
     hideModal = () => {
         this.setState({ visible: false });
     };
@@ -127,6 +127,7 @@ class PopModal extends Component {
     render() {
         let { record = {}, reduceNameList} = this.state;
         const {declare,form} = this.props;
+        const {getFieldValue} = form;
         let title='';
         const disabled = this.props.action === "look";
         const type = this.props.action;
@@ -181,7 +182,7 @@ class PopModal extends Component {
                                         label: '纳税主体',
                                         fieldName: 'main',
                                         type: 'taxMain',
-                                        span: '12',
+                                        span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
                                             initialValue: record.mainId ? { key: record.mainId, label: record.mainName } :  (declare?{key:declare.mainId}:undefined),
@@ -197,6 +198,34 @@ class PopModal extends Component {
                                             disabled:disabled || !!declare
                                         }
                                     },{
+                                        label:'利润中心',
+                                        fieldName:'profitCenterId',
+                                        type:'asyncSelect',
+                                        span: 12,
+                                        formItemStyle: formItemLayout,
+                                        fieldDecoratorOptions: {
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: '请输入利润中心'
+                                                }
+                                            ]
+                                        },
+                                        componentProps:{
+                                            fieldTextName:'profitName',
+                                            fieldValueName:'profitNum',
+                                            doNotFetchDidMount: false,
+                                            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                                            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+                                        }
+                                    }
+                                ])
+                            }
+                        </Row>
+                        <Row>
+                            {
+                                getFields(form, [
+                                    {
                                         label: '减税性质名称',
                                         fieldName: 'reduce',
                                         type: 'select',
@@ -216,21 +245,15 @@ class PopModal extends Component {
                                             labelInValue: true,
                                             disabled
                                         },
-                                    }
-                                ])
-                            }
-                        </Row>
-                        <Row>
-                            {
-                                getFields(form, [
+                                    },
                                     {
-                                        label: '期初余额',
-                                        fieldName: 'initialBalance',
+                                        label: '减税性质代码',
+                                        fieldName: 'reduceName',
                                         type: 'input',
                                         span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.initialBalance,
+                                            initialValue: getFieldValue('reduce') && getFieldValue('reduce').key,
                                             rules: [
                                                 {
                                                     required: true,
@@ -239,7 +262,7 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
+                                            disabled: true
                                         },
                                     },
                                 ])
@@ -292,13 +315,35 @@ class PopModal extends Component {
                             {
                                 getFields(form, [
                                     {
+                                        label: '进项税额是否认证抵扣',
+                                        fieldName: 'incomeTaxAuth',
+                                        type: 'select',
+                                        span: 12,
+                                        options: [
+                                            {text:'否', value:'0'},
+                                            {text:'是', value:'1'}
+                                        ],
+                                        formItemStyle: formItemLayout,
+                                        fieldDecoratorOptions: {
+                                            rules: [
+                                                {
+                                                    required: true,
+                                                    message: '请选择进项税额是否认证抵扣'
+                                                }
+                                            ]
+                                        },
+                                        componentProps: {
+                                            width: '100px',
+                                        }
+                                    },
+                                    {
                                         label: '减免税金额',
                                         fieldName: 'reduceTaxAmount',
                                         type: 'numeric',
                                         span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: record.reduceTaxAmount,
+                                            initialValue: getFieldValue('incomeTaxAuth') === '0'?getFieldValue('amount'): (getFieldValue('incomeTaxAuth') === '1'? ((getFieldValue('amount') - '') * 10000 + (getFieldValue('taxAmount') - '') * 10000) / 10000 : ''),
                                             rules: [
                                                 {
                                                     required: true,
@@ -307,53 +352,12 @@ class PopModal extends Component {
                                             ]
                                         },
                                         componentProps: {
-                                            disabled
-                                        },
-                                    }, {
-                                        label: '已认证',
-                                        fieldName: 'incomeTaxAuth',
-                                        type: 'checkbox',
-                                        span: 12,
-                                        formItemStyle: formItemLayout,
-                                        fieldDecoratorOptions: {
-                                            initialValue: parseInt(record.incomeTaxAuth,0) === 1,
-                                            valuePropName: 'checked',
-                                        },
-                                        componentProps: {
-                                            disabled,
-                                        },
-
+                                            disabled: true,
+                                        }
                                     },
                                 ])
                             }
                         </Row>
-                        <Row>
-                            {
-                                getFields(form, [
-                                    {
-                                        label: '本期应抵减税额',
-                                        fieldName: 'currentDeductAmount',
-                                        type: 'input',
-                                        span: 12,
-                                        formItemStyle: formItemLayout,
-                                        fieldDecoratorOptions: {
-                                            initialValue: record.currentDeductAmount,
-                                            rules: [
-                                                {
-                                                    required: true,
-                                                    message: '请输入本期应抵减税额'
-                                                }
-                                            ]
-                                        },
-                                        componentProps: {
-                                            disabled
-                                        },
-                                    },
-                                ])
-                            }
-                        </Row>
-
-
                     </Form>
                 </Spin>
             </Modal>
