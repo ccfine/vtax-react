@@ -232,9 +232,11 @@ export default class OtherDeductionVoucher extends Component {
                         columns: columns(this),
                         url: '/other/tax/deduction/vouchers/list',
                         onDataChange: (dataSource) => {
-                            this.setState({
-                                dataSource
-                            });
+                            setTimeout(() => {
+                                this.setState({
+                                    dataSource
+                                });
+                            }, 1);
                         },
                         cardProps: {
                             title: "其他扣税凭证",
