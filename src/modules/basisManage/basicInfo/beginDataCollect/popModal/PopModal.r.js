@@ -109,6 +109,7 @@ class PopModal extends Component{
                 //closable={false}
                 visible={visible}
                 width={'100%'}
+                height={'100%'}
                 onClose={()=>{
                     this.props.toggleModalVisible(false)
                     disabled || this.props.refreshTable();
@@ -116,8 +117,8 @@ class PopModal extends Component{
                 maskClosable={false}
                 destroyOnClose={true}
                 style={{
-                    height:window.screen.availHeight-150,
-                    overflowY:'auto'
+                    height: 'calc(100% - 55px)',
+                    minHeight: '100vh',
 
                 }}
             >
@@ -160,6 +161,10 @@ class PopModal extends Component{
                         }
                     </Row>
                 </Form>
+                <div style={{
+                    height:window.screen.availHeight-250,
+                    overflowY:'auto',
+                }}>
                 {
                     (filters && filters.creditSubject === '2') && <AsyncTable url='/dataCollection/list'
                                                                         updateKey={tableKey}
@@ -192,6 +197,7 @@ class PopModal extends Component{
                 {
                     (filters && filters.creditSubject === '1') && <TabPage key={pageTabsKey} mainId={record.mainId} filters={filters} type={type} disabled={disabled} />
                 }
+                </div>
             </Drawer>
         )
     }

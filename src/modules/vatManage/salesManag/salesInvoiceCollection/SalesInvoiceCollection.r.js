@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
-import {message,Modal,Form} from 'antd';
+import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request,requestTaxSubjectConfig } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
