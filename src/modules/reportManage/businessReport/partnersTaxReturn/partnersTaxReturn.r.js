@@ -373,7 +373,7 @@ class PartnersTaxReturn extends Component{
                     //closable={true}
                     visible={drawerVisible}
                     width={'100%'}
-                    //height={'100vh'}
+                    height={'100%'}
                     //getContainer={document.getElementsByClassName("ant-layout-content")[0]}
                     onClose={()=>this.togglesDrawerVisible(false)}
                     maskClosable={false}
