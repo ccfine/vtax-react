@@ -134,7 +134,8 @@ const columns = [
     },
     {
       title: '纳税主体',
-      dataIndex: 'mainName'
+      dataIndex: 'mainName',
+      width: "200px"
     },
     {
       title: "申报期间",
@@ -208,7 +209,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: "100%",y:window.screen.availHeight-360,},
+                    scroll:{ x: 1400, y:window.screen.availHeight-360,},
                 }}
             />
             </div>
