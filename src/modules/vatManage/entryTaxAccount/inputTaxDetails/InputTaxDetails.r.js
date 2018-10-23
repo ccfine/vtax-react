@@ -4,7 +4,7 @@
  * description  :
  */
 import React, {Component} from 'react';
-import {Modal, message, Form} from 'antd';
+import {message, Form} from 'antd';
 import {SearchTable, TableTotal} from 'compoments';
 import {request, requestResultStatus, fMoney, listMainResultStatus, composeBotton} from 'utils';
 import PopInvoiceInformationModal from './popModal';
