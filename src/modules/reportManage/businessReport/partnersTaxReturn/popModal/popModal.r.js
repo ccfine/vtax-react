@@ -168,7 +168,7 @@ class PopModal extends Component{
                                         formItemStyle,
                                         componentProps: {
                                             labelInValue: true,
-                                            disabled: readonly,
+                                            disabled: readonly || type==='edit',
                                         },
                                         fieldDecoratorOptions: {
                                             initialValue: declare ? {key:declare.mainId,label:declare.mainName} : undefined,
