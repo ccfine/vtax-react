@@ -403,9 +403,9 @@ export default class BillPool extends Component{
                                         {
                                             title:'总计',
                                             total:[
-                                                {title: '不含税金额', dataIndex: 'zebhsje'},
-                                                {title: '税额', dataIndex: 'zese'},
-                                                {title: '含税金额', dataIndex: 'zehsje'},
+                                                {title: '不含税金额', dataIndex: 'amount'},
+                                                {title: '税额', dataIndex: 'taxAmount'},
+                                                {title: '含税金额', dataIndex: 'totalAmount'},
                                             ],
                                         }
                                     ]}/>
