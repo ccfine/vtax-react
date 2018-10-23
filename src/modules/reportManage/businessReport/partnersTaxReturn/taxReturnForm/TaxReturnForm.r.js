@@ -18,6 +18,7 @@ const TabPane = Tabs.TabPane;
 
 const url = '/taxDeclarationReport/partner/find',
     saveUrl='/taxDeclarationReport/partner/update';
+
 const sheetData = [
     {
         tab:'主表',
@@ -35,8 +36,8 @@ const sheetData = [
         url,
         saveUrl,
         scroll:{
-            x:1800,
-            y:window.screen.availHeight-320,
+            x:window.screen.availWidth > 1800 ? '100%' : 1800,
+            y:window.screen.availHeight-350,
         }
     }, {
         tab:'附表二',
