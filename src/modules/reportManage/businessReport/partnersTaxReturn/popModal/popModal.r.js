@@ -171,7 +171,7 @@ class PopModal extends Component{
                                             disabled: readonly,
                                         },
                                         fieldDecoratorOptions: {
-                                            initialValue:record.mainId ? {key: record.mainId,label: record.mainName}: (declare ? {key:declare.mainId,label:declare.mainName} : undefined),
+                                            initialValue: declare ? {key:declare.mainId,label:declare.mainName} : undefined,
                                             rules: [
                                                 {
                                                     required: true,

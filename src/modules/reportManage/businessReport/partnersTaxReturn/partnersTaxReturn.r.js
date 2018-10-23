@@ -117,7 +117,6 @@ const getColumns = (context,hasOperate) => {
             key: 'vTaxActions',
             width: '160px',
             render: (text, record) => {
-                console.log(hasOperate && parseInt(context.state.statusParam.status, 0) === 1)
                 return (
                     <div>
                         {
@@ -331,7 +330,7 @@ class PartnersTaxReturn extends Component{
                                     listMainResultStatus(statusParam)
                                 }
                                 {
-                                    composeBotton([{ //(disabled && declare.decAction==='edit') &&
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'add',
                                         icon:'plus',
                                         userPermissions:['2151003'],
