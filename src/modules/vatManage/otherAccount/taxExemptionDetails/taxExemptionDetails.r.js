@@ -93,7 +93,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     dataIndex: 'amount',
                     className:'table-money',
                     render:(text,record)=>{
-                        if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                        if(false && disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].amount`}
                                     initialValue={text==='0' ? '0.00' : fMoney(text)}
@@ -114,7 +114,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     dataIndex:'taxAmount',
                     className:'table-money',
                     render:(text,record)=>{
-                        if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                        if(false && disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].taxAmount`}
                                     initialValue={text==='0' ? '0.00' : fMoney(text)}
@@ -136,7 +136,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
                     className:'table-money',
                     //render:text=>fMoney(text),
                     render:(text,record)=>{
-                        if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                        if(false && disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                             return <NumericInputCell
                                     fieldName={`list[${record.id}].reduceTaxAmount`}
                                     initialValue={text==='0' ? '0.00' : fMoney(text)}
@@ -156,7 +156,7 @@ const getColumns = (context,getFieldDecorator,disabled) => {
             title: '进项税额是否认证抵扣',
             dataIndex: 'incomeTaxAuth',
             render:(text,record)=>{
-                if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
+                if(false && disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 0) === 1){
                     return (
                         <SelectCell
                             fieldName={`list[${record.id}].incomeTaxAuth`}
@@ -361,6 +361,8 @@ class TaxExemptionDetails extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
 
+        console.error(declare);
+
         return(
             <SearchTable
                 spinning={searchTableLoading}
@@ -460,6 +462,8 @@ class TaxExemptionDetails extends Component{
                     action={action}
                     hideModal={() => { this.hideModal() }}
                     id={opid}
+                    declareData={declare}
+                    profitCenter={false}
                     update={this.update}
                 />
             </SearchTable>
