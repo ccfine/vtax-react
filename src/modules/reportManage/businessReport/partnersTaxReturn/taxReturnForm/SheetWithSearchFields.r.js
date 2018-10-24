@@ -124,12 +124,11 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
+                console.log(values)
                 values.reportType = this.props.reportType;
                 values.partnerId = this.props.drawerConfig.partnerId;
                 for(let key in values.map){
-                    if(values.map[key] !== 0){
-                        values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
-                    }
+                    values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
                 }
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){

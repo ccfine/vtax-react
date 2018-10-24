@@ -60,7 +60,7 @@ const searchFields = (disabled,declare) => {
 };
 const getColumns = (context,hasOperate) => {
     let operates = (hasOperate && parseInt(context.state.statusParam.status, 0) === 1)?[{
-        title:'合作方公操作',
+        title:'合作方操作',
         key:'actions',
         width:'160px',
         render:(text,record)=>{

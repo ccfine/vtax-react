@@ -91,9 +91,9 @@ const searchFields = (disabled, declare) => getFieldValue => {
                 fieldValueName: "id",
                 doNotFetchDidMount: false,
                 fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+                url: `/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`
             }
-          },
+        }
     ];
 };
 const getColumns = context => [
@@ -101,15 +101,17 @@ const getColumns = context => [
         title: "利润中心",
         dataIndex: "profitCenterName",
         width: "200px"
-    },{
+    },
+    {
         title: '抵扣凭据类型',
         dataIndex: 'voucherType'
-    }, {
+    },
+    {
         title: '凭据份数',
         dataIndex: 'num',
         render: (text, record) => {
             const {getFieldDecorator} = context.props.form;
-            if (record.editable) {
+            if (context.state.statusParam.status === 1) {
                 return <NumericInputCell
                     fieldName={`list[${record.id}].num`}
                     initialValue={text === '0' ? '0' : text}
@@ -150,12 +152,13 @@ const getColumns = context => [
             }
         }
 
-    }, {
+    },
+    {
         title: '金额',
         dataIndex: 'amount',
         render: (text, record) => {
             const {getFieldDecorator} = context.props.form;
-            if (record.editable) {
+            if (context.state.statusParam.status === 1) {
                 return <NumericInputCell
                     fieldName={`list[${record.id}].amount`}
                     initialValue={text === '0' ? '0.00' : fMoney(text)}
@@ -169,12 +172,13 @@ const getColumns = context => [
             }
         },
         className: "table-money"
-    }, {
+    },
+    {
         title: '税额',
         dataIndex: 'taxAmount',
         render: (text, record) => {
             const {getFieldDecorator} = context.props.form;
-            if (record.editable) {
+            if (context.state.statusParam.status === 1) {
                 return <NumericInputCell
                     fieldName={`list[${record.id}].taxAmount`}
                     initialValue={text === '0' ? '0.00' : fMoney(text)}
@@ -188,7 +192,6 @@ const getColumns = context => [
             }
         },
         className: "table-money"
-
     }
 ];
 
@@ -320,8 +323,8 @@ class InputTaxDetails extends Component {
     render() {
         const {searchTableLoading, tableKey, visible, voucherVisible, addVisible, params, statusParam = {}, filters, totalSource, record, action, saveLoading} = this.state;
         const {declare} = this.props;
-        let disabled = !!declare
-            
+        let disabled = !!declare;
+
         return (
             <SearchTable
                 searchOption={{

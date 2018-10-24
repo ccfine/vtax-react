@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import {requestResultStatus, fMoney, requestDict, listMainResultStatus, composeBotton, setFormat} from 'utils';
-import {SearchTable} from 'compoments';
+import {SearchTable, TableTotal} from 'compoments';
 import PopInvoiceInformationModal from './popModal';
 import ViewDocumentDetails from './viewDocumentDetailsPopModal';
 
@@ -91,6 +91,9 @@ const columns = context => {
                 if (lastStegesId !== row.profitCenterId) {
                     lastStegesId = row.profitCenterId;
                     rowSpan = dataSource.filter(ele => ele.profitCenterId === row.profitCenterId).length;
+                }
+                if((index + 1) === dataSource.length){
+                    lastStegesId = '';
                 }
                 return {
                     children: text,
@@ -205,7 +208,7 @@ export default class OtherDeductionVoucher extends Component {
     }
 
     render() {
-        const {visible, tableKey, filters, voucherVisible, statusParam, paramsId} = this.state;
+        const {visible, tableKey, filters, voucherVisible, statusParam, paramsId, totalSource} = this.state;
         const {declare} = this.props;
         let disabled = !!declare;
         return (
@@ -274,6 +277,18 @@ export default class OtherDeductionVoucher extends Component {
                                         userPermissions: ['1521011']
                                     }], statusParam)
                                 }
+
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title: '合计',
+                                            total: [
+                                                {title: '金额', dataIndex: 'amount'},
+                                                {title: '税额', dataIndex: 'taxAmount'}
+                                            ]
+                                        }
+                                    ]
+                                }/>
                             </div>
                         },
                         scroll: {
