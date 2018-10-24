@@ -77,8 +77,6 @@ class PopModal extends Component {
         }
 
         this.props.form.validateFields((err, values) => {
-            console.error(this.props.month);
-            console.error(values);
             if (!err) {
                 // 提交数据
                 values.incomeTaxAuth = values.incomeTaxAuth ? 1 : 0;
