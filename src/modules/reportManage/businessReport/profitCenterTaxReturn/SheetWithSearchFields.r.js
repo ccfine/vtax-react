@@ -167,7 +167,7 @@ class SheetWithSearchFields extends Component{
                             }
                         </div>
                     }
-                    title={<span><label className="tab-breadcrumb">纳税申报表 / </label>{tab}</span>}
+                    title={<span><label className="tab-breadcrumb">利润中心纳税申报表 / </label>{tab}</span>}
                     bodyStyle={{
                         padding:10
                     }}
