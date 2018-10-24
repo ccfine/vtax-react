@@ -92,6 +92,9 @@ const columns = context => {
                     lastStegesId = row.profitCenterId;
                     rowSpan = dataSource.filter(ele => ele.profitCenterId === row.profitCenterId).length;
                 }
+                if((index + 1) === dataSource.length){
+                    lastStegesId = '';
+                }
                 return {
                     children: text,
                     props: {
@@ -232,11 +235,9 @@ export default class OtherDeductionVoucher extends Component {
                         columns: columns(this),
                         url: '/other/tax/deduction/vouchers/list',
                         onDataChange: (dataSource) => {
-                            setTimeout(() => {
-                                this.setState({
-                                    dataSource
-                                });
-                            }, 1);
+                            this.setState({
+                                dataSource
+                            });
                         },
                         cardProps: {
                             title: "其他扣税凭证",
