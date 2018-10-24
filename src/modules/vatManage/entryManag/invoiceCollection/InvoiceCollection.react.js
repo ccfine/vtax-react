@@ -61,6 +61,38 @@ const getFields = (filters)=>[
                 }
             ]
         },
+    },
+    {
+        label: "导入内容",
+        fieldName: "type",
+        type: "select",
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        options: [
+            {
+                text: "进项发票",
+                value: "1"
+            },
+            {
+                text: "进项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择导入内容'
+                }
+            ]
+        },
     }
 ]
 
@@ -391,7 +423,7 @@ class InvoiceCollection extends Component {
 
     matchData = () => {
         const { filters } = this.state
-        request.put("", filters)
+        request.put("/income/invoice/collection/updateProfitCenterByPool", filters)
             .then(({data}) => {
                 if (data.code === 200) {
                     message.success(data.data);
@@ -403,7 +435,7 @@ class InvoiceCollection extends Component {
             .catch(err => {
                 message.error(err.message)
             })
-      }
+    }
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;

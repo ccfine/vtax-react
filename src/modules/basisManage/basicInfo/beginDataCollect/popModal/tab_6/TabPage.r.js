@@ -15,19 +15,22 @@ const columns = [{
         title: '期初已开票金额',
         dataIndex: 'amount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'200px',
     },
     {
         title: '期初增值税已纳税销售额',
         dataIndex: 'initialTaxableSales',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'200px',
     },
     {
         title: '应申报销售额',
         dataIndex: 'reportSalesAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'200px',
     }
 ];
 
