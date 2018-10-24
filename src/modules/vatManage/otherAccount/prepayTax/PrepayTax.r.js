@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/18.
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-09 16:32:52
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-24 18:29:09
  *
  */
 import React,{Component} from 'react'
@@ -92,11 +92,28 @@ const searchFields =(disabled,declare)=> getFieldValue => {
 }
 const getColumns = (context,disabled) => {
     let lastStegesId2 = '',{dataSource} = context.state;
+    let profitCenterList = [];
+    dataSource.forEach((item, index) => {
+        profitCenterList.includes(item.profitCenterId) ? profitCenterList.push(0) : profitCenterList.push(item.profitCenterId);
+        return item;
+    })
     return [
         {
             title: '利润中心',
             dataIndex: 'profitCenterName',
             width:'150px',
+            render: (text, row, index) => {
+                let rowSpan = 0;
+                if(profitCenterList[index] === row.profitCenterId){
+                    rowSpan = dataSource.filter(ele=>ele.profitCenterId === row.profitCenterId).length;
+                }
+                return {
+                    children: text,
+                    props: {
+                        rowSpan: rowSpan,
+                    },
+                };
+            }
         },{
         title:'项目分期',
         dataIndex:'stagesName',

@@ -1,8 +1,8 @@
 /*
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-08 11:03:59
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-23 17:57:51
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
@@ -73,12 +73,35 @@ const getColumns = (context,isEdit) => {
         {
             title: "利润中心",
             dataIndex: "profitCenterName",
-            width: "200px"
+            width: "200px",
+            render: (text, row, index) => {
+                const obj = {
+                    children: text,
+                    props: {}
+                };
+                obj.props.rowSpan = index % 9 === 0 ? 9 : 0;
+                return obj;
+            }
         },
         {
             title: "转出项目",
             dataIndex: "outProjectName",
-            width:'40%',
+            width:'300px',
+        },
+        {
+            title: "转出发票份数",
+            dataIndex: "invoiceCount",
+            width:'200px',
+            render: (text,record,index) => {
+                if(isEdit){
+                    return <NumericInputCell
+                        fieldName={`invoiceCount[${index}]`}
+                        initialValue={text=== '0' ? '0' : text}
+                        getFieldDecorator={context.props.form.getFieldDecorator} />
+                }else{
+                    return text;
+                }
+            },
         },
         {
             title: "转出税额",
@@ -94,7 +117,7 @@ const getColumns = (context,isEdit) => {
                 }
             },
             className: "table-money",
-            width:'20%',
+            width:'200px',
         }
     ];
 }
@@ -135,6 +158,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         outTaxAmount:values.outTaxAmount[index],
                         taxDate:ele.taxDate,
                         mainId:ele.mainId,
+                        invoiceCount:values.invoiceCount[index]
                     }
                 })
                 this.setState({saveLoding:true})
