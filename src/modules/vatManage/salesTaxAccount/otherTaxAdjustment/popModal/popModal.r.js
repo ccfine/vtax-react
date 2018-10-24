@@ -98,6 +98,13 @@ class PopModal extends Component{
                     delete values.taxableProject;
                 }
 
+                // 处理利润中心
+                if(values.profitCenter){
+                    values.profitCenterId = values.profitCenter.key;
+                    values.profitCenterName = values.profitCenter.label;
+                    delete values.profitCenter;
+                }
+
                 let obj = Object.assign({},this.state.record,values);
 
                 let result ,
