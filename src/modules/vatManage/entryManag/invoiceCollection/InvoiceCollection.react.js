@@ -64,7 +64,7 @@ const getFields = (filters)=>[
     },
     {
         label: "导入内容",
-        fieldName: "importCentent",
+        fieldName: "type",
         type: "select",
         span: 24,
         formItemStyle:{
@@ -423,7 +423,7 @@ class InvoiceCollection extends Component {
 
     matchData = () => {
         const { filters } = this.state
-        request.put("", filters)
+        request.put("/income/invoice/collection/updateProfitCenterByPool", filters)
             .then(({data}) => {
                 if (data.code === 200) {
                     message.success(data.data);
@@ -435,7 +435,7 @@ class InvoiceCollection extends Component {
             .catch(err => {
                 message.error(err.message)
             })
-      }
+    }
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
