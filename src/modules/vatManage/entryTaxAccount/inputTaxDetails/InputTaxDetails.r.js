@@ -399,17 +399,17 @@ class InputTaxDetails extends Component {
                         }
                         {
                             (disabled && declare.decAction === 'edit') && composeBotton([{
-                                type: 'add',
-                                icon: 'plus',
-                                userPermissions: ['1381003'],
-                                onClick: () => {
-                                    this.setState({
-                                        addVisible: true,
-                                        action: 'add',
-                                        record: filters
-                                    });
-                                }
-                            }, {
+                            //     type: 'add',
+                            //     icon: 'plus',
+                            //     userPermissions: ['1381003'],
+                            //     onClick: () => {
+                            //         this.setState({
+                            //             addVisible: true,
+                            //             action: 'add',
+                            //             record: filters
+                            //         });
+                            //     }
+                            // }, {
                                 type: 'submit',
                                 url: '/account/income/taxDetail/submit',
                                 params: filters,
