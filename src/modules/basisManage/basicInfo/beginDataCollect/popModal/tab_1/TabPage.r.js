@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {message,Form} from 'antd'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
@@ -267,7 +267,7 @@ class TabPage extends Component{
                         }),
                         pagination:false,
                         columns:getColumns(this,getFieldDecorator,this.props.disabled),
-                        url:`/mainProjectCollection/list/${this.props.mainId}`,
+                        url:`/mainProjectCollection/list?${parseJsonToParams(this.props.filters)}`,
                     }}
                 />
         )

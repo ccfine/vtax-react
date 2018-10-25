@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {message,Form} from 'antd'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
@@ -63,7 +63,7 @@ class TabPage extends Component{
                 }
                 request.post('/tax/credit/items/collection/save',{
                    ...values,
-                    mainId:this.props.mainId,
+                    mainId:this.props.filters.mainId,
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -150,7 +150,7 @@ class TabPage extends Component{
                 tableOption={{
                     pagination:false,
                     columns:getColumns(this,getFieldDecorator,this.props.disabled),
-                    url:`/tax/credit/items/collection/list/${props.mainId}`,
+                    url:`/tax/credit/items/collection/list?${parseJsonToParams(this.props.filters)}`,
                     key:updateKey,
                     cardProps:{
                         bordered:false,
