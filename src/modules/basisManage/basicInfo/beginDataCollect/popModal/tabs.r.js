@@ -31,14 +31,14 @@ const tabList = [{
     tab: '减税项目期初数据',
 }];
 
-const getContent = (key,mainId,disabled,updateKey) => {
+const getContent = (key,filters,disabled,beginType,updateKey) => {
     const contentList = {
-        tab1: <Tab1 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab2: <Tab2 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab3: <Tab3 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab4: <Tab4 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab5: <Tab5 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab6: <Tab6 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
+        tab1: <Tab1 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
+        tab2: <Tab2 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
+        tab3: <Tab3 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
+        tab4: <Tab4 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
+        tab5: <Tab5 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
+        tab6: <Tab6 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
     };
     return contentList[key]
 }
@@ -69,7 +69,7 @@ export default class TabPage extends Component{
                     tabList.map(ele=>(
                         <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                             {
-                                getContent(ele.key, props.mainId, props.disabled, this.state.updateKey)
+                                getContent(ele.key, props.filters, props.disabled, props.beginType, this.state.updateKey)
                             }
                         </TabPane>
                     ))

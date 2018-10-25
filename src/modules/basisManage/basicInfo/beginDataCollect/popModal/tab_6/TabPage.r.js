@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 const columns = [{
         title: '房间编码',
         dataIndex: 'roomCode',
@@ -57,7 +57,7 @@ export default class TabPage extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleDeleteLoading(true)
-                request.delete(`/realtyCollection/delete/${this.props.mainId}`)
+                request.delete(`/realtyCollection/delete/${this.props.filters.mainId}`)
                     .then(({data})=>{
                         this.toggleDeleteLoading(false)
                         if(data.code===200){
@@ -96,7 +96,7 @@ export default class TabPage extends Component{
                                     url: 'realtyCollection/download',
                                 },{
                                     type:'autoFileImport',
-                                    url:`realtyCollection/upload/${props.mainId}`,
+                                    url:`realtyCollection/upload?${parseJsonToParams(props.filters)}`,
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1121005'],
                                 },{
@@ -117,7 +117,7 @@ export default class TabPage extends Component{
                 searchOption={undefined}
                 tableOption={{
                     columns:columns,
-                    url:`/realtyCollection/list/${props.mainId}`,
+                    url:`/realtyCollection/list?${parseJsonToParams(props.filters)}`,
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,

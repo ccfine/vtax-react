@@ -63,20 +63,18 @@ class PopModal extends Component {
                     values.name = values.event.label;
                     values.event = undefined;
                 }
-
-                if(values.profitCenter){
-                    values.profitCenterId = values.profitCenter.key;
-                    values.profitCenterName = values.profitCenter.label;
-                    values.profitCenter = undefined;
-                }
-
                 if(values.stages){
                     values.stagesId = values.stages.key;
                     values.stagesName = values.stages.label;
                     values.stages = undefined;
                 }
+                let obj = Object.assign({id:this.state.record.id,mainId:this.state.record.mainId || (this.props && this.props.filters.mainId)},
+                        this.props && this.props.beginType === '1' ? values : {
+                            ...values,
+                            ...this.props && this.props.filters
+                        }
 
-                let obj = Object.assign({id:this.state.record.id,mainId:this.state.record.mainId}, values);
+                );
                 let result,
                     sucessMsg;
 
@@ -84,7 +82,6 @@ class PopModal extends Component {
                     result = request.put('/landPriceCollection/update', obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
-                    obj.mainId = this.props.mainId;
                     result = request.post('/landPriceCollection/add', obj);
                     sucessMsg = '新增成功';
                 }
@@ -187,16 +184,16 @@ class PopModal extends Component {
                                 )
                             }
                         </Row>
-                        {/*<Row>
+                        <Row>
                             {
                                 (eventkey === 3) && getFields(form, [{
                                     label: "利润中心",
-                                    fieldName: "profitCenter",
+                                    fieldName: "profitCenterId",
                                     type: "asyncSelect",
                                     span:24,
                                     formItemStyle:formItemLayout,
-                                    fieldDecoratorOptions: {
-                                        initialValue:(record && record.profitCenterId) ? {label:record.profitCenterName,key:record.profitCenterId} : undefined,
+                                    fieldDecoratorOptions: { //(record && record.profitCenterId) ? {label:record.profitCenterName,key:record.profitCenterId} :
+                                        initialValue: (this.props && this.props.filters.profitCenterId) || (record && record.profitCenterId) || undefined,
                                         rules: [
                                             {
                                                 required: true,
@@ -206,19 +203,19 @@ class PopModal extends Component {
                                     },
                                     componentProps: {
                                         selectOptions:{
-                                            labelInValue:true,
-                                            disabled: readonly || isModify,
+                                            //labelInValue:true,
+                                            disabled: this.props && this.props.beginType === '2' ? true : readonly || isModify,
                                         },
                                         fieldTextName: "profitName",
                                         fieldValueName: "id",
                                         doNotFetchDidMount: false,
                                         fetchAble:false,
-                                        url: `/taxsubject/profitCenterList/${this.props && this.props.mainId}`,
+                                        url: `/taxsubject/profitCenterList/${this.props && this.props.filters.mainId}`,
                                     }
                                 }]
                                 )
                             }
-                        </Row>*/}
+                        </Row>
                         <Row>
                             {
                                  (eventkey === 3) && getFields(form, [{
@@ -243,18 +240,17 @@ class PopModal extends Component {
                                         },
                                         fieldTextName: "itemName",
                                         fieldValueName: "id",
-                                        fetchAble:  this.props && this.props.mainId,
+                                        /*fetchAble:  this.props && this.props.mainId,
                                         url:`/project/stage/list?${parseJsonToParams({
-                                            mainId: (this.props && this.props.mainId) || '',
-                                            size:1000,
-                                        })}`,
-                                        /*
-                                        doNotFetchDidMount: true,
-                                        fetchAble: (form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (this.props && this.props.mainId),
-                                        url:`/project/stage/list?${parseJsonToParams({
-                                            profitCenterId:(form.getFieldValue("profitCenter") && form.getFieldValue("profitCenter").key) || (record && record.profitCenterId) || "",
+                                            mainId: (this.props && this.props.filters.mainId) || '',
                                             size:1000,
                                         })}`,*/
+                                        doNotFetchDidMount: this.props && this.props.beginType === '2' ? false : true,
+                                        fetchAble: (this.props && this.props.filters.profitCenterId) || form.getFieldValue("profitCenterId") || false,
+                                        url:`/project/stage/list?${parseJsonToParams({
+                                            profitCenterId:(this.props && this.props.filters.profitCenterId) || form.getFieldValue("profitCenterId") || "",
+                                            size:1000,
+                                        })}`,
                                     }
                                 }])
                             }
