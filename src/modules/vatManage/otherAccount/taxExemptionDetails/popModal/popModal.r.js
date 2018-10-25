@@ -3,9 +3,21 @@
  */
 import React, {Component} from "react";
 import {Modal, Form, Button, message, Spin, Row} from "antd";
-import {getFields, request, requestDict, setFormat} from "utils";
+import {getFields, request, requestDict} from "utils";
 import {connect} from 'react-redux';
 import {BigNumber} from 'bignumber.js';
+
+
+//设置select值名不同
+const setFormat = data =>{
+    return data.map(item=>{
+        return{
+            code:item.code,
+            value:item.id,
+            text:item.name
+        }
+    })
+}
 
 const formItemLayout = {
     labelCol: {
@@ -24,14 +36,16 @@ class PopModal extends Component {
         formLoading: false,
         record: {},
         visible: false,
-        reduceNameList: []
+        reduceNameList: [],
+        modalKey: Date.now()
     };
 
     componentDidMount() {
         //减免税性质代码：从数据字典中取出JMS 根据代码获取和类型
         requestDict('JMS', result => {
             this.setState({
-                reduceNameList: setFormat(result)
+                reduceNameList: setFormat(result),
+                modalKey: Date.now()
             });
         });
     }
@@ -77,8 +91,6 @@ class PopModal extends Component {
         }
 
         this.props.form.validateFields((err, values) => {
-            console.error(this.props.month);
-            console.error(values);
             if (!err) {
                 // 提交数据
                 values.incomeTaxAuth = values.incomeTaxAuth ? 1 : 0;
@@ -134,11 +146,11 @@ class PopModal extends Component {
     }
 
     render() {
-        let {record = {}, reduceNameList} = this.state;
-        const {declare, declareData, form} = this.props;
+        let {record = {}, reduceNameList, modalKey} = this.state;
+        const {declareData, form} = this.props;
         const {getFieldValue} = form;
         let title = '';
-        const disabled = this.props.action === "look";
+        const disabled = this.props.action === "modify";
         const type = this.props.action;
         switch (type) {
             case 'add':
@@ -159,6 +171,7 @@ class PopModal extends Component {
 
         return (
             <Modal
+                key={modalKey}
                 title={title}
                 visible={this.props.visible}
                 width="800px"
@@ -166,7 +179,7 @@ class PopModal extends Component {
                 bodyStyle={{maxHeight: "450px", overflow: "auto"}}
                 onCancel={this.hideSelfModal}
                 footer={
-                    !disabled && [
+                    [
                         <Button key="back" onClick={this.hideSelfModal}>
                             取消
                         </Button>,
@@ -291,7 +304,18 @@ class PopModal extends Component {
                                         span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: getFieldValue('reduce') && getFieldValue('reduce').key,
+                                            initialValue: (()=>{
+                                                let code = '';
+                                                reduceNameList.map(o=>{
+                                                    if(getFieldValue('reduce') && getFieldValue('reduce').key){
+                                                        if(o.value === getFieldValue('reduce').key){
+                                                            return code = o.code;
+                                                        }
+                                                    }
+                                                    return null;
+                                                });
+                                                return code || record.reduceNum;
+                                            })(),
                                             rules: [
                                                 {
                                                     required: true,
@@ -323,9 +347,6 @@ class PopModal extends Component {
                                                     message: '请输入金额'
                                                 }
                                             ]
-                                        },
-                                        componentProps: {
-                                            disabled
                                         }
                                     }, {
                                         label: '税额',
@@ -341,9 +362,6 @@ class PopModal extends Component {
                                                     message: '请输入税额'
                                                 }
                                             ]
-                                        },
-                                        componentProps: {
-                                            disabled
                                         }
                                     }
                                 ])
@@ -363,6 +381,7 @@ class PopModal extends Component {
                                         ],
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
+                                            initialValue: record.incomeTaxAuth,
                                             rules: [
                                                 {
                                                     required: true,
@@ -381,7 +400,17 @@ class PopModal extends Component {
                                         span: 12,
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
-                                            initialValue: getFieldValue('incomeTaxAuth') === 0 ? getFieldValue('amount') : (getFieldValue('incomeTaxAuth') === 1 ? new BigNumber(getFieldValue('amount')).plus(new BigNumber(getFieldValue('taxAmount'))) : ''),
+                                            initialValue: (()=>{
+                                                let reduceTaxAmount = '';
+                                                if(getFieldValue('incomeTaxAuth') === 1){
+                                                    reduceTaxAmount = getFieldValue('amount');
+                                                }else if(getFieldValue('incomeTaxAuth') === 0){
+                                                    const amount = new BigNumber(getFieldValue('amount') || 0);
+                                                    const taxAmount = new BigNumber(getFieldValue('taxAmount') || 0);
+                                                    reduceTaxAmount = amount.plus(taxAmount);
+                                                }
+                                                return reduceTaxAmount || record.reduceTaxAmount;
+                                            })(),
                                             rules: [
                                                 {
                                                     required: true,

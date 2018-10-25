@@ -96,33 +96,52 @@ const searchFields = (disabled, declare) => getFieldValue => {
         }
     ];
 };
-const getColumns = context => [
-    {
-        title: "利润中心",
-        dataIndex: "profitCenterName",
-        width: "200px"
-    },
-    {
-        title: '抵扣凭据类型',
-        dataIndex: 'voucherType'
-    },
-    {
-        title: '凭据份数',
-        dataIndex: 'num',
-        render: (text, record) => {
-            const {getFieldDecorator} = context.props.form;
-            if (context.state.statusParam.status === 1) {
-                return <NumericInputCell
-                    fieldName={`list[${record.id}].num`}
-                    initialValue={text === '0' ? '0' : text}
-                    getFieldDecorator={getFieldDecorator}/>;
+const getColumns = context => {
+    let lastStegesId = '';
+    const {dataSource} = context.state;
+    return [
+        {
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width: '200px',
+            render: (text, row, index) => {
+                let rowSpan = 0;
+                if (lastStegesId !== row.profitCenterId) {
+                    lastStegesId = row.profitCenterId;
+                    rowSpan = dataSource.filter(ele => ele.profitCenterId === row.profitCenterId).length;
+                }
+                if((index + 1) === dataSource.length){
+                    lastStegesId = '';
+                }
+                return {
+                    children: text,
+                    props: {
+                        rowSpan: rowSpan
+                    }
+                };
             }
-            if (parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0) {
-                return text;
-            }
-            if (parseInt(record.invoiceType, 0) === 1) {
-                return (
-                    <span>
+        },
+        {
+            title: '抵扣凭据类型',
+            dataIndex: 'voucherType'
+        },
+        {
+            title: '凭据份数',
+            dataIndex: 'num',
+            render: (text, record) => {
+                const {getFieldDecorator} = context.props.form;
+                if (context.state.statusParam.status === 1) {
+                    return <NumericInputCell
+                        fieldName={`list[${record.id}].num`}
+                        initialValue={text === '0' ? '0' : text}
+                        getFieldDecorator={getFieldDecorator}/>;
+                }
+                if (parseInt(record.invoiceType, 0) !== 1 || parseInt(text, 0) === 0) {
+                    return text;
+                }
+                if (parseInt(record.invoiceType, 0) === 1) {
+                    return (
+                        <span>
                     {
                         record.invoiceType
                             ?
@@ -146,54 +165,55 @@ const getColumns = context => [
                             </span>
                     }
                 </span>
-                );
-            } else {
-                return text;
+                    );
+                } else {
+                    return text;
+                }
             }
-        }
 
-    },
-    {
-        title: '金额',
-        dataIndex: 'amount',
-        render: (text, record) => {
-            const {getFieldDecorator} = context.props.form;
-            if (context.state.statusParam.status === 1) {
-                return <NumericInputCell
-                    fieldName={`list[${record.id}].amount`}
-                    initialValue={text === '0' ? '0.00' : fMoney(text)}
-                    getFieldDecorator={getFieldDecorator}
-                    componentProps={{
-                        onFocus: (e) => context.handleFocus(e, `list[${record.id}].amount`),
-                        onBlur: (e) => context.handleBlur(e, `list[${record.id}].amount`)
-                    }}/>;
-            } else {
-                return fMoney(text);
-            }
         },
-        className: "table-money"
-    },
-    {
-        title: '税额',
-        dataIndex: 'taxAmount',
-        render: (text, record) => {
-            const {getFieldDecorator} = context.props.form;
-            if (context.state.statusParam.status === 1) {
-                return <NumericInputCell
-                    fieldName={`list[${record.id}].taxAmount`}
-                    initialValue={text === '0' ? '0.00' : fMoney(text)}
-                    getFieldDecorator={getFieldDecorator}
-                    componentProps={{
-                        onFocus: (e) => context.handleFocus(e, `list[${record.id}].taxAmount`),
-                        onBlur: (e) => context.handleBlur(e, `list[${record.id}].taxAmount`)
-                    }}/>;
-            } else {
-                return fMoney(text);
-            }
+        {
+            title: '金额',
+            dataIndex: 'amount',
+            render: (text, record) => {
+                const {getFieldDecorator} = context.props.form;
+                if (context.state.statusParam.status === 1) {
+                    return <NumericInputCell
+                        fieldName={`list[${record.id}].amount`}
+                        initialValue={text === '0' ? '0.00' : fMoney(text)}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            onFocus: (e) => context.handleFocus(e, `list[${record.id}].amount`),
+                            onBlur: (e) => context.handleBlur(e, `list[${record.id}].amount`)
+                        }}/>;
+                } else {
+                    return fMoney(text);
+                }
+            },
+            className: "table-money"
         },
-        className: "table-money"
-    }
-];
+        {
+            title: '税额',
+            dataIndex: 'taxAmount',
+            render: (text, record) => {
+                const {getFieldDecorator} = context.props.form;
+                if (context.state.statusParam.status === 1) {
+                    return <NumericInputCell
+                        fieldName={`list[${record.id}].taxAmount`}
+                        initialValue={text === '0' ? '0.00' : fMoney(text)}
+                        getFieldDecorator={getFieldDecorator}
+                        componentProps={{
+                            onFocus: (e) => context.handleFocus(e, `list[${record.id}].taxAmount`),
+                            onBlur: (e) => context.handleBlur(e, `list[${record.id}].taxAmount`)
+                        }}/>;
+                } else {
+                    return fMoney(text);
+                }
+            },
+            className: "table-money"
+        }
+    ];
+}
 
 class InputTaxDetails extends Component {
     state = {
@@ -205,6 +225,7 @@ class InputTaxDetails extends Component {
          * */
         statusParam: {},
         totalSource: undefined,
+        dataSource: undefined,
         visible: false,
         voucherVisible: false,
         addVisible: false,
@@ -352,6 +373,11 @@ class InputTaxDetails extends Component {
                             totalSource
                         });
                     },
+                    onDataChange: (dataSource) => {
+                        this.setState({
+                            dataSource
+                        });
+                    },
                     cardProps: {
                         title: "进项税额明细台账"
                     },
@@ -373,17 +399,17 @@ class InputTaxDetails extends Component {
                         }
                         {
                             (disabled && declare.decAction === 'edit') && composeBotton([{
-                                type: 'add',
-                                icon: 'plus',
-                                userPermissions: ['1381003'],
-                                onClick: () => {
-                                    this.setState({
-                                        addVisible: true,
-                                        action: 'add',
-                                        record: filters
-                                    });
-                                }
-                            }, {
+                            //     type: 'add',
+                            //     icon: 'plus',
+                            //     userPermissions: ['1381003'],
+                            //     onClick: () => {
+                            //         this.setState({
+                            //             addVisible: true,
+                            //             action: 'add',
+                            //             record: filters
+                            //         });
+                            //     }
+                            // }, {
                                 type: 'submit',
                                 url: '/account/income/taxDetail/submit',
                                 params: filters,
