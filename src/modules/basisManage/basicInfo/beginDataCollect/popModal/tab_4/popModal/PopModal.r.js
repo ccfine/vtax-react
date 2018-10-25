@@ -61,7 +61,10 @@ class PopModal extends Component {
                     values.taxableProject = undefined;
                 }
 
-                let obj = Object.assign({}, this.state.record, values);
+                let obj = Object.assign({}, this.state.record, {
+                    ...values,
+                    ...this.props && this.props.filters
+                });
                 let result,
                     sucessMsg;
 
@@ -69,7 +72,7 @@ class PopModal extends Component {
                     result = request.put('/account/otherTax/deducted/collection/update', obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
-                    obj.mainId = this.props.mainId;
+                    //obj.mainId = this.props.mainId;
                     result = request.post('/account/otherTax/deducted/collection/add', obj);
                     sucessMsg = '新增成功';
                 }
