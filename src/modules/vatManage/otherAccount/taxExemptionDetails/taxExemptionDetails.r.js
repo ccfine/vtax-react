@@ -6,7 +6,7 @@
  *
  */
 import React, {Component} from 'react';
-import {Form, message} from 'antd';
+import {Form, message, Modal} from 'antd';
 import {fMoney, request, listMainResultStatus, composeBotton, requestResultStatus} from 'utils';
 import {SearchTable, TableTotal} from 'compoments';
 import PopModal from "./popModal";
@@ -67,7 +67,7 @@ const searchFields = (disabled, declare) => getFieldValue => [
     }
 ];
 const getColumns = (context, getFieldDecorator, disabled) => {
-    return [{
+    return ([{
         title: '操作',
         key: 'actions',
         render: (text, record) => {
@@ -84,19 +84,19 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                     title: '删除',
                     icon: 'delete',
                     userPermissions: ['1121010'],
-                    onSuccess: () => context.handleDelete('/dataCollection/submit', '提交', record)
+                    onSuccess: () => context.handleDelete(record)
                 }
             ];
             return composeBotton(submit);
         },
-        fixed: 'left',
-        width: '100px',
+        // fixed: 'left',
+        width: '120px',
         className: 'text-center'
-    }, {
+    }]).concat((context.state.showProfitCenter ? [{
         title: '利润中心',
         dataIndex: 'profitCenterName',
         width: '150px'
-    }, {
+    }] : []),[{
         title: '减税性质代码',
         dataIndex: 'reduceNum',
         width: '100px'
@@ -219,7 +219,7 @@ const getColumns = (context, getFieldDecorator, disabled) => {
         className: 'table-money',
         width: '100px'
     }
-    ];
+    ]);
 };
 // 总计数据结构，用于传递至TableTotal中
 const totalData = [
@@ -242,7 +242,8 @@ class TaxExemptionDetails extends Component {
         filters: {},
         statusParam: {},
         searchTableLoading: false,
-        totalSource: undefined
+        totalSource: undefined,
+        showProfitCenter: false
     };
     refreshTable = () => {
         this.setState({
@@ -367,7 +368,6 @@ class TaxExemptionDetails extends Component {
         let amount = new BigNumber(getFieldValue(`list[${record.id}].amount`).replace(/\$\s?|(,*)/g, ''));
         let taxAmount = new BigNumber(getFieldValue(`list[${record.id}].taxAmount`).replace(/\$\s?|(,*)/g, ''));
         let sum = amount.plus(taxAmount);
-        console.log(sum.toFormat(2));
         let incomeTaxAuth = parseInt(value, 0);
         if (incomeTaxAuth === 1) {
             setFieldsValue({
@@ -381,21 +381,43 @@ class TaxExemptionDetails extends Component {
         }
     };
 
-    handleEdit(record){
-        console.log(record)
+    handleEdit(record) {
+        this.setState({
+            visible: true,
+            action: "modify",
+            opid: record.id
+        });
     }
 
-    handleDelete(record){
-
+    handleDelete(record) {
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '该删除后将不可恢复，是否删除？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk: () => {
+                modalRef && modalRef.destroy();
+                request.delete('/account/other/reduceTaxDetail/delete/' + record.id).then(({data}) => {
+                    if (data.code === 200) {
+                        message.success('删除成功', 4);
+                        this.refreshTable();
+                    } else {
+                        message.error(data.msg, 4);
+                    }
+                });
+            },
+            onCancel() {
+                modalRef && modalRef.destroy();
+            }
+        });
     }
 
     render() {
-        const {visible, action, opid, tableKey, searchTableLoading, statusParam, totalSource, filters} = this.state;
+        const {visible, action, opid, tableKey, searchTableLoading, statusParam, totalSource, filters, showProfitCenter} = this.state;
         const {getFieldDecorator} = this.props.form;
         const {declare} = this.props;
         let disabled = !!declare;
-
-        console.error(declare);
 
         return (
             <SearchTable
@@ -499,7 +521,7 @@ class TaxExemptionDetails extends Component {
                     }}
                     id={opid}
                     declareData={declare}
-                    profitCenter={false}
+                    profitCenter={showProfitCenter}
                     update={this.update}
                 />
             </SearchTable>
