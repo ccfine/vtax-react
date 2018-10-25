@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-04-04 11:35:59 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-23 17:57:51
+ * @Last Modified time: 2018-10-25 14:43:14
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
@@ -74,6 +74,7 @@ const getColumns = (context,isEdit) => {
             title: "利润中心",
             dataIndex: "profitCenterName",
             width: "200px",
+            align: 'center',
             render: (text, row, index) => {
                 const obj = {
                     children: text,
