@@ -62,17 +62,17 @@ const searchFields = (context, disabled, declare) => (getFieldValue) => {
                 ]
             }
         }, {
-            label:'利润中心',
-            fieldName:'profitCenterId',
-            type:'asyncSelect',
-            span:8,
+            label: '利润中心',
+            fieldName: 'profitCenterId',
+            type: 'asyncSelect',
+            span: 8,
             formItemStyle,
-            componentProps:{
-                fieldTextName:'profitName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            componentProps: {
+                fieldTextName: 'profitName',
+                fieldValueName: 'id',
+                doNotFetchDidMount: false,
+                fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
+                url: `/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`
             }
         }
     ];
@@ -92,7 +92,7 @@ const columns = context => {
                     lastStegesId = row.profitCenterId;
                     rowSpan = dataSource.filter(ele => ele.profitCenterId === row.profitCenterId).length;
                 }
-                if((index + 1) === dataSource.length){
+                if ((index + 1) === dataSource.length) {
                     lastStegesId = '';
                 }
                 return {
@@ -257,11 +257,11 @@ export default class OtherDeductionVoucher extends Component {
                                 {
                                     (disabled && declare.decAction === 'edit') && composeBotton([{
 
-                                        type:'reset',
-                                        url:'/other/tax/deduction/vouchers/reset',
-                                        params:filters,
-                                        userPermissions:['1525000'],
-                                        onSuccess:this.refreshTable,
+                                        type: 'reset',
+                                        url: '/other/tax/deduction/vouchers/reset',
+                                        params: filters,
+                                        userPermissions: ['1525000'],
+                                        onSuccess: this.refreshTable
 
                                     }, {
                                         type: 'submit',
@@ -290,6 +290,11 @@ export default class OtherDeductionVoucher extends Component {
                                     ]
                                 }/>
                             </div>
+                        },
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            });
                         },
                         scroll: {
                             // x:2400,
