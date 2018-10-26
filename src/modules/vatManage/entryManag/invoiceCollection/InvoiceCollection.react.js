@@ -490,14 +490,6 @@ class InvoiceCollection extends Component {
                                     }])
                                 }
                                 {
-                                    composeBotton([{
-                                        type:'fileExport',
-                                        url:'income/invoice/collection/download',
-                                        onSuccess:this.refreshTable
-                                    }])
-                                }
-
-                                {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([             
                                     {
                                         type: "match",
@@ -506,6 +498,12 @@ class InvoiceCollection extends Component {
                                         btnType: "default",
                                         userPermissions: ["1495002"],
                                         onClick: this.matchData
+                                    },
+                                    {
+                                        type:'fileExport',
+                                        url:'income/invoice/collection/download',
+                                        onSuccess:this.refreshTable,
+                                        userPermissions:['1491005'],
                                     },
                                     {
                                         type:'fileImport',

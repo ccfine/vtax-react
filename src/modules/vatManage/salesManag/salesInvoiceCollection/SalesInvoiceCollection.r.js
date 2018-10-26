@@ -436,14 +436,12 @@ export default class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        composeBotton([{
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
                                             type:'fileExport',
                                             url:'output/invoice/collection/download',
-                                            onSuccess:this.refreshTable
-                                        }])
-                                    }
-                                    {
-                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
+                                            onSuccess:this.refreshTable,
+                                            userPermissions:['1061005'],
+                                        },{
                                             type:'fileImport',
                                             url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,

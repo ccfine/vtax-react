@@ -244,7 +244,7 @@ const getColumns = context =>[
     {
         title: '凭证摘要',
         dataIndex: 'voucherAbstract',
-        width:'500px',
+        //width:'500px',
     },
     /*{
         title: '凭证类型',
@@ -324,7 +324,7 @@ const getColumns = context =>[
             },
             {
                 title:'代扣代缴类型',
-                dataIndex:'paymentItem',
+                dataIndex:'withholdingType',
                 width:'150px',
             }
         ]

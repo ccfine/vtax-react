@@ -128,7 +128,7 @@ const setFormat = data =>{
 const parseJsonToParams = data=>{
     let str = '';
     for(let key in data){
-        if(typeof data[key] !== 'undefined' && data[key] !== ''){
+        if(typeof data[key] !== 'undefined' &&  data[key] !== undefined &&  data[key] !== '' && data[key] !== 'null' && data[key] !== null){
             str += `${key}=${data[key]}&`
         }
     }

@@ -522,14 +522,12 @@ class RoomTransactionFile extends Component{
                                 }])
                             }
                             {
-                             composeBotton([{
-                                 type:'fileExport',
-                                 url:'output/room/files/download',
-                                 onSuccess:this.refreshTable
-                                 }],statusParam)
-                             }
-                            {
                                 (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                    type:'fileExport',
+                                    url:'output/room/files/download',
+                                    userPermissions:['1211005'],
+                                    onSuccess:this.refreshTable
+                                },{
                                     type:'fileImport',
                                     url:'/output/room/files/upload/pre',
                                     uploadUrl:'/output/room/files/upload',
