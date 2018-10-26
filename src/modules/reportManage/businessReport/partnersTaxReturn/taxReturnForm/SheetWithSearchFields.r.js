@@ -7,7 +7,7 @@ import {Form, Row, Col, Button,Card,message} from 'antd'
 import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
-import Sheet from './Sheet.r'
+import Sheet from 'modules/reportManage/businessReport/taxReturnForm/Sheet.r'
 
 class SheetWithSearchFields extends Component{
     static propTypes={
@@ -124,7 +124,6 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
-                console.log(values)
                 values.reportType = this.props.reportType;
                 values.partnerId = this.props.drawerConfig.partnerId;
                 for(let key in values.map){
