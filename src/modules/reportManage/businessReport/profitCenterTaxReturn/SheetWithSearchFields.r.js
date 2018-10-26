@@ -196,7 +196,7 @@ class SheetWithSearchFields extends Component{
                                 }])
                             }*/}
                             {
-                                saveUrl && !readOnly && composeBotton([{
+                                JSON.stringify(params)!=='{}' && saveUrl && !readOnly && composeBotton([{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
