@@ -15,11 +15,6 @@ import moment from 'moment';
 import {NumericInputCell, SelectCell} from 'compoments/EditableCell';
 import {BigNumber} from "bignumber.js";
 
-const pointerStyle = {
-    cursor: "pointer",
-    color: "#1890ff"
-};
-
 const searchFields = (context, disabled, declare) => getFieldValue => ([
     {
         label: '纳税主体',
@@ -73,28 +68,13 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
 ]);
 
 const getColumns = (context, getFieldDecorator, disabled) => {
-    return [(context.state.showProfitCenter ? {
-        title: '利润中心',
-        dataIndex: 'profitCenterName',
-        width: '150px'
-    } : {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-        render: (text, record) => (
-            <span title="查看详情" style={{
-                ...pointerStyle,
-                marginLeft: 5
-            }}
-                  onClick={() => {
-                      context.setState({
-                          visible: true,
-                          action: 'look',
-                          opid: record.id
-                      });
-                  }}
-            >{text}</span>
-        )
-    }), {
+    return [
+        ...(context.state.showProfitCenter ? [{
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width: '150px'
+        }] : []),
+        {
         title: '减税性质代码',
         dataIndex: 'reduceNum',
         width: '8%'
@@ -232,6 +212,11 @@ class TaxExemptionDetails extends Component {
         totalSource: undefined,
         showProfitCenter: false
     };
+    requestLoadType = (mainId) => {
+        request.get('/dataCollection/loadType/' + mainId).then(({data})=>{
+            this.setState({showProfitCenter: data.data === '2'})
+        });
+    };
     refreshTable = () => {
         this.setState({
             tableKey: Date.now()
@@ -336,6 +321,7 @@ class TaxExemptionDetails extends Component {
         const {getFieldDecorator} = this.props.form;
         const {declare} = this.props;
         let disabled = !!declare;
+        const self = this;
 
         return (
             <SearchTable
@@ -347,6 +333,9 @@ class TaxExemptionDetails extends Component {
                         style: {
                             borderTop: 0
                         }
+                    },
+                    onFieldsChange({mainId}){
+                        mainId && self.requestLoadType(mainId);
                     }
                 }}
                 tableOption={{
@@ -415,6 +404,9 @@ class TaxExemptionDetails extends Component {
                         this.setState({
                             totalSource
                         });
+                    },
+                    onDataChange(data){
+                        console.log('xxx', data)
                     }
                 }}
             >
