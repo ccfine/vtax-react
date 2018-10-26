@@ -153,7 +153,7 @@ const columns = [
         width:'150px',
 	},
     {
-        title: '项目分期抵扣的土地价款',
+        title: '项目分期可抵扣的土地价款',
         dataIndex: 'deductibleLandPrice',
         render: text => fMoney(text),
         className: 'table-money',
