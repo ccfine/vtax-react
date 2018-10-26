@@ -424,6 +424,11 @@ const strategies = {
                 options:[
                     "2111002"
                 ],
+            },
+
+            // 不动产进项税额抵扣表
+            realEstateTax: {
+                options: []
             }
         },
     },
