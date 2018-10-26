@@ -70,11 +70,11 @@ const SubmitOrRecall = props => {
             onSuccess:props.onSuccess,
         },
         buttonOptions:{
-            text:'提交',
+            text:'审核',
             icon:'check'
         },
         modalOptions:{
-            title:'提交'
+            title:'审核'
         }
     };
     const recallOptions = {
@@ -86,11 +86,11 @@ const SubmitOrRecall = props => {
             onSuccess:props.onSuccess,
         },
         buttonOptions:{
-            text:'撤回提交',
+            text:'撤回审核',
             icon:'rollback'
         },
         modalOptions:{
-            title:'撤回提交'
+            title:'撤回审核'
         }
     }
     if(props.type===1){

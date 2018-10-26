@@ -96,10 +96,10 @@ const fromPercent = val=>{
 const transformDataStatus = status =>{
     status = parseInt(status,0)
     if(status===1){
-        return '暂存';
+        return '未审核';
     }
     if(status===2){
-        return '提交'
+        return '已审核'
     }
     return status
 }
