@@ -12,9 +12,12 @@ export default class Exception403 extends React.Component{
         ssoPath:'/web'
     }
     componentDidMount(){
-        request.post('/oauth/loginOut').then(({data})=>{
+        request.post('/oauth/loadParameter').then(({data})=>{
             if(data.code === 200){
-                this.setState({ssoPath:data.data});
+                const result = data.data;
+                this.mounted && this.setState({
+                    ssoPath:result.bipPath,
+                })
             }
         }).catch(err=>{
         })
