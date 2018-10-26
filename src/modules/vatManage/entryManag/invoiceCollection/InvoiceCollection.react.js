@@ -4,9 +4,9 @@
  * description  :
  */
 import React, { Component } from "react";
-import {message,Modal} from 'antd';
+import {message,Modal,Dropdown,Button,Icon,Menu} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
-import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request,requestTaxSubjectConfig} from "utils";
+import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request,requestTaxSubjectConfig,parseJsonToParams} from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 const pointerStyle = {
@@ -37,7 +37,7 @@ const getFields = (filters)=>[
             ]
         },
     }, {
-        label: '认证月份',
+        label: '认证所属期',
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
@@ -57,7 +57,7 @@ const getFields = (filters)=>[
             rules: [
                 {
                     required: true,
-                    message: '请选择认证月份'
+                    message: '请选择认证所属期'
                 }
             ]
         },
@@ -117,7 +117,7 @@ const getSearchFields = (disabled,declare) => (getFieldValue) => [
             }
         },
         {
-            label: "认证月份",
+            label: "认证所属期",
             fieldName: "authMonth",
             type: "monthPicker",
             span: 8,
@@ -132,7 +132,7 @@ const getSearchFields = (disabled,declare) => (getFieldValue) => [
                 rules: [
                     {
                         required: true,
-                        message: "请选择认证月份"
+                        message: "请选择认证所属期"
                     }
                 ]
             }
@@ -240,7 +240,7 @@ const getColumns = (context) => [{
         width:'100px',
     },
     {
-        title: "认证月份",
+        title: "认证所属期",
         dataIndex: "authMonth",
         width:'100px',
     },
@@ -441,6 +441,20 @@ class InvoiceCollection extends Component {
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+        const menu = (
+            <Menu>
+                <Menu.Item>
+                    <a target="_blank" href={`${window.baseURL}income/invoice/collection/download?${parseJsonToParams({Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`}>
+                        <div style={{ display: "flex", justifyContent: "space-between"}} target="_blank">进项发票模板<Icon type="download" /></div>
+                    </a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a target="_blank" href={`${window.baseURL}income/invoice/collection/downloadProfitCenter?${parseJsonToParams({Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`}>
+                        <div>进项发票的利润中心模板 <Icon type="download" /></div>
+                    </a>
+                </Menu.Item>
+            </Menu>
+        )
         return (
             <div className='oneLine'>
                 <SearchTable
@@ -489,6 +503,18 @@ class InvoiceCollection extends Component {
                                         userPermissions:['1491007'],
                                     }])
                                 }
+                                {
+                                    // composeBotton([{
+                                    //     type:'fileExport',
+                                    //     url:'income/invoice/collection/download',
+                                    //     onSuccess:this.refreshTable                                  
+                                    // }])
+                                    JSON.stringify(filters)!=='{}' && (                                      
+                                        <Dropdown overlay={ menu }>
+                                            <Button style={{ marginRight: 5 }} size="small"><Icon type="download" />下载导入模板</Button>
+                                        </Dropdown>                                      
+                                    )                                    
+                                } 
                                 {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([             
                                     {

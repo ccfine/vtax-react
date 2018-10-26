@@ -31,7 +31,7 @@ const columns = context =>[{
         dataIndex:'invoiceNum',
         width:'200px',
     },{
-        title:'认证日期',
+        title:'认证所属期',
         dataIndex:'authDate',
         width:'200px',
     }, {
