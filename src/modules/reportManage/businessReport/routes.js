@@ -24,6 +24,7 @@ const BillPool = AsyncComponent(() => import("./billPool"), "票据池")
 const TaxReturnProgressTrackTable = AsyncComponent(() => import("./taxReturnProgressTrackTable"), "纳税申报进度跟踪表")
 const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
 const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "自持类产品关联清单")
+const RealEstateTax = AsyncComponent(() => import("./realEstateTax"), "不动产进项税额抵扣表")
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -209,6 +210,17 @@ const BusinessReport_Routes = [
             backgroundColor: "#2E8A57"
         },
         authorityInfo: businessReport["taxReturnProgressTrackTable"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/realEstateTax`,
+        component: RealEstateTax,
+        name: "不动产进项税额抵扣表",
+        icon: {
+            url: `${ICON_URL_PATH}realEstateTax.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["realEstateTax"].options,
         exact: true
     },
     {
