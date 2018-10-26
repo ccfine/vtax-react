@@ -1,8 +1,8 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/12/14 12:10
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-16 15:58:37
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-26 12:19:19
  *
  */
 import React, {Component} from 'react';
@@ -294,7 +294,6 @@ class TaxExemptionDetails extends Component {
             }
         });
     };
-
     handleConfirmChange = (value, record) => {
         // 是 -- -减免税金额显示为金额的值  :0 否 1是
         // 否  减免税金额显示为 金额加税额的合计
@@ -406,7 +405,7 @@ class TaxExemptionDetails extends Component {
                         });
                     },
                     onDataChange(data){
-                        console.log('xxx', data)
+                        // console.log('xxx', data)
                     }
                 }}
             >
@@ -417,6 +416,8 @@ class TaxExemptionDetails extends Component {
                         this.hideModal();
                     }}
                     id={opid}
+                    declareData={declare}
+                    profitCenter={false}
                     update={this.update}
                 />
             </SearchTable>

@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {fMoney,requestResultStatus,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
-const searchFields =(disabled,declare)=> getFieldValue => [
+const searchFields =(disabled,declare) => [
     {
         label:'纳税主体',
         fieldName:'main',
@@ -43,25 +43,9 @@ const searchFields =(disabled,declare)=> getFieldValue => [
             ]
         },
     },
-    {
-        label:'利润中心',
-        fieldName:'profitCenterId',
-        type:'asyncSelect',
-        span:8,
-        componentProps:{
-            fieldTextName:'profitName',
-            fieldValueName:'id',
-            doNotFetchDidMount:true,
-            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
-        }
-    }
 ]
+
 const columns = [{
-    title: '利润中心',
-    dataIndex: 'profitCenterName',
-    width:'150px',
-}, {
     title: '应税项目',
     dataIndex: 'taxableProjectName',
     width:'200px',
@@ -131,6 +115,7 @@ const columns = [{
     className:'table-money',
     width:'150px',
 }];
+
 // 总计数据结构，用于传递至TableTotal中
 const totalData =  [{
         title:'合计',
@@ -144,15 +129,19 @@ const totalData =  [{
     }
 ];
 class OtherTaxableItemsDeduct extends Component{
-    state={
-        updateKey:Date.now(),
-        filters:{},
-        searchTableLoading:false,
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
-        totalSource:undefined,
+    constructor(props) {
+        super(props);
+        this.state = {
+            updateKey:Date.now(),
+            filters:{},
+            searchTableLoading:false,
+            /**
+             *修改状态和时间
+            * */
+            statusParam:{},
+            totalSource:undefined,
+        }
+        this.type = '1';
     }
     refreshTable = ()=>{
         this.setState({
@@ -162,6 +151,11 @@ class OtherTaxableItemsDeduct extends Component{
     toggleSearchTableLoading = b =>{
         this.setState({
             searchTableLoading:b
+        })
+    }
+    fetchLoadType = (mainId) => {
+        requestResultStatus(`/dataCollection/loadType/${mainId}`,{}, result=>{
+            this.type = result;
         })
     }
     fetchResultStatus = ()=>{
@@ -178,6 +172,34 @@ class OtherTaxableItemsDeduct extends Component{
             });
         }
     }
+    searchFields = (disabled,declare) => getFieldValue => {
+        return this.type === '1' ? searchFields(disabled, declare) : [
+            ...searchFields(disabled, declare),
+            {
+                label:'利润中心',
+                fieldName:'profitCenterId',
+                type:'asyncSelect',
+                span:8,
+                componentProps:{
+                    fieldTextName:'profitName',
+                    fieldValueName:'id',
+                    doNotFetchDidMount:true,
+                    fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                    url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+                },
+            }
+        ]
+    }
+    getColumns = () => {
+        return this.type === '1' ? columns : [
+            {
+                title: '利润中心',
+                dataIndex: 'profitCenterName',
+                width:'150px',
+            },
+            ...columns
+        ]
+    }
     render(){
         const {updateKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
         const { declare } = this.props;
@@ -187,7 +209,7 @@ class OtherTaxableItemsDeduct extends Component{
                     spinning={searchTableLoading}
                     doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields:searchFields(disabled,declare),
+                        fields: this.searchFields(disabled, declare),
                         cardProps:{
                             style:{
                                 borderTop:0,
@@ -198,6 +220,7 @@ class OtherTaxableItemsDeduct extends Component{
                         this.setState({
                             filters,
                         },() => {
+                            this.fetchLoadType(this.state.filters.mainId);
                             this.fetchResultStatus();
                         });
                     }}
@@ -206,7 +229,7 @@ class OtherTaxableItemsDeduct extends Component{
                         pagination:true,
                         size:'small',
                         scroll:{x:1800,y:window.screen.availHeight-380-(disabled?50:0)},
-                        columns:columns,
+                        columns:this.getColumns(),
                         cardProps:{
                             title:'其他应税项目扣除台账'
                         },
