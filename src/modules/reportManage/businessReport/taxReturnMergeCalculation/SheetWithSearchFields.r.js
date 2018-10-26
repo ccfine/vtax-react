@@ -7,7 +7,7 @@ import {Form, Row, Col, Button,Card} from 'antd'
 import {getFields,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
-import Sheet from './Sheet.r'
+import Sheet from 'modules/reportManage/businessReport/taxReturnForm/Sheet.r'
 class SheetWithSearchFields extends Component{
     static propTypes={
         tab:PropTypes.string,

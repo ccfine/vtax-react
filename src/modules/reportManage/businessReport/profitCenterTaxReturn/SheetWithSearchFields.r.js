@@ -4,10 +4,10 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Form, Row, Col, Button,Card} from 'antd'
-import {getFields,listMainResultStatus,composeBotton} from 'utils'
+import {getFields,composeBotton} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
-import Sheet from './Sheet.r'
+import Sheet from 'modules/reportManage/businessReport/taxReturnForm/Sheet.r'
 class SheetWithSearchFields extends Component{
     static propTypes={
         tab:PropTypes.string,
@@ -93,6 +93,7 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
+                values.reportType = this.props.reportType;
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
                     values.mainId = values.main.key
@@ -115,7 +116,7 @@ class SheetWithSearchFields extends Component{
     }
     render(){
         const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams} = this.props;
-        const { params,updateKey,statusParam } = this.state;
+        const { params,updateKey } = this.state;
         const readOnly = true;
         return(
             <Form onSubmit={this.onSubmit}>
@@ -145,9 +146,6 @@ class SheetWithSearchFields extends Component{
                     bordered={false}
                     extra={
                         <div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
                             {
                                 JSON.stringify(params)!=='{}' && composeBotton([{
                                     type:'fileExport',
