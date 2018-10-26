@@ -130,7 +130,7 @@ const getColumns = context => {
             dataIndex: 'num',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                if (context.state.statusParam.status === 1) {
+                if (context.state.statusParam.status === 1 && record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].num`}
                         initialValue={text === '0' ? '0' : text}
@@ -177,7 +177,7 @@ const getColumns = context => {
             dataIndex: 'amount',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                if (context.state.statusParam.status === 1) {
+                if (context.state.statusParam.status === 1 && record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].amount`}
                         initialValue={text === '0' ? '0.00' : fMoney(text)}
@@ -197,7 +197,7 @@ const getColumns = context => {
             dataIndex: 'taxAmount',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                if (context.state.statusParam.status === 1) {
+                if (context.state.statusParam.status === 1 && record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].taxAmount`}
                         initialValue={text === '0' ? '0.00' : fMoney(text)}
