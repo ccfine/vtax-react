@@ -321,6 +321,11 @@ const getColumns = context =>[
                 title:'付款成本项目',
                 dataIndex:'paymentItem',
                 width:'150px',
+            },
+            {
+                title:'代扣代缴类型',
+                dataIndex:'paymentItem',
+                width:'150px',
             }
         ]
     },
