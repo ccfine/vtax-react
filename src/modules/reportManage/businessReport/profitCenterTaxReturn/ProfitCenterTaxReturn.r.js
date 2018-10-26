@@ -25,7 +25,6 @@ const sheetData = [
         tab:'主表',
         grid:sheet_0,
         url,
-        saveUrl,
         action:true
     }, {
         tab:'附表一',
