@@ -8,9 +8,10 @@ import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
 // import { compose } from 'redux';
 // import {connect} from 'react-redux'
 import { AsyncTable,TableTotal } from "compoments";
-import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
+import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
+import VoucherModal from 'compoments/voucherModal'
 
 const columns = (context) => [
     {
@@ -168,9 +169,63 @@ const columns2=(context,hasOperate) => {
         }
     ];
 }
+
+const voucherSearchFields = [
+    {
+        label:'SAP凭证号',
+        fieldName:'voucherNum',
+        type:'input',
+        span:8,
+        componentProps:{ }
+    }
+]
+const voucherColumns = [
+    {
+        title: '利润中心',
+        dataIndex: 'mainName',
+        width:200,
+    }, {
+        title: '项目分期名称',
+        dataIndex: 'stagesName',
+        width:200,
+    },{
+        title: '科目代码',
+        dataIndex: 'voucherDate',
+        width:150,
+    },{
+        title: '科目名称',
+        dataIndex: 'voucherNum',
+        width:150,
+    },{
+        title: 'SAP凭证号',
+        dataIndex: 'voucherAbstract',
+        width:200,
+    },{
+        title: '款项明细',
+        dataIndex: 'debitSubjectName',
+        //width:100,
+    },{
+        title: '税率',
+        dataIndex: 'debitSubjectCode',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
+        width:100,
+    },{
+        title: '本币不含税金额',
+        dataIndex: 'debitAmount',
+        width:150,
+        render:text=>fMoney(text),
+        className: "table-money"
+    },{
+        title: '期间（月份）',
+        dataIndex: 'voucherType',
+        width:100,
+    }
+];
 class UnBilledSalesNotEstate extends Component {
     state={
         visible: false, // 控制Modal是否显示
+        voucherVisible: false,
         opid: "", // 当前操作的记录
         /**
          * params条件，给table用的
@@ -193,7 +248,11 @@ class UnBilledSalesNotEstate extends Component {
             tableUpDateKey:Date.now()
         })
     }
-
+    toggleModalVoucherVisible = voucherVisible => {
+        this.setState({
+            voucherVisible
+        });
+    };
     updateStatus = () => {
         requestResultStatus('/account/notInvoiceUnSale/realty/listMain',this.state.filters,result=>{
             this.mounted && this.setState({
@@ -259,7 +318,7 @@ class UnBilledSalesNotEstate extends Component {
         this.mounted = null;
     }
     render(){
-        const {tableUpDateKey,filters,statusParam,totalSource} = this.state;
+        const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
@@ -354,6 +413,15 @@ class UnBilledSalesNotEstate extends Component {
                           }
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
+                                  type:'consistent',
+                                  //icon:'exception',
+                                  btnType:'default',
+                                  text:'转租业务凭证',
+                                  userPermissions:['1265014'],
+                                  onClick:()=>{
+                                      this.toggleModalVoucherVisible(true);
+                                  }
+                              },{
                                   type:'reset',
                                   url:'/account/notInvoiceUnSale/realty/reset',
                                   params:filters,
@@ -454,6 +522,15 @@ class UnBilledSalesNotEstate extends Component {
                     declare={declare}
                 />
 
+                <VoucherModal
+                    title="凭证信息"
+                    visible={voucherVisible}
+                    fields={voucherSearchFields}
+                    columns={voucherColumns}
+                    url={`/account/income/taxDetail/taxDetailVoucherList?${parseJsonToParams(filters)}`}
+                    scroll={{ x: '1600px',y:'250px' }}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                />
             </Layout>
         )
     }
