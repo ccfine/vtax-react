@@ -274,7 +274,7 @@ class TaxCalculation extends Component{
                                     type:'save',
                                     icon:'save',
                                     text:'保存',
-                                    userPermissions:['1911007'],
+                                    userPermissions:['1911003'],
                                     onClick:()=>this.save()
                                 }/*,{
                                     type:'reset',

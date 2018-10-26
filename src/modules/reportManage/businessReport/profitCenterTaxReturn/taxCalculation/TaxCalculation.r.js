@@ -266,12 +266,12 @@ class TaxCalculation extends Component{
                                     url:'account/taxCalculation/pc/export',
                                     params:filters,
                                     title:'导出',
-                                    userPermissions:['1911007'],
+                                    userPermissions:['2161007'],
                                 },{
                                     type:'save',
                                     icon:'save',
                                     text:'保存',
-                                    userPermissions:['1911007'],
+                                    userPermissions:['2161003'],
                                     onClick:()=>this.save()
                                 }])
                             }
