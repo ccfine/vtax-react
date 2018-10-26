@@ -81,8 +81,7 @@ class TaxReturnForm extends Component{
         })
     }
     render () {
-        const {activeKey,params} = this.state,
-            {declare} = this.props;
+        const {activeKey,params} = this.state;
         return (
             <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}} onChange={this.onChange} activeKey={activeKey}  type={'line'}>
                 {
@@ -90,8 +89,8 @@ class TaxReturnForm extends Component{
                         <TabPane tab={item.tab} key={i}>
                             {
                                 parseInt(activeKey,0) === i ? (
-                                item.Component?<item.Component onParamsChange={this.onParamsChange} defaultParams={params}  declare={declare} />:
-                                <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} reportType={i} />
+                                item.Component?<item.Component onParamsChange={this.onParamsChange} defaultParams={params}  />:
+                                <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} reportType={i} />
                                 )
                                  : ''
                             }

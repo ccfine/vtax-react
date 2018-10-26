@@ -3,8 +3,8 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Form, Row, Col, Button,Card} from 'antd'
-import {getFields,composeBotton} from 'utils'
+import {Form, Row, Col, Button,Card,message} from 'antd'
+import {getFields,composeBotton,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from 'modules/reportManage/businessReport/taxReturnForm/Sheet.r'
@@ -79,6 +79,7 @@ class SheetWithSearchFields extends Component{
     state={
         params:{},
         updateKey:Date.now(),
+        saveLoding:false,
         /**
          *修改状态和时间
          * */
@@ -110,14 +111,45 @@ class SheetWithSearchFields extends Component{
             }
         })
     }
+    save=(e)=>{
+        e && e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                for(let key in values.map){
+                    values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
+                }
+                values.taxMonth = values.taxMonth.format('YYYY-MM');
+                values.reportType = this.props.reportType;
+                if(values.main){
+                    values.mainId = values.main.key
+                    delete values.main
+                }
+                this.mounted && this.setState({saveLoding:true})
+                request.post(this.props.saveUrl,values)
+                    .then(({data})=>{
+                        this.mounted && this.setState({saveLoding:false})
+                        if(data.code===200){
+                            message.success('保存成功!');
+                            this.onSubmit();
+                        }else{
+                            message.error(`保存失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.mounted && this.setState({saveLoding:false})
+                    })
+            }
+        })
+    }
     mounted=true;
     componentWillUnmount(){
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams} = this.props;
-        const { params,updateKey } = this.state;
-        const readOnly = true;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,action,saveUrl,defaultParams} = this.props;
+        const { params,updateKey,saveLoding } = this.state;
+        const readOnly = false; //TODO: 设置页面默认是否可输入
         return(
             <Form onSubmit={this.onSubmit}>
             <div>
@@ -146,7 +178,7 @@ class SheetWithSearchFields extends Component{
                     bordered={false}
                     extra={
                         <div>
-                            {
+                            {/*{
                                 JSON.stringify(params)!=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'report/tax/declare/export',
@@ -161,6 +193,19 @@ class SheetWithSearchFields extends Component{
                                     url:'tax/decConduct/main/download',
                                     title:'下载附件',
                                     onSuccess:this.refreshTable
+                                }])
+                            }*/}
+                            {
+                                saveUrl && !readOnly && composeBotton([{
+                                    type:'save',
+                                    text:'保存',
+                                    icon:'save',
+                                    userPermissions:['2131004'],
+                                    onClick:this.save,
+                                    loading:saveLoding,
+                                    style:{
+                                        marginLeft:action ? 10 : 0
+                                    }
                                 }])
                             }
                         </div>
