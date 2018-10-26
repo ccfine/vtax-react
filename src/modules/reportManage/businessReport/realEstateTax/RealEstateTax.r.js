@@ -3,7 +3,7 @@
  * @Date: 2018-10-26 16:40:18 
  * @Description: '不动产进项税额抵扣表' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-26 17:45:52
+ * @Last Modified time: 2018-10-26 19:21:44
  */
 
 import React, { Component } from 'react'
@@ -60,29 +60,23 @@ const searchFields = getFieldValue => [
             }
         },
         {
-            label:'入账期间',
-            fieldName:'authMonth2',
-            type:'rangePicker',
-            formItemStyle,
-            span:8,
-            componentProps:{
-                format:'YYYY-MM-DD',
-            },
-            fieldDecoratorOptions:{
-                initialValue: undefined,
-            },
-        },
-        {
-            label:'待抵扣期间',
-            fieldName:'authMonth3',
+            label:'入账月份',
+            fieldName:'authMonth',
             type:'monthPicker',
             formItemStyle,
             span:8,
             componentProps:{
                 format:'YYYY-MM',
             },
-            fieldDecoratorOptions:{
-                initialValue: undefined,
+        },
+        {
+            label:'待抵扣期间',
+            fieldName:'deductedPeriod',
+            type:'monthPicker',
+            formItemStyle,
+            span:8,
+            componentProps:{
+                format:'YYYY-MM',
             },
         },
     ]
@@ -94,33 +88,23 @@ const columns=[
         width:'200px',
     },{
         title: '项目分期名称',
-        dataIndex: 'invoiceNum',
-        width:'100px',
+        dataIndex: 'stagesName',
+        width:'200px',
     },{
         title: '产品编码',
-        dataIndex: 'invoiceCode',
+        dataIndex: 'assetNo',
         width:'100px',
     },{
         title: '产品名称',
-        dataIndex: 'invoiceType',
-        render: (text,record) => {
-            let invoiceTypeText ='';
-            if(text==='s'){
-                invoiceTypeText = '专票'
-            }
-            if(text==='c'){
-                invoiceTypeText = '普票'
-            }
-            return invoiceTypeText;
-        },
-        width:'100px',
+        dataIndex: 'assetName',
+        width:'200px',
     },{
         title: '入账日期',
-        dataIndex: 'projectName',
+        dataIndex: 'accountDate',
         width:'150px',
     },{
         title: '税额',
-        dataIndex: 'amount',
+        dataIndex: 'inTax',
         render:text=>fMoney(text),
         className:'table-money',
         width:'100px',
@@ -175,16 +159,16 @@ export default class SalesInvoiceCollection extends Component{
                     cardProps:{
                         title:'不动产进项税额抵扣表'
                     },
-                    url:'/output/invoice/collection/report/list',
+                    url:'/IncomeEstateReport/list',
                     extra:<div>
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '期末待抵扣进项税额', dataIndex: 'allAmount'},
-                                        {title: '当期抵扣进项税额', dataIndex: 'allTaxAmount'},
-                                        {title: '期初待抵扣进项税额', dataIndex: 'allTotalAmount'},
+                                        {title: '期末待抵扣进项税额', dataIndex: 'deductedTaxAmount'},
+                                        {title: '当期抵扣进项税额', dataIndex: 'taxAmount'},
+                                        {title: '期初待抵扣进项税额', dataIndex: 'initialTaxAmount'},
                                     ],
                                 }
                             ]
@@ -195,7 +179,7 @@ export default class SalesInvoiceCollection extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 2800,y:window.screen.availHeight-360, },
+                    scroll:{ x: 1300,y:window.screen.availHeight-360, },
                 }}
             />
             </div>
