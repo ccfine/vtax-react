@@ -221,20 +221,20 @@ export default class Tab1 extends Component{
                             } */}
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type: 'reset',
+                                    url:'/account/income/fixedAssets/reset',
+                                    params:filters,
+                                    userPermissions:['1241009'],
+                                    onSuccess:()=>{
+                                        this.props.refreshTabs()
+                                    },
+                                },{
                                     type:'submit',
                                     url:'/account/income/fixedAssets/submit',
                                     params:filters,
                                     userPermissions:['1241010'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type: 'reset',
-                                    url:'/account/income/fixedAssets/reset',
-                                    params:filters,
-                                    userPermissions:['1241009'],
-                                    onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
                                 },{

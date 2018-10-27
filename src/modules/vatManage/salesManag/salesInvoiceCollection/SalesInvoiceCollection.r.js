@@ -36,6 +36,7 @@ const fields = (disabled,declare) => [
         },
         componentProps:{
             //labelInValue:true,
+            disabled: (disabled && declare.mainId) ? true : false,
         },
         fieldDecoratorOptions:{
             initialValue: (disabled && declare.mainId) || undefined,
@@ -61,7 +62,9 @@ const fields = (disabled,declare) => [
                 span:14
             }
         },
-        componentProps: {},
+        componentProps: {
+            disabled: (disabled && moment(declare.authMonth, 'YYYY-MM')) ? true : false,
+        },
         fieldDecoratorOptions: {
             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
             rules: [
@@ -454,10 +457,7 @@ export default class SalesInvoiceCollection extends Component {
                                             monthFieldName:"authMonth",
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1065000'],
-                                        }],statusParam)
-                                    }
-                                    {
-                                        (disabled && declare.decAction==='edit') && composeBotton([{
+                                        },{
                                             type:'delete',
                                             icon:'delete',
                                             text:'删除',

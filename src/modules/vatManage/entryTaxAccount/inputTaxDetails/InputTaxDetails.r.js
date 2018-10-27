@@ -410,12 +410,6 @@ class InputTaxDetails extends Component {
                             //         });
                             //     }
                             // }, {
-                                type: 'submit',
-                                url: '/account/income/taxDetail/submit',
-                                params: filters,
-                                userPermissions: ['1381010'],
-                                onSuccess: this.refreshTable
-                            }, {
                                 type: 'save',
                                 text: '保存',
                                 icon: 'save',
@@ -427,6 +421,12 @@ class InputTaxDetails extends Component {
                                 url: '/account/income/taxDetail/reset',
                                 params: filters,
                                 userPermissions: ['1381014'],
+                                onSuccess: this.refreshTable
+                            }, {
+                                type: 'submit',
+                                url: '/account/income/taxDetail/submit',
+                                params: filters,
+                                userPermissions: ['1381010'],
                                 onSuccess: this.refreshTable
                             }, {
                                 type: 'revoke',

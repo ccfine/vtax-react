@@ -130,20 +130,20 @@ export default class SelfBuiltToSelfUse extends Component{
                                 } */}
                                 {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                        type: 'reset',
+                                        url:'/account/income/estate/reset',
+                                        params:filters,
+                                        userPermissions:['1251009'],
+                                        onSuccess:()=>{
+                                            this.props.refreshTabs()
+                                        },
+                                    },{
                                         type:'submit',
                                         url:'/account/income/estate/submit',
                                         params:filters,
                                         userPermissions:['1251010'],
                                         onSuccess:()=>{
                                             //this.refreshTable();
-                                            this.props.refreshTabs()
-                                        },
-                                    },{
-                                        type: 'reset',
-                                        url:'/account/income/estate/reset',
-                                        params:filters,
-                                        userPermissions:['1251009'],
-                                        onSuccess:()=>{
                                             this.props.refreshTabs()
                                         },
                                     },{

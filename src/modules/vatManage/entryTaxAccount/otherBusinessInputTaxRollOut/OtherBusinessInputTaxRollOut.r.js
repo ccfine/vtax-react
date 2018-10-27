@@ -252,18 +252,18 @@ class OtherBusinessInputTaxRollOut extends Component {
                                     }
                                     {
                                         (disabled && declare.decAction==='edit') && composeBotton([{
+                                            type:'reset',
+                                            url:'/account/income/taxout/reset',
+                                            params:filters,
+                                            userPermissions:['1401009'],
+                                            onSuccess:this.refreshTable,
+                                        },{
                                             type:'submit',
                                             url:'/account/income/taxout/submit',
                                             // monthFieldName:"authMonth",
                                             params:filters,
                                             userPermissions:['1401010'],
                                             onSuccess:this.refreshTable
-                                        },{
-                                            type:'reset',
-                                            url:'/account/income/taxout/reset',
-                                            params:filters,
-                                            userPermissions:['1401009'],
-                                            onSuccess:this.refreshTable,
                                         },{
                                             type:'revoke',
                                             // monthFieldName:"authMonth",

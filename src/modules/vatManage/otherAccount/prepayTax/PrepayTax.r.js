@@ -372,12 +372,6 @@ class PrepayTax extends Component{
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'submit',
-                                    url:'/account/prepaytax/submit',
-                                    params:filters,
-                                    userPermissions:['1331010'],
-                                    onSuccess:this.refreshTable
-                                },{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
@@ -389,6 +383,12 @@ class PrepayTax extends Component{
                                     url:'/account/prepaytax/reset',
                                     params:filters,
                                     userPermissions:['1331009'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'submit',
+                                    url:'/account/prepaytax/submit',
+                                    params:filters,
+                                    userPermissions:['1331010'],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',

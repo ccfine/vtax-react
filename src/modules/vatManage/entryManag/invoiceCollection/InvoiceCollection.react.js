@@ -27,6 +27,9 @@ const getFields = (filters)=>[
                 span:14
             }
         },
+        componentProps:{
+            disabled: (filters && filters["mainId"]) ? true : false,
+        },
         fieldDecoratorOptions:{
             initialValue: (filters && filters["mainId"]) || undefined,
             rules:[
@@ -49,10 +52,11 @@ const getFields = (filters)=>[
                 span:14
             }
         },
-        componentProps: {},
+        componentProps: {
+            disabled: (filters && moment(filters["authMonth"], "YYYY-MM")) ? true : false,
+        },
         fieldDecoratorOptions: {
-            initialValue:
-            (filters && moment(filters["authMonth"], "YYYY-MM")) ||
+            initialValue:(filters && moment(filters["authMonth"], "YYYY-MM")) ||
             undefined,
             rules: [
                 {
@@ -544,11 +548,7 @@ class InvoiceCollection extends Component {
                                         monthFieldName:"authMonth",
                                         onSuccess:this.refreshTable,
                                         userPermissions:['1495000'],
-                                    }],statusParam)
-                                }
-
-                                {
-                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                    },{
                                         type:'delete',
                                         icon:'delete',
                                         text:'删除',
