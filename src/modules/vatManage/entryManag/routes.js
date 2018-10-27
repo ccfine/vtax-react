@@ -41,7 +41,7 @@ const EntryManag_Routes = [
     },{
         path:`${PATH}/fixedAssetCollection`,
         component:FixedAssetCollection,
-        name:'固定资产信息采集',
+        name:'不动产信息采集',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCollection.svg`,
             backgroundColor:'#73CF2B'
@@ -132,7 +132,7 @@ const EntryManag_Routes = [
     },{
         path:`${PATH}/fixedAssetsInvoice`,
         component:FixedAssetsInvoice,
-        name:'固定资产进项发票台账',
+        name:'不动产进项发票台账',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetsInvoice.svg`,
             backgroundColor:'#3B4A83'
