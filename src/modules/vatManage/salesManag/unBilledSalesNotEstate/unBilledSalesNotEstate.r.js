@@ -173,7 +173,7 @@ const columns2=(context,hasOperate) => {
 const voucherSearchFields = [
     {
         label:'SAP凭证号',
-        fieldName:'voucherNum',
+        fieldName:'voucherNo',
         type:'input',
         span:8,
         componentProps:{ }
@@ -182,43 +182,43 @@ const voucherSearchFields = [
 const voucherColumns = [
     {
         title: '利润中心',
-        dataIndex: 'mainName',
+        dataIndex: 'profitCenterNum',
         width:200,
     }, {
         title: '项目分期名称',
-        dataIndex: 'stagesName',
+        dataIndex: 'stageName',
         width:200,
     },{
         title: '科目代码',
-        dataIndex: 'voucherDate',
+        dataIndex: 'subjectCode',
         width:150,
     },{
         title: '科目名称',
-        dataIndex: 'voucherNum',
+        dataIndex: 'subjectName',
         width:150,
     },{
         title: 'SAP凭证号',
-        dataIndex: 'voucherAbstract',
+        dataIndex: 'voucherNo',
         width:200,
     },{
         title: '款项明细',
-        dataIndex: 'debitSubjectName',
+        dataIndex: 'zkxmx',
         //width:100,
     },{
         title: '税率',
-        dataIndex: 'debitSubjectCode',
+        dataIndex: 'taxRate',
         className:'text-right',
         render:text=>text? `${text}%`: text,
         width:100,
     },{
         title: '本币不含税金额',
-        dataIndex: 'debitAmount',
+        dataIndex: 'amountWithoutTax',
         width:150,
         render:text=>fMoney(text),
         className: "table-money"
     },{
         title: '期间（月份）',
-        dataIndex: 'voucherType',
+        dataIndex: 'month',
         width:100,
     }
 ];
@@ -527,7 +527,7 @@ class UnBilledSalesNotEstate extends Component {
                     visible={voucherVisible}
                     fields={voucherSearchFields}
                     columns={voucherColumns}
-                    url={`/account/income/taxDetail/taxDetailVoucherList?${parseJsonToParams(filters)}`}
+                    url={`/advanceRentPayments/unRealty/list?${parseJsonToParams(filters)}`}
                     scroll={{ x: '1600px',y:'250px' }}
                     toggleModalVoucherVisible={this.toggleModalVoucherVisible}
                 />
