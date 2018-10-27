@@ -35,7 +35,7 @@ const searchFields = getFieldValue => [
     }
   },
   {
-    label: "查询期间",
+    label: "认证所属期",
     fieldName: "authMonth",
     type: "monthPicker",
     span: 8,
@@ -172,7 +172,7 @@ const columns = [
     width: "200px"
   },
   {
-    title: "认证月份",
+    title: "认证所属期",
     dataIndex: "authMonth",
     width: "200px"
   },

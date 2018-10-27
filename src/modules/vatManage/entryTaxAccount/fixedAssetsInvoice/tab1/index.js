@@ -131,7 +131,7 @@ const getColumns = context =>[
             return res
         }
     },{
-        title: '认证日期',
+        title: '认证所属期',
         dataIndex: 'authDate',
         width:'100px',
     }

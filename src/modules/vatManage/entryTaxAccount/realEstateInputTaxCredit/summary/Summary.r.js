@@ -3,7 +3,7 @@
  * @Date: 2018-10-26 15:15:16 
  * @Description: '不动产进项税额抵扣汇总-标签页' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-26 15:32:09
+ * @Last Modified time: 2018-10-26 19:21:51
  */
 
 import React, { Component } from 'react'
@@ -20,11 +20,11 @@ const columns = context =>[{
         width:'200px',
     },{
         title:'不动产编码',
-        dataIndex:'assetName',
+        dataIndex:'assetNo',
         width:'200px',
     },{
         title:'不动产名称',
-        dataIndex:'assetNo',
+        dataIndex:'assetName',
         width:'200px',
     },{
         title: "期初待抵扣进项税额",
@@ -110,7 +110,7 @@ export default class SelfBuiltToSelfUse extends Component{
                         key:tableKey,
                         pageSize:100,
                         columns:columns(this),
-                        url:'/account/income/estate/ownBuildList',
+                        url:'/account/income/estate/collectList',
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>不动产进项税额抵扣汇总</span>,
                         },
@@ -176,7 +176,7 @@ export default class SelfBuiltToSelfUse extends Component{
                             })
                         },
                         scroll:{
-                            x:2700,
+                            x:1250,
                             y:window.screen.availHeight-430,
                         },
                     }}
