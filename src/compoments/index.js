@@ -23,7 +23,7 @@ import {FetchTable,CardSearch} from './fetchTable'
 import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
-
+import WaterMarkComponent from './waterMarkComponent'
 
 /**react懒加载组件*/
 import AsyncComponent from './asyncComponent'
@@ -48,4 +48,5 @@ export {
     LoadingPage,
     TableTotal,
     AsyncComponent,
+    WaterMarkComponent,
 }

@@ -7,8 +7,9 @@ import DataSheet from 'react-datasheet';
 import {Spin, message } from 'antd'
 import {request,fMoney} from 'utils'
 import { NumericInputCell } from 'compoments/EditableCell'
+import { WaterMarkComponent } from 'compoments'
 
-export default class Sheet extends Component{
+class Sheet extends Component{
     static propTypes={
         grid:PropTypes.array,
         url:PropTypes.string,
@@ -195,3 +196,5 @@ export default class Sheet extends Component{
         )
     }
 }
+
+export default WaterMarkComponent(Sheet)

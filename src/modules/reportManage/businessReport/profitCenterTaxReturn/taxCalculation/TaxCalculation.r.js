@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-10 13:43:28
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-27 15:29:57
  *
  */
 import React,{Component} from 'react'
@@ -10,6 +10,7 @@ import {SearchTable} from 'compoments'
 import {request,fMoney,composeBotton} from 'utils'
 import { NumericInputCell } from 'compoments/EditableCell'
 import moment from 'moment';
+import { WaterMarkComponent } from 'compoments'
 const searchFields =(defaultParams={})=>(getFieldValue)=>{
     return [
         {
@@ -285,4 +286,4 @@ class TaxCalculation extends Component{
     }
 }
 
-export default Form.create()(TaxCalculation);
+export default Form.create()(WaterMarkComponent(TaxCalculation, 'ant-table-wrapper'));
