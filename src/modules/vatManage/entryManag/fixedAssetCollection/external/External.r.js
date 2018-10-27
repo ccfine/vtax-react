@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:47:06 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-18 17:14:14
+ * @Last Modified time: 2018-10-27 10:21:02
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
@@ -21,12 +21,12 @@ const columns=[
         width:'150px',
     },
     {
-        title:'固定资产名称',
+        title:'不动产名称',
         dataIndex:'assetName',
         width:'100px',
     },
     {
-        title:'固定资产编号',
+        title:'不动产编号',
         dataIndex:'assetNo',
         width:'100px',
     },
@@ -152,7 +152,7 @@ const columns=[
                     columns:columns,
                     url:'/fixedAssetCard/externalList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">固定资产信息采集 / </label>外部获取固定资产</span>,
+                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>外部获取不动产</span>,
                         extra: (
                             <div>
                                 {

@@ -119,7 +119,7 @@ const searchFields =(key,disabled,declare)=>(getFieldValue)=> {
             result = [
                 ...list(disabled,declare,getFieldValue),
                 {
-                    label: "固定资产名称",
+                    label: "不动产名称",
                     fieldName: "assetName",
                     type: "input",
                     span: 6,
@@ -128,7 +128,7 @@ const searchFields =(key,disabled,declare)=>(getFieldValue)=> {
                     fieldDecoratorOptions: {}
                 },
                 {
-                    label: "固定资产编号",
+                    label: "不动产编号",
                     fieldName: "assetNo",
                     type: "input",
                     span: 6,

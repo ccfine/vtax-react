@@ -117,13 +117,13 @@ class RealEstateInputTaxCredit extends Component{
                 <TabPane tab="不动产进项税额抵扣汇总" key="1">
                     <Summary declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
-                <TabPane tab="外部获取固定资产进项税额抵扣" key="2">
+                <TabPane tab="外部获取不动产进项税额抵扣" key="2">
                     <ExternalAccess declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
-                <TabPane tab="自建转自用自固定资产进项税额抵扣" key="3">
+                <TabPane tab="自建转自用自不动产进项税额抵扣" key="3">
                     <SelfBuiltToSelfUse declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
-                <TabPane tab="单独新建固定资产进项税额抵扣" key="4">
+                <TabPane tab="单独新建不动产进项税额抵扣" key="4">
                     <NewlyBuilt declare={declare} searchFields={searchFields(disabled,declare)} refreshTabs={this.refreshTabs} />
                 </TabPane>
             </Tabs>

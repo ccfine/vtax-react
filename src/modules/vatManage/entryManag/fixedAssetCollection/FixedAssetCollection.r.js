@@ -98,13 +98,13 @@ const searchFields =  (disabled,declare) => (getFieldValue) => {
 
 const tabList = [{
     key: 'tab1',
-    tab: '外部获取固定资产',
+    tab: '外部获取不动产',
 }, {
     key: 'tab2',
-    tab: '自建转自用固定资产',
+    tab: '自建转自用不动产',
 }, {
     key: 'tab3',
-    tab: '单独新建固定资产',
+    tab: '单独新建不动产',
 }];
 
 const getContent = (key,updateKey,disabled,declare,context) => {

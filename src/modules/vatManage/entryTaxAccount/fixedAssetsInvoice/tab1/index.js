@@ -203,7 +203,7 @@ export default class Tab1 extends Component{
                     columns:getColumns(this),
                     url:'/account/income/fixedAssets/incomeSeparateList',
                     cardProps:{
-                        title: <span><label className="tab-breadcrumb">固定资产进项发票台账 / </label>单独新建自持类进项发票</span>,
+                        title: <span><label className="tab-breadcrumb">不动产进项发票台账 / </label>单独新建自持类进项发票</span>,
                     },
                     extra: (
                         <div>

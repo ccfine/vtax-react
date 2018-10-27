@@ -155,7 +155,7 @@ export default class NewlyBuilt extends Component{
                     columns:columns(this),
                     url:'/account/income/estate/aloneBuildList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建固定资产进项税额抵扣</span>,
+                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建不动产进项税额抵扣</span>,
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)

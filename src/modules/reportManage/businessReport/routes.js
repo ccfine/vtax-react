@@ -14,7 +14,7 @@ const ProfitCenterTaxReturn = AsyncComponent(() => import('./profitCenterTaxRetu
 const PartnersTaxReturn = AsyncComponent(() => import('./partnersTaxReturn'), '合作方纳税申报表')
 const PartnersTaxReturnForm = AsyncComponent(() => import('./partnersTaxReturn/taxReturnForm'), '合作方的纳税申报-纳税申报表')
 const TaxReturnMergeCalculation = AsyncComponent(() => import('./taxReturnMergeCalculation'), '纳税申报合并计算表')
-const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '固定资产卡片')
+const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '不动产卡片')
 const FinancialDocuments = AsyncComponent(() => import('./financialDocuments'), '财务凭证')
 const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoiceCollection'), '进项发票采集')
 const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollection'), '销项发票采集')
@@ -111,7 +111,7 @@ const BusinessReport_Routes = [
     },{
         path:`${PATH}/fixedAssetCard`,
         component:FixedAssetCard,
-        name:'固定资产卡片',
+        name:'不动产卡片',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCard.svg`,
             backgroundColor:'#2E8A57'
