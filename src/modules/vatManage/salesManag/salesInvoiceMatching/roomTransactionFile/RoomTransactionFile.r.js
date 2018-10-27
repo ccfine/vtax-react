@@ -41,6 +41,9 @@ const importFeilds = (filters,disabled,declare)=>[
                 span:14
             }
         },
+        componentProps:{
+            disabled: (filters && filters["mainId"]) ? true : false,
+        },
         fieldDecoratorOptions:{
             initialValue: (filters && filters["mainId"]) || undefined,
             rules:[

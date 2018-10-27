@@ -23,6 +23,9 @@ const SubmitOrRecall = props => {
                     span:16
                 }
             },
+            componentProps:{
+                disabled: initialValue['mainId'] ? true : false,
+            },
             fieldDecoratorOptions:{
                 initialValue: initialValue['mainId'] || undefined,
                 rules:[
@@ -39,6 +42,7 @@ const SubmitOrRecall = props => {
             type:'monthPicker',
             componentProps:{
                 format:'YYYY-MM',
+                disabled: initialValue[monthFieldName] && moment(initialValue[monthFieldName]) ? true : false,
             },
             span:20,
             formItemStyle:{

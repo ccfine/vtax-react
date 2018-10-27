@@ -335,22 +335,19 @@ class PartnersTaxReturn extends Component{
                                         icon:'plus',
                                         userPermissions:['2151003'],
                                         onClick:()=>this.showModal('add',{})
+                                    },{
+                                        type:'submit',
+                                        url:'/taxDeclarationReport/partner/submit',
+                                        params:filters,
+                                        userPermissions:['2131010'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'revoke',
+                                        url:'/taxDeclarationReport/partner/revoke',
+                                        params:filters,
+                                        userPermissions:['2131011'],
+                                        onSuccess:this.refreshTable,
                                     }],statusParam)
-                                }
-                                {
-                                    (disabled && declare.decAction==='edit') && composeBotton([{
-                                            type:'submit',
-                                            url:'/taxDeclarationReport/partner/submit',
-                                            params:filters,
-                                            userPermissions:['2131010'],
-                                            onSuccess:this.refreshTable
-                                        },{
-                                            type:'revoke',
-                                            url:'/taxDeclarationReport/partner/revoke',
-                                            params:filters,
-                                            userPermissions:['2131011'],
-                                            onSuccess:this.refreshTable,
-                                        }],statusParam)
                                 }
                             </div>,
                         },
