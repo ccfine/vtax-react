@@ -11,7 +11,7 @@ import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ButtonConsistent from 'compoments/buttonConsistent'
-import {FileExport,FileImportModal,AutoFileUpload,FileUndoImportModal} from 'compoments';
+import {FileExport,FileImportModal,AutoFileUpload,FileUndoImportModal,FileDownload} from 'compoments';
 import ButtonTableAction from 'compoments/buttonTableAction'
 import ButtonSwitch from 'compoments/buttonSwitch'
 import {ButtonModalWithForm} from 'compoments'
@@ -127,6 +127,15 @@ const getFileExportOptions = (item)=>{
     };
 };
 
+//下载导入模板
+const getFileDownloadOptions = (item, statusParam) => {
+    return {
+        title: "下载导入模板",
+        ...item,
+        setButtonStyle: item.style || item.setButtonStyle || { marginRight: 5 },
+        disabled: isDisabled(statusParam)
+    }
+}
 
 //标记
 const getMarkOptions = (item,statusParam) =>{
@@ -259,6 +268,11 @@ const composeBotton = (buttons = [], params) => {
                     <FileExport {...getFileExportOptions(item)} />
                 );
                 break;
+            case "fileDownload":
+                component = (
+                    <FileDownload { ...getFileDownloadOptions(item) } />
+                )
+                break
             case 'revokeImport':
                 component = (
                     <FileUndoImportModal {...getRevokeImportOptions(item,params)} />

@@ -43,7 +43,7 @@ class FileUndoImportModal extends Component{
                     }
                 },
                 {
-                    label:'查询期间',
+                    label:'认证月份',
                     fieldName:monthFieldName,
                     type:'monthPicker',
                     componentProps:{
@@ -63,10 +63,42 @@ class FileUndoImportModal extends Component{
                         rules:[
                             {
                                 required:true,
-                                message:'请选查询期间'
+                                message:'请选择认证月份'
                             }
                         ]
                     }
+                },
+                {
+                    label: "撤销导入内容",
+                    fieldName: "type",
+                    type: "select",
+                    span: 20,
+                    formItemStyle:{
+                        labelCol:{
+                            span:8
+                        },
+                        wrapperCol:{
+                            span:16
+                        }
+                    },
+                    options: [
+                        {
+                            text: "进项发票",
+                            value: "1"
+                        },
+                        {
+                            text: "进项发票的利润中心",
+                            value:  "2"
+                        }
+                    ],
+                    fieldDecoratorOptions:{
+                        rules:[
+                            {
+                                required:true,
+                                message:'请选择撤销导入内容'
+                            }
+                        ]
+                    },
                 }
             ]
         }

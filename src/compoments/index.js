@@ -23,6 +23,7 @@ import {FetchTable,CardSearch} from './fetchTable'
 import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
+import FileDownload from "./fileDownload"
 
 
 /**react懒加载组件*/
@@ -48,4 +49,5 @@ export {
     LoadingPage,
     TableTotal,
     AsyncComponent,
+    FileDownload
 }
