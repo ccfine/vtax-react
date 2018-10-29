@@ -490,14 +490,6 @@ class InvoiceCollection extends Component {
                                     }])
                                 }
                                 {
-                                    composeBotton([{
-                                        type:'fileExport',
-                                        url:'income/invoice/collection/download',
-                                        onSuccess:this.refreshTable
-                                    }])
-                                }
-
-                                {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([             
                                     {
                                         type: "match",
@@ -506,6 +498,21 @@ class InvoiceCollection extends Component {
                                         btnType: "default",
                                         userPermissions: ["1495002"],
                                         onClick: this.matchData
+                                    },
+                                    {
+                                        type: "fileDownload",
+                                        menu: [
+                                            {
+                                                url: "income/invoice/collection/download",
+                                                title: "进项发票模板"
+                                            },
+                                            {
+                                                url: "income/invoice/collection/downloadProfitCenter",
+                                                title: "进项发票的利润中心模板",
+                                            }
+                                        ],
+                                        userPermissions: ["1491005"],    
+                                        onSuccess: this.refreshTable
                                     },
                                     {
                                         type:'fileImport',
