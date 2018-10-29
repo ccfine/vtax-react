@@ -146,7 +146,7 @@ const getColumns = context => {
                         record.invoiceType
                             ?
                             <span title="查看发票信息详情" onClick={() => {
-                                context.toggleModalVisible(true);
+                                context.toggleModalVisible(true, record);
                             }} style={pointerStyle}>
                                 {text}
                             </span>
@@ -230,7 +230,8 @@ class InputTaxDetails extends Component {
         voucherVisible: false,
         addVisible: false,
         params: {},
-        saveLoading: false
+        saveLoading: false,
+        currentProfitId: ''
     };
     toggoleSaveLoading = (saveLoading) => {
         this.setState({saveLoading});
@@ -245,9 +246,10 @@ class InputTaxDetails extends Component {
             addVisible
         });
     };
-    toggleModalVisible = visible => {
+    toggleModalVisible = (visible, record={}) => {
         this.setState({
-            visible
+            visible,
+            currentProfitId: record.profitCenterId
         });
     };
     toggleModalVoucherVisible = voucherVisible => {
@@ -462,7 +464,7 @@ class InputTaxDetails extends Component {
                 <PopInvoiceInformationModal
                     title="发票信息"
                     visible={visible}
-                    filters={{mainId: filters.mainId, authMonth: filters.authMonth}}
+                    filters={{mainId: filters.mainId, profitCenterId: this.state.currentProfitId, authMonth: filters.authMonth}}
                     toggleModalVisible={this.toggleModalVisible}
                 />
                 <VoucherPopModal
