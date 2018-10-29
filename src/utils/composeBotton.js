@@ -270,7 +270,7 @@ const composeBotton = (buttons = [], params) => {
                 break;
             case "fileDownload":
                 component = (
-                    <FileDownload { ...getFileDownloadOptions(item) } />
+                    <FileDownload { ...getFileDownloadOptions(item, params) } />
                 )
                 break
             case 'revokeImport':
