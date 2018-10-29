@@ -24,6 +24,7 @@ import TreeTable from './treeTable'
 import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
 import WaterMarkComponent from './waterMarkComponent'
+import FileDownload from "./fileDownload"
 
 /**react懒加载组件*/
 import AsyncComponent from './asyncComponent'
@@ -49,4 +50,5 @@ export {
     TableTotal,
     AsyncComponent,
     WaterMarkComponent,
+    FileDownload
 }
