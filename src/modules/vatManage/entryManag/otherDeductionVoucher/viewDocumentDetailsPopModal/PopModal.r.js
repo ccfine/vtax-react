@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 import {Modal, Spin} from 'antd';
 import {SearchTable} from 'compoments';
 import {fMoney, parseJsonToParams} from 'utils';
+import moment from 'moment';
 
 
 const searchFields = [
@@ -28,7 +29,10 @@ const columns = [{
 }, {
     title: '凭证日期',
     dataIndex: 'voucherDate',
-    width: 200
+    width: 200,
+    render(text){
+        return moment(text).format('YYYY-MM-DD');
+    }
 }, {
     title: 'SAP凭证号',
     dataIndex: 'voucherNumSap',
@@ -41,11 +45,6 @@ const columns = [{
     title: '借方科目名称',
     dataIndex: 'debitSubjectName',
     width: 200
-}, {
-    title: '科目名称',
-    dataIndex: 'debitSubjectName',
-    render: (text, record) => (text.trim() !== '0' && text.trim()) || record.creditSubjectName,
-    width: 150
 }, {
     title: '借方科目代码',
     dataIndex: 'debitSubjectCode',

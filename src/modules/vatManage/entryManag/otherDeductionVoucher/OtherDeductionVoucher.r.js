@@ -85,7 +85,7 @@ const columns = context => {
         {
             title: '利润中心',
             dataIndex: 'profitCenterName',
-            width: '200px',
+            width: '300px',
             render: (text, row, index) => {
                 let rowSpan = 0;
                 if (lastStegesId !== row.profitCenterId) {
@@ -111,7 +111,7 @@ const columns = context => {
             title: '凭据数量',
             className: 'text-center',
             dataIndex: 'voucherCount',
-            width: '150px',
+            width: '200px',
             render: (text, record) => {
                 if (record.voucherType === '代扣代缴税收缴款凭证') {
                     //凭证
@@ -141,13 +141,13 @@ const columns = context => {
             title: '金额',
             dataIndex: 'amount',
             className: 'table-money',
-            width: '150px',
+            width: '200px',
             render: text => fMoney(text)
         },
         {
             title: '税额',
             dataIndex: 'taxAmount',
-            width: '150px',
+            width: '200px',
             className: 'table-money',
             render: text => fMoney(text)
         }
