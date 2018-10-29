@@ -84,6 +84,9 @@ class NewBuildCollection extends Component{
         return(
             <div className='oneLine'>
             <SearchTable
+                style={{
+                    marginTop:-16
+                }}
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields,
