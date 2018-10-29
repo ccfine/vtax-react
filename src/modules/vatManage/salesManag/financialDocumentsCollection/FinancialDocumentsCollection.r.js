@@ -239,7 +239,7 @@ const columns=[
             },
             {
                 title:'代扣代缴类型',
-                dataIndex:'paymentItem',
+                dataIndex:'withholdingType',
                 width:'150px',
             }
         ]
