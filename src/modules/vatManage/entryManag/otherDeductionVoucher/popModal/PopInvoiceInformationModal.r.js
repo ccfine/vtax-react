@@ -10,6 +10,7 @@ import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
 import {fMoney,parseJsonToParams} from 'utils'
+import moment from 'moment'
 
 const searchFields = [
     {
@@ -20,21 +21,6 @@ const searchFields = [
         componentProps:{ }
     }
 ]
-
-/*
-
-invoiceCode: "12334"
-invoiceNum: "12334"
-zebhsje: ""
-zefplx: "专票"
-zegmfnsrsbh: ""
-zehsje: ""
-zekprq: "2018-10-10 12:04:38.0"
-zerzshq: ""
-zese: ""
-
-
- */
 
 const columns = [
     {
@@ -61,7 +47,10 @@ const columns = [
     }, {
         title: '开票日期',
         dataIndex: 'zekprq',
-        width: '200px'
+        width: '200px',
+        render(text){
+            return moment(text).format('YYYY-MM-DD');
+        }
     }, {
         title: '认证所属期',
         dataIndex: 'zerzshq',
@@ -69,7 +58,10 @@ const columns = [
     }, {
         title: '认证时间',
         dataIndex: 'zerzsj',
-        width: '200px'
+        width: '200px',
+        render(text){
+            return moment(text).format('YYYY-MM-DD');
+        }
     }, {
         title: '购买方纳税人识别号',
         dataIndex: 'zegmfnsrsbh',
