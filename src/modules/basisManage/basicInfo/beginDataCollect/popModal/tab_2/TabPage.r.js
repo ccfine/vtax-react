@@ -63,7 +63,7 @@ class TabPage extends Component{
                 }
                 request.post('/tax/credit/items/collection/save',{
                    ...values,
-                    mainId:this.props.filters.mainId,
+                    ...this.props.filters,
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -149,8 +149,8 @@ class TabPage extends Component{
                 searchOption={null}
                 tableOption={{
                     pagination:false,
-                    columns:getColumns(this,getFieldDecorator,this.props.disabled),
-                    url:`/tax/credit/items/collection/list?${parseJsonToParams(this.props.filters)}`,
+                    columns:getColumns(this,getFieldDecorator,props.disabled),
+                    url:`/tax/credit/items/collection/list?${parseJsonToParams(props.filters)}`,
                     key:updateKey,
                     cardProps:{
                         bordered:false,
