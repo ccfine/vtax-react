@@ -75,11 +75,29 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
 ]);
 
 const getColumns = (context, getFieldDecorator, disabled) => {
+    const {dataSource} = context.state;
+    let profitCenterId = '';
     return [
         ...(context.state.showProfitCenter ? [{
             title: '利润中心',
             dataIndex: 'profitCenterName',
-            width: '150px'
+            width: '150px',
+            render: (text, row, index) => {
+                let rowSpan = 0;
+                if(profitCenterId !== row.profitCenterId){
+                    profitCenterId = row.profitCenterId;
+                    rowSpan = dataSource.filter(ele=>ele.profitCenterId === profitCenterId).length;
+                }
+                if(index + 1 === dataSource.length){
+                    profitCenterId = '';
+                }
+                return {
+                    children: text,
+                    props: {
+                        rowSpan: rowSpan,
+                    },
+                };
+            }
         }] : []),
         {
         title: '减税性质代码',
@@ -227,7 +245,8 @@ class TaxExemptionDetails extends Component {
         statusParam: {},
         searchTableLoading: false,
         totalSource: undefined,
-        showProfitCenter: true
+        showProfitCenter: true,
+        dataSource: []
     };
     componentDidMount(){
         const {declare={}} = this.props;
@@ -458,6 +477,11 @@ class TaxExemptionDetails extends Component {
                         }
                         <TableTotal totalSource={totalSource} data={totalData} type={3}/>
                     </div>,
+                    onDataChange: (dataSource) => {
+                        this.setState({
+                            dataSource
+                        })
+                    },
                     onTotalSource: (totalSource) => {
                         this.setState({
                             totalSource
