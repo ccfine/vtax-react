@@ -52,7 +52,6 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
             ]
         }
     },
-
     ...(context.state.showProfitCenter ? [{
         label: '利润中心',
         fieldName: 'profitCenterId',
@@ -67,7 +66,6 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
         componentProps: {
             fieldTextName: 'profitName',
             fieldValueName: 'id',
-            doNotFetchDidMount: true,
             fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
             url: `/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`
         }
@@ -245,7 +243,7 @@ class TaxExemptionDetails extends Component {
         statusParam: {},
         searchTableLoading: false,
         totalSource: undefined,
-        showProfitCenter: true,
+        showProfitCenter: false,
         dataSource: []
     };
     componentDidMount(){
@@ -254,7 +252,7 @@ class TaxExemptionDetails extends Component {
     }
     requestLoadType = (mainId) => {
         request.get('/dataCollection/loadType/' + mainId).then(({data})=>{
-            this.setState({showProfitCenter: data.data === '2'})
+            this.setState({showProfitCenter: data.data === '2'});
         });
     };
     refreshTable = () => {
@@ -411,8 +409,8 @@ class TaxExemptionDetails extends Component {
                             borderTop: 0
                         }
                     },
-                    onFieldsChange({mainId}){
-                        mainId && self.requestLoadType(mainId);
+                    onFieldsChange({main={}}){
+                        main.key && self.requestLoadType(main.key);
                     }
                 }}
                 backCondition={(filters) => {
