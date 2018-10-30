@@ -52,7 +52,7 @@ const searchFields =(context,disabled,declare) => getFieldValue => [
         componentProps:{
             fieldTextName:'profitName',
             fieldValueName:'id',
-            doNotFetchDidMount:true,
+            // doNotFetchDidMount:true,
             fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
             url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
         },
