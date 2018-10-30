@@ -32,7 +32,7 @@ const columns = context =>[{
         width:'200px',
     },{
         title:'认证所属期',
-        dataIndex:'authDate',
+        dataIndex:'authMonth',
         width:'200px',
     }, {
         title: "不含税金额",
