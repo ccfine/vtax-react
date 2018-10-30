@@ -212,6 +212,9 @@ class OtherTaxableItemsDeduct extends Component{
                             style:{
                                 borderTop:0,
                             }
+                        },
+                        onFieldsChange: ({main}) => {
+                            main && this.fetchLoadType(main.key);
                         }
                     }}
                     backCondition={(filters) => {
