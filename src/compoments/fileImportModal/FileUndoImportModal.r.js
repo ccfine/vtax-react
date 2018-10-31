@@ -71,38 +71,6 @@ class FileUndoImportModal extends Component{
                             }
                         ]
                     }
-                },
-                {
-                    label: "撤销导入内容",
-                    fieldName: "type",
-                    type: "select",
-                    span: 20,
-                    formItemStyle:{
-                        labelCol:{
-                            span:8
-                        },
-                        wrapperCol:{
-                            span:16
-                        }
-                    },
-                    options: [
-                        {
-                            text: "进项发票",
-                            value: "1"
-                        },
-                        {
-                            text: "进项发票的利润中心",
-                            value:  "2"
-                        }
-                    ],
-                    fieldDecoratorOptions:{
-                        rules:[
-                            {
-                                required:true,
-                                message:'请选择撤销导入内容'
-                            }
-                        ]
-                    },
                 }
             ]
         }
@@ -174,6 +142,7 @@ class FileUndoImportModal extends Component{
     render(){
         const props = this.props;
         const {visible,loading} = this.state;
+        const { fields } = this.props
         return(
             <span style={props.style}>
                 <Button size='small' disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
@@ -184,7 +153,7 @@ class FileUndoImportModal extends Component{
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {
-                                getFields(this.props.form,props.searchFields(props))
+                                fields? getFields(this.props.form,props.searchFields(props).concat(fields)): getFields(this.props.form,props.searchFields(props))
                             }
                         </Row>
                     </Form>

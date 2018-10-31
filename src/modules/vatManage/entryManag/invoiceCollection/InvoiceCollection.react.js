@@ -100,6 +100,41 @@ const getFields = (filters)=>[
     }
 ]
 
+const getImportContent = () => [
+    {
+        label: "撤销导入内容",
+        fieldName: "type",
+        type: "select",
+        span: 20,
+        formItemStyle:{
+            labelCol:{
+                span:8
+            },
+            wrapperCol:{
+                span:16
+            }
+        },
+        options: [
+            {
+                text: "进项发票",
+                value: "1"
+            },
+            {
+                text: "进项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择撤销导入内容'
+                }
+            ]
+        },
+    }
+]
+
 const getSearchFields = (disabled,declare) => (getFieldValue) => [
         {
             label: "纳税主体",
@@ -529,6 +564,7 @@ class InvoiceCollection extends Component {
                                         url:'/income/invoice/collection/revocation',
                                         params:filters,
                                         monthFieldName:"authMonth",
+                                        fields: getImportContent(),
                                         onSuccess:this.refreshTable,
                                         userPermissions:['1495000'],
                                     },{
