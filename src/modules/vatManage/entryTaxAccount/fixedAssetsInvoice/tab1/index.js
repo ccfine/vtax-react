@@ -132,7 +132,7 @@ const getColumns = context =>[
         }
     },{
         title: '认证所属期',
-        dataIndex: 'authDate',
+        dataIndex: 'authMonth',
         width:'100px',
     }
 ];
