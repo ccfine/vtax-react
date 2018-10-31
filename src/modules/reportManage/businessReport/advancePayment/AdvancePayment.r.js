@@ -130,7 +130,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
         },
         {
             label: 'SAP凭证号',
-            fieldName: 'voucherNumSap',
+            fieldName: 'voucherNo',
             formItemStyle,
             span: 6,
             type: 'input',
@@ -176,7 +176,7 @@ const getColumns = context =>[
     },
     {
         title: 'SAP凭证号',
-        dataIndex: 'voucherNumSap',
+        dataIndex: 'voucherNo',
         width:'200px',
     },
     {
@@ -189,7 +189,7 @@ const getColumns = context =>[
         dataIndex: 'taxRate',
         width:'100px',
         className:'text-right',
-        render:text=>text? `${text}%`: text,
+        render:text=>text ? `${text}%`: text,
     },
     {
         title: '本币不含税金额',
