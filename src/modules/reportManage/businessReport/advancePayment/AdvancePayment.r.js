@@ -156,7 +156,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
 const getColumns = context =>[
     {
         title: '利润中心',
-        dataIndex: 'profitCenterNum',
+        dataIndex: 'profitCenterName',
         width:'200px',
     },
     {
