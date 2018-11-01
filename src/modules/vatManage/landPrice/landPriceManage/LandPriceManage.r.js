@@ -355,7 +355,7 @@ class LandPriceManage extends Component{
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1541007'],
-                                }],statusParam)
+                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{

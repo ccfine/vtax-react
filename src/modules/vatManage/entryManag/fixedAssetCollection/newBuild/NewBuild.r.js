@@ -122,7 +122,7 @@ class NewBuildCollection extends Component{
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
-                                    }], statusParam)
+                                    }])
                                 }
                             </div>
                         )

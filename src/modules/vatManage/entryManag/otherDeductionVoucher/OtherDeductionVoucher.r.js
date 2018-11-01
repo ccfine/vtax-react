@@ -252,7 +252,7 @@ export default class OtherDeductionVoucher extends Component {
                                         params: filters,
                                         title: '导出',
                                         userPermissions: ['1521007']
-                                    }], statusParam)
+                                    }])
                                 }
                                 {
                                     (disabled && declare.decAction === 'edit') && composeBotton([{
