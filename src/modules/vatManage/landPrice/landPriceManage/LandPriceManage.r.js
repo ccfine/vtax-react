@@ -414,7 +414,7 @@ class LandPriceManage extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visible}
-                    {...voucherInfo}
+                    id={voucherInfo.voucherId}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
             </div>

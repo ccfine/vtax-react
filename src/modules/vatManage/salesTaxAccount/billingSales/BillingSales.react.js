@@ -369,7 +369,7 @@ class BillingSales extends Component {
                                   params:filters,
                                   title:'导出',
                                   userPermissions:['1221007'],
-                              }],statusParam)
+                              }])
                           }
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
