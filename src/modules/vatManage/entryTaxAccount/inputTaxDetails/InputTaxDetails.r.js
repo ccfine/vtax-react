@@ -96,7 +96,7 @@ const searchFields = (disabled, declare) => getFieldValue => {
         }
     ];
 };
-const getColumns = context => {
+const getColumns = (context, isEdit) => {
     let lastStegesId = '';
     const {dataSource} = context.state;
     return [
@@ -130,7 +130,7 @@ const getColumns = context => {
             dataIndex: 'num',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                if (context.state.statusParam.status === 1 && record.editable) {
+                if ( isEdit && record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].num`}
                         initialValue={text === '0' ? '0' : text}
@@ -177,7 +177,7 @@ const getColumns = context => {
             dataIndex: 'amount',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                if (context.state.statusParam.status === 1 && record.editable) {
+                if (isEdit && record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].amount`}
                         initialValue={text === '0' ? '0.00' : fMoney(text)}
@@ -197,7 +197,7 @@ const getColumns = context => {
             dataIndex: 'taxAmount',
             render: (text, record) => {
                 const {getFieldDecorator} = context.props.form;
-                if (context.state.statusParam.status === 1 && record.editable) {
+                if (isEdit && record.editable) {
                     return <NumericInputCell
                         fieldName={`list[${record.id}].taxAmount`}
                         initialValue={text === '0' ? '0.00' : fMoney(text)}
@@ -348,6 +348,7 @@ class InputTaxDetails extends Component {
         const {declare} = this.props;
         let disabled = !!declare;
 
+        const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (
             <SearchTable
                 searchOption={{
@@ -384,7 +385,7 @@ class InputTaxDetails extends Component {
                         title: "进项税额明细台账"
                     },
                     pagination: false,
-                    columns: getColumns(this),
+                    columns: getColumns(this, noSubmit && disabled && declare.decAction==='edit'),
                     url: '/account/income/taxDetail/taxDetailList',
                     extra: <div>
                         {
@@ -397,7 +398,7 @@ class InputTaxDetails extends Component {
                                 params: filters,
                                 title: '导出',
                                 userPermissions: ['1381007']
-                            }], statusParam)
+                            }])
                         }
                         {
                             (disabled && declare.decAction === 'edit') && composeBotton([{
@@ -412,12 +413,6 @@ class InputTaxDetails extends Component {
                             //         });
                             //     }
                             // }, {
-                                type: 'submit',
-                                url: '/account/income/taxDetail/submit',
-                                params: filters,
-                                userPermissions: ['1381010'],
-                                onSuccess: this.refreshTable
-                            }, {
                                 type: 'save',
                                 text: '保存',
                                 icon: 'save',
@@ -429,6 +424,12 @@ class InputTaxDetails extends Component {
                                 url: '/account/income/taxDetail/reset',
                                 params: filters,
                                 userPermissions: ['1381014'],
+                                onSuccess: this.refreshTable
+                            }, {
+                                type: 'submit',
+                                url: '/account/income/taxDetail/submit',
+                                params: filters,
+                                userPermissions: ['1381010'],
                                 onSuccess: this.refreshTable
                             }, {
                                 type: 'revoke',
