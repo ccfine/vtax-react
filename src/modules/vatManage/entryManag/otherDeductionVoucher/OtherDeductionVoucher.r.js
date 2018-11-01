@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {requestResultStatus, fMoney, requestDict, listMainResultStatus, composeBotton, setFormat} from 'utils';
 import {SearchTable, TableTotal} from 'compoments';
 import PopInvoiceInformationModal from './popModal';
-import ViewDocumentDetails from './viewDocumentDetailsPopModal';
+import ViewDocumentDetails from './documentDetailsPopModal';
 
 import moment from 'moment';
 
