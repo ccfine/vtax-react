@@ -4,7 +4,7 @@
 import React, {Component} from 'react';
 import {requestResultStatus, fMoney, requestDict, listMainResultStatus, composeBotton, setFormat} from 'utils';
 import {SearchTable, TableTotal} from 'compoments';
-import PopInvoiceInformationModal from 'modules/vatManage/entryTaxAccount/inputTaxDetails/popModal';
+import PopInvoiceInformationModal from './popModal';
 import ViewDocumentDetails from './documentDetailsPopModal';
 
 import moment from 'moment';
