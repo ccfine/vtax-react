@@ -444,7 +444,7 @@ class TaxExemptionDetails extends Component {
                                 params: filters,
                                 title: '导出',
                                 userPermissions: ['1301007']
-                            }], statusParam)
+                            }])
                         }
                         {
                             (disabled && declare.decAction === 'edit') && composeBotton([{

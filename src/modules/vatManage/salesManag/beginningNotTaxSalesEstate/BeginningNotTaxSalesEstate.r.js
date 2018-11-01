@@ -367,6 +367,17 @@ class unBilledSalesEstate extends Component{
                         {
                             JSON.stringify(filters)!=='{}' &&composeBotton([
                                 {
+                                    type:'fileExport',
+                                    url:'accountInitialUntaxedSales/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1951007'],
+                                }
+                            ])
+                        }
+                        {
+                            (disabled && declare.decAction==='edit') && composeBotton([
+                                {
                                     type:'mark',
                                     buttonOptions:{
                                         text:'本期缴税房间',
@@ -381,17 +392,6 @@ class unBilledSalesEstate extends Component{
                                         userPermissions: ['1955000'],
                                     }
                                 },
-                                {
-                                    type:'fileExport',
-                                    url:'accountInitialUntaxedSales/export',
-                                    params:filters,
-                                    title:'导出',
-                                    userPermissions:['1951007'],
-                                }
-                            ],statusParam)
-                        }
-                        {
-                            (disabled && declare.decAction==='edit') && composeBotton([
                                 {
                                     type:'reset',
                                     url:'/accountInitialUntaxedSales/reset',

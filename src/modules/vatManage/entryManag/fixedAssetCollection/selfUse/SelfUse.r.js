@@ -168,7 +168,7 @@ const columns=[
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
-                                    }], statusParam)
+                                    }])
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={
                                     [
