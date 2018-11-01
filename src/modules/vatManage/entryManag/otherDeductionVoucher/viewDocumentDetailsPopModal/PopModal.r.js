@@ -2,9 +2,9 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, {Component} from 'react';
-import {Modal, Spin, Row,Col,Spin,Card,message} from 'antd';
-import {SearchTable, SynchronizeTable} from 'compoments';
-import {fMoney, parseJsonToParams, request} from 'utils';
+import {Modal, Spin, Row,Col,Card,message} from 'antd';
+import {SynchronizeTable} from 'compoments';
+import {fMoney, request} from 'utils';
 import moment from 'moment';
 
 
