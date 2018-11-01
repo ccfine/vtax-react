@@ -168,7 +168,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         this.setState({saveLoding:false})
                         if(data.code===200){
                             message.success('保存成功!');
-                            this.props.form.resetFields(this.state.dataSource.map((ele,index)=>`outTaxAmount[${index}]`))
+                            this.props.form.resetFields()
                             this.refreshTable()
                         }else{
                             message.error(`保存失败:${data.msg}`)
