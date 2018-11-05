@@ -269,7 +269,7 @@ class AdvancePayment extends Component{
                             });
                         },
                         cardProps: {
-                            title: '预缴账款-租金表',
+                            title: '预收账款-租金表',
                             extra: (
                                 <div>
                                     {/*{

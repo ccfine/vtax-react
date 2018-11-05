@@ -4,14 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react'
-import {NavRouter} from '../../../compoments'
-import routes from '../../systemManage/systemMaintain/routes'
+import {NavRouter} from 'compoments'
+import routes from './routes'
 
-class SystemMaintain extends Component {
+export default class SystemMaintain extends Component {
     render() {
         return (
             <NavRouter data={routes} />
         )
     }
 }
-export default SystemMaintain

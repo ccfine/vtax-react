@@ -526,10 +526,12 @@ class UnBilledSalesNotEstate extends Component {
                     title="凭证信息"
                     visible={voucherVisible}
                     fields={voucherSearchFields}
-                    columns={voucherColumns}
-                    url={`/advanceRentPayments/unRealty/list?${parseJsonToParams(filters)}`}
-                    scroll={{ x: '1600px',y:'250px' }}
                     toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                    tableOption={{
+                        columns:voucherColumns,
+                        url:`/advanceRentPayments/unRealty/list?${parseJsonToParams(filters)}`,
+                        scroll:{ x: '1600px',y:'250px' },
+                    }}
                 />
             </Layout>
         )

@@ -11,6 +11,7 @@ import SystemMonitor from './systemMonitor'*/
 import Organization_Routes from './organization/routes'
 import UserPermissions_Routes from './userPermissions/routes'
 import SystemMaintain_Routes from './systemMaintain/routes'
+import InterfaceLog_Routes from './interfaceLog/routes'
 //import InterfaceManage_Routes from './interfaceManage/routes'
 /*import ProcessManage_Routes from './processManage/routes'
 import SystemMonitor_Routes from './systemMonitor/routes'*/
@@ -18,7 +19,7 @@ import SystemMonitor_Routes from './systemMonitor/routes'*/
 const Organization = AsyncComponent(() => import('./organization'), '组织架构')
 const UserPermissions = AsyncComponent(() => import('./userPermissions'), '用户权限')
 const SystemMaintain = AsyncComponent(() => import('./systemMaintain'), '系统维护')
-const QueryLog = AsyncComponent(() => import("./queryLog"), "查询日志")
+const InterfaceLog = AsyncComponent(() => import('./interfaceLog'), '接口日志')
 const ImportData = AsyncComponent(() => import('./importData'), '导入')
 
 const PATH = `/web/systemManage`;
@@ -63,10 +64,11 @@ let SystemManage_Routes = [
          authorityInfo:systemManage['systemMonitor'].options,*/
     },
     {
-      path: `${PATH}/queryLog`,
-      component: QueryLog,
-      name: "查询日志",
-      exact: true
+        path:`${PATH}/interfaceLog`,
+        component:InterfaceLog,
+        name:'接口日志',
+        exact:true,
+        children:InterfaceLog_Routes,
     },
     {
         path:`${PATH}/importData`,
