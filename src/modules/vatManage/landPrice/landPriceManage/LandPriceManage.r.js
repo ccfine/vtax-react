@@ -161,7 +161,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
-                        mainId:record.voucherId,
+                        mainId:record.mainId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -415,7 +415,7 @@ class LandPriceManage extends Component{
                     <ViewDocumentDetails
                         title="查看凭证详情"
                         visible={visible}
-                        {...voucherInfo}
+                        filters={voucherInfo}
                         toggleViewModalVisible={this.toggleViewModalVisible} />
                 </SearchTable>
             </div>

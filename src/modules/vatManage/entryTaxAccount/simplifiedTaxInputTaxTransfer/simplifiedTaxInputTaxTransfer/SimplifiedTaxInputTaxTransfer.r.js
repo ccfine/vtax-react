@@ -43,6 +43,7 @@ const columns = context =>[
                 context.mounted && context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
+                        mainId:record.mainId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -186,7 +187,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visibleView}
-                    {...voucherInfo}
+                    filters={voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
             </div>

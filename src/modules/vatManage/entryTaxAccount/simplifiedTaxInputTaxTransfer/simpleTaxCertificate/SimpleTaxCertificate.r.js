@@ -44,6 +44,7 @@ const columns = context =>[
                 context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
+                        mainId:record.mainId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -163,7 +164,7 @@ class SimpleTaxCertificate extends Component{
                 <ViewDocumentDetails
                     title="查看凭证详情"
                     visible={visibleView}
-                    {...voucherInfo}
+                    filters={voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
             </div>
