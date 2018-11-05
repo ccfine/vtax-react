@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 import { NumericInputCell } from 'compoments/EditableCell'
 
 import moment from 'moment';
@@ -161,6 +161,7 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
                 context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
+                        mainId:record.voucherId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
