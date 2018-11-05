@@ -437,8 +437,15 @@ const strategies = {
                 options: [
                     "2181002",'2185001'
                 ]
+            },
+            //未开票销售补开发票报表  导出-'1911007'
+            invoiceSupplement:{
+                options:[
+                    '1911007',
+                ],
             }
         },
+
     },
 }
 

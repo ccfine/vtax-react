@@ -27,6 +27,8 @@ const SelfContainedProductList = AsyncComponent(() => import("./selfContainedPro
 const RealEstateTax = AsyncComponent(() => import("./realEstateTax"), "不动产进项税额抵扣表")
 const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "预收账款-租金表")
 
+const InvoiceSupplement = AsyncComponent(() => import('./invoiceSupplement'), '未开票销售补开发票报表')
+
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
 const businessReport = strategies['reportManage']['businessReport'];
@@ -234,6 +236,17 @@ const BusinessReport_Routes = [
         },
         authorityInfo: businessReport["advancePayment"].options,
         exact: true
+    },
+    {
+        path:`${PATH}/invoiceSupplement`,
+        component:InvoiceSupplement,
+        name:'未开票销售补开发票报表',
+        icon: {
+            url: `${ICON_URL_PATH}advancePayment.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["invoiceSupplement"].options,
+        exact:true,
     },
     {
         path:`${PATH}`,
