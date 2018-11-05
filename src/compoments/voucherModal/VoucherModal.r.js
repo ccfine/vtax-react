@@ -25,7 +25,7 @@ export default class VoucherModal extends Component{
     }
     render(){
         const {searchTableLoading,tableKey} = this.state;
-        const { title,visible,fields,columns,toggleModalVoucherVisible,url,scroll } = this.props;
+        const { title,visible,fields,toggleModalVoucherVisible,tableOption } = this.props;
         return(
             <Modal
                 maskClosable={false}
@@ -53,12 +53,14 @@ export default class VoucherModal extends Component{
                         tableOption={{
                             key:tableKey,
                             cardProps: {
-                                title: "凭证信息列表",
+                                title: tableOption.title || "凭证信息列表",
+                                extra:tableOption.extra || null
                             },
                             pageSize:100,
-                            columns:columns,
-                            url:url,
-                            scroll:scroll || { x: '140%',y:'250px'},
+                            columns:tableOption.columns,
+                            url:tableOption.url,
+                            scroll:tableOption.scroll || { x: '140%',y:'250px'},
+                            ...tableOption
                         }}
                     />
                 </div>

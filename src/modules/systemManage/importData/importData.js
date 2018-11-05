@@ -114,7 +114,7 @@ const authMonth = [
                 fields:fields,
             },
             {
-                title: '预缴账款-租金表',
+                title: '预收账款-租金表',
                 importUrl:'/advanceRentPayments/upload',
                 fields:mainId,
             },
