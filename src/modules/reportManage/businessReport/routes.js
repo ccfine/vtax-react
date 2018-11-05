@@ -25,7 +25,7 @@ const TaxReturnProgressTrackTable = AsyncComponent(() => import("./taxReturnProg
 const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
 const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "自持类产品关联清单")
 const RealEstateTax = AsyncComponent(() => import("./realEstateTax"), "不动产进项税额抵扣表")
-const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "预缴账款-租金表")
+const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "预收账款-租金表")
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -227,7 +227,7 @@ const BusinessReport_Routes = [
     {
         path: `${PATH}/advancePayment`,
         component: AdvancePayment,
-        name: "预缴账款-租金表",
+        name: "预收账款-租金表",
         icon: {
             url: `${ICON_URL_PATH}advancePayment.svg`,
             backgroundColor: "#2E8A57"

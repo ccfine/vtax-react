@@ -4,5 +4,4 @@
  * description  :
  */
 
- import QueryLog from "./QueryLog.react"
- export default QueryLog
+export {default} from "./QueryLog.react"

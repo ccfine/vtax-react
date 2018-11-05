@@ -1,13 +1,11 @@
 /**
- * author       : liuliyuan
- * createTime   : 2017/12/18 15:17
- * description  :
+ * Created by liuliyuan on 2018/11/5.
  */
 import React, { Component } from 'react'
 import {NavRouter} from 'compoments'
 import routes from './routes'
 
-export default class SystemMaintain extends Component {
+export default class InterfaceLog extends Component {
     render() {
         return (
             <NavRouter data={routes} />
