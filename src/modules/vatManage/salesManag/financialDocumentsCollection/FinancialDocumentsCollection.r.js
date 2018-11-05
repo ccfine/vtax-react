@@ -288,17 +288,17 @@ const drawerFields = (disabled,filters) =>(getFieldValue)=>[
     },
     {
         label:'修改标记',
-        fieldName:'deductionFlag',
+        fieldName:'relationStagesFlag',
         type:'select',
         formItemStyle,
         span:8,
-        options:[  //1-未修改;2-已修改
+        options:[  //0-未修改;1-已修改
             {
                 text:'未修改',
-                value:'1'
+                value:'0'
             },{
                 text:'已修改',
-                value:'2'
+                value:'1'
             }
         ],
     }
@@ -307,16 +307,16 @@ const drawerFields = (disabled,filters) =>(getFieldValue)=>[
 const drawerColumns=[
     {
         title: '修改标记',
-        dataIndex: 'deductionFlag',
+        dataIndex: 'relationStagesFlag',
         width:'150px',
         render: text => {
-            //1-待修改;2-已修改；不传则所有状态
+            //0-待修改;1-已修改；不传则所有状态
             let t = '';
             switch (parseInt(text,0)){
-                case 1:
+                case 0:
                     t='待修改';
                     break;
-                case 2:
+                case 1:
                     t='已修改';
                     break;
                 default:
@@ -402,11 +402,10 @@ const drawerColumns=[
     },
 ];
 const markFieldsData = (dFilters) =>{
-    console.log(dFilters)
     return [
         {
             label:'项目分期',
-            fieldName:'stagesId',
+            fieldName:'stageId',
             type:'asyncSelect',
             span:'22',
             componentProps:{
@@ -430,6 +429,7 @@ const markFieldsData = (dFilters) =>{
 export default class FinancialDocumentsCollection extends Component{
     state={
         updateKey:Date.now(),
+        drawerUpdateKey:Date.now(),
         filters:{},
         dFilters:{},
         drawerVisible: false,
@@ -442,7 +442,12 @@ export default class FinancialDocumentsCollection extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            updateKey:Date.now(),
+            updateKey:Date.now()
+        })
+    }
+    refreshTableDrawer = ()=>{
+        this.setState({
+            drawerUpdateKey:Date.now(),
             selectedRowKeys:[],
         })
     }
@@ -459,7 +464,7 @@ export default class FinancialDocumentsCollection extends Component{
         });
     };
     render(){
-        const {updateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
+        const {updateKey,drawerUpdateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -501,7 +506,7 @@ export default class FinancialDocumentsCollection extends Component{
                                         //icon:'exception',
                                         //btnType:'default',
                                         text:'查看缺失项目分期凭证',
-                                        userPermissions:['1265014'],
+                                        userPermissions:['1231004'],
                                         onClick:()=>{
                                             this.togglesDrawerVisible(true);
                                         }
@@ -544,8 +549,10 @@ export default class FinancialDocumentsCollection extends Component{
                 <DrawerModal
                     title="凭证信息"
                     visible={drawerVisible}
-                    onClose={()=>this.togglesDrawerVisible(false)}
-
+                    onClose={()=>{
+                        this.togglesDrawerVisible(false)
+                        this.refreshTable();
+                    }}
                     searchTableOptions={{
                         doNotFetchDidMount:JSON.stringify(filters) !=='{}',
                         searchOption:{
@@ -557,16 +564,16 @@ export default class FinancialDocumentsCollection extends Component{
                             }
                         },
                         tableOption:{
+                            key:drawerUpdateKey,
                             pageSize:100,
                             columns:drawerColumns,
-                            url:'/inter/financial/voucher/manageList',
+                            url:`/inter/financial/voucher/listStagesNumIsNull?mainId=${filters.mainId}&authMonth=${filters.authMonth}`,
                             scroll:{ x: 2500 ,y:window.screen.availHeight-450-(disabled?50:0)},
                             onSuccess:(params)=>{
+                                console.log(params)
                                 this.setState({
                                     dFilters:params,
                                     selectedRowKeys:[],
-                                },()=>{
-                                    this.fetchResultStatus()
                                 })
                             },
                             onRowSelect:parseInt(statusParam.status, 0) === 1 ? (selectedRowKeys)=>{
@@ -587,14 +594,14 @@ export default class FinancialDocumentsCollection extends Component{
                                                 formOptions:{
                                                     filters: dFilters,
                                                     selectedRowKeys: selectedRowKeys,
-                                                    url:"/account/incomeSimpleOut/controller/commonlyFlag",
+                                                    url:"/inter/financial/voucher/relationStages",
                                                     fields: markFieldsData(dFilters),
                                                     onSuccess:()=>{
-                                                        this.refreshTable()
+                                                        this.refreshTableDrawer()
                                                     },
-                                                    userPermissions:['1395000'],
+                                                    //userPermissions:['1395000'],
                                                 }
-                                            }],)
+                                            }])
                                         }
                                     </div>
                                 )
