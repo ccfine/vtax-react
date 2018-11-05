@@ -405,7 +405,7 @@ const markFieldsData = (dFilters) =>{
     return [
         {
             label:'项目分期',
-            fieldName:'stagesId',
+            fieldName:'stageId',
             type:'asyncSelect',
             span:'22',
             componentProps:{
@@ -429,6 +429,7 @@ const markFieldsData = (dFilters) =>{
 export default class FinancialDocumentsCollection extends Component{
     state={
         updateKey:Date.now(),
+        drawerUpdateKey:Date.now(),
         filters:{},
         dFilters:{},
         drawerVisible: false,
@@ -441,7 +442,12 @@ export default class FinancialDocumentsCollection extends Component{
     }
     refreshTable = ()=>{
         this.setState({
-            updateKey:Date.now(),
+            updateKey:Date.now()
+        })
+    }
+    refreshTableDrawer = ()=>{
+        this.setState({
+            drawerUpdateKey:Date.now(),
             selectedRowKeys:[],
         })
     }
@@ -458,7 +464,7 @@ export default class FinancialDocumentsCollection extends Component{
         });
     };
     render(){
-        const {updateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
+        const {updateKey,drawerUpdateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -500,7 +506,7 @@ export default class FinancialDocumentsCollection extends Component{
                                         //icon:'exception',
                                         //btnType:'default',
                                         text:'查看缺失项目分期凭证',
-                                        userPermissions:['1265014'],
+                                        userPermissions:['1231004'],
                                         onClick:()=>{
                                             this.togglesDrawerVisible(true);
                                         }
@@ -543,8 +549,10 @@ export default class FinancialDocumentsCollection extends Component{
                 <DrawerModal
                     title="凭证信息"
                     visible={drawerVisible}
-                    onClose={()=>this.togglesDrawerVisible(false)}
-
+                    onClose={()=>{
+                        this.togglesDrawerVisible(false)
+                        this.refreshTable();
+                    }}
                     searchTableOptions={{
                         doNotFetchDidMount:JSON.stringify(filters) !=='{}',
                         searchOption:{
@@ -556,11 +564,13 @@ export default class FinancialDocumentsCollection extends Component{
                             }
                         },
                         tableOption:{
+                            key:drawerUpdateKey,
                             pageSize:100,
                             columns:drawerColumns,
-                            url:'/inter/financial/voucher/listStagesNumIsNull',
+                            url:`/inter/financial/voucher/listStagesNumIsNull?mainId=${filters.mainId}&authMonth=${filters.authMonth}`,
                             scroll:{ x: 2500 ,y:window.screen.availHeight-450-(disabled?50:0)},
                             onSuccess:(params)=>{
+                                console.log(params)
                                 this.setState({
                                     dFilters:params,
                                     selectedRowKeys:[],
@@ -587,11 +597,11 @@ export default class FinancialDocumentsCollection extends Component{
                                                     url:"/inter/financial/voucher/relationStages",
                                                     fields: markFieldsData(dFilters),
                                                     onSuccess:()=>{
-                                                        this.refreshTable()
+                                                        this.refreshTableDrawer()
                                                     },
-                                                    userPermissions:['1395000'],
+                                                    //userPermissions:['1395000'],
                                                 }
-                                            }],)
+                                            }])
                                         }
                                     </div>
                                 )
