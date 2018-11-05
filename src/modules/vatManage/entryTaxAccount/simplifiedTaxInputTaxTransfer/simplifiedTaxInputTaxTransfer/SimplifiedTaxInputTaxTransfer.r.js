@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'

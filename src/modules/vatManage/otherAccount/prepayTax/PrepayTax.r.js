@@ -8,7 +8,6 @@ import React,{Component} from 'react'
 import {Form,message} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 import moment from 'moment';
 import { NumericInputCell } from 'compoments/EditableCell'
 const searchFields =(disabled,declare)=> getFieldValue => {
@@ -222,8 +221,6 @@ class PrepayTax extends Component{
     state={
         tableKey:Date.now(),
         searchTableLoading:false,
-        visibleView:false,
-        voucherNum:undefined,
         filters:{},
         /**
          *修改状态和时间
@@ -241,11 +238,6 @@ class PrepayTax extends Component{
     toggleSearchTableLoading = searchTableLoading =>{
         this.setState({
             searchTableLoading
-        })
-    }
-    toggleViewModalVisible=visibleView=>{
-        this.setState({
-            visibleView
         })
     }
     fetchResultStatus = ()=>{
@@ -319,7 +311,7 @@ class PrepayTax extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters,totalSource,saveLoding} = this.state;
+        const {searchTableLoading,tableKey,statusParam,filters,totalSource,saveLoding} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -421,13 +413,7 @@ class PrepayTax extends Component{
                             y:window.screen.availHeight-380-(disabled?50:0),
                         },
                     }}
-                >
-                    <ViewDocumentDetails
-                        title="查看凭证详情"
-                        visible={visibleView}
-                        voucherNum={voucherNum}
-                        toggleViewModalVisible={this.toggleViewModalVisible} />
-                </SearchTable>
+                />
             </div>
         )
     }

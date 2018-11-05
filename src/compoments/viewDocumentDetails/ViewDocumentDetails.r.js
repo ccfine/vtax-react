@@ -1,5 +1,5 @@
 /**
- * Created by liuliyuan on 2018/5/12.
+ * Created by liuliyuan on 2018/11/5.
  */
 import React, {Component} from 'react';
 import {Modal, Spin, Row,Col,Card,message} from 'antd';
@@ -162,25 +162,25 @@ export default class ViewDocumentDetails extends Component{
                                               bordered:true,
                                               size:'small',
                                               columns:columns,
-                                            //   scroll:{ x: 800, y: 300 }
+                                              //   scroll:{ x: 800, y: 300 }
                                           }} />
 
                         {/*<AsyncTable url="/inter/financial/voucher/listByVoucher"
-                                    updateKey={tableUpDateKey}
-                                    filters={{voucherNum:props.voucherNum}}
-                                    tableProps={{
-                                        rowKey:record=>record.id,
-                                        pagination:true,
-                                        size:'small',
-                                        columns:columns,
-                                        onDataChange:(dataSource)=>{
-                                            console.log(dataSource)
-                                            this.setState({
-                                                record:dataSource[0]
-                                            })
-                                        },
-                                    }}
-                        />*/}
+                         updateKey={tableUpDateKey}
+                         filters={{voucherNum:props.voucherNum}}
+                         tableProps={{
+                         rowKey:record=>record.id,
+                         pagination:true,
+                         size:'small',
+                         columns:columns,
+                         onDataChange:(dataSource)=>{
+                         console.log(dataSource)
+                         this.setState({
+                         record:dataSource[0]
+                         })
+                         },
+                         }}
+                         />*/}
                     </Card>
 
                 </Spin>

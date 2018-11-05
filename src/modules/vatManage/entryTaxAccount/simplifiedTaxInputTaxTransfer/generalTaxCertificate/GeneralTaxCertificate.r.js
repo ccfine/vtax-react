@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {requestResultStatus,fMoney,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -69,6 +69,7 @@ const columns = context =>[
                 context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
+                        mainId:record.voucherId,
                     }},()=>{
                     context.toggleViewModalVisible(true)
                 })
