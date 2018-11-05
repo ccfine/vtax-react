@@ -76,9 +76,9 @@ export default class ViewDocumentDetails extends Component{
     toggleLoaded = loaded => this.setState({loaded})
 
 
-    fetchReportByVoucherNum = ({voucherId}) =>{
+    fetchReportByVoucherNum = (filters) =>{
         this.toggleLoaded(false)
-        request.get('/inter/financial/voucher/listByVoucher',{params:{voucherId}})
+        request.get('/inter/financial/voucher/listByVoucher',{params:filters})
             .then(({ data }) => {
                 if (data.code === 200) {
                     this.toggleLoaded(true)
@@ -105,7 +105,7 @@ export default class ViewDocumentDetails extends Component{
             /**
              * 弹出的时候如果类型不为新增，则异步请求数据
              * */
-            this.fetchReportByVoucherNum(nextProps)
+            this.fetchReportByVoucherNum(nextProps.filters)
         }
     }
 
