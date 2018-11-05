@@ -288,17 +288,17 @@ const drawerFields = (disabled,filters) =>(getFieldValue)=>[
     },
     {
         label:'修改标记',
-        fieldName:'deductionFlag',
+        fieldName:'relationStagesFlag',
         type:'select',
         formItemStyle,
         span:8,
-        options:[  //1-未修改;2-已修改
+        options:[  //0-未修改;1-已修改
             {
                 text:'未修改',
-                value:'1'
+                value:'0'
             },{
                 text:'已修改',
-                value:'2'
+                value:'1'
             }
         ],
     }
@@ -307,16 +307,16 @@ const drawerFields = (disabled,filters) =>(getFieldValue)=>[
 const drawerColumns=[
     {
         title: '修改标记',
-        dataIndex: 'deductionFlag',
+        dataIndex: 'relationStagesFlag',
         width:'150px',
         render: text => {
-            //1-待修改;2-已修改；不传则所有状态
+            //0-待修改;1-已修改；不传则所有状态
             let t = '';
             switch (parseInt(text,0)){
-                case 1:
+                case 0:
                     t='待修改';
                     break;
-                case 2:
+                case 1:
                     t='已修改';
                     break;
                 default:
@@ -402,7 +402,6 @@ const drawerColumns=[
     },
 ];
 const markFieldsData = (dFilters) =>{
-    console.log(dFilters)
     return [
         {
             label:'项目分期',
@@ -559,14 +558,12 @@ export default class FinancialDocumentsCollection extends Component{
                         tableOption:{
                             pageSize:100,
                             columns:drawerColumns,
-                            url:'/inter/financial/voucher/manageList',
+                            url:'/inter/financial/voucher/listStagesNumIsNull',
                             scroll:{ x: 2500 ,y:window.screen.availHeight-450-(disabled?50:0)},
                             onSuccess:(params)=>{
                                 this.setState({
                                     dFilters:params,
                                     selectedRowKeys:[],
-                                },()=>{
-                                    this.fetchResultStatus()
                                 })
                             },
                             onRowSelect:parseInt(statusParam.status, 0) === 1 ? (selectedRowKeys)=>{
@@ -587,7 +584,7 @@ export default class FinancialDocumentsCollection extends Component{
                                                 formOptions:{
                                                     filters: dFilters,
                                                     selectedRowKeys: selectedRowKeys,
-                                                    url:"/account/incomeSimpleOut/controller/commonlyFlag",
+                                                    url:"/inter/financial/voucher/relationStages",
                                                     fields: markFieldsData(dFilters),
                                                     onSuccess:()=>{
                                                         this.refreshTable()
