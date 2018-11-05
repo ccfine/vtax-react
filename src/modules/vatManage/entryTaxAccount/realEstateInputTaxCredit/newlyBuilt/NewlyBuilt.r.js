@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 const columns = context =>[{
         title: '利润中心',
@@ -94,19 +93,12 @@ const columns = context =>[{
 export default class NewlyBuilt extends Component{
     state={
         tableKey:Date.now(),
-        visibleView:false,
-        voucherNum:undefined,
         filters:{},
         totalSource:undefined,
         /**
          *修改状态和时间
          * */
         statusParam:{},
-    }
-    toggleViewModalVisible=visibleView=>{
-        this.mounted && this.setState({
-            visibleView
-        })
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
@@ -125,7 +117,7 @@ export default class NewlyBuilt extends Component{
         this.mounted = null;
     }
     render(){
-        const {tableKey,visibleView,voucherNum,filters,statusParam,totalSource} = this.state;
+        const {tableKey,filters,statusParam,totalSource} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -204,13 +196,7 @@ export default class NewlyBuilt extends Component{
                         y:window.screen.availHeight-430,
                     },
                 }}
-            >
-                <ViewDocumentDetails
-                    title="查看凭证详情"
-                    visible={visibleView}
-                    voucherNum={voucherNum}
-                    toggleViewModalVisible={this.toggleViewModalVisible} />
-            </SearchTable>
+            />
         )
     }
 }
