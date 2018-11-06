@@ -5,9 +5,8 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
-import {SynchronizeTable} from 'compoments'
-import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import PopInvoiceInformationModal from './popModal'
+import {SynchronizeTable,PopDetailsModal} from 'compoments'
+import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import moment from 'moment';
 
 const formItemStyle = {
@@ -184,6 +183,93 @@ const notColumns = context =>[
         ]
     }
 ];
+
+const invoiceSearchFields =[
+    {
+        label:'发票号码',
+        fieldName:'invoiceNum',
+        type:'input',
+        span:8,
+        componentProps:{ }
+    }
+]
+const invoiceColumns = [
+    {
+        title: '发票号码',
+        dataIndex: 'invoiceNum',
+        width:'100px',
+    },{
+        title: '发票代码',
+        dataIndex: 'invoiceCode',
+        width:'100px',
+    },{
+        title:'发票类型',
+        dataIndex:'invoiceType',
+        render:text=>{
+            if(text==='s'){
+                return '专票'
+            }
+            if(text==='c'){
+                return '普票'
+            }
+            return text;
+        },
+        width:'100px',
+    },{
+        title: '购货单位名称',
+        dataIndex: 'purchaseName',
+        width:'100px',
+    },{
+        title: '备注',
+        dataIndex: 'remark',
+        //width: 100'px,
+    },{
+        title: '货物或应税劳务名称',
+        dataIndex: 'itemName',
+        width:'150px',
+    },{
+        title: '规格型号',
+        dataIndex: 'spec',
+        width:'150px',
+    },{
+        title: '单位',
+        dataIndex: 'unit',
+        width:'150px',
+    },{
+        title: '数量',
+        dataIndex: 'quantity',
+        width:'150px',
+    },{
+        title: '单价',
+        dataIndex: 'unitPrice',
+        width:'150px',
+    },{
+        title: '金额',
+        dataIndex: 'amountWithoutTax',
+        render:text=>fMoney(text),
+        width:'100px',
+    },{
+        title: '税率',
+        dataIndex:'taxRate',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
+        width:'100px',
+    },{
+        title: '税额',
+        dataIndex: 'taxAmount',
+        render:text=>fMoney(text),
+        width:'100px',
+        /*},{
+         title: '价税合计',
+         dataIndex: 'totalAmount',
+         width: '100px',
+         render:text=>fMoney(text),*/
+    },{
+        title: '开票日期',
+        dataIndex: 'billingDate',
+        width:'100px',
+    },
+];
 class BillingSales extends Component {
     state={
         /**
@@ -281,7 +367,7 @@ class BillingSales extends Component {
         const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        const { getFieldValue } = this.props.form
+        const { getFieldValue } = this.props.form;
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -423,16 +509,16 @@ class BillingSales extends Component {
                         }} />
                 </Card>
 
-                <PopInvoiceInformationModal
+                <PopDetailsModal
                     title="发票信息"
                     visible={visible}
-                    filters={{
-                        ...filters,
-                        sysTaxRateId,
-                        invoiceType,
-                        isEstate,
+                    fields={invoiceSearchFields}
+                    toggleModalVoucherVisible={this.toggleModalVisible}
+                    tableOption={{
+                        columns:invoiceColumns,
+                        url:`/account/output/billingSale/detail/list?${parseJsonToParams({ ...filters, sysTaxRateId, invoiceType, isEstate})}`,
+                        scroll:{ x: '1900px',y:'200px' },
                     }}
-                    toggleModalVisible={this.toggleModalVisible}
                 />
             </Layout>
         )
