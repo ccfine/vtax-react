@@ -69,8 +69,8 @@ const searchFields = (context, disabled, declare) => (getFieldValue) => {
             componentProps: {
                 fieldTextName: 'profitName',
                 fieldValueName: 'id',
-                doNotFetchDidMount: !declare,
-                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+                doNotFetchDidMount: false,
+                fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
                 url: `/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`
             }
         }
@@ -111,12 +111,15 @@ const columns = context => {
             className: 'text-center',
             dataIndex: 'voucherCount',
             width: '200px',
-            render: (text, record) => {
+            render: (text, record, index) => {
                 if (record.voucherType === '代扣代缴税收缴款凭证') {
                     //凭证
                     return <span title="查看凭证信息详情" onClick={() => {
                         context.setState({
-                            paramsId: record.id
+                            voucherParams: {
+                                profitCenterId: record.profitCenterId,
+                                voucherType: record.voucherType,
+                            }
                         }, () => {
                             context.toggleModalVoucherVisible(true);
                         });
@@ -125,7 +128,10 @@ const columns = context => {
                     //发票
                     return <span title="查看发票信息详情" onClick={() => {
                         context.setState({
-                            paramsId: record.id
+                            voucherParams: {
+                                profitCenterId: record.profitCenterId,
+                                voucherType: record.voucherType,
+                            }
                         }, () => {
                             context.toggleModalVisible(true);
                         });
@@ -172,32 +178,35 @@ const voucherColumns = [{
     dataIndex: 'stagesNum',
     width: 200
 }, {
-    title: '凭证日期',
-    dataIndex: 'voucherDate',
-    width: 200
+    title: '过账日期',
+    dataIndex: 'excelBillingDate',
+    width:150,
 }, {
     title: 'SAP凭证号',
     dataIndex: 'voucherNumSap',
-    width: 200
+    width: 150
 }, {
     title: '凭证摘要',
     dataIndex: 'voucherAbstract',
-    width: 200
+    width: 100
 }, {
     title: '借方科目名称',
     dataIndex: 'debitSubjectName',
-    width: 200
+    width: 100
 }, {
     title: '借方科目代码',
     dataIndex: 'debitSubjectCode',
-    width: 150
+    width: 100
 }, {
     title: '借方金额',
     dataIndex: 'debitAmount',
-    render: text => fMoney(text),
-    className: "table-money",
-    width: 120
+    width:100,
+}, {
+    title: '代扣代缴类型',
+    dataIndex: 'withholdingType',
+    width: 100
 }];
+
 
 const invoiceSearchFields =[
     {
@@ -208,8 +217,14 @@ const invoiceSearchFields =[
         componentProps:{ }
     }
 ]
+
+
 const invoiceColumns = [
     {
+        title: '抵扣凭据类型',
+        dataIndex: 'zesfdkxm',
+        width:'100px',
+    }, {
         title: '发票类型',
         dataIndex: 'zefplx',
         width: '80px',
@@ -233,25 +248,21 @@ const invoiceColumns = [
     }, {
         title: '开票日期',
         dataIndex: 'zekprq',
-        width: '200px',
+        width: '100px',
         render(text){
             return moment(text).format('YYYY-MM-DD');
         }
     }, {
         title: '认证所属期',
         dataIndex: 'zerzshq',
-        width: '200px'
+        width: '100px'
     }, {
         title: '认证时间',
         dataIndex: 'zerzsj',
-        width: '200px',
+        width: '100px',
         render(text){
             return moment(text).format('YYYY-MM-DD');
         }
-    }, {
-        title: '购买方纳税人识别号',
-        dataIndex: 'zegmfnsrsbh',
-        width: '100px'
     }, {
         title: '金额',
         dataIndex: 'zebhsje',
@@ -274,6 +285,7 @@ const invoiceColumns = [
     }
 ];
 
+
 export default class OtherDeductionVoucher extends Component {
     state = {
 
@@ -284,7 +296,7 @@ export default class OtherDeductionVoucher extends Component {
         filters: {},
         dataSource: [],
         selectedRowKeys: [],
-        paramsId: '', //点击的item id
+        voucherParams: {},
         /**
          *修改状态和时间
          * */
@@ -328,7 +340,7 @@ export default class OtherDeductionVoucher extends Component {
     }
 
     render() {
-        const {visible, tableKey, filters, voucherVisible, statusParam, paramsId, totalSource} = this.state;
+        const {visible, tableKey, filters, voucherVisible, statusParam, totalSource, voucherParams} = this.state;
         const {declare} = this.props;
         let disabled = !!declare;
         return (
@@ -426,19 +438,45 @@ export default class OtherDeductionVoucher extends Component {
                         title="发票信息"
                         visible={visible}
                         fields={invoiceSearchFields}
-                        columns={invoiceColumns}
-                        url={`/other/tax/deduction/vouchers/list/pools/${paramsId}?${parseJsonToParams(filters)}`}
-                        scroll={{ x: '200%', y: 200 }}
                         toggleModalVoucherVisible={this.toggleModalVisible}
+                        tableOption={{
+                            columns:invoiceColumns,
+                            url: `/other/tax/deduction/vouchers/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
+                            scroll:{ x: '200%', y: 200 },
+                            extra: <div>
+                                {
+                                    composeBotton([{
+                                        type: 'fileExport',
+                                        url: '/other/tax/deduction/vouchers/export/pools',
+                                        params: {...filters, ...voucherParams},
+                                        title: '导出',
+                                        userPermissions: ['1521007']
+                                    }])
+                                }
+                            </div>
+                        }}
                     />
                     <VoucherModal
                         title="凭证信息"
                         visible={voucherVisible}
                         fields={voucherSearchFields}
-                        columns={voucherColumns}
-                        url={`/other/tax/deduction/vouchers/list/voucher/${paramsId}?${parseJsonToParams({...filters})}`}
-                        scroll={{ x: '200%',y:'200px' }}
                         toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                        tableOption={{
+                            columns:voucherColumns,
+                            url:`/other/tax/deduction/vouchers/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
+                            scroll:{ x: '200%',y:'200px' },
+                            extra: <div>
+                                {
+                                    composeBotton([{
+                                        type: 'fileExport',
+                                        url: '/other/tax/deduction/vouchers/export/voucher',
+                                        params: {...filters, ...voucherParams},
+                                        title: '导出',
+                                        userPermissions: ['1521007']
+                                    }])
+                                }
+                            </div>
+                        }}
                     />
                 </SearchTable>
             </div>
