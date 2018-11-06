@@ -13,10 +13,18 @@ const formItemStyle = {
     }
 }
 
-const searchFields = () => {
+
+const searchFields =(disabled,declare)=> getFieldValue => {
     return [
         {
-            label: "查询期间",
+            label: "接口",
+            fieldName: "apiKey",
+            type: "input",
+            span: 8,
+            formItemStyle
+        },
+        {
+            label: "创建期间",
             fieldName: "createTime",
             type: "rangePicker",
             span: 8,
@@ -26,45 +34,101 @@ const searchFields = () => {
             }
         },
         {
-            label: "用户名",
-            fieldName: "username",
+            label: "修改期间",
+            fieldName: "lastModifiedTime",
+            type: "rangePicker",
+            span: 8,
+            formItemStyle,
+            componentProps: {
+                format:"YYYY-MM-DD"
+            }
+        },
+        {
+            label: "流水号",
+            fieldName: "id",
             span: 8,
             formItemStyle
         },
         {
-            label: "组织",
-            fieldName: "mainName",
-            type: "input",
+            label: "任务流水号",
+            fieldName: "id",
             span: 8,
             formItemStyle
+        },
+        {
+
+            label: "状态",
+            fieldName: "status",
+            type: "select",
+            span: 8,
+            options:[
+                {text:'待处理',value:'10'},
+                {text:'处理中',value:'20'},
+                {text:'处理成功',value:'30'},
+                {text:'异常',value:'40'},
+            ],
+            formItemStyle,
+            fieldDecoratorOptions:{
+                initialValue: getFieldValue('status'),
+                rules:[
+                    {
+                        // required:true,
+                        message:'请选择状态'
+                    }
+                ]
+            },
+            componentProps:{
+                disabled
+            }
         }
     ]
 }
 
+
 const getColumns = () => {
+    
     return [
         {
-            title: "日志序号",
-            dataIndex: "id",
-            width: "150px"
-        },
-        {
-            title: "时间",
-            dataIndex: "createTime",
+            title: "接口",
+            dataIndex: "apiKey",
             width: "200px"
         },
         {
-            title: "用户名/BIP账号",
+            title: "流水号",
+            dataIndex: "id",
+            width: "200px"
+        },
+        {
+            title: "任务流水号",
             dataIndex: "username",
             width: "200px"
         },
         {
-            title: "组织",
+            title: "数据来源",
             dataIndex: "mainName",
-            width: "300px"
+            width: "200px"
         },
         {
-            title: "内容",
+            title: "状态",
+            dataIndex: "content",
+            width: "100px"
+        },
+        {
+            title: "描述",
+            dataIndex: "username",
+        },
+        {
+            title: "接口字段报文",
+            dataIndex: "mainName",
+            width: "200px"
+        },
+        {
+            title: "创建时间",
+            dataIndex: "content",
+            width: "200px"
+        },
+        {
+            title: "任务结束时间",
             dataIndex: "content",
             width: "200px"
         }
@@ -83,7 +147,6 @@ export default class DataResume extends Component {
         return (
             <div className="oneline">
                 <SearchTable
-                    doNotFetchDidMount={ false }
                     searchOption={{
                         fields: searchFields()
                     }}
@@ -92,7 +155,7 @@ export default class DataResume extends Component {
                         pageSize: 100,
                         columns: getColumns(),
                         url: "/sysLog/list",
-                        scroll:{ y:window.screen.availHeight-350},
+                        scroll:{ y:window.screen.availHeight-350, x: 2000},
                         cardProps: {
                             title: "数据履历"
                         },
