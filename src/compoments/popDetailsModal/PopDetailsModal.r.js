@@ -1,11 +1,11 @@
 /**
- * Created by liuliyuan on 2018/10/26.
+ * Created by liuliyuan on 2018/11/6.
  */
 import React,{Component} from 'react'
 import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
 
-export default class VoucherModal extends Component{
+export default class PopDetailsModal extends Component{
     static defaultProps = {
         tableOption:{
             title:"凭证信息列表"

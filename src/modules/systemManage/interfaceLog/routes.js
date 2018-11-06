@@ -16,7 +16,7 @@ const InterfaceLog_Routes = [
         component:QueryLog,
         name:'查询日志',
         icon:{
-            url:`${ICON_URL_PATH}dataDictionaryMaintain.svg`,
+            url:`${ICON_URL_PATH}queryLog.svg`,
             backgroundColor:'#56C7F3'
         },
         exact:true,
@@ -25,7 +25,7 @@ const InterfaceLog_Routes = [
         component:TaskResume,
         name:'任务履历',
         icon:{
-            url:`${ICON_URL_PATH}taxClassificationCode.svg`,
+            url:`${ICON_URL_PATH}taskResume.svg`,
             backgroundColor:'#6CCCCA'
         },
         exact:true,
@@ -34,7 +34,7 @@ const InterfaceLog_Routes = [
         component:DataResume,
         name:'数据履历',
         icon:{
-            url:`${ICON_URL_PATH}taxableItems.svg`,
+            url:`${ICON_URL_PATH}dataResume.svg`,
             backgroundColor:'#6CCCCA'
         },
         exact:true,
