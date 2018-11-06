@@ -17,7 +17,7 @@ const searchFields =(getFieldValue)=> [
         label:'纳税主体',
         fieldName:'main',
         type:'taxMain',
-        span:6,
+        span:8,
         componentProps:{
             labelInValue:true,
         },
@@ -34,11 +34,11 @@ const searchFields =(getFieldValue)=> [
         label:'利润中心',
         fieldName:'profitCenterId',
         type:'asyncSelect',
-        span:6,
+        span:8,
         componentProps:{
             fieldTextName:'profitName',
             fieldValueName:'id',
-            //doNotFetchDidMount: !declare,
+            doNotFetchDidMount:true,
             fetchAble: getFieldValue("main") && getFieldValue("main").key,
             url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
         }
@@ -82,7 +82,7 @@ const getColumns = context =>[
         className:'text-center'
     },{
         title: '利润中心',
-        dataIndex: 'mainName',
+        dataIndex: 'profitCenterName',
         render:(text,record)=>(<span title='查看详情' style={pointerStyle} onClick={()=>context.showModal('look',record)}>{text}</span>),
     },{
         title: '是否已采集',
@@ -166,7 +166,7 @@ export default class ProfitCenter extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this),
-                    url:'/dataCollection/list',
+                    url:'/dataCollection/pc/list',
                     cardProps:{
                         title:'利润中心期初数据采集',
                     },

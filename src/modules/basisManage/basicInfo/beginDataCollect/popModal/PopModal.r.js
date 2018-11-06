@@ -37,8 +37,11 @@ class PopModal extends Component{
     }
     render(){
         const {pageTabsKey} = this.state;
-        const {visible,modalConfig:{type,record}} = this.props;
-
+        const {visible,modalConfig:{type,record},beginType} = this.props;
+        const params = {
+            mainId:record && record.mainId,
+            profitCenterId: (beginType === '2' && record && record.profitCenterId) || undefined,
+        }
         let title='';
         let disabled = false;
         switch (type){
@@ -77,7 +80,7 @@ class PopModal extends Component{
                     height:window.screen.availHeight-250,
                     overflowY:'auto',
                 }}>
-                    <TabPage key={pageTabsKey} filters={record} type={type} disabled={disabled} beginType={this.props.tab} />
+                    <TabPage key={pageTabsKey} filters={params} record={record} type={type} disabled={disabled} beginType={this.props.tab} />
                 </div>
             </Drawer>
         )

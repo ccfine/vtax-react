@@ -57,7 +57,7 @@ export default class TabPage extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleDeleteLoading(true)
-                request.delete(`/realtyCollection/delete/${this.props.filters.mainId}`)
+                request.delete(`/realtyCollection/${this.props.beginType === '2' ? 'pc/' : ''}delete/${this.props.filters.mainId}`)
                     .then(({data})=>{
                         this.toggleDeleteLoading(false)
                         if(data.code===200){
@@ -117,7 +117,7 @@ export default class TabPage extends Component{
                 searchOption={undefined}
                 tableOption={{
                     columns:columns,
-                    url:`/realtyCollection/list?${parseJsonToParams(props.filters)}`,
+                    url:`/realtyCollection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(props.filters)}`,
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,

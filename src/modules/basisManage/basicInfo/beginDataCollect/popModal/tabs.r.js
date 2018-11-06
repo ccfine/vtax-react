@@ -67,7 +67,7 @@ export default class TabPage extends Component{
             <Tabs tabPosition={this.state.tabPosition} size="small">
                 {
                     tabList.map(ele=>{
-                        return !(ele.key === 'tab6' && props.beginType==='2') && (
+                        return !((ele.key === 'tab6' || ele.key === 'tab3') && props.beginType==='2') && (
                             <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                                 {
                                     getContent(ele.key, props.filters, props.disabled, props.beginType, this.state.updateKey)

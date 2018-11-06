@@ -54,6 +54,7 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                console.log(values)
                 if(values.project){
                     values.name = values.project.label;
                     values.num = values.project.key;
@@ -95,6 +96,7 @@ class PopModal extends Component {
         });
     }
     render() {
+        const { filters } = this.props;
         const readonly = (this.props.action === 'look');
         let { record = {} } = this.state;
         const form = this.props.form;
@@ -123,6 +125,36 @@ class PopModal extends Component {
             >
                 <Spin spinning={this.state.formLoading}>
                     <Form>
+                        <Row>
+                            {getFields(form, [{
+                                label: "利润中心",
+                                fieldName: "profitCenterId",
+                                type: "asyncSelect",
+                                span: 24,
+                                formItemStyle: formItemLayout,
+                                componentProps: {
+                                    //disabled:readonly,
+                                    selectOptions: {
+                                        disabled:readonly,
+                                        //labelInValue: true
+                                    },
+                                    fieldTextName: "profitName",
+                                    fieldValueName: "id",
+                                    fetchAble: filters && filters.mainId,
+                                    url: `/taxsubject/profitCenterList/${filters && filters.mainId}`
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue:(filters && filters.profitCenterId) || undefined,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择利润中心'
+                                        }
+                                    ]
+                                },
+                            }
+                            ])}
+                        </Row>
                         <Row>
                             {
                                 getFields(form, [{

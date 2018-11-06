@@ -28,7 +28,7 @@ class PopModal extends Component {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/landPriceCollection/find/${props.id}`).then(({ data }) => {
+                request.get(`/landPriceCollection/${this.props.beginType === '2' ? 'pc/' : ''}find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data});
                     }
@@ -79,10 +79,10 @@ class PopModal extends Component {
                     sucessMsg;
 
                 if (this.props.action === "modify") {
-                    result = request.put('/landPriceCollection/update', obj);
+                    result = request.put(`/landPriceCollection/${this.props.beginType === '2' ? 'pc/' : ''}update`, obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
-                    result = request.post('/landPriceCollection/add', obj);
+                    result = request.post(`/landPriceCollection/${this.props.beginType === '2' ? 'pc/' : ''}add`, obj);
                     sucessMsg = '新增成功';
                 }
 

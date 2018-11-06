@@ -61,7 +61,7 @@ class TabPage extends Component{
                 for(let key in values){
                     values[key] = values[key].replace(/\$\s?|(,*)/g, '')
                 }
-                request.post('/tax/credit/items/collection/save',{
+                request.post(`/tax/credit/items/collection/${this.props.beginType === '2' ? 'pc/' : ''}save`,{
                    ...values,
                     ...this.props.filters,
                 })
@@ -150,7 +150,7 @@ class TabPage extends Component{
                 tableOption={{
                     pagination:false,
                     columns:getColumns(this,getFieldDecorator,props.disabled),
-                    url:`/tax/credit/items/collection/list?${parseJsonToParams(props.filters)}`,
+                    url:`/tax/credit/items/collection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(props.filters)}`,
                     key:updateKey,
                     cardProps:{
                         bordered:false,

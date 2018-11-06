@@ -99,7 +99,7 @@ export default class TabPage extends Component{
         })
     }
     deleteRecord(record){
-        request.delete(`/account/otherTax/deducted/collection/delete/${this.props && this.props.filters.mainId}/${record.id}`).then(({data}) => {
+        request.delete(`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}delete/${this.props && this.props.filters.mainId}/${record.id}`).then(({data}) => {
             if (data.code === 200) {
                 message.success('删除成功', 4);
                 this.refreshTable();
@@ -136,7 +136,7 @@ export default class TabPage extends Component{
                 searchOption={undefined}
                 tableOption={{
                     columns:getColumns(this),
-                    url:`/account/otherTax/deducted/collection/list?${parseJsonToParams(this.props.filters)}`,
+                    url:`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(this.props.filters)}`,
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,
