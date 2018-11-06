@@ -381,8 +381,8 @@ class UnBilledSalesNotEstate extends Component {
                                         componentProps:{
                                             fieldTextName:'profitName',
                                             fieldValueName:'id',
-                                            doNotFetchDidMount:false,
-                                            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                                            doNotFetchDidMount: !declare,
+                                            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
                                             url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
                                         }
                                     },
