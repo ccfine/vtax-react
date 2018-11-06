@@ -88,8 +88,8 @@ const searchFields = (disabled, declare) => getFieldValue => {
             componentProps: {
                 fieldTextName: "profitName",
                 fieldValueName: "id",
-                doNotFetchDidMount: !declare,
-                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+                doNotFetchDidMount: false,
+                fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
                 url: `/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`
             }
         }
@@ -151,7 +151,11 @@ const getColumns = (context, isEdit) => {
                     </span>);
                 } else if (record.voucherType === '增值税专用发票') {
                     return (<span title="查看发票信息详情" onClick={() => {
-                        context.toggleModalVisible(true);
+                        context.setState({
+                            currentProfitId: record.profitCenterId
+                        }, () => {
+                            context.toggleModalVisible(true);
+                        });
                     }} style={pointerStyle}>
                         {text}
                     </span>);
@@ -221,7 +225,7 @@ const getColumns = (context, isEdit) => {
 const voucherSearchFields = [
     {
         label:'SAP凭证号',
-        fieldName:'voucherNum',
+        fieldName:'voucherNumSap',
         type:'input',
         span:8,
         componentProps:{ }
@@ -238,12 +242,12 @@ const voucherColumns = [{
     width: 200
 }, {
     title: '过账日期',
-    dataIndex: 'billingDate',
-    width:200,
+    dataIndex: 'excelBillingDate',
+    width:150,
 }, {
     title: 'SAP凭证号',
     dataIndex: 'voucherNumSap',
-    width: 200
+    width: 150
 }, {
     title: '凭证摘要',
     dataIndex: 'voucherAbstract',
@@ -262,7 +266,7 @@ const voucherColumns = [{
     width:100,
 }, {
     title: '代扣代缴类型',
-    dataIndex: 'withholding_type',
+    dataIndex: 'withholdingType',
     width: 100
 }];
 
@@ -361,18 +365,8 @@ const invoiceColumns_1 = [
 const invoiceColumns_3 = [
     {
         title: '抵扣凭据类型',
-        dataIndex: 'sourceType',
-        width:'80px',
-        render:text=>{
-            text = parseInt(text,0)
-            if(text===1){
-                return '手工采集'
-            }
-            if(text===2){
-                return '外部导入'
-            }
-            return ''
-        },
+        dataIndex: 'zesfdkxm',
+        width:'100px',
     }, {
         title: '发票类型',
         dataIndex: 'zefplx',
@@ -397,18 +391,18 @@ const invoiceColumns_3 = [
     }, {
         title: '开票日期',
         dataIndex: 'zekprq',
-        width: '200px',
+        width: '100px',
         render(text){
             return moment(text).format('YYYY-MM-DD');
         }
     }, {
         title: '认证所属期',
         dataIndex: 'zerzshq',
-        width: '200px'
+        width: '100px'
     }, {
         title: '认证时间',
         dataIndex: 'zerzsj',
-        width: '200px',
+        width: '100px',
         render(text){
             return moment(text).format('YYYY-MM-DD');
         }
@@ -696,7 +690,7 @@ class InputTaxDetails extends Component {
                     toggleModalVoucherVisible={this.toggleModalVisible}
                     tableOption={{
                         columns:invoiceColumns_1,
-                        url:`/income/invoice/collection/detailList?${parseJsonToParams(filters)}`,
+                        url:`/income/invoice/collection/detailList?${parseJsonToParams({...filters, profitCenterId: this.state.currentProfitId})}`,
                         scroll:{ x: '1800px',y:'250px' },
                     }}
                 />
@@ -707,9 +701,19 @@ class InputTaxDetails extends Component {
                     toggleModalVoucherVisible={this.toggleModalVoucherVisible}
                     tableOption={{
                         columns:voucherColumns,
-                        // url:`/other/tax/deduction/vouchers/list/pools/${this.state.paramsId}`,
                         url:`/other/tax/deduction/vouchers/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll:{ x: '1800px',y:'250px' },
+                        extra: <div>
+                            {
+                                composeBotton([{
+                                    type: 'fileExport',
+                                    url: '/other/tax/deduction/vouchers/export/voucher',
+                                    params: {...filters, ...voucherParams},
+                                    title: '导出',
+                                    userPermissions: ['1381007']
+                                }])
+                            }
+                        </div>
                     }}
                 />
                 <VoucherModal
@@ -719,9 +723,19 @@ class InputTaxDetails extends Component {
                     toggleModalVoucherVisible={this.toggleModalVisible_3}
                     tableOption={{
                         columns:invoiceColumns_3,
-                        // url:`/other/tax/deduction/vouchers/list/pools/${this.state.paramsId}`,
                         url: `/other/tax/deduction/vouchers/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll:{ x: '1800px',y:'250px' },
+                        extra: <div>
+                            {
+                                composeBotton([{
+                                    type: 'fileExport',
+                                    url: '/other/tax/deduction/vouchers/export/pools',
+                                    params: {...filters, ...voucherParams},
+                                    title: '导出',
+                                    userPermissions: ['1381007']
+                                }])
+                            }
+                        </div>
                     }}
                 />
             </SearchTable>
