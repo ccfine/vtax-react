@@ -242,7 +242,7 @@ const BusinessReport_Routes = [
         component:InvoiceSupplement,
         name:'未开票销售补开发票报表',
         icon: {
-            url: `${ICON_URL_PATH}advancePayment.svg`,
+            url: `${ICON_URL_PATH}invoiceSupplement.svg`,
             backgroundColor: "#2E8A57"
         },
         authorityInfo: businessReport["invoiceSupplement"].options,

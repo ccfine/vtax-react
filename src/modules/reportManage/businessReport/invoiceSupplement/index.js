@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {SearchTable, TableTotal, VoucherModal} from 'compoments';
 import {composeBotton, fMoney, parseJsonToParams} from 'utils';
+import moment from 'moment';
 
 const formItemStyle = {
     labelCol: {
@@ -21,23 +22,45 @@ const searchFields = (disabled, declare) => (getFieldValue) => {
         {
             label: '纳税主体',
             type: 'taxMain',
-            fieldName: 'mainId',
+            fieldName: 'main',
             span: 8,
-            formItemStyle
+            componentProps: {
+                labelInValue: true,
+                disabled
+            },
+            formItemStyle,
+            fieldDecoratorOptions: {
+                initialValue: declare ? {key:declare.mainId,label:declare.mainName} : undefined,
+                rules: [
+                    {
+                        required: true,
+                        message: '请选择纳税主体'
+                    }
+                ]
+            }
         },
         {
-            label: "用户名",
-            type: 'rangePicker',
-            fieldName: "username",
+            label: "开票所属期",
+            type: 'monthPicker',
+            fieldName: "authMonth",
             span: 8,
             formItemStyle,
             componentProps: {
-                format: "YYYY-MM-DD"
+                disabled
+            },
+            fieldDecoratorOptions: {
+                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
+                rules: [
+                    {
+                        required: true,
+                        message: '请选择凭证月份'
+                    }
+                ]
             }
         },
         {
             label: "房间编码",
-            fieldName: "rootCode",
+            fieldName: "roomCode",
             type: "input",
             span: 8,
             formItemStyle
@@ -57,12 +80,25 @@ const searchFields = (disabled, declare) => (getFieldValue) => {
             }
         },
         {
-            label: "项目分期",
-            fieldName: "select",
-            type: "select",
+            label:'项目分期',
+            fieldName:'stageId',
+            type:'asyncSelect',
             span: 8,
             formItemStyle,
-            options: [{text: 'xxx', value: 'eee'}]
+            componentProps:{
+                fieldTextName:'itemName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:getFieldValue('profitCenterId') || false,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}`,
+            }
+
+            // label: "项目分期",
+            // fieldName: "stageId",
+            // type: "select",
+            // span: 8,
+            // formItemStyle,
+            // options: [{text: 'xxx', value: 'eee'}]
         }
     ];
 };
@@ -87,21 +123,7 @@ const getColumns = (context) => {
         {
             title: "房间编码",
             dataIndex: "roomCode",
-            width: "300px",
-            render:(text,record)=>(
-                <span title="查看房间编码" onClick={()=>{
-                    context.setState({
-                        filters:{
-                            voucherId:record.id,
-                            mainId:record.id,
-                        }
-                    },()=>{
-                        context.toggleModalVoucherVisible(true)
-                    })
-                }} style={pointerStyle}>
-                {text}
-            </span>
-            ),
+            width: "300px"
         },
         {
             title: "路址",
@@ -143,7 +165,23 @@ const getColumns = (context) => {
         },
         {
             title: "发票号码",
-            dataIndex: "invoiceNum"
+            dataIndex: "invoiceNum",
+            render:(text,record)=>(
+                <span title="查看房间编码" onClick={()=>{
+                    console.log(context)
+                    context.setState({
+                        filters:{
+                            mainId:record.mainId,
+                            authMonth:record.authMonth,
+                            roomCode:record.roomCode,
+                        }
+                    },()=>{
+                        context.toggleModalVoucherVisible(true)
+                    })
+                }} style={pointerStyle}>
+                {text}
+            </span>
+            ),
         },
         {
             title: "开票所属期",
@@ -171,79 +209,68 @@ const getColumns = (context) => {
 const modelColumns = [
     {
         title: "发票号码",
-        dataIndex: "mainId",
+        dataIndex: "invoiceNum",
         width: "150px"
     },
     {
         title: "发票代码",
-        dataIndex: "profitCenterName",
+        dataIndex: "invoiceCode",
         width: "150px"
     },
     {
         title: "发票类型",
-        dataIndex: "username",
-        width: "150px"
+        dataIndex: "invoiceType",
+        width: "150px",
+        render(text){
+            let value = '';
+            if(text === 's'){
+                value = '专票'
+            }else if(text === 'c'){
+                value = '普票';
+            }
+            return value;
+        }
     },
     {
-        title: "购货单位名称",
-        dataIndex: "profitCenterName",
-        width: "150px"
-    },
-    {
-        title: "备注",
-        dataIndex: "username"
-    },
-    {
-        title: "货物或应税劳务名称",
-        dataIndex: "profitCenterName",
-        width: "200px"
-    },
-    {
-        title: "规格型号",
-        dataIndex: "username",
-        width: "200px"
-    },
-    {
-        title: "单位",
-        dataIndex: "profitCenterName",
-        width: "200px"
-    },
-    {
-        title: "数量",
-        dataIndex: "username",
-        width: "200px"
-    },
-    {
-        title: "单价",
-        dataIndex: "username",
+        title: "开票日期",
+        dataIndex: "billingDate",
         width: "200px"
     },
     {
         title: "金额",
-        dataIndex: "profitCenterName",
+        dataIndex: "amount",
         width: "200px"
     },
     {
         title: "税率",
-        dataIndex: "username",
+        dataIndex: "taxRate",
         width: "200px"
     },
     {
         title: "税额",
-        dataIndex: "profitCenterName",
+        dataIndex: "taxAmount",
         width: "200px"
     },
     {
-        title: "开票日期",
-        dataIndex: "username",
+        title: "价税合计",
+        dataIndex: "totalAmount",
         width: "200px"
+    },
+    {
+        title: "购货单位名称",
+        dataIndex: "purchaseName",
+        width: "150px"
+    },
+    {
+        title: "备注",
+        dataIndex: "remark"
     }
 ];
 
 const voucherSearchFields = [
     {
         label: '发票号码',
-        fieldName: 'voucherNo',
+        fieldName: 'invoiceNum',
         type: 'input',
         span: 8,
         componentProps: {}
@@ -265,7 +292,7 @@ export default class NewPage extends Component {
         let {filters = {}, totalSource = [], voucherVisible} = this.state;
         return <div className="oneline">
             <SearchTable
-                doNotFetchDidMount={false}
+                doNotFetchDidMount={true}
                 searchOption={{
                     fields: searchFields()
                 }}
@@ -273,7 +300,7 @@ export default class NewPage extends Component {
                     key: this.state.updateKey,
                     pageSize: 100,
                     columns: getColumns(this),
-                    url: "/test/list",
+                    url: "/invoice/for/unbilled/sales/report/list",
                     scroll: {
                         x: 3000,
                         y: window.screen.availHeight - 350
@@ -285,7 +312,7 @@ export default class NewPage extends Component {
                         {
                             !(JSON.stringify(filters) !== '{}') && composeBotton([{
                                 type: 'fileExport',
-                                url: 'account/taxCalculation/pc/export',
+                                url: '/invoice/for/unbilled/sales/report/download',
                                 params: filters,
                                 title: '导出',
                                 userPermissions: ['1911007']
@@ -311,8 +338,8 @@ export default class NewPage extends Component {
                 tableOption={{
                     title: true,
                     columns: modelColumns,
-                    url: `/advanceRentPayments/unRealty/list?${parseJsonToParams(filters)}`,
-                    scroll: {x: '2800px', y: '250px'}
+                    url: `/invoice/for/unbilled/sales/report/invoice/list?${parseJsonToParams(filters)}`,
+                    scroll: {x: '2000px', y: '250px'}
                 }}
                 visible={voucherVisible}
                 fields={voucherSearchFields}
