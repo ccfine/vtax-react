@@ -6,9 +6,17 @@ import {Row,Col,Button,Modal } from 'antd'
 import {SearchTable} from 'compoments'
 
 export default class VoucherModal extends Component{
-    state={
-        tableKey:Date.now(),
-        totalSource:{},
+    static defaultProps = {
+        tableOption:{
+            title:"凭证信息列表"
+        }
+    }
+    constructor(props) {
+        super(props);
+        this.state = {
+            tableKey:Date.now(),
+            totalSource:{},
+        };
     }
     refreshTable = ()=>{
         this.setState({
@@ -53,7 +61,7 @@ export default class VoucherModal extends Component{
                         tableOption={{
                             key:tableKey,
                             cardProps: {
-                                title: tableOption.title || "凭证信息列表",
+                                title: tableOption.title,
                                 extra:tableOption.extra || null
                             },
                             pageSize:100,
