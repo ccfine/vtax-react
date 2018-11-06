@@ -28,7 +28,7 @@ class PopModal extends Component {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/landPriceCollection/find/${props.id}`).then(({ data }) => {
+                request.get(`/landPriceCollection/${this.props.beginType === '2' ? 'pc/' : ''}find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data});
                     }
@@ -79,10 +79,10 @@ class PopModal extends Component {
                     sucessMsg;
 
                 if (this.props.action === "modify") {
-                    result = request.put('/landPriceCollection/update', obj);
+                    result = request.put(`/landPriceCollection/${this.props.beginType === '2' ? 'pc/' : ''}update`, obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
-                    result = request.post('/landPriceCollection/add', obj);
+                    result = request.post(`/landPriceCollection/${this.props.beginType === '2' ? 'pc/' : ''}add`, obj);
                     sucessMsg = '新增成功';
                 }
 
@@ -116,7 +116,8 @@ class PopModal extends Component {
             title = "编辑"
         }
 
-        const eventkey = parseInt((form.getFieldValue('event') && form.getFieldValue('event').key) || record.num,10);
+        const eventkey = parseInt((form.getFieldValue('event') && form.getFieldValue('event').key) || record.num,10),
+            disabled = eventkey===3 && this.props && this.props.beginType === '1'
         return (
             <Modal
                 title={title}
@@ -144,7 +145,7 @@ class PopModal extends Component {
                                         label:'事项名称',
                                         fieldName:'event',
                                         type:'select',
-                                        options:[
+                                        options: this.props && this.props.beginType === '1' ? [
                                             {
                                                 text:'附表3-10%税率的项目-期初余额',
                                                 value:1
@@ -165,10 +166,19 @@ class PopModal extends Component {
                                                 text:'期初可抵扣土地价款',
                                                 value:5
                                             }*/
-                                        ],
+                                        ] : [{
+                                                text:'附表3-10%税率的项目-期初余额',
+                                                value:1
+                                            }],
                                         formItemStyle:formItemLayout,
                                         fieldDecoratorOptions:{
-                                            initialValue:record.num && {key:record.num,label:record.name},
+                                            initialValue:
+                                                readonly
+                                                ?
+                                                    record.num && {key:record.num,label:record.name}
+                                                :
+                                                    this.props && this.props.beginType === '2' ? { key: 1, label:'附表3-10%税率的项目-期初余额' } : undefined
+                                            ,
                                             rules:[
                                                 {
                                                     required:true,
@@ -186,7 +196,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                (eventkey === 3) && getFields(form, [{
+                                disabled && getFields(form, [{
                                     label: "利润中心",
                                     fieldName: "profitCenterId",
                                     type: "asyncSelect",
@@ -218,7 +228,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                 (eventkey === 3) && getFields(form, [{
+                                disabled && getFields(form, [{
                                     label: "项目分期",
                                     fieldName: "stages",
                                     type: "asyncSelect",
@@ -257,7 +267,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                (eventkey === 1 || eventkey === 3) && getFields(form, [{
+                                (eventkey === 1 || disabled) && getFields(form, [{
                                         span: '24',
                                         fieldName: 'amount',
                                         label: '期初余额',
@@ -282,7 +292,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                 eventkey === 3 && getFields(form, [{
+                                disabled && getFields(form, [{
                                         span: '24',
                                         fieldName: 'landPrice',
                                         label: '累计扣除土地价款',
@@ -307,7 +317,7 @@ class PopModal extends Component {
                         </Row>
                         <Row>
                             {
-                                eventkey === 3 &&getFields(form, [{
+                                disabled && getFields(form, [{
                                         span: '24',
                                         fieldName: 'salesArea',
                                         label: '累计销售土地面积',

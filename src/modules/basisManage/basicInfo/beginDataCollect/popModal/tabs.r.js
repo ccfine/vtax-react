@@ -66,13 +66,15 @@ export default class TabPage extends Component{
         return(
             <Tabs tabPosition={this.state.tabPosition} size="small">
                 {
-                    tabList.map(ele=>(
-                        <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
-                            {
-                                getContent(ele.key, props.filters, props.disabled, props.beginType, this.state.updateKey)
-                            }
-                        </TabPane>
-                    ))
+                    tabList.map(ele=>{
+                        return !((ele.key === 'tab6' || ele.key === 'tab3') && props.beginType==='2') && (
+                            <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
+                                {
+                                    getContent(ele.key, props.filters, props.disabled, props.beginType, this.state.updateKey)
+                                }
+                            </TabPane>
+                        )
+                    })
                 }
             </Tabs>
         )

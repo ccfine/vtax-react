@@ -167,7 +167,7 @@ class TabPage extends Component{
                 for(let key in values){
                     values[key] = values[key].replace(/\$\s?|(,*)/g, '')
                 }
-                request.post('/mainProjectCollection/save',values)
+                request.post(`/mainProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}save`,values)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
@@ -267,7 +267,7 @@ class TabPage extends Component{
                         }),
                         pagination:false,
                         columns:getColumns(this,getFieldDecorator,this.props.disabled),
-                        url:`/mainProjectCollection/list?${parseJsonToParams(this.props.filters)}`,
+                        url:`/mainProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(this.props.filters)}`,
                     }}
                 />
         )
