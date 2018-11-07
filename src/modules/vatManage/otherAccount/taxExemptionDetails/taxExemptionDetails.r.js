@@ -6,7 +6,7 @@
  *
  */
 import React, {Component} from 'react';
-import {Form, message} from 'antd';
+import {Form,message,Divider,Modal} from 'antd';
 import {fMoney, request, listMainResultStatus, composeBotton, requestResultStatus} from 'utils';
 import {SearchTable, TableTotal} from 'compoments';
 import PopModal from "./popModal";
@@ -52,7 +52,7 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
             ]
         }
     },
-    ...(context.state.showProfitCenter ? [{
+    ...((context.state.showProfitCenter && context.state.isEnabled) ? [{
         label: '利润中心',
         fieldName: 'profitCenterId',
         type: 'asyncSelect',
@@ -73,10 +73,10 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
 ]);
 
 const getColumns = (context, getFieldDecorator, disabled) => {
-    const {dataSource} = context.state;
+    const {dataSource,showProfitCenter,isEnabled} = context.state;
     let profitCenterId = '';
     return [
-        ...(context.state.showProfitCenter ? [{
+        ...((showProfitCenter && isEnabled) ? [{
             title: '利润中心',
             dataIndex: 'profitCenterName',
             width: '150px',
@@ -100,11 +100,11 @@ const getColumns = (context, getFieldDecorator, disabled) => {
         {
         title: '减税性质代码',
         dataIndex: 'reduceNum',
-        width: '100px'
+        width: '150px'
     }, {
         title: '减税性质名称',
         dataIndex: 'reduceName',
-        width: '200px'
+        width: '300px'
     }, {
         title: '期初余额',
         dataIndex: 'initialBalance',
@@ -244,7 +244,8 @@ class TaxExemptionDetails extends Component {
         searchTableLoading: false,
         totalSource: undefined,
         showProfitCenter: false,
-        dataSource: []
+        dataSource: [],
+        isEnabled:false,
     };
     componentDidMount(){
         const {declare={}} = this.props;
@@ -390,9 +391,32 @@ class TaxExemptionDetails extends Component {
             });
         }
     };
+    //选中多少条数据 - 禁用
+    handleChange = (checked) => {
+        const t = checked === true ? '利润中心' : '纳税主体'
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: `是否切换到${t}维度查询？`,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.setState({
+                    isEnabled:checked
+                },()=>{
+                    setTimeout(this.refreshTable, 100)
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+
+    }
 
     render() {
-        const {visible, action, opid, tableKey, searchTableLoading, statusParam, totalSource, filters, showProfitCenter} = this.state;
+        const {visible, action, opid, tableKey, searchTableLoading, statusParam, totalSource, filters, showProfitCenter,isEnabled} = this.state;
         const {getFieldDecorator} = this.props.form;
         const {declare} = this.props;
         let disabled = !!declare;
@@ -425,23 +449,42 @@ class TaxExemptionDetails extends Component {
                     key: tableKey,
                     pageSize: 100,
                     columns: getColumns(this, getFieldDecorator, (disabled && declare.decAction === 'edit')),
-                    url: '/account/other/reduceTaxDetail/list',
+                    url: `/account/other/reduceTaxDetail/list?type=${isEnabled === false ? '1' : '2'}`,
                     cardProps: {
                         title: '减免税明细台账'
                     },
                     scroll: {
-                        y: window.screen.availHeight - 380 - (disabled ? 50 : 0),
-                        x: 1500
+                        y: window.screen.availHeight - 400 - (disabled ? 50 : 0),
+                        x: (showProfitCenter && isEnabled) ? 1250 : 1100
                     },
                     extra: <div>
                         {
                             listMainResultStatus(statusParam)
                         }
                         {
+                            (disabled && declare.decAction === 'edit') && showProfitCenter && composeBotton([{
+                                type:'switch',
+                                checked: isEnabled,
+                                checkedChildren:'利润中心',
+                                unCheckedChildren:'纳税主体',
+                                size:'default',
+                                style:{marginRight:0},
+                                onSuccess:(checked)=>{
+                                    this.handleChange(checked)
+                                }
+                            }],statusParam)
+                        }
+                        {
+                            (disabled && declare.decAction === 'edit') && showProfitCenter && <Divider type="vertical" />
+                        }
+                        {
                             JSON.stringify(filters) !== '{}' && composeBotton([{
                                 type: 'fileExport',
                                 url: 'account/other/reduceTaxDetail/export',
-                                params: filters,
+                                params: {
+                                    ...filters,
+                                    type:isEnabled === false ? '1' : '2',
+                                },
                                 title: '导出',
                                 userPermissions: ['1301007']
                             }])

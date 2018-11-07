@@ -97,7 +97,6 @@ class PopModal extends Component {
         });
     }
     render() {
-        const { filters } = this.props;
         const readonly = (this.props.action === 'look');
         let { record = {} } = this.state;
         const form = this.props.form;
@@ -126,7 +125,7 @@ class PopModal extends Component {
             >
                 <Spin spinning={this.state.formLoading}>
                     <Form>
-                        <Row>
+                        {/*<Row>
                             {getFields(form, [{
                                 label: "利润中心",
                                 fieldName: "profitCenterId",
@@ -155,7 +154,7 @@ class PopModal extends Component {
                                 },
                             }
                             ])}
-                        </Row>
+                        </Row>*/}
                         <Row>
                             {
                                 getFields(form, [{
