@@ -12,7 +12,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = [
+const searchFields = getFieldValue => [
         {
             label:'纳税主体',
             fieldName:'mainId',
@@ -38,13 +38,27 @@ const searchFields = [
             fieldDecoratorOptions:{
                 initialValue: undefined,
             },
+        },
+        {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:false,
+                fetchAble:getFieldValue('mainId') || false,
+                url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
+            }
         }
     ]
 const columns=[
     {
-        title: '纳税主体',
-        dataIndex: 'mainName',
-        width:'150px',
+        title: '利润中心',
+        dataIndex: 'profitCenterName',
+        width:'200px',
     },
     {
         title: '发票号码',

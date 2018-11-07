@@ -32,6 +32,9 @@ class FileUndoImportModal extends Component{
                             span:16
                         }
                     },
+                    componentProps:{
+                        disabled: initialValue['mainId'] ? true : false,
+                    },
                     fieldDecoratorOptions:{
                         initialValue: initialValue['mainId'] || undefined,
                         rules:[
@@ -43,11 +46,12 @@ class FileUndoImportModal extends Component{
                     }
                 },
                 {
-                    label:'查询期间',
+                    label:'认证月份',
                     fieldName:monthFieldName,
                     type:'monthPicker',
                     componentProps:{
                         format:'YYYY-MM',
+                        disabled: initialValue[monthFieldName] && moment(initialValue[monthFieldName]) ? true : false,
                     },
                     span:20,
                     formItemStyle:{
@@ -63,7 +67,7 @@ class FileUndoImportModal extends Component{
                         rules:[
                             {
                                 required:true,
-                                message:'请选查询期间'
+                                message:'请选择认证月份'
                             }
                         ]
                     }
@@ -138,6 +142,7 @@ class FileUndoImportModal extends Component{
     render(){
         const props = this.props;
         const {visible,loading} = this.state;
+        const { fields } = this.props
         return(
             <span style={props.style}>
                 <Button size='small' disabled={props.disabled} onClick={()=>this.toggleVisible(true)}>
@@ -148,7 +153,7 @@ class FileUndoImportModal extends Component{
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             {
-                                getFields(this.props.form,props.searchFields(props))
+                                fields? getFields(this.props.form,props.searchFields(props).concat(fields)): getFields(this.props.form,props.searchFields(props))
                             }
                         </Row>
                     </Form>

@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
 
 const columns = context =>[{
         title: '利润中心',
@@ -31,8 +30,8 @@ const columns = context =>[{
         dataIndex:'invoiceNum',
         width:'200px',
     },{
-        title:'认证日期',
-        dataIndex:'authDate',
+        title:'认证所属期',
+        dataIndex:'authMonth',
         width:'200px',
     }, {
         title: "不含税金额",
@@ -86,7 +85,7 @@ const columns = context =>[{
         className: "table-money",
     },{
         title: "待抵扣期间",
-        dataIndex: "assetsState",
+        dataIndex: "deductedPeriod",
         width:'100px',
     },
 ];
@@ -94,19 +93,12 @@ const columns = context =>[{
 export default class NewlyBuilt extends Component{
     state={
         tableKey:Date.now(),
-        visibleView:false,
-        voucherNum:undefined,
         filters:{},
         totalSource:undefined,
         /**
          *修改状态和时间
          * */
         statusParam:{},
-    }
-    toggleViewModalVisible=visibleView=>{
-        this.mounted && this.setState({
-            visibleView
-        })
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
@@ -125,7 +117,7 @@ export default class NewlyBuilt extends Component{
         this.mounted = null;
     }
     render(){
-        const {tableKey,visibleView,voucherNum,filters,statusParam,totalSource} = this.state;
+        const {tableKey,filters,statusParam,totalSource} = this.state;
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -155,7 +147,7 @@ export default class NewlyBuilt extends Component{
                     columns:columns(this),
                     url:'/account/income/estate/aloneBuildList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建固定资产进项税额抵扣</span>,
+                        title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建不动产进项税额抵扣</span>,
                         extra:<div>
                             {
                                 listMainResultStatus(statusParam)
@@ -204,13 +196,7 @@ export default class NewlyBuilt extends Component{
                         y:window.screen.availHeight-430,
                     },
                 }}
-            >
-                <ViewDocumentDetails
-                    title="查看凭证详情"
-                    visible={visibleView}
-                    voucherNum={voucherNum}
-                    toggleViewModalVisible={this.toggleViewModalVisible} />
-            </SearchTable>
+            />
         )
     }
 }

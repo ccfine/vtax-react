@@ -36,7 +36,8 @@ export default function  watermark(settings) {
     let oTemp = document.createDocumentFragment(); //document.getElementById('root');
 
     //获取页面最大宽度
-    let page_width = Math.max(document.body.scrollWidth, document.body.clientWidth);
+    // let page_width = Math.max(document.body.scrollWidth, document.body.clientWidth);
+    let page_width = Math.max(defaultSettings.Element.scrollWidth, defaultSettings.Element.clientWidth);
     let cutWidth = page_width * 0.0150;
         page_width = page_width - cutWidth;
     //获取页面最大高度
@@ -70,7 +71,7 @@ export default function  watermark(settings) {
             mask_div.style.OTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
             mask_div.style.transform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
             mask_div.style.visibility = "";
-            mask_div.style.position = 'fixed'//"absolute";
+            mask_div.style.position = 'absolute'//"absolute";
             mask_div.style.left = x + 'px';
             mask_div.style.top = y + 'px';
             mask_div.style.overflow = "hidden";
@@ -88,7 +89,8 @@ export default function  watermark(settings) {
             oTemp.appendChild(mask_div);
         };
     };
-    document.body.appendChild(oTemp);
+    // document.body.appendChild(oTemp);
+    defaultSettings.Element.appendChild(oTemp);
 }
 //获取当前时间，格式YYYY-MM-DD
 /*export default function  getNowFormatDate() {

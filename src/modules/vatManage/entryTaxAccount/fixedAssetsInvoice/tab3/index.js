@@ -15,11 +15,11 @@ const getColumns = context =>[
         dataIndex: 'stagesName',
         width:'200px',
     },{
-        title: '固定资产名称',
+        title: '不动产名称',
         dataIndex: 'assetName',
         width:'200px',
     },{
-        title: '固定资产编号',
+        title: '不动产编号',
         dataIndex: 'assetNo',
         width:'200px',
     },{
@@ -107,7 +107,7 @@ export default class Tab3 extends Component{
                     columns:getColumns(this),
                     url:'/account/income/fixedAssets/buildRateList',
                     cardProps:{
-                        title: <span><label className="tab-breadcrumb">固定资产进项发票台账 / </label>自建转自用综合税率</span>,
+                        title: <span><label className="tab-breadcrumb">不动产进项发票台账 / </label>自建转自用综合税率</span>,
                     },
                     extra: (
                         <div>

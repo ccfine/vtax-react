@@ -61,7 +61,7 @@ const list =(disabled,declare,getFieldValue)=> [
         },
         fieldDecoratorOptions:{
             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-            rules:[
+            rules: [
                 {
                     required:true,
                     message:'请选择查询期间'
@@ -78,8 +78,8 @@ const list =(disabled,declare,getFieldValue)=> [
         componentProps:{
             fieldTextName:'profitName',
             fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
             url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
         }
     },
@@ -119,7 +119,7 @@ const searchFields =(key,disabled,declare)=>(getFieldValue)=> {
             result = [
                 ...list(disabled,declare,getFieldValue),
                 {
-                    label: "固定资产名称",
+                    label: "不动产名称",
                     fieldName: "assetName",
                     type: "input",
                     span: 6,
@@ -128,7 +128,7 @@ const searchFields =(key,disabled,declare)=>(getFieldValue)=> {
                     fieldDecoratorOptions: {}
                 },
                 {
-                    label: "固定资产编号",
+                    label: "不动产编号",
                     fieldName: "assetNo",
                     type: "input",
                     span: 6,

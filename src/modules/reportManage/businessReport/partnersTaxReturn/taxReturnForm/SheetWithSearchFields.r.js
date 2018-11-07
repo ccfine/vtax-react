@@ -7,47 +7,7 @@ import {Form, Row, Col, Button,Card,message} from 'antd'
 import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
-import Sheet from './Sheet.r'
-
-const list =(disabled,declare,defaultParams,type)=> [
-    {
-        label:'纳税主体',
-        fieldName:'main',
-        type:'taxMain',
-        span:type===1 ? 8 : 6,
-        componentProps:{
-            labelInValue:true,
-            disabled,
-        },
-        fieldDecoratorOptions:{
-            initialValue: (disabled && declare.mainId) ? {key:declare.mainId,label:declare.mainName} : JSON.stringify(defaultParams) !== "{}" ? (defaultParams && {key:defaultParams.mainId,label:''}) : undefined ,
-            rules:[
-                {
-                    required:true,
-                    message:'请选择纳税主体'
-                }
-            ]
-        },
-    },
-    {
-        label:'月份',
-        fieldName:'taxMonth',
-        span:type===1 ? 8 : 6,
-        type:'monthPicker',
-        componentProps:{
-            disabled,
-        },
-        fieldDecoratorOptions:{
-            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.taxMonth && moment(defaultParams.taxMonth)),
-            rules:[
-                {
-                    required:true,
-                    message:'请选择月份'
-                }
-            ]
-        }
-    },
-]
+import Sheet from 'modules/reportManage/businessReport/taxReturnForm/Sheet.r'
 
 class SheetWithSearchFields extends Component{
     static propTypes={
@@ -59,34 +19,45 @@ class SheetWithSearchFields extends Component{
     }
     static defaultProps = {
         grid:[],
-        /*searchFields:(disabled,declare,defaultParams={},type)=>(getFieldValue)=> {
-         return type === 1 ? list(disabled,declare,defaultParams,type) : [
-         ...list(disabled,declare,defaultParams,type),
-         {
-         label:'利润中心',
-         fieldName:'profitCenterId',
-         type:'asyncSelect',
-         span:6,
-         fieldDecoratorOptions:{
-         //initialValue: ,
-         rules:[
-         {
-         required:true,
-         message:'请选择月份'
-         }
-         ]
-         },
-         componentProps:{
-         fieldTextName:'profitName',
-         fieldValueName:'id',
-         doNotFetchDidMount:false,
-         fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-         url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-         }
-         },
-         ]
-         }*/
-        searchFields:(disabled,declare,defaultParams={})=>(getFieldValue)=>list(disabled,declare,defaultParams)
+        searchFields:(disabled,declare,defaultParams={})=>[
+            {
+                label:'纳税主体',
+                fieldName:'main',
+                type:'taxMain',
+                span:8,
+                componentProps:{
+                    labelInValue:true,
+                    disabled,
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && declare.mainId) ? {key:declare.mainId,label:declare.mainName} : JSON.stringify(defaultParams) !== "{}" ? (defaultParams && {key:defaultParams.mainId,label:''}) : undefined ,
+                    rules:[
+                        {
+                            required:true,
+                            message:'请选择纳税主体'
+                        }
+                    ]
+                },
+            },
+            {
+                label:'月份',
+                fieldName:'taxMonth',
+                span:8 ,
+                type:'monthPicker',
+                componentProps:{
+                    disabled,
+                },
+                fieldDecoratorOptions:{
+                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.taxMonth && moment(defaultParams.taxMonth)),
+                    rules:[
+                        {
+                            required:true,
+                            message:'请选择月份'
+                        }
+                    ]
+                }
+            },
+        ]
     }
     state={
         params:{},
@@ -112,7 +83,7 @@ class SheetWithSearchFields extends Component{
         })
     }
     componentDidMount(){
-        const { declare,partnerId,reportType } = this.props;
+        const { declare,drawerConfig:{partnerId},reportType } = this.props;
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
@@ -132,7 +103,7 @@ class SheetWithSearchFields extends Component{
             if(!err){
 
                 values.reportType = this.props.reportType;
-                values.partnerId = this.props.partnerId;
+                values.partnerId = this.props.drawerConfig.partnerId;
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
                     values.mainId = values.main.key
@@ -154,11 +125,9 @@ class SheetWithSearchFields extends Component{
         this.props.form.validateFields((err, values) => {
             if(!err){
                 values.reportType = this.props.reportType;
-                values.partnerId = this.props.partnerId;
+                values.partnerId = this.props.drawerConfig.partnerId;
                 for(let key in values.map){
-                    if(values.map[key] !== 0){
-                        values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
-                    }
+                    values.map[key] = values.map[key].replace(/\$\s?|(,*)/g, '')
                 }
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
@@ -188,10 +157,10 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields,type, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,drawerConfig} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding } = this.state;
-        const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
+        const readOnly = !(disabled && declare.decAction==='edit') || !(drawerConfig && drawerConfig.type==='edit') || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
                 <div>
@@ -202,7 +171,7 @@ class SheetWithSearchFields extends Component{
                     }}>
                         <Row>
                             {
-                                getFields(form, searchFields(disabled,declare,defaultParams,type))
+                                getFields(form, searchFields(disabled,declare,defaultParams))
                             }
                             <Col style={{width:'100%',textAlign:'right'}}>
                                 <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>

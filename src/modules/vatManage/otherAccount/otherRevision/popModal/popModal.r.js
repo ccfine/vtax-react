@@ -337,6 +337,7 @@ class PopModal extends Component{
                             type:'numeric',
                             componentProps:{
                                 disabled:readonly,
+                                allowNegative: true,
                             },
                             fieldDecoratorOptions:{
                                 initialValue:record.amount,

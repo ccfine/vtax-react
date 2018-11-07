@@ -60,7 +60,7 @@ const searchFields = (disabled,declare) => {
 };
 const getColumns = (context,hasOperate) => {
     let operates = (hasOperate && parseInt(context.state.statusParam.status, 0) === 1)?[{
-        title:'合作方公操作',
+        title:'合作方操作',
         key:'actions',
         width:'160px',
         render:(text,record)=>{
@@ -120,13 +120,13 @@ const getColumns = (context,hasOperate) => {
                 return (
                     <div>
                         {
-                            (hasOperate && parseInt(context.state.statusParam.status, 0) === 1) ? composeBotton([{
+                            (hasOperate && parseInt(context.state.statusParam.status, 0) === 1) && composeBotton([{
                                 type: 'action',
                                 icon: 'edit',
                                 title: '编辑',
                                 userPermissions: ['2131004'],
                                 onSuccess: () => {
-                                    context.togglesDrawerVisible(true,record.id)
+                                    context.showDrawer('edit',record.id)
                                 }
                             }, {
                                 type: 'action',
@@ -135,7 +135,6 @@ const getColumns = (context,hasOperate) => {
                                 style: {
                                     cursor: 'pointer',
                                     color: 'red',
-                                    marginRight: 10
                                 },
                                 userPermissions: ['2131008'],
                                 onSuccess: () => {
@@ -161,18 +160,19 @@ const getColumns = (context,hasOperate) => {
                                         }
                                     })
                                 }
-                            }]) :
-                                <span
-                                    title="查看纳税申报详情"
-                                    style={{
-                                        ...pointerStyle,
-                                        marginLeft: 5
-                                    }}
-                                    onClick={() => context.togglesDrawerVisible(true) }
-                                >
-                                    <Icon type="search" theme="outlined" style={{fontSize: 16}}/>
-                                </span>
+                            }])
                         }
+
+                        <span
+                            title="查看纳税申报详情"
+                            style={{
+                                ...pointerStyle,
+                                marginLeft: 5
+                            }}
+                            onClick={() => context.showDrawer('view',record.id) }
+                        >
+                            <Icon type="search" theme="outlined" style={{fontSize: 16}}/>
+                        </span>
                     </div>
                 );
             },
@@ -227,6 +227,9 @@ class PartnersTaxReturn extends Component{
         modalConfig: {
             type: ''
         },
+        drawerConfig: {
+            type: ''
+        },
         filters:{},
         statusParam: {},
 
@@ -234,17 +237,6 @@ class PartnersTaxReturn extends Component{
     toggleModalVisible=visible=>{
         this.mounted && this.setState({
             visible
-        })
-    }
-    togglesDrawerVisible = (drawerVisible,partnerId) => {
-        this.mounted && this.setState({
-            drawerVisible,
-            partnerId
-        });
-    };
-    refreshTable = ()=>{
-        this.mounted && this.setState({
-            updateKey:Date.now()
         })
     }
     showModal=(type,record)=>{
@@ -255,6 +247,20 @@ class PartnersTaxReturn extends Component{
                 id:record.id,
                 record
             }
+        })
+    }
+    togglesDrawerVisible = (drawerVisible) => {
+        this.mounted && this.setState({
+            drawerVisible
+        });
+    };
+    showDrawer=(type,partnerId)=>{
+        this.togglesDrawerVisible(true)
+        this.mounted && this.setState({
+            drawerConfig: {
+                type,
+                partnerId
+            },
         })
     }
     deleteRecord = (url, cb) => {
@@ -279,7 +285,11 @@ class PartnersTaxReturn extends Component{
             })
         })
     };
-
+    refreshTable = ()=>{
+        this.mounted && this.setState({
+            updateKey:Date.now()
+        })
+    }
     mounted=true;
     componentWillUnmount(){
         this.mounted=null
@@ -288,8 +298,8 @@ class PartnersTaxReturn extends Component{
 
     }
     render(){
-        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,partnerId,filters} = this.state;
-        const { declare,type } = this.props;
+        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,drawerConfig,filters} = this.state;
+        const { declare } = this.props;
         let disabled = !!declare;
 
         return(
@@ -314,33 +324,30 @@ class PartnersTaxReturn extends Component{
                         pageSize:100,
                         columns:getColumns(this,disabled && declare.decAction==='edit'),
                         cardProps:{
-                            title:'合作方纳税申报信息表',
+                            title:'合作方纳税申报表',
                             extra:<div>
                                 {
                                     listMainResultStatus(statusParam)
                                 }
                                 {
-                                    composeBotton([{ //(disabled && declare.decAction==='edit') &&
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'add',
                                         icon:'plus',
                                         userPermissions:['2151003'],
                                         onClick:()=>this.showModal('add',{})
+                                    },{
+                                        type:'submit',
+                                        url:'/taxDeclarationReport/partner/submit',
+                                        params:filters,
+                                        userPermissions:['2131010'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'revoke',
+                                        url:'/taxDeclarationReport/partner/revoke',
+                                        params:filters,
+                                        userPermissions:['2131011'],
+                                        onSuccess:this.refreshTable,
                                     }],statusParam)
-                                }
-                                {
-                                    (disabled && declare.decAction==='edit') && composeBotton([{
-                                            type:'submit',
-                                            url:'/taxDeclarationReport/partner/submit',
-                                            params:filters,
-                                            userPermissions:['2131010'],
-                                            onSuccess:this.refreshTable
-                                        },{
-                                            type:'revoke',
-                                            url:'/taxDeclarationReport/partner/revoke',
-                                            params:filters,
-                                            userPermissions:['2131011'],
-                                            onSuccess:this.refreshTable,
-                                        }],statusParam)
                                 }
                             </div>,
                         },
@@ -362,7 +369,7 @@ class PartnersTaxReturn extends Component{
                     //closable={true}
                     visible={drawerVisible}
                     width={'100%'}
-                    //height={'100vh'}
+                    height={'100%'}
                     //getContainer={document.getElementsByClassName("ant-layout-content")[0]}
                     onClose={()=>this.togglesDrawerVisible(false)}
                     maskClosable={false}
@@ -373,7 +380,7 @@ class PartnersTaxReturn extends Component{
 
                     }}
                 >
-                    { drawerVisible ? <PartnersTaxReturnForm declare={declare} togglesDrawerVisible={this.togglesDrawerVisible} type={type} partnerId={partnerId} /> : ''}
+                    { drawerVisible ? <PartnersTaxReturnForm declare={declare} togglesDrawerVisible={this.togglesDrawerVisible} drawerConfig={drawerConfig} /> : ''}
                 </Drawer>
             </div>
         )

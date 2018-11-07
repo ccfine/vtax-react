@@ -1,17 +1,17 @@
 /**
  * Created by liurunbin on 2018/1/18.
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-09 16:32:52
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-24 18:29:09
  *
  */
 import React,{Component} from 'react'
 import {Form,message} from 'antd'
-import {SearchTable,TableTotal} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import {SearchTable,TableTotal,PopDetailsModal} from 'compoments'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import moment from 'moment';
 import { NumericInputCell } from 'compoments/EditableCell'
-const searchFields =(disabled,declare)=> {
+
+const searchFields =(disabled,declare)=> getFieldValue => {
     return [
         {
             label:'纳税主体',
@@ -67,29 +67,54 @@ const searchFields =(disabled,declare)=> {
                 ]
             },
         },
+        {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle:{
+                labelCol:{
+                    span:8
+                },
+                wrapperCol:{
+                    span:16
+                }
+            },
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount:true,
+                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+            }
+        }
     ]
 }
 const getColumns = (context,disabled) => {
-    let lastStegesId1 = '',lastStegesId2 = '',{dataSource} = context.state;
+    let lastStegesId2 = '',{dataSource} = context.state;
+    let profitCenterList = [];
+    dataSource.forEach((item, index) => {
+        profitCenterList.includes(item.profitCenterId) ? profitCenterList.push(0) : profitCenterList.push(item.profitCenterId);
+        return item;
+    })
     return [
-    {
-        title:'纳税主体',
-        dataIndex:'mainName',
-        width:'15%',
-        render:(text, row, index) => {
-            let rowSpan = 0;
-            if(lastStegesId1 !== row.stagesId){
-                lastStegesId1 = row.stagesId;
-                rowSpan = dataSource.filter(ele=>ele.stagesId === row.stagesId).length;
+        {
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width:'150px',
+            render: (text, row, index) => {
+                let rowSpan = 0;
+                if(profitCenterList[index] === row.profitCenterId){
+                    rowSpan = dataSource.filter(ele=>ele.profitCenterId === row.profitCenterId).length;
+                }
+                return {
+                    children: text,
+                    props: {
+                        rowSpan: rowSpan,
+                    },
+                };
             }
-            return {
-              children: text,
-              props: {
-                rowSpan: rowSpan,
-              },
-            };
-          },
-    },{
+        },{
         title:'项目分期',
         dataIndex:'stagesName',
         width:'15%',
@@ -125,7 +150,15 @@ const getColumns = (context,disabled) => {
                             onBlur:(e)=>context.handleBlur(e,`list[${record.id}].withOutAmount`),
                         }}
                     />
-            }else{
+            }else if (record.preProject === "销售不动产") {
+                return (
+                    <a title="查看详情"
+                       onClick={ () => context.toggleModalVoucherVisible(true, record.stagesId) }
+                    >
+                        { text }
+                    </a>
+                )
+            } else {
                 return fMoney(text)
             }
         },
@@ -192,13 +225,93 @@ const getColumns = (context,disabled) => {
 ];
 }
 
+const voucherSearchFields = [
+    {
+        label: "SAP凭证号",
+        fieldName: "voucherNumSap",
+        span: 8,
+        formItemStyle: {
+            labelCol: {
+                span: 8
+            },
+            wrapperCol: {
+                span: 16
+            }
+        }
+    }
+]
+const voucherColumns = [
+    {
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: 150
+    },
+    {
+        title: "项目分期",
+        dataIndex: "stagesName",
+        width: 150
+    },
+    {
+        title: "计税方式",
+        dataIndex: "taxMethod",
+        width: 150
+    },
+    {
+        title: "过账日期",
+        dataIndex: "billingDate",
+        width: 150
+    },
+    {
+        title: "房间编码",
+        dataIndex: "roomCode",
+        width: 150
+    },
+    {
+        title: "确收时点",
+        dataIndex: "invoiceDate",
+        width: 150
+    },
+    {
+        title: "SAP凭证号",
+        dataIndex: "voucherNumSap",
+        width: 150
+    },
+    {
+        title: "凭证摘要",
+        dataIndex: "voucherAbstract",
+        width: 150
+    },
+    {
+        title: "贷方科目代码",
+        dataIndex: "creditSubjectCode",
+        width: 150
+    },
+    {
+        title: "贷方科目名称",
+        dataIndex: "creditSubjectName",
+        width: 150
+    },
+    {
+        title: "贷方金额",
+        dataIndex: "creditAmount",
+        width: 150
+    },
+    {
+        title: "税率",
+        dataIndex: "rate",
+        width: 150
+    },
+    {
+        title: "金额（含税）",
+        dataIndex: "withTaxAmount",
+        width: 150
+    }
+]
 
 class PrepayTax extends Component{
     state={
         tableKey:Date.now(),
         searchTableLoading:false,
-        visibleView:false,
-        voucherNum:undefined,
         filters:{},
         /**
          *修改状态和时间
@@ -207,6 +320,9 @@ class PrepayTax extends Component{
         totalSource:undefined,
         dataSource:[],
         saveLoding:false,
+        voucherVisible: false,
+        voucherFilter: {},
+        stagesId: ""
     }
     refreshTable = ()=>{
         this.setState({
@@ -218,9 +334,10 @@ class PrepayTax extends Component{
             searchTableLoading
         })
     }
-    toggleViewModalVisible=visibleView=>{
+    toggleModalVoucherVisible = (voucherVisible, stagesId) => {
         this.setState({
-            visibleView
+            voucherVisible,
+            stagesId
         })
     }
     fetchResultStatus = ()=>{
@@ -250,7 +367,7 @@ class PrepayTax extends Component{
                         this.setState({saveLoding:false})
                         if(data.code===200){
                             message.success('保存成功!');
-                            // this.props.form.resetFields(this.state.dataSource.map((ele,index)=>`outTaxAmount[${index}]`))
+                            this.props.form.resetFields()
                             this.refreshTable()
                         }else{
                             message.error(`保存失败:${data.msg}`)
@@ -294,7 +411,7 @@ class PrepayTax extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,visibleView,voucherNum,statusParam,filters,totalSource,saveLoding} = this.state;
+        const {searchTableLoading,tableKey,statusParam,filters,totalSource,saveLoding,voucherVisible,voucherFilter,stagesId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -343,16 +460,10 @@ class PrepayTax extends Component{
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1331007'],
-                                }],statusParam)
+                                }])
                             }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'submit',
-                                    url:'/account/prepaytax/submit',
-                                    params:filters,
-                                    userPermissions:['1331010'],
-                                    onSuccess:this.refreshTable
-                                },{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
@@ -364,6 +475,12 @@ class PrepayTax extends Component{
                                     url:'/account/prepaytax/reset',
                                     params:filters,
                                     userPermissions:['1331009'],
+                                    onSuccess:this.refreshTable
+                                },{
+                                    type:'submit',
+                                    url:'/account/prepaytax/submit',
+                                    params:filters,
+                                    userPermissions:['1331010'],
                                     onSuccess:this.refreshTable
                                 },{
                                     type:'revoke',
@@ -397,11 +514,39 @@ class PrepayTax extends Component{
                         },
                     }}
                 >
-                    <ViewDocumentDetails
-                        title="查看凭证详情"
-                        visible={visibleView}
-                        voucherNum={voucherNum}
-                        toggleViewModalVisible={this.toggleViewModalVisible} />
+
+                <PopDetailsModal
+                    title="销售不动产凭证详情"
+                    visible={voucherVisible}
+                    fields={voucherSearchFields}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                    tableOption={{
+                        cardProps: {
+                            title: "销售不动产凭证列表"
+                        },
+                        columns: voucherColumns,
+                        url: `/account/prepaytax/queryDetail?${parseJsonToParams(filters)}&stagesId=${stagesId}`,
+                        scroll: { x: "2000px", y: "250px" },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherFilter: params
+                            })
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    JSON.stringify(voucherFilter) !== "{}" && composeBotton([{
+                                        type: "fileExport",
+                                        url: `account/prepaytax/exportDetail`,
+                                        params: Object.assign(voucherFilter, filters, {stagesId: stagesId}),
+                                        title: "导出",
+                                        userPermissions: ["1261007"]
+                                    }])
+                                }
+                            </div>
+                        )
+                    }}
+                />
                 </SearchTable>
             </div>
         )

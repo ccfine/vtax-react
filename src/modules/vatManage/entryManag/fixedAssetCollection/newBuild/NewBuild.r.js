@@ -3,7 +3,7 @@
  * @Date: 2018-10-13 11:47:47 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-18 17:15:26
+ * @Last Modified time: 2018-10-27 10:16:50
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
@@ -84,6 +84,9 @@ class NewBuildCollection extends Component{
         return(
             <div className='oneLine'>
             <SearchTable
+                style={{
+                    marginTop:-16
+                }}
                 doNotFetchDidMount={!disabled}
                 searchOption={{
                     fields:searchFields,
@@ -106,7 +109,7 @@ class NewBuildCollection extends Component{
                     columns:columns,
                     url:'/fixedAssetCard/separateList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">固定资产信息采集 / </label>单独新建固定资产</span>,
+                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>单独新建不动产</span>,
                         extra: (
                             <div>
                                 {
@@ -119,7 +122,7 @@ class NewBuildCollection extends Component{
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
-                                    }], statusParam)
+                                    }])
                                 }
                             </div>
                         )

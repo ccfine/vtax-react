@@ -54,12 +54,17 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                //
                 if(values.project){
                     values.name = values.project.label;
                     values.num = values.project.key;
-                    values.project = undefined;
+                    delete values.project
                 }
-                let obj = Object.assign({}, this.state.record, values);
+                let obj = Object.assign({}, this.state.record, {
+                    ...this.props && this.props.filters,
+                    ...values,
+                });
+                console.log(obj, this.props && this.props.filters)
                 let result,
                     sucessMsg;
 
@@ -67,7 +72,7 @@ class PopModal extends Component {
                     result = request.put('/taxReliefProjectCollection/update', obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
-                    obj.mainId = this.props.mainId;
+                    //obj.mainId = this.props.mainId;
                     result = request.post('/taxReliefProjectCollection/add', obj);
                     sucessMsg = '新增成功';
                 }
@@ -120,6 +125,36 @@ class PopModal extends Component {
             >
                 <Spin spinning={this.state.formLoading}>
                     <Form>
+                        {/*<Row>
+                            {getFields(form, [{
+                                label: "利润中心",
+                                fieldName: "profitCenterId",
+                                type: "asyncSelect",
+                                span: 24,
+                                formItemStyle: formItemLayout,
+                                componentProps: {
+                                    //disabled:readonly,
+                                    selectOptions: {
+                                        disabled:readonly,
+                                        //labelInValue: true
+                                    },
+                                    fieldTextName: "profitName",
+                                    fieldValueName: "id",
+                                    fetchAble: filters && filters.mainId,
+                                    url: `/taxsubject/profitCenterList/${filters && filters.mainId}`
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue:(filters && filters.profitCenterId) || record.profitCenterId || undefined,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择利润中心'
+                                        }
+                                    ]
+                                },
+                            }
+                            ])}
+                        </Row>*/}
                         <Row>
                             {
                                 getFields(form, [{

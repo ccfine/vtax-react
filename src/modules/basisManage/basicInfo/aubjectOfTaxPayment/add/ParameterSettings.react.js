@@ -144,15 +144,15 @@ export default class ParameterSettings extends Component{
                                 },
                                 options:[
                                     /*{
-                                        label: '二者熟早：房间交付日期、实际交付日',
+                                        label: '二者孰早：房间交付日期、实际交付日',
                                         value: '1',
                                     },*/
                                     {
-                                        label: '三者熟早：合同约定交付日期、房间交付日期、开票日期',
+                                        label: '三者孰早：合同约定交付日期、房间交付日期、开票日期',
                                         value: '2',
                                     },
                                     {
-                                        label: '二者熟早：房间交付日期、开票日期',
+                                        label: '二者孰早：房间交付日期、开票日期',
                                         value: '3',
                                     }
                                 ],
@@ -162,6 +162,38 @@ export default class ParameterSettings extends Component{
                                 },
                                 fieldDecoratorOptions:{
                                     initialValue:(defaultData!==null && defaultData.confirmType) || '2',
+                                }
+                            },
+                            {
+                                label: '纳税申报维度',
+                                fieldName: 'taxSubjectConfigBO.dimensionality',
+                                type: 'radioGroup',
+                                span: 24,
+                                formItemStyle:{
+                                    labelCol:{
+                                        span:3
+                                    },
+                                    wrapperCol:{
+                                        span:21
+                                    },
+                                    className:'vTax-CheckboxGroup',
+                                },
+                                options:[
+                                    {
+                                        label: '纳税主体和利润中心',
+                                        value: '2',
+                                    },
+                                    {
+                                        label: '纳税主体',
+                                        value: '1',
+                                    },
+                                ],
+                                componentProps:{
+                                    className:"radioStyle",
+                                    disabled,
+                                },
+                                fieldDecoratorOptions:{
+                                    initialValue:(defaultData!==null && defaultData.dimensionality) || '1',
                                 }
                             }
                         ])

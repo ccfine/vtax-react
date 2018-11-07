@@ -2,7 +2,7 @@
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-17 14:54:31
+ * @Last Modified time: 2018-10-27 10:48:46
  */
 import React, { Component } from "react";
 import {message} from 'antd';
@@ -54,8 +54,8 @@ const searchFields = (getFieldValue) => [
             fieldTextName:'profitName',
             fieldValueName:'id',
             doNotFetchDidMount:false,
-            fetchAble:getFieldValue('taxSubjectId') || false,
-            url:`/taxsubject/profitCenterList/${getFieldValue('taxSubjectId')}`,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
         }
     },
     {
@@ -67,7 +67,7 @@ const searchFields = (getFieldValue) => [
             fieldTextName:'itemName',
             fieldValueName:'id',
             doNotFetchDidMount:true,
-            fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+            fetchAble:getFieldValue('profitCenterId') || false,
             url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
     },
@@ -189,12 +189,12 @@ const getColumns = context => [
         width:'200px',
     },
     {
-        title: "固定资产名称",
+        title: "不动产名称",
         dataIndex: "assetName",
         width:'200px',
     },
     {
-        title: "固定资产编号",
+        title: "不动产编号",
         dataIndex: "assetNo",
         width:'100px',
     },
@@ -295,7 +295,7 @@ class fixedAssetCard extends Component {
                     url: "/fixedAssetCard/report/list",
                     key: updateKey,
                     cardProps: {
-                        title: <TableTitle time={totalSource && totalSource.extractTime}>固定资产卡片</TableTitle>
+                        title: <TableTitle time={totalSource && totalSource.extractTime}>不动产卡片</TableTitle>
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({

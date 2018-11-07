@@ -40,7 +40,7 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
     }
   },
   {
-    label: "查询期间",
+    label: "认证所属期",
     fieldName: "authMonth",
     type: "monthPicker",
     span: 8,
@@ -68,8 +68,8 @@ const searchFields =  (disabled,declare) => (getFieldValue) => [
     componentProps: {
         fieldTextName: "profitName",
         fieldValueName: "id",
-        doNotFetchDidMount: false,
-        fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
+        doNotFetchDidMount: !declare,
+        fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
         url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
     }
   },
@@ -187,7 +187,7 @@ const columns = [
       width: "200px"
     },
     {
-      title: "认证月份",
+      title: "认证所属期",
       dataIndex: "authMonth",
       width: "200px"
     },
@@ -255,12 +255,17 @@ const columns = [
       width: "200px"
     },
     {
+      title: "已拆分税额",
+      dataIndex: "splitTaxAmount",
+      width: "200px"
+    },
+    {
       title: "最新更新日期",
       dataIndex: "updateDate",
       width: "200px"
     },
     {
-      title: "数据重算",
+      title: "匹配的不动产类型",
       dataIndex: "matchingStatus",
       render: text => {
         let t = ""
@@ -361,7 +366,7 @@ export default class SelfContainedProductAssociation extends Component {
             pageSize: 100,
             columns,
             cardProps: {
-              title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项的发票</TableTitle>
+              title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项发票</TableTitle>
             },
             url: "/accountReceiptsInvoice/list",
             extra: <div>
@@ -371,7 +376,7 @@ export default class SelfContainedProductAssociation extends Component {
               {
                   JSON.stringify(filters) !== "{}" && composeBotton([{
                       type: "fileExport",
-                      url: "/accountReceiptsInvoice/export",
+                      url: "accountReceiptsInvoice/export",
                       params: filters,
                       title: "导出",
                       userPermissions: ["2051007"]
@@ -432,7 +437,7 @@ export default class SelfContainedProductAssociation extends Component {
               })
             },
             scroll: {
-              x: 4400,
+              x: 4600,
               y: window.screen.availHeight - 480 - (disabled? 50: 0) 
             }
           }}

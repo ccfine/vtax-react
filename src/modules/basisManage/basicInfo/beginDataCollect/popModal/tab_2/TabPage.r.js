@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {message,Form} from 'antd'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
@@ -61,9 +61,9 @@ class TabPage extends Component{
                 for(let key in values){
                     values[key] = values[key].replace(/\$\s?|(,*)/g, '')
                 }
-                request.post('/tax/credit/items/collection/save',{
+                request.post(`/tax/credit/items/collection/${this.props.beginType === '2' ? 'pc/' : ''}save`,{
                    ...values,
-                    mainId:this.props.mainId,
+                    ...this.props.filters,
                 })
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
@@ -149,8 +149,8 @@ class TabPage extends Component{
                 searchOption={null}
                 tableOption={{
                     pagination:false,
-                    columns:getColumns(this,getFieldDecorator,this.props.disabled),
-                    url:`/tax/credit/items/collection/list/${props.mainId}`,
+                    columns:getColumns(this,getFieldDecorator,props.disabled),
+                    url:`/tax/credit/items/collection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(props.filters)}`,
                     key:updateKey,
                     cardProps:{
                         bordered:false,

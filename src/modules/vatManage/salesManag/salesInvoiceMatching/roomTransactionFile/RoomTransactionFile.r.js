@@ -41,6 +41,9 @@ const importFeilds = (filters,disabled,declare)=>[
                 span:14
             }
         },
+        componentProps:{
+            disabled: (filters && filters["mainId"]) ? true : false,
+        },
         fieldDecoratorOptions:{
             initialValue: (filters && filters["mainId"]) || undefined,
             rules:[
@@ -113,8 +116,8 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         componentProps:{
             fieldTextName:'profitName',
             fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
             url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
         }
     },
@@ -522,14 +525,12 @@ class RoomTransactionFile extends Component{
                                 }])
                             }
                             {
-                             composeBotton([{
-                                 type:'fileExport',
-                                 url:'output/room/files/download',
-                                 onSuccess:this.refreshTable
-                                 }],statusParam)
-                             }
-                            {
                                 (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                    type:'fileExport',
+                                    url:'output/room/files/download',
+                                    userPermissions:['1211005'],
+                                    onSuccess:this.refreshTable
+                                },{
                                     type:'fileImport',
                                     url:'/output/room/files/upload/pre',
                                     uploadUrl:'/output/room/files/upload',

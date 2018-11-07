@@ -67,10 +67,10 @@ const getStatuText =(status)=> {
     let span = undefined
     switch (status) {
         case 1:
-            span = <span style={{ color: '#f5222d' }}>未提交</span>
+            span = <span style={{ color: '#f5222d' }}>未审核</span>
             break
         case 2:
-            span = <span style={{ color: '#333' }}>已提交</span>
+            span = <span style={{ color: '#333' }}>已审核</span>
             break
         default:
     }

@@ -66,8 +66,8 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             componentProps:{
                 fieldTextName:'profitName',
                 fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
                 url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
@@ -81,7 +81,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                fetchAble:getFieldValue('profitCenterId') || false,
                 url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },

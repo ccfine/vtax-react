@@ -14,13 +14,13 @@ import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
 import strategies from 'config/routingAuthority.config'
 
 const InvoiceCollection = AsyncComponent(() => import('./invoiceCollection'), '进项发票采集')
-const FixedAssetCollection = AsyncComponent(() => import('./fixedAssetCollection'), '固定资产信息采集')
+const FixedAssetCollection = AsyncComponent(() => import('./fixedAssetCollection'), '不动产信息采集')
 const InputTaxDetails = AsyncComponent(() => import('../entryTaxAccount/inputTaxDetails'), '进项税额明细台账')
 const OtherBusinessInputTaxRollOut = AsyncComponent(() => import('../entryTaxAccount/otherBusinessInputTaxRollOut'), '进项税额转出台账')
 //const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
 const RealEstateInputTaxCredit = AsyncComponent(() => import('../entryTaxAccount/realEstateInputTaxCredit'), '不动产进项税额抵扣台账')
 const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
-const FixedAssetsInvoice = AsyncComponent(() => import('../entryTaxAccount/fixedAssetsInvoice'), '固定资产进项发票台账')
+const FixedAssetsInvoice = AsyncComponent(() => import('../entryTaxAccount/fixedAssetsInvoice'), '不动产进项发票台账')
 const OtherDeductionVoucher = AsyncComponent(() => import('./otherDeductionVoucher'), '其他扣税凭证')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
@@ -41,7 +41,7 @@ const EntryManag_Routes = [
     },{
         path:`${PATH}/fixedAssetCollection`,
         component:FixedAssetCollection,
-        name:'固定资产信息采集',
+        name:'不动产信息采集',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCollection.svg`,
             backgroundColor:'#73CF2B'
@@ -132,7 +132,7 @@ const EntryManag_Routes = [
     },{
         path:`${PATH}/fixedAssetsInvoice`,
         component:FixedAssetsInvoice,
-        name:'固定资产进项发票台账',
+        name:'不动产进项发票台账',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetsInvoice.svg`,
             backgroundColor:'#3B4A83'

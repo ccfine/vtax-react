@@ -11,7 +11,7 @@ import SubmitOrRecall from "compoments/buttonModalWithForm/SubmitOrRecall.r";
 import PermissibleRender from "compoments/permissible/PermissibleRender.r";
 import ButtonMarkModal from 'compoments/buttonMarkModal'
 import ButtonConsistent from 'compoments/buttonConsistent'
-import {FileExport,FileImportModal,AutoFileUpload,FileUndoImportModal} from 'compoments';
+import {FileExport,FileImportModal,AutoFileUpload,FileUndoImportModal,FileDownload} from 'compoments';
 import ButtonTableAction from 'compoments/buttonTableAction'
 import ButtonSwitch from 'compoments/buttonSwitch'
 import {ButtonModalWithForm} from 'compoments'
@@ -116,17 +116,27 @@ const getRevokeImportOptions =(item, statusParam)=>{
 }
 
 //文件导出
-const getFileExportOptions = (item)=>{
+const getFileExportOptions = (item, statusParam)=>{
     return {
-        disabled: false,
+        //disabled: false,
         title:"下载导入模板",
         url: item.url,
         onSuccess: item.onSuccess,
         ...item,
+        disabled: (statusParam && isDisabled(statusParam)) || false,
         setButtonStyle:item.style || item.setButtonStyle || {marginRight:5},
     };
 };
 
+//下载导入模板
+const getFileDownloadOptions = (item, statusParam) => {
+    return {
+        title: "下载导入模板",
+        ...item,
+        setButtonStyle: item.style || item.setButtonStyle || { marginRight: 5 },
+        disabled: isDisabled(statusParam)
+    }
+}
 
 //标记
 const getMarkOptions = (item,statusParam) =>{
@@ -195,10 +205,11 @@ const getActionOptions = (item)=>{
 };
 
 //switch
-const getSwitchOptions = (item) =>{
+const getSwitchOptions = (item,statusParam) =>{
     return {
         ...item,
         checked:item.checked,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         style:item.style || item.setButtonStyle || {marginRight:5},
     };
@@ -256,9 +267,14 @@ const composeBotton = (buttons = [], params) => {
                 break;
             case "fileExport":
                 component = (
-                    <FileExport {...getFileExportOptions(item)} />
+                    <FileExport {...getFileExportOptions(item,params)} />
                 );
                 break;
+            case "fileDownload":
+                component = (
+                    <FileDownload { ...getFileDownloadOptions(item, params) } />
+                )
+                break
             case 'revokeImport':
                 component = (
                     <FileUndoImportModal {...getRevokeImportOptions(item,params)} />
@@ -286,7 +302,7 @@ const composeBotton = (buttons = [], params) => {
                 break;
             case 'switch':
                 component = (
-                    <ButtonSwitch {...getSwitchOptions(item)} />
+                    <ButtonSwitch {...getSwitchOptions(item,params)} />
                 )
                 break;
             case 'self':

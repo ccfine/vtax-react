@@ -7,8 +7,8 @@ import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
 // import { compose } from 'redux';
 // import {connect} from 'react-redux'
-import { AsyncTable,TableTotal } from "compoments";
-import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
+import { AsyncTable,TableTotal,PopDetailsModal } from "compoments";
+import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
 
@@ -168,9 +168,63 @@ const columns2=(context,hasOperate) => {
         }
     ];
 }
+
+const voucherSearchFields = [
+    {
+        label:'SAP凭证号',
+        fieldName:'voucherNo',
+        type:'input',
+        span:8,
+        componentProps:{ }
+    }
+]
+const voucherColumns = [
+    {
+        title: '利润中心',
+        dataIndex: 'profitCenterNum',
+        width:200,
+    }, {
+        title: '项目分期名称',
+        dataIndex: 'stageName',
+        width:200,
+    },{
+        title: '科目代码',
+        dataIndex: 'subjectCode',
+        width:150,
+    },{
+        title: '科目名称',
+        dataIndex: 'subjectName',
+        width:150,
+    },{
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNo',
+        width:200,
+    },{
+        title: '款项明细',
+        dataIndex: 'zkxmx',
+        //width:100,
+    },{
+        title: '税率',
+        dataIndex: 'taxRate',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
+        width:100,
+    },{
+        title: '本币不含税金额',
+        dataIndex: 'amountWithoutTax',
+        width:150,
+        render:text=>fMoney(text),
+        className: "table-money"
+    },{
+        title: '期间（月份）',
+        dataIndex: 'month',
+        width:100,
+    }
+];
 class UnBilledSalesNotEstate extends Component {
     state={
         visible: false, // 控制Modal是否显示
+        voucherVisible: false,
         opid: "", // 当前操作的记录
         /**
          * params条件，给table用的
@@ -193,7 +247,11 @@ class UnBilledSalesNotEstate extends Component {
             tableUpDateKey:Date.now()
         })
     }
-
+    toggleModalVoucherVisible = voucherVisible => {
+        this.setState({
+            voucherVisible
+        });
+    };
     updateStatus = () => {
         requestResultStatus('/account/notInvoiceUnSale/realty/listMain',this.state.filters,result=>{
             this.mounted && this.setState({
@@ -259,11 +317,11 @@ class UnBilledSalesNotEstate extends Component {
         this.mounted = null;
     }
     render(){
-        const {tableUpDateKey,filters,statusParam,totalSource} = this.state;
+        const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
-
+        const { getFieldValue } = this.props.form
         return(
             <Layout style={{background:'transparent'}} >
                 <Card
@@ -314,6 +372,19 @@ class UnBilledSalesNotEstate extends Component {
                                             ]
                                         }
                                     },
+                                    {
+                                        label:'利润中心',
+                                        fieldName:'profitCenterId',
+                                        type:'asyncSelect',
+                                        span:8,
+                                        componentProps:{
+                                            fieldTextName:'profitName',
+                                            fieldValueName:'id',
+                                            doNotFetchDidMount: !declare,
+                                            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+                                            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+                                        }
+                                    },
                                 ])
                             }
 
@@ -341,6 +412,15 @@ class UnBilledSalesNotEstate extends Component {
                           }
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
+                                  type:'consistent',
+                                  //icon:'exception',
+                                  btnType:'default',
+                                  text:'转租业务凭证',
+                                  userPermissions:['1265014'],
+                                  onClick:()=>{
+                                      this.toggleModalVoucherVisible(true);
+                                  }
+                              },{
                                   type:'reset',
                                   url:'/account/notInvoiceUnSale/realty/reset',
                                   params:filters,
@@ -441,6 +521,17 @@ class UnBilledSalesNotEstate extends Component {
                     declare={declare}
                 />
 
+                <PopDetailsModal
+                    title="凭证信息"
+                    visible={voucherVisible}
+                    fields={voucherSearchFields}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                    tableOption={{
+                        columns:voucherColumns,
+                        url:`/advanceRentPayments/unRealty/list?${parseJsonToParams(filters)}`,
+                        scroll:{ x: '1600px',y:'250px' },
+                    }}
+                />
             </Layout>
         )
     }

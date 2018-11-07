@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 const pointerStyle = {
     cursor:'pointer',
     color:'#1890ff'
@@ -44,6 +44,7 @@ const columns = context =>[
                 context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
+                        mainId:record.mainId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -163,7 +164,7 @@ class InputTaxCertificate extends Component{
                     <ViewDocumentDetails
                         title="查看凭证详情"
                         visible={visibleView}
-                        {...voucherInfo}
+                        filters={voucherInfo}
                         toggleViewModalVisible={this.toggleViewModalVisible} />
                 </SearchTable>
             </div>

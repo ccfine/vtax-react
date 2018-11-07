@@ -14,11 +14,11 @@ const columns = context =>[{
         dataIndex:'stagesName',
         width:'200px',
     },{
-        title:'固定资产名称',
+        title:'不动产名称',
         dataIndex:'assetName',
         width:'200px',
     },{
-        title:'固定资产编号',
+        title:'不动产编号',
         dataIndex:'assetNo',
         width:'200px',
     },{
@@ -166,7 +166,7 @@ export default class SelfBuiltToSelfUse extends Component{
                         columns:columns(this),
                         url:'/account/income/estate/ownBuildList',
                         cardProps: {
-                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>自建转自用自固定资产进项税额抵扣</span>,
+                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>自建转自用自不动产进项税额抵扣</span>,
                         },
                         extra: (
                             <div>

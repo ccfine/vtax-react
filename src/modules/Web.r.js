@@ -10,12 +10,12 @@ import {withRouter,Switch,Route} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {RouteWithSubRoutes} from 'compoments'
 import {composeMenus} from 'utils'
-import watermark from '../utils/WaterMark'
+// import watermark from '../utils/WaterMark'
 import Header from './header'
 import Sider from './sider'
 import routes from '../modules/routes'
 import {logout} from '../redux/ducks/user'
-import moment from 'moment';
+// import moment from 'moment';
 
 
 const { Content } = Layout;
@@ -56,12 +56,12 @@ class Web extends Component {
     }
 
     componentDidMount(){
-        const {isAuthed} = this.props;
-        if(isAuthed){
-            let mask_div = document.getElementsByClassName("mask_div");
-            mask_div.innerHTML = null;
-            watermark({ watermark_txt:`${this.props.realName},${this.props.username},${moment().format('YYYY-MM-DD HH:mm')}`});
-        }
+        // const {isAuthed} = this.props;
+        // if(isAuthed){
+        //     let mask_div = document.getElementsByClassName("mask_div");
+        //     mask_div.innerHTML = null;
+        //     watermark({ watermark_txt:`${this.props.realName},${this.props.username},${moment().format('YYYY-MM-DD HH:mm')}`});
+        // }
 
     }
 

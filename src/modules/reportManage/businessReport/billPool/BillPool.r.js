@@ -6,7 +6,7 @@ import {SearchTable,TableTotal} from 'compoments'
 // import {message} from 'antd'
 // import {connect} from 'react-redux'
 // import createSocket from '../socket'
-import {fMoney, requestDict, setFormat} from 'utils'
+import {fMoney, requestDict} from 'utils'
 
 const formItemStyle={
     labelCol:{
@@ -300,6 +300,15 @@ const columns = [
     },
 ];
 
+const setFormat = data => {
+    return data.map(item=>{
+        return{
+            value:item.code,
+            text:item.name
+        }
+    })
+}
+
 export default class BillPool extends Component{
     state={
         updateKey:Date.now(),
@@ -394,9 +403,9 @@ export default class BillPool extends Component{
                                         {
                                             title:'总计',
                                             total:[
-                                                {title: '不含税金额', dataIndex: 'zebhsje'},
-                                                {title: '税额', dataIndex: 'zese'},
-                                                {title: '含税金额', dataIndex: 'zehsje'},
+                                                {title: '不含税金额', dataIndex: 'amount'},
+                                                {title: '税额', dataIndex: 'taxAmount'},
+                                                {title: '含税金额', dataIndex: 'totalAmount'},
                                             ],
                                         }
                                     ]}/>

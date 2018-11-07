@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import {message,Form} from 'antd'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import { NumericInputCell } from 'compoments/EditableCell'
 import { withRouter } from 'react-router'
@@ -167,7 +167,7 @@ class TabPage extends Component{
                 for(let key in values){
                     values[key] = values[key].replace(/\$\s?|(,*)/g, '')
                 }
-                request.post('/mainProjectCollection/save',values)
+                request.post(`/mainProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}save`,values)
                     .then(({data})=>{
                         this.toggleSearchTableLoading(false)
                         if(data.code===200){
@@ -224,6 +224,7 @@ class TabPage extends Component{
     render(){
         const {searchTableLoading,tableKey} = this.state;
         const {getFieldDecorator} = this.props.form;
+        console.log(this.props.filters)
         return(
                 <SearchTable
                     actionOption={
@@ -258,7 +259,7 @@ class TabPage extends Component{
                             bordered:false,
                             style:{
                                 marginTop:0,
-                                maxHeight:400,
+                                //maxHeight:window.screen.availHeight-350,
                                 overflowY:'auto',
                             }
                         },
@@ -267,7 +268,7 @@ class TabPage extends Component{
                         }),
                         pagination:false,
                         columns:getColumns(this,getFieldDecorator,this.props.disabled),
-                        url:`/mainProjectCollection/list/${this.props.mainId}`,
+                        url:`/mainProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(this.props.filters)}`,
                     }}
                 />
         )

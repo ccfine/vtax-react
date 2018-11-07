@@ -11,22 +11,20 @@ import sheet_2 from 'modules/reportManage/businessReport/taxReturnForm/sheetData
 import sheet_3 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet3'
 import sheet_4 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet4'
 import sheet_5 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet5'
-/*
- import sheet_6 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet6'
- import sheet_7 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet7'*/
 import {sheet_8,composeGrid_8} from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet8'
-
-// import sheet_9 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet9'
 import sheet_10 from 'modules/reportManage/businessReport/taxReturnForm/sheetData/sheet10'
 import SheetWithSearchFields from '../taxReturnForm/SheetWithSearchFields.r'
 const TabPane = Tabs.TabPane;
+
+const url = '/taxDeclarationReport/partner/find',
+    saveUrl='/taxDeclarationReport/partner/update';
 
 const sheetData = [
     {
         tab:'主表',
         grid:sheet_0,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url,
+        saveUrl,
         action:true,
         scroll:{
             x:'100%',
@@ -35,17 +33,17 @@ const sheetData = [
     }, {
         tab:'附表一',
         grid:sheet_1,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url,
+        saveUrl,
         scroll:{
-            x:1800,
-            y:window.screen.availHeight-320,
+            x:window.screen.availWidth > 1800 ? '100%' : 1800,
+            y:window.screen.availHeight-350,
         }
     }, {
         tab:'附表二',
         grid:sheet_2,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url,
+        saveUrl,
         scroll:{
             //x:1800,
             y:window.screen.availHeight-320,
@@ -53,8 +51,8 @@ const sheetData = [
     }, {
         tab:'附表三',
         grid:sheet_3,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url,
+        saveUrl,
         scroll:{
             //x:1800,
             y:window.screen.availHeight-320,
@@ -62,41 +60,25 @@ const sheetData = [
     }, {
         tab:'附表四',
         grid:sheet_4,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url,
+        saveUrl,
     }, {
         tab:'附表五',
         grid:sheet_5,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
-        /*}, {
-         tab:'固定资产表',
-         grid:sheet_6,
-         url:'/tax/decConduct/fixedAssets/list'
-         }, {
-         tab:'进项结构明细',
-         grid:sheet_7,
-         url:'/tax/declaration/tax/structure/list'*/
+        url,
+        saveUrl,
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
-        url:'/taxDeclarationReport/partner/find',
-        saveUrl:'/taxDeclarationReport/partner/update',
+        url,
+        saveUrl,
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
-        url:'/taxDeclarationReport/partner/find',
+        url,
+        saveUrl,
         composeGrid:composeGrid_8,
-        saveUrl:'/taxDeclarationReport/partner/update',
     },
-    // {
-    //     tab:'营改增税负分析测算明细表',
-    //     grid:sheet_9,
-    //     url:'/tax/decConduct/camping/list',
-    //     scroll:{
-    //         x:'200%'
-    //     }
-    // }
 ]
 
 export default class TaxReturnForm extends Component{
@@ -114,7 +96,7 @@ export default class TaxReturnForm extends Component{
     }
     render () {
         const {activeKey,params} = this.state,
-            {declare,type,partnerId} = this.props;
+            {declare,drawerConfig} = this.props;
         return (
             <React.Fragment>
                 <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}}
@@ -130,7 +112,7 @@ export default class TaxReturnForm extends Component{
                             <TabPane tab={item.tab} key={i}>
                                 {
                                     parseInt(activeKey,0) === i ?
-                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} reportType={i} partnerId={partnerId}/>
+                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} drawerConfig={drawerConfig} reportType={i} />
                                         : ''
                                 }
                             </TabPane>

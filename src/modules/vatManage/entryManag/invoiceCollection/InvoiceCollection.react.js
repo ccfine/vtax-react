@@ -27,6 +27,9 @@ const getFields = (filters)=>[
                 span:14
             }
         },
+        componentProps:{
+            disabled: (filters && filters["mainId"]) ? true : false,
+        },
         fieldDecoratorOptions:{
             initialValue: (filters && filters["mainId"]) || undefined,
             rules:[
@@ -37,7 +40,7 @@ const getFields = (filters)=>[
             ]
         },
     }, {
-        label: '认证月份',
+        label: '认证所属期',
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
@@ -49,23 +52,90 @@ const getFields = (filters)=>[
                 span:14
             }
         },
-        componentProps: {},
+        componentProps: {
+            disabled: (filters && moment(filters["authMonth"], "YYYY-MM")) ? true : false,
+        },
         fieldDecoratorOptions: {
-            initialValue:
-            (filters && moment(filters["authMonth"], "YYYY-MM")) ||
+            initialValue:(filters && moment(filters["authMonth"], "YYYY-MM")) ||
             undefined,
             rules: [
                 {
                     required: true,
-                    message: '请选择认证月份'
+                    message: '请选择认证所属期'
+                }
+            ]
+        },
+    },
+    {
+        label: "导入内容",
+        fieldName: "type",
+        type: "select",
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        options: [
+            {
+                text: "进项发票",
+                value: "1"
+            },
+            {
+                text: "进项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择导入内容'
                 }
             ]
         },
     }
 ]
 
-const getSearchFields = (disabled,declare) => {
-    return [
+const getImportContent = () => [
+    {
+        label: "撤销导入内容",
+        fieldName: "type",
+        type: "select",
+        span: 20,
+        formItemStyle:{
+            labelCol:{
+                span:8
+            },
+            wrapperCol:{
+                span:16
+            }
+        },
+        options: [
+            {
+                text: "进项发票",
+                value: "1"
+            },
+            {
+                text: "进项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择撤销导入内容'
+                }
+            ]
+        },
+    }
+]
+
+const getSearchFields = (disabled,declare) => (getFieldValue) => [
         {
             label: "纳税主体",
             fieldName: "main",
@@ -86,7 +156,7 @@ const getSearchFields = (disabled,declare) => {
             }
         },
         {
-            label: "认证月份",
+            label: "认证所属期",
             fieldName: "authMonth",
             type: "monthPicker",
             span: 8,
@@ -101,9 +171,22 @@ const getSearchFields = (disabled,declare) => {
                 rules: [
                     {
                         required: true,
-                        message: "请选择认证月份"
+                        message: "请选择认证所属期"
                     }
                 ]
+            }
+        },
+        {
+            label: "利润中心",
+            fieldName: "profitCenterId",
+            type: "asyncSelect",
+            span: 8,
+            componentProps: {
+                fieldTextName: "profitName",
+                fieldValueName: "id",
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
@@ -113,15 +196,23 @@ const getSearchFields = (disabled,declare) => {
             span: 8,
             componentProps: {},
             fieldDecoratorOptions: {}
+        },
+        {
+            label: "认证日期",
+            fieldName: "authDate",
+            type: "datePicker",
+            span: 8,
+            componentProps:{
+                format:'YYYY-MM-DD'
+            }
         }
-    ]
-};
+]
 
 const getColumns = (context) => [{
-    title: "纳税主体",
-    dataIndex: "mainName",
-    width:'200px',
-    },
+    title: "利润中心",
+    dataIndex: "profitCenterName",
+    width: "200px"
+  },
     {
         title: "数据来源",
         dataIndex: "sourceType",
@@ -197,7 +288,7 @@ const getColumns = (context) => [{
         width:'100px',
     },
     {
-        title: "认证月份",
+        title: "认证所属期",
         dataIndex: "authMonth",
         width:'100px',
     },
@@ -377,6 +468,22 @@ class InvoiceCollection extends Component {
     componentWillUnmount(){
         this.mounted = null;
     }
+
+    matchData = () => {
+        const { filters } = this.state
+        request.put("/income/invoice/collection/updateProfitCenterByPool", filters)
+            .then(({data}) => {
+                if (data.code === 200) {
+                    message.success(data.data);
+                    this.refreshTable()
+                } else {
+                    message.error(`数据匹配失败:${data.msg}`)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
@@ -431,15 +538,31 @@ class InvoiceCollection extends Component {
                                     }])
                                 }
                                 {
-                                    composeBotton([{
-                                        type:'fileExport',
-                                        url:'income/invoice/collection/download',
-                                        onSuccess:this.refreshTable
-                                    }])
-                                }
-
-                                {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([             
+                                    {
+                                        type: "match",
+                                        icon: "copy",
+                                        text: "数据匹配",
+                                        btnType: "default",
+                                        userPermissions: ["1495002"],
+                                        onClick: this.matchData
+                                    },
+                                    {
+                                        type: "fileDownload",
+                                        menu: [
+                                            {
+                                                url: "income/invoice/collection/download",
+                                                title: "进项发票模板"
+                                            },
+                                            {
+                                                url: "income/invoice/collection/downloadProfitCenter",
+                                                title: "进项发票的利润中心模板",
+                                            }
+                                        ],
+                                        userPermissions: ["1491005"],    
+                                        onSuccess: this.refreshTable
+                                    },
+                                    {
                                         type:'fileImport',
                                         url:'/income/invoice/collection/upload',
                                         userPermissions:['1491005'],
@@ -450,13 +573,10 @@ class InvoiceCollection extends Component {
                                         url:'/income/invoice/collection/revocation',
                                         params:filters,
                                         monthFieldName:"authMonth",
+                                        fields: getImportContent(),
                                         onSuccess:this.refreshTable,
                                         userPermissions:['1495000'],
-                                    }],statusParam)
-                                }
-
-                                {
-                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                    },{
                                         type:'delete',
                                         icon:'delete',
                                         text:'删除',

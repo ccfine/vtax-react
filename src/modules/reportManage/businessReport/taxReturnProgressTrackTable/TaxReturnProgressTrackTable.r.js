@@ -19,7 +19,7 @@ const searchFields=(getFieldValue)=>{
     return [
         {
             label: "区域",
-            fieldName: "area",
+            fieldName: "parent",
             type: "asyncSelect",
             span: 8,
             formItemStyle,
@@ -46,8 +46,8 @@ const searchFields=(getFieldValue)=>{
             componentProps: {
                 fieldTextName: "name",
                 fieldValueName: "id",
-                fetchAble:(getFieldValue('area') && getFieldValue('area').key) || false,
-                url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('area') && getFieldValue('area').key)}`,
+                fetchAble:(getFieldValue('parent') && getFieldValue('parent').key) || false,
+                url:`/sysOrganization/queryLoginOrgs/${(getFieldValue('parent') && getFieldValue('parent').key)}`,
                 selectOptions:{
                     labelInValue:true,
                     showSearch:true,
@@ -134,7 +134,8 @@ const columns = [
     },
     {
       title: '纳税主体',
-      dataIndex: 'mainName'
+      dataIndex: 'mainName',
+      width: "200px"
     },
     {
       title: "申报期间",
@@ -196,7 +197,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                         {
                             JSON.stringify(filters) !=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'/taxDeclarationTrack/report/export',
+                                url:'taxDeclarationTrack/report/export',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:["2121007"],
@@ -208,7 +209,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: "100%",y:window.screen.availHeight-360,},
+                    scroll:{ x: 1400, y:window.screen.availHeight-360,},
                 }}
             />
             </div>

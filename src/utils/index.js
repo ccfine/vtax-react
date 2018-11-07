@@ -77,7 +77,7 @@ const htmlDecode = html =>{
 const toPercent = val => {
     let valNum = Number(val);
     if (isNaN(valNum)){
-         return val;
+        return val;
     }else if (valNum === 0) {
         return valNum;
     }
@@ -96,10 +96,10 @@ const fromPercent = val=>{
 const transformDataStatus = status =>{
     status = parseInt(status,0)
     if(status===1){
-        return '暂存';
+        return '未审核';
     }
     if(status===2){
-        return '提交'
+        return '已审核'
     }
     return status
 }
@@ -108,10 +108,10 @@ const listMainResultStatus = (statusParam) =>{
                                 <span style={{marginRight: 20}}>状态：<label style={{color: '#f5222d'}}>{
                                     transformDataStatus(statusParam.status)
                                 }</label></span>
-        {
-            ( statusParam && parseInt(statusParam.status, 0)===2 && statusParam.lastModifiedDate) && <span>提交时间：{statusParam.lastModifiedDate}</span>
-        }
-    </div>
+            {
+                ( statusParam && parseInt(statusParam.status, 0)===2 && statusParam.lastModifiedDate) && <span>提交时间：{statusParam.lastModifiedDate}</span>
+            }
+        </div>
 }
 
 //设置select值名不同
@@ -128,7 +128,7 @@ const setFormat = data =>{
 const parseJsonToParams = data=>{
     let str = '';
     for(let key in data){
-        if(typeof data[key] !== 'undefined' && data[key] !== ''){
+        if(typeof data[key] !== 'undefined' &&  data[key] !== undefined &&  data[key] !== '' && data[key] !== 'null' && data[key] !== null){
             str += `${key}=${data[key]}&`
         }
     }
@@ -137,8 +137,8 @@ const parseJsonToParams = data=>{
 const getResultStatus = (url,filters) => {
     return new Promise(function (resolve, reject) {
         request.get(url,{
-                params:filters
-            })
+            params:filters
+        })
             .then(({data}) => {
                 if(data.code===200){
                     resolve(data.data)

@@ -131,8 +131,8 @@ const getColumns = context =>[
             return res
         }
     },{
-        title: '认证日期',
-        dataIndex: 'authDate',
+        title: '认证所属期',
+        dataIndex: 'authMonth',
         width:'100px',
     }
 ];
@@ -203,7 +203,7 @@ export default class Tab1 extends Component{
                     columns:getColumns(this),
                     url:'/account/income/fixedAssets/incomeSeparateList',
                     cardProps:{
-                        title: <span><label className="tab-breadcrumb">固定资产进项发票台账 / </label>单独新建自持类进项发票</span>,
+                        title: <span><label className="tab-breadcrumb">不动产进项发票台账 / </label>单独新建自持类进项发票</span>,
                     },
                     extra: (
                         <div>
@@ -221,20 +221,20 @@ export default class Tab1 extends Component{
                             } */}
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type: 'reset',
+                                    url:'/account/income/fixedAssets/reset',
+                                    params:filters,
+                                    userPermissions:['1241009'],
+                                    onSuccess:()=>{
+                                        this.props.refreshTabs()
+                                    },
+                                },{
                                     type:'submit',
                                     url:'/account/income/fixedAssets/submit',
                                     params:filters,
                                     userPermissions:['1241010'],
                                     onSuccess:()=>{
                                         //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type: 'reset',
-                                    url:'/account/income/fixedAssets/reset',
-                                    params:filters,
-                                    userPermissions:['1241009'],
-                                    onSuccess:()=>{
                                         this.props.refreshTabs()
                                     },
                                 },{

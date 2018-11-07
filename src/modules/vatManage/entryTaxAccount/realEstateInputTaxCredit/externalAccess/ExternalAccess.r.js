@@ -13,11 +13,11 @@ const columns = (context,isEdit) =>[{
         dataIndex:'stagesName',
         width:'200px',
     },{
-        title:'固定资产名称',
+        title:'不动产名称',
         dataIndex:'assetName',
         width:'200px',
     },{
-        title:'固定资产编号',
+        title:'不动产编号',
         dataIndex:'assetNo',
         width:'200px',
     },{
@@ -154,7 +154,7 @@ export default class ExternalAccess extends Component{
                         columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
                         url:'/account/income/estate/externalList',
                         cardProps: {
-                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>外部获取固定资产进项税额抵扣</span>,
+                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>外部获取不动产进项税额抵扣</span>,
                         },
                         // onSuccess: (params,dataSource) => {
                         //     this.setState({
@@ -179,16 +179,7 @@ export default class ExternalAccess extends Component{
                                     }],statusParam)
                                 } */}
                                 {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'submit',
-                                        url:'/account/income/estate/submit',
-                                        params:filters,
-                                        userPermissions:['1251010'],
-                                        onSuccess:()=>{
-                                            //this.refreshTable();
-                                            this.props.refreshTabs()
-                                        },
-                                    },{
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
                                         type: 'reset',
                                         url:'/account/income/estate/reset',
                                         params:filters,
@@ -196,16 +187,8 @@ export default class ExternalAccess extends Component{
                                         onSuccess:()=>{
                                             this.props.refreshTabs()
                                         },
-                                    },{
-                                        type:'revoke',
-                                        url:'/account/income/estate/revoke',
-                                        params:filters,
-                                        userPermissions:['1251011'],
-                                        onSuccess:()=>{
-                                            //this.refreshTable();
-                                            this.props.refreshTabs()
-                                        },
-                                    }],statusParam)
+                                    }
+                                    ],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={
                                     [
