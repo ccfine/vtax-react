@@ -196,6 +196,15 @@ const getSearchFields = (disabled,declare) => (getFieldValue) => [
             span: 8,
             componentProps: {},
             fieldDecoratorOptions: {}
+        },
+        {
+            label: "认证日期",
+            fieldName: "authDate",
+            type: "datePicker",
+            span: 8,
+            componentProps:{
+                format:'YYYY-MM-DD'
+            }
         }
 ]
 

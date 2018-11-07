@@ -6,11 +6,16 @@
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
-import {SearchTable,TableTotal} from "compoments";
-import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus } from "utils";
+import {SearchTable,TableTotal,PopDetailsModal} from "compoments";
+import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus, parseJsonToParams } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 import { NumericInputCell } from 'compoments/EditableCell'
+
+const pointerStyle = {
+    cursor: 'pointer',
+    color: '#1890ff'
+};
 
 const getFields = (disabled,declare) => getFieldValue => [
     {
@@ -88,6 +93,18 @@ const getColumns = (context,isEdit) => {
             title: "转出项目",
             dataIndex: "outProjectName",
             width:'300px',
+            render: (text, record, index) => {
+                return (<span title="查看发票信息详情" onClick={() => {
+                    context.setState({
+                        voucherParams: {
+                            profitCenterId: record.profitCenterId,
+                            outProjectName: record.outProjectName,
+                        }
+                    }, () => {
+                        context.toggleModalVisible(true);
+                    });
+                }} style={pointerStyle}>{text}</span>);
+            }
         },
         {
             title: "转出发票份数",
@@ -123,6 +140,76 @@ const getColumns = (context,isEdit) => {
     ];
 }
 
+const invoiceSearchFields = [
+    {
+        label:'发票号码',
+        fieldName:'invoiceNum',
+        type:'input',
+        span:8,
+        componentProps:{ }
+    }
+];
+
+const invoiceColumns = [
+    {
+        title: '转出项目',
+        dataIndex: 'zcxmName',
+        width:'100px',
+    },{
+        title: '发票类型',
+        dataIndex: 'zefplx',
+        width:'100px',
+        render:text=>{
+            if(text==='s'){
+                return '专票'
+            }
+            if(text==='c'){
+                return '普票'
+            }
+            return text;
+        }
+    },{
+        title: '发票代码',
+        dataIndex: 'invoiceCode',
+        width:'100px',
+    },{
+        title: '发票号码',
+        dataIndex: 'invoiceNum',
+        width:'100px',
+    },{
+        title: '开票日期',
+        dataIndex: 'zekprq',
+        width:'100px',
+    },{
+        title: '认证所属期',
+        dataIndex: 'zerzshq',
+        width:'100px',
+    },{
+        title: '认证时间',
+        dataIndex: 'zerzsj',
+        width:'100px',
+    },{
+        title: '金额',
+        dataIndex: 'zebhsje',
+        className: "table-money",
+        width:'100px',
+        render:text=>fMoney(text),
+    },{
+        title: '税额',
+        dataIndex: 'zese',
+        className: "table-money",
+        width:'100px',
+        render:text=>fMoney(text),
+
+    },{
+        title: '含税金额',
+        dataIndex: 'zehsje',
+        className: "table-money",
+        width:'100px',
+        render:text=>fMoney(text),
+    }
+];
+
 class OtherBusinessInputTaxRollOut extends Component {
     state = {
         visible: false, // 控制Modal是否显示
@@ -133,6 +220,8 @@ class OtherBusinessInputTaxRollOut extends Component {
         filters: {},
         saveLoding:false,
         dataSource:[],
+        voucherVisible: false,
+        voucherParams: {}
     };
     hideModal() {
         this.setState({ visible: false });
@@ -147,6 +236,13 @@ class OtherBusinessInputTaxRollOut extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
+
+    toggleModalVisible = voucherVisible => {
+        this.setState({
+            voucherVisible
+        });
+    };
+
     save=(e)=>{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
@@ -182,7 +278,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         })
     }
     render() {
-        const { totalSource,saveLoding } = this.state;
+        const { totalSource,saveLoding, voucherVisible, voucherParams } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
 
@@ -300,6 +396,28 @@ class OtherBusinessInputTaxRollOut extends Component {
                     }}
                     id={this.state.opid}
                     update={this.refreshTable}
+                />
+                <PopDetailsModal
+                    title="发票信息"
+                    visible={voucherVisible}
+                    fields={invoiceSearchFields}
+                    toggleModalVoucherVisible={this.toggleModalVisible}
+                    tableOption={{
+                        columns:invoiceColumns,
+                        url: `/account/income/taxout/invoice/detailsList?${parseJsonToParams({...filters, ...voucherParams})}`,
+                        scroll:{ x: '1800px',y:'250px' },
+                        extra: <div>
+                            {
+                                composeBotton([{
+                                    type: 'fileExport',
+                                    url: '/account/income/taxout/details/export',
+                                    params: {...filters, ...voucherParams},
+                                    title: '导出',
+                                    userPermissions: ['1401007']
+                                }])
+                            }
+                        </div>
+                    }}
                 />
             </div>
         );

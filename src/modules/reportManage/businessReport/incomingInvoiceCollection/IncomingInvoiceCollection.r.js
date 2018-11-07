@@ -49,6 +49,16 @@ const searchFields = (getFieldValue)=> [
             url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
         }
     },
+    {
+        label: "认证日期",
+        fieldName: "authDate",
+        type: "datePicker",
+        formItemStyle,
+        span: 8,
+        componentProps:{
+            format:'YYYY-MM-DD'
+        }
+    }
 ]
 const columns = [
     {

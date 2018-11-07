@@ -6,10 +6,11 @@
  */
 import React,{Component} from 'react'
 import {Form,message} from 'antd'
-import {SearchTable,TableTotal} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {SearchTable,TableTotal,PopDetailsModal} from 'compoments'
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import moment from 'moment';
 import { NumericInputCell } from 'compoments/EditableCell'
+
 const searchFields =(disabled,declare)=> getFieldValue => {
     return [
         {
@@ -149,7 +150,15 @@ const getColumns = (context,disabled) => {
                             onBlur:(e)=>context.handleBlur(e,`list[${record.id}].withOutAmount`),
                         }}
                     />
-            }else{
+            }else if (record.preProject === "销售不动产") {
+                return (
+                    <a title="查看详情"
+                       onClick={ () => context.toggleModalVoucherVisible(true, record.stagesId) }
+                    >
+                        { text }
+                    </a>
+                )
+            } else {
                 return fMoney(text)
             }
         },
@@ -216,6 +225,88 @@ const getColumns = (context,disabled) => {
 ];
 }
 
+const voucherSearchFields = [
+    {
+        label: "SAP凭证号",
+        fieldName: "voucherNumSap",
+        span: 8,
+        formItemStyle: {
+            labelCol: {
+                span: 8
+            },
+            wrapperCol: {
+                span: 16
+            }
+        }
+    }
+]
+const voucherColumns = [
+    {
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: 150
+    },
+    {
+        title: "项目分期",
+        dataIndex: "stagesName",
+        width: 150
+    },
+    {
+        title: "计税方式",
+        dataIndex: "taxMethod",
+        width: 150
+    },
+    {
+        title: "过账日期",
+        dataIndex: "billingDate",
+        width: 150
+    },
+    {
+        title: "房间编码",
+        dataIndex: "roomCode",
+        width: 150
+    },
+    {
+        title: "确收时点",
+        dataIndex: "invoiceDate",
+        width: 150
+    },
+    {
+        title: "SAP凭证号",
+        dataIndex: "voucherNumSap",
+        width: 150
+    },
+    {
+        title: "凭证摘要",
+        dataIndex: "voucherAbstract",
+        width: 150
+    },
+    {
+        title: "贷方科目代码",
+        dataIndex: "creditSubjectCode",
+        width: 150
+    },
+    {
+        title: "贷方科目名称",
+        dataIndex: "creditSubjectName",
+        width: 150
+    },
+    {
+        title: "贷方金额",
+        dataIndex: "creditAmount",
+        width: 150
+    },
+    {
+        title: "税率",
+        dataIndex: "rate",
+        width: 150
+    },
+    {
+        title: "金额（含税）",
+        dataIndex: "withTaxAmount",
+        width: 150
+    }
+]
 
 class PrepayTax extends Component{
     state={
@@ -229,6 +320,9 @@ class PrepayTax extends Component{
         totalSource:undefined,
         dataSource:[],
         saveLoding:false,
+        voucherVisible: false,
+        voucherFilter: {},
+        stagesId: ""
     }
     refreshTable = ()=>{
         this.setState({
@@ -238,6 +332,12 @@ class PrepayTax extends Component{
     toggleSearchTableLoading = searchTableLoading =>{
         this.setState({
             searchTableLoading
+        })
+    }
+    toggleModalVoucherVisible = (voucherVisible, stagesId) => {
+        this.setState({
+            voucherVisible,
+            stagesId
         })
     }
     fetchResultStatus = ()=>{
@@ -311,7 +411,7 @@ class PrepayTax extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey,statusParam,filters,totalSource,saveLoding} = this.state;
+        const {searchTableLoading,tableKey,statusParam,filters,totalSource,saveLoding,voucherVisible,voucherFilter,stagesId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -413,7 +513,41 @@ class PrepayTax extends Component{
                             y:window.screen.availHeight-380-(disabled?50:0),
                         },
                     }}
+                >
+
+                <PopDetailsModal
+                    title="销售不动产凭证详情"
+                    visible={voucherVisible}
+                    fields={voucherSearchFields}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                    tableOption={{
+                        cardProps: {
+                            title: "销售不动产凭证列表"
+                        },
+                        columns: voucherColumns,
+                        url: `/account/prepaytax/queryDetail?${parseJsonToParams(filters)}&stagesId=${stagesId}`,
+                        scroll: { x: "2000px", y: "250px" },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherFilter: params
+                            })
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    JSON.stringify(voucherFilter) !== "{}" && composeBotton([{
+                                        type: "fileExport",
+                                        url: `account/prepaytax/exportDetail`,
+                                        params: Object.assign(voucherFilter, filters, {stagesId: stagesId}),
+                                        title: "导出",
+                                        userPermissions: ["1261007"]
+                                    }])
+                                }
+                            </div>
+                        )
+                    }}
                 />
+                </SearchTable>
             </div>
         )
     }

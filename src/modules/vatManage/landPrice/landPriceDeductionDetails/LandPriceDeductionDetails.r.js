@@ -8,8 +8,8 @@ import React from 'react'
 // import HasDeduct from './hasDeduct'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
-import { SearchTable,TableTotal } from 'compoments'
-import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request} from 'utils'
+import { SearchTable,TableTotal,PopDetailsModal } from 'compoments'
+import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request,parseJsonToParams} from 'utils'
 import PopModal from './popModal'
 
 const formItemStyle = {
@@ -129,7 +129,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
 }*/
 
 
-const columns = [
+const columns = context => [
     {
         title: '利润中心',
         dataIndex: 'profitCenterName',
@@ -151,7 +151,12 @@ const columns = [
 		render: text => fMoney(text),
 		className: 'table-money',
         width:'150px',
-	},
+    },
+    {
+        title: "当期发生的已标记的可抵扣土地价款",
+        dataIndex: "actualAppendDeductPrice",
+        width: "250px"
+    },
     {
         title: '项目分期可抵扣的土地价款',
         dataIndex: 'deductibleLandPrice',
@@ -197,7 +202,14 @@ const columns = [
 	},
 	{
 		title: '当期销售建筑面积',
-		dataIndex: 'salesBuildingArea',
+        dataIndex: 'salesBuildingArea',
+        render: (text, record) => (
+            <a title="查看详情"
+               onClick={ () => context.toggleModalVoucherVisible(true, record.stagesId) }
+            >
+                { text }
+            </a>
+        ),
         width:'150px',
 	},
 	{
@@ -209,8 +221,14 @@ const columns = [
 	},
 	{
 		title: '收入确认金额',
-		dataIndex: 'price',
-		render: text => fMoney(text),
+        dataIndex: 'price',
+        render: (text, record) =>  (
+            <a title="查看详情"
+               onClick={ () => context.toggleModalVoucherVisible(true, record.stagesId) }
+            >
+                { fMoney(text) }
+            </a>
+        ),
 		className: 'table-money',
         width:'100px',
 	},
@@ -242,6 +260,63 @@ const columns = [
         width:'200px',
 	}
 ]
+
+const voucherSearchFields = [
+    {
+        label: "房间编码",
+        fieldName: "roomNumber",
+        span: 8,
+        formItemStyle
+    }
+]
+const voucherColumns = [
+    {
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: 150
+    },
+    {
+        title: "项目分期名称",
+        dataIndex: "itemName",
+        width: 150
+    },
+    {
+        title: "房间编码",
+        dataIndex: "roomNumber",
+        width: 150
+    },
+    {
+        title: "路址",
+        dataIndex: "htRoomName",
+        width: 150
+    },
+    {
+        title: "房间建筑面积",
+        dataIndex: "roomArea",
+        width: 150
+    },
+    {
+        title: "确收时点",
+        dataIndex: "confirmedDate",
+        width: 150
+    },
+    {
+        title: "确收金额",
+        dataIndex: "confirmedPrice",
+        width: 150
+    },
+    {
+        title: "结算价",
+        dataIndex: "valorem",
+        width: 150
+    },
+    {
+        title: "当期销售建筑面积",
+        dataIndex: "salesBuildingArea",
+        width: 150
+    },
+]
+
 class DeductProjectSummary extends React.Component {
 	state = {
 		tableKey: Date.now(),
@@ -251,11 +326,20 @@ class DeductProjectSummary extends React.Component {
         canFinish:false,
         visible:false,
         totalSource:undefined,
+        voucherVisible: false,
+        voucherFilter: {},
+        stagesId: ""
 	}
 	toggleModalVisible = visible => {
 		this.setState({
 			visible
 		})
+    }
+    toggleModalVoucherVisible = (voucherVisible, stagesId) => {
+        this.setState({
+            voucherVisible,
+            stagesId
+        })
     }
 	refreshTable = () => {
 		this.setState({
@@ -279,113 +363,146 @@ class DeductProjectSummary extends React.Component {
         })
     }
 	render() {
-		const { tableKey, filters = {}, statusParam={},canFinish,visible,totalSource} = this.state
+		const { tableKey, filters = {}, statusParam={},canFinish,visible,totalSource,voucherVisible,voucherFilter,stagesId} = this.state
         const { declare } = this.props;
         let disabled = !!declare;
 		return (
-			<SearchTable
-				doNotFetchDidMount={!disabled}
-				searchOption={{
-					fields: searchFields(disabled,declare),
-					cardProps: {
-						style: {
-							borderTop: 0
-						}
-					}
-				}}
-				tableOption={{
-					cardProps: {
-						title: '土地价款扣除明细台账',
-					},
-					key: tableKey,
-					pageSize: 100,
-					columns: columns,
-					url: '/account/landPrice/deductedDetails/list',
-					onSuccess: (params) => {
-						this.setState({
-							filters: params
-						},()=>{
-                            this.fetchResultStatus()
-                            this.fetchIsFinish()
-                        })
-                    },
-                    scroll:{
-                        x:2400,
-                        y:window.screen.availHeight-400-(disabled?50:0),
-                    },
-					extra: (
-						<div>
-							{
-                                listMainResultStatus(statusParam)
+                <SearchTable
+                    doNotFetchDidMount={!disabled}
+                    searchOption={{
+                        fields: searchFields(disabled,declare),
+                        cardProps: {
+                            style: {
+                                borderTop: 0
                             }
-                            {
-                                JSON.stringify(filters)!=='{}' && composeBotton([{
-                                    type:'fileExport',
-                                    url:'account/landPrice/deductedDetails/export',
-                                    params:filters,
-                                    title:'导出',
-                                    userPermissions:['1261007'],
-                                }])
-                            }
-                            {
-                                (disabled && declare.decAction==='edit') && canFinish && composeBotton([{
-                                    type:'consistent',
-                                    icon:'exception',
-                                    btnType:'default',
-                                    text:'分期结转',
-                                    userPermissions:['1265014'],
-                                    onClick:()=>{
-                                        this.toggleModalVisible(true)
-                                    }
-                                }],statusParam)
-                            }
-                            <PopModal visible={visible} filters={filters} toggleModalVisible={this.toggleModalVisible} refreshTable={this.refreshTable}/>
-                            {
-                                (disabled && declare.decAction==='edit') && composeBotton([{
-                                    type:'reset',
-                                    url:'/account/landPrice/deductedDetails/reset',
-                                    params:filters,
-                                    userPermissions:['1261009'],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'submit',
-                                    url:'/account/landPrice/deductedDetails/submit',
-                                    params:filters,
-                                    userPermissions:['1261010'],
-                                    onSuccess:()=>{
-                                        this.refreshTable()
-                                        this.props.refreshTabs()
-                                    }
-                                },{
-                                    type:'revoke',
-                                    url:'/account/landPrice/deductedDetails/revoke',
-                                    params:filters,
-                                    userPermissions:['1261011'],
-                                    onSuccess:()=>{
-                                        this.refreshTable()
-                                        this.props.refreshTabs()
-                                    }
-                                }],statusParam)
-                            }
-							<TableTotal type={3} totalSource={totalSource} data={
-                                [
-                                    {
-                                        title:'合计',
-                                        total:[
-                                            {title: '当期实际扣除土地价款', dataIndex: 'amount'},
-                                        ],
-                                    }
-                                ]
-                            } />
-						</div>
-					),
-                    onTotalSource: (totalSource) => {
-                        this.setState({
-                            totalSource
-                        })
-                    },
-				}}
-			/>
+                        }
+                    }}
+                    tableOption={{
+                        cardProps: {
+                            title: '土地价款扣除明细台账',
+                        },
+                        key: tableKey,
+                        pageSize: 100,
+                        columns: columns(this),
+                        url: '/account/landPrice/deductedDetails/list',
+                        onSuccess: (params) => {
+                            this.setState({
+                                filters: params
+                            },()=>{
+                                this.fetchResultStatus()
+                                this.fetchIsFinish()
+                            })
+                        },
+                        scroll:{
+                            x:2650,
+                            y:window.screen.availHeight-400-(disabled?50:0),
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
+                                    JSON.stringify(filters)!=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'account/landPrice/deductedDetails/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1261007'],
+                                    }])
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit') && canFinish && composeBotton([{
+                                        type:'consistent',
+                                        icon:'exception',
+                                        btnType:'default',
+                                        text:'分期结转',
+                                        userPermissions:['1265014'],
+                                        onClick:()=>{
+                                            this.toggleModalVisible(true)
+                                        }
+                                    }],statusParam)
+                                }
+                                <PopModal visible={visible} filters={filters} toggleModalVisible={this.toggleModalVisible} refreshTable={this.refreshTable}/>
+                                {
+                                    (disabled && declare.decAction==='edit') && composeBotton([{
+                                        type:'reset',
+                                        url:'/account/landPrice/deductedDetails/reset',
+                                        params:filters,
+                                        userPermissions:['1261009'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'submit',
+                                        url:'/account/landPrice/deductedDetails/submit',
+                                        params:filters,
+                                        userPermissions:['1261010'],
+                                        onSuccess:()=>{
+                                            this.refreshTable()
+                                            this.props.refreshTabs()
+                                        }
+                                    },{
+                                        type:'revoke',
+                                        url:'/account/landPrice/deductedDetails/revoke',
+                                        params:filters,
+                                        userPermissions:['1261011'],
+                                        onSuccess:()=>{
+                                            this.refreshTable()
+                                            this.props.refreshTabs()
+                                        }
+                                    }],statusParam)
+                                }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '当期实际扣除土地价款', dataIndex: 'amount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
+                            </div>
+                        ),
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            })
+                        },
+                    }}
+                >
+                <PopDetailsModal
+                    title="详情"
+                    visible={voucherVisible}
+                    fields={voucherSearchFields}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisible}
+                    tableOption={{
+                        cardProps: {
+                            title: "详情列表"
+                        },
+                        columns: voucherColumns,
+                        url: `/account/landPrice/deductedDetails/detailsList?${parseJsonToParams(filters)}&stagesId=${stagesId}`,
+                        scroll: { x: "1400px", y: "250px" },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherFilter: params
+                            })
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    JSON.stringify(voucherFilter) !== "{}" && composeBotton([{
+                                        type: "fileExport",
+                                        url: `account/landPrice/deductedDetails/detailsExport`,
+                                        params: Object.assign(voucherFilter, filters, {stagesId: stagesId}),
+                                        title: "导出",
+                                        userPermissions: ["1261007"]
+                                    }])
+                                }
+                            </div>
+                        )
+                    }}
+                />
+                </SearchTable>
 		)
 	}
 }

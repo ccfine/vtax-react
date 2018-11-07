@@ -3,8 +3,7 @@
  */
 import React, {Component} from 'react';
 import {requestResultStatus, fMoney, requestDict, listMainResultStatus, composeBotton, setFormat,parseJsonToParams} from 'utils';
-import {SearchTable, TableTotal} from 'compoments';
-import VoucherModal from 'compoments/voucherModal'
+import {SearchTable, TableTotal,PopDetailsModal} from 'compoments';
 
 import moment from 'moment';
 
@@ -434,7 +433,7 @@ export default class OtherDeductionVoucher extends Component {
                         }
                     }}
                 >
-                    <VoucherModal
+                    <PopDetailsModal
                         title="发票信息"
                         visible={visible}
                         fields={invoiceSearchFields}
@@ -456,7 +455,7 @@ export default class OtherDeductionVoucher extends Component {
                             </div>
                         }}
                     />
-                    <VoucherModal
+                    <PopDetailsModal
                         title="凭证信息"
                         visible={voucherVisible}
                         fields={voucherSearchFields}

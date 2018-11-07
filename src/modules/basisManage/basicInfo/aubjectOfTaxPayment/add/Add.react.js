@@ -107,6 +107,7 @@ class Add extends Component {
                         unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
                         jointDevelopment:values.taxSubjectConfigBO.jointDevelopment === true ? '1' : '0',
                         confirmType:values.taxSubjectConfigBO.confirmType,
+                        dimensionality: values.taxSubjectConfigBO.dimensionality,
                     } : {
                         id:this.state.taxSubjectConfigBO.id,
                         parentId:this.state.taxSubjectConfigBO.parentId,
@@ -114,6 +115,7 @@ class Add extends Component {
                         unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
                         jointDevelopment:values.taxSubjectConfigBO.jointDevelopment === true ? '1' : '0',
                         confirmType:values.taxSubjectConfigBO.confirmType,
+                        dimensionality: values.taxSubjectConfigBO.dimensionality,
                         // unusedInvoicePlatform: values.taxSubjectConfigBO.unusedInvoicePlatform === true ? '1' : '0',
                         //offlineBillingInvoice: values.taxSubjectConfigBO.offlineBillingInvoice === true ? '1' : '0'
                     }
