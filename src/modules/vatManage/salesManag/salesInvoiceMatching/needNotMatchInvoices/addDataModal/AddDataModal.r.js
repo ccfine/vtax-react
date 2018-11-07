@@ -163,6 +163,12 @@ class ManualMatchRoomModal extends Component{
     componentWillUnmount(){
         this.mounted=null
     }
+    refreshTable = ()=>{
+        this.setState({
+            tableKey:Date.now(),
+            selectedRowKeys:[],
+        })
+    }
     toggleSearchTableLoading = b =>{
         this.setState({
             searchTableLoading:b
@@ -182,6 +188,7 @@ class ManualMatchRoomModal extends Component{
                     if(data.code===200){
                         message.success('添加成功！');
                         this.props.toggleModalVisible(false);
+                        this.refreshTable()
                         this.props.refreshTable();
                     }else{
                         message.error(`添加失败:${data.msg}`)
@@ -234,6 +241,11 @@ class ManualMatchRoomModal extends Component{
                                 searchFieldsValues:values
                             })
                         }
+                    }}
+                    backCondition={()=>{
+                        this.setState({
+                            selectedRowKeys:[],
+                        })
                     }}
                     tableOption={{
                         key:tableKey,

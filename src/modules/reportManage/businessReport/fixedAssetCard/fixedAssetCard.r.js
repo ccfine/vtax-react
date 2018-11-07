@@ -1,21 +1,21 @@
 /*
  * @Author: liuchunxiu 
  * @Date: 2018-05-17 10:25:07 
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-06 18:48:29
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-27 10:48:46
  */
 import React, { Component } from "react";
 import {message} from 'antd';
-import { SearchTable} from "compoments";
+import { SearchTable, TableTotal } from "compoments";
 import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
 import TableTitle from 'compoments/tableTitleWithTime'
 import createSocket from '../socket'
-const searchFields = [
+const searchFields = (getFieldValue) => [
     {
         label: "纳税主体",
         type: "taxMain",
-        fieldName: "taxSubjectId",
+        fieldName: "mainId",
         fieldDecoratorOptions:{
             rules:[{
                 required:true,
@@ -26,7 +26,7 @@ const searchFields = [
     {
         label: "入账月份",
         type: "monthPicker",
-        fieldName: "taxMonth"
+        fieldName: "authMonth"
     },
     {
         label: "取得方式",
@@ -39,16 +39,39 @@ const searchFields = [
                 value: "0"
             },
             {
-                text: "单独新建",
-                value: "1"
-            },
-            {
                 text: "自建转自用",
                 value: "2"
             }
         ]
 
-    }
+    },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:8,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount:false,
+            fetchAble:getFieldValue('mainId') || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
+        }
+    },
+    {
+        label:'项目分期',
+        fieldName:'stagesId',
+        type:'asyncSelect',
+        span:8,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('profitCenterId') || false,
+            url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
+        }
+    },
+
 ];
 /*
 const importFeilds = [
@@ -156,14 +179,9 @@ const getColumns = context => [
         className:'text-center',
     },*/
     {
-        title: "纳税主体名称",
-        dataIndex: "taxSubjectName",
-        width:'200px',
-    },
-    {
-        title: "纳税主体代码",
-        dataIndex: "taxSubjectNum",
-        width:'100px',
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: '200px'
     },
     {
         title: "项目分期名称",
@@ -171,17 +189,12 @@ const getColumns = context => [
         width:'200px',
     },
     {
-        title: "项目分期代码",
-        dataIndex: "stageNum",
-        width:'100px',
-    },
-    {
-        title: "固定资产名称",
+        title: "不动产名称",
         dataIndex: "assetName",
         width:'200px',
     },
     {
-        title: "固定资产编号",
+        title: "不动产编号",
         dataIndex: "assetNo",
         width:'100px',
     },
@@ -196,15 +209,11 @@ const getColumns = context => [
         width:'100px',
         render: (text) => {
             // 0-外部获取
-            // 1-单独新建
             // 2-自建转自用
             let res = "";
             switch (parseInt(text, 0)) {
                 case 0:
                     res = "外部获取";
-                    break;
-                case 1:
-                    res = "单独新建";
                     break;
                 case 2:
                     res = "自建转自用";
@@ -238,37 +247,18 @@ const getColumns = context => [
         width:'100px',
     },
     {
-        title: "购进税额",
-        dataIndex: "inTax",
-        width:'100px',
-        render: text => fMoney(text),
-        className: "table-money"
-    },
-    {
-        title: "购进税率",
+        title: "税率",
         dataIndex: "intaxRate",
         width:'100px',
         render: (text) => text ? `${text}%`: text
     },
     {
-        title: "当期抵扣的进项税额",
-        dataIndex: "taxAmount",
+        title: "税额",
+        dataIndex: "inTax",
         width:'100px',
         render: text => fMoney(text),
         className: "table-money"
     },
-    {
-        title: "待抵扣的进项税额",
-        dataIndex: "deductedTaxAmount",
-        width:'100px',
-        render: text => fMoney(text),
-        className: "table-money"
-    },
-    {
-        title: "待抵扣期间",
-        dataIndex: "deductedPeriod",
-        width:'100px',
-    }
 ];
 
 class fixedAssetCard extends Component {
@@ -305,7 +295,7 @@ class fixedAssetCard extends Component {
                     url: "/fixedAssetCard/report/list",
                     key: updateKey,
                     cardProps: {
-                        title: <TableTitle time={totalSource && totalSource.extractTime}>固定资产卡片</TableTitle>
+                        title: <TableTitle time={totalSource && totalSource.extractTime}>不动产卡片</TableTitle>
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({
@@ -352,6 +342,17 @@ class fixedAssetCard extends Component {
                                     }
                                 }])
                             }
+                            <TableTotal type={3} totalSource={totalSource} data={
+                                [
+                                    {
+                                        title:'合计',
+                                        total:[
+                                            {title: '税额', dataIndex: 'inTax'},
+                                            {title: '取得价值', dataIndex: 'gainValue'},
+                                        ],
+                                    }
+                                ]
+                            } />
                         </span>
                     )
                 }}

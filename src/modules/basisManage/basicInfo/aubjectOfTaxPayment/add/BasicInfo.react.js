@@ -176,15 +176,15 @@ class BasicInfo extends Component {
                                     },
                                     fieldDecoratorOptions:{
                                         initialValue:defaultData.busLicenseNum,
-                                        rules: [
+                                        /*rules: [
                                             {
                                                 required: true, message: '请输入管理单位公司注册证书营业执照号',
-                                            },/*{
+                                            },{
                                                 pattern: regRules.trim.pattern, message: regRules.trim.message,
                                             },{
                                                 max:regRules.input_length_20.max, message: regRules.input_length_20.message,
-                                            }*/
-                                        ],
+                                            }
+                                        ],*/
                                     }
                                 /*},{
                                     label:'所属行业',

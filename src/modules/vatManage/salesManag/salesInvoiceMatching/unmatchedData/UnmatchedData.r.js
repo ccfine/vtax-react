@@ -24,7 +24,7 @@ const formItemStyle = {
         }
     }
 }
-const searchFields=(disabled,declare)=> {
+const searchFields=(disabled,declare)=> getFieldValue => {
     return [
         {
             label: '纳税主体',
@@ -63,6 +63,20 @@ const searchFields=(disabled,declare)=> {
                         message:'请选择开票月份'
                     }
                 ]
+            }
+        },
+        {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:6,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
@@ -118,6 +132,11 @@ const getColumns = (context,disabled) =>{
     return [
             ...operates
          ,
+        {
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width:'200px',
+        },
         {
             title:'发票代码',
             dataIndex:'invoiceCode',

@@ -17,6 +17,7 @@ const mainId = [
             }
         },
         fieldDecoratorOptions:{
+            //initialValue:'',
             rules:[
                 {
                     required:true,
@@ -62,7 +63,7 @@ const authMonth = [
          })
      }
     render(){
-        const fields = mainId.concat(authMonth)
+        const fields = mainId.concat(authMonth);
         const data = [
             {
                 title: '房间交易档案',
@@ -95,6 +96,26 @@ const authMonth = [
             {
                 title: '利润中心',
                 importUrl:'/profitCenter/upload',
+                fields:mainId,
+            },
+            {
+                title: '自持类产品清单',
+                importUrl:'/interProductList/upload',
+                fields:fields,
+            },
+            {
+                title: '自持类产品关联进项发票',
+                importUrl:'/ReceiptsInvoiceReport/upload',
+                fields:fields,
+            },
+            {
+                title: '票据池',
+                importUrl:'/interInvoicePools/upload',
+                fields:fields,
+            },
+            {
+                title: '预收账款-租金表',
+                importUrl:'/advanceRentPayments/upload',
                 fields:mainId,
             },
         ];

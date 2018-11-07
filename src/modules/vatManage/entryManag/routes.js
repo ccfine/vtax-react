@@ -14,12 +14,14 @@ import InputTaxOnFixedAssets from '../entryTaxAccount/inputTaxOnFixedAssets'
 import strategies from 'config/routingAuthority.config'
 
 const InvoiceCollection = AsyncComponent(() => import('./invoiceCollection'), '进项发票采集')
-const FixedAssetCollection = AsyncComponent(() => import('./fixedAssetCollection'), '固定资产信息采集')
+const FixedAssetCollection = AsyncComponent(() => import('./fixedAssetCollection'), '不动产信息采集')
 const InputTaxDetails = AsyncComponent(() => import('../entryTaxAccount/inputTaxDetails'), '进项税额明细台账')
-const OtherBusinessInputTaxRollOut = AsyncComponent(() => import('../entryTaxAccount/otherBusinessInputTaxRollOut'), '其他类型进项税额转出台账')
-const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
+const OtherBusinessInputTaxRollOut = AsyncComponent(() => import('../entryTaxAccount/otherBusinessInputTaxRollOut'), '进项税额转出台账')
+//const SimplifiedTaxInputTaxTransfer = AsyncComponent(() => import('../entryTaxAccount/simplifiedTaxInputTaxTransfer'), '简易计税进项税额转出台账')
 const RealEstateInputTaxCredit = AsyncComponent(() => import('../entryTaxAccount/realEstateInputTaxCredit'), '不动产进项税额抵扣台账')
-
+const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
+const FixedAssetsInvoice = AsyncComponent(() => import('../entryTaxAccount/fixedAssetsInvoice'), '不动产进项发票台账')
+const OtherDeductionVoucher = AsyncComponent(() => import('./otherDeductionVoucher'), '其他扣税凭证')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/vatManage/entryManag`;
@@ -39,7 +41,7 @@ const EntryManag_Routes = [
     },{
         path:`${PATH}/fixedAssetCollection`,
         component:FixedAssetCollection,
-        name:'固定资产信息采集',
+        name:'不动产信息采集',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCollection.svg`,
             backgroundColor:'#73CF2B'
@@ -66,9 +68,9 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['inputTaxDetails'].options,
         exact:true,
-        /* },{
+    },{
         path:`${PATH}/otherDeductionVoucher`,
-        component:wrapPage('其他扣税凭证',OtherDeductionVoucher),
+        component:OtherDeductionVoucher,
         name:'其他扣税凭证',
         icon:{
             url:`${ICON_URL_PATH}otherDeductionVoucher.svg`,
@@ -76,6 +78,8 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['otherDeductionVoucher'].options,
         exact:true,
+
+        /*
     },{
         path:`${PATH}/inputTaxStructure`,
         component:wrapPage('进项税额结构台账',InputTaxStructure),
@@ -108,14 +112,14 @@ const EntryManag_Routes = [
     },{
         path:`${PATH}/otherBusinessInputTaxRollOut`,
         component:OtherBusinessInputTaxRollOut,
-        name:'其他类型进项税额转出台账',
+        name:'进项税额转出台账',
         icon:{
             url:`${ICON_URL_PATH}otherBusinessInputTaxRollOut.svg`,
             backgroundColor:'#3B4A83'
         },
         authorityInfo:entryManag['otherBusinessInputTaxRollOut'].options,
         exact:true,
-    },{
+    /*},{
         path:`${PATH}/simplifiedTaxInputTaxTransfer`,
         component:SimplifiedTaxInputTaxTransfer,
         name:'简易计税进项税额转出台账',
@@ -124,6 +128,16 @@ const EntryManag_Routes = [
             backgroundColor:'#3B4A83'
         },
         authorityInfo:entryManag['simplifiedTaxInputTaxTransfer'].options,
+        exact:true,*/
+    },{
+        path:`${PATH}/fixedAssetsInvoice`,
+        component:FixedAssetsInvoice,
+        name:'不动产进项发票台账',
+        icon:{
+            url:`${ICON_URL_PATH}fixedAssetsInvoice.svg`,
+            backgroundColor:'#3B4A83'
+        },
+        authorityInfo:entryManag['fixedAssetsInvoice'].options,
         exact:true,
     },{
         path:`${PATH}/realEstateInputTaxCredit`,
@@ -135,7 +149,19 @@ const EntryManag_Routes = [
         },
         authorityInfo:entryManag['realEstateInputTaxCredit'].options,
         exact:true,
-    },{
+    },
+    {
+        path: `${PATH}/selfContainedProductAssociation`,
+        component: SelfContainedProductAssociation,
+        name: "自持类产品关联进项发票",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductAssociation.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: entryManag["selfContainedProductAssociation"].options,
+        exact: true
+    },
+    {
         exact:true,
         path:`${PATH}`,
         redirect:true,

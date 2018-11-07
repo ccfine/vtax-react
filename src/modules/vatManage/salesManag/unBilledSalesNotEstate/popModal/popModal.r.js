@@ -376,7 +376,8 @@ class PopModal extends Component {
                                             }]
                                     },
                                     componentProps: {
-                                        disabled: readonly
+                                        disabled: readonly,
+                                        allowNegative: true,
                                     }
                                 },
                             ])}

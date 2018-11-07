@@ -50,7 +50,7 @@ class SearchTable extends Component{
             for(let key in nextProps.searchOption.filters){
                 if(nextProps.searchOption.filters[key] !== this.props.searchOption.filters[key]){
                     this.mounted && this.setState({
-                        filters:nextProps.searchOption.filters
+                        filters:nextProps.searchOption.filters,
                     })
                 }
             }
@@ -85,7 +85,7 @@ class SearchTable extends Component{
                     }
 
                     if(moment.isMoment(values[key])){
-                        if(key === 'taxMonth' || key === 'authMonth' || key === 'partTerm'){
+                        if(key === 'taxMonth' || key === 'authMonth' || key === 'partTerm' || key === 'deductedPeriod'){
                             //格式化一下时间 YYYY-MM类型
                             if(moment(values[key].format('YYYY-MM'),'YYYY-MM',true).isValid()){
                                 values[key] = values[key].format('YYYY-MM');

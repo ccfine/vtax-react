@@ -22,6 +22,7 @@ class WimsHeader extends Component {
         fetchingNotices:false,
         data:[],
         ssoPath:'',
+        developVersionName:'',
     };
 
     toggle = () => {
@@ -59,9 +60,14 @@ class WimsHeader extends Component {
         }
     }
     componentDidMount(){
-        request.post('/oauth/loginOut').then(({data})=>{
+        request.post('/oauth/loadParameter').then(({data})=>{
             if(data.code === 200){
-                this.mounted && this.setState({ssoPath:data.data})
+                const result = data.data;
+                this.mounted && this.setState({
+                    ssoPath:result.bipPath,
+                    developVersionName:result.developVersionName,
+
+                })
             }
         }).catch(err=>{
         })
@@ -90,20 +96,20 @@ class WimsHeader extends Component {
         return (
             <Header className="header">
                 <Row>
-                    <Col xs={0} sm={4} lg={6}>
+                    <Col xs={2} sm={4} lg={8}>
                         <h2 style={{overflow:'hidden',whiteSpace:'nowrap'}}>
                             <Icon
                                 className='trigger'
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            增值税纳税申报系统
+                            增值税纳税申报系统 {this.state.developVersionName && <span style={{color:'red',fontSize:'14px',paddingLeft:10}}>{this.state.developVersionName}</span>}
                         </h2>
                     </Col>
                     {/*<Col xs={20} sm={16} lg={14}>
 
                     </Col>*/}
-                    <Col xs={20} sm={16} lg={18}>
+                    <Col xs={20} sm={16} lg={16}>
                         <div className='right'>
                             <span className='action search' style={{float:'left'}}>
                                 {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}

@@ -98,6 +98,13 @@ class PopModal extends Component{
                     delete values.taxableProject;
                 }
 
+                // 处理利润中心
+                if(values.profitCenter){
+                    values.profitCenterId = values.profitCenter.key;
+                    values.profitCenterName = values.profitCenter.label;
+                    delete values.profitCenter;
+                }
+
                 let obj = Object.assign({},this.state.record,values);
 
                 let result ,
@@ -152,6 +159,7 @@ class PopModal extends Component{
 
         const { declare } = this.props;
         let disabled = !!declare;
+        const { getFieldValue } = form
         return (
             <Modal
             title={title}
@@ -453,6 +461,50 @@ class PopModal extends Component{
                             }    
                             }
                         ])
+                        }
+                    </Row>
+                    <Row>
+                        {
+                            getFields(form, [{
+                                label:'利润中心',
+                                fieldName:'profitCenter',
+                                type:'asyncSelect',
+                                span:16,
+                                formItemStyle:{
+                                    labelCol: {
+                                      xs: { span: 12 },
+                                      sm: { span: 6 },
+                                    },
+                                    wrapperCol: {
+                                      xs: { span: 12 },
+                                      sm: { span: 18 },
+                                    },
+                                  },
+                                fieldDecoratorOptions:{
+                                    initialValue: (record && record.profitCenterId) ? {
+                                        label:record.profitCenterName,
+                                        key:record.profitCenterId
+                                    } : undefined,
+                                    rules:[
+                                        {
+                                            required:true,
+                                            message:'请选择利润中心'
+                                        }
+                                    ]
+                                },
+                                componentProps:{
+                                    selectOptions:{
+                                        labelInValue:true,
+                                        disabled:readonly,
+                                        placeholder:readonly?'':'请选择利润中心',
+                                    },
+                                    fieldTextName:'profitName',
+                                    fieldValueName:'id',
+                                    doNotFetchDidMount:false,
+                                    fetchAble:false,
+                                    url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key) || (declare && declare.mainId)}`,
+                                }
+                            }])
                         }
                     </Row>
                 </Form>

@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/24.
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-10 13:43:28
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-10-27 14:50:00
  *
  */
 import React,{Component} from 'react'
@@ -10,6 +10,7 @@ import {SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import { NumericInputCell } from 'compoments/EditableCell'
 import moment from 'moment';
+import { WaterMarkComponent } from 'compoments'
 const searchFields =(disabled,declare,defaultParams={})=>{
     return [
         {
@@ -274,7 +275,7 @@ class TaxCalculation extends Component{
                                     type:'save',
                                     icon:'save',
                                     text:'保存',
-                                    userPermissions:['1911007'],
+                                    userPermissions:['1911003'],
                                     onClick:()=>this.save()
                                 }/*,{
                                     type:'reset',
@@ -308,4 +309,4 @@ class TaxCalculation extends Component{
     }
 }
 
-export default Form.create()(TaxCalculation);
+export default Form.create()(WaterMarkComponent(TaxCalculation, 'ant-table-wrapper'));

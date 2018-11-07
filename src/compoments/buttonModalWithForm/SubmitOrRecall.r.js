@@ -23,6 +23,9 @@ const SubmitOrRecall = props => {
                     span:16
                 }
             },
+            componentProps:{
+                disabled: initialValue['mainId'] ? true : false,
+            },
             fieldDecoratorOptions:{
                 initialValue: initialValue['mainId'] || undefined,
                 rules:[
@@ -39,6 +42,7 @@ const SubmitOrRecall = props => {
             type:'monthPicker',
             componentProps:{
                 format:'YYYY-MM',
+                disabled: initialValue[monthFieldName] && moment(initialValue[monthFieldName]) ? true : false,
             },
             span:20,
             formItemStyle:{
@@ -70,11 +74,11 @@ const SubmitOrRecall = props => {
             onSuccess:props.onSuccess,
         },
         buttonOptions:{
-            text:'提交',
+            text:'审核',
             icon:'check'
         },
         modalOptions:{
-            title:'提交'
+            title:'审核'
         }
     };
     const recallOptions = {
@@ -86,11 +90,11 @@ const SubmitOrRecall = props => {
             onSuccess:props.onSuccess,
         },
         buttonOptions:{
-            text:'撤回提交',
+            text:'撤回审核',
             icon:'rollback'
         },
         modalOptions:{
-            title:'撤回提交'
+            title:'撤回审核'
         }
     }
     if(props.type===1){

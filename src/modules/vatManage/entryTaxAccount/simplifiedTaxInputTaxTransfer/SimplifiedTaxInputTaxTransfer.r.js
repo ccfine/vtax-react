@@ -87,7 +87,7 @@ class SimpleTaxInputTaxTransferredToTheAccount extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <Tabs key={tabsKey}  onChange={this.onTabChange} type={!!declare?'line':"card"} tabBarStyle={!!declare?{backgroundColor:'#FFF'}:{}} activeKey={activeKey}>
+            <Tabs key={tabsKey}  onChange={this.onTabChange} type={'line'} tabBarStyle={{backgroundColor:'#FFF'}} activeKey={activeKey}>
                 <TabPane tab="进项税额" key="1">
                     <InputTaxCertificate searchFields={searchFields(disabled,declare)} declare={declare}/>
                 </TabPane>

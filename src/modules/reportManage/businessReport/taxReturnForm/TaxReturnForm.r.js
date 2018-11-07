@@ -3,6 +3,7 @@
  */
 import React,{Component} from 'react'
 import 'react-datasheet/lib/react-datasheet.css';
+import './sheet.css'
 import { Tabs } from 'antd';
 import sheet_0 from './sheetData/sheet0'
 import sheet_1 from './sheetData/sheet1'
@@ -101,7 +102,7 @@ class TaxReturnForm extends Component{
         const {activeKey,params} = this.state,
             {declare} = this.props;
         return (
-            <Tabs tabBarStyle={{marginBottom:0,backgroundColor:!!declare?'#FFF':'transparent'}} onChange={this.onChange} activeKey={activeKey}  type={!!declare?'line':"card"}>
+            <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}} onChange={this.onChange} activeKey={activeKey}  type={'line'}>
                 {
                     sheetData.map((item,i)=>(
                         <TabPane tab={item.tab} key={i}>

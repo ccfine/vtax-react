@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,parseJsonToParams} from 'utils'
+import {fMoney,composeBotton} from 'utils'
 //import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -25,7 +25,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 disabled:disabled
             },
             formItemStyle,
-            span:6,
+            span:8,
             fieldDecoratorOptions:{
                 initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
                 rules:[
@@ -40,74 +40,56 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             label:'截至月份',
             fieldName:'authMonth',
             type:'monthPicker',
-            span:6,
+            span:8,
             componentProps:{
                 format:'YYYY-MM',
                 disabled:disabled
             },
             formItemStyle,
             /*fieldDecoratorOptions:{
-                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择查询期间'
-                    }
-                ]
-            },*/
+             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+             rules:[
+             {
+             required:true,
+             message:'请选择查询期间'
+             }
+             ]
+             },*/
 
         },
         {
             label:'利润中心',
             fieldName:'profitCenterId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'profitName',
                 fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
                 url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        },
-        {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
             label:'项目分期',
             fieldName:'stagesId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stage/list?${parseJsonToParams({
-                    profitCenterId:getFieldValue('profitCenterId') || '',
-                    projectId:getFieldValue('projectId') || '',
-                    size:1000,
-                })}`,
+                fetchAble:getFieldValue('profitCenterId') || false,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },
         {
             label: '房间编码',
             fieldName: 'roomCode',
             formItemStyle,
-            span:6,
+            span:8,
             type: 'input',
         },
         {
@@ -115,7 +97,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             fieldName:'dif',
             type:'select',
             formItemStyle,
-            span:6,
+            span:8,
             options:[
                 {
                     text:'否',
@@ -161,8 +143,8 @@ const columns=[
         width:'100px',
     },
     {
-        title:'增值税申报销售额',
-        dataIndex: "newSdValorem",
+        title:'确收金额',
+        dataIndex: "confirmedPrice",
         render: text => fMoney(text),
         className: "table-money",
         width:'150px',

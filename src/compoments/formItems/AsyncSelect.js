@@ -15,6 +15,7 @@ export default class AsyncSelect extends Component{
         fieldName:PropTypes.string,
         initialValue:PropTypes.any,
         fieldTextName:PropTypes.string.isRequired,
+        fieldOtherName:PropTypes.string,  //给组织拼接显示的第一展示字段 code
         fieldValueName:PropTypes.string.isRequired,
         label:PropTypes.string.isRequired,
         url:PropTypes.string.isRequired,
@@ -157,10 +158,24 @@ export default class AsyncSelect extends Component{
             selectOptions.onChange(...args,item)
         }
     }
+    onPopupScroll = (e)=>{
+        let target = e.target;
+        if (target.scrollHeight - target.scrollTop - target.offsetHeight < 1) {
+            let optionData = this.state.dataSource.concat([
+                111,
+                222,
+                333,
+                444,
+                555,
+                666
+            ]);
+            console.log(optionData)
+        }
+    }
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
-        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll,notShowAll} = this.props;
+        const {formItemStyle,fieldName,initialValue,fieldTextName,fieldValueName,label,selectOptions,decoratorOptions,whetherShowAll,notShowAll,fieldOtherName} = this.props;
         //TODO:为了设置所有不是必填的select都加上一个全部默认选项  notShowAll:是否添加无或者全部
         let optionsData = [], initialValues;
         if(notShowAll === true){
@@ -168,9 +183,9 @@ export default class AsyncSelect extends Component{
         }else{
             const isShowAll = decoratorOptions && decoratorOptions.rules && decoratorOptions.rules.map(item=>item.required)[0] === true,
             newData = dataSource.length > 0 ? [{[fieldTextName]: whetherShowAll ? '无' : '全部', [fieldValueName]:''}].concat(dataSource) : dataSource;
-        initialValues = initialValue || (isShowAll ? undefined : '');
-        optionsData = isShowAll ? dataSource :  newData;
-    }
+            initialValues = initialValue || (isShowAll ? undefined : '');
+            optionsData = isShowAll ? dataSource :  newData;
+        }
         return(
             <Spin spinning={!loaded}>
                 <FormItem label={label} {...formItemStyle}>
@@ -184,10 +199,28 @@ export default class AsyncSelect extends Component{
                             placeholder={`请选择${label}`}
                             {...selectOptions}
                             onChange={this.onChange}
+                            //onPopupScroll={this.onPopupScroll} 滚动分页加载
                         >
                             {
                                 optionsData.map((item,i)=>(
-                                    <Option key={i} value={item[fieldValueName]}>{item[fieldTextName]}</Option>
+                                    <Option title={
+                                            (fieldOtherName && fieldOtherName !== '')
+                                                ?
+                                                `${item[fieldOtherName]}-${item[fieldTextName]}`
+                                                :
+                                                item[fieldTextName]
+                                            }
+                                            key={i}
+                                            value={item[fieldValueName]}
+                                    >
+                                        {
+                                            (fieldOtherName && fieldOtherName !== '')
+                                                ?
+                                                item['name'] === '全部' ? `${item[fieldTextName]}` : `${item[fieldOtherName] }-${item[fieldTextName]}`
+                                                :
+                                                item[fieldTextName]
+                                        }
+                                    </Option>
                                 ))
                             }
                         </Select>

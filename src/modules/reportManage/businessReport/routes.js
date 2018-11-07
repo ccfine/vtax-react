@@ -10,12 +10,24 @@ import strategies from 'config/routingAuthority.config'
 
 const RoomTransactionFile = AsyncComponent(() => import('./roomTransactionFile'), '房间交易档案')
 const TaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '纳税申报表')
-const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '固定资产卡片')
+const ProfitCenterTaxReturn = AsyncComponent(() => import('./profitCenterTaxReturn'), '利润中心纳税申报表')
+const PartnersTaxReturn = AsyncComponent(() => import('./partnersTaxReturn'), '合作方纳税申报表')
+const PartnersTaxReturnForm = AsyncComponent(() => import('./partnersTaxReturn/taxReturnForm'), '合作方的纳税申报-纳税申报表')
+const TaxReturnMergeCalculation = AsyncComponent(() => import('./taxReturnMergeCalculation'), '纳税申报合并计算表')
+const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), '不动产卡片')
 const FinancialDocuments = AsyncComponent(() => import('./financialDocuments'), '财务凭证')
 const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoiceCollection'), '进项发票采集')
 const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollection'), '销项发票采集')
 const AvailableArea = AsyncComponent(() => import('./availableArea'), '可售面积')
 const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), '科目余额表')
+const BillPool = AsyncComponent(() => import("./billPool"), "票据池")
+const TaxReturnProgressTrackTable = AsyncComponent(() => import("./taxReturnProgressTrackTable"), "纳税申报进度跟踪表")
+const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "自持类产品关联进项发票")
+const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "自持类产品关联清单")
+const RealEstateTax = AsyncComponent(() => import("./realEstateTax"), "不动产进项税额抵扣表")
+const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "预收账款-租金表")
+
+const InvoiceSupplement = AsyncComponent(() => import('./invoiceSupplement'), '未开票销售补开发票报表')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -65,9 +77,44 @@ const BusinessReport_Routes = [
         authorityInfo:businessReport['taxReturn'].options,
         exact:true,
     },{
+        path:`${PATH}/profitCenterTaxReturn`,
+        component:ProfitCenterTaxReturn,
+        name:'利润中心纳税申报表',
+        icon:{
+            url:`${ICON_URL_PATH}profitCenterTaxReturn.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['profitCenterTaxReturn'].options,
+        exact:true,
+    },{
+        path:`${PATH}/partnersTaxReturn`,
+        component:PartnersTaxReturn,
+        name:'合作方纳税申报表',
+        icon:{
+            url:`${ICON_URL_PATH}partnersTaxReturn.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['partnersTaxReturn'].options,
+        exact:true,
+    },{
+        path:`${PATH}/partnersTaxReturn/partnersTaxReturnForm`,
+        component:PartnersTaxReturnForm,
+        name:'合作方纳税申报信息-纳税申报表',
+        exact:true
+    },{
+        path:`${PATH}/taxReturnMergeCalculation`,
+        component:TaxReturnMergeCalculation,
+        name:'纳税申报合并计算表',
+        icon:{
+            url:`${ICON_URL_PATH}taxReturnMergeCalculation.svg`,
+            backgroundColor:'#2E8A57'
+        },
+        authorityInfo:businessReport['taxReturnMergeCalculation'].options,
+        exact:true,
+    },{
         path:`${PATH}/fixedAssetCard`,
         component:FixedAssetCard,
-        name:'固定资产卡片',
+        name:'不动产卡片',
         icon:{
             url:`${ICON_URL_PATH}fixedAssetCard.svg`,
             backgroundColor:'#2E8A57'
@@ -124,7 +171,84 @@ const BusinessReport_Routes = [
         },
         authorityInfo:businessReport['accountBalanceSheet'].options,
         exact:true,
-    },{
+    },
+    {
+        path: `${PATH}/billPool`,
+        component: BillPool,
+        name: "票据池",
+        icon: {
+            url: `${ICON_URL_PATH}billPool.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["billPool"].options,
+    },
+    {
+        path: `${PATH}/selfContainedProductAssociation`,
+        component: SelfContainedProductAssociation,
+        name: "自持类产品关联进项发票",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductAssociation.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["selfContainedProductAssociation"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/selfContainedProductList`,
+        component: SelfContainedProductList,
+        name: "自持类产品清单",
+        icon: {
+            url: `${ICON_URL_PATH}selfContainedProductList.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["selfContainedProductList"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/taxReturnProgressTrackTable`,
+        component: TaxReturnProgressTrackTable,
+        name: "纳税申报进度跟踪表",
+        icon: {
+            url: `${ICON_URL_PATH}taxReturnProgressTrackTable.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["taxReturnProgressTrackTable"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/realEstateTax`,
+        component: RealEstateTax,
+        name: "不动产进项税额抵扣表",
+        icon: {
+            url: `${ICON_URL_PATH}realEstateTax.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["realEstateTax"].options,
+        exact: true
+    },
+    {
+        path: `${PATH}/advancePayment`,
+        component: AdvancePayment,
+        name: "预收账款-租金表",
+        icon: {
+            url: `${ICON_URL_PATH}advancePayment.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["advancePayment"].options,
+        exact: true
+    },
+    {
+        path:`${PATH}/invoiceSupplement`,
+        component:InvoiceSupplement,
+        name:'未开票销售补开发票报表',
+        icon: {
+            url: `${ICON_URL_PATH}invoiceSupplement.svg`,
+            backgroundColor: "#2E8A57"
+        },
+        authorityInfo: businessReport["invoiceSupplement"].options,
+        exact:true,
+    },
+    {
         path:`${PATH}`,
         redirect:true,
         to:`${PATH}/generalTaxpayerVATReturn`,

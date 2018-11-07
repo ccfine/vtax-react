@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 const columns = [{
         title: '房间编码',
         dataIndex: 'roomCode',
@@ -15,19 +15,22 @@ const columns = [{
         title: '期初已开票金额',
         dataIndex: 'amount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'200px',
     },
     {
         title: '期初增值税已纳税销售额',
         dataIndex: 'initialTaxableSales',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'200px',
     },
     {
         title: '应申报销售额',
         dataIndex: 'reportSalesAmount',
         render:text=>fMoney(text),
-        className:'table-money'
+        className:'table-money',
+        width:'200px',
     }
 ];
 
@@ -54,7 +57,7 @@ export default class TabPage extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleDeleteLoading(true)
-                request.delete(`/realtyCollection/delete/${this.props.mainId}`)
+                request.delete(`/realtyCollection/${this.props.beginType === '2' ? 'pc/' : ''}delete/${this.props.filters.mainId}`)
                     .then(({data})=>{
                         this.toggleDeleteLoading(false)
                         if(data.code===200){
@@ -93,7 +96,7 @@ export default class TabPage extends Component{
                                     url: 'realtyCollection/download',
                                 },{
                                     type:'autoFileImport',
-                                    url:`realtyCollection/upload/${props.mainId}`,
+                                    url:`realtyCollection/upload?${parseJsonToParams(props.filters)}`,
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1121005'],
                                 },{
@@ -114,14 +117,17 @@ export default class TabPage extends Component{
                 searchOption={undefined}
                 tableOption={{
                     columns:columns,
-                    url:`/realtyCollection/list/${props.mainId}`,
+                    url:`/realtyCollection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(props.filters)}`,
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,
-                        style:{marginTop:"0px"}
                     },
                     pagination:true,
                     pageSize:100,
+                    scroll:{
+                        //x:1800,
+                        y:window.screen.availHeight-380,
+                    },
                 }}
             >
             </SearchTable>

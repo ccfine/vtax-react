@@ -1,6 +1,7 @@
 // Created by liuliyuan on 2018/8/21
 import React, { Component } from 'react'
 import {Card,message,Form,Row,Col,Button,Modal,Icon} from 'antd'
+import {connect} from 'react-redux'
 import {request} from 'utils'
 import {AsyncTable} from 'compoments'
 import { SelectCell } from 'compoments/EditableCell'
@@ -22,50 +23,54 @@ const table_1_columns = [{
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
     dataIndex: 'itemName',
-    width:'30%',
+    //width:'150px',
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'30%',
+    width:'150px',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'40%',
-    className:'text-center',
+    width:'150px',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
         text = parseInt(text,0);
-        if(text===1){
-            return '一般计税方法'
-        }else if(text ===2){
-            return '简易计税方法'
+        let selectCell = <SelectCell
+            style={{ width:'120px', margin: '0 auto' }}
+            fieldName={`list[${record.id}].taxMethod`}
+            options={[
+                {
+                    text:'一般计税方法',
+                    value:'1',
+                },{
+                    text:'简易计税方法',
+                    value:'2',
+                }
+            ]}
+            initialValue={record.taxMethod.toString()}
+            getFieldDecorator={getFieldDecorator}
+            fieldDecoratorOptions={{
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择计税方法'
+                    }
+                ]
+            }}
+            /*componentProps={{
+             onChange:(value)=>context.handleChange(value,record)
+             }}*/
+        />
+        if(context.props.username === 'admin01'){
+            return selectCell
         }else{
-            return (
-                <SelectCell
-                    fieldName={`list[${record.id}].taxMethod`}
-                    options={[
-                        {
-                            text:'一般计税方法',
-                            value:'1',
-                        },{
-                            text:'简易计税方法',
-                            value:'2',
-                        }
-                    ]}
-                    //initialValue={record.taxMethod.toString()}
-                    getFieldDecorator={getFieldDecorator}
-                    fieldDecoratorOptions={{
-                        rules:[
-                            {
-                                required:true,
-                                message:'请选择计税方法'
-                            }
-                        ]
-                    }}
-                    /*componentProps={{
-                     onChange:(value)=>context.handleChange(value,record)
-                     }}*/
-                />)
+            if(text===1){
+                return '一般计税方法'
+            }else if(text ===2){
+                return '简易计税方法'
+            }else{
+                return selectCell
+            }
         }
     },
 
@@ -162,7 +167,7 @@ class ProjectManagement extends Component{
                                         message.success(`保存成功！`);
                                     }
                                     this.props.form.resetFields();
-                                    this.refreshTableThree();
+                                    this.refreshTableTwo();
                                 }else{
                                     message.error(`保存失败:${data.msg}`)
                                 }
@@ -239,7 +244,7 @@ class ProjectManagement extends Component{
                                 title="分期信息"
                                 bodyStyle={{padding: '10px 20px'}}
                                 extra={
-                                    <Button disabled={selectedRowKeys.length<1} size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
+                                    <Button size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
                                 }
                             >
                                 <Form onSubmit={this.handleSubmit}>
@@ -258,13 +263,11 @@ class ProjectManagement extends Component{
                                                         this.mounted && this.setState({
                                                             selectedRowKeys,
                                                         },()=>{
-                                                            this.mounted && this.setState({
-                                                                tableUpDateKey2: Date.now(),
-                                                            })
+                                                            this.refreshTableThree()
                                                         })
                                                     },
                                                     scroll:{
-                                                        //x:400,
+                                                        x:520,
                                                         y:window.screen.availHeight-320,
                                                     },
                                                 }} />
@@ -296,4 +299,6 @@ class ProjectManagement extends Component{
         )
     }
 }
-export default Form.create()(ProjectManagement)
+export default connect(state=>({
+    username:state.user.getIn(['personal','username']),
+}))(Form.create()(ProjectManagement));

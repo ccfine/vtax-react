@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {fMoney,requestResultStatus,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
-const searchFields =(disabled,declare)=> [
+const searchFields =(context,disabled,declare) => getFieldValue => [
     {
         label:'纳税主体',
         fieldName:'main',
@@ -43,80 +43,101 @@ const searchFields =(disabled,declare)=> [
             ]
         },
     },
+
+    ...(context.state.showProfitCenter ? [{
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:8,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            // doNotFetchDidMount:true,
+            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            url:`/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`,
+        },
+    }] : [])
 ]
-const columns = [{
-    title: '纳税主体',
-    dataIndex: 'mainName',
-}, {
-    title: '应税项目',
-    dataIndex: 'taxableProjectName',
-    width:'16%',
-},{
-    title: '计税方法',
-    dataIndex: 'taxMethod',
-    render:text=>{
-        //1一般计税方法，2简易计税方法 ,
-        let res = "";
-        switch (parseInt(text, 10)) {
-            case 1:
-                res = "一般计税方法";
-                break;
-            case 2:
-                res = "简易计税方法";
-                break;
-            default:
-        }
-        return res;
-    },
-    width:90,
-},{
-    title: '税率',
-    dataIndex: 'taxRate',
-    render:text=>text? `${text}%`: text,
-    width:50,
-},{
-    title: '价税合计 ',
-    dataIndex: 'totalAmount',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-},{
-    title: '期初余额',
-    dataIndex: 'initialBalance',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-},{
-    title: '本期发生额',
-    dataIndex: 'currentAmount',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-},{
-    title: '本期应扣除金额',
-    dataIndex: 'currentDeductAmount',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-},{
-    title: '本期实际扣除金额',
-    dataIndex: 'actualDeductAmount',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-},{
-    title: '期末余额',
-    dataIndex: 'endingBalance',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-},{
-    title: '销项税额',
-    dataIndex: 'outputTax',
-    render:text=>fMoney(text),
-    className:'table-money',
-    width:'8%',
-}];
+
+const getColumns = (context) => {
+    return [
+        ...(context.state.showProfitCenter ? [{
+            title: '利润中心',
+            dataIndex: 'profitCenterName',
+            width: '150px'
+        }] : []),
+        {
+            title: '应税项目',
+            dataIndex: 'taxableProjectName',
+            width:'200px',
+        },{
+        title: '计税方法',
+        dataIndex: 'taxMethod',
+        render:text=>{
+            //1一般计税方法，2简易计税方法 ,
+            let res = "";
+            switch (parseInt(text, 10)) {
+                case 1:
+                    res = "一般计税方法";
+                    break;
+                case 2:
+                    res = "简易计税方法";
+                    break;
+                default:
+            }
+            return res;
+        },
+        width:'150px',
+    },{
+        title: '税率',
+        dataIndex: 'taxRateName',
+        //render:text=>text? `${text}%`: text,
+        width:'200px',
+    },{
+        title: '价税合计 ',
+        dataIndex: 'totalAmount',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    },{
+        title: '期初余额',
+        dataIndex: 'initialBalance',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    },{
+        title: '本期发生额',
+        dataIndex: 'currentAmount',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    },{
+        title: '本期应扣除金额',
+        dataIndex: 'currentDeductAmount',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    },{
+        title: '本期实际扣除金额',
+        dataIndex: 'actualDeductAmount',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    },{
+        title: '期末余额',
+        dataIndex: 'endingBalance',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    },{
+        title: '销项税额',
+        dataIndex: 'outputTax',
+        render:text=>fMoney(text),
+        className:'table-money',
+        width:'150px',
+    }];
+}
+
 // 总计数据结构，用于传递至TableTotal中
 const totalData =  [{
         title:'合计',
@@ -130,15 +151,23 @@ const totalData =  [{
     }
 ];
 class OtherTaxableItemsDeduct extends Component{
-    state={
-        updateKey:Date.now(),
-        filters:{},
-        searchTableLoading:false,
-        /**
-         *修改状态和时间
-         * */
-        statusParam:{},
-        totalSource:undefined,
+    constructor(props) {
+        super(props);
+        this.state = {
+            updateKey:Date.now(),
+            filters:{},
+            searchTableLoading:false,
+            /**
+             *修改状态和时间
+            * */
+            statusParam:{},
+            totalSource:undefined,
+            showProfitCenter: true,
+        }
+    }
+    componentDidMount(){
+        const {declare={}} = this.props;
+        declare.mainId && this.fetchLoadType(declare.mainId);
     }
     refreshTable = ()=>{
         this.setState({
@@ -148,6 +177,11 @@ class OtherTaxableItemsDeduct extends Component{
     toggleSearchTableLoading = b =>{
         this.setState({
             searchTableLoading:b
+        })
+    }
+    fetchLoadType = (mainId) => {
+        requestResultStatus(`/dataCollection/loadType/${mainId}`,{}, result=>{
+            this.setState({showProfitCenter: result === '2'});
         })
     }
     fetchResultStatus = ()=>{
@@ -173,11 +207,14 @@ class OtherTaxableItemsDeduct extends Component{
                     spinning={searchTableLoading}
                     doNotFetchDidMount={!disabled}
                     searchOption={{
-                        fields:searchFields(disabled,declare),
+                        fields: searchFields(this, disabled, declare),
                         cardProps:{
                             style:{
                                 borderTop:0,
                             }
+                        },
+                        onFieldsChange: ({main}) => {
+                            main && this.fetchLoadType(main.key);
                         }
                     }}
                     backCondition={(filters) => {
@@ -191,8 +228,8 @@ class OtherTaxableItemsDeduct extends Component{
                         key:updateKey,
                         pagination:true,
                         size:'small',
-                        scroll:{x:1200,y:window.screen.availHeight-380-(disabled?50:0)},
-                        columns:columns,
+                        scroll:{x:1800,y:window.screen.availHeight-380-(disabled?50:0)},
+                        columns:getColumns(this),
                         cardProps:{
                             title:'其他应税项目扣除台账'
                         },

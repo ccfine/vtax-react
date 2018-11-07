@@ -25,7 +25,7 @@ class PopModal extends Component {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/account/otherTax/deducted/collection/find/${props.id}`).then(({ data }) => {
+                request.get(`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data});
                     }
@@ -61,16 +61,19 @@ class PopModal extends Component {
                     values.taxableProject = undefined;
                 }
 
-                let obj = Object.assign({}, this.state.record, values);
+                let obj = Object.assign({}, this.state.record, {
+                    ...values,
+                    ...this.props && this.props.filters
+                });
                 let result,
                     sucessMsg;
 
                 if (this.props.action === "modify") {
-                    result = request.put('/account/otherTax/deducted/collection/update', obj);
+                    result = request.put(`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}update`, obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
-                    obj.mainId = this.props.mainId;
-                    result = request.post('/account/otherTax/deducted/collection/add', obj);
+                    //obj.mainId = this.props.mainId;
+                    result = request.post(`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}add`, obj);
                     sucessMsg = '新增成功';
                 }
 

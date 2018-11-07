@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 import moment from 'moment';
 const formItemStyle = {
@@ -77,23 +77,9 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             componentProps:{
                 fieldTextName:'profitName',
                 fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
                 url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        },
-        {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:8,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
@@ -107,13 +93,9 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stage/list?${parseJsonToParams({
-                    profitCenterId:getFieldValue('profitCenterId') || '',
-                    projectId:getFieldValue('projectId') || '',
-                    size:1000,
-                })}`,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
-        },
+        }
     ]
 }
 const columns = [

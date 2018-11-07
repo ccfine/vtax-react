@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
+import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -75,23 +75,9 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             componentProps:{
                 fieldTextName:'profitName',
                 fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
                 url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        },
-        {
-            label:'项目名称',
-            fieldName:'projectId',
-            type:'asyncSelect',
-            span:8,
-            formItemStyle,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:false,
-                fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-                url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             }
         },
         {
@@ -105,11 +91,7 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
                 fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stage/list?${parseJsonToParams({
-                    profitCenterId:getFieldValue('profitCenterId') || '',
-                    projectId:getFieldValue('projectId') || '',
-                    size:1000,
-                })}`,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },
         {
@@ -364,11 +346,11 @@ class unBilledSalesEstate extends Component{
                             selectedRowKeys
                         })
                     }:undefined,
-                    rowSelection:{
+                    rowSelection:isCheck?{
                         getCheckboxProps: record => ({
                             disabled: parseInt(record.doCheck, 0)  === 1, // Column configuration not to be checked
                         }),
-                    },
+                    }:undefined,
                     url:'/accountInitialUntaxedSales/list',
                     onSuccess:(params)=>{
                         this.setState({
@@ -385,6 +367,17 @@ class unBilledSalesEstate extends Component{
                         {
                             JSON.stringify(filters)!=='{}' &&composeBotton([
                                 {
+                                    type:'fileExport',
+                                    url:'accountInitialUntaxedSales/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1951007'],
+                                }
+                            ])
+                        }
+                        {
+                            (disabled && declare.decAction==='edit') && composeBotton([
+                                {
                                     type:'mark',
                                     buttonOptions:{
                                         text:'本期缴税房间',
@@ -399,17 +392,6 @@ class unBilledSalesEstate extends Component{
                                         userPermissions: ['1955000'],
                                     }
                                 },
-                                {
-                                    type:'fileExport',
-                                    url:'accountInitialUntaxedSales/export',
-                                    params:filters,
-                                    title:'导出',
-                                    userPermissions:['1951007'],
-                                }
-                            ],statusParam)
-                        }
-                        {
-                            (disabled && declare.decAction==='edit') && composeBotton([
                                 {
                                     type:'reset',
                                     url:'/accountInitialUntaxedSales/reset',

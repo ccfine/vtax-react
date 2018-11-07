@@ -31,6 +31,40 @@ class FileImportModal extends Component{
             visible
         })
     }
+
+    fetchUpload=(data,formData)=>{
+        const modalRef = Modal.confirm({
+            title: '导入',
+            content: data.data,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef.destroy();
+                request.post(this.props.uploadUrl, formData, {
+                    header:{
+                        "Content-Type":"application/x-www-form-urlencoded"
+                    }
+                })
+                    .then(({data})=>{
+                        if(data.code === 200){
+                            const {onSuccess} = this.props;
+                            message.success(data.data ? `本次${data.data}条数据，导入成功`: `导入成功！`);
+                            this.toggleVisible(false);
+                            onSuccess && onSuccess();
+                        }else {
+                            message.error(data.msg);
+                        }
+                    }).catch(err=>{
+                    message.error(err.message);
+                    this.toggleVisible(false);
+                })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
     handleSubmit = e => {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -64,10 +98,12 @@ class FileImportModal extends Component{
                         this.toggleLoading(false)
                         if(data.code===200){
                             const {onSuccess} = this.props;
-                            message.success('导入成功！');
+                            message.success(data.data ? `本次${data.data}条数据，导入成功`: `导入成功！`);
                             this.toggleVisible(false);
                             onSuccess && onSuccess()
-                        }else{
+                        }else if(data.code === -99999){
+                            this.fetchUpload(data, formData)
+                        }else {
                             message.error(data.msg)
                         }
                     })

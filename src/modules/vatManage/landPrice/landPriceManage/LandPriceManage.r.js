@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {message,Form} from 'antd'
 import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
-import ViewDocumentDetails from 'modules/vatManage/entryManag/otherDeductionVoucher/viewDocumentDetailsPopModal'
+import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 import { NumericInputCell } from 'compoments/EditableCell'
 
 import moment from 'moment';
@@ -133,38 +133,35 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         width:'150px',
     },
     /*{
-        title: '纳税主体名称',
-        dataIndex: 'mainName',
-        width:'150px',
-    },*/
+     title: '纳税主体名称',
+     dataIndex: 'mainName',
+     width:'150px',
+     },*/
     {
         title: '项目分期名称',
         dataIndex: 'stagesName',
         width:'150px',
     },
     /*{
-        title: '项目分期代码',
-        dataIndex: 'stagesNum',
-        width:'150px',
-    },*/
+     title: '项目分期代码',
+     dataIndex: 'stagesNum',
+     width:'150px',
+     },*/
     {
         title: '凭证日期',
         dataIndex: 'voucherDate',
         width:'100px',
     },
-    /*{
-        title: '凭证类型',
-        dataIndex: 'voucherType',
-        width:'6%',
-    },*/
     {
-        title: '凭证号',
-        dataIndex: 'voucherNum',
+        title: 'SAP凭证号',
+        dataIndex: 'voucherNumSap',
+        width:'100px',
         render:(text,record)=>(
             <span title="查看凭证详情" onClick={()=>{
                 context.setState({
                     voucherInfo:{
                         voucherId:record.voucherId,
+                        mainId:record.mainId,
                     }
                 },()=>{
                     context.toggleViewModalVisible(true)
@@ -174,7 +171,6 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
             </span>
         ),
         sorter: true,
-        width:'100px',
     },
     {
         title: '凭证摘要',
@@ -197,29 +193,34 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         className: "table-money",
         render:(text,record)=>{
             if(!disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 10) === 1 && parseInt(record.deductionFlag, 10) === 1){
-                   return <NumericInputCell
-                        fieldName={`debitAmount_${record.id}`}
-                        initialValue={text==='0' ? '0.00' : text}
-                        getFieldDecorator={getFieldDecorator}
-                        editAble={disabled}
-                        componentProps={{
-                            onBlur:(e)=>context.handleConfirmBlur(e,record)
-                        }}
-                    /> 
+                return <NumericInputCell
+                    fieldName={`debitAmount_${record.id}`}
+                    initialValue={text==='0' ? '0.00' : text}
+                    getFieldDecorator={getFieldDecorator}
+                    editAble={disabled}
+                    componentProps={{
+                        onBlur:(e)=>context.handleConfirmBlur(e,record)
+                    }}
+                />
             }else{
                 return fMoney(text)
             }
         },
         width:'100px',
     },
-    {
-        title: '借方辅助核算名称',
-        dataIndex: 'debitProjectName',
-        width:'150px',
-    },
+    /*{
+     title: '借方辅助核算名称',
+     dataIndex: 'debitProjectName',
+     width:'150px',
+     },*/
     {
         title: '借方辅助核算代码',
         dataIndex: 'debitProjectNum',
+        width:'150px',
+    },
+    {
+        title: '付款成本项目',
+        dataIndex: 'paymentItem',
         width:'150px',
     },
     {
@@ -314,109 +315,109 @@ class LandPriceManage extends Component{
         const {getFieldDecorator} = this.props.form;
         return(
             <div className='oneLine'>
-            <SearchTable
-                spinning={searchTableLoading}
-                doNotFetchDidMount={!disabled}
-                searchOption={{
-                    fields:searchFields(disabled,declare),
-                    cardProps:{
-                        className:'',
-                        style:{borderTop:0}
-                    },
-                }}
-                backCondition={(filters) => {
-                    this.setState({
-                        filters,
-                        selectedRowKeys:[],
-                    },() => {
-                        this.fetchResultStatus();
-                    });
-                }}
-                tableOption={{
-                    key:tableKey,
-                    pageSize:100,
-                    columns:getColumns(this,!disabled,getFieldDecorator),
-                    url:'/land/price/manage/list',
-                    onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1) ? (selectedRowKeys)=>{
+                <SearchTable
+                    spinning={searchTableLoading}
+                    doNotFetchDidMount={!disabled}
+                    searchOption={{
+                        fields:searchFields(disabled,declare),
+                        cardProps:{
+                            className:'',
+                            style:{borderTop:0}
+                        },
+                    }}
+                    backCondition={(filters) => {
                         this.setState({
-                            selectedRowKeys
-                        })
-                    } : undefined,
-                    cardProps: {
-                        title: "土地价款管理",
-                        extra:<div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
-                                JSON.stringify(filters) !=='{}' && composeBotton([{
-                                    type:'fileExport',
-                                    url:'land/price/manage/export',
-                                    params:filters,
-                                    title:'导出',
-                                    userPermissions:['1541007'],
-                                }],statusParam)
-                            }
-                            {
-                                (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                    type:'mark',
-                                    formOptions:{
-                                        filters: filters,
-                                        selectedRowKeys: selectedRowKeys,
-                                        url:"/land/price/manage/deductionFlag",
-                                        fields: markFieldsData,
-                                        onSuccess: this.refreshTable,
-                                        userPermissions:['1545000'],
-                                    }
-                                },{
-                                    type:'reset',
-                                    url:'/land/price/manage/reset',
-                                    params:filters,
-                                    userPermissions:['1541009'],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'submit',
-                                    url:'/land/price/manage/submit',
-                                    params:filters,
-                                    userPermissions:['1541010'],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'revoke',
-                                    url:'/land/price/manage/revoke',
-                                    params:filters,
-                                    userPermissions:['1541011'],
-                                    onSuccess:this.refreshTable,
-                                }],statusParam)
-                            }
-                            <TableTotal type={3} totalSource={totalSource} data={
-                                [
-                                    {
-                                        title:'合计',
-                                        total:[
-                                            {title: '借方金额', dataIndex: 'debitAmount'},
-                                        ],
-                                    }
-                                ]
-                            } />
-                        </div>,
-                    },
-                    onTotalSource: (totalSource) => {
-                        this.setState({
-                            totalSource
-                        })
-                    },
-                    scroll:{
-                         x:2000,
-                         y:window.screen.availHeight-400-(disabled?50:0),
-                    },
-                }}
-            >
-                <ViewDocumentDetails
-                    title="查看凭证详情"
-                    visible={visible}
-                    {...voucherInfo}
-                    toggleViewModalVisible={this.toggleViewModalVisible} />
-            </SearchTable>
+                            filters,
+                            selectedRowKeys:[],
+                        },() => {
+                            this.fetchResultStatus();
+                        });
+                    }}
+                    tableOption={{
+                        key:tableKey,
+                        pageSize:100,
+                        columns:getColumns(this,!disabled,getFieldDecorator),
+                        url:'/land/price/manage/list',
+                        onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1) ? (selectedRowKeys)=>{
+                            this.setState({
+                                selectedRowKeys
+                            })
+                        } : undefined,
+                        cardProps: {
+                            title: "土地价款管理",
+                            extra:<div>
+                                {
+                                    listMainResultStatus(statusParam)
+                                }
+                                {
+                                    JSON.stringify(filters) !=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'land/price/manage/export',
+                                        params:filters,
+                                        title:'导出',
+                                        userPermissions:['1541007'],
+                                    }])
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                        type:'mark',
+                                        formOptions:{
+                                            filters: filters,
+                                            selectedRowKeys: selectedRowKeys,
+                                            url:"/land/price/manage/deductionFlag",
+                                            fields: markFieldsData,
+                                            onSuccess: this.refreshTable,
+                                            userPermissions:['1545000'],
+                                        }
+                                    },{
+                                        type:'reset',
+                                        url:'/land/price/manage/reset',
+                                        params:filters,
+                                        userPermissions:['1541009'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'submit',
+                                        url:'/land/price/manage/submit',
+                                        params:filters,
+                                        userPermissions:['1541010'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'revoke',
+                                        url:'/land/price/manage/revoke',
+                                        params:filters,
+                                        userPermissions:['1541011'],
+                                        onSuccess:this.refreshTable,
+                                    }],statusParam)
+                                }
+                                <TableTotal type={3} totalSource={totalSource} data={
+                                    [
+                                        {
+                                            title:'合计',
+                                            total:[
+                                                {title: '借方金额', dataIndex: 'debitAmount'},
+                                            ],
+                                        }
+                                    ]
+                                } />
+                            </div>,
+                        },
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            })
+                        },
+                        scroll:{
+                            x:2100,
+                            y:window.screen.availHeight-400-(disabled?50:0),
+                        },
+                    }}
+                >
+                    <ViewDocumentDetails
+                        title="查看凭证详情"
+                        visible={visible}
+                        filters={voucherInfo}
+                        toggleViewModalVisible={this.toggleViewModalVisible} />
+                </SearchTable>
             </div>
         )
     }

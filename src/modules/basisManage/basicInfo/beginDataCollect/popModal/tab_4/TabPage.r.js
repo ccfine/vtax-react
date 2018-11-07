@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {Modal,message} from 'antd'
 import SearchTable from 'modules/basisManage/taxFile/licenseManage/popModal/SearchTableTansform.react'
 import PopModal from './popModal'
-import {request,fMoney,composeBotton} from 'utils'
+import {request,fMoney,composeBotton,parseJsonToParams} from 'utils'
 const getColumns = context=>{
     let operates = context.props.disabled?[]:[{
         title:'操作',
@@ -99,7 +99,7 @@ export default class TabPage extends Component{
         })
     }
     deleteRecord(record){
-        request.delete(`/account/otherTax/deducted/collection/delete/${record.id}`).then(({data}) => {
+        request.delete(`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}delete/${this.props && this.props.filters.mainId}/${record.id}`).then(({data}) => {
             if (data.code === 200) {
                 message.success('删除成功', 4);
                 this.refreshTable();
@@ -136,18 +136,23 @@ export default class TabPage extends Component{
                 searchOption={undefined}
                 tableOption={{
                     columns:getColumns(this),
-                    url:`/account/otherTax/deducted/collection/list/${props.mainId}`,
+                    url:`/account/otherTax/deducted/collection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(this.props.filters)}`,
                     key:this.state.updateKey,
                     cardProps:{
                         bordered:false,
-                        style:{marginTop:"0px"}
+                        style:{
+                            marginTop:0,
+                            maxHeight:400,
+                            overflowY:'auto',
+                        }
                     },
                     pagination:true,
                     pageSize:100,
                 }}
             >
                 <PopModal
-                    mainId={props.mainId}
+                    filters={this.props.filters}
+                    beginType={props.beginType}
                     id={this.state.opid}
                     action={this.state.action}
                     visible={this.state.visible}

@@ -1,14 +1,14 @@
 /**
  * Created by liurunbin on 2018/1/8.
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-08-16 14:33:49
+ * @Last Modified by: zhouzhe
+ * @Last Modified time: 2018-09-28 14:20:09
  *
  */
 import React,{Component} from 'react'
 import {message,Alert,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig,parseJsonToParams} from 'utils'
-import moment from "moment";
+import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
+// import moment from "moment";
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -41,6 +41,9 @@ const importFeilds = (filters,disabled,declare)=>[
                 span:14
             }
         },
+        componentProps:{
+            disabled: (filters && filters["mainId"]) ? true : false,
+        },
         fieldDecoratorOptions:{
             initialValue: (filters && filters["mainId"]) || undefined,
             rules:[
@@ -50,7 +53,7 @@ const importFeilds = (filters,disabled,declare)=>[
                 }
             ]
         },
-    }, {
+    /*}, {
         label: '认证月份',
         fieldName: 'authMonth',
         type: 'monthPicker',
@@ -73,7 +76,7 @@ const importFeilds = (filters,disabled,declare)=>[
                     message: '请选择认证月份'
                 }
             ]
-        },
+        },*/
     }
 ]
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
@@ -98,6 +101,13 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         },
     },
     {
+        label:'交易月份',
+        fieldName:'authMonth',
+        type:'monthPicker',
+        formItemStyle,
+        span:6,
+    },
+    {
         label:'利润中心',
         fieldName:'profitCenterId',
         type:'asyncSelect',
@@ -106,30 +116,9 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
         componentProps:{
             fieldTextName:'profitName',
             fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
             url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-        }
-    },
-    {
-        label:'交易月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        formItemStyle,
-        span:6,
-    },
-    {
-        label:'项目名称',
-        fieldName:'projectId',
-        type:'asyncSelect',
-        span:6,
-        formItemStyle,
-        componentProps:{
-            fieldTextName:'itemName',
-            fieldValueName:'id',
-            doNotFetchDidMount:false,
-            fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
-            url:`/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
         }
     },
     {
@@ -143,11 +132,7 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
             fieldValueName:'id',
             doNotFetchDidMount:true,
             fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-            url:`/project/stage/list?${parseJsonToParams({
-                profitCenterId:getFieldValue('profitCenterId') || '',
-                projectId:getFieldValue('projectId') || '',
-                size:1000,
-            })}`,
+            url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
     },
     {
@@ -184,13 +169,20 @@ const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
     {
         label:'房间交付日期',
         fieldName:'deliveryDate',
-        type:'datePicker',
+        type:'rangePicker',
         formItemStyle,
         span:6,
         /*componentProps:{
             format:'YYYY-MM-DD',
         }*/
     },
+    {
+        label:'确收时点',
+        fieldName:'confirmedDate',
+        type:'rangePicker',
+        formItemStyle,
+        span:6,
+    }
 ];
 
 const getColumns = (context,disabled) => {
@@ -232,6 +224,11 @@ const getColumns = (context,disabled) => {
         {
             title:'确收时点',
             dataIndex:'confirmedDate',
+            width:'100px',
+        },
+        {
+            title:'确收金额',
+            dataIndex:'confirmedPrice',
             width:'100px',
         },
         {
@@ -379,7 +376,21 @@ const getColumns = (context,disabled) => {
                 width:'150px',
             }
             ]
-        },
+        },{
+            title: '数据来源',
+            dataIndex: 'sourceType',
+            width: '100px',
+            render: text => {
+                text = parseInt(text, 0);
+                if (text === 1) {
+                    return '手工采集'
+                }
+                if (text === 2) {
+                    return '外部导入'
+                }
+                return text
+            }
+        }
     ]}
 class RoomTransactionFile extends Component{
     state={
@@ -395,7 +406,9 @@ class RoomTransactionFile extends Component{
          * */
         statusParam:'',
 
-        filters:{},
+        filters:{
+
+        },
         deleteLoading:false,
         totalSource:undefined,
         isShowImport:null,
@@ -496,7 +509,7 @@ class RoomTransactionFile extends Component{
                             })
                         },
                         columns:getColumns(this,(disabled && declare.decAction==='edit')),
-                        url: '/output/room/files/list',
+                        url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}`,
                         key:tableUpDateKey,
                         extra: <div>
                             {
@@ -512,16 +525,15 @@ class RoomTransactionFile extends Component{
                                 }])
                             }
                             {
-                             composeBotton([{
-                                 type:'fileExport',
-                                 url:'output/room/files/download',
-                                 onSuccess:this.refreshTable
-                                 }],statusParam)
-                             }
-                            {
                                 (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                    type:'fileExport',
+                                    url:'output/room/files/download',
+                                    userPermissions:['1211005'],
+                                    onSuccess:this.refreshTable
+                                },{
                                     type:'fileImport',
-                                    url:'/output/room/files/upload',
+                                    url:'/output/room/files/upload/pre',
+                                    uploadUrl:'/output/room/files/upload',
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1211005'],
                                     fields:importFeilds(filters,disabled,declare)
@@ -571,7 +583,7 @@ class RoomTransactionFile extends Component{
                                     {
                                         title:'合计',
                                         total:[
-                                            {title: '成交金额', dataIndex: 'allTotalPrice'},
+                                            {title: '结算价合计（不含税）', dataIndex: 'allOldSdValorem'},
                                             {title: '已开票金额', dataIndex: 'allInvoicedAmount'},
                                         ],
                                     }
@@ -582,16 +594,15 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 4150,
+                            x: 4350,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
-                        rowSelection:{
+                        rowSelection: isCheck ? {
                             getCheckboxProps: record => ({
-                                disabled: parseInt(record.sourceType, 0)  === 2 || parseInt(record.matchingStatus, 0)  === 1, // Column configuration not to be checked
+                                disabled: parseInt(record.delete , 0) === 0 , // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
-                            console.log(selectedRowKeys)
                             this.mounted && this.setState({
                                 selectedRowKeys
                             })

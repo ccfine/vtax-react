@@ -20,7 +20,7 @@ const formItemStyle = {
         span: 16
     }
 };
-const fields = (disabled,declare)=> [
+const fields = (disabled,declare) => [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -36,6 +36,7 @@ const fields = (disabled,declare)=> [
         },
         componentProps:{
             //labelInValue:true,
+            disabled: (disabled && declare.mainId) ? true : false,
         },
         fieldDecoratorOptions:{
             initialValue: (disabled && declare.mainId) || undefined,
@@ -48,9 +49,35 @@ const fields = (disabled,declare)=> [
             ]
         },
     },
+    {
+        label: '开票月份',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        componentProps: {
+            disabled: (disabled && moment(declare.authMonth, 'YYYY-MM')) ? true : false,
+        },
+        fieldDecoratorOptions: {
+            initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: '请选择开票月份'
+                }
+            ]
+        },
+    }
 ]
 
-const searchFields = (disabled,declare) => {
+const searchFields = (disabled,declare) => getFieldValue => {
     return [
         {
             label: "纳税主体",
@@ -94,6 +121,20 @@ const searchFields = (disabled,declare) => {
             }
         },
         {
+            label:'利润中心',
+            fieldName:'profitCenterId',
+            type:'asyncSelect',
+            span:8,
+            formItemStyle,
+            componentProps:{
+                fieldTextName:'profitName',
+                fieldValueName:'id',
+                doNotFetchDidMount: !declare,
+                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            }
+        },
+        {
             label: "发票号码",
             type: "input",
             fieldName: "invoiceNum",
@@ -132,11 +173,12 @@ const searchFields = (disabled,declare) => {
         }
     ];
 };
-const getColumns = (context) => [{
-    title: "纳税主体",
-    dataIndex: "mainName",
-    width:'200px',
-},
+const getColumns = (context) => [
+    {
+        title:'利润中心',
+        dataIndex:'profitCenterName',
+        width:'200px',
+    },
     {
         title: '发票类型',
         dataIndex: "invoiceType",
@@ -250,7 +292,7 @@ const getColumns = (context) => [{
 
 ]
 
-class SalesInvoiceCollection extends Component {
+export default class SalesInvoiceCollection extends Component {
     state = {
         visible: false,
         deleteLoading:false,
@@ -265,7 +307,7 @@ class SalesInvoiceCollection extends Component {
         statusParam: {},
         totalSource: undefined,
         selectedRowKeys:[],
-        isShowImport:null,
+        //isShowImport:null,
     };
     fetchResultStatus = () => {
         requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
@@ -339,7 +381,7 @@ class SalesInvoiceCollection extends Component {
         this.mounted = null;
     }
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading,isShowImport } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
@@ -359,7 +401,7 @@ class SalesInvoiceCollection extends Component {
                             filters,
                         },() => {
                             this.fetchResultStatus();
-                            this.fetchTaxSubjectConfig()
+                            //this.fetchTaxSubjectConfig()
                         });
                     }}
                     tableOption={{
@@ -370,11 +412,11 @@ class SalesInvoiceCollection extends Component {
                         // rowSelection:{
                         //     type: 'checkbox',
                         // },
-                        rowSelection:{
+                        rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
-                        },
+                        }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
                             this.mounted && this.setState({
                                 selectedRowKeys
@@ -397,14 +439,12 @@ class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        composeBotton([{
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
                                             type:'fileExport',
                                             url:'output/invoice/collection/download',
-                                            onSuccess:this.refreshTable
-                                        }])
-                                    }
-                                    {
-                                        (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                            onSuccess:this.refreshTable,
+                                            userPermissions:['1061005'],
+                                        },{
                                             type:'fileImport',
                                             url:'/output/invoice/collection/upload',
                                             onSuccess:this.refreshTable,
@@ -417,10 +457,7 @@ class SalesInvoiceCollection extends Component {
                                             monthFieldName:"authMonth",
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1065000'],
-                                        }],statusParam)
-                                    }
-                                    {
-                                        (disabled && declare.decAction==='edit') && composeBotton([{
+                                        },{
                                             type:'delete',
                                             icon:'delete',
                                             text:'删除',
@@ -481,4 +518,3 @@ class SalesInvoiceCollection extends Component {
         );
     }
 }
-export default SalesInvoiceCollection

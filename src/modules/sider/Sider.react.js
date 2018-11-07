@@ -13,7 +13,7 @@ import checkPermissions from 'compoments/permissible/index'
 import {saveDeclare} from 'redux/ducks/user'
 import {menuPermissions} from 'config/routingAuthority.config'
 
-import logo from './images/logo.png'
+import logo from './images/logo.svg'
 import './styles.less'
 
 const { Sider } = Layout;

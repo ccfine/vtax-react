@@ -17,17 +17,17 @@ const formItemStyle={
 const searchFields = selectedData=> (getFieldValue)=> {
     return [
         {
-            label:'项目名称',
-            fieldName:'projectId',
+            label:'利润中心',
+            fieldName:'profitCenterId',
             type:'asyncSelect',
             span:6,
             formItemStyle,
             componentProps:{
-                fieldTextName:'itemName',
+                fieldTextName:'profitName',
                 fieldValueName:'id',
                 doNotFetchDidMount:false,
                 fetchAble:selectedData['mainId'] || false,
-                url:`/project/list/${selectedData['mainId']}`,
+                url:`/taxsubject/profitCenterList/${selectedData['mainId']}`,
             }
         },
         {
@@ -40,8 +40,8 @@ const searchFields = selectedData=> (getFieldValue)=> {
                 fieldTextName:'itemName',
                 fieldValueName:'id',
                 doNotFetchDidMount:true,
-                fetchAble:getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('projectId') || ''}`,
+                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
         },
         {
