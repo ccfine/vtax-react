@@ -241,6 +241,7 @@ class UnBilledSalesNotEstate extends Component {
         statusParam: {},
         dataSource:[],
         totalSource:undefined,
+        showProfitCenter: true,
 
     }
     refreshTable = ()=>{
@@ -253,6 +254,11 @@ class UnBilledSalesNotEstate extends Component {
             voucherVisible
         });
     };
+    fetchLoadType = (mainId) => {
+        requestResultStatus(`/dataCollection/loadType/${mainId}`,{}, result=>{
+            this.setState({showProfitCenter: result === '2'});
+        })
+    }
     updateStatus = () => {
         requestResultStatus('/account/notInvoiceUnSale/realty/listMain',this.state.filters,result=>{
             this.mounted && this.setState({
@@ -312,6 +318,7 @@ class UnBilledSalesNotEstate extends Component {
                 this.refreshTable()
             });
         }
+        declare.mainId && this.fetchLoadType(declare.mainId);
     }
     mounted = true;
     componentWillUnmount(){
@@ -373,7 +380,7 @@ class UnBilledSalesNotEstate extends Component {
                                             ]
                                         }
                                     },
-                                    {
+                                    ...(this.state.showProfitCenter ? [{
                                         label:'利润中心',
                                         fieldName:'profitCenterId',
                                         type:'asyncSelect',
@@ -385,7 +392,7 @@ class UnBilledSalesNotEstate extends Component {
                                             fetchAble:(getFieldValue('main') && getFieldValue('main').key) || false,
                                             url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
                                         }
-                                    },
+                                    }]: []),
                                 ])
                             }
 
