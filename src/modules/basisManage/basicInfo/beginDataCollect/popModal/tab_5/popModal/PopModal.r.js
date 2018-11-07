@@ -172,13 +172,7 @@ class PopModal extends Component {
                                             }],
                                         formItemStyle:formItemLayout,
                                         fieldDecoratorOptions:{
-                                            initialValue:
-                                                readonly
-                                                ?
-                                                    record.num && {key:record.num,label:record.name}
-                                                :
-                                                    this.props && this.props.beginType === '2' ? { key: 1, label:'附表3-10%税率的项目-期初余额' } : undefined
-                                            ,
+                                            initialValue: (this.props && this.props.beginType === '2' && { key: 1, label:'附表3-10%税率的项目-期初余额' }) || (record.num && {key:record.num,label:record.name}) || undefined,
                                             rules:[
                                                 {
                                                     required:true,
