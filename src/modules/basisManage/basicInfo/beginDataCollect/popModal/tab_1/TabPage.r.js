@@ -224,6 +224,7 @@ class TabPage extends Component{
     render(){
         const {searchTableLoading,tableKey} = this.state;
         const {getFieldDecorator} = this.props.form;
+        console.log(this.props.filters)
         return(
                 <SearchTable
                     actionOption={

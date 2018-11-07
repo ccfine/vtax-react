@@ -152,6 +152,7 @@ export default class TabPage extends Component{
             >
                 <PopModal
                     filters={this.props.filters}
+                    beginType={props.beginType}
                     id={this.state.opid}
                     action={this.state.action}
                     visible={this.state.visible}

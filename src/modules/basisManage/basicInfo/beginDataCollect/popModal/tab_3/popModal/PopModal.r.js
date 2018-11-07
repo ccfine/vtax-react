@@ -54,16 +54,17 @@ class PopModal extends Component {
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values)
+                //
                 if(values.project){
                     values.name = values.project.label;
                     values.num = values.project.key;
-                    values.project = undefined;
+                    delete values.project
                 }
                 let obj = Object.assign({}, this.state.record, {
+                    ...this.props && this.props.filters,
                     ...values,
-                    ...this.props && this.props.filters
                 });
+                console.log(obj, this.props && this.props.filters)
                 let result,
                     sucessMsg;
 
@@ -144,7 +145,7 @@ class PopModal extends Component {
                                     url: `/taxsubject/profitCenterList/${filters && filters.mainId}`
                                 },
                                 fieldDecoratorOptions: {
-                                    initialValue:(filters && filters.profitCenterId) || undefined,
+                                    initialValue:(filters && filters.profitCenterId) || record.profitCenterId || undefined,
                                     rules: [
                                         {
                                             required: true,
