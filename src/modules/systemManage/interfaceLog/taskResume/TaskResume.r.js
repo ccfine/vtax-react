@@ -1,9 +1,9 @@
 /**
  * Created by liuliyuan on 2018/11/5.
  */
-import React, { Component } from "react"
-import { SearchTable } from "compoments"
-import moment from 'moment'
+import React, {Component} from "react";
+import {SearchTable} from "compoments";
+import moment from 'moment';
 
 const formItemStyle = {
     labelCol: {
@@ -12,9 +12,9 @@ const formItemStyle = {
     wrapperCol: {
         span: 16
     }
-}
+};
 
-const searchFields =(disabled,declare)=> getFieldValue => {
+const searchFields = (disabled, declare) => getFieldValue => {
     return [
         {
             label: "创建期间",
@@ -23,7 +23,7 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             span: 8,
             formItemStyle,
             componentProps: {
-                format:"YYYY-MM-DD"
+                format: "YYYY-MM-DD"
             }
         },
         {
@@ -33,7 +33,7 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             span: 8,
             formItemStyle,
             componentProps: {
-                format:"YYYY-MM-DD"
+                format: "YYYY-MM-DD"
             }
         },
         {
@@ -55,27 +55,27 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             fieldName: "status",
             type: "select",
             span: 8,
-            options:[
-                {text:'待处理',value:'10'},
-                {text:'处理中',value:'20'},
-                {text:'处理成功',value:'30'},
-                {text:'异常',value:'40'},
-                ],
+            options: [
+                {text: '待处理', value: '10'},
+                {text: '处理中', value: '20'},
+                {text: '处理成功', value: '30'},
+                {text: '异常', value: '40'}
+            ],
             formItemStyle,
-            fieldDecoratorOptions:{
-                rules:[
+            fieldDecoratorOptions: {
+                rules: [
                     {
                         // required:true,
-                        message:'请选择状态'
+                        message: '请选择状态'
                     }
                 ]
             },
-            componentProps:{
+            componentProps: {
                 disabled
             }
         }
-    ]
-}
+    ];
+};
 
 const getColumns = () => {
     return [
@@ -92,7 +92,7 @@ const getColumns = () => {
         {
             title: "参数",
             dataIndex: "param",
-            width: "200px"
+            width: "300px"
         },
         {
             title: "信息",
@@ -107,44 +107,47 @@ const getColumns = () => {
         {
             title: "状态",
             dataIndex: "status",
+            className:'text-center',
             width: "100px"
         },
         {
             title: "创建时间",
             dataIndex: "createTime",
+            className:'text-center',
             width: "200px",
-            render(text){
-                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+            render(text) {
+                return moment(text - '').format('YYYY-MM-DD HH:mm:ss');
             }
         },
         {
             title: "任务结束时间",
             dataIndex: "lastModifiedTime",
+            className:'text-center',
             width: "200px",
-            render(text){
-                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+            render(text) {
+                return moment(text - '').format('YYYY-MM-DD HH:mm:ss');
             }
         },
         {
             title: "请求报文",
-            dataIndex: "requestMsg",
+            dataIndex: "requestMsg"
         },
         {
             title: "响应报文",
-            dataIndex: "responseMsg",
+            dataIndex: "responseMsg"
         }
-    ]
-}
+    ];
+};
 
 export default class TaskResume extends Component {
-    constructor () {
-        super()
+    constructor() {
+        super();
         this.state = {
             updateKey: Date.now()
-        }
+        };
     }
 
-    render () {
+    render() {
         return (
             <div className="oneline">
                 <SearchTable
@@ -156,13 +159,13 @@ export default class TaskResume extends Component {
                         pageSize: 100,
                         columns: getColumns(),
                         url: "/api/queryJobRecord",
-                        scroll:{ y:window.screen.availHeight-350, x: 3000},
+                        scroll: {y: window.screen.availHeight - 350, x: 3000},
                         cardProps: {
                             title: "任务履历"
-                        },
+                        }
                     }}
                 />
             </div>
-        )
+        );
     }
 }

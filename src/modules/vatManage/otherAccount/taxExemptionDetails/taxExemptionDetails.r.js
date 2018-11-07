@@ -68,7 +68,7 @@ const searchFields = (context, disabled, declare) => getFieldValue => ([
             fieldValueName: 'id',
             fetchAble: (getFieldValue('main') && getFieldValue('main').key) || false,
             url: `/taxsubject/profitCenterList/${getFieldValue('main') && getFieldValue('main').key}`
-        }
+        },
     }] : [])
 ]);
 
@@ -421,7 +421,6 @@ class TaxExemptionDetails extends Component {
         const {declare} = this.props;
         let disabled = !!declare;
         const self = this;
-
         return (
             <SearchTable
                 spinning={searchTableLoading}
@@ -432,6 +431,10 @@ class TaxExemptionDetails extends Component {
                         style: {
                             borderTop: 0
                         }
+                    },
+                    filters:{
+                        ...filters,
+                        profitCenterId:isEnabled === false ? undefined : filters.profitCenterId
                     },
                     onFieldsChange({main={}}){
                         main.key && self.requestLoadType(main.key);

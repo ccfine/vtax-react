@@ -22,7 +22,15 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             fieldName: "apiKey",
             type: "input",
             span: 8,
-            formItemStyle
+            formItemStyle,
+            fieldDecoratorOptions:{
+                rules:[
+                    {
+                        required:true,
+                        message:'请输入接口'
+                    }
+                ]
+            },
         },
         {
             label: "创建期间",
@@ -32,7 +40,15 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             formItemStyle,
             componentProps: {
                 format:"YYYY-MM-DD"
-            }
+            },
+            fieldDecoratorOptions:{
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择创建期间'
+                    }
+                ]
+            },
         },
         {
             label: "修改期间",
@@ -52,7 +68,7 @@ const searchFields =(disabled,declare)=> getFieldValue => {
         },
         {
             label: "任务流水号",
-            fieldName: "id",
+            fieldName: "jobId",
             span: 8,
             formItemStyle
         },
@@ -112,31 +128,41 @@ const getColumns = () => {
         {
             title: "状态",
             dataIndex: "baseStatus",
+            className:'text-center',
             width: "100px"
         },
         {
             title: "描述",
             dataIndex: "baseMsg",
+            width: "300px",
         },
         {
             title: "接口字段报文",
             dataIndex: "apiData",
-            width: "200px"
+            render(obj){
+                if(obj.constructor === Object || obj.constructor === Array){
+                    return JSON.stringify(obj);
+                }else{
+                    return obj;
+                }
+            }
         },
         {
             title: "创建时间",
             dataIndex: "baseCreateTime",
+            className:'text-center',
             width: "200px",
             render(text){
-                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+                return moment(text-'').format('YYYY-MM-DD HH:mm:ss');
             }
         },
         {
             title: "任务结束时间",
             dataIndex: "baseLastModifiedTime",
+            className:'text-center',
             width: "200px",
             render(text){
-                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+                return moment(text - '').format('YYYY-MM-DD HH:mm:ss');
             }
         }
     ]
@@ -154,6 +180,7 @@ export default class DataResume extends Component {
         return (
             <div className="oneline">
                 <SearchTable
+                    doNotFetchDidMount={true}
                     searchOption={{
                         fields: searchFields()
                     }}
