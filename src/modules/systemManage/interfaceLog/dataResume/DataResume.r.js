@@ -3,6 +3,7 @@
  */
 import React, { Component } from "react"
 import { SearchTable } from "compoments"
+import moment from 'moment'
 
 const formItemStyle = {
     labelCol: {
@@ -100,37 +101,43 @@ const getColumns = () => {
         },
         {
             title: "任务流水号",
-            dataIndex: "username",
+            dataIndex: "jobId",
             width: "200px"
         },
         {
             title: "数据来源",
-            dataIndex: "mainName",
+            dataIndex: "baseSource",
             width: "200px"
         },
         {
             title: "状态",
-            dataIndex: "content",
+            dataIndex: "baseStatus",
             width: "100px"
         },
         {
             title: "描述",
-            dataIndex: "username",
+            dataIndex: "baseMsg",
         },
         {
             title: "接口字段报文",
-            dataIndex: "mainName",
+            dataIndex: "apiData",
             width: "200px"
         },
         {
             title: "创建时间",
-            dataIndex: "content",
-            width: "200px"
+            dataIndex: "baseCreateTime",
+            width: "200px",
+            render(text){
+                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+            }
         },
         {
             title: "任务结束时间",
-            dataIndex: "content",
-            width: "200px"
+            dataIndex: "baseLastModifiedTime",
+            width: "200px",
+            render(text){
+                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+            }
         }
     ]
 }
@@ -154,7 +161,7 @@ export default class DataResume extends Component {
                         key: this.state.updateKey,
                         pageSize: 100,
                         columns: getColumns(),
-                        url: "/sysLog/list",
+                        url: "/api/queryDataRecord",
                         scroll:{ y:window.screen.availHeight-350, x: 2000},
                         cardProps: {
                             title: "数据履历"

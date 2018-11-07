@@ -3,6 +3,7 @@
  */
 import React, { Component } from "react"
 import { SearchTable } from "compoments"
+import moment from 'moment'
 
 const formItemStyle = {
     labelCol: {
@@ -111,12 +112,18 @@ const getColumns = () => {
         {
             title: "创建时间",
             dataIndex: "createTime",
-            width: "200px"
+            width: "200px",
+            render(text){
+                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+            }
         },
         {
             title: "任务结束时间",
             dataIndex: "lastModifiedTime",
-            width: "200px"
+            width: "200px",
+            render(text){
+                return moment(text).format('YYYY-MM-DD HH:mm:ss');
+            }
         },
         {
             title: "请求报文",
