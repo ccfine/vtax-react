@@ -264,7 +264,7 @@ const columns = context => [
 const voucherSearchFields = [
     {
         label: "房间编码",
-        fieldName: "roomNumber",
+        fieldName: "roomCode",
         span: 8,
         formItemStyle
     }
@@ -282,7 +282,7 @@ const voucherColumns = [
     },
     {
         title: "房间编码",
-        dataIndex: "roomNumber",
+        dataIndex: "roomCode",
         width: 150
     },
     {
