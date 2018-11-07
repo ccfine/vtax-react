@@ -312,7 +312,7 @@ const voucherColumns = [
     },
     {
         title: "当期销售建筑面积",
-        dataIndex: "salesBuildingArea",
+        dataIndex: "salesBuildingArea2",
         width: 150
     },
 ]
@@ -492,7 +492,7 @@ class DeductProjectSummary extends React.Component {
                                 {
                                     JSON.stringify(voucherFilter) !== "{}" && composeBotton([{
                                         type: "fileExport",
-                                        url: `account/landPrice/deductedDetails/detailsExport`,
+                                        url: `account/landPrice/deductedDetails/details/export`,
                                         params: Object.assign(voucherFilter, filters, {stagesId: stagesId}),
                                         title: "导出",
                                         userPermissions: ["1261007"]
