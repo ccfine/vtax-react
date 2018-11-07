@@ -7,11 +7,10 @@ import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
 // import { compose } from 'redux';
 // import {connect} from 'react-redux'
-import { AsyncTable,TableTotal } from "compoments";
+import { AsyncTable,TableTotal,PopDetailsModal } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
-import VoucherModal from 'compoments/voucherModal'
 
 const columns = (context) => [
     {
@@ -522,7 +521,7 @@ class UnBilledSalesNotEstate extends Component {
                     declare={declare}
                 />
 
-                <VoucherModal
+                <PopDetailsModal
                     title="凭证信息"
                     visible={voucherVisible}
                     fields={voucherSearchFields}

@@ -8,10 +8,9 @@ import React from 'react'
 // import HasDeduct from './hasDeduct'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
-import { SearchTable,TableTotal } from 'compoments'
+import { SearchTable,TableTotal,PopDetailsModal } from 'compoments'
 import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request,parseJsonToParams} from 'utils'
 import PopModal from './popModal'
-import VoucherModal from 'compoments/voucherModal'
 
 const formItemStyle = {
     labelCol: {
@@ -471,7 +470,7 @@ class DeductProjectSummary extends React.Component {
                         },
                     }}
                 >
-                <VoucherModal
+                <PopDetailsModal
                     title="详情"
                     visible={voucherVisible}
                     fields={voucherSearchFields}

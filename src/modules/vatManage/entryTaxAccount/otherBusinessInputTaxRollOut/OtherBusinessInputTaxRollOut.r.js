@@ -6,12 +6,11 @@
  */
 import React, { Component } from "react";
 import { message,Form } from "antd";
-import {SearchTable,TableTotal} from "compoments";
+import {SearchTable,TableTotal,PopDetailsModal} from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus, parseJsonToParams } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 import { NumericInputCell } from 'compoments/EditableCell'
-import VoucherModal from 'compoments/voucherModal';
 
 const pointerStyle = {
     cursor: 'pointer',
@@ -398,7 +397,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                     id={this.state.opid}
                     update={this.refreshTable}
                 />
-                <VoucherModal
+                <PopDetailsModal
                     title="发票信息"
                     visible={voucherVisible}
                     fields={invoiceSearchFields}

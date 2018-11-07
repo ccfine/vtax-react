@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SearchTable, TableTotal, VoucherModal} from 'compoments';
+import {SearchTable, TableTotal, PopDetailsModal} from 'compoments';
 import {composeBotton, fMoney, parseJsonToParams} from 'utils';
 import moment from 'moment';
 
@@ -333,7 +333,7 @@ export default class NewPage extends Component {
                     </div>
                 }}
             />
-            <VoucherModal
+            <PopDetailsModal
                 title="发票信息"
                 tableOption={{
                     title: true,

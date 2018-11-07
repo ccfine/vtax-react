@@ -5,12 +5,11 @@
  */
 import React, {Component} from 'react';
 import {message, Form} from 'antd';
-import {SearchTable, TableTotal} from 'compoments';
+import {SearchTable, TableTotal,PopDetailsModal} from 'compoments';
 import {request, requestResultStatus, fMoney, listMainResultStatus, composeBotton, parseJsonToParams} from 'utils';
 import AddPopModal from './addPopModal';
 import moment from 'moment';
 import {NumericInputCell} from 'compoments/EditableCell';
-import VoucherModal from 'compoments/voucherModal';
 
 const pointerStyle = {
     cursor: 'pointer',
@@ -683,7 +682,7 @@ class InputTaxDetails extends Component {
                     refreshTable={this.refreshTable}
                     toggleModalAddVisible={this.toggleModalAddVisible}
                 />
-                <VoucherModal
+                <PopDetailsModal
                     title="发票信息"
                     visible={visible}
                     fields={invoiceSearchFields}
@@ -694,7 +693,7 @@ class InputTaxDetails extends Component {
                         scroll:{ x: '1800px',y:'250px' },
                     }}
                 />
-                <VoucherModal
+                <PopDetailsModal
                     title="凭证信息"
                     visible={voucherVisible}
                     fields={voucherSearchFields}
@@ -716,7 +715,7 @@ class InputTaxDetails extends Component {
                         </div>
                     }}
                 />
-                <VoucherModal
+                <PopDetailsModal
                     title="发票信息"
                     visible={visible_3}
                     fields={invoiceSearchFields}
