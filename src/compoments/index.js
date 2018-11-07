@@ -25,7 +25,6 @@ import LoadingPage from './loadingPage'
 import TableTotal from './tableTotal'
 import WaterMarkComponent from './waterMarkComponent'
 import FileDownload from "./fileDownload"
-import VoucherModal from "./voucherModal"
 import PopDetailsModal from './popDetailsModal'
 
 /**react懒加载组件*/
@@ -53,6 +52,5 @@ export {
     AsyncComponent,
     WaterMarkComponent,
     FileDownload,
-    VoucherModal,
     PopDetailsModal
 }

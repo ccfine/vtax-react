@@ -6,11 +6,10 @@
  */
 import React,{Component} from 'react'
 import {Form,message} from 'antd'
-import {SearchTable,TableTotal} from 'compoments'
+import {SearchTable,TableTotal,PopDetailsModal} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import moment from 'moment';
 import { NumericInputCell } from 'compoments/EditableCell'
-import VoucherModal from 'compoments/voucherModal'
 
 const searchFields =(disabled,declare)=> getFieldValue => {
     return [
@@ -516,7 +515,7 @@ class PrepayTax extends Component{
                     }}
                 >
 
-                <VoucherModal
+                <PopDetailsModal
                     title="销售不动产凭证详情"
                     visible={voucherVisible}
                     fields={voucherSearchFields}
