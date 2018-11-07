@@ -205,10 +205,11 @@ const getActionOptions = (item)=>{
 };
 
 //switch
-const getSwitchOptions = (item) =>{
+const getSwitchOptions = (item,statusParam) =>{
     return {
         ...item,
         checked:item.checked,
+        disabled: isDisabled(statusParam),
         onSuccess: item.onSuccess,
         style:item.style || item.setButtonStyle || {marginRight:5},
     };
@@ -301,7 +302,7 @@ const composeBotton = (buttons = [], params) => {
                 break;
             case 'switch':
                 component = (
-                    <ButtonSwitch {...getSwitchOptions(item)} />
+                    <ButtonSwitch {...getSwitchOptions(item,params)} />
                 )
                 break;
             case 'self':
