@@ -3,6 +3,7 @@
  */
 import React,{Component} from 'react'
 import { Layout,Form, Icon, Input, Button, Alert,Row,Col} from 'antd'
+import { Base64 } from 'js-base64';
 import md5 from 'blueimp-md5'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
@@ -11,7 +12,6 @@ import {login} from '../../redux/ducks/user'
 import logo from './images/logo.png'
 import loginIcon from './images/login.png'
 import './styles.less'
-
 const FormItem = Form.Item;
 
 class LoginWithNormal extends Component {
@@ -34,7 +34,7 @@ class LoginWithNormal extends Component {
             if (!err) {
                 this.toggleLoading(true)
                 login({
-                    userName:values.userName,
+                    userName:Base64.encode(values.userName),
                     password:md5(values.password),
                     type:1,//1表示正常通过登录页面登录,
                     success:()=>{
