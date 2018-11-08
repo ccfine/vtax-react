@@ -276,7 +276,8 @@ export default class NewPage extends Component {
     state = {
         updateKey: '',
         filters: {},
-        voucherVisible: false
+        voucherVisible: false,
+        totalSource: {}
     };
 
     toggleModalVoucherVisible = voucherVisible => {
@@ -318,14 +319,17 @@ export default class NewPage extends Component {
                                 {
                                     title: '合计',
                                     total: [
-                                        {title: '金额', dataIndex: 'pageAmount'},
-                                        {title: '税额', dataIndex: 'pageTaxAmount'},
-                                        {title: '价税合计', dataIndex: 'pageTotalAmount'}
+                                        {title: '本期补开票金额', dataIndex: 'totalAmount'},
                                     ]
                                 }
                             ]
                         }/>
-                    </div>
+                    </div>,
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        });
+                    }
                 }}
             />
             <PopDetailsModal
