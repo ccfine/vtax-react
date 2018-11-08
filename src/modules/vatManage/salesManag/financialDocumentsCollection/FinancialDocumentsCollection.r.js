@@ -506,7 +506,7 @@ export default class FinancialDocumentsCollection extends Component{
                                         //icon:'exception',
                                         //btnType:'default',
                                         text:'查看缺失项目分期凭证',
-                                        userPermissions:['1231004'],
+                                        userPermissions:['1235000'],
                                         onClick:()=>{
                                             this.togglesDrawerVisible(true);
                                         }
