@@ -268,7 +268,7 @@ const voucherColumns = [
     },
     {
         title: "确收时点",
-        dataIndex: "invoiceDate",
+        dataIndex: "confirmedDate",
         width: 150
     },
     {
