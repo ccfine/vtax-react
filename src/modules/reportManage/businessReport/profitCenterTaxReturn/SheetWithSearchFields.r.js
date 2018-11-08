@@ -200,7 +200,7 @@ class SheetWithSearchFields extends Component{
                                     type:'save',
                                     text:'保存',
                                     icon:'save',
-                                    userPermissions:['2161004'],
+                                    userPermissions:['2161003'],
                                     onClick:this.save,
                                     loading:saveLoding,
                                     style:{
