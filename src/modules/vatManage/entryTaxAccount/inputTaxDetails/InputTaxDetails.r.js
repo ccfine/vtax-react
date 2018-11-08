@@ -636,14 +636,14 @@ class InputTaxDetails extends Component {
                                 type: 'save',
                                 text: '保存',
                                 icon: 'save',
-                                userPermissions: ['1381024'],
+                                userPermissions: ['1381003'],
                                 onClick: this.save,
                                 loading: saveLoading
                             }, {
                                 type: 'reset',
                                 url: '/account/income/taxDetail/reset',
                                 params: filters,
-                                userPermissions: ['1381014'],
+                                userPermissions: ['1381009'],
                                 onSuccess: this.refreshTable
                             }, {
                                 type: 'submit',
