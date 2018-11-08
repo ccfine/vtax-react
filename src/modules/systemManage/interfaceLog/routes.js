@@ -3,7 +3,7 @@
  */
 import {AsyncComponent} from 'compoments'
 
-const QueryLog = AsyncComponent(() => import("./queryLog"), "查询日志")
+const LoginLog = AsyncComponent(() => import("./loginLog"), "登陆日志")
 const TaskResume = AsyncComponent(() => import("./taskResume"), "任务履历")
 const DataResume = AsyncComponent(() => import("./dataResume"), "数据履历")
 
@@ -12,11 +12,11 @@ const PATHS = '/web/systemManage/interfaceLog';
 
 const InterfaceLog_Routes = [
     {
-        path:`${PATHS}/queryLog`,
-        component:QueryLog,
-        name:'查询日志',
+        path:`${PATHS}/loginLog`,
+        component:LoginLog,
+        name:'登陆日志',
         icon:{
-            url:`${ICON_URL_PATH}queryLog.svg`,
+            url:`${ICON_URL_PATH}loginLog.svg`,
             backgroundColor:'#56C7F3'
         },
         exact:true,

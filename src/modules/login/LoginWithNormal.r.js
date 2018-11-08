@@ -3,6 +3,7 @@
  */
 import React,{Component} from 'react'
 import { Layout,Form, Icon, Input, Button, Alert,Row,Col} from 'antd'
+import md5 from 'blueimp-md5'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {regRules} from 'utils'
@@ -34,7 +35,7 @@ class LoginWithNormal extends Component {
                 this.toggleLoading(true)
                 login({
                     userName:values.userName,
-                    password:values.password,
+                    password:md5(values.password),
                     type:1,//1表示正常通过登录页面登录,
                     success:()=>{
 
