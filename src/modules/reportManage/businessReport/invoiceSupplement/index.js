@@ -106,11 +106,6 @@ const searchFields = (disabled, declare) => (getFieldValue) => {
 const getColumns = (context) => {
     return [
         {
-            title: "纳税主体",
-            dataIndex: "id",
-            width: "200px"
-        },
-        {
             title: "利润中心",
             dataIndex: "profitCenterName",
             width: "300px"
