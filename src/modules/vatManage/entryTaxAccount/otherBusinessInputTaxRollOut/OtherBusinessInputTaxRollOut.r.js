@@ -406,6 +406,14 @@ class OtherBusinessInputTaxRollOut extends Component {
                         columns:invoiceColumns,
                         url: `/account/income/taxout/invoice/detailsList?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll:{ x: '1800px',y:'250px' },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherParams: {
+                                    ...this.state.voucherParams,
+                                    ...params
+                                }
+                            });
+                        },
                         extra: <div>
                             {
                                 composeBotton([{
