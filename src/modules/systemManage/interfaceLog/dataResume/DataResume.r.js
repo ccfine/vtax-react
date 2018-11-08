@@ -14,13 +14,32 @@ const formItemStyle = {
     }
 }
 
+const apiList = [
+    {value: 'YxRoomTransactionFile', text: '营销售楼-房间交易档案接口', system: '营销售楼系统'},
+    {value: 'YxRoomInvoice', text: '营销售楼-房间对应发票接口', system: '营销售楼系统'},
+    {value: 'MySellFloorAreaInfo', text: '明源成本-可售建筑面积信息接口', system: '明源成本系统'},
+    {value: 'MyProductList', text: '明源成本-自持产品清单接口', system: '明源成本系统'},
+    {value: 'MyReceiptsInvoice', text: '明源成本-进项发票接口', system: '明源成本系统'},
+    {value: 'XyjOutputInvoiceMain', text: '喜盈佳-销项发票信息接口', system: '喜盈佳发票平台'},
+    {value: 'XyjIncomeInvoiceMain', text: '喜盈佳-进项发票信息接口', system: '喜盈佳发票平台'},
+    {value: 'MdgLegalPersonCompany', text: 'MDG-法人公司信息接口', system: '主数据平台'},
+    {value: 'MdgProfitCenter', text: 'MDG-利润中心信息接口', system: '主数据平台'},
+    {value: 'MdgProject', text: 'MDG-项目信息接口', system: '主数据平台'},
+    {value: 'MdgProjectStage', text: ' MDG-项目分期信息接口', system: '主数据平台'},
+    {value: 'SapAccountBalance', text: 'SAP-科目余额表接口', system: 'SAP'},
+    {value: 'SapVoucher', text: 'SAP-财务凭证接口', system: 'SAP'},
+    {value: 'SapFixedAssetCard', text: 'SAP-固定资产卡片接口', system: 'SAP'},
+    {value: 'SapNotesPool', text: 'SAP-票据池接口', system: 'SAP'},
+    {value: 'SapRent', text: 'SAP-预收账款租金接口', system: 'SAP'},
+];
 
 const searchFields =(disabled,declare)=> getFieldValue => {
     return [
         {
             label: "接口",
             fieldName: "apiKey",
-            type: "input",
+            type: "select",
+            options: apiList,
             span: 8,
             formItemStyle,
             fieldDecoratorOptions:{
@@ -122,8 +141,17 @@ const getColumns = () => {
         },
         {
             title: "数据来源",
-            dataIndex: "baseSource",
-            width: "200px"
+            dataIndex: "content",
+            width: "200px",
+            render(text, record){
+                apiList.map(o=>{
+                    if(o.value === record.apiKey){
+                        text = o.system;
+                    }
+                    return null;
+                });
+                return text;
+            }
         },
         {
             title: "状态",

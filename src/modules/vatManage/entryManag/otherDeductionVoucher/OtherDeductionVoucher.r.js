@@ -391,7 +391,7 @@ export default class OtherDeductionVoucher extends Component {
                                         type: 'reset',
                                         url: '/other/tax/deduction/vouchers/reset',
                                         params: filters,
-                                        userPermissions: ['1525000'],
+                                        userPermissions: ['1521009'],
                                         onSuccess: this.refreshTable
 
                                     }, {

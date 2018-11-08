@@ -53,7 +53,7 @@ const searchFields = (disabled, declare) => (getFieldValue) => {
                 rules: [
                     {
                         required: true,
-                        message: '请选择凭证月份'
+                        message: '请选择开票所属期'
                     }
                 ]
             }
@@ -105,11 +105,6 @@ const searchFields = (disabled, declare) => (getFieldValue) => {
 
 const getColumns = (context) => {
     return [
-        {
-            title: "纳税主体",
-            dataIndex: "id",
-            width: "200px"
-        },
         {
             title: "利润中心",
             dataIndex: "profitCenterName",
@@ -168,9 +163,8 @@ const getColumns = (context) => {
             dataIndex: "invoiceNum",
             render:(text,record)=>(
                 <span title="查看房间编码" onClick={()=>{
-                    console.log(context)
                     context.setState({
-                        filters:{
+                        detailFilters:{
                             mainId:record.mainId,
                             authMonth:record.authMonth,
                             roomCode:record.roomCode,
@@ -281,7 +275,9 @@ export default class NewPage extends Component {
     state = {
         updateKey: '',
         filters: {},
-        voucherVisible: false
+        detailFilters: {},
+        voucherVisible: false,
+        totalSource: {}
     };
 
     toggleModalVoucherVisible = voucherVisible => {
@@ -289,12 +285,17 @@ export default class NewPage extends Component {
     };
 
     render() {
-        let {filters = {}, totalSource = [], voucherVisible} = this.state;
+        let {filters = {}, detailFilters={}, totalSource = [], voucherVisible} = this.state;
         return <div className="oneline">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
                     fields: searchFields()
+                }}
+                backCondition={(filters) => {
+                    this.setState({
+                        filters,
+                    });
                 }}
                 tableOption={{
                     key: this.state.updateKey,
@@ -310,12 +311,12 @@ export default class NewPage extends Component {
                     },
                     extra: <div>
                         {
-                            !(JSON.stringify(filters) !== '{}') && composeBotton([{
+                            JSON.stringify(filters) !== '{}' && composeBotton([{
                                 type: 'fileExport',
-                                url: '/invoice/for/unbilled/sales/report/download',
+                                url: '/invoice/for/unbilled/sales/report/export',
                                 params: filters,
                                 title: '导出',
-                                userPermissions: ['1911007']
+                                userPermissions: ['2191007']
                             }])
                         }
                         <TableTotal type={3} totalSource={totalSource} data={
@@ -323,14 +324,17 @@ export default class NewPage extends Component {
                                 {
                                     title: '合计',
                                     total: [
-                                        {title: '金额', dataIndex: 'pageAmount'},
-                                        {title: '税额', dataIndex: 'pageTaxAmount'},
-                                        {title: '价税合计', dataIndex: 'pageTotalAmount'}
+                                        {title: '本期补开票金额', dataIndex: 'totalAmount'},
                                     ]
                                 }
                             ]
                         }/>
-                    </div>
+                    </div>,
+                    onTotalSource: (totalSource) => {
+                        this.setState({
+                            totalSource
+                        });
+                    }
                 }}
             />
             <PopDetailsModal
@@ -338,7 +342,7 @@ export default class NewPage extends Component {
                 tableOption={{
                     title: true,
                     columns: modelColumns,
-                    url: `/invoice/for/unbilled/sales/report/invoice/list?${parseJsonToParams(filters)}`,
+                    url: `/invoice/for/unbilled/sales/report/invoice/list?${parseJsonToParams(detailFilters)}`,
                     scroll: {x: '2000px', y: '250px'}
                 }}
                 visible={voucherVisible}
