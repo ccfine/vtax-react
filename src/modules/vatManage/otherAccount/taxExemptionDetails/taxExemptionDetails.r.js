@@ -323,7 +323,8 @@ class TaxExemptionDetails extends Component {
                 request.post('/account/other/reduceTaxDetail/save', {
                     list: data,
                     mainId: this.state.filters.mainId,
-                    taxMonth: this.state.filters.authMonth
+                    taxMonth: this.state.filters.authMonth,
+                    type: this.state.isEnabled === false ? '1' : '2',
                 })
                 .then(({data}) => {
                     this.toggleSearchTableLoading(false);
