@@ -316,8 +316,8 @@ class UnBilledSalesNotEstate extends Component {
             },()=>{
                 this.refreshTable()
             });
+            declare.mainId && this.fetchLoadType(declare.mainId);
         }
-        declare.mainId && this.fetchLoadType(declare.mainId);
     }
     mounted = true;
     componentWillUnmount(){
