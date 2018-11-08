@@ -441,7 +441,7 @@ const strategies = {
             //未开票销售补开发票报表  导出-'1911007'
             invoiceSupplement:{
                 options:[
-                    '1911007',
+                    '2191007',
                 ],
             }
         },

@@ -163,9 +163,8 @@ const getColumns = (context) => {
             dataIndex: "invoiceNum",
             render:(text,record)=>(
                 <span title="查看房间编码" onClick={()=>{
-                    console.log(context)
                     context.setState({
-                        filters:{
+                        detailFilters:{
                             mainId:record.mainId,
                             authMonth:record.authMonth,
                             roomCode:record.roomCode,
@@ -276,6 +275,7 @@ export default class NewPage extends Component {
     state = {
         updateKey: '',
         filters: {},
+        detailFilters: {},
         voucherVisible: false,
         totalSource: {}
     };
@@ -285,12 +285,17 @@ export default class NewPage extends Component {
     };
 
     render() {
-        let {filters = {}, totalSource = [], voucherVisible} = this.state;
+        let {filters = {}, detailFilters={}, totalSource = [], voucherVisible} = this.state;
         return <div className="oneline">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
                     fields: searchFields()
+                }}
+                backCondition={(filters) => {
+                    this.setState({
+                        filters,
+                    });
                 }}
                 tableOption={{
                     key: this.state.updateKey,
@@ -306,12 +311,12 @@ export default class NewPage extends Component {
                     },
                     extra: <div>
                         {
-                            !(JSON.stringify(filters) !== '{}') && composeBotton([{
+                            JSON.stringify(filters) !== '{}' && composeBotton([{
                                 type: 'fileExport',
-                                url: '/invoice/for/unbilled/sales/report/download',
+                                url: '/invoice/for/unbilled/sales/report/export',
                                 params: filters,
                                 title: '导出',
-                                userPermissions: ['1911007']
+                                userPermissions: ['2191007']
                             }])
                         }
                         <TableTotal type={3} totalSource={totalSource} data={
@@ -337,7 +342,7 @@ export default class NewPage extends Component {
                 tableOption={{
                     title: true,
                     columns: modelColumns,
-                    url: `/invoice/for/unbilled/sales/report/invoice/list?${parseJsonToParams(filters)}`,
+                    url: `/invoice/for/unbilled/sales/report/invoice/list?${parseJsonToParams(detailFilters)}`,
                     scroll: {x: '2000px', y: '250px'}
                 }}
                 visible={voucherVisible}
