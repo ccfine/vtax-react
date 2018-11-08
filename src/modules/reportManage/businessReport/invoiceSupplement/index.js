@@ -53,7 +53,7 @@ const searchFields = (disabled, declare) => (getFieldValue) => {
                 rules: [
                     {
                         required: true,
-                        message: '请选择凭证月份'
+                        message: '请选择开票所属期'
                     }
                 ]
             }
