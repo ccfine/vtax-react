@@ -60,7 +60,7 @@ class WimsHeader extends Component {
         }
     }
     componentDidMount(){
-        request.post('/oauth/loadParameter').then(({data})=>{
+        this.props.isAuthed && request.post('/oauth/loadParameter').then(({data})=>{
             if(data.code === 200){
                 const result = data.data;
                 this.mounted && this.setState({
