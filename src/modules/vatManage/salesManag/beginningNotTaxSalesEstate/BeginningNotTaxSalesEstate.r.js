@@ -108,23 +108,23 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             span:8,
             type: 'input',
         },
-        {
-            label:'状态',
-            fieldName:'status',
-            type:'select',
-            formItemStyle,
-            span:8,
-            options:[
-                {
-                    text:'未缴税',
-                    value:'0'
-                },
-                {
-                    text:'已缴税',
-                    value:'1'
-                }
-            ]
-        }
+        // {
+        //     label:'状态',
+        //     fieldName:'status',
+        //     type:'select',
+        //     formItemStyle,
+        //     span:8,
+        //     options:[
+        //         {
+        //             text:'未缴税',
+        //             value:'0'
+        //         },
+        //         {
+        //             text:'已缴税',
+        //             value:'1'
+        //         }
+        //     ]
+        // }
     ]
 }
 const columns = [
@@ -244,14 +244,14 @@ const columns = [
     //         return parseInt(record.status,10) === 0 ? "未缴税":"已缴税";
     //     }
     // },
-    // {
-    //     title:'是否勾选',
-    //     dataIndex:'check',
-    //     width:'100px',
-    //     render:(id,record)=>{
-    //         return parseInt(record.check,10) === 0 ? "未勾选":"已勾选";
-    //     }
-    // }
+    {
+        title:'是否勾选',
+        dataIndex:'check',
+        width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.check,10) === 0 ? "未勾选":"已勾选";
+        }
+    }
 ];
 const markFieldsData = [
     {
@@ -432,7 +432,7 @@ class unBilledSalesEstate extends Component{
                         }
                     </div>,
                     scroll:{
-                        x:2000,
+                        x:2100,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}
