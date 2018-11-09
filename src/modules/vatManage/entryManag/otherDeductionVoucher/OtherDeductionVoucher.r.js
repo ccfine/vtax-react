@@ -296,6 +296,7 @@ export default class OtherDeductionVoucher extends Component {
         dataSource: [],
         selectedRowKeys: [],
         voucherParams: {},
+        exportParams: {},
         /**
          *修改状态和时间
          * */
@@ -339,7 +340,7 @@ export default class OtherDeductionVoucher extends Component {
     }
 
     render() {
-        const {visible, tableKey, filters, voucherVisible, statusParam, totalSource, voucherParams} = this.state;
+        const {visible, tableKey, filters, voucherVisible, statusParam, totalSource, voucherParams, exportParams} = this.state;
         const {declare} = this.props;
         let disabled = !!declare;
         return (
@@ -444,10 +445,7 @@ export default class OtherDeductionVoucher extends Component {
                             scroll:{ x: '200%', y: 200 },
                             onSuccess: params => {
                                 this.setState({
-                                    voucherParams: {
-                                        ...this.state.voucherParams,
-                                        ...params
-                                    }
+                                    exportParams: {...params}
                                 });
                             },
                             extra: <div>
@@ -455,7 +453,7 @@ export default class OtherDeductionVoucher extends Component {
                                     composeBotton([{
                                         type: 'fileExport',
                                         url: '/other/tax/deduction/vouchers/export/pools',
-                                        params: {...filters, ...voucherParams},
+                                        params: {...filters, ...voucherParams, ...exportParams},
                                         title: '导出',
                                         userPermissions: ['1521007']
                                     }])
@@ -474,10 +472,7 @@ export default class OtherDeductionVoucher extends Component {
                             scroll:{ x: '200%',y:'200px' },
                             onSuccess: params => {
                                 this.setState({
-                                    voucherParams: {
-                                        ...this.state.voucherParams,
-                                        ...params
-                                    }
+                                    exportParams: {...params}
                                 });
                             },
                             extra: <div>
@@ -485,7 +480,7 @@ export default class OtherDeductionVoucher extends Component {
                                     composeBotton([{
                                         type: 'fileExport',
                                         url: '/other/tax/deduction/vouchers/export/voucher',
-                                        params: {...filters, ...voucherParams},
+                                        params: {...filters, ...voucherParams, ...exportParams},
                                         title: '导出',
                                         userPermissions: ['1521007']
                                     }])
