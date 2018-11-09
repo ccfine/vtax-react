@@ -3,6 +3,8 @@
  */
 import React,{Component} from 'react'
 import { Layout,Form, Icon, Input, Button, Alert,Row,Col} from 'antd'
+import { Base64 } from 'js-base64';
+import md5 from 'blueimp-md5'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {regRules} from 'utils'
@@ -10,7 +12,6 @@ import {login} from '../../redux/ducks/user'
 import logo from './images/logo.png'
 import loginIcon from './images/login.png'
 import './styles.less'
-
 const FormItem = Form.Item;
 
 class LoginWithNormal extends Component {
@@ -33,8 +34,8 @@ class LoginWithNormal extends Component {
             if (!err) {
                 this.toggleLoading(true)
                 login({
-                    userName:values.userName,
-                    password:values.password,
+                    userName:Base64.encode(values.userName),
+                    password:md5(values.password),
                     type:1,//1表示正常通过登录页面登录,
                     success:()=>{
 
@@ -118,8 +119,8 @@ class LoginWithNormal extends Component {
                                     {getFieldDecorator('password', {
                                         rules: [{
                                             required: true, message: '请输入密码!'
-                                        /*},{
-                                            pattern:regRules.password.pattern, message: regRules.password.message,*/
+                                            /*},{
+                                             pattern:regRules.password.pattern, message: regRules.password.message,*/
                                         }],
                                     })(
                                         <Input prefix={<Icon type="lock" style={{ fontSize: 14 }} />} type="password" placeholder="密码" />
