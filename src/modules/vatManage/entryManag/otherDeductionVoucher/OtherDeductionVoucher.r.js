@@ -442,6 +442,14 @@ export default class OtherDeductionVoucher extends Component {
                             columns:invoiceColumns,
                             url: `/other/tax/deduction/vouchers/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
                             scroll:{ x: '200%', y: 200 },
+                            onSuccess: params => {
+                                this.setState({
+                                    voucherParams: {
+                                        ...this.state.voucherParams,
+                                        ...params
+                                    }
+                                });
+                            },
                             extra: <div>
                                 {
                                     composeBotton([{
@@ -464,6 +472,14 @@ export default class OtherDeductionVoucher extends Component {
                             columns:voucherColumns,
                             url:`/other/tax/deduction/vouchers/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
                             scroll:{ x: '200%',y:'200px' },
+                            onSuccess: params => {
+                                this.setState({
+                                    voucherParams: {
+                                        ...this.state.voucherParams,
+                                        ...params
+                                    }
+                                });
+                            },
                             extra: <div>
                                 {
                                     composeBotton([{

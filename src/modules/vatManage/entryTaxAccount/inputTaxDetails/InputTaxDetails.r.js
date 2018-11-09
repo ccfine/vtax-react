@@ -702,6 +702,14 @@ class InputTaxDetails extends Component {
                         columns:voucherColumns,
                         url:`/other/tax/deduction/vouchers/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll:{ x: '1800px',y:'250px' },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherParams: {
+                                    ...this.state.voucherParams,
+                                    ...params
+                                }
+                            });
+                        },
                         extra: <div>
                             {
                                 composeBotton([{
@@ -724,6 +732,14 @@ class InputTaxDetails extends Component {
                         columns:invoiceColumns_3,
                         url: `/other/tax/deduction/vouchers/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll:{ x: '1800px',y:'250px' },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherParams: {
+                                    ...this.state.voucherParams,
+                                    ...params
+                                }
+                            });
+                        },
                         extra: <div>
                             {
                                 composeBotton([{

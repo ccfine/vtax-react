@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Form, Row, Col, Button,message } from 'antd'
 import { getFields,request } from 'utils'
 import { connect } from 'react-redux'
-
+const wsURL = 'ws://10.10.179.67:82/';
 class InterfaceData extends React.Component {
 	state = {
         texts: [],
@@ -12,7 +12,7 @@ class InterfaceData extends React.Component {
 	connect = () => {
 		this.pushMessage('开始连接...')
 		this.socket = new WebSocket(
-			window.wsURL + 'webSocketHandler/id=' + this.props.personal.id
+			wsURL + 'webSocketHandler/id=' + this.props.personal.id
 		)
 		this.socket.onopen = () => {
 			// this.pushMessage('连接成功')
