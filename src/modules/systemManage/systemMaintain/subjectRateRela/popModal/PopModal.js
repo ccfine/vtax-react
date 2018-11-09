@@ -5,8 +5,14 @@
  * @Last Modified time: 2018-07-11 10:51:11
  */
 import React, { Component } from "react";
-import { Modal, Form, Button, message, Spin, Row } from "antd";
-import { getFields, request,setFormat } from "utils";
+import { Modal, Form, Button, message, Spin, Row, Select } from "antd";
+import { getFields, request,setFormat, composeBotton } from "utils";
+import { AsyncTable } from "compoments";
+const Option = Select.Option;
+const confirm = Modal.confirm;
+
+let timeout;
+
 const formItemLayout = {
     labelCol: {
         xs: { span: 12 },
@@ -18,6 +24,38 @@ const formItemLayout = {
     }
 };
 
+const pointerStyleDelete = {
+    cursor:'pointer',
+    color:'red',
+    marginRight:10
+}
+
+const columns = (context) => [{
+    title: '操作',
+    width:'10%',
+    dataIndex:'action',
+    className:'text-center',
+    render:(text,record)=>(
+        <span>
+            {
+                composeBotton([{
+                    type:'action',
+                    icon:'delete',
+                    title:'删除',
+                    style:pointerStyleDelete,
+                    onSuccess:()=>{ context.deleteData(record.taxableProjectId) }
+                }])
+            }
+        </span>
+    )
+},{
+    title: '税收分类编码',
+    dataIndex: 'num',
+}, {
+    title: '货物或应税劳务、服务名称',
+    dataIndex: 'commodityName',
+}];
+
 class PopModal extends Component {
     state = {
         loading: false,
@@ -26,6 +64,9 @@ class PopModal extends Component {
         visible: false,
         commonlyTaxRateList:[],
         simpleTaxRateList:[],
+        tableUpDateKey:Date.now(),
+        value_num: '',
+        data: [],
     };
     componentWillReceiveProps(props) {
         if(!props.visible){
@@ -50,7 +91,8 @@ class PopModal extends Component {
                         if (data.code === 200) {
                             this.setState({
                                 formLoading: false,
-                                record: data.data
+                                record: data.data,
+                                tableUpDateKey:Date.now()
                             });
                         }
                     })
@@ -171,6 +213,76 @@ class PopModal extends Component {
         this.fetchTypeList()
     }
 
+    handleChange = (value) => {
+        let params = {
+            classificationId: value,
+            subjectsId: this.props.id
+        }
+        request.post('incomeAndTaxRateCorrespondence/addSubjectTax', {...params}).then(({data}) => {
+            if (data.code === 200) {
+                this.setState({tableUpDateKey:Date.now()});
+                message.success('添加成功', 4);
+            } else {
+                message.error(data.msg);
+            }
+        }).catch(err => {
+            message.error(err.message)
+        })
+    }
+
+    handleSearch = (value) => {
+        this.fetchSearch(value, list => this.setState({
+            data: list,
+            value_num: value
+        }));
+    }
+
+    fetchSearch = (value, callback) => {
+        if (timeout) {
+            clearTimeout(timeout);
+            timeout = null;
+        }
+
+        timeout = setTimeout(() => {
+            request.get(`incomeAndTaxRateCorrespondence/queryTax`, {params: {num: value}}).then(({data}) => {
+                if (data.code === 200) {
+                    let list = [{
+                        value: data.data.id,
+                        text: data.data.taxableProjectName
+                    }]
+                    callback && callback(list);
+                }
+            })
+        }, 1000);
+    }
+
+    deleteData = (id) => {
+        confirm({
+            title: '友情提醒',
+            content: '删除后将不可恢复，是否删除？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk: () => {
+                request.delete(`/incomeAndTaxRateCorrespondence/deleteSubjectTax/${id}`)
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            message.success('删除成功!');
+                            this.setState({tableUpDateKey:Date.now()});
+                        } else {
+                            message.error(data.msg)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
+            },
+            onCancel: () => {
+                console.log('Cancel');
+            },
+        });
+    }
+
     render() {
         const readonly = this.props.action === "look";
         let { record = {} } = this.state;
@@ -218,7 +330,7 @@ class PopModal extends Component {
             <Modal
                 title={title}
                 visible={this.props.visible}
-                width="500px"
+                width="850px"
                 bodyStyle={{ maxHeight: "420px", overflow: "auto" }}
                 style={{top:'5%'}}
                 onCancel={this.hideSelfModal}
@@ -231,7 +343,7 @@ class PopModal extends Component {
                         <Row>
                             {getFields(form, [
                                 {
-                                    span: 24,
+                                    span: 12,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.code,
@@ -252,10 +364,11 @@ class PopModal extends Component {
                                 }
                             ])}
                         </Row>
+
                         <Row>
                             {getFields(form, [
                                 {
-                                    span: 24,
+                                    span: 12,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.parentName,
@@ -274,7 +387,7 @@ class PopModal extends Component {
                                     }
                                 },
                                 {
-                                    span: 24,
+                                    span: 12,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.name,
@@ -295,10 +408,11 @@ class PopModal extends Component {
                                 }
                             ])}
                         </Row>
+
                         <Row>
                             {getFields(form, [
                                 {
-                                    span: 24,
+                                    span: 12,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.accountingEntries
@@ -312,7 +426,7 @@ class PopModal extends Component {
                                     }
                                 },
                                 {
-                                    span: 24,
+                                    span: 12,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.noTaxMethod,
@@ -330,13 +444,14 @@ class PopModal extends Component {
                                 }
                             ])}
                         </Row>
+
                         <Row>
                             {getFields(form, [
                                 {
                                     label:'一般计税税率',
                                     fieldName:'commonlyTaxRateId',
                                     type:'select',
-                                    span:24,
+                                    span:12,
                                     formItemStyle: formItemLayout,
                                     options:this.state.commonlyTaxRateList,
                                     componentProps:{
@@ -354,14 +469,12 @@ class PopModal extends Component {
                                     },
                                 }
                             ])}
-                        </Row>
-                        <Row>
                             {!record.noTaxMethod && getFields(form, [
                                 {
                                     label:'简易计税税率',
                                     fieldName:'simpleTaxRateId',
                                     type:'select',
-                                    span:24,
+                                    span:12,
                                     formItemStyle: formItemLayout,
                                     options:this.state.simpleTaxRateList,
                                     componentProps:{
@@ -380,6 +493,7 @@ class PopModal extends Component {
                                 }
                             ])}
                         </Row>
+
                         {/*<Row>
                          {getFields(form, [
                          {
@@ -441,7 +555,7 @@ class PopModal extends Component {
                         <Row>
                             {getFields(form, [
                                 {
-                                    span: 24,
+                                    span: 12,
                                     formItemStyle: formItemLayout,
                                     fieldDecoratorOptions: {
                                         initialValue: record.taxItem
@@ -456,7 +570,37 @@ class PopModal extends Component {
                                 }
                             ])}
                         </Row>
+
                     </Form>
+
+
+                    <Row>
+                        <span>税收分类编码:</span>
+                        <Select
+                            showSearch
+                            value={this.state.value_num}
+                            style={{ width: '50%' }}
+                            placeholder={'请输入税收分类编码'}
+                            defaultActiveFirstOption={false}
+                            showArrow={false}
+                            filterOption={false}
+                            notFoundContent={null}
+                            onSearch={this.handleSearch}
+                            onChange={this.handleChange}
+                        >
+                            {
+                                this.state.data.map(d => <Option key={d.value}>{d.text}</Option>)
+                            }
+                        </Select>
+                    </Row>        
+                    <AsyncTable url={`/incomeAndTaxRateCorrespondence/relationList?subjectsId=${this.props.id}`}
+                                updateKey={this.state.tableUpDateKey}
+                                tableProps={{
+                                    rowKey:record=>record.id,
+                                    pagination:true,
+                                    size:'small',
+                                    columns:columns(this),
+                                }} />
                 </Spin>
             </Modal>
         );
