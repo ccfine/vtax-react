@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/11/6.
  */
 import React, { Component } from 'react'
-import {message} from 'antd'
+import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments'
 import PopModal from '../popModal'
 import {request,composeBotton} from 'utils';
@@ -111,21 +111,35 @@ export default class TaxMain extends Component{
     }
 
     handleSubmit = (url,text,record) =>{
-        request.post(url,{
-            mainId:record.mainId,
-            mainName:record.mainId
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(`${text}成功!`);
-                    this.refreshTable();
-                }else{
-                    message.error(`${text}失败:${data.msg}`)
-                }
-            })
-            .catch(err=>{
-                message.error(err.message);
-            })
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: `是否${text}？`,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                request.post(url,{
+                    mainId:record.mainId,
+                    mainName:record.mainId
+                })
+                    .then(({data})=>{
+                        if(data.code===200){
+                            message.success(`${text}成功!`);
+                            this.refreshTable();
+                        }else{
+                            message.error(`${text}失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err=>{
+                        message.error(err.message);
+                    })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+
     }
 
     render(){
