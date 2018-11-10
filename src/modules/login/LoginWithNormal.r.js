@@ -37,7 +37,7 @@ class LoginWithNormal extends Component {
                 this.toggleLoading(true)
                 login({
                     userName:Base64.encode(values.userName),
-                    password:md5(values.password),
+                    password:Base64.encode(md5(values.password)),
                     type:1,//1表示正常通过登录页面登录,
                     success:()=>{
 
