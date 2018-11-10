@@ -12,49 +12,154 @@ import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestRe
 import moment from 'moment';
 import PopModal from "./popModal";
 
-const columns = (context) => [
+// const columns = (context) => [
+//     {
+//         title: "计税方法",
+//         dataIndex: "taxMethod",
+//         render: (text) => {
+//             let tempText = '';
+//             switch(text){
+//                 case '1':
+//                     tempText='一般计税';
+//                     break;
+//                 case '2':
+//                     tempText='简易计税';
+//                     break;
+//                 default:
+//                     tempText='';
+//                     break;
+//             }
+//             return tempText;
+//         },
+//         footer: (data) => {
+//             return <div>Summary: {data.taxMethod}</div>
+//         },
+//     }, {
+//         title: "税率",
+//         dataIndex: "taxRateName",
+//         //render: text => `${text}${text ? "%" : ""}`
+//     }, {
+//         title: "金额",
+//         dataIndex: "creditAmount",
+//         render: text => fMoney(text),
+//         className: "table-money"
+//     }, {
+//         title: "税额",
+//         dataIndex: "taxAmount",
+//         render: text => fMoney(text),
+//         className: "table-money"
+//     }, {
+//         title: "价税合计",
+//         dataIndex: "totalAmount",
+//         render: text => fMoney(text),
+//         className: "table-money"
+//     }
+// ];
+
+const columns = [
     {
-        title: "计税方法",
-        dataIndex: "taxMethod",
-        render: (text) => {
-            let tempText = '';
-            switch(text){
-                case '1':
-                    tempText='一般计税';
-                    break;
-                case '2':
-                    tempText='简易计税';
-                    break;
-                default:
-                    tempText='';
-                    break;
-            }
-            return tempText;
-        },
-        footer: (data) => {
-            return <div>Summary: {data.taxMethod}</div>
-        },
-    }, {
+        title: "收入类型",
+        dataIndex: "",
+        width: "200px"
+    },
+    {
         title: "税率",
-        dataIndex: "taxRateName",
-        //render: text => `${text}${text ? "%" : ""}`
-    }, {
-        title: "金额",
-        dataIndex: "creditAmount",
+        dataIndex: "",
+        width: "150px"
+    },
+    {
+        title: "上期末合计金额",
+        children: [
+            {
+                title: "增值税收入确认金额",
+                dataIndex: "",
+                width: "220px",
+                render: text => fMoney(text),
+                className: "table-money"
+            },
+            {
+                title: "增值税开票金额",
+                dataIndex: "",
+                width: "200px",
+                render: text => fMoney(text),
+                className: "table-money"
+            },
+            {
+                title: "未开具发票销售额",
+                dataIndex: "",
+                width: "200px",
+                render: text => fMoney(text),
+                className: "table-money"
+            }
+        ]
+    },
+    {
+        title: "本期发生额",
+        children: [
+            {
+                title: "增值税收入确认金额",
+                dataIndex: "",
+                width: "220px",
+                render: text => fMoney(text),
+                className: "table-money"
+            },
+            {
+                title: "增值税开票金额",
+                dataIndex: "",
+                width: "200px",
+                render: text => fMoney(text),
+                className: "table-money"
+            },
+            {
+                title: "未开具发票销售额",
+                dataIndex: "",
+                width: "200px",
+                render: text => fMoney(text),
+                className: "table-money"
+            }
+        ]
+    },
+    {
+        title: "本期末合计金额",
+        children: [
+            {
+                title: "增值税收入确认金额",
+                dataIndex: "",
+                width: "220px",
+                render: text => fMoney(text),
+                className: "table-money"
+            },
+            {
+                title: "增值税开票金额",
+                dataIndex: "",
+                width: "200px",
+                render: text => fMoney(text),
+                className: "table-money"
+            },
+            {
+                title: "未开具发票销售额",
+                dataIndex: "",
+                width: "200px",
+                render: text => fMoney(text),
+                className: "table-money"
+            }
+        ]
+    },
+    {
+        title: "本期应申报未开票销售额",
+        dataIndex: "",
+        width: "250px",
         render: text => fMoney(text),
         className: "table-money"
-    }, {
-        title: "税额",
-        dataIndex: "taxAmount",
-        render: text => fMoney(text),
-        className: "table-money"
-    }, {
-        title: "价税合计",
-        dataIndex: "totalAmount",
+    },
+    {
+        title: "本期应申报未开票销售税额",
+        dataIndex: "",
+        width: "250px",
         render: text => fMoney(text),
         className: "table-money"
     }
-];
+]
 
 const columns2=(context,hasOperate) => {
     let operates = hasOperate ? [{
@@ -469,9 +574,9 @@ class UnBilledSalesNotEstate extends Component {
                                 filters={filters}
                                 tableProps={{
                                     rowKey:record=>record.id,
-                                    pagination:true,
+                                    pagination:false,
                                     size:'small',
-                                    columns:columns(this),
+                                    columns:columns,
                                     onSuccess:this.updateStatus,
                                     onDataChange:(dataSource)=>{
                                         this.setState({
