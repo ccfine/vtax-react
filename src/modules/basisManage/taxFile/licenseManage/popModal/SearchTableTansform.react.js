@@ -121,13 +121,20 @@ class SearchTable extends Component{
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
-                                    rowKey:record=>record.id,
-                                    pagination:tableOption.pagination || false,
-                                    pageSize:tableOption.pageSize || 10,
+                                    rowKey:record=>record[tableOption.rowKey] || record.id,
+                                    dataSource:tableOption.dataSource || tableOption.dataSource || undefined,
+                                    pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
+                                    pageSize:tableOption.pageSize || 100,
                                     size:'small',
+                                    onRow:tableOption.onRow || undefined,
+                                    rowSelection:tableOption.rowSelection || tableOption.onRowSelect || undefined,
+                                    onRowSelect:tableOption.onRowSelect || undefined,
                                     columns:tableOption.columns,
+                                    onSuccess:tableOption.onSuccess || undefined,
                                     scroll:tableOption.scroll || undefined,
-                                    rowSelection:tableOption.rowSelection||undefined
+                                    onDataChange:tableOption.onDataChange || undefined,
+                                    onTotalSource:tableOption.onTotalSource || undefined,
+                                    renderFooter:tableOption.renderFooter || undefined
                                 }} />
                 </Card>
                 {
