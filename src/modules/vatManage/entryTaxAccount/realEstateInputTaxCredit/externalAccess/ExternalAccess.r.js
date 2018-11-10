@@ -72,6 +72,8 @@ const columns = (context,isEdit) =>[{
         title: "税率",
         dataIndex: "intaxRate",
         width:'100px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },
     {
         title: "税额",

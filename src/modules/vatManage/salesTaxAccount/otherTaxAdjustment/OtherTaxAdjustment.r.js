@@ -160,7 +160,8 @@ const getColumns = (context,hasOperate) => {
   {
     title: "税率",
     dataIndex: "taxRate",
-    render: text => (text ? `${text}%` : text),
+      className:'text-right',
+      render:text=>text? `${text}%`: text,
     width:'100px',
   },
   {

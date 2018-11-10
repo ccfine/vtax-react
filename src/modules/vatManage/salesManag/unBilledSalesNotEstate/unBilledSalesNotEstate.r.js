@@ -12,154 +12,49 @@ import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestRe
 import moment from 'moment';
 import PopModal from "./popModal";
 
-// const columns = (context) => [
-//     {
-//         title: "计税方法",
-//         dataIndex: "taxMethod",
-//         render: (text) => {
-//             let tempText = '';
-//             switch(text){
-//                 case '1':
-//                     tempText='一般计税';
-//                     break;
-//                 case '2':
-//                     tempText='简易计税';
-//                     break;
-//                 default:
-//                     tempText='';
-//                     break;
-//             }
-//             return tempText;
-//         },
-//         footer: (data) => {
-//             return <div>Summary: {data.taxMethod}</div>
-//         },
-//     }, {
-//         title: "税率",
-//         dataIndex: "taxRateName",
-//         //render: text => `${text}${text ? "%" : ""}`
-//     }, {
-//         title: "金额",
-//         dataIndex: "creditAmount",
-//         render: text => fMoney(text),
-//         className: "table-money"
-//     }, {
-//         title: "税额",
-//         dataIndex: "taxAmount",
-//         render: text => fMoney(text),
-//         className: "table-money"
-//     }, {
-//         title: "价税合计",
-//         dataIndex: "totalAmount",
-//         render: text => fMoney(text),
-//         className: "table-money"
-//     }
-// ];
-
-const columns = [
+const columns = (context) => [
     {
-        title: "收入类型",
-        dataIndex: "",
-        width: "200px"
-    },
-    {
+        title: "计税方法",
+        dataIndex: "taxMethod",
+        render: (text) => {
+            let tempText = '';
+            switch(text){
+                case '1':
+                    tempText='一般计税';
+                    break;
+                case '2':
+                    tempText='简易计税';
+                    break;
+                default:
+                    tempText='';
+                    break;
+            }
+            return tempText;
+        },
+        footer: (data) => {
+            return <div>Summary: {data.taxMethod}</div>
+        },
+    }, {
         title: "税率",
-        dataIndex: "",
-        width: "150px"
-    },
-    {
-        title: "上期末合计金额",
-        children: [
-            {
-                title: "增值税收入确认金额",
-                dataIndex: "",
-                width: "220px",
-                render: text => fMoney(text),
-                className: "table-money"
-            },
-            {
-                title: "增值税开票金额",
-                dataIndex: "",
-                width: "200px",
-                render: text => fMoney(text),
-                className: "table-money"
-            },
-            {
-                title: "未开具发票销售额",
-                dataIndex: "",
-                width: "200px",
-                render: text => fMoney(text),
-                className: "table-money"
-            }
-        ]
-    },
-    {
-        title: "本期发生额",
-        children: [
-            {
-                title: "增值税收入确认金额",
-                dataIndex: "",
-                width: "220px",
-                render: text => fMoney(text),
-                className: "table-money"
-            },
-            {
-                title: "增值税开票金额",
-                dataIndex: "",
-                width: "200px",
-                render: text => fMoney(text),
-                className: "table-money"
-            },
-            {
-                title: "未开具发票销售额",
-                dataIndex: "",
-                width: "200px",
-                render: text => fMoney(text),
-                className: "table-money"
-            }
-        ]
-    },
-    {
-        title: "本期末合计金额",
-        children: [
-            {
-                title: "增值税收入确认金额",
-                dataIndex: "",
-                width: "220px",
-                render: text => fMoney(text),
-                className: "table-money"
-            },
-            {
-                title: "增值税开票金额",
-                dataIndex: "",
-                width: "200px",
-                render: text => fMoney(text),
-                className: "table-money"
-            },
-            {
-                title: "未开具发票销售额",
-                dataIndex: "",
-                width: "200px",
-                render: text => fMoney(text),
-                className: "table-money"
-            }
-        ]
-    },
-    {
-        title: "本期应申报未开票销售额",
-        dataIndex: "",
-        width: "250px",
+        dataIndex: "taxRateName",
+        //render: text => `${text}${text ? "%" : ""}`
+    }, {
+        title: "金额",
+        dataIndex: "creditAmount",
         render: text => fMoney(text),
         className: "table-money"
-    },
-    {
-        title: "本期应申报未开票销售税额",
-        dataIndex: "",
-        width: "250px",
+    }, {
+        title: "税额",
+        dataIndex: "taxAmount",
+        render: text => fMoney(text),
+        className: "table-money"
+    }, {
+        title: "价税合计",
+        dataIndex: "totalAmount",
         render: text => fMoney(text),
         className: "table-money"
     }
-]
+];
 
 const columns2=(context,hasOperate) => {
     let operates = hasOperate ? [{
@@ -225,23 +120,23 @@ const columns2=(context,hasOperate) => {
                     {text}
                 </a>
             }
-        /*},{
-            title: "纳税主体",
-            dataIndex: "mainName",
-            render: (text, record) => {
-                return <a title='查看详情' onClick={() => {
-                    context.setState({
-                        visible: true,
-                        action: "look",
-                        opid: record.id
-                    });
-                }}>
-                    {text}
-                </a>
-            }
-        }, {
-            title: '项目',
-            dataIndex: 'projectName',*/
+            /*},{
+             title: "纳税主体",
+             dataIndex: "mainName",
+             render: (text, record) => {
+             return <a title='查看详情' onClick={() => {
+             context.setState({
+             visible: true,
+             action: "look",
+             opid: record.id
+             });
+             }}>
+             {text}
+             </a>
+             }
+             }, {
+             title: '项目',
+             dataIndex: 'projectName',*/
         }, {
             title: '项目分期',
             dataIndex: 'stagesName',
@@ -395,7 +290,7 @@ class UnBilledSalesNotEstate extends Component {
                 if (values.authMonth) {
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
-                
+
                 if(values.main){
                     values.mainId = values.main.key;
                     values.main = undefined;
@@ -510,7 +405,7 @@ class UnBilledSalesNotEstate extends Component {
                     </Form>
                 </Card>
                 <Card title={<span>未开票销售台账-非地产汇总列表</span>}
-                    bordered={false}
+                      bordered={false}
                       extra={<div>
                           {listMainResultStatus(statusParam)}
                           {
@@ -574,9 +469,9 @@ class UnBilledSalesNotEstate extends Component {
                                 filters={filters}
                                 tableProps={{
                                     rowKey:record=>record.id,
-                                    pagination:false,
+                                    pagination:true,
                                     size:'small',
-                                    columns:columns,
+                                    columns:columns(this),
                                     onSuccess:this.updateStatus,
                                     onDataChange:(dataSource)=>{
                                         this.setState({
@@ -592,7 +487,7 @@ class UnBilledSalesNotEstate extends Component {
 
                 </Card>
                 <Card title={<span>未开票销售台账-非地产手工新增列表</span>}
-                    bordered={false}
+                      bordered={false}
                       extra={<div>
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
