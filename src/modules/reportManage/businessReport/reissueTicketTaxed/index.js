@@ -271,7 +271,7 @@ const voucherSearchFields = [
     }
 ];
 
-export default class NewPage extends Component {
+export default class ReissueTicketTaxed extends Component {
     state = {
         updateKey: '',
         filters: {},
@@ -307,7 +307,7 @@ export default class NewPage extends Component {
                         y: window.screen.availHeight - 350
                     },
                     cardProps: {
-                        title: "未开票销售补开发票报表"
+                        title: "补开票已税备查档案"
                     },
                     extra: <div>
                         {
