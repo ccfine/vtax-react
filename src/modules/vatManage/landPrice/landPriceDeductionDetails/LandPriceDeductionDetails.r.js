@@ -236,7 +236,6 @@ const columns = context => [
 	{
 		title: '税率',
 		dataIndex: 'taxRate',
-        className:'text-right',
         render:text=>text? `${text}%`: text,
         width:'100px',
         className:'text-right',

@@ -172,9 +172,8 @@ const columns=[
     },{
         title: '税率',
         dataIndex: 'taxRate',
-        className:'text-right',
         render:text=>text? `${text}%`: text,
-        className:'table-money',
+        className:'text-right',
         width:'100px',
     },{
         title: '应税项目名称',
