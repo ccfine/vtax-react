@@ -130,6 +130,8 @@ const columns = [
         title: '含税金额',
         dataIndex: 'zehsje',
         width:'100px',
+        render: text => fMoney(text),
+        className: "table-money",
     },
     {
         title: '不含税金额',
@@ -142,6 +144,8 @@ const columns = [
         title: '税额',
         dataIndex: 'zese',
         width:'100px',
+        render: text => fMoney(text),
+        className: "table-money",
     },
     {
         title: '购买方纳税人识别号',
