@@ -494,7 +494,7 @@ class TaxExemptionDetails extends Component {
                             }])
                         }
                         {
-                            (disabled && declare.decAction === 'edit') && composeBotton([{
+                             (disabled && declare.decAction === 'edit') && composeBotton([{
                                 type: 'save',
                                 text: '保存',
                                 icon: 'save',

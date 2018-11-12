@@ -1,6 +1,7 @@
 
 import {notification } from 'antd';
 let socket = undefined;
+const wsURL = 'ws://10.10.179.67:82/';
 export default function create(id){
     if(typeof(WebSocket) === `undefined`){
         console.error('您得客户端不支持websocket接收消息')
@@ -13,7 +14,7 @@ export default function create(id){
     }
 
     socket = new WebSocket(
-        window.wsURL + 'webSocketHandler/id=' + id
+        wsURL + 'webSocketHandler/id=' + id
     )
     socket.onopen = () => {
         console.log('连接成功')
