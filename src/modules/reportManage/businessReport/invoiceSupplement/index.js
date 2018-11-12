@@ -233,22 +233,30 @@ const modelColumns = [
     {
         title: "金额",
         dataIndex: "amount",
-        width: "200px"
+        width: "200px",
+        render: text => fMoney(text),
+        className: "table-money",
     },
     {
         title: "税率",
         dataIndex: "taxRate",
-        width: "200px"
+        width: "200px",
+        render:text=>text? `${text}%`: text,
+        className: "table-money",
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
-        width: "200px"
+        width: "200px",
+        render: text => fMoney(text),
+        className: "table-money",
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
-        width: "200px"
+        width: "200px",
+        render: text => fMoney(text),
+        className: "table-money",
     },
     {
         title: "购货单位名称",
