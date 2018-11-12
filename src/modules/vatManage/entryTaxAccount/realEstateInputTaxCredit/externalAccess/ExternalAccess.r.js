@@ -52,6 +52,8 @@ const columns = (context,isEdit) =>[{
         title:'取得价值',
         dataIndex:'gainValue',
         width:'200px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
     },
     {
         title: "资产类别",
@@ -72,6 +74,8 @@ const columns = (context,isEdit) =>[{
         title: "税率",
         dataIndex: "intaxRate",
         width:'100px',
+        render:text=>text? `${text}%`: text,
+        className: "table-money",
     },
     {
         title: "税额",
