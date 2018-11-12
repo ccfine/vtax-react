@@ -191,6 +191,8 @@ const columns = [{
     {
         title:'确收金额',
         dataIndex:'confirmedPrice',
+        render: text => fMoney(text),
+        className:'table-money',
         width:'100px',
     },
     {

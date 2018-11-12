@@ -10,6 +10,7 @@ import { SearchTable, TableTotal } from "compoments"
 // import { composeBotton } from 'utils'
 // import createSocket from "../socket"
 import TableTitle from "compoments/tableTitleWithTime"
+import { fMoney } from 'utils'
 
 const formItemStyle = {
   labelCol: {
@@ -212,37 +213,51 @@ const columns = [
   {
     title: "不含税金额",
     dataIndex: "withoutTax",
-    width: "200px"
+    render: text => fMoney(text),
+    width: "200px",
+    className: "table-money",
   },
   {
     title: "税率",
     dataIndex: "taxRate",
-    width: "100px"
+    render:text=>text? `${text}%`: text,
+    width: "100px",
+    className: "table-money",
   },
   {
     title: "进项税额",
     dataIndex: "inTaxAmount",
-    width: "200px"
+    render: text => fMoney(text),
+    width: "200px",
+    className: "table-money",
   },
   {
     title: "价税合计",
     dataIndex: "totalAmount",
-    width: "200px"
+    render: text => fMoney(text),
+    width: "200px",
+    className: "table-money",
   },
   {
     title: "拆分比例",
     dataIndex: "splitProportion",
-    width: "200px"
+    render:text=>text? `${text}%`: text,
+    width: "200px",
+    className: "table-money",
   },
   {
     title: "已拆分金额",
     dataIndex: "splitAmount",
-    width: "200px"
+    render: text => fMoney(text),
+    width: "200px",
+    className: "table-money",
   },
   {
     title: "已拆分税额",
     dataIndex: "splitTaxAmount",
-    width: "200px"
+    render: text => fMoney(text),
+    width: "200px",
+    className: "table-money",
   },
   {
     title: "最新更新日期",
