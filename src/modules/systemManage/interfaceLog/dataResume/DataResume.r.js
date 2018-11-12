@@ -206,7 +206,7 @@ export default class DataResume extends Component {
 
     render () {
         return (
-            <div className="oneline">
+            <div className="oneLine">
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{

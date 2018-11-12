@@ -294,7 +294,7 @@ export default class NewPage extends Component {
 
     render() {
         let {filters = {}, detailFilters={}, totalSource = [], voucherVisible} = this.state;
-        return <div className="oneline">
+        return <div className="oneLine">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
