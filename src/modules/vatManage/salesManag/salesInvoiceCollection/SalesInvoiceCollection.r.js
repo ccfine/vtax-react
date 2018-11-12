@@ -231,7 +231,8 @@ const getColumns = (context) => [
         title: "税率",
         dataIndex: "taxRate",
         width:'100px',
-        render: text => text?`${text}%`:text
+        render: text => text?`${text}%`:text,
+        className: "text-right",
     },
     {
         title: "税额",

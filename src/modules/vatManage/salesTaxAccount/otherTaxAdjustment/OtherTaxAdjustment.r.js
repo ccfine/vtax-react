@@ -162,6 +162,7 @@ const getColumns = (context,hasOperate) => {
     dataIndex: "taxRate",
     render: text => (text ? `${text}%` : text),
     width:'100px',
+    className:'text-right',
   },
   {
     title: "销售额（不含税）",
