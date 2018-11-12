@@ -314,14 +314,14 @@ class PopModal extends Component {
                                 disabled && getFields(form, [{
                                         span: '24',
                                         fieldName: 'salesArea',
-                                        label: '累计销售土地面积',
+                                        label: '累计销售建筑面积',
                                         formItemStyle: formItemLayout,
                                         fieldDecoratorOptions: {
                                             initialValue: record.salesArea|| 0,
                                             rules: [
                                                 {
                                                     required: true,
-                                                    message: '请输入累计销售土地面积'
+                                                    message: '请输入累计销售建筑面积'
                                                 }
                                             ]
                                         },

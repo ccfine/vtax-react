@@ -60,22 +60,27 @@ class PopModal extends Component{
     },{
         title: '单价',
         dataIndex: 'unitPrice',
+        className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '金额',
         dataIndex: 'amount',
+        className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '税率',
         dataIndex: 'taxRate',
+        className:'text-right',
         render:text=>text? `${text}%`: text,
     },{
         title: '税额',
         dataIndex: 'taxAmount',
+        className:'table-money',
         render:text=>fMoney(text),
     },{
         title: '价税合计',
         dataIndex: 'totalAmount',
+        className:'table-money',
         render:text=>fMoney(text),
     }];
 

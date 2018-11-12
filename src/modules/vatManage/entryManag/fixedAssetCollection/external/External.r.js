@@ -85,7 +85,8 @@ const columns=[
     {
         title: "税率",
         dataIndex: "intaxRate",
-        render:text=>text && `${text}%`,
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
         width:'100px',
     },
     {

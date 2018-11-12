@@ -25,7 +25,7 @@ class PopModal extends Component {
         if (props.visible && this.props.visible !== props.visible) {
             if (props.id) {
                 this.setState({ formLoading: true });
-                request.get(`/taxReliefProjectCollection/find/${props.id}`).then(({ data }) => {
+                request.get(`/taxReliefProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}find/${props.id}`).then(({ data }) => {
                     if (data.code === 200) {
                         this.setState({ formLoading: false, record: data.data});
                     }
@@ -69,11 +69,11 @@ class PopModal extends Component {
                     sucessMsg;
 
                 if (this.props.action === "modify") {
-                    result = request.put('/taxReliefProjectCollection/update', obj);
+                    result = request.put(`/taxReliefProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}update`, obj);
                     sucessMsg = '修改成功';
                 } else if (this.props.action === "add") {
                     //obj.mainId = this.props.mainId;
-                    result = request.post('/taxReliefProjectCollection/add', obj);
+                    result = request.post(`/taxReliefProjectCollection/${this.props.beginType === '2' ? 'pc/' : ''}add`, obj);
                     sucessMsg = '新增成功';
                 }
 

@@ -120,23 +120,23 @@ const columns2=(context,hasOperate) => {
                     {text}
                 </a>
             }
-        /*},{
-            title: "纳税主体",
-            dataIndex: "mainName",
-            render: (text, record) => {
-                return <a title='查看详情' onClick={() => {
-                    context.setState({
-                        visible: true,
-                        action: "look",
-                        opid: record.id
-                    });
-                }}>
-                    {text}
-                </a>
-            }
-        }, {
-            title: '项目',
-            dataIndex: 'projectName',*/
+            /*},{
+             title: "纳税主体",
+             dataIndex: "mainName",
+             render: (text, record) => {
+             return <a title='查看详情' onClick={() => {
+             context.setState({
+             visible: true,
+             action: "look",
+             opid: record.id
+             });
+             }}>
+             {text}
+             </a>
+             }
+             }, {
+             title: '项目',
+             dataIndex: 'projectName',*/
         }, {
             title: '项目分期',
             dataIndex: 'stagesName',
@@ -290,7 +290,7 @@ class UnBilledSalesNotEstate extends Component {
                 if (values.authMonth) {
                     values.authMonth = values.authMonth.format('YYYY-MM')
                 }
-                
+
                 if(values.main){
                     values.mainId = values.main.key;
                     values.main = undefined;
@@ -405,7 +405,7 @@ class UnBilledSalesNotEstate extends Component {
                     </Form>
                 </Card>
                 <Card title={<span>未开票销售台账-非地产汇总列表</span>}
-                    bordered={false}
+                      bordered={false}
                       extra={<div>
                           {listMainResultStatus(statusParam)}
                           {
@@ -487,7 +487,7 @@ class UnBilledSalesNotEstate extends Component {
 
                 </Card>
                 <Card title={<span>未开票销售台账-非地产手工新增列表</span>}
-                    bordered={false}
+                      bordered={false}
                       extra={<div>
                           {
                               (disabled && declare.decAction==='edit') && composeBotton([{
