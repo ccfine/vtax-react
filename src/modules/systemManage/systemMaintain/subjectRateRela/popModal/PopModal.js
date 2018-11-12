@@ -5,14 +5,13 @@
  * @Last Modified time: 2018-07-11 10:51:11
  */
 import React, { Component } from "react";
-import { Modal, Form, Button, message, Spin, Row, Select,Card,Col,Icon } from "antd";
+import { Modal, Form, Button, message, Spin, Row, Select,Card,Col } from "antd";
 import { getFields, request,setFormat, composeBotton } from "utils";
 import { AsyncTable } from "compoments";
 import debounce from 'lodash/debounce';
 const Option = Select.Option;
 const confirm = Modal.confirm;
 const FormItem = Form.Item;
-let timeout;
 
 const formItemLayout = {
     labelCol: {
