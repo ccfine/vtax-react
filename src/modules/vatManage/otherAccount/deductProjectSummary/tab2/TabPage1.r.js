@@ -75,35 +75,43 @@ const columns = [{
 },{
     title: '税率',
     dataIndex: 'taxRate',
+    className:'text-right',
     render:text=>text? `${text}%`: text,
 },{
     title: '价税合计 ',
     dataIndex: 'totalAmount',
     render:text=>fMoney(text),
+    className: 'table-money'
 },{
     title: '期初余额',
     dataIndex: 'initialBalance',
     render:text=>fMoney(text),
+    className: 'table-money'
 },{
     title: '本期发生额',
     dataIndex: 'currentAmount',
     render:text=>fMoney(text),
+    className: 'table-money'
 },{
     title: '本期应扣除金额',
     dataIndex: 'currentDeductAmount',
     render:text=>fMoney(text),
+    className: 'table-money'
 },{
     title: '本期实际扣除金额',
     dataIndex: 'actualDeductAmount',
     render:text=>fMoney(text),
+    className: 'table-money'
 },{
     title: '期末余额',
     dataIndex: 'endingBalance',
     render:text=>fMoney(text),
+    className: 'table-money'
 },{
     title: '销项税额',
     dataIndex: 'outputTax',
     render:text=>fMoney(text),
+    className: 'table-money'
 }];
 // 总计数据结构，用于传递至TableTotal中
 const totalData =  [

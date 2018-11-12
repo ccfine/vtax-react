@@ -8,7 +8,7 @@ import React, { Component } from "react"
 import { message } from "antd"
 import { SearchTable, TableTotal } from "compoments"
 import moment from "moment"
-import { listMainResultStatus, composeBotton, request, requestResultStatus, fMoney } from "utils"
+import { listMainResultStatus, composeBotton, request, requestResultStatus,fMoney } from "utils"
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -227,51 +227,51 @@ const columns = [
     {
       title: "不含税金额",
       dataIndex: "withoutTax",
-      width: "200px",
-      className:'table-money',
-      render:text=>fMoney(text),
+        render:(text)=>fMoney(text),
+        className: "table-money",
+      width: "200px"
     },
     {
-      title: "税率",
-      dataIndex: "taxRate",
-      width: "100px",
-      className:'table-money',
-      render:text=>text? `${text}%`: text,
+        title: "税率",
+        dataIndex: "taxRate",
+        width: "100px",
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },
     {
       title: "进项税额",
       dataIndex: "inTaxAmount",
-      width: "200px",
-      className:'table-money',
-      render:text=>fMoney(text),
+        render:(text)=>fMoney(text),
+        className: "table-money",
+      width: "200px"
     },
     {
       title: "价税合计",
       dataIndex: "totalAmount",
-      width: "200px",
-      className:'table-money',
-      render:text=>fMoney(text),
+        render:(text)=>fMoney(text),
+        className: "table-money",
+      width: "200px"
     },
     {
       title: "拆分比例",
       dataIndex: "splitProportion",
       width: "200px",
-      className:'table-money',
-      render:text=>text? `${text}%`: text,
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },
     {
       title: "已拆分金额",
       dataIndex: "splitAmount",
-      width: "200px",
-      className:'table-money',
-      render:text=>fMoney(text),
+        render:(text)=>fMoney(text),
+        className: "table-money",
+      width: "200px"
     },
     {
       title: "已拆分税额",
       dataIndex: "splitTaxAmount",
-      width: "200px",
-      className:'table-money',
-      render:text=>fMoney(text),
+        render:(text)=>fMoney(text),
+        className: "table-money",
+      width: "200px"
     },
     {
       title: "最新更新日期",

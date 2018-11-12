@@ -52,8 +52,6 @@ const columns = (context,isEdit) =>[{
         title:'取得价值',
         dataIndex:'gainValue',
         width:'200px',
-        render:(text)=>fMoney(text),
-        className: "table-money",
     },
     {
         title: "资产类别",
