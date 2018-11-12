@@ -155,7 +155,8 @@ const columns = [
     {
         title: "确收金额",
         dataIndex: "confirmedPrice",
-        width: "150px"
+        width: "150px",
+        className:'table-money',
     },
     {
         title:'税率',
@@ -194,7 +195,8 @@ const columns = [
     {
         title: "期初未纳税销售额",
         dataIndex: "initialNoTaxableTaxAmount",
-        width: "150px"
+        width: "150px",
+        className:'table-money',
     },
     {
         title:'期初已开票金额',
@@ -213,7 +215,8 @@ const columns = [
     {
         title: "期末累计开票金额",
         dataIndex: "endSumInvoiceAmount",
-        width: "150px"
+        width: "150px",
+        className:'table-money',
     },
     {
         title:'期末未纳税销售额',

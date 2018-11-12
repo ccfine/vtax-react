@@ -230,6 +230,7 @@ const getColumns = (context,disabled) => {
             title:'确收金额',
             dataIndex:'confirmedPrice',
             width:'100px',
+            className:'table-money',
         },
         {
             title:'成交金额',

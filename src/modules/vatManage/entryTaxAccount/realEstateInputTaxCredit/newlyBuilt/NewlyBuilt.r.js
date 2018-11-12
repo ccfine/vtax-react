@@ -37,18 +37,26 @@ const columns = context =>[{
         title: "不含税金额",
         dataIndex: "withoutTax",
         width:'200px',
+        render:text=>fMoney(text),
+        className: "table-money",
     }, {
         title: "税率",
         dataIndex: "taxRate",
         width:'200px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     }, {
         title: "进项税额",
         dataIndex: "inTaxAmount",
         width:'100px',
+        render:text=>fMoney(text),
+        className: "table-money",
     }, {
         title: "价税合计",
         dataIndex: "totalAmount",
         width:'100px',
+        render:text=>fMoney(text),
+        className: "table-money",
     }, {
         title: "拆分规则",
         dataIndex: "splitRule",
@@ -57,14 +65,20 @@ const columns = context =>[{
         title: "拆分比例",
         dataIndex: "splitProportion",
         width:'100px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },{
         title: "已拆分金额",
         dataIndex: "splitAmount",
         width:'100px',
+        render:text=>fMoney(text),
+        className: "table-money",
     },{
         title: "已拆分税额",
         dataIndex: "splitTaxAmount",
         width:'100px',
+        render:(text)=>fMoney(text),
+        className: "table-money",
     },{
         title: "期初待抵扣进项税额",
         dataIndex: "initialTaxAmount",

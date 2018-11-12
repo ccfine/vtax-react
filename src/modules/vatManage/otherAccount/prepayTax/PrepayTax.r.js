@@ -294,17 +294,20 @@ const voucherColumns = [
     {
         title: "贷方金额",
         dataIndex: "creditAmount",
-        width: 150
+        width: 150,
+        className:'table-money',
     },
     {
         title: "税率",
         dataIndex: "rate",
-        width: 150
+        width: 150,
+        className:'text-right',
     },
     {
         title: "金额（含税）",
         dataIndex: "withTaxAmount",
-        width: 150
+        width: 150,
+        className:'table-money',
     }
 ]
 

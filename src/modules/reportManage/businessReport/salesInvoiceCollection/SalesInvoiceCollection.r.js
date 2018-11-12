@@ -172,6 +172,7 @@ const columns=[
     },{
         title: '税率',
         dataIndex: 'taxRate',
+        className:'text-right',
         render:text=>text? `${text}%`: text,
         className:'table-money',
         width:'100px',

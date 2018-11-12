@@ -147,7 +147,7 @@ export default class SelfContainedProductList extends Component {
   render () {
     const { totalSource } = this.state
     return (
-      <div className="oneline">
+      <div className="oneLine">
         <SearchTable 
           doNotFetchDidMount={ true }
           searchOption={{

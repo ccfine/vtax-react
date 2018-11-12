@@ -170,7 +170,7 @@ export default class TaskResume extends Component {
 
     render() {
         return (
-            <div className="oneline">
+            <div className="oneLine">
                 <SearchTable
                     searchOption={{
                         fields: searchFields()

@@ -94,12 +94,14 @@ const getColumns =(context)=>[
     },{
         title: '一般增值税税率',
         dataIndex: 'commonlyTaxRate',
-        render:text=>text&&`${text}%`,
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
         width:100,
     },{
         title: '简易增值税税率',
         dataIndex: 'simpleTaxRate',
-        render:text=>text&&`${text}%`,
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
         width:100,
     }
 ];

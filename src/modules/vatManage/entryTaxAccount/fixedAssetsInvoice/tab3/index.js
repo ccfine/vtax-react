@@ -38,6 +38,8 @@ const getColumns = context =>[
         title: '综合税率',
         dataIndex: 'taxRate',
         width:'200px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     }
 ];
 

@@ -84,7 +84,7 @@ export default class QueryLog extends Component {
 
   render () {
     return (
-      <div className="oneline">
+      <div className="oneLine">
         <SearchTable
           doNotFetchDidMount={ false }
           searchOption={{

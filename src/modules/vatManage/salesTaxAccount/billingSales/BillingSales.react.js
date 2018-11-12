@@ -38,6 +38,7 @@ const columns = context => [
         title: '税率',
         dataIndex: 'taxRate',
         render:text=>text? `${text}%`: text,
+        className:'text-right',
     },{
         title: '开具增值税专用发票',
         children: [
@@ -59,10 +60,12 @@ const columns = context => [
                 title: '销售额',
                 dataIndex: 'specialInvoiceAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             },{
                 title: '销项（应纳）税额 ',
                 dataIndex: 'specialInvoiceTaxAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             }
         ]
     },{
@@ -86,10 +89,12 @@ const columns = context => [
                 title: '销售额',
                 dataIndex: 'otherInvoiceAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             },{
                 title: '销项（应纳）税额 ',
                 dataIndex: 'otherInvoiceTaxAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             }
         ]
     }
@@ -127,6 +132,7 @@ const notColumns = context =>[
         title: '税率',
         dataIndex: 'taxRate',
         render:text=>text? `${text}%`: text,
+        className:'text-right',
     },{
         title: '开具增值税专用发票',
         children: [
@@ -148,10 +154,12 @@ const notColumns = context =>[
                 title: '销售额',
                 dataIndex: 'specialInvoiceAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             },{
                 title: '销项（应纳）税额 ',
                 dataIndex: 'specialInvoiceTaxAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             }
         ]
     },{
@@ -175,10 +183,12 @@ const notColumns = context =>[
                 title: '销售额',
                 dataIndex: 'otherInvoiceAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             },{
                 title: '销项（应纳）税额 ',
                 dataIndex: 'otherInvoiceTaxAmount',
                 render:text=>fMoney(text),
+                className:'table-money',
             }
         ]
     }
@@ -248,6 +258,7 @@ const invoiceColumns = [
         dataIndex: 'amountWithoutTax',
         render:text=>fMoney(text),
         width:'100px',
+        className:'table-money',
     },{
         title: '税率',
         dataIndex:'taxRate',
@@ -259,6 +270,7 @@ const invoiceColumns = [
         dataIndex: 'taxAmount',
         render:text=>fMoney(text),
         width:'100px',
+        className:'table-money',
         /*},{
          title: '价税合计',
          dataIndex: 'totalAmount',

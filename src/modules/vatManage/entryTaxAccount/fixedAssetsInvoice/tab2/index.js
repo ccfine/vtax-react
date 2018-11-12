@@ -54,6 +54,8 @@ const getColumns = context =>[
         title: '取得价值',
         dataIndex: 'gainValue',
         width:'100px',
+        className:'table-money',
+        render:text=>fMoney(text),
     },{
         title: '资产类别',
         dataIndex: 'assetType',
@@ -70,6 +72,8 @@ const getColumns = context =>[
         title: '税率',
         dataIndex: 'fixedTaxRate',
         width:'100px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },{
         title: '税额',
         dataIndex: 'fixedTaxAmount',
@@ -115,6 +119,8 @@ const getColumns = context =>[
         title: '税率',
         dataIndex: 'invoiceTaxRate',
         width:'100px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },{
         title: '进项税额',
         dataIndex: 'incomeTaxAmount',

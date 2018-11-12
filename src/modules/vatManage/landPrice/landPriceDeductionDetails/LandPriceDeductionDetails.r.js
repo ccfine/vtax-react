@@ -155,7 +155,8 @@ const columns = context => [
     {
         title: "当期发生的已标记的可抵扣土地价款",
         dataIndex: "actualAppendDeductPrice",
-        width: "250px"
+        width: "250px",
+        className:'table-money',
     },
     {
         title: '项目分期可抵扣的土地价款',
@@ -235,8 +236,10 @@ const columns = context => [
 	{
 		title: '税率',
 		dataIndex: 'taxRate',
-        render: text => text && `${text}%`,
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
         width:'100px',
+        className:'text-right',
 	},
 	{
 		title: '税额',
@@ -303,12 +306,14 @@ const voucherColumns = [
     {
         title: "确收金额",
         dataIndex: "confirmedPrice",
-        width: 150
+        width: 150,
+        className:'table-money',
     },
     {
         title: "结算价",
         dataIndex: "valorem",
-        width: 150
+        width: 150,
+        className:'table-money',
     },
     {
         title: "当期销售建筑面积",

@@ -263,6 +263,8 @@ const voucherColumns = [{
     title: '借方金额',
     dataIndex: 'debitAmount',
     width:100,
+    className: "table-money",
+    render:text=>fMoney(text),
 }, {
     title: '代扣代缴类型',
     dataIndex: 'withholdingType',

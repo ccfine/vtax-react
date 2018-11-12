@@ -107,11 +107,11 @@ const columns = [
     {
         title:'房间交易档案',
         children:[ {
-                title:'项目',
+                /*title:'项目',
                 dataIndex:'projectName',
                 width:'150px',
             },
-            {
+            {*/
                 title:'项目分期',
                 dataIndex:'itemName',
                 width:'150px',

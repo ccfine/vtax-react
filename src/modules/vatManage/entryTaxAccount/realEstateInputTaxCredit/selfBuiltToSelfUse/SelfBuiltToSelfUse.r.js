@@ -53,6 +53,8 @@ const columns = context =>[{
         title:'取得价值',
         dataIndex:'gainValue',
         width:'200px',
+        render:text=>fMoney(text),
+        className: "table-money",
     },
     {
         title: "资产类别",
@@ -73,6 +75,8 @@ const columns = context =>[{
         title: "税率",
         dataIndex: "intaxRate",
         width:'100px',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },
     {
         title: "税额",
