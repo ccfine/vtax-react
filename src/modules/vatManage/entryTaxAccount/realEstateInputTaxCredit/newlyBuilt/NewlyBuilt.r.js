@@ -43,8 +43,8 @@ const columns = context =>[{
         title: "税率",
         dataIndex: "taxRate",
         width:'200px',
+        className:'text-right',
         render:text=>text? `${text}%`: text,
-        className: "table-money",
     }, {
         title: "进项税额",
         dataIndex: "inTaxAmount",
@@ -65,8 +65,8 @@ const columns = context =>[{
         title: "拆分比例",
         dataIndex: "splitProportion",
         width:'100px',
+        className:'text-right',
         render:text=>text? `${text}%`: text,
-        className: "table-money",
     },{
         title: "已拆分金额",
         dataIndex: "splitAmount",

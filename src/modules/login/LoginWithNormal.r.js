@@ -32,8 +32,6 @@ class LoginWithNormal extends Component {
         const {login} = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                //console.log(EncryptAES(values.userName))
-                //console.log(DecryptAES(EncryptAES(values.userName)))
                 this.toggleLoading(true)
                 login({
                     userName:Base64.encode(values.userName),

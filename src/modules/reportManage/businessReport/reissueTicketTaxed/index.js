@@ -233,30 +233,30 @@ const modelColumns = [
     {
         title: "金额",
         dataIndex: "amount",
-        width: "200px",
         render: text => fMoney(text),
         className: "table-money",
+        width: "200px"
     },
     {
         title: "税率",
         dataIndex: "taxRate",
-        width: "200px",
-        render:text=>text? `${text}%`: text,
-        className: "table-money",
+        render: (text) => text ? `${text}%`: text,
+        className:'text-right',
+        width: "200px"
     },
     {
         title: "税额",
         dataIndex: "taxAmount",
-        width: "200px",
         render: text => fMoney(text),
         className: "table-money",
+        width: "200px"
     },
     {
         title: "价税合计",
         dataIndex: "totalAmount",
-        width: "200px",
         render: text => fMoney(text),
         className: "table-money",
+        width: "200px"
     },
     {
         title: "购货单位名称",
@@ -279,7 +279,7 @@ const voucherSearchFields = [
     }
 ];
 
-export default class NewPage extends Component {
+export default class ReissueTicketTaxed extends Component {
     state = {
         updateKey: '',
         filters: {},
@@ -315,7 +315,7 @@ export default class NewPage extends Component {
                         y: window.screen.availHeight - 350
                     },
                     cardProps: {
-                        title: "未开票销售补开发票报表"
+                        title: "补开票已税备查档案"
                     },
                     extra: <div>
                         {
