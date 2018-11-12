@@ -65,7 +65,8 @@ const columns = [
     {
         title: "税率",
         dataIndex: "",
-        width: "150px"
+        width: "150px",
+        className:'text-right',
     },
     {
         title: "上期末合计金额",
