@@ -9,6 +9,7 @@
 - [@storybook/react](https://github.com/storybooks/storybook) --- UI测试组件库
 - [echarts](https://github.com/apache/incubator-echarts) --- 图表组件库
 - [cross-env](https://github.com/kentcdodds/cross-env) --- 跨平台设置环境变量
+- [svgo](https://github.com/svg/svgo) --- 用于优化SVG文件的工具
 
 - less、sass
 
@@ -57,15 +58,21 @@
     - 接口管理--``interfaceManage``
     - 流程管理--``processManage``
     - 系统监控--``systemMonitor``
-        
+
+## svgo
+>  使用目的:SVG文件，尤其是从各种编辑器导出的文件，通常包含大量冗余和无用的信息。这可以包括编辑器元数据，注释，隐藏元素，默认或非最佳值以及可以安全地删除或转换而不影响SVG渲染结果的其他内容。
+
+```sh
+$ npm install -g svgo
+```
 
 ## Commitizen
 > 使用目的:统一commit格式，增加可阅读性，自动生成版本的 changelog
 
 ```sh
 $ npm install -g commitizen
-$ npm install -g conventional-changelog --``不包含命令行工具
-$ npm install -g conventional-changelog-cli  --``含命令行工具
+$ npm install -g conventional-changelog --不包含命令行工具
+$ npm install -g conventional-changelog-cli  --含命令行工具
 ```
 
 cd vtax

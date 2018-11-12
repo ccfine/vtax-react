@@ -172,6 +172,13 @@ export default class AsyncSelect extends Component{
             console.log(optionData)
         }
     }
+    /*onPopupScroll = e => {
+        e.persist();
+        let target = e.target;
+        if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+            // dynamic add options...
+        }
+    };*/
     render(){
         const {dataSource,loaded}=this.state;
         const {getFieldDecorator} = this.props.form;
