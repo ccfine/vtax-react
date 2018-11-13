@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-07-11 10:51:11
  */
 import React, { Component } from "react";
-import { Modal, Form, Button, message, Spin, Row, Select,Card,Col } from "antd";
+import { Modal, Form, Button, message, Spin, Row, Select,Card,Col, Icon } from "antd";
 import { getFields, request,setFormat, composeBotton } from "utils";
 import { AsyncTable } from "compoments";
 import debounce from 'lodash/debounce';
@@ -241,6 +241,7 @@ class PopModal extends Component {
                 }]
                 this.setState({
                     data:list,
+                    value_num: value,
                     fetching: false
                 });
             }else{
@@ -259,7 +260,6 @@ class PopModal extends Component {
             subjectsId: this.props.id
         }
         this.setState({
-            value_num:value,
             data: [],
             fetching: false,
         },()=>{
@@ -311,7 +311,7 @@ class PopModal extends Component {
                     })
             },
             onCancel: () => {
-                console.log('Cancel');
+                // console.log('Cancel');
             },
         });
     }
@@ -618,16 +618,16 @@ class PopModal extends Component {
                                                 placeholder={'请输入税收分类编码'}
                                                 defaultActiveFirstOption={false}
                                                 notFoundContent={fetching ? <Spin size="small" /> : null}
-                                                showArrow={false}
+                                                // showArrow={false}
                                                 filterOption={false}
                                                 onSearch={this.handleSearch}
                                                 onChange={this.handleChange}
-                                                /*suffixIcon={
-                                                    <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                                                }*/
+                                                suffixIcon={
+                                                    <Icon type="search" style={{color: 'rgba(0,0,0,.25)'}} />
+                                                }
                                             >
                                                 {
-                                                    this.state.data.map(d => <Option key={d.value}>{d.text}</Option>)
+                                                    this.state.data.map(d => <Option key={d.value} value={d.value}>{d.text}</Option>)
                                                 }
                                             </Select>
                                         </FormItem>
@@ -636,7 +636,7 @@ class PopModal extends Component {
                                 <AsyncTable url={`/incomeAndTaxRateCorrespondence/relationList?subjectsId=${this.props.id}`}
                                             updateKey={this.state.tableUpDateKey}
                                             tableProps={{
-                                                rowKey:record=>record.id,
+                                                rowKey:record=>record.taxableProjectId,
                                                 pagination:true,
                                                 size:'small',
                                                 columns:columns(this,readonly),
