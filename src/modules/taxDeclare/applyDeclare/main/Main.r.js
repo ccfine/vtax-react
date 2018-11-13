@@ -188,7 +188,7 @@ class Main extends Component {
 					let res = []
 					if (index !== 0) {
 						res.push(
-							<Col span={1}>
+							<Col span={1} key={new Date()}>
 								<div className="steps-icon">
 									<Icon type="arrow-right" />
 								</div>
@@ -196,7 +196,7 @@ class Main extends Component {
 						)
 					}
 					res.push(
-						<Col span={everySpan}>
+						<Col span={everySpan} key={Math.random() * new Date()}>
 							<h4 className="steps-title">{item.title}</h4>
 							<div className="steps-content">
 								{this.getOneContent(item.options, 0)}
