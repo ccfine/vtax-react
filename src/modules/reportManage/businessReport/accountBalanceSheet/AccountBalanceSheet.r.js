@@ -1,10 +1,10 @@
 // Created by liuliyuan on 2018/8/15
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {connect} from 'react-redux'
 import {fMoney,composeBotton} from 'utils'
 import moment from 'moment';
 import TableTitle from 'compoments/tableTitleWithTime'
+
 const formItemStyle={
     labelCol:{
         span:8
@@ -14,7 +14,7 @@ const formItemStyle={
     }
 }
 
-/*const apiFields = (getFieldValue)=> [
+const apiFields = ()=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -26,20 +26,8 @@ const formItemStyle={
                 message:'请选择纳税主体',
             }]
         },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
-]*/
+    }
+]
 
 const searchFields =(disabled,declare)=>(getFieldValue)=> {
     return [
@@ -180,7 +168,7 @@ const getColumns = context =>[
         width:'100px',
     }
 ];
-class AccountBalanceSheet extends Component{
+export default class AccountBalanceSheet extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -228,22 +216,19 @@ class AccountBalanceSheet extends Component{
                                             url:'reportAccountBalance/export',
                                             params:filters,
                                             title:'导出',
-                                            userPermissions:['1891007'],
+                                            userPermissions:['1981007'],
                                         }])
                                     }
-                                    {/*{
+                                    {
                                         composeBotton([{
                                             type:'modal',
-                                            url:'/inter/financial/voucher/report/sendApi',
+                                            url:'/reportAccountBalance/sendApi',
                                             title:'抽数',
                                             icon:'usb',
                                             fields:apiFields,
-                                            userPermissions:['1895001'],
-                                            onSuccess:()=>{
-                                                createSocket(this.props.userid)
-                                            }
+                                            userPermissions:['1985001'],
                                         }])
-                                    }*/}
+                                    }
                                     <TableTotal totalSource={totalSource} type={3} data={[
                                         {
                                             title:'总计',
@@ -264,7 +249,3 @@ class AccountBalanceSheet extends Component{
         )
     }
 }
-
-export default connect(state=>({
-    userid:state.user.getIn(['personal','id'])
-}))(AccountBalanceSheet);

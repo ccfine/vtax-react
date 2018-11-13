@@ -4,8 +4,6 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {message} from 'antd'
-import {connect} from 'react-redux'
-import createSocket from '../socket'
 import {fMoney,composeBotton,request} from 'utils'
 import TableTitle from 'compoments/tableTitleWithTime'
 const formItemStyle={
@@ -75,19 +73,7 @@ const apiFields = (getFieldValue)=> [
                 message:'请选择纳税主体',
             }]
         },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
+    }
 ]
 const searchFields = (getFieldValue) =>[
         {
@@ -330,7 +316,7 @@ const getColumns = context =>[
         ]
     },
 ];
-class FinancialDocuments extends Component{
+export default class FinancialDocuments extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -412,9 +398,6 @@ class FinancialDocuments extends Component{
                                         icon:'usb',
                                         fields:apiFields,
                                         userPermissions:['1895001'],
-                                        onSuccess:()=>{
-                                            createSocket(this.props.userid)
-                                        }
                                     }])
                                 }
                                 <TableTotal totalSource={totalSource} type={3} data={[
@@ -435,7 +418,3 @@ class FinancialDocuments extends Component{
         )
     }
 }
-
-export default connect(state=>({
-    userid:state.user.getIn(['personal','id'])
-}))(FinancialDocuments);

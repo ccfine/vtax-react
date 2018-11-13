@@ -7,10 +7,9 @@
 import React, { Component } from "react";
 import {message} from 'antd';
 import { SearchTable, TableTotal } from "compoments";
-import {connect} from 'react-redux'
 import { fMoney,composeBotton,request } from "utils";
 import TableTitle from 'compoments/tableTitleWithTime'
-import createSocket from '../socket'
+
 const searchFields = (getFieldValue) => [
     {
         label: "纳税主体",
@@ -133,19 +132,7 @@ const apiFields = (getFieldValue)=> [
                 message:'请选择纳税主体',
             }]
         },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
+    }
 ]
 const getColumns = context => [
     /*{
@@ -262,7 +249,7 @@ const getColumns = context => [
     },
 ];
 
-class fixedAssetCard extends Component {
+export default class fixedAssetCard extends Component {
     state = {
         updateKey: Date.now(),
         filters:{},
@@ -338,9 +325,6 @@ class fixedAssetCard extends Component {
                                     icon:'usb',
                                     fields:apiFields,
                                     userPermissions:['1875001'],
-                                    onSuccess:()=>{
-                                        createSocket(this.props.userid)
-                                    }
                                 }])
                             }
                             <TableTotal type={3} totalSource={totalSource} data={
@@ -361,7 +345,3 @@ class fixedAssetCard extends Component {
         );
     }
 }
-
-export default connect(state=>({
-    userid:state.user.getIn(['personal','id'])
-}))(fixedAssetCard)
