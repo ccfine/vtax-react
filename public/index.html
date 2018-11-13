@@ -22,12 +22,13 @@
   -->
   <title>碧桂园增值税管理系统</title>
   <script>
-      //var baseURL = 'http://dev-vscloud.servingcloud.com:8080/' //测试环境
+      var baseURL = 'http://test-vscloud.servingcloud.com:8090/' //测试环境
       //var baseURL = 'http://rap2api.taobao.org/app/mock/4589/GET/'; //前端 mock
-      var baseURL = 'http://47.106.160.182:8090/'; //打包用的地址
+      //var baseURL = 'http://120.79.17.173:8090/'; //打包用的地址
       //var baseURL = 'http://dev-vscloud.servingcloud.com:8090/'; //开发环境
       //var baseURL = 'http://192.168.3.155/'
       //var baseURL = '/';  //给客户的dev-prod用的地址
+      var wsURL = 'ws://10.10.179.67:82/';
       var isProd = 'false';  //TODO: 判断是否是正式环境
       var isShow = isProd === 'false';
       var isIE = !!window.ActiveXObject || "ActiveXObject" in window; //IE11  "ActiveXObject" in window 没有引号不识别
@@ -35,6 +36,7 @@
           document.documentElement.className += ' ie' + document.documentMode
       }
   </script>
+
   <!-- Polyfills -->
   <script type="text/javascript" src="/libs/polyfill.min.js"></script>
 
