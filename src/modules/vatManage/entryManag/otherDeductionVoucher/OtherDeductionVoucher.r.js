@@ -380,7 +380,7 @@ export default class OtherDeductionVoucher extends Component {
                                 {
                                     JSON.stringify(filters) !== '{}' && composeBotton([{
                                         type: 'fileExport',
-                                        url: '/other/tax/deduction/vouchers/export',
+                                        url: 'other/tax/deduction/vouchers/export',
                                         params: filters,
                                         title: '导出',
                                         userPermissions: ['1521007']
@@ -452,7 +452,7 @@ export default class OtherDeductionVoucher extends Component {
                                 {
                                     composeBotton([{
                                         type: 'fileExport',
-                                        url: '/other/tax/deduction/vouchers/export/pools',
+                                        url: 'other/tax/deduction/vouchers/export/pools',
                                         params: {...filters, ...voucherParams, ...exportParams},
                                         title: '导出',
                                         userPermissions: ['1521007']
@@ -479,7 +479,7 @@ export default class OtherDeductionVoucher extends Component {
                                 {
                                     composeBotton([{
                                         type: 'fileExport',
-                                        url: '/other/tax/deduction/vouchers/export/voucher',
+                                        url: 'other/tax/deduction/vouchers/export/voucher',
                                         params: {...filters, ...voucherParams, ...exportParams},
                                         title: '导出',
                                         userPermissions: ['1521007']

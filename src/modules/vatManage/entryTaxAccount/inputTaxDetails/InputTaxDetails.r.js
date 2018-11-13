@@ -712,7 +712,7 @@ class InputTaxDetails extends Component {
                             {
                                 composeBotton([{
                                     type: 'fileExport',
-                                    url: '/other/tax/deduction/vouchers/export/voucher',
+                                    url: 'other/tax/deduction/vouchers/export/voucher',
                                     params: {...filters, ...voucherParams, ...exportParams},
                                     title: '导出',
                                     userPermissions: ['1381007']
@@ -739,7 +739,7 @@ class InputTaxDetails extends Component {
                             {
                                 composeBotton([{
                                     type: 'fileExport',
-                                    url: '/other/tax/deduction/vouchers/export/pools',
+                                    url: 'other/tax/deduction/vouchers/export/pools',
                                     params: {...filters, ...voucherParams, ...exportParams},
                                     title: '导出',
                                     userPermissions: ['1381007']
