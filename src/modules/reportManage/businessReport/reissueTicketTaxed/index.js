@@ -321,7 +321,7 @@ export default class ReissueTicketTaxed extends Component {
                         {
                             JSON.stringify(filters) !== '{}' && composeBotton([{
                                 type: 'fileExport',
-                                url: '/invoice/for/unbilled/sales/report/export',
+                                url: 'invoice/for/unbilled/sales/report/export',
                                 params: filters,
                                 title: '导出',
                                 userPermissions: ['2191007']
