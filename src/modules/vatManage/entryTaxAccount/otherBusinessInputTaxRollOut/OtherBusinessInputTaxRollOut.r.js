@@ -416,7 +416,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                             {
                                 composeBotton([{
                                     type: 'fileExport',
-                                    url: '/account/income/taxout/details/export',
+                                    url: 'account/income/taxout/details/export',
                                     params: {...filters, ...voucherParams, ...exportParams},
                                     title: '导出',
                                     userPermissions: ['1401007']

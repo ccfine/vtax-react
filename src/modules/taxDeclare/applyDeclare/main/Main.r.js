@@ -184,27 +184,27 @@ class Main extends Component {
 
 		return (
 			<Row gutter={0} justify="center" type="flex">
-				{dataSource.map((item, index) => {
-					let res = []
-					if (index !== 0) {
-						res.push(
+                {dataSource.map((item, index) => {
+                    let res = []
+                    if (index !== 0) {
+                        res.push(
 							<Col span={1} key={new Date()}>
 								<div className="steps-icon">
 									<Icon type="arrow-right" />
 								</div>
 							</Col>
-						)
-					}
-					res.push(
+                        )
+                    }
+                    res.push(
 						<Col span={everySpan} key={Math.random() * new Date()}>
 							<h4 className="steps-title">{item.title}</h4>
 							<div className="steps-content">
-								{this.getOneContent(item.options, 0)}
+                                {this.getOneContent(item.options, 0)}
 							</div>
 						</Col>
-					)
-					return res
-				})}
+                    )
+                    return res
+                })}
 			</Row>
 		)
 	}
