@@ -93,6 +93,7 @@ class WimsHeader extends Component {
                 </Menu.Item> */}
             </Menu>
         );
+        let isBeyond = this.props.realName && this.props.realName.length > 8;
         return (
             <Header className="header">
                 <Row>
@@ -123,11 +124,21 @@ class WimsHeader extends Component {
                             </Tooltip>
 
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-                                <span className='action account'>
-                                    <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
-                                    {/*src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}*/}
-                                    <span className='name'>{(this.props.realName && this.props.realName) || '欢迎您'}</span>
-                                </span>
+                                {
+                                    isBeyond ? (
+                                        <Tooltip placement="left" title={this.props.realName && this.props.realName}>
+                                            <span className='action account'>
+                                                <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                                                <span className='name'>{(`${this.props.realName && this.props.realName.substr(0,8)}...`) || '欢迎您'}</span>
+                                            </span>
+                                        </Tooltip>
+                                    ) : (
+                                        <span className='action account'>
+                                            <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
+                                            <span className='name'>{(this.props.realName && this.props.realName) || '欢迎您'}</span>
+                                        </span>
+                                    )
+                                }
                             </Dropdown>
 
                             {/*{this.props.realName ? (

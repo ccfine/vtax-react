@@ -27,7 +27,7 @@ const SelfContainedProductList = AsyncComponent(() => import("./selfContainedPro
 const RealEstateTax = AsyncComponent(() => import("./realEstateTax"), "不动产进项税额抵扣表")
 const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "预收账款-租金表")
 
-const InvoiceSupplement = AsyncComponent(() => import('./invoiceSupplement'), '未开票销售补开发票报表')
+const ReissueTicketTaxed = AsyncComponent(() => import('./reissueTicketTaxed'), '补开票已税备查档案')
 
 const ICON_URL_PATH = '/assets/routes_avatar/'
 const PATH = `/web/reportManage/businessReport`
@@ -238,14 +238,14 @@ const BusinessReport_Routes = [
         exact: true
     },
     {
-        path:`${PATH}/invoiceSupplement`,
-        component:InvoiceSupplement,
-        name:'未开票销售补开发票报表',
+        path:`${PATH}/reissueTicketTaxed`,
+        component:ReissueTicketTaxed,
+        name:'补开票已税备查档案',
         icon: {
-            url: `${ICON_URL_PATH}invoiceSupplement.svg`,
+            url: `${ICON_URL_PATH}reissueTicketTaxed.svg`,
             backgroundColor: "#2E8A57"
         },
-        authorityInfo: businessReport["invoiceSupplement"].options,
+        authorityInfo: businessReport["reissueTicketTaxed"].options,
         exact:true,
     },
     {

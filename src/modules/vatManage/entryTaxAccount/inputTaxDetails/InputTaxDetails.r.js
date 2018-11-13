@@ -435,6 +435,7 @@ class InputTaxDetails extends Component {
         searchTableLoading: false,
         filters: {},
         voucherParams: {},
+        exportParams: {},
         /**
          *修改状态和时间
          * */
@@ -564,7 +565,7 @@ class InputTaxDetails extends Component {
     };
 
     render() {
-        const {searchTableLoading, tableKey, visible, visible_3, voucherVisible, addVisible, statusParam = {}, filters, voucherParams, totalSource, record, action, saveLoading} = this.state;
+        const {searchTableLoading, tableKey, visible, visible_3, voucherVisible, addVisible, statusParam = {}, filters, voucherParams, exportParams, totalSource, record, action, saveLoading} = this.state;
         const {declare} = this.props;
         let disabled = !!declare;
 
@@ -704,10 +705,7 @@ class InputTaxDetails extends Component {
                         scroll:{ x: '1800px',y:'250px' },
                         onSuccess: params => {
                             this.setState({
-                                voucherParams: {
-                                    ...this.state.voucherParams,
-                                    ...params
-                                }
+                                exportParams: {...params}
                             });
                         },
                         extra: <div>
@@ -715,7 +713,7 @@ class InputTaxDetails extends Component {
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: '/other/tax/deduction/vouchers/export/voucher',
-                                    params: {...filters, ...voucherParams},
+                                    params: {...filters, ...voucherParams, ...exportParams},
                                     title: '导出',
                                     userPermissions: ['1381007']
                                 }])
@@ -734,10 +732,7 @@ class InputTaxDetails extends Component {
                         scroll:{ x: '1800px',y:'250px' },
                         onSuccess: params => {
                             this.setState({
-                                voucherParams: {
-                                    ...this.state.voucherParams,
-                                    ...params
-                                }
+                                exportParams: {...params}
                             });
                         },
                         extra: <div>
@@ -745,7 +740,7 @@ class InputTaxDetails extends Component {
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: '/other/tax/deduction/vouchers/export/pools',
-                                    params: {...filters, ...voucherParams},
+                                    params: {...filters, ...voucherParams, ...exportParams},
                                     title: '导出',
                                     userPermissions: ['1381007']
                                 }])

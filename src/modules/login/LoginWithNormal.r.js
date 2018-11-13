@@ -32,12 +32,10 @@ class LoginWithNormal extends Component {
         const {login} = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                //console.log(EncryptAES(values.userName))
-                //console.log(DecryptAES(EncryptAES(values.userName)))
                 this.toggleLoading(true)
                 login({
                     userName:Base64.encode(values.userName),
-                    password:md5(values.password),
+                    password:Base64.encode(md5(values.password)),
                     type:1,//1表示正常通过登录页面登录,
                     success:()=>{
 

@@ -73,7 +73,7 @@ const getColumns = context=>{
         render:text=>fMoney(text),
         className:'table-money'
     }, {
-        title: '累计销售土地面积',
+        title: '累计销售建筑面积',
         dataIndex: 'salesArea',
     }
     ];

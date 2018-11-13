@@ -108,23 +108,23 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
             span:8,
             type: 'input',
         },
-        {
-            label:'状态',
-            fieldName:'status',
-            type:'select',
-            formItemStyle,
-            span:8,
-            options:[
-                {
-                    text:'未缴税',
-                    value:'0'
-                },
-                {
-                    text:'已缴税',
-                    value:'1'
-                }
-            ]
-        }
+        // {
+        //     label:'状态',
+        //     fieldName:'status',
+        //     type:'select',
+        //     formItemStyle,
+        //     span:8,
+        //     options:[
+        //         {
+        //             text:'未缴税',
+        //             value:'0'
+        //         },
+        //         {
+        //             text:'已缴税',
+        //             value:'1'
+        //         }
+        //     ]
+        // }
     ]
 }
 const columns = [
@@ -151,6 +151,11 @@ const columns = [
         title:'确收时点',
         dataIndex:'confirmedDate',
         width:'150px',
+    },
+    {
+        title: "确收金额",
+        dataIndex: "confirmedPrice",
+        width: "150px"
     },
     {
         title:'税率',
@@ -187,6 +192,11 @@ const columns = [
         width:'100px',
     },
     {
+        title: "期初未纳税销售额",
+        dataIndex: "initialNoTaxableTaxAmount",
+        width: "150px"
+    },
+    {
         title:'期初已开票金额',
         dataIndex:'initialTaxableTotalAmount',
         render:text=>fMoney(text),
@@ -201,34 +211,39 @@ const columns = [
         width:'100px',
     },
     {
-        title:'未纳税销售额',
+        title: "期末累计开票金额",
+        dataIndex: "endSumInvoiceAmount",
+        width: "150px"
+    },
+    {
+        title:'期末未纳税销售额',
         dataIndex:'noTaxableSales',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'100px',
+        width:'120px',
     },
-    {
-        title:'本期申报的未纳税销售额',
-        dataIndex:'currentNoTaxableSales',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'150px',
-    },
-    {
-        title:'本期申报的未纳税销项税额',
-        dataIndex:'currentNoTaxableTaxAmount',
-        render:text=>fMoney(text),
-        className:'table-money',
-        width:'200px',
-    },
-    {
-        title:'状态',
-        dataIndex:'status',
-        width:'100px',
-        render:(id,record)=>{
-            return parseInt(record.status,10) === 0 ? "未缴税":"已缴税";
-        }
-    },
+    // {
+    //     title:'本期申报的未纳税销售额',
+    //     dataIndex:'currentNoTaxableSales',
+    //     render:text=>fMoney(text),
+    //     className:'table-money',
+    //     width:'150px',
+    // },
+    // {
+    //     title:'本期申报的未纳税销项税额',
+    //     dataIndex:'currentNoTaxableTaxAmount',
+    //     render:text=>fMoney(text),
+    //     className:'table-money',
+    //     width:'200px',
+    // },
+    // {
+    //     title:'状态',
+    //     dataIndex:'status',
+    //     width:'100px',
+    //     render:(id,record)=>{
+    //         return parseInt(record.status,10) === 0 ? "未缴税":"已缴税";
+    //     }
+    // },
     {
         title:'是否勾选',
         dataIndex:'check',

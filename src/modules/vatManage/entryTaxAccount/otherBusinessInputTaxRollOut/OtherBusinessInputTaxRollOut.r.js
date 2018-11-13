@@ -221,7 +221,8 @@ class OtherBusinessInputTaxRollOut extends Component {
         saveLoding:false,
         dataSource:[],
         voucherVisible: false,
-        voucherParams: {}
+        voucherParams: {},
+        exportParams: {}
     };
     hideModal() {
         this.setState({ visible: false });
@@ -278,7 +279,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         })
     }
     render() {
-        const { totalSource,saveLoding, voucherVisible, voucherParams } = this.state;
+        const { totalSource,saveLoding, voucherVisible, voucherParams, exportParams } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
 
@@ -408,10 +409,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         scroll:{ x: '1800px',y:'250px' },
                         onSuccess: params => {
                             this.setState({
-                                voucherParams: {
-                                    ...this.state.voucherParams,
-                                    ...params
-                                }
+                                exportParams: {...params}
                             });
                         },
                         extra: <div>
@@ -419,7 +417,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                                 composeBotton([{
                                     type: 'fileExport',
                                     url: '/account/income/taxout/details/export',
-                                    params: {...filters, ...voucherParams},
+                                    params: {...filters, ...voucherParams, ...exportParams},
                                     title: '导出',
                                     userPermissions: ['1401007']
                                 }])

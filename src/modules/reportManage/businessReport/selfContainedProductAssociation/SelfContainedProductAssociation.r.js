@@ -217,7 +217,9 @@ const columns = [
   {
     title: "税率",
     dataIndex: "taxRate",
-    width: "100px"
+    width: "100px",
+      className:'text-right',
+      render:text=>text? `${text}%`: text,
   },
   {
     title: "进项税额",
@@ -232,7 +234,9 @@ const columns = [
   {
     title: "拆分比例",
     dataIndex: "splitProportion",
-    width: "200px"
+    width: "200px",
+      className:'text-right',
+      render:text=>text? `${text}%`: text,
   },
   {
     title: "已拆分金额",

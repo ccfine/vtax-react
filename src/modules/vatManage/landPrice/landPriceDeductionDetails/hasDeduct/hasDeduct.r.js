@@ -69,7 +69,8 @@ const columns= [
     },{
         title: '税率',
         dataIndex: 'taxRate',
-        render:text=>parseInt(text,10) && text+'%',
+        className:'text-right',
+        render:text=>text? `${text}%`: text,
     },{
         title: '税额',
         dataIndex: 'taxAmount',
