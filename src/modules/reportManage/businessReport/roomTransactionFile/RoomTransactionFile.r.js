@@ -5,7 +5,6 @@ import React,{Component} from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton} from 'utils'
 import {connect} from 'react-redux'
-import createSocket from '../socket'
 import TableTitle from 'compoments/tableTitleWithTime'
 const formItemStyle = {
     labelCol:{
@@ -320,19 +319,7 @@ const apiFields = (getFieldValue)=> [
                 message:'请选择纳税主体',
             }]
         },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
+    }
 ]
 class RoomTransactionFile extends Component{
     state={
@@ -377,9 +364,6 @@ class RoomTransactionFile extends Component{
                                 icon:'usb',
                                 fields:apiFields,
                                 userPermissions:['1865001'],
-                                onSuccess:()=>{
-                                    createSocket(this.props.userid)
-                                }
                             }])
                         }
                         <TableTotal type={3} totalSource={totalSource} data={

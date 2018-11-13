@@ -3,10 +3,8 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-// import {message} from 'antd'
-// import {connect} from 'react-redux'
-// import createSocket from '../socket'
-import {fMoney, requestDict} from 'utils'
+import {fMoney,composeBotton,requestDict} from 'utils'
+import TableTitle from 'compoments/tableTitleWithTime'
 
 const formItemStyle={
     labelCol:{
@@ -16,32 +14,20 @@ const formItemStyle={
         span:16
     }
 }
-// const apiFields = (getFieldValue)=> [
-//     {
-//         label:'纳税主体',
-//         fieldName:'mainId',
-//         type:'taxMain',
-//         span:20,
-//         fieldDecoratorOptions:{
-//             rules:[{
-//                 required:true,
-//                 message:'请选择纳税主体',
-//             }]
-//         },
-//     },
-//     {
-//         label:'抽取月份',
-//         fieldName:'authMonth',
-//         type:'monthPicker',
-//         span:20,
-//         fieldDecoratorOptions:{
-//             rules:[{
-//                 required:true,
-//                 message:'请选择抽取月份',
-//             }]
-//         },
-//     },
-// ]
+const apiFields = (getFieldValue)=> [
+    {
+        label:'纳税主体',
+        fieldName:'mainId',
+        type:'taxMain',
+        span:20,
+        fieldDecoratorOptions:{
+            rules:[{
+                required:true,
+                message:'请选择纳税主体',
+            }]
+        },
+    }
+]
 
 const searchFields = contxt => getFieldValue =>[
     {
@@ -378,7 +364,7 @@ export default class BillPool extends Component{
                             });
                         },
                         cardProps: {
-                            title: '票据池',
+                            title: <TableTitle time={totalSource && totalSource.extractTime}>票据池</TableTitle>,
                             extra: (
                                 <div>
                                     {/* {
@@ -390,19 +376,16 @@ export default class BillPool extends Component{
                                             userPermissions:["2111007"],
                                         }])
                                     } */}
-                                    {/* {
+                                    {
                                         composeBotton([{
                                             type:'modal',
-                                            url:'',
+                                            url:'/interInvoicePools/sendApi',
                                             title:'抽数',
                                             icon:'usb',
                                             fields:apiFields,
-                                            userPermissions:[],
-                                            onSuccess:()=>{
-                                                createSocket(this.props.userid)
-                                            }
+                                            userPermissions:['2115001'],
                                         }])
-                                    } */}
+                                    }
                                     <TableTotal totalSource={totalSource} type={3} data={[
                                         {
                                             title:'总计',
@@ -422,7 +405,3 @@ export default class BillPool extends Component{
         )
     }
 }
-
-// export default connect(state=>({
-//     userid:state.user.getIn(['personal','id'])
-// }))(BillPool);
