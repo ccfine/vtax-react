@@ -2,12 +2,11 @@
  * Created by liuliyuan on 2018/10/27.
  */
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
 import moment from 'moment';
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney} from 'utils'
-//import {fMoney,composeBotton} from 'utils'
-//import createSocket from '../socket'
+import {fMoney,composeBotton} from 'utils'
+import TableTitle from 'compoments/tableTitleWithTime'
+
 const formItemStyle={
     labelCol:{
         span:8
@@ -16,7 +15,7 @@ const formItemStyle={
         span:16
     }
 }
-/*const apiFields = (getFieldValue)=> [
+const apiFields = (getFieldValue)=> [
     {
         label:'纳税主体',
         fieldName:'mainId',
@@ -28,20 +27,8 @@ const formItemStyle={
                 message:'请选择纳税主体',
             }]
         },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
-]*/
+    }
+]
 const searchFields =(disabled,declare)=>(getFieldValue)=> {
     return [
         {
@@ -230,7 +217,7 @@ const getColumns = context =>[
         }
     }
 ];
-class AdvancePayment extends Component{
+export default class AdvancePayment extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
@@ -269,31 +256,28 @@ class AdvancePayment extends Component{
                             });
                         },
                         cardProps: {
-                            title: '预收账款-租金表',
+                            title: <TableTitle time={totalSource && totalSource.extractTime}>预收账款-租金表</TableTitle>,
                             extra: (
                                 <div>
                                     {/*{
-                                        JSON.stringify(filters)!=='{}' && composeBotton([{
-                                            type:'fileExport',
-                                            url:'reportAccountBalance/export',
-                                            params:filters,
-                                            title:'导出',
-                                            userPermissions:['1891007'],
-                                        }])
-                                    }
+                                         JSON.stringify(filters)!=='{}' && composeBotton([{
+                                             type:'fileExport',
+                                             url:'reportAccountBalance/export',
+                                             params:filters,
+                                             title:'导出',
+                                             userPermissions:['1891007'],
+                                         }])
+                                     }*/}
                                     {
                                         composeBotton([{
                                             type:'modal',
-                                            url:'/inter/financial/voucher/report/sendApi',
+                                            url:'/advanceRentPayments/sendApi',
                                             title:'抽数',
                                             icon:'usb',
                                             fields:apiFields,
-                                            userPermissions:['1895001'],
-                                            onSuccess:()=>{
-                                                createSocket(this.props.userid)
-                                            }
+                                            userPermissions:['2185001'],
                                         }])
-                                    }*/}
+                                    }
                                     <TableTotal totalSource={totalSource} type={3} data={[
                                         {
                                             title:'总计',
@@ -311,7 +295,3 @@ class AdvancePayment extends Component{
         )
     }
 }
-
-export default connect(state=>({
-    userid:state.user.getIn(['personal','id'])
-}))(AdvancePayment);

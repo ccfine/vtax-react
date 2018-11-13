@@ -5,10 +5,8 @@
 */
 
 import React, { Component } from "react"
-// import { connect } from "react-redux"
 import { SearchTable } from "compoments"
-// import { composeBotton } from 'utils'
-// import createSocket from "../socket"
+import { composeBotton } from 'utils'
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -108,32 +106,20 @@ const columns = [
   }
 ]
 
-// const apiFields = getFieldValue => [
-//   {
-//       label: "纳税主体",
-//       fieldName: "mainId",
-//       type: "taxMain",
-//       span: 20,
-//       fieldDecoratorOptions: {
-//           rules: [{
-//               required: true,
-//               message: "请选择纳税主体"
-//           }]
-//       }
-//   },
-//   {
-//       label: "抽取月份",
-//       fieldName: "authMonth",
-//       type: "monthPicker",
-//       span: 20,
-//       fieldDecoratorOptions: {
-//           rules: [{
-//               required: true,
-//               message: "请选择抽取月份"
-//           }]
-//       }
-//   }
-// ]
+const apiFields = getFieldValue => [
+  {
+      label: "纳税主体",
+      fieldName: "mainId",
+      type: "taxMain",
+      span: 20,
+      fieldDecoratorOptions: {
+          rules: [{
+              required: true,
+              message: "请选择纳税主体"
+          }]
+      }
+  }
+]
 
 export default class SelfContainedProductList extends Component {
   constructor () {
@@ -165,21 +151,18 @@ export default class SelfContainedProductList extends Component {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品清单</TableTitle>
             },
             url: "/interProductList/list",
-            // extra: <div>
-            //   {/* {
-            //       composeBotton([{
-            //           type: "modal",
-            //           url: "",
-            //           title: "抽数",
-            //           icon: "usb",
-            //           fields: apiFields,
-            //           userPermissions: [],
-            //           onSuccess: () => {
-            //               createSocket(this.props.userid)
-            //           }
-            //       }])
-            //   } */}
-            // </div>,
+            extra: <div>
+              {
+                  composeBotton([{
+                      type: "modal",
+                      url: "/interProductList/sendApi",
+                      title: "抽数",
+                      icon: "usb",
+                      fields: apiFields,
+                      userPermissions: ['2065001'],
+                  }])
+              }
+            </div>,
             onTotalSource: totalSource => {
               this.setState({
                   totalSource

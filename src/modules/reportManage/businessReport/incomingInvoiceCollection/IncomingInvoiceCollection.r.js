@@ -3,7 +3,9 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney} from 'utils'
+import { composeBotton,fMoney } from 'utils'
+import TableTitle from "compoments/tableTitleWithTime"
+
 const formItemStyle={
     labelCol:{
         span:8
@@ -57,6 +59,20 @@ const searchFields = (getFieldValue)=> [
         span: 8,
         componentProps:{
             format:'YYYY-MM-DD'
+        }
+    }
+]
+const apiFields = getFieldValue => [
+    {
+        label: "纳税主体",
+        fieldName: "mainId",
+        type: "taxMain",
+        span: 20,
+        fieldDecoratorOptions: {
+            rules: [{
+                required: true,
+                message: "请选择纳税主体"
+            }]
         }
     }
 ]
@@ -272,10 +288,20 @@ export default class IncomingInvoiceCollection extends Component{
                     pageSize:100,
                     columns:columns,
                     cardProps:{
-                        title:'进项发票采集'
+                        title:<TableTitle time={ totalSource && totalSource.extractTime }>进项发票采集</TableTitle>
                     },
                     url:'/income/invoice/collection/report/list',
                     extra:<div>
+                        {
+                            composeBotton([{
+                                type: "modal",
+                                url: "/income/invoice/collection/report/sendApi",
+                                title: "抽数",
+                                icon: "usb",
+                                fields: apiFields,
+                                userPermissions: ['1885001'],
+                            }])
+                        }
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {

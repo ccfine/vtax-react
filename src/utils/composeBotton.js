@@ -180,7 +180,7 @@ const getModalFormOptions = (item,statusParam) =>{
 }
 
 // 数据匹配参数
-/*const getMatchOptions = (item,statusParam) =>{
+const getMatchOptions = (item,statusParam) =>{
     return {
         ...item,
         url:item.url,
@@ -191,7 +191,7 @@ const getModalFormOptions = (item,statusParam) =>{
         icon:'copy',
         style: { marginRight: 5 }
     };
-}*/
+}
 
 //table表格里面的操作 action
 const getActionOptions = (item)=>{
@@ -290,11 +290,11 @@ const composeBotton = (buttons = [], params) => {
                     <ButtonModalWithForm {...getModalFormOptions(item,params)}/>
                 )
                 break;            
-            /*case 'match':
+            case 'match':
                 component = (
                     <ButtonReset {...getMatchOptions(item, params)} />
                 );
-                break;*/
+                break;
             case 'action':
                 component = (
                     <ButtonTableAction {...getActionOptions(item)} />

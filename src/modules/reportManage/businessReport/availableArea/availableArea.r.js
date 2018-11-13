@@ -10,7 +10,6 @@ import {request,composeBotton} from 'utils';
 import {message,Form} from 'antd';
 import { NumericInputCell } from 'compoments/EditableCell'
 import {connect} from 'react-redux'
-import createSocket from '../socket'
 import TableTitle from 'compoments/tableTitleWithTime'
 const formItemStyle = {
     labelCol:{
@@ -86,19 +85,7 @@ const apiFields = (getFieldValue)=> [
                 message:'请选择纳税主体',
             }]
         },
-    },
-    {
-        label:'抽取月份',
-        fieldName:'authMonth',
-        type:'monthPicker',
-        span:20,
-        fieldDecoratorOptions:{
-            rules:[{
-                required:true,
-                message:'请选择抽取月份',
-            }]
-        },
-    },
+    }
 ]
 const getColumns = context => [/*{
         title:'操作',
@@ -301,9 +288,6 @@ class AvailableArea extends Component {
                                     icon:'usb',
                                     fields:apiFields,
                                     userPermissions:['1535001'],
-                                    onSuccess:()=>{
-                                        createSocket(this.props.userid)
-                                    }
                                 }])
                             }
                         </span>
