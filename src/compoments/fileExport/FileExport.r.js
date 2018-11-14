@@ -45,9 +45,10 @@ class FileExport extends Component{
 
     render(){
         const {setButtonStyle,size,title,disabled,WrapComponent,params={},url} = this.props;
+        const oUrl = url.charAt(0) === "/" ?  url.substr(1) : url;
         return(
             <React.Fragment>
-                <WrapComponent size={size} target="_blank" style={{...setButtonStyle}} disabled={disabled} href={`${window.baseURL}${url}?${parseJsonToParams({...params,Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`}>
+                <WrapComponent size={size} target="_blank" style={{...setButtonStyle}} disabled={disabled} href={`${window.baseURL}${oUrl}?${parseJsonToParams({...params,Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`}>
                     <Icon type="download" />{title}
                 </WrapComponent>
                 {/*<WrapComponent size={size} style={{...setButtonStyle}} disabled={disabled} onClick={this.handleDownload}>
