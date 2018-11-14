@@ -5,58 +5,12 @@
  */
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
-// import { compose } from 'redux';
-// import {connect} from 'react-redux'
 import { AsyncTable,TableTotal,PopDetailsModal } from "compoments";
 import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
 
-// const columns = (context) => [
-//     {
-//         title: "计税方法",
-//         dataIndex: "taxMethod",
-//         render: (text) => {
-//             let tempText = '';
-//             switch(text){
-//                 case '1':
-//                     tempText='一般计税';
-//                     break;
-//                 case '2':
-//                     tempText='简易计税';
-//                     break;
-//                 default:
-//                     tempText='';
-//                     break;
-//             }
-//             return tempText;
-//         },
-//         footer: (data) => {
-//             return <div>Summary: {data.taxMethod}</div>
-//         },
-//     }, {
-//         title: "税率",
-//         dataIndex: "taxRateName",
-//         //render: text => `${text}${text ? "%" : ""}`
-//     }, {
-//         title: "金额",
-//         dataIndex: "creditAmount",
-//         render: text => fMoney(text),
-//         className: "table-money"
-//     }, {
-//         title: "税额",
-//         dataIndex: "taxAmount",
-//         render: text => fMoney(text),
-//         className: "table-money"
-//     }, {
-//         title: "价税合计",
-//         dataIndex: "totalAmount",
-//         render: text => fMoney(text),
-//         className: "table-money"
-//     }
-// ];
-
-const columns = [
+const columns = context => [
     {
         title: "收入类型",
         dataIndex: "",
@@ -101,14 +55,26 @@ const columns = [
                 title: "增值税收入确认金额",
                 dataIndex: "",
                 width: "220px",
-                render: text => fMoney(text),
+                render: (text, record) => (
+                    <a title="查看详情"
+                       onClick={ () => context.toggleModalVoucherVisibleConfirm(true) }
+                    >
+                        { fMoney(text) }
+                    </a>
+                ),
                 className: "table-money"
             },
             {
                 title: "增值税开票金额",
                 dataIndex: "",
                 width: "200px",
-                render: text => fMoney(text),
+                render: (text, record) => (
+                    <a title="查看详情"
+                       onClick={ () => context.toggleModalVoucherVisibleInvoice(true) }
+                    >
+                        { fMoney(text) }
+                    </a>
+                ),
                 className: "table-money"
             },
             {
@@ -284,6 +250,28 @@ const voucherSearchFields = [
         componentProps:{ }
     }
 ]
+
+const voucherSearchFieldsConfirm = [
+    {
+        label: "科目代码",
+        fieldName: "",
+        span: 8
+    },
+    {
+        label: "SAP凭证号",
+        fieldName: "voucherNo",
+        span: 8
+    }
+]
+
+const voucherSearchFieldsInvoice = [
+    {
+        label: "发票号码",
+        fieldName: "",
+        span: 8
+    }
+]
+
 const voucherColumns = [
     {
         title: '利润中心',
@@ -327,6 +315,143 @@ const voucherColumns = [
         width:100,
     }
 ];
+
+const voucherColumnsConfirm = [
+    {
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: 200
+    },
+    {
+        title: "项目分期",
+        dataIndex: "stageName",
+        width: 200
+    },
+    {
+        title: "过账日期",
+        dataIndex: "",
+        width: 150
+    },
+    {
+        title: "SAP凭证号",
+        dataIndex: "voucherNo",
+        width: 200
+    },
+    {
+        title: "凭证摘要",
+        dataIndex: "",
+        width: 200
+    },
+    {
+        title: "贷方科目代码",
+        dataIndex: "subjectCode",
+        width: 150
+    },
+    {
+        title: "贷方科目名称",
+        dataIndex: "subjectName",
+        width: 150
+    },
+    {
+        title: "贷方金额",
+        dataIndex: "",
+        render: text => fMoney(text),
+        className: "table-money",
+        width: 150
+    },
+    {
+        title: "税率",
+        dataIndex: "tax",
+        className: "text-right",
+        width: 100
+    },
+    {
+        title: "能源转售类型",
+        dataIndex: "",
+        width: 150
+    }
+]
+
+const voucherColumnsInvoice = [
+    {
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: "200px"
+    },
+    {
+        title: "项目分期",
+        dataIndex: "stagesName",
+        width: "200px"
+    },
+    {
+        title: "房间编码",
+        dataIndex: "roomCode",
+        width: "200px"
+    },
+    {
+        title: "路址",
+        dataIndex: "htRoomName",
+        width: "200px"
+    },
+    {
+        title: "增值税确认收入金额",
+        dataIndex: "confirmedPrice",
+        className: "table-money",
+        width: "200px",
+        render: text => fMoney(text)
+    },
+    {
+        title: "期初累计开票金额",
+        dataIndex: "beginSumInvoiceAmount",
+        className: "table-money",
+        width: "200px",
+        render: text => fMoney(text)
+    },
+    {
+        title: "未开具发票销售额",
+        dataIndex: "noInvoiceSales",
+        className: "table-money",
+        width: "200px",
+        render: text => fMoney(text)
+    },
+    {
+        title: "未开具发票申报所属期",
+        dataIndex: "month",
+        width: "200px"
+    },
+    {
+        title: "本期补开票金额",
+        dataIndex: "balanceOfInvoice",
+        className: "table-money",
+        width: "200px",
+        render: text => fMoney(text)
+    },
+    {
+        title: "发票号码",
+        dataIndex: "invoiceNum",
+        width: "200px",
+    },
+    {
+        title: "开票所属期",
+        dataIndex: "authMonth",
+        width: "200px"
+    },
+    {
+        title: "期末累计开票金额",
+        dataIndex: "endSumInvoiceAmount",
+        className: "table-money",
+        width: "200px",
+        render: text => fMoney(text)
+    },
+    {
+        title: "期末未开票金额",
+        dataIndex: "endUnInvoiceAmount",
+        className: "table-money",
+        width: "200px",
+        render: text => fMoney(text)
+    }
+]
+
 class UnBilledSalesNotEstate extends Component {
     state={
         visible: false, // 控制Modal是否显示
@@ -347,7 +472,10 @@ class UnBilledSalesNotEstate extends Component {
         dataSource:[],
         totalSource:undefined,
         showProfitCenter: true,
-
+        voucherVisibleConfirm: false,
+        voucherFilterConfirm: {},
+        voucherVisibleInvoice: false,
+        voucherFilterInvoice: {}
     }
     refreshTable = ()=>{
         this.mounted && this.setState({
@@ -359,6 +487,16 @@ class UnBilledSalesNotEstate extends Component {
             voucherVisible
         });
     };
+    toggleModalVoucherVisibleConfirm = voucherVisibleConfirm => {
+        this.setState({
+            voucherVisibleConfirm
+        })
+    }
+    toggleModalVoucherVisibleInvoice = voucherVisibleInvoice => {
+        this.setState({
+            voucherVisibleInvoice
+        })
+    }
     fetchLoadType = (mainId) => {
         requestResultStatus(`/dataCollection/loadType/${mainId}`,{}, result=>{
             this.setState({showProfitCenter: result === '2'});
@@ -430,7 +568,7 @@ class UnBilledSalesNotEstate extends Component {
         this.mounted = null;
     }
     render(){
-        const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource} = this.state;
+        const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource,voucherVisibleConfirm,voucherFilterConfirm,voucherVisibleInvoice,voucherFilterInvoice} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
@@ -577,7 +715,7 @@ class UnBilledSalesNotEstate extends Component {
                                     rowKey:record=>record.id,
                                     pagination:false,
                                     size:'small',
-                                    columns:columns,
+                                    columns:columns(this),
                                     onSuccess:this.updateStatus,
                                     onDataChange:(dataSource)=>{
                                         this.setState({
@@ -643,6 +781,72 @@ class UnBilledSalesNotEstate extends Component {
                         columns:voucherColumns,
                         url:`/advanceRentPayments/unRealty/list?${parseJsonToParams(filters)}`,
                         scroll:{ x: '1600px',y:'250px' },
+                    }}
+                />
+
+                <PopDetailsModal
+                    title="凭证详情"
+                    visible={voucherVisibleConfirm}
+                    fields={voucherSearchFieldsConfirm}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisibleConfirm}
+                    tableOption={{
+                        cardProps: {
+                            title: "凭证列表"
+                        },
+                        columns: voucherColumnsConfirm,
+                        url: `/?${parseJsonToParams(filters)}`,
+                        scroll: { x: "1700px", y: "250px" },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherFilterConfirm: params
+                            })
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    JSON.stringify(voucherFilterConfirm) !== "{}" && composeBotton([{
+                                        type: "fileExport",
+                                        url: ``,
+                                        params: Object.assign(voucherFilterConfirm, filters),
+                                        title: "导出",
+                                        userPermissions: ["1361007"]
+                                    }])
+                                }
+                            </div>
+                        )
+                    }}
+                />
+
+                <PopDetailsModal
+                    title="发票信息"
+                    visible={voucherVisibleInvoice}
+                    fields={voucherSearchFieldsInvoice}
+                    toggleModalVoucherVisible={this.toggleModalVoucherVisibleInvoice}
+                    tableOption={{
+                        cardProps: {
+                            title: "发票信息列表"
+                        },
+                        columns: voucherColumnsInvoice,
+                        url: `/?${parseJsonToParams(filters)}`,
+                        scroll: { x: "2300px", y: "250px" },
+                        onSuccess: params => {
+                            this.setState({
+                                voucherFilterInvoice: params
+                            })
+                        },
+                        extra: (
+                            <div>
+                                {
+                                    JSON.stringify(voucherFilterInvoice) !== "{}" && composeBotton([{
+                                        type: "fileExport",
+                                        url: ``,
+                                        params: Object.assign(voucherFilterInvoice, filters),
+                                        title: "导出",
+                                        userPermissions: ["1361007"]
+                                    }])
+                                }
+                            </div>
+                        )
                     }}
                 />
             </Layout>

@@ -65,6 +65,12 @@ const searchFields = getFieldValue => [
     fieldName: "productName",
     span: 8,
     formItemStyle
+  },
+  {
+    label: "产品编码",
+    fieldName: "productNum",
+    span: 8,
+    formItemStyle
   }
 ]
 
