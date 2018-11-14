@@ -178,16 +178,16 @@ class SheetWithSearchFields extends Component{
                     bordered={false}
                     extra={
                         <div>
-                            {/*{
+                            {
                                 JSON.stringify(params)!=='{}' && composeBotton([{
                                     type:'fileExport',
-                                    url:'report/tax/declare/export',
+                                    url:'TaxDecConductPc/export',
                                     params:{...params,authMonth:params.taxMonth},
                                     title:'导出',
-                                    userPermissions:['1911007'],
+                                    userPermissions:['2161007'],
                                 }])
                             }
-                            {
+                            {/*{
                                 composeBotton([{
                                     type:'fileExport',
                                     url:'tax/decConduct/main/download',
