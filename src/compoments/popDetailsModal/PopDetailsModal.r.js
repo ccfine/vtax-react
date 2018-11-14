@@ -16,6 +16,7 @@ export default class PopDetailsModal extends Component{
         this.state = {
             tableKey:Date.now(),
             totalSource:{},
+
         };
     }
     refreshTable = ()=>{
@@ -32,8 +33,8 @@ export default class PopDetailsModal extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey} = this.state;
-        const { title,visible,fields,toggleModalVoucherVisible,tableOption } = this.props;
+        const {searchTableLoading,tableKey,totalSource} = this.state;
+        const { title,visible,fields,toggleModalVoucherVisible,tableOption, showTotal } = this.props;
         return(
             <Modal
                 maskClosable={false}
@@ -68,9 +69,27 @@ export default class PopDetailsModal extends Component{
                             columns:tableOption.columns,
                             url:tableOption.url,
                             scroll:tableOption.scroll || { x: '140%',y:'250px'},
+                            onTotalSource: totalSource => {
+                                this.setState({
+                                    totalSource
+                                });
+                            },
                             ...tableOption
                         }}
+
                     />
+                </div>
+                <div style={{display: showTotal ? 'block' : 'none', marginTop: '15px'}}>
+                    <Row>
+                        <Col span={8} className="text-center">合计凭据份数: {totalSource.size}</Col>
+                        <Col span={8} className="text-center">合计金额: {totalSource.size}</Col>
+                        <Col span={8} className="text-center">合计税额: {totalSource.size}</Col>
+                    </Row>
+                    <Row>
+                        <Col span={8} className="text-center">调整凭据份数: {totalSource.size}</Col>
+                        <Col span={8} className="text-center">调整金额: {totalSource.size}</Col>
+                        <Col span={8} className="text-center">调整税额: {totalSource.size}</Col>
+                    </Row>
                 </div>
             </Modal>
         )
