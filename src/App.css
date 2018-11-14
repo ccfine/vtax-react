@@ -301,18 +301,15 @@ table.data-grid{
 /* 设置火狐的滚动条背景基本样式 */
 @-moz-document url-prefix() {
   .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    -moz-appearance: none !important;
-    background-color: transparent !important; /* 滚动条背景透明 */
-    background-image: none !important; /* 滚动条背景图案不显示 */
-    /*position: relative !important;*/ /* 更改滚动条的定位方式为相对 */
+    /*-moz-appearance: none !important;
+    background-color: transparent !important; !* 滚动条背景透明 *!
+    background-image: none !important; !* 滚动条背景图案不显示 *!
+    !*position: relative !important;*! !* 更改滚动条的定位方式为相对 *!
     overflow: hidden !important;
-    z-index: 999999999 !important; /* 把滚动条提到Z轴最上层 */
+    z-index: 999999999 !important; !* 把滚动条提到Z轴最上层 *!
     height: 41px;
-    margin-right: 17px;
-  }
-
-  .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header th{
-    height: 24px;
+    margin-right: 17px;*/
+    margin-bottom: -29px!important;
   }
 }
 
