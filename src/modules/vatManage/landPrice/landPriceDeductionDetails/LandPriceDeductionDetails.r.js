@@ -280,7 +280,7 @@ const voucherColumns = [
     {
         title: "项目分期名称",
         dataIndex: "itemName",
-        width: 150
+        width: 200
     },
     {
         title: "房间编码",
@@ -290,7 +290,7 @@ const voucherColumns = [
     {
         title: "路址",
         dataIndex: "htRoomName",
-        width: 150
+        // width: 300
     },
     {
         title: "房间建筑面积",
@@ -301,6 +301,22 @@ const voucherColumns = [
         title: "确收时点",
         dataIndex: "confirmedDate",
         width: 150
+    },{
+        title: "前期累计开票金额",
+        dataIndex: "confirmedDate1",
+        className:'table-money',
+        width: 150
+    },{
+        title: "本期开票金额",
+        className:'table-money',
+        dataIndex: "confirmedDate3",
+        width: 150
+    },
+    {
+        title: "结算价",
+        dataIndex: "valorem",
+        width: 150,
+        className:'table-money',
     },
     {
         title: "确收金额",
@@ -309,8 +325,8 @@ const voucherColumns = [
         className:'table-money',
     },
     {
-        title: "结算价",
-        dataIndex: "valorem",
+        title: "收入确认金额",
+        dataIndex: "confirmedPrice2",
         width: 150,
         className:'table-money',
     },
@@ -485,7 +501,7 @@ class DeductProjectSummary extends React.Component {
                         },
                         columns: voucherColumns,
                         url: `/account/landPrice/deductedDetails/detailsList?${parseJsonToParams(filters)}&stagesId=${stagesId}`,
-                        scroll: { x: "1400px", y: "250px" },
+                        scroll: { x: "2000px", y: "250px" },
                         onSuccess: params => {
                             this.setState({
                                 voucherFilter: params

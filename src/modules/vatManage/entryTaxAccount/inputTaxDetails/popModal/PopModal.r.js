@@ -31,6 +31,7 @@ class PopModal extends Component {
         }
         if (this.props.visible !== nextProps.visible && !this.props.visible) {
             //todo
+            console.log(this.props.filters)
             //请求历史修改记录
         }
     }

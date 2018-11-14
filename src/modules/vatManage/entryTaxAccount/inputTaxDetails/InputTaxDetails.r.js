@@ -143,6 +143,7 @@ const getColumns = (context, isEdit) => {
                     return (<span title="查看凭证信息详情" onClick={() => {
                         context.setState({
                             voucherParams: {
+                                id: record.id,
                                 profitCenterId: record.profitCenterId,
                                 voucherType: record.voucherType
                             }
@@ -155,6 +156,7 @@ const getColumns = (context, isEdit) => {
                     return (<span title="查看发票信息详情" onClick={() => {
                         context.setState({
                             voucherParams: {
+                                id: record.id,
                                 profitCenterId: record.profitCenterId,
                                 voucherType: record.voucherType
                             }
@@ -238,7 +240,7 @@ const getColumns = (context, isEdit) => {
             title: '操作',
             render: (text, record) => {
                 return checkVoucherType(record) ? (
-                    <span style={pointerStyle} onClick={()=>{context.toggleModal({popModalEdit: true, editFilters: {...record}})}}>{'调整'}</span>) : '';
+                    <span style={pointerStyle} onClick={()=>{context.toggleModal({popModalEdit: true, editFilters: {id: record.id}})}}>{'调整'}</span>) : '';
             },
             width: '45px',
             dataIndex: 'action',
@@ -715,7 +717,7 @@ class InputTaxDetails extends Component {
                     toggleModalVoucherVisible={voucherVisible=>this.toggleModal({voucherVisible})}
                     tableOption={{
                         columns: voucherColumns,
-                        url: `/other/tax/deduction/vouchers/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
+                        url: `/account/income/taxDetail/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll: {x: '1800px', y: '250px'},
                         onSuccess: params => {
                             this.setState({
@@ -743,7 +745,7 @@ class InputTaxDetails extends Component {
                     toggleModalVoucherVisible={visible_3=>this.toggleModal({visible_3})}
                     tableOption={{
                         columns: invoiceColumns_3,
-                        url: `/other/tax/deduction/vouchers/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
+                        url: `/account/income/taxDetail/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
                         scroll: {x: '1800px', y: '250px'},
                         onSuccess: params => {
                             this.setState({
