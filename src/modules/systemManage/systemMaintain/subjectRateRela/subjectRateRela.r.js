@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
 import { SearchTable } from "compoments";
 import {composeBotton} from 'utils'
 import PopModal from "./popModal";
+import {Tooltip} from 'antd'
 
 const searchFields = [
     {
@@ -61,6 +62,20 @@ const getColumns = (context) => [
                     {text}
                 </a>
             )
+        }
+    },
+    {
+        title: '税收分类编码',
+        dataIndex: 'classificationList',
+        width: '200px',
+        render: text => {
+            if (text && text.length > 30) {
+                return (<Tooltip placement="left" title={text}>
+                    <span>{text.substr(0,30) + '...'}</span>
+                </Tooltip>)
+            } else {
+                return text;
+            }
         }
     },
     {

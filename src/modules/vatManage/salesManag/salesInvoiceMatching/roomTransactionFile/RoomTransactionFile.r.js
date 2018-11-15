@@ -8,6 +8,7 @@ import React,{Component} from 'react'
 import {message,Alert,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
+import PopModal from './popModal.r'
 // import moment from "moment";
 const formItemStyle = {
     labelCol:{
@@ -413,6 +414,7 @@ class RoomTransactionFile extends Component{
         deleteLoading:false,
         totalSource:undefined,
         isShowImport:null,
+        popModalVisible: false,
     }
 
     refreshTable = ()=>{
@@ -474,8 +476,13 @@ class RoomTransactionFile extends Component{
     componentWillUnmount(){
         this.mounted = null;
     }
+    togglesPopModalVisible = popModalVisible => {
+        this.setState({
+            popModalVisible
+        });
+    };
     render(){
-        const {tableUpDateKey,statusParam,totalSource,filters={},deleteLoading,selectedRowKeys,isShowImport} = this.state;
+        const {tableUpDateKey,statusParam,totalSource,filters={},deleteLoading,selectedRowKeys,isShowImport,popModalVisible} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
@@ -515,6 +522,16 @@ class RoomTransactionFile extends Component{
                         extra: <div>
                             {
                                 listMainResultStatus(statusParam)
+                            }
+                            {
+                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'consistent',
+                                    text:'确收时点参数设置',
+                                    userPermissions:['1215000'],
+                                    onClick:()=>{
+                                        this.togglesPopModalVisible(true);
+                                    }
+                                }])
                             }
                             {
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
@@ -611,6 +628,12 @@ class RoomTransactionFile extends Component{
                     }}
                 >
                 </SearchTable>
+                <PopModal 
+                    visible={popModalVisible}
+                    title='确收时点参数设置'
+                    toggleModalVisible={this.togglesPopModalVisible}
+                    declare={declare}
+                />
             </div>
         )
     }

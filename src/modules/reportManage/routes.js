@@ -5,24 +5,46 @@
  */
 import {AsyncComponent} from 'compoments'
 
-import BusinessReport_Routes from './businessReport/routes'
+import business_Routes from './business/routes'
+import DataSource_Routes from './dataSource/routes'
+import progressAnalysis_Routes from './progressAnalysis/routes'
+
 import { getChildOptions } from 'config/routingAuthority.config'
 
-const BusinessReport = AsyncComponent(() => import('./businessReport'), '业务报表')
+const business = AsyncComponent(() => import('./business'), '业务报表')
+const DataSource = AsyncComponent(() => import('./dataSource'), '数据源报表')
+const ProgressAnalysis = AsyncComponent(() => import('./progressAnalysis'), '进度分析报表')
 
 const PATH = `/web/reportManage`;
 const ReportManage_Routes = [
     {
-        path:`${PATH}/businessReport`,
-        component:BusinessReport,
+        path:`${PATH}/business`,
+        component:business,
         name:'业务报表',
         exact:true,
-        children:BusinessReport_Routes,
-        authorityInfo:getChildOptions('reportManage','businessReport')
-    },{
+        children:business_Routes,
+        authorityInfo:getChildOptions('reportManage','business')
+    },
+    {
+        path:`${PATH}/dataSource`,
+        component:DataSource,
+        name:'数据源报表',
+        exact:true,
+        children:DataSource_Routes,
+        authorityInfo:getChildOptions('reportManage','dataSource')
+    },
+    {
+        path:`${PATH}/progressAnalysis`,
+        component:ProgressAnalysis,
+        name:'进度分析报表',
+        exact:true,
+        children:progressAnalysis_Routes,
+        authorityInfo:getChildOptions('reportManage','progressAnalysis')
+    },
+    {
         path:`${PATH}`,
         redirect:true,
-        to:`${PATH}/businessReport`,
+        to:`${PATH}/business`,
 
     }
 ]
