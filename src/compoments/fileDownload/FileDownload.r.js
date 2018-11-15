@@ -20,17 +20,20 @@ export default class FileDownload extends Component {
   }
 
   render () {
-    const { title, disabled, setButtonStyle } = this.props
+    const { title, disabled, setButtonStyle } = this.props;
     const menu = (
       <Menu>
         {
-          this.props.menu.map((item, index) => (
-            <Menu.Item key={ index }>
-              <a target="_blank" href={`${window.baseURL}${item.url}?${parseJsonToParams({Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>{ item.title }<Icon type="download" style={{ marginLeft: "5px" }} /></div>
-              </a>
-            </Menu.Item>
-          ))
+          this.props.menu.map((item, index) => {
+              const url = item['url'].charAt(0) === "/" ?  item['url'].substr(1) : item['url'];
+              return (
+                  <Menu.Item key={ index }>
+                    <a target="_blank" href={`${window.baseURL}${url}?${parseJsonToParams({Authorization:request.getToken(),_t: Date.parse(new Date())/1000,})}`}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>{ item.title }<Icon type="download" style={{ marginLeft: "5px" }} /></div>
+                    </a>
+                  </Menu.Item>
+              )
+          })
         }
       </Menu>
     )

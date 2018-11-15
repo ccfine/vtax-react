@@ -60,7 +60,7 @@ const routes = [
         exact:true,
         permissions:true,
         redirect:true,
-        to:`${PATH}/reportManage/businessReport`,
+        to:`${PATH}/reportManage/business`,
         children:ReportManage_Routes,
         authorityInfo:getParentOptions('reportManage'),
     },{

@@ -158,7 +158,7 @@ export default class ParameterSettings extends Component{
                                 ],
                                 componentProps:{
                                     className:"radioStyle",
-                                    disabled,
+                                    disabled: true,
                                 },
                                 fieldDecoratorOptions:{
                                     initialValue:(defaultData!==null && defaultData.confirmType) || '2',

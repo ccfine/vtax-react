@@ -16,6 +16,7 @@ export default class PopDetailsModal extends Component{
         this.state = {
             tableKey:Date.now(),
             totalSource:{},
+
         };
     }
     refreshTable = ()=>{
@@ -32,8 +33,8 @@ export default class PopDetailsModal extends Component{
         }
     }
     render(){
-        const {searchTableLoading,tableKey} = this.state;
-        const { title,visible,fields,toggleModalVoucherVisible,tableOption } = this.props;
+        const {searchTableLoading,tableKey,totalSource} = this.state;
+        const { title,visible,fields,toggleModalVoucherVisible,tableOption, totalData=[] } = this.props;
         return(
             <Modal
                 maskClosable={false}
@@ -68,9 +69,27 @@ export default class PopDetailsModal extends Component{
                             columns:tableOption.columns,
                             url:tableOption.url,
                             scroll:tableOption.scroll || { x: '140%',y:'250px'},
+                            onTotalSource: totalSource => {
+                                this.setState({
+                                    totalSource
+                                });
+                            },
                             ...tableOption
                         }}
+
                     />
+                </div>
+                {/* totalData 格式 [[{label: text, key: valueKey}, ...], ...] */}
+                <div style={{display: totalData.length ? 'block' : 'none', marginTop: '15px'}}>
+                    {totalData.map((row, k)=>(<Row key={k}>
+                        {
+                            row.map((item, key)=>(
+                                <Col key={key} span={24 / row.length} className="text-center">
+                                    {item.label} {totalSource[item.key]}
+                                </Col>
+                            ))
+                        }
+                    </Row>))}
                 </div>
             </Modal>
         )
