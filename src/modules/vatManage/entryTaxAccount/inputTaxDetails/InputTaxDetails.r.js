@@ -112,7 +112,8 @@ const checkVoucherType = record => {
 
 const getColumns = (context, isEdit) => {
     let lastStegesId = '';
-    const {dataSource} = context.state;
+    const {dataSource, statusParam={}} = context.state;
+    const {declare} = context.props;
     return [
         {
             title: '利润中心',
@@ -236,17 +237,19 @@ const getColumns = (context, isEdit) => {
             },
             className: "table-money"
         },
-        {
-            title: '操作',
-            render: (text, record) => {
-                return checkVoucherType(record) ? (
-                    <span style={pointerStyle} onClick={()=>{context.toggleModal({editFilters: {detailId: record.id, hideAmount: record.voucherType === '代扣代缴税收缴款凭证'}, popModalEdit: true})}}>{'调整'}</span>
-                ) : '';
-            },
-            width: '45px',
-            dataIndex: 'action',
-            className: 'text-center'
-        }
+        ...((!!declare && declare.decAction === 'edit') && statusParam.status && statusParam.status === 1 ? [
+            {
+                title: '操作',
+                render: (text, record) => {
+                    return checkVoucherType(record) ? (
+                        <span style={pointerStyle} onClick={()=>{context.toggleModal({editFilters: {detailId: record.id, hideAmount: record.voucherType === '代扣代缴税收缴款凭证'}, popModalEdit: true})}}>{'调整'}</span>
+                    ) : '';
+                },
+                width: '45px',
+                dataIndex: 'action',
+                className: 'text-center'
+            }
+        ] : [])
     ];
 };
 
