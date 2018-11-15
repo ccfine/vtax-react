@@ -28,72 +28,110 @@ const formItemStyle = {
         }
     }
 }
-const searchFields =  (disabled,declare) => (getFieldValue) => {
-    return [
-        {
-            label:'纳税主体',
-            fieldName:'main',
-            type:'taxMain',
-            span:6,
-            formItemStyle,
-            componentProps:{
-                labelInValue:true,
-                disabled
-            },
-            fieldDecoratorOptions:{
-                initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择纳税主体'
-                    }
-                ]
-            }
-        }, {
-            label: '纳税申报期',
-            fieldName: 'authMonth',
-            type: 'monthPicker',
-            formItemStyle,
-            span: 6,
-            componentProps: {
-                format: 'YYYY-MM',
-                disabled
-            },
-            fieldDecoratorOptions: {
-                initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
-                rules: [
-                    {
-                        required: true,
-                        message: '请选择查询期间'
-                    }
-                ]
-            },
-        }, {
-            label:'利润中心',
-            fieldName:'profitCenterId',
-            type:'asyncSelect',
-            span:6,
-            componentProps:{
-                fieldTextName:'profitName',
-                fieldValueName:'id',
-                doNotFetchDidMount: !declare,
-                fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
-                url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
-            }
-        }, {
-            label:'项目分期',
-            fieldName:'stageId',
-            type:'asyncSelect',
-            span:6,
-            componentProps:{
-                fieldTextName:'itemName',
-                fieldValueName:'id',
-                doNotFetchDidMount:true,
-                fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
-                url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
-            }
+const list = (disabled,declare,getFieldValue) => [
+    {
+        label:'纳税主体',
+        fieldName:'main',
+        type:'taxMain',
+        span:6,
+        formItemStyle,
+        componentProps:{
+            labelInValue:true,
+            disabled
+        },
+        fieldDecoratorOptions:{
+            initialValue: (disabled && {key:declare.mainId,label:declare.mainName}) || undefined,
+            rules:[
+                {
+                    required:true,
+                    message:'请选择纳税主体'
+                }
+            ]
         }
-    ]
+    },
+    {
+        label: '纳税申报期',
+        fieldName: 'authMonth',
+        type: 'monthPicker',
+        formItemStyle,
+        span: 6,
+        componentProps: {
+            format: 'YYYY-MM',
+            disabled
+        },
+        fieldDecoratorOptions: {
+            initialValue: (disabled && moment(declare['authMonth'], 'YYYY-MM')) || undefined,
+            rules: [
+                {
+                    required: true,
+                    message: '请选择查询期间'
+                }
+            ]
+        },
+    },
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        span:6,
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+        }
+    },
+    {
+        label:'项目分期',
+        fieldName:'stageId',
+        type:'asyncSelect',
+        span:6,
+        componentProps:{
+            fieldTextName:'itemName',
+            fieldValueName:'id',
+            doNotFetchDidMount:true,
+            fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
+            url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
+        }
+    }
+]
+const searchFields =  (key,disabled,declare) => (getFieldValue) => {
+    let result = [];
+    switch (key) {
+        case 'tab1':
+            result = [...list(disabled,declare,getFieldValue)];
+            break;
+        case 'tab2':
+            result = [
+                ...list(disabled,declare,getFieldValue),
+                {
+                    label: "转固单号",
+                    fieldName: "rotaryNum",
+                    type: "input",
+                    span: 6,
+                    formItemStyle,
+                    componentProps: {},
+                    fieldDecoratorOptions: {}
+                },
+                {
+                    label: "产品编码",
+                    fieldName: "productNum",
+                    type: "input",
+                    span: 6,
+                    formItemStyle,
+                    componentProps: {},
+                    fieldDecoratorOptions: {}
+                }
+            ];
+            break;
+        case 'tab3':
+            result = [...list(disabled,declare,getFieldValue)];
+            break;
+        default:
+            break;
+    }
+    return result;
 }
 
 const tabList = [{
@@ -109,9 +147,9 @@ const tabList = [{
 
 const getContent = (key,updateKey,disabled,declare,context) => {
     const contentList = {
-        tab1: <External updateKey={updateKey} declare={declare} searchFields={ searchFields(disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab2: <SelfUse updateKey={updateKey} declare={declare} searchFields={ searchFields(disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab3: <NewBuild updateKey={updateKey} declare={declare} searchFields={ searchFields(disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab1: <External updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab2: <SelfUse updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab3: <NewBuild updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
     };
     return contentList[key]
 }

@@ -70,7 +70,11 @@ const searchFields = (getFieldValue) => [
             url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
         }
     },
-
+    {
+        label:'转固单号',
+        fieldName:'rotaryNum',
+        span:8,
+    },
 ];
 /*
 const importFeilds = [
@@ -186,6 +190,11 @@ const getColumns = context => [
         width:'100px',
     },
     {
+        title: "转固单号",
+        dataIndex: "rotaryNum",
+        width:'100px',
+    },
+    {
         title: "入账日期",
         dataIndex: "accountDate",
         width:'100px',
@@ -293,7 +302,7 @@ export default class fixedAssetCard extends Component {
                     onSuccess:(filters)=>{
                         this.setState({filters})
                     },
-                    scroll:{ x: 2170,y:window.screen.availHeight-360,},
+                    scroll:{ x: 2270,y:window.screen.availHeight-360,},
                     extra: (
                         <span>
                             {/*

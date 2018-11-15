@@ -31,6 +31,16 @@ const columns=[
         width:'100px',
     },
     {
+        title: "转固单号",
+        dataIndex: "rotaryNum",
+        width: "100px"
+    },
+    {
+        title: "产品名称",
+        dataIndex: "productName",
+        width: "100px"
+    },
+    {
         title: "入账日期",
         dataIndex: "accountDate",
         width:'100px',
@@ -191,7 +201,7 @@ const columns=[
                         })
                     },
                     scroll:{
-                        x:1800,
+                        x:2000,
                         y:window.screen.availHeight-380-(disabled?50:0),
                     },
                 }}
