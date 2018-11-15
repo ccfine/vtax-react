@@ -36,8 +36,8 @@ const columns=[
         width: "100px"
     },
     {
-        title: "产品名称",
-        dataIndex: "productName",
+        title: "产品编码",
+        dataIndex: "productNum",
         width: "100px"
     },
     {
