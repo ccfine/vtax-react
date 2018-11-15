@@ -143,7 +143,7 @@ const getColumns = (context, isEdit) => {
                     return (<span title="查看凭证信息详情" onClick={() => {
                         context.setState({
                             voucherParams: {
-                                id: record.id,
+                                detailId: record.id,
                                 profitCenterId: record.profitCenterId,
                                 voucherType: record.voucherType
                             }
@@ -156,7 +156,7 @@ const getColumns = (context, isEdit) => {
                     return (<span title="查看发票信息详情" onClick={() => {
                         context.setState({
                             voucherParams: {
-                                id: record.id,
+                                detailId: record.id,
                                 profitCenterId: record.profitCenterId,
                                 voucherType: record.voucherType
                             }
@@ -240,7 +240,8 @@ const getColumns = (context, isEdit) => {
             title: '操作',
             render: (text, record) => {
                 return checkVoucherType(record) ? (
-                    <span style={pointerStyle} onClick={()=>{context.toggleModal({popModalEdit: true, editFilters: {id: record.id}})}}>{'调整'}</span>) : '';
+                    <span style={pointerStyle} onClick={()=>{context.toggleModal({editFilters: {detailId: record.id, hideAmount: record.voucherType === '代扣代缴税收缴款凭证'}, popModalEdit: true})}}>{'调整'}</span>
+                ) : '';
             },
             width: '45px',
             dataIndex: 'action',
@@ -456,6 +457,34 @@ const invoiceColumns_3 = [
         render: text => fMoney(text)
     }
 ];
+
+//发票详情总计
+const invoiceTotalData = [
+    [
+        {label: '原合计凭据份数：', key: 'numTotal'},
+        {label: '原合计金额：', key: 'amountTotal'},
+        {label: '原合计税额：', key: 'taxAmountTotal'},
+    ],
+    [
+        {label: '调整凭据份数：', key: 'num'},
+        {label: '调整金额：', key: 'amount'},
+        {label: '调整税额：', key: 'taxAmount'},
+    ]
+]
+
+//凭证详情总计
+const voucherTotalData = [
+    [
+        {label: '合计凭据份数：', key: 'numTotal'},
+        {label: '合计金额：', key: 'amountTotal'},
+        {label: '合计税额：', key: 'taxAmountTotal'},
+    ],
+    [
+        {label: '合计凭据份数：', key: 'num'},
+        {label: '', key: ''},
+        {label: '调整税额：', key: 'taxAmount'},
+    ]
+]
 
 
 class InputTaxDetails extends Component {
@@ -736,7 +765,7 @@ class InputTaxDetails extends Component {
                             }
                         </div>
                     }}
-                    showTotal="true"
+                    totalData={voucherTotalData}
                 />
                 <PopDetailsModal
                     title="发票信息"
@@ -764,7 +793,7 @@ class InputTaxDetails extends Component {
                             }
                         </div>
                     }}
-                    showTotal="true"
+                    totalData={invoiceTotalData}
                 />
                 <PopModal
                     title="凭据误差调整"

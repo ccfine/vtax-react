@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import {Row, Col, Button, Modal, Form} from 'antd';
-import {getFields} from 'utils';
+import {request, getFields} from 'utils';
 
 const formItemStyle = {
     labelCol: {
@@ -30,9 +30,18 @@ class PopModal extends Component {
             });
         }
         if (this.props.visible !== nextProps.visible && !this.props.visible) {
-            //todo
-            console.log(this.props.filters)
             //请求历史修改记录
+            const {hideAmount, detailId} = nextProps.filters;
+            request.get('/account/income/taxDetail/query/account/income/revise?detailId=' + detailId).then(({data})=>{
+                const {num, amount, taxAmount} = data.data || {};
+                const record = {
+                    num,
+                    ...(hideAmount ? {} : {amount}),
+                    taxAmount
+                };
+                this.setState({record});
+                nextProps.form.setFieldsValue(record);
+            })
         }
     }
 
@@ -40,11 +49,15 @@ class PopModal extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                const {hideAmount, ...filters} = this.props.filters;
                 let data = {
                     ...this.state.record,
-                    ...values
+                    ...values,
+                    ...filters
                 };
-                console.log(data)
+                request.post('/account/income/taxDetail/update/account/income/revise', data).then(({data})=>{
+                    this.props.toggleModalVoucherVisible(false);
+                })
             }
         });
 
@@ -52,8 +65,7 @@ class PopModal extends Component {
 
     render() {
         const {record} = this.state;
-        const {title, visible, form, toggleModalVoucherVisible} = this.props;
-        const {getFieldValue} = form;
+        const {title, visible, toggleModalVoucherVisible, filters: {hideAmount}} = this.props;
         return (
             <Modal
                 maskClosable={false}
@@ -85,13 +97,14 @@ class PopModal extends Component {
                                     fieldDecoratorOptions: {
                                         initialValue: record.num,
                                         rules: [
-                                            (parseInt(getFieldValue('invoiceType'), 0) !== 7 ) && {
+                                            {
                                                 required: true,
                                                 message: '请输入凭据份数'
                                             }
                                         ]
                                     }
-                                }, {
+                                },
+                                ...(hideAmount ? [] : [{
                                     label: '调整金额',
                                     fieldName: 'amount',
                                     type: 'numeric',
@@ -100,13 +113,14 @@ class PopModal extends Component {
                                     fieldDecoratorOptions: {
                                         initialValue: record.amount,
                                         rules: [
-                                            (parseInt(getFieldValue('invoiceType'), 0) !== 4 && parseInt(getFieldValue('invoiceType'), 0) !== 7  ) && {
+                                            {
                                                 required: true,
                                                 message: '请输入金额'
                                             }
                                         ]
                                     }
-                                }, {
+                                }]),
+                                ...[{
                                     label: '调整税额',
                                     fieldName: 'taxAmount',
                                     type: 'numeric',
@@ -121,7 +135,7 @@ class PopModal extends Component {
                                             }
                                         ]
                                     }
-                                }
+                                }]
                             ])
                         }
                     </Row>
