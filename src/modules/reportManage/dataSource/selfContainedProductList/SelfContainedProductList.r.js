@@ -66,7 +66,7 @@ const searchFields = getFieldValue => [
     span: 8,
     formItemStyle
   },
-  {
+  { 
     label:'转固单号',
     fieldName:'rotaryNum',
     span:8,
