@@ -10,7 +10,8 @@ import {SearchTable,TableTotal,PopDetailsModal} from "compoments";
 import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus, parseJsonToParams } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
-import { NumericInputCell } from 'compoments/EditableCell'
+import AdjustPopModal from "./adjustPopModal"
+// import { NumericInputCell } from 'compoments/EditableCell'
 
 const pointerStyle = {
     cursor: 'pointer',
@@ -74,6 +75,8 @@ const getFields = (disabled,declare) => getFieldValue => [
 ];
 
 const getColumns = (context,isEdit) => {
+    const {statusParam={}} = context.state;
+    const {declare} = context.props;
     return [
         {
             title: "利润中心",
@@ -110,33 +113,44 @@ const getColumns = (context,isEdit) => {
             title: "转出发票份数",
             dataIndex: "invoiceCount",
             width:'200px',
-            render: (text,record,index) => {
-                if(isEdit){
-                    return <NumericInputCell
-                        fieldName={`invoiceCount[${index}]`}
-                        initialValue={text=== '0' ? '0' : text}
-                        getFieldDecorator={context.props.form.getFieldDecorator} />
-                }else{
-                    return text;
-                }
-            },
+            // render: (text,record,index) => {
+            //     if(isEdit){
+            //         return <NumericInputCell
+            //             fieldName={`invoiceCount[${index}]`}
+            //             initialValue={text=== '0' ? '0' : text}
+            //             getFieldDecorator={context.props.form.getFieldDecorator} />
+            //     }else{
+            //         return text;
+            //     }
+            // },
         },
         {
             title: "转出税额",
             dataIndex: "outTaxAmount",
-            render: (text,record,index) => {
-                if(isEdit){
-                    return <NumericInputCell
-                        fieldName={`outTaxAmount[${index}]`}
-                        initialValue={text==='0' ? '0.00' : text}
-                        getFieldDecorator={context.props.form.getFieldDecorator} />
-                }else{
-                    return fMoney(text);
-                }
-            },
+            // render: (text,record,index) => {
+            //     if(isEdit){
+            //         return <NumericInputCell
+            //             fieldName={`outTaxAmount[${index}]`}
+            //             initialValue={text==='0' ? '0.00' : text}
+            //             getFieldDecorator={context.props.form.getFieldDecorator} />
+            //     }else{
+            //         return fMoney(text);
+            //     }
+            // },
             className: "table-money",
             width:'200px',
-        }
+        },
+        ...((!!declare && declare.decAction === 'edit') && statusParam.status && statusParam.status === 1 ? [
+            {
+                title: '操作',
+                render: (text, record) => (
+                    <span style={pointerStyle} onClick={()=>{context.toggleModal({editFilters: {detailId: record.id}, popModalEdit: true})}}>{'调整'}</span>
+                ),
+                width: '45px',
+                dataIndex: 'action',
+                className: 'text-center'
+            }
+        ] : [])
     ];
 }
 
@@ -210,6 +224,29 @@ const invoiceColumns = [
     }
 ];
 
+const invoiceTotalData = [
+    [
+        {
+            label: "原合计发票份数：",
+            key: ""
+        },
+        {
+            label: "原合计税额：",
+            key: ""
+        }
+    ],
+    [
+        {
+            label: "调整发票份数：",
+            key: ""
+        },
+        {
+            label: "调整税额：",
+            key: ""
+        }
+    ]
+]
+
 class OtherBusinessInputTaxRollOut extends Component {
     state = {
         visible: false, // 控制Modal是否显示
@@ -222,7 +259,9 @@ class OtherBusinessInputTaxRollOut extends Component {
         dataSource:[],
         voucherVisible: false,
         voucherParams: {},
-        exportParams: {}
+        exportParams: {},
+        popModalEdit: false,
+        editFilters: {}
     };
     hideModal() {
         this.setState({ visible: false });
@@ -237,7 +276,7 @@ class OtherBusinessInputTaxRollOut extends Component {
     refreshTable = () => {
         this.setState({ updateKey: Date.now() });
     };
-
+    toggleModal = obj => this.setState(obj)
     toggleModalVisible = voucherVisible => {
         this.setState({
             voucherVisible
@@ -279,7 +318,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         })
     }
     render() {
-        const { totalSource,saveLoding, voucherVisible, voucherParams, exportParams } = this.state;
+        const { totalSource,saveLoding, voucherVisible, voucherParams, exportParams, popModalEdit, editFilters } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
 
@@ -424,6 +463,14 @@ class OtherBusinessInputTaxRollOut extends Component {
                             }
                         </div>
                     }}
+                    totalData={invoiceTotalData}
+                />
+
+                <AdjustPopModal 
+                    title="凭证误差调整"
+                    visible={popModalEdit}
+                    filters={editFilters}
+                    toggleModalVoucherVisible={popModalEdit=>this.toggleModal({popModalEdit})}
                 />
             </div>
         );
