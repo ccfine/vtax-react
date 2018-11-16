@@ -303,13 +303,13 @@ const voucherColumns = [
         width: 150
     },{
         title: "前期累计开票金额",
-        dataIndex: "confirmedDate1",
+        dataIndex: "sumTotalAmount",
         className:'table-money',
         width: 150
     },{
         title: "本期开票金额",
         className:'table-money',
-        dataIndex: "confirmedDate3",
+        dataIndex: "totalAmount",
         width: 150
     },
     {
@@ -326,7 +326,7 @@ const voucherColumns = [
     },
     {
         title: "收入确认金额",
-        dataIndex: "confirmedPrice2",
+        dataIndex: "price",
         width: 150,
         className:'table-money',
     },

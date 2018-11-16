@@ -65,7 +65,19 @@ const searchFields = getFieldValue => [
     fieldName: "productName",
     span: 8,
     formItemStyle
-  }
+  },
+  {
+    label:'转固单号',
+    fieldName:'rotaryNum',
+    span:8,
+    formItemStyle
+  },
+  {
+    label:'产品编码',
+    fieldName:'productNum',
+    span:8,
+    formItemStyle
+  },
 ]
 
 const columns = [
@@ -77,6 +89,11 @@ const columns = [
   {
     title: "项目分期名称",
     dataIndex: "stagesName",
+    width: "200px"
+  },
+  {
+    title: "转固单号",
+    dataIndex: "rotaryNum",
     width: "200px"
   },
   {
@@ -169,7 +186,7 @@ export default class SelfContainedProductList extends Component {
               })
             },
             scroll: {
-              x: 1500,
+              x: 1700,
               y: window.screen.availHeight - 400
             }
           }}
