@@ -224,6 +224,7 @@ class UserManage extends Component {
             simplePermissionId: undefined,
 
             searchValues: undefined,
+            currentSearchValues: undefined,
             params: {...props.location.state},
         }
     }
@@ -373,7 +374,8 @@ class UserManage extends Component {
                     doNotFetchDidMount={false}
                     backCondition={values => {
                         this.setState({
-                            searchValues: values
+                            searchValues: values,
+                            currentSearchValues: values
                         });
                     }}
                     tableOption={{
@@ -446,13 +448,19 @@ class UserManage extends Component {
                         toggleModalVisible={visible => {
                             this.setState({
                                 simplePermissionVisible: visible,
-                                simplePermissionKey: Date.now()
+                                simplePermissionKey: Date.now(),
+                                searchValues: this.state.currentSearchValues
                             });
                         }}
                         togglePermissionModalVisible={visible => {
                             this.setState({
                                 permissionVisible: visible,
                                 permissionKey: Date.now()
+                            });
+                        }}
+                        onOrgId={value => {
+                            this.setState({
+                                searchValues: {orgId: value}
                             });
                         }}
                         />

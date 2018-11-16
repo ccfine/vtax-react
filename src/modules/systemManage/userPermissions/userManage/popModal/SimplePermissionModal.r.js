@@ -307,6 +307,9 @@ class SimPlePermissionModal extends React.Component{
     switchSenior=()=>{
         this.props.togglePermissionModalVisible(true)
     }
+    handleOrgId = (value) => {
+        this.props.onOrgId && this.props.onOrgId(value) 
+    }
     render(){
         let {visible,orgId,userId}                          = this.props,
             {userPermissionLoading,submitLoading,_orgFetch} = this.state,
@@ -355,7 +358,8 @@ class SimPlePermissionModal extends React.Component{
                             fieldDecoratorOptions: {
                                 initialValue: orgId,
                                 onChange    : (orgId)=>{
-                                    orgId && this.fetchPermissionByUserId({orgId,userId})
+                                    // orgId && this.fetchPermissionByUserId({orgId,userId})
+                                    orgId && this.handleOrgId(orgId)
                                 },
                                 rules: [
                                     {
