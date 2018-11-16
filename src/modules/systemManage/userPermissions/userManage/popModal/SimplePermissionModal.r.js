@@ -206,11 +206,9 @@ class SimPlePermissionModal extends React.Component{
     componentWillReceiveProps(nextProps){
         if(nextProps.updateKey !== this.props.updateKey){
             if(nextProps.orgId){
-                debugger
                 this.fetchPermissionByUserId(nextProps)
                 this.setState({_orgFetch:Date.now()})
             }else{
-                debugger
                 this.props.form.resetFields();
                 this.setState({checkedKeys:[]})
             }
@@ -236,8 +234,6 @@ class SimPlePermissionModal extends React.Component{
             .get(`/sysUser/queryUserPermissions/${orgId}/${userId}`)
             .then(({ data }) => {
                 if (data.code === 200) {
-                    console.log(data.data);
-                    debugger
                     let checkedKeys = []
                     keys.forEach(ele=>{
                         if(intersection(data.data.userPermissions,plainStrategies[ele]).length>0){
