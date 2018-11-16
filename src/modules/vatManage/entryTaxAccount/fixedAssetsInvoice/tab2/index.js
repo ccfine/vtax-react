@@ -23,6 +23,14 @@ const getColumns = context =>[
         dataIndex: 'assetNo',
         width:'200px',
     },{
+        title: "转固单号",
+        dataIndex: "rotaryNum",
+        width: "200px"
+    },{
+        title: "产品编码",
+        dataIndex: "productNum",
+        width: "200px"
+    },{
         title: '入账日期',
         dataIndex: 'accountDate',
         width:'100px',
@@ -233,7 +241,7 @@ export default class Tab2 extends Component{
                         })
                     },
                     scroll:{
-                        x:2500,
+                        x:2900,
                         y:window.screen.availHeight-430,
                     },
                 }}

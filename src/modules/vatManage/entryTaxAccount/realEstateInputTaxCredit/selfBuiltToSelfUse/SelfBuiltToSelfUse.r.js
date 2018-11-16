@@ -22,6 +22,14 @@ const columns = context =>[{
         dataIndex:'assetNo',
         width:'200px',
     },{
+        title: "转固单号",
+        dataIndex: "rotaryNum",
+        width: "200px"
+    },{
+        title: "产品编码",
+        dataIndex: "productNum",
+        width: "200px"
+    },{
         title: "入账日期",
         dataIndex: "accountDate",
         width:'200px',
@@ -217,7 +225,7 @@ export default class SelfBuiltToSelfUse extends Component{
                             })
                         },
                         scroll:{
-                            x:2700,
+                            x:3100,
                             y:window.screen.availHeight-430,
                         },
                     }}

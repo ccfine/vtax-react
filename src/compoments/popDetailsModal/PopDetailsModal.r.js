@@ -34,7 +34,7 @@ export default class PopDetailsModal extends Component{
     }
     render(){
         const {searchTableLoading,tableKey,totalSource} = this.state;
-        const { title,visible,fields,toggleModalVoucherVisible,tableOption, showTotal } = this.props;
+        const { title,visible,fields,toggleModalVoucherVisible,tableOption, totalData=[] } = this.props;
         return(
             <Modal
                 maskClosable={false}
@@ -79,17 +79,17 @@ export default class PopDetailsModal extends Component{
 
                     />
                 </div>
-                <div style={{display: showTotal ? 'block' : 'none', marginTop: '15px'}}>
-                    <Row>
-                        <Col span={8} className="text-center">合计凭据份数: {totalSource.size}</Col>
-                        <Col span={8} className="text-center">合计金额: {totalSource.size}</Col>
-                        <Col span={8} className="text-center">合计税额: {totalSource.size}</Col>
-                    </Row>
-                    <Row>
-                        <Col span={8} className="text-center">调整凭据份数: {totalSource.size}</Col>
-                        <Col span={8} className="text-center">调整金额: {totalSource.size}</Col>
-                        <Col span={8} className="text-center">调整税额: {totalSource.size}</Col>
-                    </Row>
+                {/* totalData 格式 [[{label: text, key: valueKey}, ...], ...] */}
+                <div style={{display: totalData.length ? 'block' : 'none', marginTop: '15px'}}>
+                    {totalData.map((row, k)=>(<Row key={k}>
+                        {
+                            row.map((item, key)=>(
+                                <Col key={key} span={24 / row.length} className="text-center">
+                                    {item.label} {totalSource[item.key]}
+                                </Col>
+                            ))
+                        }
+                    </Row>))}
                 </div>
             </Modal>
         )

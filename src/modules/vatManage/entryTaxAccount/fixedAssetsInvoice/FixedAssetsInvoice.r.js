@@ -144,6 +144,24 @@ const searchFields =(key,disabled,declare)=>(getFieldValue)=> {
                     formItemStyle,
                     componentProps: {},
                     fieldDecoratorOptions: {}
+                },
+                {
+                    label: "转固单号",
+                    fieldName: "rotaryNum",
+                    type: "input",
+                    span: 6,
+                    formItemStyle,
+                    componentProps: {},
+                    fieldDecoratorOptions: {}
+                },
+                {
+                    label: "产品编码",
+                    fieldName: "productNum",
+                    type: "input",
+                    span: 6,
+                    formItemStyle,
+                    componentProps: {},
+                    fieldDecoratorOptions: {}
                 }
             ]
             break
