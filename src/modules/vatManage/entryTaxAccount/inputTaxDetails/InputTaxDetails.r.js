@@ -803,6 +803,7 @@ class InputTaxDetails extends Component {
                     visible={popModalEdit}
                     filters={editFilters}
                     toggleModalVoucherVisible={popModalEdit=>this.toggleModal({popModalEdit})}
+                    refreshTable={this.refreshTable}
                 />
             </SearchTable>
         );
