@@ -478,9 +478,9 @@ const invoiceTotalData = [
 //凭证详情总计
 const voucherTotalData = [
     [
-        {label: '合计凭据份数：', key: 'numTotal'},
-        {label: '合计金额：', key: 'amountTotal'},
-        {label: '合计税额：', key: 'taxAmountTotal'},
+        {label: '原合计凭据份数：', key: 'numTotal'},
+        {label: '原合计金额：', key: 'amountTotal'},
+        {label: '原合计税额：', key: 'taxAmountTotal'},
     ],
     [
         {label: '调整凭据份数：', key: 'num'},
