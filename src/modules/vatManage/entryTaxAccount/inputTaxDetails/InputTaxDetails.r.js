@@ -483,7 +483,7 @@ const voucherTotalData = [
         {label: '合计税额：', key: 'taxAmountTotal'},
     ],
     [
-        {label: '合计凭据份数：', key: 'num'},
+        {label: '调整凭据份数：', key: 'num'},
         {label: '', key: ''},
         {label: '调整税额：', key: 'taxAmount'},
     ]
