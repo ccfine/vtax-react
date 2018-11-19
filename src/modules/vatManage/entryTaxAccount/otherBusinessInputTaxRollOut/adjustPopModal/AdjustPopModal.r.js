@@ -32,11 +32,11 @@ class AdjustPopModal extends Component {
         if (this.props.visible !== nextProps.visible && !this.props.visible) {
             //请求历史修改记录
             const {detailId} = nextProps.filters;
-            request.get('/?detailId=' + detailId).then(({data})=>{
-                const {num, taxAmount} = data.data || {};
+            request.get(`/account/income/taxout/find/${detailId}`).then(({data})=>{
+                const {modifyOutTaxAmount, modifyInvoiceCount} = data.data || {};
                 const record = {
-                    num,
-                    taxAmount
+                    modifyOutTaxAmount,
+                    modifyInvoiceCount
                 };
                 this.setState({record});
                 nextProps.form.setFieldsValue(record);
@@ -48,14 +48,14 @@ class AdjustPopModal extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const {...filters} = this.props.filters;
                 let data = {
                     ...this.state.record,
                     ...values,
-                    ...filters
+                    id: this.props.filters.detailId
                 };
-                request.post('/', data).then(({data})=>{
+                request.put('/account/income/taxout/update', data).then(({data})=>{
                     this.props.toggleModalVoucherVisible(false);
+                    this.props.refreshTable();
                 })
             }
         });
@@ -89,12 +89,17 @@ class AdjustPopModal extends Component {
                             getFields(this.props.form, [
                                 {
                                     label: '调整发票份数',
-                                    fieldName: 'num',
+                                    fieldName: 'modifyInvoiceCount',
                                     type: 'numeric',
+                                    componentProps: {
+                                        allowNegative: true,
+                                        valueType: "int",
+                                        decimalPlaces: -10
+                                    },
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.num,
+                                        initialValue: record.modifyInvoiceCount,
                                         rules: [
                                             {
                                                 required: true,
@@ -105,12 +110,15 @@ class AdjustPopModal extends Component {
                                 },
                                 ...[{
                                     label: '调整税额',
-                                    fieldName: 'taxAmount',
+                                    fieldName: 'modifyOutTaxAmount',
                                     type: 'numeric',
+                                    componentProps: {
+                                        allowNegative: true
+                                    },
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.taxAmount,
+                                        initialValue: record.modifyOutTaxAmount,
                                         rules: [
                                             {
                                                 required: true,

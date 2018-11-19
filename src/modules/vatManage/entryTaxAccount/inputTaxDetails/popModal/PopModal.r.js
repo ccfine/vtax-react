@@ -57,6 +57,7 @@ class PopModal extends Component {
                 };
                 request.post('/account/income/taxDetail/update/account/income/revise', data).then(({data})=>{
                     this.props.toggleModalVoucherVisible(false);
+                    this.props.refreshTable();
                 })
             }
         });
@@ -92,6 +93,11 @@ class PopModal extends Component {
                                     label: '调整凭据份数',
                                     fieldName: 'num',
                                     type: 'numeric',
+                                    componentProps: {
+                                        allowNegative: true,
+                                        valueType: "int",
+                                        decimalPlaces: -10
+                                    },
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {
@@ -108,6 +114,9 @@ class PopModal extends Component {
                                     label: '调整金额',
                                     fieldName: 'amount',
                                     type: 'numeric',
+                                    componentProps: {
+                                        allowNegative: true
+                                    },
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {
@@ -124,6 +133,9 @@ class PopModal extends Component {
                                     label: '调整税额',
                                     fieldName: 'taxAmount',
                                     type: 'numeric',
+                                    componentProps: {
+                                        allowNegative: true
+                                    },
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {

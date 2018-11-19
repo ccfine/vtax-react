@@ -228,21 +228,21 @@ const invoiceTotalData = [
     [
         {
             label: "原合计发票份数：",
-            key: ""
+            key: "invoiceCount"
         },
         {
             label: "原合计税额：",
-            key: ""
+            key: "outTaxAmount"
         }
     ],
     [
         {
             label: "调整发票份数：",
-            key: ""
+            key: "modifyInvoiceCount"
         },
         {
             label: "调整税额：",
-            key: ""
+            key: "modifyOutTaxAmount"
         }
     ]
 ]
@@ -471,6 +471,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                     visible={popModalEdit}
                     filters={editFilters}
                     toggleModalVoucherVisible={popModalEdit=>this.toggleModal({popModalEdit})}
+                    refreshTable={this.refreshTable}
                 />
             </div>
         );
