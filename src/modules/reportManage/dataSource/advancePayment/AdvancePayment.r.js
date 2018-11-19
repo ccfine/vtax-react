@@ -256,7 +256,7 @@ export default class AdvancePayment extends Component{
                             });
                         },
                         cardProps: {
-                            title: <TableTitle time={totalSource && totalSource.extractTime}>SAP-预收账款租金表数据采集</TableTitle>,
+                            title: <TableTitle time={totalSource && totalSource.extractTime}>SAP-预收账款租金数据采集</TableTitle>,
                             extra: (
                                 <div>
                                     {/*{

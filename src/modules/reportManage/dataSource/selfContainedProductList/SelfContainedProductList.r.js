@@ -165,7 +165,7 @@ export default class SelfContainedProductList extends Component {
               })
             },
             cardProps: {
-              title: <TableTitle time={ totalSource && totalSource.extractTime }>明源-自持类产品关联清单数据采集</TableTitle>
+              title: <TableTitle time={ totalSource && totalSource.extractTime }>明源-自持类产品清单数据采集</TableTitle>
             },
             url: "/interProductList/list",
             extra: <div>
