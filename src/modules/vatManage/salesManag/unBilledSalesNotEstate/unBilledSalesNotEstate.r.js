@@ -13,35 +13,34 @@ import PopModal from "./popModal";
 const columns = context => [
     {
         title: "收入类型",
-        dataIndex: "",
+        dataIndex: "incomeType",
         width: "200px"
     },
     {
         title: "税率",
-        dataIndex: "",
-        width: "150px",
-        className:'text-right',
+        dataIndex: "taxRateName",
+        width: "200px"
     },
     {
         title: "上期末合计金额",
         children: [
             {
                 title: "增值税收入确认金额",
-                dataIndex: "",
+                dataIndex: "beforeConfirmAmount",
                 width: "220px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "增值税开票金额",
-                dataIndex: "",
+                dataIndex: "beforeBillingAmount",
                 width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "未开具发票销售额",
-                dataIndex: "",
+                dataIndex: "beforeUnbillingAmount",
                 width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
@@ -53,11 +52,11 @@ const columns = context => [
         children: [
             {
                 title: "增值税收入确认金额",
-                dataIndex: "",
+                dataIndex: "confirmAmount",
                 width: "220px",
                 render: (text, record) => (
                     <a title="查看详情"
-                       onClick={ () => context.toggleModalVoucherVisibleConfirm(true) }
+                       onClick={ () => context.toggleModalVoucherVisibleConfirm(true, record.subjectId, record.taxRateId) }
                     >
                         { fMoney(text) }
                     </a>
@@ -66,11 +65,11 @@ const columns = context => [
             },
             {
                 title: "增值税开票金额",
-                dataIndex: "",
+                dataIndex: "billingAmount",
                 width: "200px",
                 render: (text, record) => (
                     <a title="查看详情"
-                       onClick={ () => context.toggleModalVoucherVisibleInvoice(true) }
+                       onClick={ () => context.toggleModalVoucherVisibleInvoice(true, record.subjectId, record.taxRateId) }
                     >
                         { fMoney(text) }
                     </a>
@@ -79,7 +78,7 @@ const columns = context => [
             },
             {
                 title: "未开具发票销售额",
-                dataIndex: "",
+                dataIndex: "unbillingAmount",
                 width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
@@ -91,21 +90,21 @@ const columns = context => [
         children: [
             {
                 title: "增值税收入确认金额",
-                dataIndex: "",
+                dataIndex: "endConfirmAmount",
                 width: "220px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "增值税开票金额",
-                dataIndex: "",
+                dataIndex: "endBillingAmount",
                 width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "未开具发票销售额",
-                dataIndex: "",
+                dataIndex: "endUnbillingAmount",
                 width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
@@ -114,14 +113,14 @@ const columns = context => [
     },
     {
         title: "本期应申报未开票销售额",
-        dataIndex: "",
+        dataIndex: "currentUnbillingAmount",
         width: "250px",
         render: text => fMoney(text),
         className: "table-money"
     },
     {
         title: "本期应申报未开票销售税额",
-        dataIndex: "",
+        dataIndex: "currentTaxAmount",
         width: "250px",
         render: text => fMoney(text),
         className: "table-money"
@@ -254,7 +253,7 @@ const voucherSearchFields = [
 const voucherSearchFieldsConfirm = [
     {
         label: "科目代码",
-        fieldName: "",
+        fieldName: "creditSubjectCode",
         span: 8
     },
     {
@@ -267,7 +266,7 @@ const voucherSearchFieldsConfirm = [
 const voucherSearchFieldsInvoice = [
     {
         label: "发票号码",
-        fieldName: "",
+        fieldName: "invoiceNum",
         span: 8
     }
 ]
@@ -324,12 +323,12 @@ const voucherColumnsConfirm = [
     },
     {
         title: "项目分期",
-        dataIndex: "stageName",
+        dataIndex: "stagesName",
         width: 200
     },
     {
         title: "过账日期",
-        dataIndex: "",
+        dataIndex: "month",
         width: 150
     },
     {
@@ -339,116 +338,105 @@ const voucherColumnsConfirm = [
     },
     {
         title: "凭证摘要",
-        dataIndex: "",
+        dataIndex: "voucherAbstract",
         width: 200
     },
     {
         title: "贷方科目代码",
-        dataIndex: "subjectCode",
+        dataIndex: "creditSubjectCode",
         width: 150
     },
     {
         title: "贷方科目名称",
-        dataIndex: "subjectName",
+        dataIndex: "creditSubjectName",
         width: 150
     },
     {
         title: "贷方金额",
-        dataIndex: "",
+        dataIndex: "creditAmount",
         render: text => fMoney(text),
         className: "table-money",
         width: 150
     },
     {
         title: "税率",
-        dataIndex: "tax",
+        dataIndex: "taxRate",
         className: "text-right",
         width: 100
     },
     {
         title: "能源转售类型",
-        dataIndex: "",
+        dataIndex: "energyType",
         width: 150
     }
 ]
 
 const voucherColumnsInvoice = [
     {
-        title: "利润中心",
-        dataIndex: "profitCenterName",
-        width: "200px"
-    },
-    {
-        title: "项目分期",
-        dataIndex: "stagesName",
-        width: "200px"
-    },
-    {
-        title: "房间编码",
-        dataIndex: "roomCode",
-        width: "200px"
-    },
-    {
-        title: "路址",
-        dataIndex: "htRoomName",
-        width: "200px"
-    },
-    {
-        title: "增值税确认收入金额",
-        dataIndex: "confirmedPrice",
-        className: "table-money",
-        width: "200px",
-        render: text => fMoney(text)
-    },
-    {
-        title: "期初累计开票金额",
-        dataIndex: "beginSumInvoiceAmount",
-        className: "table-money",
-        width: "200px",
-        render: text => fMoney(text)
-    },
-    {
-        title: "未开具发票销售额",
-        dataIndex: "noInvoiceSales",
-        className: "table-money",
-        width: "200px",
-        render: text => fMoney(text)
-    },
-    {
-        title: "未开具发票申报所属期",
-        dataIndex: "month",
-        width: "200px"
-    },
-    {
-        title: "本期补开票金额",
-        dataIndex: "balanceOfInvoice",
-        className: "table-money",
-        width: "200px",
-        render: text => fMoney(text)
-    },
-    {
         title: "发票号码",
         dataIndex: "invoiceNum",
-        width: "200px",
+        width: "150px"
     },
     {
-        title: "开票所属期",
-        dataIndex: "authMonth",
+        title: "发票代码",
+        dataIndex: "invoiceCode",
+        width: "150px"
+    },
+    {
+        title: "发票类型",
+        dataIndex: "invoiceType",
+        width: "150px",
+        render(text){
+            let value = '';
+            if(text === 's'){
+                value = '专票'
+            }else if(text === 'c'){
+                value = '普票';
+            }
+            return value;
+        }
+    },
+    {
+        title: "开票日期",
+        dataIndex: "billingDate",
         width: "200px"
     },
     {
-        title: "期末累计开票金额",
-        dataIndex: "endSumInvoiceAmount",
+        title: "金额",
+        dataIndex: "amount",
+        render: text => fMoney(text),
         className: "table-money",
-        width: "200px",
-        render: text => fMoney(text)
+        width: "200px"
     },
     {
-        title: "期末未开票金额",
-        dataIndex: "endUnInvoiceAmount",
+        title: "税率",
+        dataIndex: "taxRate",
+        render: (text) => text ? `${text}%`: text,
+        className:'text-right',
+        width: "200px"
+    },
+    {
+        title: "税额",
+        dataIndex: "taxAmount",
+        render: text => fMoney(text),
         className: "table-money",
-        width: "200px",
-        render: text => fMoney(text)
+        width: "200px"
+    },
+    {
+        title: "价税合计",
+        dataIndex: "totalAmount",
+        render: text => fMoney(text),
+        className: "table-money",
+        width: "200px"
+    },
+    {
+        title: "购货单位名称",
+        dataIndex: "purchaseName",
+        width: "150px"
+    },
+    {
+        title: "备注",
+        dataIndex: "remark"
     }
 ]
 
@@ -475,7 +463,9 @@ class UnBilledSalesNotEstate extends Component {
         voucherVisibleConfirm: false,
         voucherFilterConfirm: {},
         voucherVisibleInvoice: false,
-        voucherFilterInvoice: {}
+        voucherFilterInvoice: {},
+        subjectId: "",
+        taxRateId: "",
     }
     refreshTable = ()=>{
         this.mounted && this.setState({
@@ -487,14 +477,18 @@ class UnBilledSalesNotEstate extends Component {
             voucherVisible
         });
     };
-    toggleModalVoucherVisibleConfirm = voucherVisibleConfirm => {
+    toggleModalVoucherVisibleConfirm = (voucherVisibleConfirm, subjectId, taxRateId) => {
         this.setState({
-            voucherVisibleConfirm
+            voucherVisibleConfirm,
+            subjectId,
+            taxRateId
         })
     }
-    toggleModalVoucherVisibleInvoice = voucherVisibleInvoice => {
+    toggleModalVoucherVisibleInvoice = (voucherVisibleInvoice, subjectId, taxRateId) => {
         this.setState({
-            voucherVisibleInvoice
+            voucherVisibleInvoice,
+            subjectId,
+            taxRateId
         })
     }
     fetchLoadType = (mainId) => {
@@ -568,7 +562,7 @@ class UnBilledSalesNotEstate extends Component {
         this.mounted = null;
     }
     render(){
-        const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource,voucherVisibleConfirm,voucherFilterConfirm,voucherVisibleInvoice,voucherFilterInvoice} = this.state;
+        const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource,voucherVisibleConfirm,voucherFilterConfirm,voucherVisibleInvoice,voucherFilterInvoice,subjectId,taxRateId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             noSubmit = parseInt(statusParam.status,10)===1;
@@ -655,7 +649,7 @@ class UnBilledSalesNotEstate extends Component {
                           {
                               JSON.stringify(filters)!=='{}' && composeBotton([{
                                   type:'fileExport',
-                                  url:'account/notInvoiceUnSale/realty/export',
+                                  url:'account/invoiceSale/unrealty/export',
                                   params:filters,
                                   title:'导出',
                                   userPermissions:['1361007'],
@@ -673,19 +667,19 @@ class UnBilledSalesNotEstate extends Component {
                                   }
                               },{
                                   type:'reset',
-                                  url:'/account/notInvoiceUnSale/realty/reset',
+                                  url:'/account/invoiceSale/unrealty/reset',
                                   params:filters,
                                   userPermissions:['1361009'],
                                   onSuccess:this.refreshTable
                               },{
                                   type:'submit',
-                                  url:'/account/notInvoiceUnSale/realty/submit',
+                                  url:'/account/invoiceSale/unrealty/submit',
                                   params:filters,
                                   userPermissions:['1361010'],
                                   onSuccess:this.refreshTable
                               },{
                                   type:'revoke',
-                                  url:'/account/notInvoiceUnSale/realty/revoke',
+                                  url:'/account/invoiceSale/unrealty/reset/revoke',
                                   params:filters,
                                   userPermissions:['1361011'],
                                   onSuccess:this.refreshTable,
@@ -708,7 +702,7 @@ class UnBilledSalesNotEstate extends Component {
                       style={{marginTop:10}}>
 
 
-                    <AsyncTable url="/account/notInvoiceUnSale/realty/list?orderByField=taxMethod"
+                    <AsyncTable url="/account/invoiceSale/unrealty/pc/list"
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -794,7 +788,7 @@ class UnBilledSalesNotEstate extends Component {
                             title: "凭证列表"
                         },
                         columns: voucherColumnsConfirm,
-                        url: `/?${parseJsonToParams(filters)}`,
+                        url: `/account/invoiceSale/unrealty/detailList/?${parseJsonToParams(filters)}&subjectId=${subjectId}&taxRateId=${taxRateId}`,
                         scroll: { x: "1700px", y: "250px" },
                         onSuccess: params => {
                             this.setState({
@@ -806,8 +800,8 @@ class UnBilledSalesNotEstate extends Component {
                                 {
                                     JSON.stringify(voucherFilterConfirm) !== "{}" && composeBotton([{
                                         type: "fileExport",
-                                        url: ``,
-                                        params: Object.assign(voucherFilterConfirm, filters),
+                                        url: `account/invoiceSale/unrealty/detail/export`,
+                                        params: Object.assign(voucherFilterConfirm, filters, {subjectId, taxRateId}),
                                         title: "导出",
                                         userPermissions: ["1361007"]
                                     }])
@@ -827,7 +821,7 @@ class UnBilledSalesNotEstate extends Component {
                             title: "发票信息列表"
                         },
                         columns: voucherColumnsInvoice,
-                        url: `/?${parseJsonToParams(filters)}`,
+                        url: `/account/invoiceSale/unrealty/invoiceDetail/?${parseJsonToParams(filters)}&subjectId=${subjectId}&taxRateId=${taxRateId}`,
                         scroll: { x: "2300px", y: "250px" },
                         onSuccess: params => {
                             this.setState({
@@ -839,8 +833,8 @@ class UnBilledSalesNotEstate extends Component {
                                 {
                                     JSON.stringify(voucherFilterInvoice) !== "{}" && composeBotton([{
                                         type: "fileExport",
-                                        url: ``,
-                                        params: Object.assign(voucherFilterInvoice, filters),
+                                        url: `account/invoiceSale/unrealty/invoice/export`,
+                                        params: Object.assign(voucherFilterInvoice, filters, {subjectId, taxRateId}),
                                         title: "导出",
                                         userPermissions: ["1361007"]
                                     }])

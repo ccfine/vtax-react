@@ -100,7 +100,7 @@ class PopModal extends Component{
                                     }
                                 ],
                                 fieldDecoratorOptions:{
-                                    initialValue: this.state.confirmType,
+                                    initialValue: this.state.confirmType || "",
                                     rules:[
                                         {
                                             required:true,
