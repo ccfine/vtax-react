@@ -86,7 +86,7 @@ export default class PopDetailsModal extends Component{
                             {totalData.map((row, k)=>(<Row key={k}>
                                 {
                                     row.map((item, key)=>(
-                                        <Col key={key} span={24 / row.length} className="text-center">
+                                        <Col key={key} span={24 / row.length}>
                                             {item.label} {totalSource[item.key]}
                                         </Col>
                                     ))
