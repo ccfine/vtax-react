@@ -11,7 +11,7 @@ export default class DrawerModal extends Component {
     title             : PropTypes.string.isRequired,
     visible           : PropTypes.bool.isRequired,
     onClose           : PropTypes.func.isRequired,
-    drawerOptions     : PropTypes.bool.isRequired,
+    // drawerOptions     : PropTypes.bool.isRequired,
     searchTableOptions: PropTypes.object,
     children          : PropTypes.oneOfType([
       PropTypes.array,
