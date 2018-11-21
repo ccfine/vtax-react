@@ -679,7 +679,7 @@ class UnBilledSalesNotEstate extends Component {
                                   onSuccess:this.refreshTable
                               },{
                                   type:'revoke',
-                                  url:'/account/invoiceSale/unrealty/reset/revoke',
+                                  url:'/account/invoiceSale/unrealty/revoke',
                                   params:filters,
                                   userPermissions:['1361011'],
                                   onSuccess:this.refreshTable,
