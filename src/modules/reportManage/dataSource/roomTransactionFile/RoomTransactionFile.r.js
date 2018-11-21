@@ -326,7 +326,7 @@ const columns = [{
     {
         title:'结转状态',
         dataIndex:'knots',
-        render:text=>parseInt(text,0) === 0 ? <span style={{color: '#f5222d'}}>未结转</span>:<span style={{color: "#87d068"}}>已结转</span>,
+        render:text=>parseInt(text,0) === 1 ? <span style={{color: '#87d068'}}>已结转</span>:<span style={{color: "#f5222d"}}>未结转</span>,
         width:'100px'
     }
 ]
