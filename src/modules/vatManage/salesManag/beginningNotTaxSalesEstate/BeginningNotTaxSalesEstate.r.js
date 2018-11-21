@@ -131,7 +131,7 @@ const columns = [
     {
         title:'利润中心',
         dataIndex:'profitCenterName',
-        width:'180px',
+        width:'200px',
     },
     {
         title:'项目分期',
@@ -141,7 +141,7 @@ const columns = [
     {
         title:'房间路址',
         dataIndex:'htRoomName',
-        width:'100px',
+        // width:'200px',
     },
     {
         title:'房间编码',
@@ -435,7 +435,7 @@ class unBilledSalesEstate extends Component{
                         }
                     </div>,
                     scroll:{
-                        x:2100,
+                        x:2500,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}

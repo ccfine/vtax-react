@@ -14,8 +14,8 @@ const getColumns = (context,getFieldDecorator,disabled) =>[
         width:'300px',
     },{
         title: '税率',
-        dataIndex: 'taxRate',
-        width:'200px',
+        dataIndex: 'taxRateName',
+        width:'250px',
     },{
         title: '期初增值税收入确认金额',
         dataIndex: 'confirmAmount',

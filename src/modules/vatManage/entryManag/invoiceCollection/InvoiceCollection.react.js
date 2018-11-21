@@ -298,7 +298,7 @@ const getColumns = (context) => [{
         width:'100px',
     },
     {
-        title: "销售单位名称",
+        title: "销货单位名称",
         dataIndex: "sellerName",
         width:'200px',
     },

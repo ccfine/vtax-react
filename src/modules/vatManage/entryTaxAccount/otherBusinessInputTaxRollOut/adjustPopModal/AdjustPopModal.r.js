@@ -1,5 +1,5 @@
 /**
- * Created by liuliyuan on 2018/11/6.
+ * Created by chenfeng on 2018/11/16.
  */
 import React, {Component} from 'react';
 import {Row, Col, Button, Modal, Form} from 'antd';
@@ -14,7 +14,7 @@ const formItemStyle = {
     }
 };
 
-class PopModal extends Component {
+class AdjustPopModal extends Component {
     state = {
         record: {}
     };
@@ -31,13 +31,12 @@ class PopModal extends Component {
         }
         if (this.props.visible !== nextProps.visible && !this.props.visible) {
             //请求历史修改记录
-            const {hideAmount, detailId} = nextProps.filters;
-            request.get('/account/income/taxDetail/query/account/income/revise?detailId=' + detailId).then(({data})=>{
-                const {num, amount, taxAmount} = data.data || {};
+            const {detailId} = nextProps.filters;
+            request.get(`/account/income/taxout/find/${detailId}`).then(({data})=>{
+                const {modifyOutTaxAmount, modifyInvoiceCount} = data.data || {};
                 const record = {
-                    num,
-                    ...(hideAmount ? {} : {amount}),
-                    taxAmount
+                    modifyOutTaxAmount,
+                    modifyInvoiceCount
                 };
                 this.setState({record});
                 nextProps.form.setFieldsValue(record);
@@ -49,13 +48,12 @@ class PopModal extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const {hideAmount, ...filters} = this.props.filters;
                 let data = {
                     ...this.state.record,
                     ...values,
-                    ...filters
+                    id: this.props.filters.detailId
                 };
-                request.post('/account/income/taxDetail/update/account/income/revise', data).then(({data})=>{
+                request.put('/account/income/taxout/update', data).then(({data})=>{
                     this.props.toggleModalVoucherVisible(false);
                     this.props.refreshTable();
                 })
@@ -66,7 +64,7 @@ class PopModal extends Component {
 
     render() {
         const {record} = this.state;
-        const {title, visible, toggleModalVoucherVisible, filters: {hideAmount}} = this.props;
+        const {title, visible, toggleModalVoucherVisible} = this.props;
         return (
             <Modal
                 maskClosable={false}
@@ -90,8 +88,8 @@ class PopModal extends Component {
                         {
                             getFields(this.props.form, [
                                 {
-                                    label: '调整凭据份数',
-                                    fieldName: 'num',
+                                    label: '调整发票份数',
+                                    fieldName: 'modifyInvoiceCount',
                                     type: 'numeric',
                                     componentProps: {
                                         allowNegative: true,
@@ -101,37 +99,18 @@ class PopModal extends Component {
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.num,
+                                        initialValue: record.modifyInvoiceCount,
                                         rules: [
                                             {
                                                 required: true,
-                                                message: '请输入凭据份数'
+                                                message: '请输入发票份数'
                                             }
                                         ]
                                     }
                                 },
-                                ...(hideAmount ? [] : [{
-                                    label: '调整金额',
-                                    fieldName: 'amount',
-                                    type: 'numeric',
-                                    componentProps: {
-                                        allowNegative: true
-                                    },
-                                    span: 22,
-                                    formItemStyle,
-                                    fieldDecoratorOptions: {
-                                        initialValue: record.amount,
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: '请输入金额'
-                                            }
-                                        ]
-                                    }
-                                }]),
                                 ...[{
                                     label: '调整税额',
-                                    fieldName: 'taxAmount',
+                                    fieldName: 'modifyOutTaxAmount',
                                     type: 'numeric',
                                     componentProps: {
                                         allowNegative: true
@@ -139,7 +118,7 @@ class PopModal extends Component {
                                     span: 22,
                                     formItemStyle,
                                     fieldDecoratorOptions: {
-                                        initialValue: record.taxAmount,
+                                        initialValue: record.modifyOutTaxAmount,
                                         rules: [
                                             {
                                                 required: true,
@@ -157,4 +136,4 @@ class PopModal extends Component {
     }
 }
 
-export default Form.create()(PopModal);
+export default Form.create()(AdjustPopModal);

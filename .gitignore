@@ -2,6 +2,7 @@
 
 #index,gitignore
 /public/index.html
+.vscode/
 .gitignore
 
 # dependencies

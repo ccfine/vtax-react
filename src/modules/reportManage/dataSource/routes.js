@@ -11,10 +11,10 @@ const IncomingInvoiceCollection = AsyncComponent(() => import('./incomingInvoice
 const FinancialDocuments = AsyncComponent(() => import('./financialDocuments'), 'SAP-财务凭证数据采集')
 const FixedAssetCard = AsyncComponent(() => import('./fixedAssetCard'), 'SAP-不动产卡片采集')
 const AccountBalanceSheet = AsyncComponent(() => import('./accountBalanceSheet'), 'SAP-科目余额表数据采集')
-const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "SAP-预收账款租金表数据采集")
+const AdvancePayment = AsyncComponent(() => import("./advancePayment"), "SAP-预收账款租金数据采集")
 const BillPool = AsyncComponent(() => import("./billPool"), "SAP-票据池数据采集")
 const AvailableArea = AsyncComponent(() => import('./availableArea'), '明源-可售面积数据采集')
-const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "明源-自持类产品关联清单数据采集")
+const SelfContainedProductList = AsyncComponent(() => import("./selfContainedProductList"), "明源-自持类产品清单数据采集")
 const SelfContainedProductAssociation = AsyncComponent(() => import("./selfContainedProductAssociation"), "明源-自持类产品关联进项发票数据采集")
 
 
@@ -91,7 +91,7 @@ const DataSource_Routes = [
     {
         path: `${PATH}/advancePayment`,
         component: AdvancePayment,
-        name: "SAP-预收账款租金表数据采集",
+        name: "SAP-预收账款租金数据采集",
         icon: {
             url: `${ICON_URL_PATH}advancePayment.svg`,
             backgroundColor: "#2E8A57"
@@ -123,7 +123,7 @@ const DataSource_Routes = [
     {
         path: `${PATH}/selfContainedProductList`,
         component: SelfContainedProductList,
-        name: "明源-自持类产品关联清单数据采集",
+        name: "明源-自持类产品清单数据采集",
         icon: {
             url: `${ICON_URL_PATH}selfContainedProductList.svg`,
             backgroundColor: "#2E8A57"

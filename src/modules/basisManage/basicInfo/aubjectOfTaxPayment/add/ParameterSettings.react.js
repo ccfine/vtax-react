@@ -161,7 +161,7 @@ export default class ParameterSettings extends Component{
                                     disabled: true,
                                 },
                                 fieldDecoratorOptions:{
-                                    initialValue:(defaultData!==null && defaultData.confirmType) || '2',
+                                    initialValue:(defaultData!==null && defaultData.confirmType) || "",
                                 }
                             },
                             {
