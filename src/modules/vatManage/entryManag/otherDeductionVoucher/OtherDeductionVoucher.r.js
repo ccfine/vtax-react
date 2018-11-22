@@ -77,7 +77,6 @@ const searchFields = (context, disabled, declare) => (getFieldValue) => {
 };
 
 const columns = context => {
-    let lastStegesId = '';
     const {dataSource=[]} = context.state;
     let profitCenterList = [];
     dataSource.forEach((item, index) => {
