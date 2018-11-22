@@ -6,6 +6,7 @@ import {AsyncComponent} from 'compoments'
 const LoginLog = AsyncComponent(() => import("./loginLog"), "登陆日志")
 const TaskResume = AsyncComponent(() => import("./taskResume"), "任务履历")
 const DataResume = AsyncComponent(() => import("./dataResume"), "数据履历")
+const OperationsLog = AsyncComponent(() => import("./operationsLog"), "操作日志")
 
 const ICON_URL_PATH = '/assets/routes_avatar/';
 const PATHS = '/web/systemManage/interfaceLog';
@@ -33,6 +34,15 @@ const InterfaceLog_Routes = [
         path:`${PATHS}/dataResume`,
         component:DataResume,
         name:'数据履历',
+        icon:{
+            url:`${ICON_URL_PATH}dataResume.svg`,
+            backgroundColor:'#6CCCCA'
+        },
+        exact:true,
+    },{
+        path:`${PATHS}/operationsLog`,
+        component:OperationsLog,
+        name:'操作日志',
         icon:{
             url:`${ICON_URL_PATH}dataResume.svg`,
             backgroundColor:'#6CCCCA'

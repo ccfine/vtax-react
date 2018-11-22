@@ -185,15 +185,15 @@ export default class SelfBuiltToSelfUse extends Component{
                                 {
                                     listMainResultStatus(statusParam)
                                 }
-                                {/* {
+                                {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'account/income/estate/stayDed/export',
+                                        url:'account/income/estate/ownBuildList/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1251007'],
-                                    }],statusParam)
-                                } */}
+                                    }])
+                                }
                                 {
                                     (disabled && declare.decAction==='edit') && composeBotton([{
                                         type: 'reset',

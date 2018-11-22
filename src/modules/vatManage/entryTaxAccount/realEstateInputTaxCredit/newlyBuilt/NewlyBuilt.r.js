@@ -166,15 +166,15 @@ export default class NewlyBuilt extends Component{
                             {
                                 listMainResultStatus(statusParam)
                             }
-                            {/* {
+                            {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
-                                    url:'account/income/estate/build/export',
+                                    url:'account/income/estate/aloneBuildList/export',
                                     params:filters,
                                     title:'导出',
                                     userPermissions:['1251007'],
-                                }],statusParam)
-                            } */}
+                                }])
+                            }
                             {
                                 (disabled && declare.decAction==='edit') && composeBotton([{
                                         type: 'reset',

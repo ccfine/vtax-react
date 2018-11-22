@@ -212,6 +212,15 @@ export default class Tab2 extends Component{
                                 listMainResultStatus(statusParam)
                             }
                             {
+                                JSON.stringify(filters) !=='{}' && composeBotton([{
+                                    type:'fileExport',
+                                    url:'account/income/fixedAssets/incomeBuildList/export',
+                                    params:filters,
+                                    title:'导出',
+                                    userPermissions:['1241007'],
+                                }])
+                            }
+                            {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type: 'reset',
                                     url:'/account/income/fixedAssets/reset',
