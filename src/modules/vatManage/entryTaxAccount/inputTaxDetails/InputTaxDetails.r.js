@@ -111,7 +111,6 @@ const checkVoucherType = record => {
 };
 
 const getColumns = (context, isEdit) => {
-    let lastStegesId = '';
     const {dataSource=[], statusParam={}} = context.state;
     const {declare} = context.props;
     let profitCenterList = [];
