@@ -267,6 +267,11 @@ const getColumns = (context,disabled) => {
             width:'100px',
         },
         {
+            title:'确收时点',
+            dataIndex:'confirmedDate',
+            width:'150px',
+        },
+        {
             title:'开票日期',
             dataIndex:'billingDate',
             width:'100px',
@@ -484,7 +489,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 3050,
+                        x: 3200,
                         y:window.screen.availHeight-480-(disabled?50:0),
                     },
                     cardProps:{

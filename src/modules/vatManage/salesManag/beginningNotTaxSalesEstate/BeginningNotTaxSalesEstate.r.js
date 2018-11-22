@@ -129,6 +129,14 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
 }
 const columns = [
     {
+        title:'是否勾选',
+        dataIndex:'check',
+        width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.check,10) === 0 ? "未勾选":"已勾选";
+        }
+    },
+    {
         title:'利润中心',
         dataIndex:'profitCenterName',
         width:'200px',
@@ -247,14 +255,6 @@ const columns = [
     //         return parseInt(record.status,10) === 0 ? "未缴税":"已缴税";
     //     }
     // },
-    {
-        title:'是否勾选',
-        dataIndex:'check',
-        width:'100px',
-        render:(id,record)=>{
-            return parseInt(record.check,10) === 0 ? "未勾选":"已勾选";
-        }
-    }
 ];
 const markFieldsData = [
     {

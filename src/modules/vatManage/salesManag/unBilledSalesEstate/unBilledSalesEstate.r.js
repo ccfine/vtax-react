@@ -223,18 +223,18 @@ const columns = [
         ]
     },
     {
-        title:'应申报未开具发票销售额',
+        title:'期末未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
     },
     {
-        title:'未开具发票销售税额',
+        title:'期末未开具发票销项税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
-        width:'100px',
+        width:'150px',
     }
 ];
 class unBilledSalesEstate extends Component{
@@ -365,7 +365,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:2150,
+                        x:2200,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     onTotalSource: (totalSource) => {
