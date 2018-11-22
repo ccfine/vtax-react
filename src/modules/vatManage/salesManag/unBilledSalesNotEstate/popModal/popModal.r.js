@@ -76,7 +76,7 @@ class PopModal extends Component {
             if (props.id) {
                 this.setState({ formLoading: true });
                 request
-                    .get(`/account/notInvoiceUnSale/realty/find/${props.id}`)
+                    .get(`/account/invoiceSale/unrealty/find/${props.id}`)
                     .then(({ data }) => {
                         if (data.code === 200) {
                             this.setState({
@@ -151,13 +151,13 @@ class PopModal extends Component {
                 let result, sucessMsg;
                 if (this.props.action === "modify") {
                     result = request.put(
-                        "/account/notInvoiceUnSale/realty/update",
+                        "/account/invoiceSale/unrealty/update",
                         obj
                     );
                     sucessMsg = "修改成功";
                 } else if (this.props.action === "add") {
                     result = request.post(
-                        "/account/notInvoiceUnSale/realty/add",
+                        "/account/invoiceSale/unrealty/add",
                         obj
                     );
                     sucessMsg = "添加成功";

@@ -111,9 +111,13 @@ const checkVoucherType = record => {
 };
 
 const getColumns = (context, isEdit) => {
-    let lastStegesId = '';
-    const {dataSource, statusParam={}} = context.state;
+    const {dataSource=[], statusParam={}} = context.state;
     const {declare} = context.props;
+    let profitCenterList = [];
+    dataSource.forEach((item, index) => {
+        profitCenterList.includes(item.profitCenterId) ? profitCenterList.push(0) : profitCenterList.push(item.profitCenterId);
+        return item;
+    })
     return [
         {
             title: '利润中心',
@@ -121,12 +125,8 @@ const getColumns = (context, isEdit) => {
             width: '200px',
             render: (text, row, index) => {
                 let rowSpan = 0;
-                if (lastStegesId !== row.profitCenterId) {
-                    lastStegesId = row.profitCenterId;
-                    rowSpan = dataSource.filter(ele => ele.profitCenterId === row.profitCenterId).length;
-                }
-                if ((index + 1) === dataSource.length) {
-                    lastStegesId = '';
+                if(profitCenterList[index] === row.profitCenterId){
+                    rowSpan = dataSource.filter(ele=>ele.profitCenterId === row.profitCenterId).length;
                 }
                 return {
                     children: text,

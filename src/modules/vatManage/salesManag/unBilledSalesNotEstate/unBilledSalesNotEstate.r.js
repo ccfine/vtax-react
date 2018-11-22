@@ -508,7 +508,7 @@ class UnBilledSalesNotEstate extends Component {
     }
     deleteRecord = (id, cb) => {
         request
-            .delete(`/account/notInvoiceUnSale/realty/delete/${id}`)
+            .delete(`/account/invoiceSale/unrealty/delete/${id}`)
             .then(({ data }) => {
                 if (data.code === 200) {
                     message.success("删除成功", 4);
