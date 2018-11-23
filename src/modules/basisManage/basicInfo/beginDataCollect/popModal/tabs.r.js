@@ -39,15 +39,15 @@ const tabList = [{
     tab: '非地产未开票期初数据',
 }];
 
-const getContent = (key,filters,disabled,beginType,updateKey) => {
+const getContent = (key,filters,disabled,beginType) => {
     const contentList = {
-        tab1: <Tab1 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
-        tab2: <Tab2 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
-        tab3: <Tab3 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
-        tab4: <Tab4 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
-        tab5: <Tab5 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
-        tab6: <Tab6 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
-        tab8: <Tab8 filters={filters} disabled={disabled} updateKey={updateKey} beginType={beginType}/>,
+        tab1: <Tab1 filters={filters} disabled={disabled} beginType={beginType}/>,
+        tab2: <Tab2 filters={filters} disabled={disabled} beginType={beginType}/>,
+        tab3: <Tab3 filters={filters} disabled={disabled} beginType={beginType}/>,
+        tab4: <Tab4 filters={filters} disabled={disabled} beginType={beginType}/>,
+        tab5: <Tab5 filters={filters} disabled={disabled} beginType={beginType}/>,
+        tab6: <Tab6 filters={filters} disabled={disabled} beginType={beginType}/>,
+        tab8: <Tab8 filters={filters} disabled={disabled} beginType={beginType}/>,
     };
     return contentList[key]
 }
@@ -59,16 +59,10 @@ export default class TabPage extends Component{
 
     state = {
         key: 'tab1',
-        updateKey:Date.now(),
         tabPosition: 'top',
     }
     onTabChange = (key, type) => {
         this.mounted && this.setState({ [type]: key });
-    }
-    componentDidMount(){
-        this.setState({
-            updateKey: Date.now()
-        });
     }
     render(){
         const props = this.props;
@@ -79,7 +73,7 @@ export default class TabPage extends Component{
                         return !((ele.key === 'tab6') && props.beginType==='2') && (
                             <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                                 {
-                                    getContent(ele.key, props.filters, props.disabled, props.beginType, this.state.updateKey)
+                                    getContent(ele.key, props.filters, props.disabled, props.beginType)
                                 }
                             </TabPane>
                         )

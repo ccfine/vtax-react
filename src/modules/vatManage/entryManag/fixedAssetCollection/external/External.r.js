@@ -100,7 +100,7 @@ const columns=[
 
  class ExternalCollection extends Component{
     state={
-        updateKey:Date.now(),
+        updateKey:Date.now()+1,
         filters:{},
         /**
          *修改状态和时间
@@ -109,13 +109,13 @@ const columns=[
         totalSource:undefined,
     }
     refreshTable = ()=>{
-        this.setState({
+        this.mounted && this.setState({
             updateKey:Date.now()
         })
     }
     fetchResultStatus = ()=>{
         requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.setState({
+            this.mounted && this.setState({
                 statusParam: result,
             })
         })

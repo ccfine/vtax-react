@@ -35,15 +35,15 @@ const tabList = [{
     tab: '减税项目期初数据',
 }];
 
-const getContent = (key,mainId,disabled,updateKey) => {
+const getContent = (key,mainId,disabled) => {
     const contentList = {
-        tab1: <Tab1 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab2: <Tab2 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab3: <Tab3 mainId={mainId} disabled={disabled} updateKey={updateKey}/>,
-        tab4: <Tab4 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab5: <Tab5 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab6: <Tab6 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
-        tab7: <Tab7 mainId={mainId} disabled={disabled} updateKey={updateKey} />,
+        tab1: <Tab1 mainId={mainId} disabled={disabled} />,
+        tab2: <Tab2 mainId={mainId} disabled={disabled} />,
+        tab3: <Tab3 mainId={mainId} disabled={disabled} />,
+        tab4: <Tab4 mainId={mainId} disabled={disabled} />,
+        tab5: <Tab5 mainId={mainId} disabled={disabled} />,
+        tab6: <Tab6 mainId={mainId} disabled={disabled} />,
+        tab7: <Tab7 mainId={mainId} disabled={disabled} />,
     };
     return contentList[key]
 }
@@ -123,7 +123,7 @@ class PopModal extends Component{
                             tabList.map(ele=>(
                                 <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                                     {
-                                        getContent(ele.key, this.props.modalConfig.mainId, disabled, this.state.updateKey)
+                                        getContent(ele.key, this.props.modalConfig.mainId, disabled)
                                     }
                                 </TabPane>
                             ))
