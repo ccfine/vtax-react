@@ -233,7 +233,7 @@ class Main extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props.updateKey !== nextProps.updateKey){
-			// this.refresh()
+			this.refresh()
 		}
 	}
 	render() {
