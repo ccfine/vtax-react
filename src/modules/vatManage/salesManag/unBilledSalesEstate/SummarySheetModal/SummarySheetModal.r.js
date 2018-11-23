@@ -32,13 +32,13 @@ const columns = [
     },
     {
         title:'期末增值税确认收入金额',
-        dataIndex:'',
+        dataIndex:'endTotalPrice',
         className:'text-right',
         render:text=>fMoney(text)
     },
     {
         title:'期末增值税开票金额',
-        dataIndex:'',
+        dataIndex:'endTotalAmount',
         className:'text-right',
         render:text=>fMoney(text)
     },
@@ -125,7 +125,7 @@ class SummarySheetModal extends Component{
                                 {
                                     JSON.stringify(params)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'',
+                                        url:'/account/output/notInvoiceSale/realty/sum/export',
                                         params,
                                         title:'导出',
                                         userPermissions:['1351007'],
