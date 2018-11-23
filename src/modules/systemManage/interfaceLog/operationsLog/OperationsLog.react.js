@@ -25,13 +25,13 @@ const searchFields = () => {
             formItemStyle
         }, {
             label: "请求来源",
-            fieldName: "mainName",
+            fieldName: "remoteAddr",
             type: "input",
             span: 8,
             formItemStyle
         }, {
             label: "查询期间",
-            fieldName: "createTime",
+            fieldName: "date", 
             type: "rangePicker",
             span: 8,
             formItemStyle,
@@ -40,10 +40,20 @@ const searchFields = () => {
             }
         }, {
             label: "日志类型",
-            fieldName: "mainName",
-            type: "input",
+            fieldName: "type",
+            type: "select",
             span: 8,
-            formItemStyle
+            formItemStyle,
+            options: [
+                {
+                    text: "正常",
+                    value: "info"
+                },
+                {
+                    text: "异常",
+                    value: "error"
+                }
+            ]
         }
     ]
 }
@@ -56,56 +66,61 @@ const getColumns = () => {
             width: "150px"
         }, {
             title: "用户名",
-            dataIndex: "createTime",
-            width: "200px"
+            dataIndex: "username",
+            width: "100px"
         }, {
             title: "用户姓名",
-            dataIndex: "username",
-            width: "200px"
+            dataIndex: "realName",
+            width: "100px"
         }, {
             title: "日志类型",
-            dataIndex: "mainName",
-            width: "300px"
+            dataIndex: "type",
+            width: "100px",
+            render: (text, record) => {
+                return record.type === 'info' ? <span style={{color: '#87d068'}}>正常</span> : <span style={{color: '#f5222d'}}>异常</span>
+            }
         }, {
             title: "请求来源",
-            dataIndex: "content",
-            width: "200px"
+            dataIndex: "remoteAddr",
+            width: "100px"
         }, {
             title: "请求模块",
-            dataIndex: "id",
-            width: "150px"
+            dataIndex: "title",
+            width: "100px"
         }, {
             title: "请求URL",
-            dataIndex: "id",
+            dataIndex: "requestURL",
             width: "150px"
         }, {
             title: "请求方法名",
-            dataIndex: "id",
-            width: "150px"
-        }, {
-            title: "请求头信息",
-            dataIndex: "id",
-            width: "150px"
-        }, {
+            dataIndex: "method",
+            width: "50px"
+        }, 
+        // {
+        //     title: "请求头信息",
+        //     dataIndex: "requestHeader",
+        //     width: "150px"
+        // }, 
+        {
             title: "请求参数",
-            dataIndex: "id",
+            dataIndex: "requestParams",
             width: "150px"
         }, {
             title: "响应方法",
-            dataIndex: "id",
+            dataIndex: "declaringTypeName",
             width: "150px"
         }, {
             title: "请求开始时间",
-            dataIndex: "id",
-            width: "150px"
+            dataIndex: "dateStart",
+            width: "100px"
         }, {
             title: "请求消耗时长",
-            dataIndex: "id",
-            width: "150px"
+            dataIndex: "duration",
+            width: "100px"
         }, {
             title: "异常信息",
-            dataIndex: "id",
-            width: "150px"
+            dataIndex: "exceptionInfo",
+            width: "100px"
         }
     ]
 }
@@ -130,8 +145,9 @@ export default class OperationsLog extends Component {
                     key: this.state.updateKey,
                     pageSize: 100,
                     columns: getColumns(),
-                    url: "/sysLog/list",
+                    url: "/sysLog/opt/list",
                     scroll: {
+                        x: 3000,
                         y: window.screen.availHeight - 350
                     },
                     cardProps: {
