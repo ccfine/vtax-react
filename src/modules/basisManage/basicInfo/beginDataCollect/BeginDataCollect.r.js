@@ -16,10 +16,10 @@ const tabList = [{
     tab: '利润中心期初数据采集',
 }];
 
-const getContent = (key,updateKey,context) => {
+const getContent = (key) => {
     const contentList = {
-        tab1: <TaxMain updateKey={updateKey} refreshTabs={context.refreshTabs}/>,
-        tab2: <ProfitCenter updateKey={updateKey} refreshTabs={context.refreshTabs}/>,
+        tab1: <TaxMain />,
+        tab2: <ProfitCenter />,
     };
     return contentList[key]
 }
@@ -29,15 +29,17 @@ export default class BeginDataCollect extends Component{
         this.state = {
             activeKey: 'tab1',
             tabsKey:Date.now(),
-            updateKey:Date.now(),
         };
         this.mounted = true;
     }
 
     onTabChange = (key) => {
-        this.mounted && this.setState({ activeKey: key }, () => {
-            this.refreshTabs();
-        });
+        this.mounted && this.setState(
+            { activeKey: key }
+            //     , () => {
+            //     this.refreshTabs();
+            // }
+        );
     }
 
     refreshTabs = ()=>{
@@ -51,14 +53,14 @@ export default class BeginDataCollect extends Component{
     }
 
     render(){
-        const { tabsKey, activeKey, updateKey } = this.state;
+        const { tabsKey, activeKey} = this.state;
         return(
             <Tabs key={tabsKey} onChange={this.onTabChange} activeKey={activeKey} type={'line'} tabBarStyle={{backgroundColor:'#FFF'}}>
                 {
                     tabList.map(ele=>(
                         <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                             {
-                                getContent(ele.key, updateKey, this)
+                                getContent(ele.key)
                             }
                         </TabPane>
                     ))
