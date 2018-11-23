@@ -145,7 +145,7 @@ const tabList = [{
     tab: '单独新建不动产',
 }];
 
-const getContent = (key,updateKey,disabled,declare,context) => {
+const getContent = (key,disabled,declare,context) => {
     const contentList = {
         tab1: <External declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
         tab2: <SelfUse declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,

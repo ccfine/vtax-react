@@ -143,12 +143,12 @@ const tabList = [{
     tab: '单独新建不动产进项税额抵扣',
 }];
 
-const getContent = (key,updateKey,disabled,declare,context) => {
+const getContent = (key,disabled,declare,context) => {
     const contentList = {
-        tab1: <Summary updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab2: <ExternalAccess updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab3: <SelfBuiltToSelfUse updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab4: <NewlyBuilt updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab1: <Summary declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab2: <ExternalAccess declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab3: <SelfBuiltToSelfUse declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab4: <NewlyBuilt declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
     };
     return contentList[key]
 }
@@ -156,12 +156,13 @@ class RealEstateInputTaxCredit extends Component{
     state = {
         activeKey:'tab1',
         tabsKey:Date.now(),
-        updateKey:Date.now(),
     }
     onTabChange = (key) => {
-        this.mounted && this.setState({ activeKey: key }, () => {
-            this.refreshTabs();
-        });
+        this.mounted && this.setState({ activeKey: key }
+            // , () => {
+            //     this.refreshTabs();
+            // }
+        );
     }
     refreshTabs = ()=>{
         this.mounted && this.setState({
@@ -173,7 +174,7 @@ class RealEstateInputTaxCredit extends Component{
         this.mounted = null;
     }
     render(){
-        const {tabsKey,activeKey,updateKey} = this.state;
+        const {tabsKey,activeKey} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -182,7 +183,7 @@ class RealEstateInputTaxCredit extends Component{
                     tabList.map(ele=>(
                         <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                             {
-                                getContent(ele.key, updateKey, disabled, declare, this)
+                                getContent(ele.key, disabled, declare, this)
                             }
                         </TabPane>
                     ))
