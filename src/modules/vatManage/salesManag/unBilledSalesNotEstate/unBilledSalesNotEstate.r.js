@@ -690,9 +690,17 @@ class UnBilledSalesNotEstate extends Component {
                                   {
                                       title:'合计',
                                       total:[
-                                          {title: '金额', dataIndex: 'amount'},
-                                          {title: '税额', dataIndex: 'taxAmount'},
-                                          {title: '价税合计', dataIndex: 'totalAmount'},
+                                          {title: '本期应申报未开票销售额', dataIndex: 'currentUnbillingAmountSum'},
+                                          {title: '本期应申报未开票销售税额', dataIndex: 'currentTaxAmountSum'},
+                                          {title: '上期末增值税收入确认金额', dataIndex: 'beforeConfirmAmountSum'},
+                                          {title: '上期末增值税开票金额', dataIndex: 'beforeBillingAmountSum'},
+                                          {title: '上期末未开具发票销售额', dataIndex: 'beforeUnbillingAmountSum'},
+                                          {title: '本期增值税收入确认金额', dataIndex: 'confirmAmountSum'},
+                                          {title: '本期增值税开票金额', dataIndex: 'billingAmountSum'},
+                                          {title: '本期未开具发票销售额', dataIndex: 'unbillingAmountSum'},
+                                          {title: '本期末增值税收入确认金额', dataIndex: 'endConfirmAmountSum'},
+                                          {title: '本期末增值税开票金额', dataIndex: 'endBillingAmountSum'},
+                                          {title: '本期末未开具发票销售额', dataIndex: 'endUnbillingAmountSum'}
                                       ],
                                   }
                               ]
