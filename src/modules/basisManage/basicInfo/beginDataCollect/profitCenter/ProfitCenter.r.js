@@ -150,7 +150,7 @@ export default class ProfitCenter extends Component{
                     columns  : getColumns(this),
                     url      : '/dataCollection/pc/list',
                     cardProps: {
-                        title: <span>利润中心期初数据采集  <label style={{color: 'red',marginLeft:'20px'}}>(每个模块权限必须分配查看权限才能访问，否则页面不能访问！)</label></span>,
+                        title: <span>利润中心期初数据采集  <label style={{color: 'red',marginLeft:'20px'}}>(纳税主体期初数据采集提交时关联利润中心期初数据采集一起提交！)</label></span>,
                     },
                 }}
             >
