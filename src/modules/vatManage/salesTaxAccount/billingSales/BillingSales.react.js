@@ -299,6 +299,7 @@ class BillingSales extends Component {
         isEstate:undefined,
         invoiceType:undefined,
         statusParam:{},
+        exportParams: {},
         dataSource:[],
         notDataSource:[],
     }
@@ -376,7 +377,7 @@ class BillingSales extends Component {
         }
     }
     render(){
-        const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,sysTaxRateId,invoiceType,statusParam,loaded} = this.state;
+        const {tableUpDateKey,filters,dataSource,notDataSource,visible,isEstate,sysTaxRateId,invoiceType,statusParam,loaded,exportParams} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         const { getFieldValue } = this.props.form;
@@ -530,6 +531,22 @@ class BillingSales extends Component {
                         columns:invoiceColumns,
                         url:`/account/output/billingSale/detail/list?${parseJsonToParams({ ...filters, sysTaxRateId, invoiceType, isEstate})}`,
                         scroll:{ x: '1900px',y:'200px' },
+                        onSuccess: params => {
+                            this.setState({
+                                exportParams: {...params}
+                            });
+                        },
+                        extra: <div>
+                            {
+                                composeBotton([{
+                                    type: 'fileExport',
+                                    url: 'account/output/billingSale/detail/list/export',
+                                    params: {...filters, ...exportParams, sysTaxRateId, invoiceType, isEstate},
+                                    title: '导出',
+                                    userPermissions: ['1221007']
+                                }])
+                            }
+                        </div>
                     }}
                 />
             </Layout>
