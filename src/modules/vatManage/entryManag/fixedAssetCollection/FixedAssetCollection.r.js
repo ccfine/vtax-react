@@ -145,11 +145,11 @@ const tabList = [{
     tab: '单独新建不动产',
 }];
 
-const getContent = (key,updateKey,disabled,declare,context) => {
+const getContent = (key,disabled,declare,context) => {
     const contentList = {
-        tab1: <External updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab2: <SelfUse updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab3: <NewBuild updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab1: <External declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab2: <SelfUse declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab3: <NewBuild declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
     };
     return contentList[key]
 }
@@ -159,15 +159,17 @@ const getContent = (key,updateKey,disabled,declare,context) => {
         this.state = {
             activeKey: 'tab1',
             tabsKey:Date.now(),
-            updateKey:Date.now(),
         };
         this.mounted = true;
     }
 
     onTabChange = (key) => {
-        this.mounted && this.setState({ activeKey: key }, () => {
-            this.refreshTabs();
-        });
+        this.mounted && this.setState(
+            { activeKey: key }
+            //     , () => {
+            //     this.refreshTabs();
+            // }
+        );
     }
 
     refreshTabs = ()=>{
@@ -181,7 +183,7 @@ const getContent = (key,updateKey,disabled,declare,context) => {
     }
 
     render(){
-        const { tabsKey, activeKey, updateKey } = this.state;
+        const { tabsKey, activeKey } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
@@ -190,7 +192,7 @@ const getContent = (key,updateKey,disabled,declare,context) => {
                     tabList.map(ele=>(
                         <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                             {
-                                getContent(ele.key, updateKey, disabled, declare, this)
+                                getContent(ele.key, disabled, declare, this)
                             }
                         </TabPane>
                     ))

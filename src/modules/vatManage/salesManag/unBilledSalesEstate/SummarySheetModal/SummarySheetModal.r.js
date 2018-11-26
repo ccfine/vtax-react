@@ -2,8 +2,8 @@
  * Created by liurunbin on 2018/1/15.
  */
 import React,{Component} from 'react';
-import {Modal,Table,message,Spin} from 'antd';
-import {request,fMoney} from 'utils'
+import {Modal,Table,message,Spin,Card} from 'antd';
+import {request,fMoney,composeBotton} from 'utils'
 const columns = [
     /*{
         title:'计税方式',
@@ -31,13 +31,25 @@ const columns = [
         width:50,
     },
     {
-        title:'未开具发票销售额',
+        title:'期末增值税确认收入金额',
+        dataIndex:'endTotalPrice',
+        className:'text-right',
+        render:text=>fMoney(text)
+    },
+    {
+        title:'期末增值税开票金额',
+        dataIndex:'endTotalAmount',
+        className:'text-right',
+        render:text=>fMoney(text)
+    },
+    {
+        title:'期末未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
         className:'text-right',
         render:text=>fMoney(text)
     },
     {
-        title:'未开具发票税额',
+        title:'期末未开具发票销项税额',
         dataIndex:'taxAmount',
         className:'text-right',
         render:text=>fMoney(text)
@@ -89,13 +101,13 @@ class SummarySheetModal extends Component{
     }
     render(){
         const props = this.props;
-        const {title} = this.props;
+        const {title, params} = this.props;
         const {dataSource,loading} = this.state;
         return(
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={600}
+                width={700}
                 destroyOnClose={true}
                 bodyStyle={{
                     backgroundColor:'#fafafa'
@@ -107,7 +119,24 @@ class SummarySheetModal extends Component{
                 visible={props.visible}
                 title={title}>
                 <Spin spinning={loading}>
-                    <Table dataSource={dataSource} columns={columns} rowKey={(record)=>record.id}/>
+                    <Card
+                        extra={
+                            <div>
+                                {
+                                    JSON.stringify(params)!=='{}' && composeBotton([{
+                                        type:'fileExport',
+                                        url:'/account/output/notInvoiceSale/realty/sum/export',
+                                        params,
+                                        title:'导出',
+                                        userPermissions:['1351007'],
+                                    }])
+                                }
+                            </div>
+                        }
+                        bordered={false}
+                    >
+                        <Table dataSource={dataSource} columns={columns} rowKey={(record)=>record.id}/>
+                    </Card>
                 </Spin>
             </Modal>
         )

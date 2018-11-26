@@ -61,11 +61,11 @@ const searchFields =(context,disabled,declare) => getFieldValue => [
 
 const getColumns = (context) => {
     return [
-        ...(context.state.showProfitCenter ? [{
-            title: '利润中心',
-            dataIndex: 'profitCenterName',
-            width: '150px'
-        }] : []),
+        // ...(context.state.showProfitCenter ? [{
+        //     title: '利润中心',
+        //     dataIndex: 'profitCenterName',
+        //     width: '150px'
+        // }] : []),
         {
             title: '应税项目',
             dataIndex: 'taxableProjectName',

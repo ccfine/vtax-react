@@ -1,0 +1,65 @@
+/**
+ * author       : zhouzhe
+ * createTime   : 2018/11/26 12:22
+ * description  :
+ */
+
+.badge-status-text {
+    color: rgba(0,0,0,0.65);
+    margin-left: 8px;
+}
+
+.badge-status-dot {
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    border-radius: 50%;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
+.badge-status-dot-success {
+    background: #52c41a;
+}
+
+.badge-status-dot-error {
+    background: #f5222d;
+}
+
+.badge-status-dot-default {
+    background: #d9d9d9;
+}
+
+.badge-status-dot-processing {
+    background: #1890ff;
+    position: relative;
+}
+
+.badge-status-dot-processing:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid #1890ff;
+    content: "";
+    -webkit-animation: StatusProcessing 1.2s infinite ease-in-out;
+    animation: StatusProcessing 1.2s infinite ease-in-out;
+}
+
+@keyframes StatusProcessing {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+
+.badge-status-dot-warning {
+    background: #faad14;
+}

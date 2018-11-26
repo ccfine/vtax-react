@@ -50,9 +50,6 @@ class ApplyDeclare extends React.Component {
 		})
 	}
 	onChange = activeKey => {
-		if (activeKey === 'main') {
-			this.fetchRecordById(this.props.match.params.id)
-		}
         this.mounted && this.setState({ activeKey,mainUpdateKey:Date.now() })
 	}
 	onEdit = (targetKey, action) => {

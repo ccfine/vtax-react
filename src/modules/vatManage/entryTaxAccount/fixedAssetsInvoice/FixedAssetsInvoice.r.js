@@ -185,11 +185,11 @@ const tabList = [{
     tab: '自建转自用综合税率',
 }];
 
-const getContent = (key,updateKey,disabled,declare,context) => {
+const getContent = (key,disabled,declare,context) => {
     const contentList = {
-        tab1: <Tab1 updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab2: <Tab2 updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab3: <Tab3 updateKey={updateKey} declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab1: <Tab1 declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab2: <Tab2 declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab3: <Tab3 declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
     };
     return contentList[key]
 }
@@ -201,15 +201,17 @@ export default class FixedAssetsInvoice extends Component{
         this.state = {
             activeKey: 'tab1',
             tabsKey:Date.now(),
-            updateKey:Date.now(),
         };
         this.mounted = true;
     }
 
     onTabChange = (key) => {
-        this.mounted && this.setState({ activeKey: key }, () => {
-            this.refreshTabs();
-        });
+        this.mounted && this.setState(
+            { activeKey: key }
+            //     , () => {
+            //     this.refreshTabs();
+            // }
+        );
     }
     refreshTabs = ()=>{
         this.mounted && this.setState({
@@ -221,7 +223,7 @@ export default class FixedAssetsInvoice extends Component{
         this.mounted = null;
     }
     render() {
-        const { activeKey, tabsKey, updateKey } = this.state;
+        const { activeKey, tabsKey } = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return (
@@ -230,7 +232,7 @@ export default class FixedAssetsInvoice extends Component{
                     tabList.map(ele=>(
                         <TabPane tab={ele.tab} key={ele.key} forceRender={false} style={{marginRight:"0px"}}>
                             {
-                                getContent(ele.key, updateKey, disabled, declare, this)
+                                getContent(ele.key, disabled, declare, this)
                             }
                         </TabPane>
                     ))

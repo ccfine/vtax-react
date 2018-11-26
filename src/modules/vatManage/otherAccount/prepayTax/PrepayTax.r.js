@@ -91,7 +91,7 @@ const searchFields =(disabled,declare)=> getFieldValue => {
     ]
 }
 const getColumns = (context,disabled) => {
-    let lastStegesId2 = '',{dataSource} = context.state;
+    let lastStegesId2 = '',{dataSource=[]} = context.state;
     let profitCenterList = [];
     dataSource.forEach((item, index) => {
         profitCenterList.includes(item.profitCenterId) ? profitCenterList.push(0) : profitCenterList.push(item.profitCenterId);
