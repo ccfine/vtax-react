@@ -33,10 +33,11 @@
       "redux-thunk"                      : "^2.2.0"
     },
     "scripts": {
-      "start"          : "NODE_PATH=src react-app-rewired start",
-      "build"          : "NODE_PATH=src react-app-rewired build",
-      "test"           : "NODE_PATH=src react-app-rewired test --env=jsdom",
-      "eject"          : "NODE_PATH=src react-scripts eject",
+      "start"          : "cross-env NODE_PATH=src react-app-rewired start",
+      "build"          : "cross-env NODE_PATH=src react-app-rewired build",
+      "build-linux"    : "NODE_PATH=src react-app-rewired build",
+      "test"           : "cross-env NODE_PATH=src react-app-rewired test --env=jsdom",
+      "eject"          : "cross-env NODE_PATH=src react-scripts eject",
       "changelog"      : "conventional-changelog -p angular -i CHANGELOG.md -s",
       "version"        : "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && node replace-issues-url.js && git add CHANGELOG.md",
       "storybook"      : "start-storybook -p 9009 -s public",
