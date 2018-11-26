@@ -26,6 +26,7 @@ import TableTotal from './tableTotal'
 import WaterMarkComponent from './waterMarkComponent'
 import FileDownload from "./fileDownload"
 import PopDetailsModal from './popDetailsModal'
+import Badge from './badge'
 
 /**react懒加载组件*/
 import AsyncComponent from './asyncComponent'
@@ -52,5 +53,6 @@ export {
     AsyncComponent,
     WaterMarkComponent,
     FileDownload,
-    PopDetailsModal
+    PopDetailsModal,
+    Badge
 }
