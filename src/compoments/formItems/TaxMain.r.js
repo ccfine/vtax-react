@@ -74,7 +74,6 @@ class TaxMain extends Component{
     }*/
     componentDidMount(){
         if(this.props.isAuthed){
-            console.log(this.props)
             fetchTaxMain(this.props.url,'',data => {
                 this.mounted && this.setState({
                     mainTaxItems: data
