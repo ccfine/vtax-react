@@ -53,7 +53,6 @@ class Sheet extends Component{
                             ...deepItem,
                             ...sheetData[deepItem.key],
                             value:(typeof sheetData[deepItem.key].value === 'string' && sheetData[deepItem.key].value!=='--'  && deepItem.type!=='rate' && (readOnly || sheetData[deepItem.key].readOnly)) ? fMoney(sheetData[deepItem.key].value) : sheetData[deepItem.key].value,
-                                
                         }
                     }else{
                         return {...deepItem};
