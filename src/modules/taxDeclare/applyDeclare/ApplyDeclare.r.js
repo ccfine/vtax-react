@@ -53,9 +53,6 @@ class ApplyDeclare extends React.Component {
         this.mounted && this.setState({ activeKey,mainUpdateKey:Date.now() })
 	}
 	onEdit = (targetKey, action) => {
-		if (action == 'remove') {
-			this.fetchRecordById(this.props.match.params.id)
-		}
 		this[action](targetKey)
 	}
 	add = (key,title,Component,props={}) => {
