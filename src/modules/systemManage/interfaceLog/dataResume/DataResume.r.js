@@ -2,6 +2,7 @@
  * Created by liuliyuan on 2018/11/5.
  */
 import React, { Component } from "react"
+import { Tooltip } from "antd"
 import { SearchTable } from "compoments"
 import moment from 'moment'
 
@@ -32,6 +33,12 @@ const apiList = [
     {value: 'SapNotesPool', text: 'SAP-票据池接口', system: 'SAP'},
     {value: 'SapRent', text: 'SAP-预收账款租金接口', system: 'SAP'},
 ];
+const status = [
+    {text:'待处理',value:'10'},
+    {text:'处理中',value:'20'},
+    {text:'处理成功',value:'30'},
+    {text:'异常',value:'40'},
+]
 
 const searchFields =(disabled,declare)=> getFieldValue => {
     return [
@@ -59,14 +66,6 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             formItemStyle,
             componentProps: {
                 format:"YYYY-MM-DD"
-            },
-            fieldDecoratorOptions:{
-                rules:[
-                    {
-                        required:true,
-                        message:'请选择创建期间'
-                    }
-                ]
             },
         },
         {
@@ -97,12 +96,7 @@ const searchFields =(disabled,declare)=> getFieldValue => {
             fieldName: "status",
             type: "select",
             span: 8,
-            options:[
-                {text:'待处理',value:'10'},
-                {text:'处理中',value:'20'},
-                {text:'处理成功',value:'30'},
-                {text:'异常',value:'40'},
-            ],
+            options:status,
             formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: getFieldValue('status'),
@@ -127,7 +121,16 @@ const getColumns = () => {
         {
             title: "接口",
             dataIndex: "apiKey",
-            width: "200px"
+            width: "200px",
+            render(text, record){
+                apiList.map(o=>{
+                    if(o.value === record.apiKey){
+                        text = o.text;
+                    }
+                    return '';
+                });
+                return text;
+            }
         },
         {
             title: "流水号",
@@ -157,21 +160,36 @@ const getColumns = () => {
             title: "状态",
             dataIndex: "baseStatus",
             className:'text-center',
-            width: "100px"
+            width: "100px",
+            render:text=>{
+                //10:待处理;20:处理中;3:处理成功;40:异常
+                status.map(o=>{
+                    if( parseInt(o.value, 0) === parseInt(text, 0)){
+                        text = o.text
+                    }
+                    return '';
+                })
+                return text;
+            },
         },
         {
             title: "描述",
             dataIndex: "baseMsg",
-            width: "300px",
+            //width: "300px",
         },
         {
             title: "接口字段报文",
             dataIndex: "apiData",
+            width: "300px",
             render(obj){
                 if(obj.constructor === Object || obj.constructor === Array){
-                    return JSON.stringify(obj);
+                    return <Tooltip placement="topLeft" title={JSON.stringify(obj)}>
+                                <div className="ellipsis-index-lineClamp">{JSON.stringify(obj)}</div>
+                            </Tooltip>
                 }else{
-                    return obj;
+                    return <Tooltip placement="topLeft" title={obj}>
+                                <div className="ellipsis-index-lineClamp">{obj}</div>
+                            </Tooltip>
                 }
             }
         },
@@ -217,7 +235,7 @@ export default class DataResume extends Component {
                         pageSize: 100,
                         columns: getColumns(),
                         url: "/api/queryDataRecord",
-                        scroll:{ y:window.screen.availHeight-350, x: 2000},
+                        scroll:{ y:window.screen.availHeight-400, x: 2000},
                         cardProps: {
                             title: "数据履历"
                         },
