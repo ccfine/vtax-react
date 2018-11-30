@@ -358,3 +358,18 @@ table.data-grid{
   -ms-perspective: 1000;
   perspective: 1000;   !* Other transform properties here *!*/
 }
+
+.ellipsis-index-lineClamp{
+  width: 293px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+
+  /* height: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  overflow: hidden;
+  -webkit-box-pack: center; */
+}
