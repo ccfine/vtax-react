@@ -1,9 +1,9 @@
 /*
  * @Author: zhouzhe 
- * @Date: 2018-10-13 11:47:06 
+ * @Date: 2018-10-13 11:48:33 
  * @Description: '' 
  * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-10-27 10:21:02
+ * @Last Modified time: 2018-10-27 10:20:48
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
@@ -29,6 +29,16 @@ const columns=[
         title:'不动产编号',
         dataIndex:'assetNo',
         width:'100px',
+    },
+    {
+        title: "转固单号",
+        dataIndex: "rotaryNum",
+        width: "100px"
+    },
+    {
+        title: "产品编码",
+        dataIndex: "productNum",
+        width: "100px"
     },
     {
         title: "入账日期",
@@ -86,7 +96,7 @@ const columns=[
         title: "税率",
         dataIndex: "intaxRate",
         render:text=>text && `${text}%`,
-        className: "table-money",
+        className:'text-right',
         width:'100px',
     },
     {
@@ -97,10 +107,9 @@ const columns=[
         className: "table-money"
     },
 ];
-
- class ExternalCollection extends Component{
+ class SelfUseCollection extends Component{
     state={
-        updateKey:Date.now()+1,
+        updateKey:Date.now(),
         filters:{},
         /**
          *修改状态和时间
@@ -154,9 +163,10 @@ const columns=[
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/fixedAssetCard/externalList',
+                    url:'/fixedAssetCard/buildList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>外部获取不动产</span>,
+                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>
+                        自建转自用不动产</span>,
                         extra: (
                             <div>
                                 {
@@ -165,30 +175,11 @@ const columns=[
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'fixedAssetCard/external/export',
+                                        url:'fixedAssetCard/build/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
                                     }])
-                                }
-                                {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'submit',
-                                        url:'/fixedAssetCard/submit',
-                                        params:filters,
-                                        userPermissions:['1511010'],
-                                        onSuccess:()=>{
-                                            this.props.refreshTabs();
-                                        },
-                                    },{
-                                        type:'revoke',
-                                        url:'/fixedAssetCard/revoke',
-                                        params:filters,
-                                        userPermissions:['1511011'],
-                                        onSuccess:()=>{
-                                            this.props.refreshTabs();
-                                        },
-                                    }],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={
                                     [
@@ -210,7 +201,7 @@ const columns=[
                         })
                     },
                     scroll:{
-                        x:1800,
+                        x:2000,
                         y:window.screen.availHeight-380-(disabled?50:0),
                     },
                 }}
@@ -219,4 +210,4 @@ const columns=[
         )
     }
 }
-export default ExternalCollection
+export default SelfUseCollection
