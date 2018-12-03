@@ -154,9 +154,9 @@ export default class ExternalAccess extends Component{
                         key:tableKey,
                         pageSize:100,
                         columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
-                        url:'/account/income/estate/externalList',
+                        url:'/account/income/estate/list',
                         cardProps: {
-                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>外部获取不动产进项税额抵扣</span>,
+                            title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>不动产卡片进项税额抵扣</span>,
                         },
                         // onSuccess: (params,dataSource) => {
                         //     this.setState({
@@ -174,7 +174,7 @@ export default class ExternalAccess extends Component{
                                 {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'account/income/estate/externalList/export',
+                                        url:'account/income/estate/list/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1251007'],
