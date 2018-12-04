@@ -198,6 +198,7 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                         initialValue={record.incomeTaxAuth.toString()}
                         getFieldDecorator={getFieldDecorator}
                         componentProps={{
+                            disabled:(record.reduceNum !== '1129914' && record.reduceNum !== '1129917') && parseInt(text, 0) === 1,
                             onChange: (value) => context.handleConfirmChange(value, record)
                         }}
                     />);
@@ -312,8 +313,6 @@ class TaxExemptionDetails extends Component {
                         taxAmount: values.list[item.id].taxAmount.replace(/\$\s?|(,*)/g, '')
                     }
                 });
-
-                console.log(arrList)
                 request.post('/account/other/reduceTaxDetail/save', {
                     list: arrList,
                     mainId: this.state.filters.mainId,
