@@ -198,6 +198,7 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                         initialValue={record.incomeTaxAuth.toString()}
                         getFieldDecorator={getFieldDecorator}
                         componentProps={{
+                            disabled:(record.reduceNum !== '1129914' && record.reduceNum !== '1129917') && parseInt(text, 0) === 1,
                             onChange: (value) => context.handleConfirmChange(value, record)
                         }}
                     />);
@@ -301,27 +302,19 @@ class TaxExemptionDetails extends Component {
         this.toggleSearchTableLoading(true);
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                let nArr = [];
-                for (let key in values) {
-                    for (let nKey in values[key]) {
-                        nArr = nArr.concat(
-                            {
-                                ...values[key][nKey],
-                                id: nKey
-                            }
-                        );
-                    }
-                }
-                const data = nArr.map(item => {
+                const newData = [...this.state.dataSource];
+                let arrList=[];
+                arrList = newData.map(item=>{
                     return {
                         ...item,
-                        amount: item.amount.replace(/\$\s?|(,*)/g, ''),
-                        reduceTaxAmount: item.reduceTaxAmount.replace(/\$\s?|(,*)/g, ''),
-                        taxAmount: item.taxAmount.replace(/\$\s?|(,*)/g, '')
-                    };
+                        ...values.list[item.id],
+                        amount: values.list[item.id].amount.replace(/\$\s?|(,*)/g, ''),
+                        reduceTaxAmount: values.list[item.id].reduceTaxAmount.replace(/\$\s?|(,*)/g, ''),
+                        taxAmount: values.list[item.id].taxAmount.replace(/\$\s?|(,*)/g, '')
+                    }
                 });
                 request.post('/account/other/reduceTaxDetail/save', {
-                    list: data,
+                    list: arrList,
                     mainId: this.state.filters.mainId,
                     taxMonth: this.state.filters.authMonth,
                     type: this.state.isEnabled === false ? '1' : '2',
