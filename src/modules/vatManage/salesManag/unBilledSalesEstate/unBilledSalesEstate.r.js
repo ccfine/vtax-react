@@ -346,7 +346,7 @@ class unBilledSalesEstate extends Component{
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '应申报未开具发票销售额', dataIndex: 'allTotalNoInvoiceSales'},
+                                        {title: '期末未开具发票销售额', dataIndex: 'allTotalNoInvoiceSales'},
 
                                         {title: '上期末增值税收入确认金额', dataIndex: 'allSumTotalPrice'},
                                         {title: '上期末增值税开票金额', dataIndex: 'allSumTotalAmount'},
