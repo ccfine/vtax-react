@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react'
-import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Row,Col,Tooltip} from 'antd'
+import {Layout,Menu,Avatar,Icon,Modal,Dropdown,Row,Col,Tooltip,Badge} from 'antd'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 //import Message from './Message.react'
@@ -59,6 +59,9 @@ class WimsHeader extends Component {
             this.props.history.push(`/web/${key}`)
         }
     }
+    handleMessageMenu = ({ key }) => {
+        this.props.history.push(`/web/${key}`)
+    }
     componentDidMount(){
         this.props.isAuthed && request.post('/oauth/loadParameter').then(({data})=>{
             if(data.code === 200){
@@ -93,6 +96,12 @@ class WimsHeader extends Component {
                 </Menu.Item> */}
             </Menu>
         );
+        const messageMenu = (
+            <Menu className='menu' selectedKeys={[]} onClick={this.handleMessageMenu}>
+                <Menu.Item key="adminMessage">管理员消息中心</Menu.Item>
+                <Menu.Item key="message">消息中心</Menu.Item>
+            </Menu>
+        );
         let isBeyond = this.props.realName && this.props.realName.length > 8;
         return (
             <Header className="header">
@@ -122,6 +131,28 @@ class WimsHeader extends Component {
                                     <Icon type="question-circle-o" />
                                 </a>
                             </Tooltip>
+                            {
+                                parseInt(this.props.type, 0) === 1 ? (
+                                    <Tooltip placement="bottom" title='消息'>
+                                        <a className='action'
+                                        rel='noopener noreferrer' target='_blank' href='/web/message'>
+                                            <Badge count={this.props.noticeNum}>
+                                                <div style={{position:"relative",top:2}}>
+                                                    <Icon type='bell' style={{fontSize:16,padding:4}} />
+                                                </div>
+                                            </Badge>
+                                        </a>
+                                    </Tooltip>
+                                ) : (
+                                    <Dropdown overlay={messageMenu} placement="bottomRight" trigger={['click']}>
+                                        <a className="action" href="javascript();">
+                                        <Badge count={this.props.noticeNum}>
+                                                <Icon type='bell' style={{fontSize:16,padding:4}} />
+                                        </Badge>
+                                        </a>
+                                    </Dropdown>
+                                )
+                            }
 
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 {
@@ -165,6 +196,8 @@ export default withRouter(connect(state=>{
         isAuthed:state.user.get('isAuthed'),
         realName:state.user.getIn(['personal','realname']),  //'secUserBasicBO',
         org: state.user.get("org"),
+        type: state.user.getIn(['personal','type']),
+        noticeNum:state.user.get('noticeNum'),
         // id: state.user.getIn(["personal",'id']),
     }
 })(WimsHeader))

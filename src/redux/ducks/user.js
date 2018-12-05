@@ -64,9 +64,11 @@ const initialState = fromJS({
     //给纳税申报用的对象
     declare:null,
 
+    //公告消息数
+    noticeNum: 0
 });
 
-export const {personal, token, isAuthed, org, area, loginType, declare, options} = createActions({
+export const {personal, token, isAuthed, org, area, loginType, declare, options, noticeNum} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -98,6 +100,9 @@ export const {personal, token, isAuthed, org, area, loginType, declare, options}
     OPTIONS:{
         /**增加*/
         INCREMENT:info => info,
+    },
+    NOTICE_NUM: {
+        INCREMENT: info => info
     }
 })
 
@@ -126,6 +131,9 @@ export default handleActions({
     },
     [declare.increment]:(state,{payload})=>{
         return state.set('declare',payload)
+    },
+    [noticeNum.increment]:(state,{payload})=>{
+        return state.set('noticeNum',payload)
     },
 }, initialState)
 
@@ -258,4 +266,11 @@ export const saveDeclare = dispatch => async (data) =>{
     }
 }
 
-
+//公告消息数
+export const getNoticeNum = dispatch => async (data) => {
+    try {
+        dispatch(noticeNum.increment(data))
+    }catch (err){
+        console.log(err)
+    }
+}

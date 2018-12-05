@@ -13,6 +13,8 @@ import { getParentOptions } from 'config/routingAuthority.config'
 
 const Home = AsyncComponent(() => import('./home'), '首页')
 const TaxDeclare = AsyncComponent(() => import('./taxDeclare'), '纳税申报')
+const AdminMessage = AsyncComponent(() => import('./adminMessage'), '公告中心') //管理员公告中心
+const Message = AsyncComponent(() => import('./message'), '公告中心') //普通用户公告中心
 
 const PATH = '/web';
 const routes = [
@@ -24,6 +26,14 @@ const routes = [
         exact:true,
         permissions:true,
         //authorityInfo:strategies['home'].options,
+    },{
+        path:'/web/adminMessage',
+        component:AdminMessage,
+        name:'公告中心',
+    },{
+        path:'/web/message',
+        component:Message,
+        name:'公告中心',
     },{
         path:`${PATH}/basisManage`,
         name:'基础管理',
