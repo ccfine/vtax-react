@@ -287,9 +287,10 @@ class PopModal extends Component {
                                                         placeholder="请选择公告类型"
                                                         onChange={this.handleSelectChange}
                                                     >
-                                                        <Option value="1">集团公告</Option>
-                                                        <Option value="2">区域公告</Option>
-                                                        <Option value="3">其他公告</Option>
+                                                        <Option value="1">集团税务公告</Option>
+                                                        <Option value="2">税务政策解读</Option>
+                                                        <Option value="3">平台更新公告</Option>
+                                                        <Option value="4">其他</Option>
                                                     </Select>
                                                 )
                                             }
