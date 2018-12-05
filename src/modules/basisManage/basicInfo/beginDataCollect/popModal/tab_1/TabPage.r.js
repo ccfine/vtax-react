@@ -224,7 +224,6 @@ class TabPage extends Component{
     render(){
         const {searchTableLoading,tableKey} = this.state;
         const {getFieldDecorator} = this.props.form;
-        console.log(this.props.filters)
         return(
                 <SearchTable
                     actionOption={
@@ -258,8 +257,8 @@ class TabPage extends Component{
                         cardProps:{
                             bordered:false,
                             style:{
-                                marginTop:0,
-                                //maxHeight:window.screen.availHeight-350,
+                                marginTop:10,
+                                maxHeight:window.screen.availHeight-300,
                                 overflowY:'auto',
                             }
                         },

@@ -318,8 +318,6 @@ class CreateADeclare extends Component{
                     }
 
                 </SearchTable>
-
-
         )
     }
 }

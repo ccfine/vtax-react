@@ -25,77 +25,29 @@ select位置偏下问题源于ant版本，升级到3.1x即可
   font-size: large;
 }
 
-/*.ant-layout{
-  background: #fff;
-  overflow-x: hidden;
-}*/
-
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-.ant-table{
-  border-radius:0;
-  line-height:1.2;
-}
-.ant-table table,.ant-table-small{
-  border-radius:0;
-  border:none;
-}
-.ant-table-scroll .ant-table-body{
-}
-.ant-table-fixed-left td{
-  border-left:1px solid #ccc;
-  border-right:1px solid #ccc;
-}
-.ant-table-thead th{
-  border-top:1px solid #ccc;
-  border-bottom:1px solid #ccc;
-  text-align: center!important;
-}
-.ant-table-body td,.ant-table-thead th{
-  border-right:1px solid #ccc;
-}
-.ant-table-body td:first-child,.ant-table-thead th:first-child{
-  border-left:1px solid #ccc;
-}
-.ant-table-body td{
-  border-bottom:1px solid #ccc;
-}
-.ant-table-tbody > tr > td{
-  border-bottom:1px solid #ccc;
-}
-.ant-table-content .ant-table-row:last-child td{
-  border-bottom:1px solid #ccc!important;
+
+.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th{
+  background-color: #fafafa!important;
+  /* background: #fafafa; */
 }
 
+.ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th,
+.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td,
 .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td,
-.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td{
-  padding:3px;
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td,
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td,
+.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td,
+.ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td,
+.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td,
+.ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td
+{
+padding: 6px
 }
-.ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,
-.ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td,
-.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td{
-  padding:3px;
-}
-.ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,.ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td{
-  padding:3px 3px!important;
-}
-.ant-table-small > .ant-table-content > .ant-table-header > table, .ant-table-small > .ant-table-content > .ant-table-body > table{
-  padding:0;
-}
-.ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
-  background:#fafafa;
-}
-.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th,.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th{
-  background:#fafafa;
-}
-.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th{
-  background:#fafafa;
-}
-.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td,.ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-small > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td{
-  padding:3px
-}
+
 
 .table-money,.text-right{
   text-align: right;
@@ -299,19 +251,22 @@ table.data-grid{
 }
 
 /* 设置火狐的滚动条背景基本样式 */
-@-moz-document url-prefix() {
+/* .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+  -moz-appearance: none !important;
+  background-color: transparent !important; !* 滚动条背景透明 *!
+  background-image: none !important; !* 滚动条背景图案不显示 *!
+  !*position: relative !important;*! !* 更改滚动条的定位方式为相对 *!
+  overflow: hidden !important;
+  z-index: 999999999 !important; !* 把滚动条提到Z轴最上层 *!
+  height: 41px;
+  margin-right: 17px;
+  margin-bottom: -29px!important;
+} */
+ /* @-moz-document url-prefix() {
   .oneLine .ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    /*-moz-appearance: none !important;
-    background-color: transparent !important; !* 滚动条背景透明 *!
-    background-image: none !important; !* 滚动条背景图案不显示 *!
-    !*position: relative !important;*! !* 更改滚动条的定位方式为相对 *!
-    overflow: hidden !important;
-    z-index: 999999999 !important; !* 把滚动条提到Z轴最上层 *!
-    height: 41px;
-    margin-right: 17px;*/
     margin-bottom: -29px!important;
   }
-}
+}  */
 
 /*申报办理tabs*/
 .declare-card-container.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-nav-container{

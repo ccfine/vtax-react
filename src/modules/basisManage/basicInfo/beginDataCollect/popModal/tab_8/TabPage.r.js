@@ -186,8 +186,8 @@ class TabPage extends Component{
                     cardProps:{
                         bordered:false,
                         style:{
-                            marginTop:0,
-                            maxHeight:400,
+                            marginTop:10,
+                            maxHeight:window.screen.availHeight-300,
                             overflowY:'auto',
                         }
                     },
