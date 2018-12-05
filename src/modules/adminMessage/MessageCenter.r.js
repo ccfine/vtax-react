@@ -35,16 +35,20 @@ const getSearchFields = [
         span: 8,
         options: [
             {
-                text: "集团公告",
+                text: "集团税务公告",
                 value: "1"
             },
             {
-                text: "区域公告",
+                text: "税务政策解读",
                 value:  "2"
             },
             {
-                text: "其他公告",
+                text: "平台更新公告",
                 value: "3"
+            },
+            {
+                text: "其他",
+                value: "4"
             }
         ]
     },
@@ -55,15 +59,15 @@ const getSearchFields = [
         span: 8,
         options: [
             {
-                text: "紧急",
+                text: "紧急公告",
                 value: "1"
             },
             {
-                text: "重要",
+                text: "重要公告",
                 value:  "2"
             },
             {
-                text: "普通",
+                text: "普通公告",
                 value: "3"
             }
         ]
@@ -140,11 +144,13 @@ const getColumns = context => [
         width:'100px',
         render: (text) => {
             if (parseInt(text,0) === 1) {
-                return '紧急公告'
+                return '集团税务公告'
             } else if (parseInt(text,0) === 2) {
-                return '重要公告'
+                return '税务政策解读'
             } else if (parseInt(text,0 === 3)) {
-                return '普通公告'
+                return '平台更新公告'
+            } else if (parseInt(text,0 === 4)) {
+                return '其他'
             } else {
                 return ''
             }
