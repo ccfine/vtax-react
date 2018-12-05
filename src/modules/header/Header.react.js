@@ -102,7 +102,6 @@ class WimsHeader extends Component {
                 <Menu.Item key="message">消息中心</Menu.Item>
             </Menu>
         );
-        let isBeyond = this.props.realName && this.props.realName.length > 8;
         return (
             <Header className="header">
                 <Row>
@@ -156,19 +155,12 @@ class WimsHeader extends Component {
 
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 {
-                                    isBeyond ? (
-                                        <Tooltip placement="left" title={this.props.realName && this.props.realName}>
-                                            <span className='action account'>
-                                                <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
-                                                <span className='name'>{(`${this.props.realName && this.props.realName.substr(0,8)}...`) || '欢迎您'}</span>
-                                            </span>
-                                        </Tooltip>
-                                    ) : (
+                                    <Tooltip placement="left" title={this.props.realName && this.props.realName}>
                                         <span className='action account'>
                                             <Avatar size="small" className='avatar' icon="user"  style={{ backgroundColor: '#87d068',color:'#fff'}} />
-                                            <span className='name'>{(this.props.realName && this.props.realName) || '欢迎您'}</span>
+                                            {/* <span className='name'>{(`${this.props.realName && this.props.realName.substr(0,8)}...`) || '欢迎您'}</span> */}
                                         </span>
-                                    )
+                                    </Tooltip>
                                 }
                             </Dropdown>
 
