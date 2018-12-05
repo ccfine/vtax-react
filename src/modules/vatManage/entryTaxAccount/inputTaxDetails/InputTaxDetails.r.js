@@ -681,7 +681,7 @@ class InputTaxDetails extends Component {
                                 type: 'save',
                                 text: '保存',
                                 icon: 'save',
-                                userPermissions: ['1381003'],
+                                userPermissions: ['1381004'],
                                 onClick: this.save,
                                 loading: saveLoading
                             }, {
