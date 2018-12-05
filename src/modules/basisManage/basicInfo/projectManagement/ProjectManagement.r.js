@@ -195,7 +195,7 @@ class ProjectManagement extends Component{
             taxSubjectId = this.props.match.params.id;
         const {getFieldDecorator} = this.props.form;
         return(
-            <div>
+            <div className="oneLine">
                 <div style={{ margin: "0px 0 6px 6px" }}>
                     <span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12,cursor: 'pointer'}}
                           onClick={() => {

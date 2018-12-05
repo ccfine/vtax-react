@@ -1,7 +1,7 @@
 {
-  "name": "vtax",
-  "version": "0.1.8",
-  "private": true,
+  "name"        : "vtax",
+  "version"     : "0.1.8",
+  "private"     : true,
   "dependencies": {
     "antd": "^3.10.7",
     "axios": "^0.17.1",
@@ -33,8 +33,8 @@
     "redux-immutable": "^4.0.0",
     "redux-persist": "^5.4.0",
     "redux-persist-transform-immutable": "^4.3.0",
-    "redux-promise": "^0.5.3",
-    "redux-thunk": "^2.2.0"
+    "redux-promise"                    : "^0.5.3",
+    "redux-thunk"                      : "^2.2.0"
   },
   "scripts": {
     "start": "cross-env NODE_PATH=src react-app-rewired start",
@@ -45,15 +45,16 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && node replace-issues-url.js && git add CHANGELOG.md",
     "storybook": "start-storybook -p 9009 -s public",
+
     "build-storybook": "build-storybook -s public"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^3.4.0",
-    "@storybook/addon-links": "^3.4.0",
-    "@storybook/addons": "^3.4.0",
-    "@storybook/react": "^3.4.0",
-    "babel-core": "^6.26.0",
-    "babel-plugin-import": "^1.6.2",
+    "@storybook/addon-actions"      : "^3.4.0",
+    "@storybook/addon-links"        : "^3.4.0",
+    "@storybook/addons"             : "^3.4.0",
+    "@storybook/react"              : "^3.4.0",
+    "babel-core"                    : "^6.26.0",
+    "babel-plugin-import"           : "^1.6.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",

@@ -107,7 +107,7 @@ class PopModal extends Component{
         }
     }
     render(){
-        const {toggleModalVisible,modalConfig,visible,form,declare} = this.props;
+        const {toggleModalVisible,modalConfig,visible,form} = this.props;
         const {loaded,record} = this.state;
         let title='';
         const type = modalConfig.type;
@@ -171,7 +171,7 @@ class PopModal extends Component{
                                             disabled: true,//readonly || type==='edit' || type==='add',
                                         },
                                         fieldDecoratorOptions: {
-                                            initialValue: declare ? {key:declare.mainId,label:declare.mainName} : undefined,
+                                            initialValue: record ? {key:record.mainId,label:record.mainName} : undefined,
                                             rules: [
                                                 {
                                                     required: true,

@@ -89,7 +89,7 @@ export default class TabPage extends Component{
                 actionOption={props.disabled ? null :{
                     span:12,
                     body:(
-                        <span>
+                        <div style={{mraginBottom:10}}>
                             {
                                 composeBotton([{
                                     type: 'fileExport',
@@ -111,7 +111,7 @@ export default class TabPage extends Component{
                                     }
                                 }])
                             }
-                        </span>
+                        </div>
                     )
                 }}
                 searchOption={undefined}
@@ -119,14 +119,19 @@ export default class TabPage extends Component{
                     columns:columns,
                     url:`/realtyCollection/${this.props.beginType === '2' ? 'pc/' : ''}list?${parseJsonToParams(props.filters)}`,
                     key:this.state.updateKey,
-                    cardProps:{
-                        bordered:false,
-                    },
                     pagination:true,
                     pageSize:100,
                     scroll:{
                         //x:1800,
                         y:window.screen.availHeight-380,
+                    },
+                    cardProps:{
+                        bordered:false,
+                        style:{
+                            marginTop:10,
+                            maxHeight:window.screen.availHeight-300,
+                            overflowY:'auto',
+                        }
                     },
                 }}
             >

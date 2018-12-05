@@ -27,7 +27,8 @@ export default class AsyncTable extends Component{
     }
     static propTypes={
         tableProps:PropTypes.shape({
-            clearSelectedRowAfterFetch:PropTypes.bool
+            clearSelectedRowAfterFetch:PropTypes.bool,
+            bordered:PropTypes.bool,
         }),
         updateKey:PropTypes.number,
         url:PropTypes.string.isRequired,
@@ -36,7 +37,8 @@ export default class AsyncTable extends Component{
     }
     static defaultProps={
         tableProps:{
-            clearSelectedRowAfterFetch:true
+            clearSelectedRowAfterFetch:true,
+            bordered:true,
         },
         updateKey:Date.now(),
     }
@@ -155,6 +157,7 @@ export default class AsyncTable extends Component{
                 <Table
                     className="apply-form-list-table"
                     {...props.tableProps}
+                    bordered={props.tableProps.bordered ? props.tableProps.bordered : true}
                     dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}
                     rowSelection={ ( props.tableProps.onRowSelect || props.tableProps.rowSelection ) ? rowSelection : null}
                     pagination={props.tableProps.pagination ? pagination : false}

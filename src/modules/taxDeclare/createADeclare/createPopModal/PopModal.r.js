@@ -86,7 +86,9 @@ class PopModal extends Component{
             })
         });
 
-        this.refreshTable()
+        this.props && this.props.type !== 'view' && setTimeout(()=>{
+            this.refreshTable()
+        },300)
     }
     toggleLoading=b=>{
         this.setState({
@@ -239,7 +241,7 @@ class PopModal extends Component{
                 }
                 title={`${title}申报`}>
                 {
-                    type !== 'view' && <SearchTable
+                    type !== 'view' && <div className="oneLine"><SearchTable
                         spinning={searchTableLoading}
                         searchOption={{
                             fields:searchFields,
@@ -268,10 +270,9 @@ class PopModal extends Component{
                             url: '/tax/declaration/add/list',
                         }}
                     >
-                    </SearchTable>
+                    </SearchTable></div>
                 }
-
-
+                
                 <Card
                     style={{
                         marginTop: type !== 'view' && 10

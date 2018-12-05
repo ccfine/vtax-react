@@ -76,12 +76,7 @@ class PopModal extends Component{
 
                 }}
             >
-                <div style={{
-                    height:window.screen.availHeight-250,
-                    overflowY:'auto',
-                }}>
-                    <TabPage key={pageTabsKey} filters={params} record={record} type={type} disabled={disabled} beginType={this.props.tab} />
-                </div>
+                <TabPage key={pageTabsKey} filters={params} record={record} type={type} disabled={disabled} beginType={this.props.tab} />
             </Drawer>
         )
     }
