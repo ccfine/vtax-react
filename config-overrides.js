@@ -46,8 +46,8 @@ module.exports = function override(config, env) {
             //form
             "@form-item-margin-bottom":"12px",
 
-            "@table-padding-vertical": "3px",
-            "@table-padding-horizontal":"3px",
+            //"@table-padding-vertical": "12px",
+            //"@table-padding-horizontal":"12px",
 
             //input
             "@input-height-base":'25px'

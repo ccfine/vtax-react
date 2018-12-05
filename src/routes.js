@@ -16,6 +16,7 @@ const Exception403 = AsyncComponent(() => import('modules/exception/403'), '403'
 const Exception404 = AsyncComponent(() => import('modules/exception/404'), '404')
 const Exception500 = AsyncComponent(() => import('modules/exception/500'), '500')
 const Help = AsyncComponent(() => import('./modules/help'), '帮助中心')
+const MessageDetail = AsyncComponent(() => import('./modules/messageDetail'), '消息详情页')
 
 const routes = [
     {
@@ -26,6 +27,10 @@ const routes = [
         path:`/help`,
         component:Help,
         name:'帮助中心',
+    },{
+        path:`/messageDetail`,
+        component:MessageDetail,
+        name:'消息详情页',
     },{
         path:'/tax2018bgy/login',
         component:props=><Login {...props} type={1}/>,

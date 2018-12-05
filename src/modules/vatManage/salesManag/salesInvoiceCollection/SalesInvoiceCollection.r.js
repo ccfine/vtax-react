@@ -20,32 +20,6 @@ const formItemStyle = {
         span: 16
     }
 };
-const markFieldsData = [
-    {
-        label:'发票状态',
-        fieldName:'status',
-        type:'select',
-        notShowAll:true,
-        span:'22',
-        options:[ 
-            {
-                text:'标记作废',
-                value:'-1'
-            },{
-                text:'取消作废',
-                value:'1'
-            }
-        ],
-        fieldDecoratorOptions:{
-            rules:[
-                {
-                    required:true,
-                    message:'请选择发票状态'
-                }
-            ]
-        }
-    }
-]
 const fields = (disabled,declare) => [
     {
         label:'纳税主体',
@@ -103,28 +77,13 @@ const fields = (disabled,declare) => [
     }
 ]
 
-const status = [
-    {
-        text: "正常",
-        value: "1"
-    },
-    {
-        text: "作废",
-        value: "-1"
-    },
-    {
-        text: "红冲",
-        value: "2"
-    }
-]
-
 const searchFields = (disabled,declare) => getFieldValue => {
     return [
         {
             label: "纳税主体",
             type: "taxMain",
             fieldName: "main",
-            span: 6,
+            span: 8,
             componentProps: {
                 labelInValue:true,
                 disabled
@@ -144,7 +103,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label: "开票月份",
             type: "monthPicker",
             formItemStyle,
-            span: 6,
+            span: 8,
             fieldName: "authMonth",
             componentProps: {
                 disabled
@@ -165,7 +124,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label:'利润中心',
             fieldName:'profitCenterId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'profitName',
@@ -179,23 +138,15 @@ const searchFields = (disabled,declare) => getFieldValue => {
             label: "发票号码",
             type: "input",
             fieldName: "invoiceNum",
-            span: 6,
+            span: 8,
             formItemStyle,
             fieldDecoratorOptions: {},
             componentProps: {}
         },
         {
-            label: "发票状态",
-            fieldName: "status",
-            span: 6,
-            formItemStyle,
-            type: "select",
-            options: status
-        },
-        {
             label: "税率",
             type: "numeric",
-            span: 6,
+            span: 8,
             formItemStyle,
             fieldName: "taxRate",
             componentProps: {
@@ -206,7 +157,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
         {
             label: "发票类型",
             fieldName: "invoiceType",
-            span: 6,
+            span: 8,
             formItemStyle,
             type: "select",
             options: [
@@ -231,7 +182,7 @@ const getColumns = (context) => [
     {
         title: '发票类型',
         dataIndex: "invoiceType",
-        width:'150px',
+        width:'100px',
     },
     {
         title: '发票代码',
@@ -263,20 +214,6 @@ const getColumns = (context) => [
                 {text}
             </a>
         )
-    },
-    {
-        title: '发票状态',
-        dataIndex: "status",
-        width:'150px',
-        render:text=>{
-            status.map(o=>{
-                if( parseInt(o.value, 0) === parseInt(text, 0)){
-                    text = o.text
-                }
-                return '';
-            })
-            return text;
-        },
     },
     {
         title: '备注',
@@ -522,25 +459,6 @@ export default class SalesInvoiceCollection extends Component {
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1065000'],
                                         },{
-                                            type:'mark',
-                                            buttonOptions:{
-                                                text:'标记发票状态',
-                                                icon:'pushpin-o'
-                                            },
-                                            modalOptions:{
-                                                title:'标记发票状态'
-                                            },
-                                            formOptions:{
-                                                filters: filters,
-                                                selectedRowKeys: selectedRowKeys,
-                                                url:"/output/invoice/collection/update/status",
-                                                fields: markFieldsData,
-                                                onSuccess:()=>{
-                                                    this.refreshTable()
-                                                },
-                                                userPermissions:['1395000'],
-                                            }
-                                        },{
                                             type:'delete',
                                             icon:'delete',
                                             text:'删除',
@@ -580,7 +498,7 @@ export default class SalesInvoiceCollection extends Component {
                         },
                         scroll:{
                             x:1900,
-                            y:window.screen.availHeight-450,
+                            y:window.screen.availHeight-400,
                         },
                         onTotalSource: totalSource => {
                             this.setState({
