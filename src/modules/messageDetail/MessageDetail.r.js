@@ -101,7 +101,7 @@ class MessageDetail extends Component {
                                 <span>{(data && data.title) || ''}</span>
                             </div>
                             <div className="message-info">
-                                <span style={{marginRight: 20}}>{`公告时间：${(data && data.publishDate) || ''}`}</span>
+                                <span style={{marginRight: 20}}>{`公告时间：${(data && data.publishDateStr) || ''}`}</span>
                                 <span style={{marginRight: 20}}>{`发布人：${(data && data.publishBy) || ''}`}</span>
                                 <span>{`公告类型：${(data && this.getSysDictId(data.sysDictId)) || ''}`}</span>
                             </div>
