@@ -51,7 +51,8 @@ class homeMessage extends Component {
 
     htmlToText = (text) => {
         const re = /<(?:.|\s)*?>/g;
-        return text.replace(re, "");
+        const content = text.replace(re, "");
+        return content.length > 130 ? `${content.substr(0,130)}...` : content;
     }
 
     fetchMessageList = () => {
