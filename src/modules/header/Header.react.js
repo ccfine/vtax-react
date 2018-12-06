@@ -10,7 +10,7 @@ import {connect} from 'react-redux'
 //import Message from './Message.react'
 import SelectSearch from './SelectSearch.react'
 import {request} from 'utils';
-
+import {fetchNoticeNum} from '../../redux/ducks/user'
 import './header.less'
 
 const { Header} = Layout;
@@ -63,6 +63,7 @@ class WimsHeader extends Component {
         this.props.history.push(`/web/${key}`)
     }
     componentDidMount(){
+        this.props.fetchNoticeNum()
         this.props.isAuthed && request.post('/oauth/loadParameter').then(({data})=>{
             if(data.code === 200){
                 const result = data.data;
@@ -192,4 +193,6 @@ export default withRouter(connect(state=>{
         noticeNum:state.user.get('noticeNum'),
         // id: state.user.getIn(["personal",'id']),
     }
-})(WimsHeader))
+},dispatch=>({
+    fetchNoticeNum:fetchNoticeNum(dispatch)
+}))(WimsHeader))

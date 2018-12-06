@@ -266,10 +266,14 @@ export const saveDeclare = dispatch => async (data) =>{
     }
 }
 
-//公告消息数
-export const getNoticeNum = dispatch => async (data) => {
+// 请求公告消息数量
+export const fetchNoticeNum = dispatch => async () => {
     try {
-        dispatch(noticeNum.increment(data))
+        await request.get('/sysNotice/unReadCount').then(({data}) => {
+            if (data.code === 200) {
+                dispatch(noticeNum.increment(data.data))
+            }
+        })
     }catch (err){
         console.log(err)
     }

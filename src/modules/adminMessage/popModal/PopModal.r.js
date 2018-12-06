@@ -12,6 +12,7 @@ import EditorComponent from './Editor'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
+import difference from 'lodash/difference'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -55,13 +56,6 @@ class PopModal extends Component {
                 fileUUIDArray: newArr
             })
         }
-        if (!nextProps.visible && nextProps.modalType === 'add') {
-            // 如果为新增 关闭弹窗则删除附件
-            if (this.state.fileUUIDArray.length > 0) {
-                this.deleteRecord(this.state.fileUUIDArray)
-            }
-        }
-
     }
 
     handleSubmit = (e, type) => {
@@ -167,9 +161,14 @@ class PopModal extends Component {
 		})
     }
     
-    deleteRecord = data => {
-        return request.post(`/sysNotice/exit`,data).then(({data}) => {
+    deleteRecord = (reqData, type) => {
+        const { fileUUIDArray } = this.state
+        return request.post(`/sysNotice/exit`,reqData).then(({data}) => {
             if (data.code === 200) {
+                // 新增公告点击关闭按钮 删除文件UUID
+                let newArr = difference(fileUUIDArray, reqData)
+                this.setState({fileUUIDArray: newArr})
+                type === 'cancel' ? null : message.success('附件删除成功', 2);
                 return true
             } else {
                 message.error(`文件删除失败:${data.msg}`, 4);
@@ -215,19 +214,27 @@ class PopModal extends Component {
             .then(({data})=>{
                 if(data.code===200){
                     const reqData = data.data
+                    message.success('附件上传成功', 2)
                     this.setUuid(reqData)
                 }else{
                     message.error(`附件上传失败:${data.msg}`,4)
                 }
             }).catch(err=>{
-
+                message.error(`附件上传失败:${err}`,4)
         })
         return false;
     }
 
+    handleCancel = () => {
+        if (this.state.fileUUIDArray.length > 0) {
+            this.deleteRecord(this.state.fileUUIDArray, 'cancel')
+        }
+        this.props.toggleModalVisible(false)
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form
-        const { visible, toggleModalVisible, loading } = this.props
+        const { visible, loading } = this.props
         const { defaultData, fileList, saveLoading, publishLoading } = this.state
         const props = {
             onChange: this.handleFileChange,
@@ -242,7 +249,7 @@ class PopModal extends Component {
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
-                onCancel={() => toggleModalVisible(false)}
+                onCancel={this.handleCancel}
                 width={900}
                 visible={visible}
                 title='编辑公告'
@@ -290,7 +297,7 @@ class PopModal extends Component {
                                                         <Option value="1">集团税务公告</Option>
                                                         <Option value="2">税务政策解读</Option>
                                                         <Option value="3">平台更新公告</Option>
-                                                        <Option value="4">其他</Option>
+                                                        <Option value="4">其他公告</Option>
                                                     </Select>
                                                 )
                                             }
