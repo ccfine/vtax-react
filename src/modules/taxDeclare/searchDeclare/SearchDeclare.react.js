@@ -84,7 +84,7 @@ const getColumns =(context)=>[
                     type: 'action',
                     icon: 'check',
                     title: '提交审批',
-                    userPermissions: ['1085001'],
+                    userPermissions: ['1085002'],
                     onSuccess: () => {
                         context.handelArchiving(record,'/tax/decConduct/query/submit','提交审批')
                     }
@@ -118,7 +118,7 @@ const getColumns =(context)=>[
                                 type:'action',
                                 icon:'file-search',
                                 title:'查询最新审批状态',
-                                userPermissions:['1085001'],
+                                userPermissions:['1085003'],
                                 onSuccess:()=>{ context.handelArchiving(record,'/tax/decConduct/query/getResult','查询最新审批状态') }
                             
                             }])
