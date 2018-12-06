@@ -91,13 +91,13 @@ const getSearchFields = [
             },
             {
                 text: "未阅读",
-                value:  "0"
+                value:  "2"
             }
         ]
     },
     {
         label: "发布人",
-        fieldName: "createBy",
+        fieldName: "publishBy",
         span: 8,
     },
 ]
@@ -152,7 +152,7 @@ const getColumns = context => [
     },
     {
         title: "发布时间",
-        dataIndex: "publishDate",
+        dataIndex: "publishDateStr",
         width:'100px',
     },
     {
@@ -162,7 +162,7 @@ const getColumns = context => [
         render: (text) => {
             if (parseInt(text,0) === 1) {
                 return '已阅读'
-            } else if (parseInt(text,0) === 0) {
+            } else if (parseInt(text,0) === 2) {
                 return '未阅读'
             } else {
                 return '————'
@@ -211,10 +211,15 @@ class MessageCenter extends Component {
         }
     }
 
+    handleReturn = () => {
+        window.history.back()
+    }
+
     render() {
         const { tableUpDateKey } = this.state;
         return (
             <div className="message-center">
+                <span className="message-return" onClick={this.handleReturn}>返回</span>
                 <div className="title">公告中心</div>
                 <SearchTable
                     searchOption={{
