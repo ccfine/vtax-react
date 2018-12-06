@@ -63,16 +63,22 @@ class MessageDetail extends Component {
             return '重要公告'
         } else if (parseInt(type, 0) === 3) {
             return '普通公告'
+        } else {
+            return ''
         }
     }
 
     getSysDictId = (type) => {
         if (parseInt(type, 0) === 1) {
-            return '集团公告'
+            return '集团税务公告'
         } else if (parseInt(type, 0) === 2) {
-            return '区域公告'
+            return '税务政策解读'
         } else if (parseInt(type, 0) === 3) {
+            return '平台更新公告'
+        } else if (parseInt(type, 0) === 4) {
             return '其他公告'
+        } else {
+            return ''
         }
     }
 

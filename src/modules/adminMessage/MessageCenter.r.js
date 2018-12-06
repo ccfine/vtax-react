@@ -11,6 +11,7 @@ import { SearchTable } from "compoments"
 import PopsModal from './popModal'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
+import {fetchNoticeNum} from '../../redux/ducks/user'
 import './index.less'
 
 const transformData = (data=[]) =>{
@@ -47,7 +48,7 @@ const getSearchFields = [
                 value: "3"
             },
             {
-                text: "其他",
+                text: "其他公告",
                 value: "4"
             }
         ]
@@ -128,10 +129,12 @@ const getColumns = context => [
         width:'100px',
         render: (text) => {
             if (parseInt(text,0) === 1) {
-                return '集团公告'
+                return '集团税务公告'
             } else if (parseInt(text,0) === 2) {
-                return '区域公告'
-            } else if (parseInt(text,0 === 3)) {
+                return '税务政策解读'
+            } else if (parseInt(text,0) === 3) {
+                return '平台更新公告'
+            } else if (parseInt(text,0) === 4) {
                 return '其他公告'
             } else {
                 return ''
@@ -144,13 +147,11 @@ const getColumns = context => [
         width:'100px',
         render: (text) => {
             if (parseInt(text,0) === 1) {
-                return '集团税务公告'
+                return '紧急公告'
             } else if (parseInt(text,0) === 2) {
-                return '税务政策解读'
+                return '重要公告'
             } else if (parseInt(text,0 === 3)) {
-                return '平台更新公告'
-            } else if (parseInt(text,0 === 4)) {
-                return '其他'
+                return '普通公告'
             } else {
                 return ''
             }
@@ -191,7 +192,7 @@ const getColumns = context => [
         width:'100px',
         render(text, record, index) {
             if (record.publishStatus === 1) {
-                return <a href={`/messageDetail?id=${record.id}&readStatus=2`} target="_blank">查看</a>
+                return <a href={`/messageDetail?id=${record.id}&readStatus=2`} target="_blank" onClick={() => context.handleGo()}>查看</a>
             }else {
                 return composeBotton([{
                     type:'action',
@@ -291,6 +292,13 @@ class MessageCenter extends Component {
 		})
 	}
 
+    handleGo = () => {
+        this.refreshTable()
+        if (this.props.noticeNum > 0) {
+            this.props.fetchNoticeNum()
+        }
+    }
+
     render() {
         const { tableUpDateKey, visible, defaultData, messageLoading, modalType, fileList } = this.state;
         return (
@@ -342,5 +350,7 @@ class MessageCenter extends Component {
 }
 
 export default withRouter(connect(state=>({
-    type:state.user.getIn(['personal'])
+    noticeNum:state.user.get('noticeNum'),
+}),dispatch=>({
+    fetchNoticeNum:fetchNoticeNum(dispatch)
 }))(MessageCenter))

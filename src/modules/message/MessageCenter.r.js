@@ -6,6 +6,9 @@
 
 import React, { Component } from 'react'
 import { SearchTable } from "compoments"
+import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {fetchNoticeNum} from '../../redux/ducks/user'
 import './index.less'
 
 const getSearchFields = [
@@ -117,10 +120,10 @@ const getColumns = context => [
                 return '集团税务公告'
             } else if (parseInt(text,0) === 2) {
                 return '税务政策解读'
-            } else if (parseInt(text,0 === 3)) {
+            } else if (parseInt(text,0) === 3) {
                 return '平台更新公告'
-            } else if (parseInt(text,0 === 4)) {
-                return '其他'
+            } else if (parseInt(text,0) === 4) {
+                return '其他公告'
             } else {
                 return ''
             }
@@ -176,7 +179,7 @@ const getColumns = context => [
         dataIndex: "taxableProject9",
         width:'100px',
         render(text, record, index) {
-            return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank">查看</a>
+            return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank" onClick={() => context.handleGo()}>查看</a>
         },
     },
 ]
@@ -199,6 +202,13 @@ class MessageCenter extends Component {
         this.setState({
             visible
         })
+    }
+
+    handleGo = () => {
+        this.refreshTable()
+        if (this.props.noticeNum > 0) {
+            this.props.fetchNoticeNum()
+        }
     }
 
     render() {
@@ -226,4 +236,8 @@ class MessageCenter extends Component {
     }
 }
 
-export default MessageCenter
+export default withRouter(connect(state=>({
+    noticeNum:state.user.get('noticeNum'),
+}),dispatch=>({
+    fetchNoticeNum:fetchNoticeNum(dispatch)
+}))(MessageCenter))
