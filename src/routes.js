@@ -27,11 +27,11 @@ const routes = [
         path:`/help`,
         component:Help,
         name:'帮助中心',
-    },/*{
+    },{
         path:`/messageDetail`,
         component:MessageDetail,
         name:'消息详情页',
-    },*/{
+    },{
         path:'/tax2018bgy/login',
         component:props=><Login {...props} type={1}/>,
         name:'登录'

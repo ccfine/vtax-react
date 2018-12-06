@@ -26,7 +26,7 @@ const routes = [
         exact:true,
         permissions:true,
         //authorityInfo:strategies['home'].options,
-    },/*{
+    },{
         path:'/web/adminMessage',
         component:AdminMessage,
         name:'公告中心',
@@ -34,7 +34,7 @@ const routes = [
         path:'/web/message',
         component:Message,
         name:'公告中心',
-    },*/{
+    },{
         path:`${PATH}/basisManage`,
         name:'基础管理',
         icon:'appstore-o',
