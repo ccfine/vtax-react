@@ -131,7 +131,7 @@ class WimsHeader extends Component {
                                     <Icon type="question-circle-o" />
                                 </a>
                             </Tooltip>
-                            {
+                            {/* {
                                 parseInt(this.props.type, 0) === 1 ? (
                                     <Tooltip placement="bottom" title='消息'>
                                         <a className='action'
@@ -152,7 +152,7 @@ class WimsHeader extends Component {
                                         </a>
                                     </Dropdown>
                                 )
-                            }
+                            } */}
 
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 {

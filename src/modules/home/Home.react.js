@@ -11,11 +11,11 @@ import {withRouter} from 'react-router-dom'
 import { Layout, Card} from 'antd'
 import { getTowOptions } from 'config/routingAuthority.config'
 import checkPermissions from 'compoments/permissible/index'
-// import ImageGallery from 'react-image-gallery'
+import ImageGallery from 'react-image-gallery'
 import DeclareHandle from 'modules/taxDeclare/declareHandle'
 import HomeMessage from './homeMessage'
-// import banner1 from './images/banner1.jpg'
-// import banner2 from './images/banner2.jpg'
+import banner1 from './images/banner1.jpg'
+import banner2 from './images/banner2.jpg'
 import "react-image-gallery/styles/css/image-gallery.css";
 import './index.less'
 
@@ -62,13 +62,13 @@ class Home extends Component {
 
     render() {
 
-        // const banner = [{
-        //     key:'1',
-        //     original: banner1,
-        // },{
-        //     key:'2',
-        //     original: banner2,
-        // }]
+        const banner = [{
+            key:'1',
+            original: banner1,
+        },{
+            key:'2',
+            original: banner2,
+        }]
         let isShow = true;
         if(parseInt(this.props.type, 0) === 1){
 
@@ -77,7 +77,7 @@ class Home extends Component {
 
         return (
             <Layout style={{background:'transparent'}} >
-                 {/* <ImageGallery
+                 <ImageGallery
                     infinite={true}
                     autoPlay={true}
                     showBullets={true}
@@ -92,8 +92,8 @@ class Home extends Component {
                     //useTranslate3D={false}  这个会影响水印抖动
                     showThumbnails={false}
                     items={banner}
-                /> */}
-                <HomeMessage />
+                />
+                {/* <HomeMessage /> */}
                 {
                     isShow && <div style={{ padding: '24px 0'}}>
                         <Card style={{ padding:'0' }}>
