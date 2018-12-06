@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {message,Modal} from 'antd'
+import {message,Modal,Tooltip} from 'antd'
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
 import {request,composeBotton} from 'utils'
@@ -133,6 +133,7 @@ const getColumns =(context)=>[
         title: '纳税申报系统申报进度',
         dataIndex: 'status',
         className:'text-center',
+        width: "200px",
         render:text=>{
             status.map(o=>{
                 if( parseInt(o.value, 0) === parseInt(text, 0)){
@@ -145,12 +146,20 @@ const getColumns =(context)=>[
     }, {
         title: '税局审批结果',
         dataIndex: 'approvalStatusInfo',
+        width: "100px",
     },{
         title: '税局审批结果说明',
         dataIndex: 'errorMessage',
+        width: "300px",
+        render(obj){
+           return <Tooltip placement="topLeft" title={JSON.stringify(obj)} overlayStyle={{maxWidth:'60%'}}>
+                        <div className="ellipsis-index-lineClamp">{JSON.stringify(obj)}</div>
+                    </Tooltip>
+        }
     },{
         title: '扣款状态',
         dataIndex: 'deductionStatus',
+        width: "100px",
         render:text=>{
             deductionStatus.map(o=>{
                 if( parseInt(o.value, 0) === parseInt(text, 0)){
@@ -163,15 +172,19 @@ const getColumns =(context)=>[
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
+        width: "200px",
     },{
         title: '纳税申报期',
         dataIndex: 'month',
+        width: "100px",
     },{
         title: '申报人',
         dataIndex: 'declareBy',
+        width: "100px",
     },{
         title: '申报日期',
         dataIndex: 'declarationDate',
+        width: "100px",
     }
 ];
 
