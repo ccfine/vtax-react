@@ -168,7 +168,9 @@ class PopModal extends Component {
                 // 新增公告点击关闭按钮 删除文件UUID
                 let newArr = difference(fileUUIDArray, reqData)
                 this.setState({fileUUIDArray: newArr})
-                type === 'cancel' ? null : message.success('附件删除成功', 2);
+                if (type === 'cancel') {
+                    message.success('附件删除成功', 2);
+                }
                 return true
             } else {
                 message.error(`文件删除失败:${data.msg}`, 4);

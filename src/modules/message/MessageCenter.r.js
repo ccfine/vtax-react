@@ -36,7 +36,7 @@ const getSearchFields = [
                 value: "3"
             },
             {
-                text: "其他",
+                text: "其他公告",
                 value: "4"
             }
         ]
