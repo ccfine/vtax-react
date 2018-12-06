@@ -164,7 +164,7 @@ const getColumns = context => [
     },
     {
         title: "发布时间",
-        dataIndex: "publishDate",
+        dataIndex: "publishDateStr",
         width:'100px',
     },
     {
@@ -299,10 +299,15 @@ class MessageCenter extends Component {
         }
     }
 
+    handleReturn = () => {
+        window.history.back()
+    }
+
     render() {
         const { tableUpDateKey, visible, defaultData, messageLoading, modalType, fileList } = this.state;
         return (
             <div className="message-center">
+                <span className="message-return" onClick={this.handleReturn}>返回</span>
                 <div className="title">公告中心</div>
                 <SearchTable
                     searchOption={{
