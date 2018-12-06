@@ -4,9 +4,10 @@
  * description  :
  */
 import React, { Component } from 'react';
+import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
-import {composeBotton} from 'utils'
+import {request,composeBotton} from 'utils'
 import {withRouter} from 'react-router-dom';
 const formItemStyle={
     labelCol:{
@@ -16,6 +17,35 @@ const formItemStyle={
         span:16
     }
 }
+//纳税申报系统进度
+const status = [ 
+    {value:'1',text:'申报办理'},
+    {value:'2',text:'申报审核'},
+    {value:'3',text:'申报审批'},
+    {value:'4',text:'申报完成'},
+    {value:'5',text:'归档'},
+    {value:'-1',text:'流程终止'}
+]
+//申报状态
+const approvalStatus = [
+    {value: '-1', text: '审批失败'},
+    {value: '0', text: '审批中'},
+    {value: '1', text: '审批成功'},
+    {value: '2', text: '已申报'},
+]
+//扣款状态
+const deductionStatus= [
+    {value: '0', text: '未扣款'},
+    {value: '3', text: '扣款中'},
+    {value: '4', text: '扣款已受理'},
+    {value: '5', text: '扣款已受理'},
+    {value: '6', text: '税局扣款处理中'},
+    {value: '7', text: '扣款成功'},
+    {value: '8', text: '税局扣款处理中'},
+    {value: '9', text: '无需扣款'},
+    {value: '10', text: '税局自动扣款'},
+    {value: '11', text: '人工扣款成功'},
+]
 const searchFields = [
     {
         label:'纳税主体',
@@ -23,149 +53,119 @@ const searchFields = [
         fieldName:'mainId',
         formItemStyle,
         span:8,
-    },{
-        label:'办理进度',
-        type:'select',
-        fieldName:'status',
-        formItemStyle,
-        span:8,
-        options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
-            {
-                text:'申报办理',
-                value:'1'
-            }/*,{
-                text:'申报审核',
-                value:'2'
-            },{
-                text:'申报审批',
-                value:'3'
-            }*/,{
-                text:'申报完成',
-                value:'4'
-            },{
-                text:'归档',
-                value:'5'
-            }/*,{
-                text:'流程终止',
-                value:'-1'
-            }*/
-        ],
-    },{
-        label:'所属期',
+    },
+    {
+        label:'纳税申报期',
         type:'monthPicker',
-        fieldName:'partTerm',
+        fieldName:'month',
         formItemStyle,
         span:8,
-    },/*{
-        label:'税（费）种',
+    },
+    {
+        label:'纳税申报系统进度',
         type:'select',
-        fieldName:'taxType',
+        fieldName:'approvalStatus',
         formItemStyle,
         span:8,
-        options:[
-            {
-                text:'增值税',
-                value:'1'
-            },{
-                text:'企业所得税',
-                value:'2'
-            }
-        ],
-    }*/
+        options:approvalStatus
+    },
 ]
 const getColumns =(context)=>[
     {
         title: "操作",
         className:'text-center',
         render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
-            return composeBotton([{
-                type:'action',
-                icon:'search',
-                title:'查看申报',
-                onSuccess:()=>{
-                    
-                    context.props.history.push(`${context.props.match.url}/lookDeclare/${record.id}`)
+            let t = undefined;
+            let status = parseInt(record.status,0);
+            let deductionStatus = parseInt(record.deductionStatus,0);
+             //申报完成 && 税局审批结果 === 空 && 税局审批结果 === 审核失败
+            if((status === 4 && record.approvalStatus === '') || (status === 4 && parseInt(record.approvalStatus,0)===-1)){
+                t = composeBotton([{
+                    type: 'action',
+                    icon: 'check',
+                    title: '提交审批',
+                    userPermissions: ['1085001'],
+                    onSuccess: () => {
+                        context.handelArchiving(record,'/tax/decConduct/query/submit','提交审批')
+                    }
+                }])
+            }
+             //扣款状态 === 扣款成功 || 扣款状态   === 人工扣款成功
+             if((status === 4 && deductionStatus === 7) || (status === 4 && deductionStatus===11)){
+                t = composeBotton([{
+                    type:'action',
+                    icon:'folder',
+                    title:'申报归档',
+                    userPermissions:['1085001'],
+                    onSuccess:()=>{ context.handelArchiving(record,'/tax/decConduct/query/record','申报归档') }
+                }])
+            }
+            return <span>
+                        {
+                            composeBotton([{
+                                type:'action',
+                                icon:'search',
+                                title:'查看申报',
+                                onSuccess:()=>{
+                                    context.props.history.push(`${context.props.match.url}/lookDeclare/${record.id}`)
+                                    /*context.setState({
+                                        record: record
+                                    },() => {
+                                        context.toggleApplyVisible(true);
+                                    });*/
+                                }
+                            },{
+                                type:'action',
+                                icon:'file-search',
+                                title:'查询最新审批状态',
+                                userPermissions:['1085001'],
+                                onSuccess:()=>{ context.handelArchiving(record,'/tax/decConduct/query/getResult','查询最新审批状态') }
                             
-                    /*context.setState({
-                        record: record
-                    },() => {
-                        context.toggleApplyVisible(true);
-                    });*/
-                }
-            }])
+                            }])
+                        }
+                        {t}
+                    </span>;
         },
         fixed: "left",
-        width: "50px",
+        width: "75px",
         dataIndex: "action"
     },{
-        title: '申报状态',
+        title: '纳税申报系统申报进度',
         dataIndex: 'status',
         className:'text-center',
         render:text=>{
-            //1:免抵退税;2:免税;3:减税;4:即征即退;5:财政返还;6:其他税收优惠;
-            let t = '';
-            switch (parseInt(text,0)){
-                case 1:
-                    t=<span style={{ color: '#44b973' }}>申报办理</span>;
-                    break;
-                case 2:
-                    t=<span style={{ color: '#2783d8' }}>申报审核</span>;
-                    break;
-                case 3:
-                    t=<span style={{ color: '#373ac6' }}>申报审批</span>;
-                    break;
-                case 4:
-                    t=<span style={{ color: '#1795f6' }}>申报完成</span>;
-                    break;
-                case 5:
-                    t=<span style={{ color: '#7a7e91' }}>归档</span>;
-                    break;
-                case -1:
-                    t=<span style={{ color: '#ed2550' }}>流程终止</span>;
-                    break;
-                default:
-                //no default
-            }
-            return t;
-        }
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
     }, {
-        title: '上一步完成时间',
-        dataIndex: 'lastModifiedDate',
+        title: '税局审批结果',
+        dataIndex: 'approvalStatusInfo',
     },{
-        title: '大区',
-        dataIndex: 'region',
+        title: '税局审批结果说明',
+        dataIndex: 'errorMessage',
     },{
-        title: '组织架构',
-        dataIndex: 'orgName',
+        title: '扣款状态',
+        dataIndex: 'deductionStatus',
+        render:text=>{
+            deductionStatus.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
     },{
-        title: '所属期',
-        dataIndex: 'partTerm',
-    }/*,{
-        title: '税（费）种',
-        dataIndex: 'taxType',
-        render:text=>{
-            //1:增值税;2:企业所得税;
-            text = parseInt(text,0);
-            if(text===1){
-                return '增值税'
-            }
-            if(text ===2){
-                return '企业所得税'
-            }
-            return text;
-        }
-    },{
-        title: '所属期起',
-        dataIndex: 'subordinatePeriodStart',
-    },{
-        title: '所属期止',
-        dataIndex: 'subordinatePeriodEnd',
-    }*/,{
-        title: '所属流程',
-        dataIndex: 'isProcess',
+        title: '纳税申报期',
+        dataIndex: 'month',
     },{
         title: '申报人',
         dataIndex: 'declareBy',
@@ -182,11 +182,43 @@ class SearchDeclare extends Component{
         applyVisible:false,
         record:undefined,
     }
+    refreshTable = ()=>{
+        this.setState({
+            updateKey:Date.now(),
+        })
+    }
     toggleApplyVisible = applyVisible => {
         this.setState({
             applyVisible
         });
     };
+    handelArchiving=(record,url,m)=>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: `是否确定要${m}？`,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                request.put(`${url}/${record.id}`)
+                    .then(({data})=>{
+                        if (data.code === 200) {
+                            message.success(`${m}成功!`);
+                            this.refreshTable();
+                        } else {
+                            message.error(data.msg)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                    })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
     render(){
         const {updateKey,record,applyVisible,applyDeclarationModalKey} = this.state
         return(
