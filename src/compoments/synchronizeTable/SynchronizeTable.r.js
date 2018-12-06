@@ -64,6 +64,7 @@ export default class SynchronizeTable extends Component{
         const {props} = this;
         return(
             <Table {...props.tableProps}
+                    bordered={props.tableProps.bordered ? props.tableProps.bordered : true}
                    dataSource={props.data}
                    pagination={props.tableProps.pagination ? pagination : false}
                    onChange={this.handleTableChange}
