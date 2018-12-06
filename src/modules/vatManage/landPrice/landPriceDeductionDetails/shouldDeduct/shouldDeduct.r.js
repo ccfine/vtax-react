@@ -6,7 +6,7 @@
  */
 import React from 'react'
 import { SearchTable } from 'compoments'
-import { fMoney, composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+import { fMoney, composeBotton,requestResultStatus} from 'utils'
 
 
 const columns = [
@@ -101,7 +101,7 @@ export default class ShouldDeduct extends React.Component {
 		})
 	}
 	fetchResultStatus = ()=>{
-        requestResultStatus('/account/landPrice/deductedDetails/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -142,9 +142,6 @@ export default class ShouldDeduct extends React.Component {
 					},
 					extra: (
 						<div>
-							{
-                            	listMainResultStatus(statusParam)
-                        	}
 							{
 								(disabled && declare.decAction==='edit') && composeBotton([
 									{

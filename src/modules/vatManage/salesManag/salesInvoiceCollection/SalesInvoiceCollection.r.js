@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
-import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request,requestTaxSubjectConfig } from "utils";
+import { fMoney,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
 
@@ -272,25 +272,7 @@ const getColumns = (context) => [
             }
             return text;
         }
-    },
-    /*,
-     {
-     title: '购方税号',
-     dataIndex: "purchaseTaxNum",
-     width:'150px',
-     },
-     {
-     title: '项目名称',
-     dataIndex: "projectName",
-     width:'150px',
-     },
-     {
-     title: '项目编码',
-     dataIndex: "projectNum",
-     width:'150px',
-     },
-     */
-
+    }
 ]
 
 export default class SalesInvoiceCollection extends Component {
@@ -308,10 +290,9 @@ export default class SalesInvoiceCollection extends Component {
         statusParam: {},
         totalSource: undefined,
         selectedRowKeys:[],
-        //isShowImport:null,
     };
     fetchResultStatus = () => {
-        requestResultStatus('/output/invoice/collection/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -369,14 +350,6 @@ export default class SalesInvoiceCollection extends Component {
             selectedRowKeys:[],
         });
     };
-    fetchTaxSubjectConfig = () =>{
-        //根据纳税主体那边的参数设置来判断是否展示导入；并且删除的时候需要加上如果是从接口来的数据不能删除
-        requestTaxSubjectConfig(this.state.filters && this.state.filters.mainId, result=>{
-            this.mounted && this.setState({
-                isShowImport: typeof result === 'undefined' ? 0 : result.unusedInvoicePlatform
-            })
-        })
-    }
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
@@ -402,7 +375,6 @@ export default class SalesInvoiceCollection extends Component {
                             filters,
                         },() => {
                             this.fetchResultStatus();
-                            //this.fetchTaxSubjectConfig()
                         });
                     }}
                     tableOption={{
@@ -428,9 +400,6 @@ export default class SalesInvoiceCollection extends Component {
                             extra: (
                                 <div>
                                     {
-                                        listMainResultStatus(statusParam)
-                                    }
-                                    {
                                         JSON.stringify(filters)!=='{}' && composeBotton([{
                                             type:'fileExport',
                                             url:'output/invoice/collection/export',
@@ -440,7 +409,7 @@ export default class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{
                                             type:'fileExport',
                                             url:'output/invoice/collection/download',
                                             onSuccess:this.refreshTable,
@@ -467,18 +436,6 @@ export default class SalesInvoiceCollection extends Component {
                                             selectedRowKeys:selectedRowKeys,
                                             userPermissions:['1061008'],
                                             onClick:this.deleteData
-                                        },{
-                                            type:'submit',
-                                            url:'/output/invoice/collection/submit',
-                                            params:filters,
-                                            onSuccess:this.refreshTable,
-                                            userPermissions:['1061010'],
-                                        },{
-                                            type:'revoke',
-                                            url:'/output/invoice/collection/revoke',
-                                            params:filters,
-                                            onSuccess:this.refreshTable,
-                                            userPermissions:['1061011'],
                                         }],statusParam)
                                     }
                                     <TableTotal type={3} totalSource={totalSource} data={

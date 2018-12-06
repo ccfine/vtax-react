@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 import moment from 'moment';
 const formItemStyle = {
     labelCol:{
@@ -321,7 +321,7 @@ class unBilledSalesEstate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/accountInitialUntaxedSales/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -380,9 +380,6 @@ class unBilledSalesEstate extends Component{
                     },
                     extra:<div>
                         {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
                             JSON.stringify(filters)!=='{}' &&composeBotton([
                                 {
                                     type:'fileExport',
@@ -416,20 +413,6 @@ class unBilledSalesEstate extends Component{
                                     params:filters,
                                     onSuccess:this.refreshTable,
                                     userPermissions:['1951009'],
-                                },
-                                {
-                                    type:'submit',
-                                    url:'/accountInitialUntaxedSales/submit',
-                                    params:filters,
-                                    onSuccess:this.refreshTable,
-                                    userPermissions:['1951010'],
-                                },
-                                {
-                                    type:'revoke',
-                                    url:'/accountInitialUntaxedSales/revoke',
-                                    params:filters,
-                                    onSuccess:this.refreshTable,
-                                    userPermissions:['1951011'],
                                 }
                             ],statusParam)
                         }

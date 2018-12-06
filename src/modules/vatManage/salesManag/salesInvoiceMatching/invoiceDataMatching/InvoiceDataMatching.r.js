@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {request,fMoney,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
 const formItemStyle = {
@@ -363,7 +363,7 @@ class InvoiceDataMatching extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -433,9 +433,6 @@ class InvoiceDataMatching extends Component{
                     url:'/output/invoice/marry/already/list',
                     extra:<div>
                         {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
                                 url:'output/invoice/marry/already/export',
@@ -452,22 +449,6 @@ class InvoiceDataMatching extends Component{
                                 btnType:'default',
                                 userPermissions:['1215002'],
                                 onClick:this.matchData
-                            },{
-                                type:'submit',
-                                url:'/output/invoice/marry/submit',
-                                params:filters,
-                                userPermissions:['1215000'],
-                                onSuccess:()=>{
-                                    this.props.refreshTabs()
-                                }
-                            },{
-                                type:'revoke',
-                                url:'output/invoice/marry/revoke',
-                                params:filters,
-                                userPermissions:['1215001'],
-                                onSuccess:()=>{
-                                    this.props.refreshTabs()
-                                }
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={

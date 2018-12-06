@@ -6,7 +6,7 @@
  */
 import React from 'react'
 import {SearchTable} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 
 const columns= [
     {
@@ -103,7 +103,7 @@ export default class HasDeduct extends React.Component{
         })
     }
 	fetchResultStatus = ()=>{
-        requestResultStatus('/account/landPrice/deductedDetails/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -147,33 +147,12 @@ export default class HasDeduct extends React.Component{
                     },
                     extra:<div>
                         {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
                             (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'reset',
                                 url:'/account/landPrice/deductedDetails/reset',
                                 params:filters,
                                 userPermissions:['1261009'],
                                 onSuccess:this.refreshTable
-                            },{
-                                type:'submit',
-                                url:'/account/landPrice/deductedDetails/submit',
-                                params:filters,
-                                userPermissions:['1261010'],
-                                onSuccess:()=>{
-                                    this.refreshTable()
-                                    this.props.refreshTabs()
-                                }
-                            },{
-                                type:'revoke',
-                                url:'/account/landPrice/deductedDetails/revoke',
-                                params:filters,
-                                userPermissions:['1261011'],
-                                onSuccess:()=>{
-                                    this.refreshTable()
-                                    this.props.refreshTabs()
-                                }
                             }],statusParam)
                         }
                     </div>,

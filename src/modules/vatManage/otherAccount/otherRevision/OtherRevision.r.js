@@ -12,7 +12,6 @@ import PopModal from "./popModal";
 import {
   request,
   fMoney,
-  listMainResultStatus,
   composeBotton,requestResultStatus
 } from "utils";
 import moment from "moment";
@@ -184,7 +183,7 @@ class OtherRevision extends Component {
           });
   }
   updateStatus = (values) => {
-    requestResultStatus('/accountOtherRevision/listMain',values,result=>{
+    requestResultStatus('',values,result=>{
       this.setState({
           statusParam: result,
       })
@@ -222,7 +221,6 @@ class OtherRevision extends Component {
               title: "其他事项调整台账",
               extra: (
                 <div>
-                  {listMainResultStatus(statusParam)}
                     {
                         JSON.stringify(filters)!=='{}' && composeBotton([{
                             type:'fileExport',
@@ -244,18 +242,6 @@ class OtherRevision extends Component {
                               opid: undefined
                             });
                           }
-                      },{
-                          type:'submit',
-                          url:'/accountOtherRevision/submit',
-                          params:filters,
-                          userPermissions:['1941010'],
-                          onSuccess:this.refreshTable
-                      },{
-                          type:'revoke',
-                          url:'/accountOtherRevision/revoke',
-                          params:filters,
-                          userPermissions:['1941011'],
-                          onSuccess:this.refreshTable,
                       }],statusParam)
                   }
                   {/* <TableTotal type={3} totalSource={totalSource} data={

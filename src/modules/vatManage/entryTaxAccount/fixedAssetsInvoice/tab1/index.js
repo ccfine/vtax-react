@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 
 const getColumns = context =>[
     {
@@ -173,7 +173,7 @@ export default class Tab1 extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/fixedAssets/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -214,9 +214,6 @@ export default class Tab1 extends Component{
                     extra: (
                         <div>
                             {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/income/fixedAssets/incomeSeparateList/export',
@@ -232,24 +229,6 @@ export default class Tab1 extends Component{
                                     params:filters,
                                     userPermissions:['1241009'],
                                     onSuccess:()=>{
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type:'submit',
-                                    url:'/account/income/fixedAssets/submit',
-                                    params:filters,
-                                    userPermissions:['1241010'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                },{
-                                    type:'revoke',
-                                    url:'/account/income/fixedAssets/revoke',
-                                    params:filters,
-                                    userPermissions:['1241011'],
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
                                         this.props.refreshTabs()
                                     },
                                 }],statusParam)

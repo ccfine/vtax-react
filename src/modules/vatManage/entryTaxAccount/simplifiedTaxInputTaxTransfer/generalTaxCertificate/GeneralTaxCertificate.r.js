@@ -142,7 +142,7 @@ class GeneralTaxCertificate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/incomeSimpleOut/controller/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })

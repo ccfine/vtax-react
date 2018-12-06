@@ -7,7 +7,7 @@
 import React,{Component} from 'react'
 import {message,Form} from 'antd'
 import {SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {request,fMoney,composeBotton,requestResultStatus} from 'utils'
 import { NumericInputCell } from 'compoments/EditableCell'
 import moment from 'moment';
 import { WaterMarkComponent } from 'compoments'
@@ -208,7 +208,7 @@ class TaxCalculation extends Component{
         }
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/tax/decConduct/main/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -259,9 +259,6 @@ class TaxCalculation extends Component{
                         },
                         extra:<div>
                             {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/taxCalculation/export',
@@ -283,20 +280,6 @@ class TaxCalculation extends Component{
                                     params:filters,
                                     userPermissions:['1371009'],
                                     onSuccess:this.refreshTable
-                                },{
-                                    type:'submit',
-                                    url:'/account/taxCalculation/submit',
-                                    params:filters,
-                                    // monthFieldName:'authMonth',
-                                    userPermissions:['1371010'],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'revoke',
-                                    url:'/account/taxCalculation/revoke',
-                                    params:filters,
-                                    // monthFieldName:'authMonth',
-                                    userPermissions:['1371011'],
-                                    onSuccess:this.refreshTable,
                                 }*/],statusParam)
                             }
                         </div>

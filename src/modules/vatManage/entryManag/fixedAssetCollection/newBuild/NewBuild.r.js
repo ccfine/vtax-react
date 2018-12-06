@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {composeBotton} from 'utils'
 
 const columns=[
     {
@@ -56,21 +56,10 @@ class NewBuildCollection extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam: {},
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
-        })
-    }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
         })
     }
     mounted = true;
@@ -78,7 +67,7 @@ class NewBuildCollection extends Component{
         this.mounted = null;
     }
     render(){
-        const {updateKey,filters,statusParam} = this.state;
+        const {updateKey,filters} = this.state;
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
@@ -98,9 +87,7 @@ class NewBuildCollection extends Component{
                 }}
                 backCondition={(filters)=>{
                     this.mounted && this.setState({
-                        filters,
-                    },()=>{
-                        this.fetchResultStatus()
+                        filters
                     })
                 }}
                 tableOption={{
@@ -112,9 +99,6 @@ class NewBuildCollection extends Component{
                         title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>单独新建不动产</span>,
                         extra: (
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',

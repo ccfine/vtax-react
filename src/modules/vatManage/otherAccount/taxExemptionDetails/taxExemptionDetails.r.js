@@ -7,7 +7,7 @@
  */
 import React, {Component} from 'react';
 import {Form,message,Divider,Modal} from 'antd';
-import {fMoney, request, listMainResultStatus, composeBotton, requestResultStatus} from 'utils';
+import {fMoney, request, composeBotton, requestResultStatus} from 'utils';
 import {SearchTable, TableTotal} from 'compoments';
 import PopModal from "./popModal";
 import moment from 'moment';
@@ -291,7 +291,7 @@ class TaxExemptionDetails extends Component {
     };
 
     fetchResultStatus = () => {
-        requestResultStatus('/account/other/reduceTaxDetail/listMain', this.state.filters, result => {
+        requestResultStatus('', this.state.filters, result => {
             this.setState({
                 statusParam: result
             });
@@ -456,9 +456,6 @@ class TaxExemptionDetails extends Component {
                     },
                     extra: <div>
                         {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
                             (disabled && declare.decAction === 'edit') && showProfitCenter && composeBotton([{
                                 type:'switch',
                                 checked: isEnabled,
@@ -498,18 +495,6 @@ class TaxExemptionDetails extends Component {
                                 url: '/account/other/reduceTaxDetail/reset',
                                 params: filters,
                                 userPermissions: ['1301009'],
-                                onSuccess: this.refreshTable
-                            }, {
-                                type: 'submit',
-                                url: '/account/other/reduceTaxDetail/submit',
-                                params: filters,
-                                userPermissions: ['1301010'],
-                                onSuccess: this.refreshTable
-                            }, {
-                                type: 'revoke',
-                                url: '/account/other/reduceTaxDetail/revoke',
-                                params: filters,
-                                userPermissions: ['1301011'],
                                 onSuccess: this.refreshTable
                             }], statusParam)
                         }

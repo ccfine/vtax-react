@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,composeBotton} from 'utils'
 
 const columns = context =>[{
         title: '利润中心',
@@ -115,7 +115,7 @@ export default class NewlyBuilt extends Component{
         statusParam:{},
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -163,9 +163,6 @@ export default class NewlyBuilt extends Component{
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>单独新建不动产进项税额抵扣</span>,
                         extra:<div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
                             {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',

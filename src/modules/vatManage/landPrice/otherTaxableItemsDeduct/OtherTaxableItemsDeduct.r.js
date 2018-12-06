@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/17.
  */
 import React, { Component } from 'react'
-import {fMoney,requestResultStatus,listMainResultStatus,composeBotton} from 'utils'
+import {fMoney,requestResultStatus,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
 const searchFields =(context,disabled,declare) => getFieldValue => [
@@ -185,7 +185,7 @@ class OtherTaxableItemsDeduct extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/othertax/deducted/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -236,9 +236,6 @@ class OtherTaxableItemsDeduct extends Component{
                         url:'/account/othertax/deducted/list',
                         extra: <div>
                             {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/othertax/deducted/export',
@@ -254,18 +251,6 @@ class OtherTaxableItemsDeduct extends Component{
                                     params:filters,
                                     userPermissions:['1271009'],
                                     onSuccess:this.refreshTable
-                                },{
-                                    type:'submit',
-                                    url:'/account/othertax/deducted/submit',
-                                    params:filters,
-                                    userPermissions:['1271010'],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'revoke',
-                                    url:'/account/othertax/deducted/revoke',
-                                    params:filters,
-                                    userPermissions:['1271011'],
-                                    onSuccess:this.refreshTable,
                                 }],statusParam)
                             }
                             <TableTotal totalSource={totalSource} data={totalData} type={3}/>

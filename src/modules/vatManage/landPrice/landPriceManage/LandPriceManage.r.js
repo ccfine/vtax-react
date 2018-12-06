@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {message,Form} from 'antd'
-import {request,requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {request,requestResultStatus,fMoney,composeBotton} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 import { NumericInputCell } from 'compoments/EditableCell'
@@ -259,7 +259,7 @@ class LandPriceManage extends Component{
         totalSource:undefined,
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/land/price/manage/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -347,9 +347,6 @@ class LandPriceManage extends Component{
                             title: "土地价款管理",
                             extra:<div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'land/price/manage/export',
@@ -375,18 +372,6 @@ class LandPriceManage extends Component{
                                         params:filters,
                                         userPermissions:['1541009'],
                                         onSuccess:this.refreshTable
-                                    },{
-                                        type:'submit',
-                                        url:'/land/price/manage/submit',
-                                        params:filters,
-                                        userPermissions:['1541010'],
-                                        onSuccess:this.refreshTable
-                                    },{
-                                        type:'revoke',
-                                        url:'/land/price/manage/revoke',
-                                        params:filters,
-                                        userPermissions:['1541011'],
-                                        onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={

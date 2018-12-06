@@ -328,3 +328,8 @@ table.data-grid{
   overflow: hidden;
   -webkit-box-pack: center; */
 }
+
+/* 设置纳税申报的下划线的颜色 */
+.stepsCurrent .ant-steps-item-finish > .ant-steps-item-content > .ant-steps-item-title:after {
+  background-color: #e8e8e8;
+}

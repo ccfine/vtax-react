@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import DrawerModal from 'compoments/drawerModal'
-import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {fMoney,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -452,7 +452,7 @@ export default class FinancialDocumentsCollection extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/inter/financial/voucher/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -497,10 +497,6 @@ export default class FinancialDocumentsCollection extends Component{
                         extra: (
                             <div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-
-                                {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'consistent',
                                         //icon:'exception',
@@ -510,20 +506,6 @@ export default class FinancialDocumentsCollection extends Component{
                                         onClick:()=>{
                                             this.togglesDrawerVisible(true);
                                         }
-                                    },
-                                    {
-                                        type:'submit',
-                                        url:'/inter/financial/voucher/submit',
-                                        params:filters,
-                                        onSuccess:this.refreshTable,
-                                        userPermissions:['1231010'],
-                                    },
-                                    {
-                                        type:'revoke',
-                                        url:'/inter/financial/voucher/revoke',
-                                        params:filters,
-                                        onSuccess:this.refreshTable,
-                                        userPermissions:['1231011'],
                                     }],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={

@@ -152,7 +152,7 @@ const getResultStatus = (url,filters) => {
     })
 }
 const requestResultStatus = async (url,filters,callback)=>{
-    let result = await getResultStatus(url,filters);
+    let result = await getResultStatus(url!=='' ? url : '/tax/decConduct/load/status',filters);
     callback(result)
 }
 

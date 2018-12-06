@@ -6,7 +6,7 @@
  */
 import React, { Component } from 'react'
 import {Modal,message} from 'antd'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
+import {fMoney,composeBotton,requestResultStatus,request} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './addDataModal'
 import moment from 'moment';
@@ -227,7 +227,7 @@ class NeedNotMatchInvoices extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -296,8 +296,6 @@ class NeedNotMatchInvoices extends Component{
                     url:'/output/invoice/marry/unwanted/list',
                     extra:<div>
                         {
-                            listMainResultStatus(statusParam)
-                        }{
                             (disabled && declare.decAction==='edit') && composeBotton([{
                                 type:'add',
                                 icon:'plus',

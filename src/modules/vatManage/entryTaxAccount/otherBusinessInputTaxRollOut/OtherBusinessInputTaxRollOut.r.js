@@ -7,7 +7,7 @@
 import React, { Component } from "react";
 import { message,Form } from "antd";
 import {SearchTable,TableTotal,PopDetailsModal} from "compoments";
-import { request, fMoney, listMainResultStatus,composeBotton,requestResultStatus, parseJsonToParams } from "utils";
+import { request, fMoney,composeBotton,requestResultStatus, parseJsonToParams } from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 import AdjustPopModal from "./adjustPopModal"
@@ -267,7 +267,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         this.setState({ visible: false });
     }
     updateStatus = (values) => {
-        requestResultStatus('/account/income/taxout/listMain',values,result=>{
+        requestResultStatus('',values,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -359,7 +359,6 @@ class OtherBusinessInputTaxRollOut extends Component {
                             title: "进项税额转出台账",
                             extra: (
                                 <div>
-                                    {listMainResultStatus(statusParam)}
                                     {
                                         JSON.stringify(filters)!=='{}' && composeBotton([{
                                             type:'fileExport',
@@ -385,20 +384,6 @@ class OtherBusinessInputTaxRollOut extends Component {
                                             url:'/account/income/taxout/reset',
                                             params:filters,
                                             userPermissions:['1401009'],
-                                            onSuccess:this.refreshTable,
-                                        },{
-                                            type:'submit',
-                                            url:'/account/income/taxout/submit',
-                                            // monthFieldName:"authMonth",
-                                            params:filters,
-                                            userPermissions:['1401010'],
-                                            onSuccess:this.refreshTable
-                                        },{
-                                            type:'revoke',
-                                            // monthFieldName:"authMonth",
-                                            url:'/account/income/taxout/revoke',
-                                            params:filters,
-                                            userPermissions:['1401011'],
                                             onSuccess:this.refreshTable,
                                         }],statusParam)
                                     }

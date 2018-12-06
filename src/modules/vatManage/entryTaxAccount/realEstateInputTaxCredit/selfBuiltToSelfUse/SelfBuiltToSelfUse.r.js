@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 
 const columns = context =>[{
         title: '利润中心',
@@ -136,7 +136,7 @@ export default class SelfBuiltToSelfUse extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -182,9 +182,6 @@ export default class SelfBuiltToSelfUse extends Component{
                         },
                         extra: (
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',

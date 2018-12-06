@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 const columns = (context,isEdit) =>[{
         title: '利润中心',
         dataIndex: 'profitCenterName',
@@ -114,7 +114,7 @@ export default class ExternalAccess extends Component{
         totalSource:undefined,
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -168,9 +168,6 @@ export default class ExternalAccess extends Component{
                         // },
                         extra: (
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',
