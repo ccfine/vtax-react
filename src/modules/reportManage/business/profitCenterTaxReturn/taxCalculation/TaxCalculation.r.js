@@ -23,7 +23,7 @@ const searchFields =(defaultParams={})=>(getFieldValue)=>{
                     span:8
                 },
                 wrapperCol:{
-                    span:16
+                    span:16 
                 }
             },
             componentProps:{
@@ -232,6 +232,13 @@ class TaxCalculation extends Component{
                     doNotFetchDidMount={true}
                     searchOption={{
                         fields:searchFields(defaultParams),
+                        onResetFields:()=>{
+                            this.setState({
+                                filters: {}
+                            },()=>{
+                                this.props.onParamsChange && this.props.onParamsChange({});
+                            })
+                        },
                         cardProps:{
                             className:'',
                             style:{borderTop:0}

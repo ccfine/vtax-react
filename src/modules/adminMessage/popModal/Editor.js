@@ -49,7 +49,7 @@ class EditorComponent extends Component {
         return (
             <div className="editor-content">
                 <Editor
-                    // toolbarClassName="toolbarClassName"
+                    toolbarClassName="message-toolbar"
                     wrapperClassName="message-wrapper"
                     editorClassName="message-editor"
                     {...editorProps}
