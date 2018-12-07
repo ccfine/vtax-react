@@ -90,45 +90,65 @@ const list = (disabled,declare,getFieldValue) => [
 ];
 
 const searchFields=(key,disabled,declare) => (getFieldValue) => {
-    // let result = [];
-    // switch (key) {
-    //     case 'tab1':
-    //         result = [...list(disabled,declare,getFieldValue)];
-    //         break;
-    //     case 'tab2':
-    //         result = [...list(disabled,declare,getFieldValue)];
-    //         break;
-    //     case 'tab3':
-    //         result = [
-    //             ...list(disabled,declare,getFieldValue),
-    //             {
-    //                 label: "转固单号",
-    //                 fieldName: "rotaryNum",
-    //                 type: "input",
-    //                 span: 6,
-    //                 formItemStyle,
-    //                 componentProps: {},
-    //                 fieldDecoratorOptions: {}
-    //             },
-    //             {
-    //                 label: "产品编码",
-    //                 fieldName: "productNum",
-    //                 type: "input",
-    //                 span: 6,
-    //                 formItemStyle,
-    //                 componentProps: {},
-    //                 fieldDecoratorOptions: {}
-    //             }
-    //         ];
-    //         break;
-    //     case 'tab4':
-    //         result = [...list(disabled,declare,getFieldValue)];
-    //         break;
-    //     default:
-    //         break;
-    // }
-    // return result;
-    return [...list(disabled,declare,getFieldValue)]
+    let result = [];
+    switch (key) {
+        case 'tab1':
+            result = [...list(disabled,declare,getFieldValue)];
+            break;
+        case 'tab2':
+            result = [
+                ...list(disabled,declare,getFieldValue),
+                {
+                    label: "取得方式",
+                    fieldName: "acquisitionMode",
+                    span:6,
+                    formItemStyle,
+                    type: "select",
+                    options: [ //0-外部获取,1-单独新建，2-自建转自用
+                        {
+                            text: "外部获取",
+                            value: "0"
+                        },
+                        {
+                            text: "自建转自用",
+                            value: "2"
+                        }
+                    ]
+
+                },
+            ];
+            break;
+        case 'tab3':
+            // result = [
+            //     ...list(disabled,declare,getFieldValue),
+            //     {
+            //         label: "转固单号",
+            //         fieldName: "rotaryNum",
+            //         type: "input",
+            //         span: 6,
+            //         formItemStyle,
+            //         componentProps: {},
+            //         fieldDecoratorOptions: {}
+            //     },
+            //     {
+            //         label: "产品编码",
+            //         fieldName: "productNum",
+            //         type: "input",
+            //         span: 6,
+            //         formItemStyle,
+            //         componentProps: {},
+            //         fieldDecoratorOptions: {}
+            //     }
+            // ];
+            result = [...list(disabled,declare,getFieldValue)];
+            break;
+        // case 'tab4':
+        //     result = [...list(disabled,declare,getFieldValue)];
+        //     break;
+        default:
+        //break;
+    }
+    return result;
 }
 const tabList = [{
     key: 'tab1',
