@@ -4,12 +4,11 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
-
 const getColumns = context =>[
     {
         title: '利润中心',
         dataIndex: 'profitCenterName',
-        //width:'200px',
+        width:'200px',
     }, {
         title: '项目分期名称',
         dataIndex: 'stagesName',
@@ -27,9 +26,9 @@ const getColumns = context =>[
         dataIndex: "rotaryNum",
         width: "200px"
     },{
-        title: "产品编码",
-        dataIndex: "productNum",
-        width: "200px"
+        title:'匹配自持产品的产品编码',
+        dataIndex:'productNum',
+        width:'300px',
     },{
         title: '入账日期',
         dataIndex: 'accountDate',
