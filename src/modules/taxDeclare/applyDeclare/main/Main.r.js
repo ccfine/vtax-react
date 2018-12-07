@@ -242,14 +242,16 @@ class Main extends Component {
 				<h4 style={{padding:'10px 30px 0',textAlign:'right'}}>申报处理【{record.mainName}】 申报期间 【{record.partTerm}】</h4>
 				<Steps current={current} size="small" className="stepsCurrent">
 					{steps.map((item, i) => {
-						let status = parseInt(stepsStatus[i],0)===1;
-						let checke = current === parseInt(item.decConduct,0) && 'rgb(135, 208, 104)';
+						let status = parseInt(stepsStatus[i],0)===1,
+							isCurrent = current === parseInt(item.decConduct,0),
+							checke =  isCurrent && 'filled',
+							isColor =  isCurrent && '#1890ff'
 						return (
 							<Step
 								key={item.title}
 								title={item.title}
 								status={status ? 'wait' : 'finish'}
-								icon={status ? <Icon type="clock-circle" style={{color:checke}} /> : <Icon type="check-circle" style={{color:checke}} />}
+								icon={status ? <Icon type="clock-circle" theme={checke} style={{color: isColor}} /> : <Icon type="check-circle" theme={checke} style={{color: isColor}} />}
 								onClick={() => this.handleCurrent(i)}
 							/>
 						)
