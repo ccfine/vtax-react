@@ -65,11 +65,11 @@ class ButtonMarkeModal extends Component{
                     .then(({data})=>{
                         this.toggleLoading(false)
                         if(data.code===200){
-                            message.success(`${this.props.modalOptions.title}成功!`);
+                            message.success('标记类型成功!');
                             this.toggleVisible(false);
                             onSuccess && onSuccess()
                         }else{
-                            message.error(`${this.props.modalOptions.title}失败:${data.msg}`)
+                            message.error(`标记类型失败:${data.msg}`)
                         }
                     })
                     .catch(err => {

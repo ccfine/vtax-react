@@ -18,7 +18,7 @@ const searchFields = getFieldValue => [
             label:'纳税主体',
             fieldName:'mainId',
             type:'taxMain',
-            span:6,
+            span:8,
             formItemStyle,
             fieldDecoratorOptions:{
                 initialValue: undefined,
@@ -32,7 +32,7 @@ const searchFields = getFieldValue => [
             fieldName:'authMonth',
             type:'monthPicker',
             formItemStyle,
-            span:6,
+            span:8,
             componentProps:{
                 format:'YYYY-MM',
             },
@@ -44,7 +44,7 @@ const searchFields = getFieldValue => [
             label:'利润中心',
             fieldName:'profitCenterId',
             type:'asyncSelect',
-            span:6,
+            span:8,
             formItemStyle,
             componentProps:{
                 fieldTextName:'profitName',
@@ -53,43 +53,8 @@ const searchFields = getFieldValue => [
                 fetchAble:getFieldValue('mainId') || false,
                 url:`/taxsubject/profitCenterList/${getFieldValue('mainId')}`,
             }
-        },
-        {
-            label: "发票状态",
-            fieldName: "invoiceCode",
-            span: 6,
-            formItemStyle,
-            type: "select",
-            options: [
-                {
-                    text: "正常",
-                    value: "1"
-                },
-                {
-                    text: "作废",
-                    value: "2"
-                },
-                {
-                    text: "红冲",
-                    value: "3"
-                }
-            ]
-        },
+        }
     ]
-const status = [
-    {
-        text: "正常",
-        value: "1"
-    },
-    {
-        text: "作废",
-        value: "-1"
-    },
-    {
-        text: "红冲",
-        value: "2"
-    }
-]
 const apiFields = getFieldValue => [
     {
         label: "纳税主体",
@@ -119,22 +84,7 @@ const columns=[
         title: '发票代码',
         dataIndex: 'invoiceCode',
         width:'100px',
-    },
-    {
-        title: '发票状态',
-        dataIndex: "status",
-        width:'150px',
-        render:text=>{
-            status.map(o=>{
-                if( parseInt(o.value, 0) === parseInt(text, 0)){
-                    text = o.text
-                }
-                return '';
-            })
-            return text;
-        },
-    },
-    {
+    },{
         title: '发票类型',
         dataIndex: 'invoiceType',
         render: (text,record) => {
@@ -334,7 +284,7 @@ export default class SalesInvoiceCollection extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 3500,y:window.screen.availHeight-360, },
+                    scroll:{ x: 2800,y:window.screen.availHeight-360, },
                 }}
             />
             </div>
