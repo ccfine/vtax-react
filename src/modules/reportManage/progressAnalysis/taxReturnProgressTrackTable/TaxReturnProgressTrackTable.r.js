@@ -126,6 +126,10 @@ const searchFields=(getFieldValue)=>{
         }
     ]
 }
+const status = [
+    {text:'未处理',value:'0'},
+    {text:'已处理',value:'1'},
+]
 const columns = [
     {
       title: "区域",
@@ -148,7 +152,49 @@ const columns = [
       width: "200px"
     },
     {
-      title: "纳税申报表提交状态",
+        title: "销项管理",
+        dataIndex: "outputStatus",
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },
+    {
+        title: "进项管理",
+        dataIndex: "incomeStatus",
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },
+    {
+        title: "其他管理",
+        dataIndex: "otherStatus",
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },
+    {
+      title: "纳税申报表",
       dataIndex: "submitStatus",
       width: "200px"
     },
@@ -174,9 +220,7 @@ export default class TaxReturnProgressTrackTable extends Component{
     render(){
         const {updateKey, filters,statusParam} = this.state;
         return(
-            <div className="oneLine">
             <SearchTable
-                doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields
                 }}
@@ -209,10 +253,9 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 1400, y:window.screen.availHeight-360,},
+                    scroll:{ x: 1400, y:window.screen.availHeight-450},
                 }}
             />
-            </div>
         )
     }
 }
