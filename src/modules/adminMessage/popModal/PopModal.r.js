@@ -67,8 +67,7 @@ class PopModal extends Component {
                 const { defaultData } = this.props;
                 const { fileUUIDArray } = this.state
                 if (this.props.modalType === 'add') {
-                    // 新增公告  保存和发布按钮 都用这个接口
-                    // const url = '/sysNotice/add'
+                    // 新增公告
                     const values = {
                         ...fieldsValue,
                         'takeDate': fieldsValue['takeDate'].format('YYYY-MM-DD'),
@@ -81,15 +80,12 @@ class PopModal extends Component {
                     if (type === 'push') {
                         this.deleteRole(() => {
                             this.fetchSave(values, 'push')
-                            // this.requestPublish(url, values, 'add')
                         })
                     } else {
                         this.fetchSave(values, 'save')
-                        // this.requestSave(url, values, 'add')
                     }
                 } else {
-                    // 修改公告 保存和发布按钮 都用这个接口
-                    // const url = '/sysNotice/update'
+                    // 修改公告
                     const values = {
                         ...fieldsValue,
                         'takeDate': fieldsValue['takeDate'].format('YYYY-MM-DD'),
@@ -103,107 +99,23 @@ class PopModal extends Component {
                     if (type === 'push') {
                         this.deleteRole(() => {
                             this.fetchPut(values, 'push')
-                            // this.requestPublish(url, values, 'edit')
                         })
                     } else {
                         this.fetchPut(values, 'save')
-                        // this.requestSave(url, values, 'edit')
                     }
                 }
             }
         })
     }
     
-    // new 保存接口
-    requestSave = (url, data, type) => {
-        this.setState({saveLoading: true})
-        if (type === 'add') {
-            this.fetchPost(url, data).then((data) => {
-                message.success('公告保存成功', 2);
-                this.setState({saveLoading: false})
-                this.props.toggleModalVisible(false)
-            }).catch((err) => {
-                this.setState({saveLoading: false})
-                message.error(err, 2)
-            })
-        } else if (type === 'edit') {
-            this.fetchPut(url, data).then((data) => {
-                message.success('公告保存成功', 2);
-                this.setState({saveLoading: false})
-                this.props.toggleModalVisible(false)
-            }).catch((err) => {
-                this.setState({saveLoading: false})
-                message.error(err, 2)
-            })
-        }
-    }
-
-    // new 发布接口
-    requestPublish = (url, data, type) => {
-        this.setState({publishLoading: true})
-        if (type === 'add') {
-            this.fetchPost(url, data).then(() => {
-                message.success('公告发布成功', 2);
-                this.setState({publishLoading: false})
-                this.props.toggleModalVisible(false)
-            }).catch((err) => {
-                this.setState({publishLoading: false})
-                message.error(err, 2)
-            })
-        } else if (type === 'edit') {
-            this.fetchPut(url, data).then(() => {
-                message.success('公告发布成功', 2);
-                this.setState({publishLoading: false})
-                this.props.toggleModalVisible(false)
-            }).catch((err) => {
-                this.setState({publishLoading: false})
-                message.error(err, 2)
-            })
-        }
-    }
-
-    async fetchPost(url, data) {
-        return await request
-            .post(url, data)
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    return Promise.resolve(data.data);
-                } else {
-                    return Promise.reject(data.msg)
-                }
-            })
-            .catch(err => {
-                return Promise.reject(err.message)
-            });
-    }
-
-    async fetchPut(url, data) {
-        return await request
-            .put(url, data)
-            .then(({ data }) => {
-                if (data.code === 200) {
-                    return Promise.resolve(data);
-                } else {
-                    return Promise.reject(data.msg)
-                }
-            })
-            .catch(err => {
-                return Promise.reject(err.message)
-            });
-    }
-
     // 保存接口
     fetchSave = (data, type) => {
-        const BtnDit = {
-            'save': 'saveLoading',
-            'push': 'publishLoading'
-        }
-        this.setState({[BtnDit.type]: true})
-        // type === 'save' ? this.setState({saveLoading: true}) : this.setState({publishLoading: true})
+        type === 'save' ? this.setState({saveLoading: true}) : this.setState({publishLoading: true})
         request.post('/sysNotice/add', data)
             .then(({data}) => {
                 if(data.code===200){
                     type === 'save' ? this.setState({saveLoading: false}) : this.setState({publishLoading: false})
+                    type === 'save' ? message.success('保存成功',2) : message.success('发布成功',2)
                     this.props.toggleModalVisible(false)
                 }else {
                     message.error(data.msg)
@@ -224,6 +136,7 @@ class PopModal extends Component {
             .then(({data}) => {
                 if(data.code===200){
                     type === 'save' ? this.setState({saveLoading: false}) : this.setState({publishLoading: false})
+                    type === 'save' ? message.success('保存成功',2) : message.success('发布成功',2)
                     this.props.toggleModalVisible(false)
                 }else {
                     message.error(data.msg)
@@ -261,10 +174,6 @@ class PopModal extends Component {
                 // 新增公告点击关闭按钮 删除文件UUID
                 let newArr = difference(fileUUIDArray, reqData)
                 this.setState({fileUUIDArray: newArr})
-                if (type === 'cancel') {
-                    message.success('附件删除成功', 2);
-                }
-
                 return true
             } else {
                 message.error(`文件删除失败:${data.msg}`, 4);
@@ -287,19 +196,42 @@ class PopModal extends Component {
         const { file, fileList } = info
         const isLt5M = file.size / 1024 / 1024 < 5
         if (info.file.status === 'error') {
+            // 当文件上传失败 处理
+            let newFiles = fileList.filter((item) => {
+                if (item.status !== 'error' || !!item.noticeId) {
+                    return item
+                }
+            })
+            message.error('文件上传失败，请重新上传', 2)
+            this.setState({fileList: newFiles, uploadLoging: false})
             return false;
         }
         if (info.file.status === 'removed') {
+            message.success('文件删除成功', 2)
+            this.setState({uploadLoging: false})
             this.setState({ fileList: fileList })
             return true;
+        }
+        const fileName = file.name
+        const pos = fileName.lastIndexOf('.')
+        const lastName = fileName.substring(pos,fileName.length)
+        if (lastName.toLowerCase() !== '.zip' && lastName.toLowerCase() !== '.rar' && lastName.toLowerCase() !== '.7z') {
+            message.warning('文件必须为压缩包格式', 2)
+            this.setState({uploadLoging: false})
+            return false;
         }
         if (fileList.length > 5) {
             return false;
         }
+
         if (!isLt5M) {
             return false;
         }
+        if (info.file.status === 'uploading') {
+            console.log('正在上传........')
+        }
         if (info.file.status === 'done') {
+            message.success('文件上传成功', 2)
             this.setState({uploadLoging: false})
             this.setUuid(file)
         }
@@ -346,8 +278,15 @@ class PopModal extends Component {
     }
 
     handleCancel = () => {
-        if (this.state.fileUUIDArray.length > 0 && this.props.modalType === 'add') {
-            this.deleteRecord(this.state.fileUUIDArray, 'cancel')
+        const { fileList } = this.state;
+        let newArr = []
+        fileList.forEach((item) => {
+            if (!item.noticeId) {
+                newArr.push(item.uid)
+            }
+        })
+        if (newArr.length > 0) {
+            this.deleteRecord(newArr, 'cancel')
         }
         this.props.toggleModalVisible(false)
     }
@@ -370,8 +309,14 @@ class PopModal extends Component {
             onChange: this.handleFileChange,
             beforeUpload: this.handleBeforeUpload,
             onRemove: (file) => {
+                const { response, noticeId } = file
                 let files = [file.uid]
-                return this.deleteRecord(files)
+                console.log('file',file)
+                if ((response && response.code === 200) || !!noticeId) {
+                    return this.deleteRecord(files)
+                } else {
+                    return true;
+                }
             },
             fileList
         };
