@@ -219,7 +219,6 @@ class TaxCalculation extends Component{
         const {getFieldDecorator} = this.props.form;
         let { declare,defaultParams} = this.props;
         defaultParams.authMonth = defaultParams.taxMonth;
-
         let disabled = !!declare;
         return(
             <div className="oneLine">
@@ -227,6 +226,13 @@ class TaxCalculation extends Component{
                     doNotFetchDidMount={!disabled}
                     searchOption={{
                         fields:searchFields(disabled,declare,defaultParams),
+                        onResetFields:()=>{
+                            this.setState({
+                                filters: {}
+                            },()=>{
+                                this.props.onParamsChange && this.props.onParamsChange({});
+                            })
+                        },
                         cardProps:{
                             className:'',
                             style:{borderTop:0}
