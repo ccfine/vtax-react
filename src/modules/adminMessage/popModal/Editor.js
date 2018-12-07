@@ -54,7 +54,20 @@ class EditorComponent extends Component {
                     editorClassName="message-editor"
                     {...editorProps}
                     toolbar={{
-                        // options: ['image'],
+                        options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'history'],
+                        inline: {
+                            options: ['bold', 'italic', 'underline'],
+                        },
+                        blockType: {
+                            inDropdown: true,
+                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
+                        },
+                        list: {
+                            options: ['unordered', 'ordered', 'indent', 'outdent'],
+                        },
+                        textAlign: {
+                            options: ['left', 'center', 'right'],
+                        },
                     }}
                     onEditorStateChange={this.onEditorStateChange}
                 />
