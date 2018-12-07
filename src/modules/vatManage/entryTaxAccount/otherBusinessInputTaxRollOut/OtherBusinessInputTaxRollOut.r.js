@@ -325,7 +325,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         let { filters, statusParam } = this.state;
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (
-            <div className='oneLine'>
+            <React.Fragment>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     backCondition={(filters)=>{
@@ -458,7 +458,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                     toggleModalVoucherVisible={popModalEdit=>this.toggleModal({popModalEdit})}
                     refreshTable={this.refreshTable}
                 />
-            </div>
+            </React.Fragment>
         );
     }
 }

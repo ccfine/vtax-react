@@ -135,7 +135,6 @@ export default class OperationsLog extends Component {
 
     render() {
         return (
-            <div className="oneLine">
                 <SearchTable
                     doNotFetchDidMount={false}
                     searchOption={{
@@ -154,7 +153,6 @@ export default class OperationsLog extends Component {
                         title: "操作日志"
                     }
                 }}/>
-            </div>
         )
     }
 }

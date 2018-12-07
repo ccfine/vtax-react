@@ -67,7 +67,6 @@ export default class DrawerModal extends Component {
         }}
         {...drawerOptions}
       >
-        <div className="oneLine">
           <SearchTable
             searchOption={{
               fields: searchTableOptions.searchOption.fields,
@@ -85,7 +84,6 @@ export default class DrawerModal extends Component {
             {...searchTableOptions}
           />
           {children ? children : null}
-        </div>
       </Drawer>
     );
   }

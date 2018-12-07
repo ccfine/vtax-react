@@ -266,7 +266,6 @@ class NeedNotMatchInvoices extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -344,7 +343,6 @@ class NeedNotMatchInvoices extends Component{
             >
                 <ManualMatchRoomModal title="新增信息" refreshTable={this.refreshTable} visible={visible} toggleModalVisible={this.toggleModalVisible} declare={declare}/>
             </SearchTable>
-            </div>
         )
     }
 }

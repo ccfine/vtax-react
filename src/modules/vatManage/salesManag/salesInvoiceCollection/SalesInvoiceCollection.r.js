@@ -423,7 +423,6 @@ export default class SalesInvoiceCollection extends Component {
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
-            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -554,7 +553,6 @@ export default class SalesInvoiceCollection extends Component {
                         toggleModalVisible={this.toggleModalVisible}
                     />
                 </SearchTable>
-            </div>
         );
     }
 }

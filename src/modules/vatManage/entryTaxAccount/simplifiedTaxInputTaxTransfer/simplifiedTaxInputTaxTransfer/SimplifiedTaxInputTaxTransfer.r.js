@@ -114,7 +114,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -178,7 +177,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                     filters={voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
-            </div>
         )
     }
 }

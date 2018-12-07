@@ -303,7 +303,7 @@ class PartnersTaxReturn extends Component{
         let disabled = !!declare;
 
         return(
-            <div className="oneLine">
+            <React.Fragment>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -367,7 +367,7 @@ class PartnersTaxReturn extends Component{
                 >
                     { drawerVisible ? <PartnersTaxReturnForm declare={declare} togglesDrawerVisible={this.togglesDrawerVisible} drawerConfig={drawerConfig} /> : ''}
                 </Drawer>
-            </div>
+            </React.Fragment>
         )
     }
 }

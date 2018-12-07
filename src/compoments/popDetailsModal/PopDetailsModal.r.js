@@ -52,7 +52,6 @@ export default class PopDetailsModal extends Component{
                     </Row>
                 }
                 title={title}>
-                <div className='oneLine'>
                     <SearchTable
                         searchOption={{
                             fields:fields
@@ -78,7 +77,6 @@ export default class PopDetailsModal extends Component{
                         }}
 
                     />
-                </div>
                 {/* totalData 格式 [[{label: text, key: valueKey}, ...], ...] */}
                 {
                     totalData.length? (

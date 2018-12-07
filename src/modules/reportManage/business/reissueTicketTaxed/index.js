@@ -294,7 +294,7 @@ export default class ReissueTicketTaxed extends Component {
 
     render() {
         let {filters = {}, detailFilters={}, totalSource = [], voucherVisible} = this.state;
-        return <div className="oneLine">
+        return (
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
@@ -344,7 +344,7 @@ export default class ReissueTicketTaxed extends Component {
                         });
                     }
                 }}
-            />
+            >
             <PopDetailsModal
                 title="发票信息"
                 tableOption={{
@@ -357,6 +357,7 @@ export default class ReissueTicketTaxed extends Component {
                 fields={voucherSearchFields}
                 toggleModalVoucherVisible={this.toggleModalVoucherVisible}
             />
-        </div>;
+        </SearchTable>
+        )
     }
 }

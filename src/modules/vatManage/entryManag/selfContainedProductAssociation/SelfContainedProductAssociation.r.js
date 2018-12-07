@@ -362,7 +362,6 @@ export default class SelfContainedProductAssociation extends Component {
     const { declare } = this.props
     let disabled = !!declare 
     return (
-      <div className="oneLine">
         <SearchTable 
           doNotFetchDidMount={ !disabled }
           searchOption={{
@@ -437,7 +436,6 @@ export default class SelfContainedProductAssociation extends Component {
             }
           }}
         />
-      </div>
     )
   }
 }

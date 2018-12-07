@@ -127,7 +127,6 @@ const columns=[
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -190,7 +189,6 @@ const columns=[
                     },
                 }}
             />
-            </div>
         )
     }
 }

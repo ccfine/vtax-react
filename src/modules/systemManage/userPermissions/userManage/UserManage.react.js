@@ -359,7 +359,6 @@ class UserManage extends Component {
     render() {
         const {  params } = this.state
         return (
-            <div className="oneLine">
                 <SearchTable
                     searchOption={{
                         fields: getSearchFields(this,params),
@@ -482,7 +481,6 @@ class UserManage extends Component {
                         editAble={true}
                     />
                 </SearchTable>
-            </div>
         );
     }
 }

@@ -195,7 +195,6 @@ class OtherRevision extends Component {
     let { filters={}, statusParam = {} } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (
-      <div className='oneLine'>
         <SearchTable
           doNotFetchDidMount={!disabled}
           searchOption={{
@@ -260,7 +259,7 @@ class OtherRevision extends Component {
               ),
             }
           }}
-        />
+        >
         <PopModal
           visible={this.state.visible}
           action={this.state.action}
@@ -271,7 +270,7 @@ class OtherRevision extends Component {
           update={this.refreshTable}
           declare={declare}
         />
-      </div>
+      </SearchTable>
     );
   }
 }

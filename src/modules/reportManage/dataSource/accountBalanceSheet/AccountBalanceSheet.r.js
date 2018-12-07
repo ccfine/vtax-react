@@ -184,7 +184,6 @@ export default class AccountBalanceSheet extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
@@ -245,7 +244,6 @@ export default class AccountBalanceSheet extends Component{
                         },
                     }}
                 />
-            </div>
         )
     }
 }

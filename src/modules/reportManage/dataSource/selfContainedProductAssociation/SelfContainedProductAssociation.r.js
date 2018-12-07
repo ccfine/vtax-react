@@ -305,7 +305,6 @@ export default class SelfContainedProductAssociation extends Component {
   render () {
     const { totalSource } = this.state
     return (
-      <div className="oneline">
         <SearchTable 
           doNotFetchDidMount={ true }
           searchOption={{
@@ -363,7 +362,6 @@ export default class SelfContainedProductAssociation extends Component {
             }
           }}
         />
-      </div>
     )
   }
 }

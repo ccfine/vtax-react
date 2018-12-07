@@ -233,7 +233,6 @@ export default class AdvancePayment extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
@@ -291,7 +290,6 @@ export default class AdvancePayment extends Component{
                         },
                     }}
                 />
-            </div>
         )
     }
 }

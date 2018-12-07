@@ -81,7 +81,6 @@ class NewBuildCollection extends Component{
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -127,7 +126,6 @@ class NewBuildCollection extends Component{
                     },
                 }}
             />
-            </div>
         )
     }
 }

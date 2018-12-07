@@ -151,7 +151,6 @@ export default class SelfBuiltToSelfUse extends Component{
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
                 <SearchTable
                     style={{
                         marginTop:-16
@@ -227,7 +226,6 @@ export default class SelfBuiltToSelfUse extends Component{
                         },
                     }}
                 />
-            </div>
         )
     }
 }

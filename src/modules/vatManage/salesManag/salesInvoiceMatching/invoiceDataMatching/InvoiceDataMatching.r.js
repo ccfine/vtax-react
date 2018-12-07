@@ -403,7 +403,6 @@ class InvoiceDataMatching extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 style={{
@@ -477,9 +476,7 @@ class InvoiceDataMatching extends Component{
                         title:<span><label className="tab-breadcrumb">销项发票匹配 / </label>销项发票数据匹配</span>,
                     },
                 }}
-            >
-            </SearchTable>
-            </div>
+            />
         )
     }
 }

@@ -246,7 +246,6 @@ class UnmatchedData extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 style={{
@@ -302,7 +301,6 @@ class UnmatchedData extends Component{
             >
                 <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
-            </div>
         )
     }
 }

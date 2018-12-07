@@ -243,7 +243,6 @@ class AvailableArea extends Component {
     render() {
         let { updateKey,saveLoding ,totalSource} = this.state;
         return (
-            <div className="oneLine">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
@@ -294,7 +293,6 @@ class AvailableArea extends Component {
                     )
                 }}
             />
-            </div>
         );
     }
 }

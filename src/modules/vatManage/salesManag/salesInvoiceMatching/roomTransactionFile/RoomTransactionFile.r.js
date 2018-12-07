@@ -492,7 +492,6 @@ class RoomTransactionFile extends Component{
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return(
-            <div className='oneLine'>
                 <SearchTable
                     style={{
                         marginTop:-16
@@ -604,14 +603,14 @@ class RoomTransactionFile extends Component{
                         }:undefined,
                     }}
                 >
+                    <PopModal 
+                        visible={popModalVisible}
+                        title='确收时点参数设置'
+                        toggleModalVisible={this.togglesPopModalVisible}
+                        declare={declare}
+                    />
                 </SearchTable>
-                <PopModal 
-                    visible={popModalVisible}
-                    title='确收时点参数设置'
-                    toggleModalVisible={this.togglesPopModalVisible}
-                    declare={declare}
-                />
-            </div>
+                
         )
     }
 }

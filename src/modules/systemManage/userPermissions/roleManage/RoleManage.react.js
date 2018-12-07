@@ -279,7 +279,7 @@ class RoleManage extends Component{
     render(){
         const {updateKey,visible,userVisible,permissionVisible,modalConfig,permissionId,userId,filters,params} = this.state;
         return (
-            (this.props.org && this.props.org.orgId) ? <div className="oneLine"><SearchTable
+            (this.props.org && this.props.org.orgId) ? <SearchTable
                 searchOption={{
                     fields:searchFields(this, params),
                     onResetFields:()=>{
@@ -340,7 +340,7 @@ class RoleManage extends Component{
                         toggleUserModalVisible={this.toggleUserModalVisible}
                  />
 
-            </SearchTable></div>:'loading'
+            </SearchTable>:'loading'
 
         )
     }

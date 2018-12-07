@@ -256,7 +256,6 @@ class OtherTaxAdjustment extends Component {
     let { filters={}, statusParam = {},totalSource } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (
-      <div className='oneLine'>
         <SearchTable
           doNotFetchDidMount={!disabled}
           searchOption={{
@@ -326,18 +325,18 @@ class OtherTaxAdjustment extends Component {
               ),
             }
           }}
-        />
-        <PopModal
-          visible={this.state.visible}
-          action={this.state.action}
-          hideModal={() => {
-            this.hideModal();
-          }}
-          id={this.state.opid}
-          update={this.refreshTable}
-          declare={declare}
-        />
-      </div>
+        >
+          <PopModal
+            visible={this.state.visible}
+            action={this.state.action}
+            hideModal={() => {
+              this.hideModal();
+            }}
+            id={this.state.opid}
+            update={this.refreshTable}
+            declare={declare}
+          />
+        </SearchTable>
     );
   }
 }

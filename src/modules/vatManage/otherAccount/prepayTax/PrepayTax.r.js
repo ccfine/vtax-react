@@ -418,7 +418,6 @@ class PrepayTax extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className="oneLine">
                     <SearchTable
                     searchOption={{
                         fields:searchFields(disabled,declare),
@@ -537,7 +536,6 @@ class PrepayTax extends Component{
                     }}
                 />
                 </SearchTable>
-            </div>
         )
     }
 }

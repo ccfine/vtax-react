@@ -145,7 +145,6 @@ export default class TaxMain extends Component{
     render(){
         const {visible,modalConfig,tableKey} = this.state;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -165,7 +164,6 @@ export default class TaxMain extends Component{
             >
                 <PopModal tab="1" visible={visible} refreshTable={this.refreshTable} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
-            </div>
         )
     }
 }

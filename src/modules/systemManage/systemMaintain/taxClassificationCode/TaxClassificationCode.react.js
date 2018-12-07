@@ -154,7 +154,6 @@ class TaxClassificationCode extends Component{
     render(){
         const {updateKey,visible,modalConfig} = this.state;
         return(
-            <div className="oneLine">
                 <SearchTable
                     searchOption={{
                         fields:searchFields,
@@ -200,7 +199,6 @@ class TaxClassificationCode extends Component{
                         toggleModalVisible={this.toggleModalVisible}
                     />
                 </SearchTable>
-            </div>
         )
     }
 }

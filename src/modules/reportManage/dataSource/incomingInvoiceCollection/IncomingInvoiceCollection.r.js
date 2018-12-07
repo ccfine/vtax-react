@@ -277,7 +277,6 @@ export default class IncomingInvoiceCollection extends Component{
     render(){
         const {updateKey,totalSource} = this.state;
         return(
-            <div className="oneLine">
             <SearchTable
                 doNotFetchDidMount={true}
                 searchOption={{
@@ -323,7 +322,6 @@ export default class IncomingInvoiceCollection extends Component{
                     scroll:{ x: 2900,y:window.screen.availHeight-360,},
                 }}
             />
-            </div>
         )
     }
 }

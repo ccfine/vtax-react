@@ -315,7 +315,6 @@ class LandPriceManage extends Component{
         const {getFieldDecorator} = this.props.form;
         const isCheck = (disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1);
         return(
-            <div className='oneLine'>
                 <SearchTable
                     spinning={searchTableLoading}
                     doNotFetchDidMount={!disabled}
@@ -409,7 +408,6 @@ class LandPriceManage extends Component{
                         filters={voucherInfo}
                         toggleViewModalVisible={this.toggleViewModalVisible} />
                 </SearchTable>
-            </div>
         )
     }
 }
