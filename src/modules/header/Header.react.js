@@ -121,39 +121,6 @@ class WimsHeader extends Component {
                     </Col>*/}
                     <Col xs={20} sm={16} lg={16}>
                         <div className='right'>
-                            <span className='action search' style={{float:'left'}}>
-                                {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
-                            </span>
-
-                            <Tooltip placement="bottom" title='我要提问'>
-                                <a className='action'
-                                   rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'>
-                                    <Icon type="question-circle-o" />
-                                </a>
-                            </Tooltip>
-                            {
-                                parseInt(this.props.type, 0) === 1 ? (
-                                    <Tooltip placement="bottom" title='消息'>
-                                        <a className='action'
-                                        rel='noopener noreferrer' target='_blank' href='/web/message'>
-                                            <Badge count={this.props.noticeNum}>
-                                                <div style={{position:"relative",top:2}}>
-                                                    <Icon type='bell' style={{fontSize:16,padding:4}} />
-                                                </div>
-                                            </Badge>
-                                        </a>
-                                    </Tooltip>
-                                ) : (
-                                    <Dropdown overlay={messageMenu} placement="bottomRight" trigger={['click']}>
-                                        <a className="action" href="javascript();">
-                                        <Badge count={this.props.noticeNum}>
-                                                <Icon type='bell' style={{fontSize:16,padding:4}} />
-                                        </Badge>
-                                        </a>
-                                    </Dropdown>
-                                )
-                            }
-
                             <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 {
                                     <Tooltip placement="left" title={this.props.realName && this.props.realName}>
@@ -164,7 +131,37 @@ class WimsHeader extends Component {
                                     </Tooltip>
                                 }
                             </Dropdown>
-
+                            {
+                                parseInt(this.props.type, 0) === 1 ? (
+                                    <Tooltip placement="bottom" title='消息'>
+                                        <a style={{paddingTop: '3px'}} className='action'
+                                        rel='noopener noreferrer' target='_blank' href='/web/message'>
+                                            <Badge count={this.props.noticeNum}>
+                                                <div style={{position:"relative",top:2}}>
+                                                    <Icon type='bell' style={{fontSize:16,padding:4}} />
+                                                </div>
+                                            </Badge>
+                                        </a>
+                                    </Tooltip>
+                                ) : (
+                                    <Dropdown overlay={messageMenu} placement="bottomRight" trigger={['click']}>
+                                        <a style={{paddingTop: '3px'}} className="action" href="javascript();">
+                                        <Badge count={this.props.noticeNum}>
+                                                <Icon type='bell' style={{fontSize:16,padding:4}} />
+                                        </Badge>
+                                        </a>
+                                    </Dropdown>
+                                )
+                            }
+                            <Tooltip placement="bottom" title='我要提问'>
+                                <a className='action'
+                                   rel='noopener noreferrer' target='_blank' href='http://help.countrygarden.com.cn:9000/form.action?&type=VATTDS'>
+                                    <Icon type="question-circle-o" />
+                                </a>
+                            </Tooltip>
+                            <span className='action search'>
+                                {this.props.isAuthed && <SelectSearch changeRefresh={this.props.changeRefresh.bind(this)} />}
+                            </span>
                             {/*{this.props.realName ? (
                                 <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
                                 <span className='action account'>
