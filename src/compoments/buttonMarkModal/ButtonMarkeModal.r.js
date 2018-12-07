@@ -5,6 +5,7 @@ import React,{Component} from 'react'
 import {Button,Modal,Form,Row,message,Icon} from 'antd';
 import PropTypes from 'prop-types'
 import {request,getFields} from 'utils'
+
 class ButtonMarkeModal extends Component{
     static propTypes={
         buttonOptions:PropTypes.shape({
@@ -65,11 +66,11 @@ class ButtonMarkeModal extends Component{
                     .then(({data})=>{
                         this.toggleLoading(false)
                         if(data.code===200){
-                            message.success('标记类型成功!');
+                            message.success(`${this.props.modalOptions.title}成功!`);
                             this.toggleVisible(false);
                             onSuccess && onSuccess()
                         }else{
-                            message.error(`标记类型失败:${data.msg}`)
+                            message.error(`${this.props.modalOptions.title}失败:${data.msg}`)
                         }
                     })
                     .catch(err => {

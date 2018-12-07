@@ -30,6 +30,16 @@ const columns=[
         width:'100px',
     },
     {
+        title:'转固单号',
+        dataIndex:'rotaryNum',
+        width:'200px',
+    },
+    {
+        title:'匹配自持产品的产品编码',
+        dataIndex:'productNum',
+        width:'300px',
+    },
+    {
         title: "入账日期",
         dataIndex: "accountDate",
         width:'100px',
@@ -153,9 +163,9 @@ const columns=[
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/fixedAssetCard/externalList',
+                    url:'/fixedAssetCard/fixedList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>外部获取不动产</span>,
+                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>不动产卡片</span>,
                         extra: (
                             <div>
                                 {
@@ -164,7 +174,7 @@ const columns=[
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'fixedAssetCard/external/export',
+                                        url:'fixedAssetCard/fixedList/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],
