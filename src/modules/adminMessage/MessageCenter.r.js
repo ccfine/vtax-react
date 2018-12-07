@@ -9,9 +9,6 @@ import {Button,message,Modal} from 'antd'
 import { request,composeBotton } from "utils"
 import { SearchTable } from "compoments"
 import PopsModal from './popModal'
-import {withRouter} from 'react-router-dom'
-import {connect} from 'react-redux'
-import {fetchNoticeNum} from '../../redux/ducks/user'
 import './index.less'
 
 const transformData = (data=[]) =>{
@@ -19,6 +16,7 @@ const transformData = (data=[]) =>{
         return {
             uid: item.fileUuid,
             name: item.srcFileName,
+            noticeId: item.noticeId,
         }
     })
 }
@@ -91,27 +89,6 @@ const getSearchFields = [
             format:'YYYY-MM-DD'
         }
     },
-    // {
-    //     label: "阅读状态",
-    //     fieldName: "readStatus",
-    //     type: "select",
-    //     span: 8,
-    //     options: [
-    //         {
-    //             text: "已阅读",
-    //             value: "1"
-    //         },
-    //         {
-    //             text: "未阅读",
-    //             value:  "2"
-    //         }
-    //     ]
-    // },
-    // {
-    //     label: "发布人",
-    //     fieldName: "createBy",
-    //     span: 8,
-    // },
 ]
 
 const getColumns = context => [
@@ -181,18 +158,13 @@ const getColumns = context => [
             }
         }
     },
-    // {
-    //     title: "发布人",
-    //     dataIndex: "publishBy",
-    //     width:'100px',
-    // },
     {
         title: "操作",
         dataIndex: "taxableProject9",
         width:'100px',
         render(text, record, index) {
             if (record.publishStatus === 1) {
-                return <a href={`/messageDetail?id=${record.id}&readStatus=2`} target="_blank" onClick={() => context.handleGo()}>查看</a>
+                return <a href={`/messageDetail?id=${record.id}&readStatus=0`} target="_blank">查看</a>
             }else {
                 return composeBotton([{
                     type:'action',
@@ -292,13 +264,6 @@ class MessageCenter extends Component {
 		})
 	}
 
-    handleGo = () => {
-        this.refreshTable()
-        if (this.props.noticeNum > 0) {
-            this.props.fetchNoticeNum()
-        }
-    }
-
     handleReturn = () => {
         window.history.back()
     }
@@ -354,8 +319,4 @@ class MessageCenter extends Component {
     }
 }
 
-export default withRouter(connect(state=>({
-    noticeNum:state.user.get('noticeNum'),
-}),dispatch=>({
-    fetchNoticeNum:fetchNoticeNum(dispatch)
-}))(MessageCenter))
+export default MessageCenter

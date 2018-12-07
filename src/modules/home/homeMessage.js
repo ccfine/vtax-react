@@ -51,7 +51,8 @@ class homeMessage extends Component {
 
     htmlToText = (text) => {
         const re = /<(?:.|\s)*?>/g;
-        return text.replace(re, "");
+        const content = text.replace(re, "");
+        return content.length > 130 ? `${content.substr(0,130)}...` : content;
     }
 
     fetchMessageList = () => {
@@ -73,9 +74,29 @@ class homeMessage extends Component {
             })
     }
 
-    handleGo = () => {
-        if (this.props.noticeNum > 0) {
-            this.props.fetchNoticeNum()
+    fetchData = (id, data, callback) => {
+        request.get(`/sysNotice/find/${id}`, {
+            params: data
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    callback && callback()
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
+
+    handleGo = (record) => {
+        const id = record.id;
+        let reqData = {
+            readStatus: record.readStatus
+        }
+        if (parseInt(record.readStatus,0) === 2) {
+            this.fetchData(id, reqData, () => {
+                this.props.fetchNoticeNum()
+            })
         }
     }
 
@@ -93,8 +114,12 @@ class homeMessage extends Component {
                             listData.length > 0 ? listData.map((item, key) => {
                                 return (
                                     <div key={key} className="home-message-page">
-                                        <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={this.handleGo}><div className="message-page-header"><span>{this.getLevel(item.level)}</span><span>{item.title}</span></div></a>
-                                        <div className="message-page-info"><span>{`公告时间：${item.publishDate}`}</span><span>{`发布人：${item.publishBy}`}</span><span>{`公告类型：${this.getSysDictId(item.sysDictId)}`}</span></div>
+                                        <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={() => this.handleGo(item)}>
+                                            <div className="message-page-header">
+                                                <span>{this.getLevel(item.level)}</span><span>{item.title}</span>
+                                            </div>
+                                        </a>
+                                        <div className="message-page-info"><span>{`公告时间：${item.publishDateStr}`}</span><span>{`发布人：${item.publishBy}`}</span><span>{`公告类型：${this.getSysDictId(item.sysDictId)}`}</span></div>
                                         <div className="message-page-text">{this.htmlToText(item.content)}</div>
                                     </div>
                                 )

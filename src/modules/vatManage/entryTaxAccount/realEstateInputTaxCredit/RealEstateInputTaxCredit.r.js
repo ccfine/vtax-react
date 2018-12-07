@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react'
 import { Tabs } from 'antd';
-import SelfBuiltToSelfUse from './selfBuiltToSelfUse'
+//import SelfBuiltToSelfUse from './selfBuiltToSelfUse'
 import ExternalAccess from './externalAccess'
 import NewlyBuilt from './newlyBuilt'
 import Summary from './summary'
@@ -96,36 +96,57 @@ const searchFields=(key,disabled,declare) => (getFieldValue) => {
             result = [...list(disabled,declare,getFieldValue)];
             break;
         case 'tab2':
-            result = [...list(disabled,declare,getFieldValue)];
-            break;
-        case 'tab3':
             result = [
                 ...list(disabled,declare,getFieldValue),
                 {
-                    label: "转固单号",
-                    fieldName: "rotaryNum",
-                    type: "input",
-                    span: 6,
+                    label: "取得方式",
+                    fieldName: "acquisitionMode",
+                    span:6,
                     formItemStyle,
-                    componentProps: {},
-                    fieldDecoratorOptions: {}
+                    type: "select",
+                    options: [ //0-外部获取,1-单独新建，2-自建转自用
+                        {
+                            text: "外部获取",
+                            value: "0"
+                        },
+                        {
+                            text: "自建转自用",
+                            value: "2"
+                        }
+                    ]
+
                 },
-                {
-                    label: "产品编码",
-                    fieldName: "productNum",
-                    type: "input",
-                    span: 6,
-                    formItemStyle,
-                    componentProps: {},
-                    fieldDecoratorOptions: {}
-                }
             ];
             break;
-        case 'tab4':
+        case 'tab3':
+            // result = [
+            //     ...list(disabled,declare,getFieldValue),
+            //     {
+            //         label: "转固单号",
+            //         fieldName: "rotaryNum",
+            //         type: "input",
+            //         span: 6,
+            //         formItemStyle,
+            //         componentProps: {},
+            //         fieldDecoratorOptions: {}
+            //     },
+            //     {
+            //         label: "产品编码",
+            //         fieldName: "productNum",
+            //         type: "input",
+            //         span: 6,
+            //         formItemStyle,
+            //         componentProps: {},
+            //         fieldDecoratorOptions: {}
+            //     }
+            // ];
             result = [...list(disabled,declare,getFieldValue)];
             break;
+        // case 'tab4':
+        //     result = [...list(disabled,declare,getFieldValue)];
+        //     break;
         default:
-            break;
+        //break;
     }
     return result;
 }
@@ -134,21 +155,21 @@ const tabList = [{
     tab: '不动产进项税额抵扣汇总',
 }, {
     key: 'tab2',
-    tab: '外部获取不动产进项税额抵扣',
+    tab: '不动产卡片进项税额抵扣',
 }, {
     key: 'tab3',
-    tab: '自建转自用不动产进项税额抵扣',
-}, {
-    key: 'tab4',
     tab: '单独新建不动产进项税额抵扣',
+// }, {
+//     key: 'tab4',
+//     tab: '自建转自用不动产进项税额抵扣',
 }];
 
 const getContent = (key,disabled,declare,context) => {
     const contentList = {
         tab1: <Summary declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
         tab2: <ExternalAccess declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab3: <SelfBuiltToSelfUse declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab4: <NewlyBuilt declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab3: <NewlyBuilt declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        //tab4: <SelfBuiltToSelfUse declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
     };
     return contentList[key]
 }

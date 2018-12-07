@@ -5,7 +5,6 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import {Tabs} from 'antd';
 import External from './external';
-import SelfUse from './selfUse';
 import NewBuild from './newBuild';
 
 const TabPane = Tabs.TabPane;
@@ -33,7 +32,7 @@ const list = (disabled,declare,getFieldValue) => [
         label:'纳税主体',
         fieldName:'main',
         type:'taxMain',
-        span:6,
+        span:8,
         formItemStyle,
         componentProps:{
             labelInValue:true,
@@ -53,8 +52,8 @@ const list = (disabled,declare,getFieldValue) => [
         label: '纳税申报期',
         fieldName: 'authMonth',
         type: 'monthPicker',
+        span:8,
         formItemStyle,
-        span: 6,
         componentProps: {
             format: 'YYYY-MM',
             disabled
@@ -73,7 +72,8 @@ const list = (disabled,declare,getFieldValue) => [
         label:'利润中心',
         fieldName:'profitCenterId',
         type:'asyncSelect',
-        span:6,
+        span:8,
+        formItemStyle,
         componentProps:{
             fieldTextName:'profitName',
             fieldValueName:'id',
@@ -86,7 +86,8 @@ const list = (disabled,declare,getFieldValue) => [
         label:'项目分期',
         fieldName:'stageId',
         type:'asyncSelect',
-        span:6,
+        span:8,
+        formItemStyle,
         componentProps:{
             fieldTextName:'itemName',
             fieldValueName:'id',
@@ -100,32 +101,29 @@ const searchFields =  (key,disabled,declare) => (getFieldValue) => {
     let result = [];
     switch (key) {
         case 'tab1':
-            result = [...list(disabled,declare,getFieldValue)];
-            break;
-        case 'tab2':
             result = [
                 ...list(disabled,declare,getFieldValue),
                 {
-                    label: "转固单号",
-                    fieldName: "rotaryNum",
-                    type: "input",
-                    span: 6,
+                    label: "取得方式",
+                    fieldName: "acquisitionMode",
+                    span:8,
                     formItemStyle,
-                    componentProps: {},
-                    fieldDecoratorOptions: {}
+                    type: "select",
+                    options: [ //0-外部获取,1-单独新建，2-自建转自用
+                        {
+                            text: "外部获取",
+                            value: "0"
+                        },
+                        {
+                            text: "自建转自用",
+                            value: "2"
+                        }
+                    ]
+
                 },
-                {
-                    label: "产品编码",
-                    fieldName: "productNum",
-                    type: "input",
-                    span: 6,
-                    formItemStyle,
-                    componentProps: {},
-                    fieldDecoratorOptions: {}
-                }
             ];
             break;
-        case 'tab3':
+        case 'tab2':
             result = [...list(disabled,declare,getFieldValue)];
             break;
         default:
@@ -136,20 +134,16 @@ const searchFields =  (key,disabled,declare) => (getFieldValue) => {
 
 const tabList = [{
     key: 'tab1',
-    tab: '外部获取不动产',
+    tab: '不动产卡片',
 }, {
     key: 'tab2',
-    tab: '自建转自用不动产',
-}, {
-    key: 'tab3',
-    tab: '单独新建不动产',
+    tab: '自持产品清单',
 }];
 
 const getContent = (key,disabled,declare,context) => {
     const contentList = {
         tab1: <External declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab2: <SelfUse declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
-        tab3: <NewBuild declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
+        tab2: <NewBuild declare={declare} searchFields={ searchFields(key,disabled,declare) } refreshTabs={context.refreshTabs}/>,
     };
     return contentList[key]
 }

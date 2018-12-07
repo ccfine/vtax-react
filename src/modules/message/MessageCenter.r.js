@@ -5,10 +5,12 @@
  */
 
 import React, { Component } from 'react'
+import { message } from 'antd'
 import { SearchTable } from "compoments"
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {fetchNoticeNum} from '../../redux/ducks/user'
+import {request} from 'utils'
 import './index.less'
 
 const getSearchFields = [
@@ -179,7 +181,7 @@ const getColumns = context => [
         dataIndex: "taxableProject9",
         width:'100px',
         render(text, record, index) {
-            return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank" onClick={() => context.handleGo()}>查看</a>
+            return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank" onClick={() => context.handleGo(record)}>查看</a>
         },
     },
 ]
@@ -204,10 +206,30 @@ class MessageCenter extends Component {
         })
     }
 
-    handleGo = () => {
-        this.refreshTable()
-        if (this.props.noticeNum > 0) {
-            this.props.fetchNoticeNum()
+    fetchData = (id, data, callback) => {
+        request.get(`/sysNotice/find/${id}`, {
+            params: data
+        })
+            .then(({data}) => {
+                if(data.code===200){
+                    callback && callback()
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
+
+    handleGo = (record) => {
+        const id = record.id;
+        let reqData = {
+            readStatus: record.readStatus
+        }
+        if (parseInt(record.readStatus,0) === 2) {
+            this.fetchData(id, reqData, () => {
+                this.refreshTable()
+                this.props.fetchNoticeNum()
+            })
         }
     }
 

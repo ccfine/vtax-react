@@ -7,6 +7,7 @@
 import React, { Component } from 'react'
 import {Tree,Spin} from 'antd'
 // import difference from 'lodash/difference'
+// import isEqual from 'lodash/isEqual'
 import './tree.less'
 
 const TreeNode = Tree.TreeNode
@@ -32,6 +33,11 @@ class TreeDom extends Component {
         // if(difference(nextState.checkedKeys, this.state.checkedKeys).length === 0 && difference(nextProps.treeData, this.props.treeData).length === 0) {
         //     return false
         // }
+        // if ( isEqual(nextProps, this.props) && isEqual(nextState, this.state) ) {
+        //     return false
+        // }
+        // console.log('nextProps', nextProps)
+        // console.log('this.props', this.props)
         return true
     }
 

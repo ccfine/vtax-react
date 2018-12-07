@@ -13,6 +13,7 @@ import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import difference from 'lodash/difference'
+import { store } from 'redux/store'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -26,7 +27,8 @@ class PopModal extends Component {
             fileUUIDArray: [],
             list: [],
             saveLoading: false,
-            publishLoading: false
+            publishLoading: false,
+            uploadLoging: false
         }
     }
 
@@ -65,6 +67,7 @@ class PopModal extends Component {
                 const { defaultData } = this.props;
                 const { fileUUIDArray } = this.state
                 if (this.props.modalType === 'add') {
+                    // 新增公告
                     const values = {
                         ...fieldsValue,
                         'takeDate': fieldsValue['takeDate'].format('YYYY-MM-DD'),
@@ -82,6 +85,7 @@ class PopModal extends Component {
                         this.fetchSave(values, 'save')
                     }
                 } else {
+                    // 修改公告
                     const values = {
                         ...fieldsValue,
                         'takeDate': fieldsValue['takeDate'].format('YYYY-MM-DD'),
@@ -111,6 +115,7 @@ class PopModal extends Component {
             .then(({data}) => {
                 if(data.code===200){
                     type === 'save' ? this.setState({saveLoading: false}) : this.setState({publishLoading: false})
+                    type === 'save' ? message.success('保存成功',2) : message.success('发布成功',2)
                     this.props.toggleModalVisible(false)
                 }else {
                     message.error(data.msg)
@@ -131,6 +136,7 @@ class PopModal extends Component {
             .then(({data}) => {
                 if(data.code===200){
                     type === 'save' ? this.setState({saveLoading: false}) : this.setState({publishLoading: false})
+                    type === 'save' ? message.success('保存成功',2) : message.success('发布成功',2)
                     this.props.toggleModalVisible(false)
                 }else {
                     message.error(data.msg)
@@ -168,9 +174,6 @@ class PopModal extends Component {
                 // 新增公告点击关闭按钮 删除文件UUID
                 let newArr = difference(fileUUIDArray, reqData)
                 this.setState({fileUUIDArray: newArr})
-                if (type === 'cancel') {
-                    message.success('附件删除成功', 2);
-                }
                 return true
             } else {
                 message.error(`文件删除失败:${data.msg}`, 4);
@@ -185,65 +188,135 @@ class PopModal extends Component {
     // 上传附件后台返回的uuid 保存要传给后台
     setUuid = (data) => {
         const { fileUUIDArray } = this.state
-        let newArr = fileUUIDArray.concat([data.fileUuid])
+        let newArr = fileUUIDArray.concat([data.uid])// uid  fileUuid
         this.setState({fileUUIDArray: newArr})
     }
 
     handleFileChange = (info) => {
-        let fileList = info.fileList
-        if (fileList.length > 5) {
-            message.error('附件数量不能多于5个！');
+        const { file, fileList } = info
+        const isLt5M = file.size / 1024 / 1024 < 5
+        if (info.file.status === 'error') {
+            // 当文件上传失败 处理
+            let newFiles = fileList.filter((item) => {
+                if (item.status !== 'error' || !!item.noticeId) {
+                    return item
+                }
+            })
+            message.error('文件上传失败，请重新上传', 2)
+            this.setState({fileList: newFiles, uploadLoging: false})
             return false;
         }
-        this.setState({ fileList })
+        if (info.file.status === 'removed') {
+            message.success('文件删除成功', 2)
+            this.setState({uploadLoging: false})
+            this.setState({ fileList: fileList })
+            return true;
+        }
+        const fileName = file.name
+        const pos = fileName.lastIndexOf('.')
+        const lastName = fileName.substring(pos,fileName.length)
+        if (lastName.toLowerCase() !== '.zip' && lastName.toLowerCase() !== '.rar' && lastName.toLowerCase() !== '.7z') {
+            message.warning('文件必须为压缩包格式', 2)
+            this.setState({uploadLoging: false})
+            return false;
+        }
+        if (fileList.length > 5) {
+            return false;
+        }
+
+        if (!isLt5M) {
+            return false;
+        }
+        if (info.file.status === 'uploading') {
+            console.log('正在上传........')
+        }
+        if (info.file.status === 'done') {
+            message.success('文件上传成功', 2)
+            this.setState({uploadLoging: false})
+            this.setUuid(file)
+        }
+        this.setState({ fileList: fileList })
     }
 
     handleBeforeUpload = (file, filesList) => {
+        const { fileList } = this.state
         const isLt5M = file.size / 1024 / 1024 < 5;
+        if (fileList.length > 4) {
+            message.error('附件数量不能多于5个！');
+            return false;
+        }
         if (!isLt5M) {
             message.error('文件必须小于5MB！');
             return false;
         }
-        const formData = new FormData()
-        formData.append('files',file)
-        formData.append('targetfileName',file.uid)
-        request.post('/sysNotice/upload',formData, {
-            header:{
-                //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到
-                "Content-Type":"application/x-www-form-urlencoded"
-            }
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    const reqData = data.data
-                    message.success('附件上传成功', 2)
-                    this.setUuid(reqData)
-                }else{
-                    message.error(`附件上传失败:${data.msg}`,4)
-                }
-            }).catch(err=>{
-                message.error(`附件上传失败:${err}`,4)
-        })
-        return false;
+        // const formData = new FormData()
+        // formData.append('files',file)
+        // formData.append('targetfileName',file.uid)
+        this.setState({currentUid:file.uid})
+        this.setState({uploadLoging: true})
+        // request.post('/sysNotice/upload',formData, {
+        //     header:{
+        //         //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到
+        //         "Content-Type":"application/x-www-form-urlencoded"
+        //     }
+        // })
+        //     .then(({data})=>{
+        //         if(data.code===200){
+        //             const reqData = data.data
+        //             message.success('附件上传成功', 2)
+        //             this.setState({uploadLoging: false})
+        //             this.setUuid(reqData)
+        //         }else{
+        //             this.setState({uploadLoging: false})
+        //             message.error(`附件上传失败:${data.msg}`,4)
+        //         }
+        //     }).catch(err=>{
+        //         this.setState({uploadLoging: false})
+        //         message.error(`附件上传失败.:${err}`,4)
+        // })
+        return true;
     }
 
     handleCancel = () => {
-        if (this.state.fileUUIDArray.length > 0) {
-            this.deleteRecord(this.state.fileUUIDArray, 'cancel')
+        const { fileList } = this.state;
+        let newArr = []
+        fileList.forEach((item) => {
+            if (!item.noticeId) {
+                newArr.push(item.uid)
+            }
+        })
+        if (newArr.length > 0) {
+            this.deleteRecord(newArr, 'cancel')
         }
         this.props.toggleModalVisible(false)
+    }
+
+    getToken = ()=>{
+        return store.getState().user.get('token') || false
     }
 
     render() {
         const { getFieldDecorator } = this.props.form
         const { visible, loading } = this.props
-        const { defaultData, fileList, saveLoading, publishLoading } = this.state
+        const { defaultData, fileList, saveLoading, publishLoading, uploadLoging } = this.state
         const props = {
+            name: 'files',
+            action: `${window.baseURL}sysNotice/upload`,
+            headers: {
+                Authorization: this.getToken()
+            },
+            data: {targetfileName: this.state.currentUid},
             onChange: this.handleFileChange,
             beforeUpload: this.handleBeforeUpload,
             onRemove: (file) => {
+                const { response, noticeId } = file
                 let files = [file.uid]
-                return this.deleteRecord(files)
+                console.log('file',file)
+                if ((response && response.code === 200) || !!noticeId) {
+                    return this.deleteRecord(files)
+                } else {
+                    return true;
+                }
             },
             fileList
         };
@@ -258,7 +331,7 @@ class PopModal extends Component {
                 footer={null}
             >
                 <Spin spinning={loading}>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form onSubmit={this.handleSubmit} className="message-form">
                         <Row gutter={24}>
                             <Col span={16}>
                                 <Row>
@@ -271,7 +344,10 @@ class PopModal extends Component {
                                             {
                                                 getFieldDecorator('title', {
                                                     initialValue: defaultData.title || '',
-                                                    rules: [{ required: true, message: '请输入公告标题' }],
+                                                    rules: [
+                                                        { required: true, message: '请输入公告标题' },
+                                                        { max: 20, message: '公告标题最多输入20个字符' }
+                                                    ],
                                                 })(
                                                     <Input />
                                                 )
@@ -379,19 +455,8 @@ class PopModal extends Component {
                                 <Row>
                                     <Col span={3} offset={1}>添加附件：</Col>
                                     <Col span={12}>
-                                        {/* <FormItem
-                                            labelCol={{span: 8}}
-                                            wrapperCol={{ span: 16 }}
-                                            label="添加附件"
-                                        >
-                                            <Upload {...props}>
-                                                <Button size='small'>
-                                                    <Icon type="upload" />
-                                                </Button>
-                                            </Upload>
-                                        </FormItem> */}
                                         <Upload {...props}>
-                                            <Button size='small'>
+                                            <Button disabled={uploadLoging} size='small'>
                                                 <Icon type="upload" />
                                             </Button>
                                         </Upload>

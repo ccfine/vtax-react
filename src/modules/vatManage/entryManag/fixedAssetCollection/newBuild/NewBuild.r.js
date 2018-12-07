@@ -31,6 +31,16 @@ const columns=[
         width:'100px',
     },
     {
+        title:'转固单号',
+        dataIndex:'rotaryNum',
+        width:'200px',
+    },
+    {
+        title:'匹配的不动产编码',
+        dataIndex:'assetNo',
+        width:'300px',
+    },
+    {
         title: "产品类型",
         dataIndex: "productType",
         width:'100px',
@@ -94,15 +104,15 @@ class NewBuildCollection extends Component{
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/fixedAssetCard/separateList',
+                    url:'/fixedAssetCard/productList',
                     cardProps: {
-                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>单独新建不动产</span>,
+                        title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>自持产品清单</span>,
                         extra: (
                             <div>
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
-                                        url:'fixedAssetCard/separate/export',
+                                        url:'fixedAssetCard/productList/export',
                                         params:filters,
                                         title:'导出',
                                         userPermissions:['1511007'],

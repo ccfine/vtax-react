@@ -28,7 +28,7 @@ class PopModal extends Component{
                     confirmType: values.confirmType,
                     parentId: declare.mainId
                 }
-                request.post('/taxsubject/updateConfig',param).then(({data}) => {
+                request.post('/output/room/files/updateConfig',param).then(({data}) => {
                     if (data.code === 200) {
                         message.success('修改成功')
                     } else {
