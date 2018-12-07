@@ -13,6 +13,7 @@ import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import difference from 'lodash/difference'
+import { store } from 'redux/store'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -80,11 +81,11 @@ class PopModal extends Component {
                     if (type === 'push') {
                         this.deleteRole(() => {
                             this.fetchSave(values, 'push')
-                            // this.requestPublish(url, values)
+                            // this.requestPublish(url, values, 'add')
                         })
                     } else {
                         this.fetchSave(values, 'save')
-                        // this.requestSave(url, values)
+                        // this.requestSave(url, values, 'add')
                     }
                 } else {
                     // 修改公告 保存和发布按钮 都用这个接口
@@ -102,11 +103,11 @@ class PopModal extends Component {
                     if (type === 'push') {
                         this.deleteRole(() => {
                             this.fetchPut(values, 'push')
-                            // this.requestPublish(url, values)
+                            // this.requestPublish(url, values, 'edit')
                         })
                     } else {
                         this.fetchPut(values, 'save')
-                        // this.requestSave(url, values)
+                        // this.requestSave(url, values, 'edit')
                     }
                 }
             }
@@ -114,50 +115,91 @@ class PopModal extends Component {
     }
     
     // new 保存接口
-    requestSave = (url, data) => {
+    requestSave = (url, data, type) => {
         this.setState({saveLoading: true})
-        request.post(url, data)
-            .then(({data}) => {
-                if(data.code===200){
-                    this.setState({saveLoading: false})
-                    message.success('公告保存成功', 2);
-                    this.props.toggleModalVisible(false)
-                }else {
-                    message.error(data.msg)
-                    this.setState({saveLoading: false})
-                }
-            })
-            .catch(err => {
+        if (type === 'add') {
+            this.fetchPost(url, data).then((data) => {
+                message.success('公告保存成功', 2);
                 this.setState({saveLoading: false})
                 this.props.toggleModalVisible(false)
-                message.error(err.message)
+            }).catch((err) => {
+                this.setState({saveLoading: false})
+                message.error(err, 2)
             })
+        } else if (type === 'edit') {
+            this.fetchPut(url, data).then((data) => {
+                message.success('公告保存成功', 2);
+                this.setState({saveLoading: false})
+                this.props.toggleModalVisible(false)
+            }).catch((err) => {
+                this.setState({saveLoading: false})
+                message.error(err, 2)
+            })
+        }
     }
 
     // new 发布接口
-    requestPublish = (url, data) => {
+    requestPublish = (url, data, type) => {
         this.setState({publishLoading: true})
-        request.post(url, data)
-            .then(({data}) => {
-                if(data.code===200){
-                    this.setState({publishLoading: false})
-                    message.success('公告发布成功', 2);
-                    this.props.toggleModalVisible(false)
-                }else {
-                    message.error(data.msg)
-                    this.setState({publishLoading: false})
+        if (type === 'add') {
+            this.fetchPost(url, data).then(() => {
+                message.success('公告发布成功', 2);
+                this.setState({publishLoading: false})
+                this.props.toggleModalVisible(false)
+            }).catch((err) => {
+                this.setState({publishLoading: false})
+                message.error(err, 2)
+            })
+        } else if (type === 'edit') {
+            this.fetchPut(url, data).then(() => {
+                message.success('公告发布成功', 2);
+                this.setState({publishLoading: false})
+                this.props.toggleModalVisible(false)
+            }).catch((err) => {
+                this.setState({publishLoading: false})
+                message.error(err, 2)
+            })
+        }
+    }
+
+    async fetchPost(url, data) {
+        return await request
+            .post(url, data)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    return Promise.resolve(data.data);
+                } else {
+                    return Promise.reject(data.msg)
                 }
             })
             .catch(err => {
-                this.setState({publishLoading: false})
-                this.props.toggleModalVisible(false)
-                message.error(err.message)
+                return Promise.reject(err.message)
+            });
+    }
+
+    async fetchPut(url, data) {
+        return await request
+            .put(url, data)
+            .then(({ data }) => {
+                if (data.code === 200) {
+                    return Promise.resolve(data);
+                } else {
+                    return Promise.reject(data.msg)
+                }
             })
+            .catch(err => {
+                return Promise.reject(err.message)
+            });
     }
 
     // 保存接口
     fetchSave = (data, type) => {
-        type === 'save' ? this.setState({saveLoading: true}) : this.setState({publishLoading: true})
+        const BtnDit = {
+            'save': 'saveLoading',
+            'push': 'publishLoading'
+        }
+        this.setState({[BtnDit.type]: true})
+        // type === 'save' ? this.setState({saveLoading: true}) : this.setState({publishLoading: true})
         request.post('/sysNotice/add', data)
             .then(({data}) => {
                 if(data.code===200){
@@ -222,6 +264,7 @@ class PopModal extends Component {
                 if (type === 'cancel') {
                     message.success('附件删除成功', 2);
                 }
+
                 return true
             } else {
                 message.error(`文件删除失败:${data.msg}`, 4);
@@ -236,18 +279,29 @@ class PopModal extends Component {
     // 上传附件后台返回的uuid 保存要传给后台
     setUuid = (data) => {
         const { fileUUIDArray } = this.state
-        let newArr = fileUUIDArray.concat([data.fileUuid])
+        let newArr = fileUUIDArray.concat([data.uid])// uid  fileUuid
         this.setState({fileUUIDArray: newArr})
     }
 
     handleFileChange = (info) => {
         const { file, fileList } = info
         const isLt5M = file.size / 1024 / 1024 < 5
+        if (info.file.status === 'error') {
+            return false;
+        }
+        if (info.file.status === 'removed') {
+            this.setState({ fileList: fileList })
+            return true;
+        }
         if (fileList.length > 5) {
             return false;
         }
         if (!isLt5M) {
             return false;
+        }
+        if (info.file.status === 'done') {
+            this.setState({uploadLoging: false})
+            this.setUuid(file)
         }
         this.setState({ fileList: fileList })
     }
@@ -263,32 +317,32 @@ class PopModal extends Component {
             message.error('文件必须小于5MB！');
             return false;
         }
-        const formData = new FormData()
-        formData.append('files',file)
-        formData.append('targetfileName',file.uid)
+        // const formData = new FormData()
+        // formData.append('files',file)
+        // formData.append('targetfileName',file.uid)
+        this.setState({currentUid:file.uid})
         this.setState({uploadLoging: true})
-        
-        request.post('/sysNotice/upload',formData, {
-            header:{
-                //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到
-                "Content-Type":"application/x-www-form-urlencoded"
-            }
-        })
-            .then(({data})=>{
-                if(data.code===200){
-                    const reqData = data.data
-                    message.success('附件上传成功', 2)
-                    this.setState({uploadLoging: false})
-                    this.setUuid(reqData)
-                }else{
-                    this.setState({uploadLoging: false})
-                    message.error(`附件上传失败:${data.msg}`,4)
-                }
-            }).catch(err=>{
-                this.setState({uploadLoging: false})
-                message.error(`附件上传失败.:${err}`,4)
-        })
-        return false;
+        // request.post('/sysNotice/upload',formData, {
+        //     header:{
+        //         //使用formData传输文件的时候要设置一下请求头的Content-Type，否则服务器接收不到
+        //         "Content-Type":"application/x-www-form-urlencoded"
+        //     }
+        // })
+        //     .then(({data})=>{
+        //         if(data.code===200){
+        //             const reqData = data.data
+        //             message.success('附件上传成功', 2)
+        //             this.setState({uploadLoging: false})
+        //             this.setUuid(reqData)
+        //         }else{
+        //             this.setState({uploadLoging: false})
+        //             message.error(`附件上传失败:${data.msg}`,4)
+        //         }
+        //     }).catch(err=>{
+        //         this.setState({uploadLoging: false})
+        //         message.error(`附件上传失败.:${err}`,4)
+        // })
+        return true;
     }
 
     handleCancel = () => {
@@ -298,11 +352,21 @@ class PopModal extends Component {
         this.props.toggleModalVisible(false)
     }
 
+    getToken = ()=>{
+        return store.getState().user.get('token') || false
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form
         const { visible, loading } = this.props
         const { defaultData, fileList, saveLoading, publishLoading, uploadLoging } = this.state
         const props = {
+            name: 'files',
+            action: `${window.baseURL}sysNotice/upload`,
+            headers: {
+                Authorization: this.getToken()
+            },
+            data: {targetfileName: this.state.currentUid},
             onChange: this.handleFileChange,
             beforeUpload: this.handleBeforeUpload,
             onRemove: (file) => {
@@ -322,7 +386,7 @@ class PopModal extends Component {
                 footer={null}
             >
                 <Spin spinning={loading}>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form onSubmit={this.handleSubmit} className="message-form">
                         <Row gutter={24}>
                             <Col span={16}>
                                 <Row>
@@ -446,17 +510,6 @@ class PopModal extends Component {
                                 <Row>
                                     <Col span={3} offset={1}>添加附件：</Col>
                                     <Col span={12}>
-                                        {/* <FormItem
-                                            labelCol={{span: 8}}
-                                            wrapperCol={{ span: 16 }}
-                                            label="添加附件"
-                                        >
-                                            <Upload {...props}>
-                                                <Button size='small'>
-                                                    <Icon type="upload" />
-                                                </Button>
-                                            </Upload>
-                                        </FormItem> */}
                                         <Upload {...props}>
                                             <Button disabled={uploadLoging} size='small'>
                                                 <Icon type="upload" />
