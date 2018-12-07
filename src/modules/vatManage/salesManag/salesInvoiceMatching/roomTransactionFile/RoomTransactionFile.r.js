@@ -427,6 +427,7 @@ class RoomTransactionFile extends Component{
         this.mounted && this.setState({deleteLoading:val})
     }
     deleteData = () =>{
+        const { declare } = this.props;
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '是否要删除选中的记录？',
@@ -436,7 +437,11 @@ class RoomTransactionFile extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleDeleteLoading(true)
-                request.post(`/output/room/files/delete/deleteByIds`,this.state.selectedRowKeys)
+                request.post(`/output/room/files/delete/deleteByIds`,{
+                    ids: this.state.selectedRowKeys,
+                    mainId: declare.mainId,
+                    authMonth: declare.authMonth
+                })
                     .then(({data})=>{
                         this.toggleDeleteLoading(false)
                         if(data.code===200){

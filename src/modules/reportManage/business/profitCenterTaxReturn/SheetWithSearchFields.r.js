@@ -3,11 +3,22 @@
  */
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
-import {Form, Row, Col, Button,Card,message} from 'antd'
+import {Form, Row, Col, Button,Card,message,notification} from 'antd'
 import {getFields,composeBotton,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from 'modules/reportManage/business/taxReturnForm/Sheet.r'
+
+const openNotificationWithIcon = (type,msg) => {
+    notification[type]({
+        placement: 'bottomRight',
+        bottom: 50,
+        duration: 0,
+        message: '提示',
+        description: msg,
+    });
+};
+
 class SheetWithSearchFields extends Component{
     static propTypes={
         tab:PropTypes.string,
@@ -146,6 +157,30 @@ class SheetWithSearchFields extends Component{
     componentWillUnmount(){
         this.mounted=null;
     }
+
+    handelGenerateTax = () => {
+        const { params } = this.state;
+        request.post('/TaxDecConductPc/create',{
+            mainId:params && params.mainId,
+            authMonth:params && moment(params.taxMonth, 'YYYY-MM').format('YYYY-MM'),
+        })
+        .then(({data})=>{
+            this.mounted && this.setState({saveLoding:false})
+            message.warning('系统正在生成法人公司纳税申报表，请稍候查询!');
+            if(data.code===200){
+                openNotificationWithIcon('success','生成纳税申报表成功!')
+                //message.success('保存成功!');
+                this.onSubmit();
+            }else{
+                openNotificationWithIcon('error',`生成纳税申报表失败:${data.msg}`)
+                //message.error(`保存失败:${data.msg}`)
+            }
+        })
+        .catch(err => {
+            message.error(err.message)
+            this.mounted && this.setState({saveLoding:false})
+        })
+    }
     render(){
         const { tab, grid, url , searchFields, form, composeGrid,scroll,action,saveUrl,defaultParams} = this.props;
         const { params,updateKey,saveLoding } = this.state;
@@ -178,6 +213,16 @@ class SheetWithSearchFields extends Component{
                     bordered={false}
                     extra={
                         <div>
+                            {
+                                JSON.stringify(params)!=='{}' && composeBotton([{
+                                    type:'consistent',
+                                    text:'生成纳税申报表',
+                                    userPermissions:['2165015'],
+                                    onClick:()=>{
+                                        this.handelGenerateTax();
+                                    }
+                                }])
+                            }
                             {
                                 JSON.stringify(params)!=='{}' && composeBotton([{
                                     type:'fileExport',

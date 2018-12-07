@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import DrawerModal from 'compoments/drawerModal'
-import {fMoney,requestResultStatus,composeBotton} from 'utils'
+import {request,fMoney,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -439,6 +439,7 @@ export default class FinancialDocumentsCollection extends Component{
          * */
         statusParam: {},
         totalSource:undefined,
+        errMsg: ''
     }
     refreshTable = ()=>{
         this.setState({
@@ -463,6 +464,17 @@ export default class FinancialDocumentsCollection extends Component{
             drawerVisible
         });
     };
+
+    requestMessage = () => {
+        request.get('/inter/financial/voucher/load/noStages', {
+            params: this.state.filters
+        }).then(({data}) => {
+            if (data.code !== 200) {
+                this.setState({errMsg: data.msg})
+            }
+        })
+    }
+
     render(){
         const {updateKey,drawerUpdateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
@@ -490,12 +502,16 @@ export default class FinancialDocumentsCollection extends Component{
                             filters:params,
                         },()=>{
                             this.fetchResultStatus()
+                            this.requestMessage()
                         })
                     },
                     cardProps: {
                         title: "财务凭证采集",
                         extra: (
                             <div>
+                                {
+                                    <span style={{color: 'red',marginRight: '10px'}}>{this.state.errMsg}</span>
+                                }
                                 {
                                     (disabled && declare.decAction==='edit') &&  composeBotton([{
                                         type:'consistent',
