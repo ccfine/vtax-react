@@ -114,7 +114,11 @@ class homeMessage extends Component {
                             listData.length > 0 ? listData.map((item, key) => {
                                 return (
                                     <div key={key} className="home-message-page">
-                                        <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={() => this.handleGo(item)}><div className="message-page-header"><span>{this.getLevel(item.level)}</span><span>{item.title}</span></div></a>
+                                        <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={() => this.handleGo(item)}>
+                                            <div className="message-page-header">
+                                                <span>{this.getLevel(item.level)}</span><span>{item.title}</span>
+                                            </div>
+                                        </a>
                                         <div className="message-page-info"><span>{`公告时间：${item.publishDateStr}`}</span><span>{`发布人：${item.publishBy}`}</span><span>{`公告类型：${this.getSysDictId(item.sysDictId)}`}</span></div>
                                         <div className="message-page-text">{this.htmlToText(item.content)}</div>
                                     </div>
