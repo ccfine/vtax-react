@@ -313,6 +313,7 @@ class LandPriceManage extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         const {getFieldDecorator} = this.props.form;
+        const isCheck = (disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1);
         return(
             <div className='oneLine'>
                 <SearchTable
@@ -338,7 +339,12 @@ class LandPriceManage extends Component{
                         pageSize:100,
                         columns:getColumns(this,!disabled,getFieldDecorator),
                         url:'/land/price/manage/list',
-                        onRowSelect:(disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1) ? (selectedRowKeys)=>{
+                        rowSelection:isCheck?{
+                            getCheckboxProps: record => ({
+                                disabled: record.stagesId.trim() === '', // Column configuration not to be checked
+                            }),
+                        }:undefined,
+                        onRowSelect: isCheck ? (selectedRowKeys)=>{
                             this.setState({
                                 selectedRowKeys
                             })
