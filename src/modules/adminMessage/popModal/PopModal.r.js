@@ -197,11 +197,7 @@ class PopModal extends Component {
         const isLt5M = file.size / 1024 / 1024 < 5
         if (info.file.status === 'error') {
             // 当文件上传失败 处理
-            let newFiles = fileList.filter((item) => {
-                if (item.status !== 'error' || !!item.noticeId) {
-                    return item
-                }
-            })
+            let newFiles = fileList.filter((item) => item.status !== 'error' || !!item.noticeId)
             message.error('文件上传失败，请重新上传', 2)
             this.setState({fileList: newFiles, uploadLoging: false})
             return false;
@@ -215,12 +211,12 @@ class PopModal extends Component {
         const fileName = file.name
         const pos = fileName.lastIndexOf('.')
         const lastName = fileName.substring(pos,fileName.length)
+        if (fileList.length > 5) {
+            return false;
+        }
         if (lastName.toLowerCase() !== '.zip' && lastName.toLowerCase() !== '.rar' && lastName.toLowerCase() !== '.7z') {
             message.warning('文件必须为压缩包格式', 2)
             this.setState({uploadLoging: false})
-            return false;
-        }
-        if (fileList.length > 5) {
             return false;
         }
 
@@ -228,7 +224,7 @@ class PopModal extends Component {
             return false;
         }
         if (info.file.status === 'uploading') {
-            console.log('正在上传........')
+            // console.log('正在上传........')
         }
         if (info.file.status === 'done') {
             message.success('文件上传成功', 2)

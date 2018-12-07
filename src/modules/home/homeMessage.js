@@ -96,6 +96,7 @@ class homeMessage extends Component {
         if (parseInt(record.readStatus,0) === 2) {
             this.fetchData(id, reqData, () => {
                 this.props.fetchNoticeNum()
+                this.fetchMessageList()
             })
         }
     }
@@ -115,7 +116,7 @@ class homeMessage extends Component {
                                 return (
                                     <div key={key} className="home-message-page">
                                         <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={() => this.handleGo(item)}>
-                                            <div className="message-page-header">
+                                            <div className="message-page-header" style={{fontWeight: item.readStatus === 2 ? 500 : 'normal'}}>
                                                 <span>{this.getLevel(item.level)}</span><span>{item.title}</span>
                                             </div>
                                         </a>
