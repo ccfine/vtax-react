@@ -16,6 +16,7 @@ const transformData = (data=[]) =>{
         return {
             uid: item.fileUuid,
             name: item.srcFileName,
+            noticeId: item.noticeId,
         }
     })
 }
