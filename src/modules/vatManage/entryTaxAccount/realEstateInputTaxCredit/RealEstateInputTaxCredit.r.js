@@ -153,7 +153,7 @@ const getContent = (key,disabled,declare,context) => {
     };
     return contentList[key]
 }
-class RealEstateInputTaxCredit extends Component{
+export default class RealEstateInputTaxCredit extends Component{
     state = {
         activeKey:'tab1',
         tabsKey:Date.now(),
@@ -193,4 +193,3 @@ class RealEstateInputTaxCredit extends Component{
         )
     }
 }
-export default RealEstateInputTaxCredit

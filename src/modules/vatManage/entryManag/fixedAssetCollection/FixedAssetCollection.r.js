@@ -6,7 +6,6 @@ import moment from 'moment';
 import {Tabs} from 'antd';
 import External from './external';
 import NewBuild from './newBuild';
-
 const TabPane = Tabs.TabPane;
 
 const formItemStyle = {

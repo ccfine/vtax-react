@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import { composeBotton,fMoney } from 'utils'
 import TableTitle from "compoments/tableTitleWithTime"
-
 const formItemStyle={
     labelCol:{
         span:8

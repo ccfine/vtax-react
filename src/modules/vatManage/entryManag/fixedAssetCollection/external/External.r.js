@@ -8,7 +8,6 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
-
 const columns=[
     {
         title: '利润中心',

@@ -7,7 +7,6 @@ import {message,Modal} from 'antd';
 import { fMoney, listMainResultStatus,composeBotton,requestResultStatus,request,requestTaxSubjectConfig } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
-
 const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"

@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
-
 const getColumns = context =>[
     {
         title: '利润中心',

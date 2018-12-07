@@ -158,14 +158,6 @@ export default class ExternalAccess extends Component{
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>不动产卡片进项税额抵扣</span>,
                         },
-                        // onSuccess: (params,dataSource) => {
-                        //     this.setState({
-                        //         filters: params,
-                        //         dataSource
-                        //     },()=>{
-                        //         this.fetchResultStatus()
-                        //     })
-                        // },
                         extra: (
                             <div>
                                 {

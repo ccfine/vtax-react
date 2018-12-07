@@ -5,7 +5,6 @@ import React,{Component} from 'react'
 import {Button,Modal,Form,Row,message,Icon} from 'antd';
 import PropTypes from 'prop-types'
 import {request,getFields} from 'utils'
-
 class ButtonMarkeModal extends Component{
     static propTypes={
         buttonOptions:PropTypes.shape({
