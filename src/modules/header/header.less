@@ -68,6 +68,7 @@
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   position: relative;
   line-height: 48px;
+  overflow: hidden;
 }
 
 /*:global {
@@ -135,7 +136,9 @@ i.trigger {
 }
 
 .right {
-  float: right;
+  // float: right;
+  display: flex;
+  flex-direction: row-reverse;
   height: 100%;
   .action {
     cursor: pointer;
