@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react'
-import {Button,message,Modal} from 'antd'
+import {Button,message,Modal,Icon} from 'antd'
 import { request,composeBotton } from "utils"
 import { SearchTable } from "compoments"
 import PopsModal from './popModal'
@@ -272,7 +272,12 @@ class MessageCenter extends Component {
         const { tableUpDateKey, visible, defaultData, messageLoading, modalType, fileList } = this.state;
         return (
             <div className="message-center">
-                <span className="message-return" onClick={this.handleReturn}>返回</span>
+                {/* <span className="message-return" onClick={this.handleReturn}>返回</span> */}
+                <div style={{ margin: "0px 0 6px 6px" }} onClick={this.handleReturn}>
+					<span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}>
+						<Icon type="left" /><span>返回</span>
+					</span>
+				</div>
                 <div className="title">公告中心</div>
                 <SearchTable
                     searchOption={{

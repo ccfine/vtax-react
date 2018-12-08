@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react'
-import { message } from 'antd'
+import { message, Icon } from 'antd'
 import { SearchTable } from "compoments"
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
@@ -241,7 +241,12 @@ class MessageCenter extends Component {
         const { tableUpDateKey } = this.state;
         return (
             <div className="message-center">
-                <span className="message-return" onClick={this.handleReturn}>返回</span>
+                {/* <span className="message-return" onClick={this.handleReturn}>返回</span> */}
+                <div style={{ margin: "0px 0 6px 6px" }} onClick={this.handleReturn}>
+					<span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}>
+						<Icon type="left" /><span>返回</span>
+					</span>
+				</div>
                 <div className="title">公告中心</div>
                 <SearchTable
                     searchOption={{
