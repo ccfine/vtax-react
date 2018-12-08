@@ -241,7 +241,7 @@ class PopModal extends Component{
                 }
                 title={`${title}申报`}>
                 {
-                    type !== 'view' && <div className="oneLine"><SearchTable
+                    type !== 'view' && <SearchTable
                         spinning={searchTableLoading}
                         searchOption={{
                             fields:searchFields,
@@ -270,7 +270,7 @@ class PopModal extends Component{
                             url: '/tax/declaration/add/list',
                         }}
                     >
-                    </SearchTable></div>
+                    </SearchTable>
                 }
                 
                 <Card

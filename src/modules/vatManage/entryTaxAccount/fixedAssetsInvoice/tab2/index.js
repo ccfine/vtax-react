@@ -3,7 +3,8 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
+
 const getColumns = context =>[
     {
         title: '利润中心',
@@ -167,7 +168,7 @@ export default class Tab2 extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/fixedAssets/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -207,9 +208,6 @@ export default class Tab2 extends Component{
                     },
                     extra: (
                         <div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
                             {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',

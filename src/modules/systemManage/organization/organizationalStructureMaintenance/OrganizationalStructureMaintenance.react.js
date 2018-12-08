@@ -175,7 +175,6 @@ class OrganizationalStructureMaintenance extends Component {
     render() {
         const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,onlyAdd,selectedNodes,filters} = this.state;
         return (
-            <div className="oneLine">
                 <TreeTable
                     spinning={searchTableLoading}
                     refreshTree={this.refreshTree}
@@ -284,7 +283,6 @@ class OrganizationalStructureMaintenance extends Component {
                 >
                     <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} selectedNodes={selectedNodes} toggleModalVisible={this.toggleModalVisible} />
                 </TreeTable>
-            </div>
         )
     }
 }

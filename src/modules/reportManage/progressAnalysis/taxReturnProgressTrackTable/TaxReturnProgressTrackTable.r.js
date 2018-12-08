@@ -153,6 +153,10 @@ const searchFields=(getFieldValue)=>{
         }
     ]
 }
+const status = [
+    {text:'未处理',value:'0'},
+    {text:'已处理',value:'1'},
+]
 const columns = [
     {
       title: "区域",

@@ -6,7 +6,7 @@
 import React, {Component} from 'react';
 import {message, Form} from 'antd';
 import {SearchTable, TableTotal, PopDetailsModal} from 'compoments';
-import {request, requestResultStatus, fMoney, listMainResultStatus, composeBotton, parseJsonToParams} from 'utils';
+import {request, requestResultStatus, fMoney, composeBotton, parseJsonToParams} from 'utils';
 import AddPopModal from './addPopModal';
 import moment from 'moment';
 import {NumericInputCell} from 'compoments/EditableCell';
@@ -523,7 +523,7 @@ class InputTaxDetails extends Component {
     };
     toggleModal = obj => this.setState(obj);
     fetchResultStatus = () => {
-        requestResultStatus('/account/income/taxDetail/listMain', this.state.filters, result => {
+        requestResultStatus('',this.state.filters, result => {
             this.setState({
                 statusParam: result
             });
@@ -654,9 +654,6 @@ class InputTaxDetails extends Component {
                     url: '/account/income/taxDetail/taxDetailList',
                     extra: <div>
                         {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
                             JSON.stringify(filters) !== '{}' && composeBotton([{
                                 type: 'fileExport',
                                 url: 'account/income/taxDetail/export',
@@ -689,18 +686,6 @@ class InputTaxDetails extends Component {
                                 url: '/account/income/taxDetail/reset',
                                 params: filters,
                                 userPermissions: ['1381009'],
-                                onSuccess: this.refreshTable
-                            }, {
-                                type: 'submit',
-                                url: '/account/income/taxDetail/submit',
-                                params: filters,
-                                userPermissions: ['1381010'],
-                                onSuccess: this.refreshTable
-                            }, {
-                                type: 'revoke',
-                                url: '/account/income/taxDetail/revoke',
-                                params: filters,
-                                userPermissions: ['1381011'],
                                 onSuccess: this.refreshTable
                             }], statusParam)
                         }

@@ -5,9 +5,9 @@
  *
  */
 import React,{Component} from 'react'
-import {message,Alert,Modal} from 'antd'
+import {message,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
+import {request,fMoney,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
 import PopModal from './popModal.r'
 // import moment from "moment";
 const formItemStyle = {
@@ -427,6 +427,7 @@ class RoomTransactionFile extends Component{
         this.mounted && this.setState({deleteLoading:val})
     }
     deleteData = () =>{
+        const { declare } = this.props;
         const modalRef = Modal.confirm({
             title: '友情提醒',
             content: '是否要删除选中的记录？',
@@ -436,7 +437,11 @@ class RoomTransactionFile extends Component{
             onOk:()=>{
                 modalRef && modalRef.destroy();
                 this.toggleDeleteLoading(true)
-                request.post(`/output/room/files/delete/deleteByIds`,this.state.selectedRowKeys)
+                request.post(`/output/room/files/delete/deleteByIds`,{
+                    ids: this.state.selectedRowKeys,
+                    mainId: declare.mainId,
+                    authMonth: declare.authMonth
+                })
                     .then(({data})=>{
                         this.toggleDeleteLoading(false)
                         if(data.code===200){
@@ -458,7 +463,7 @@ class RoomTransactionFile extends Component{
     fetchResultStatus = ()=>{
         const { declare } = this.props;
         if(!declare){return}
-        requestResultStatus('/output/room/files/listMain',{...this.state.filters,authMonth:this.props.declare.authMonth},result=>{
+        requestResultStatus('',{...this.state.filters,authMonth:this.props.declare.authMonth},result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -487,7 +492,6 @@ class RoomTransactionFile extends Component{
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return(
-            <div className='oneLine'>
                 <SearchTable
                     style={{
                         marginTop:-16
@@ -520,9 +524,6 @@ class RoomTransactionFile extends Component{
                         url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}`,
                         key:tableUpDateKey,
                         extra: <div>
-                            {
-                                listMainResultStatus(statusParam)
-                            }
                             {
                                 (disabled && declare.decAction==='edit') &&  composeBotton([{
                                     type:'consistent',
@@ -569,31 +570,6 @@ class RoomTransactionFile extends Component{
                                         selectedRowKeys:selectedRowKeys,
                                         userPermissions:['1215013'],
                                         onClick:this.deleteData
-                                    },{
-                                        type:'submit',
-                                        url:'/output/room/files/submit',
-                                        params:{...filters,authMonth:declare.authMonth},
-                                        userPermissions:['1215010'],
-                                        children: totalSource && totalSource.flag===true && (
-                                            <Alert
-                                                type="warning"
-                                                showIcon
-                                                message={
-                                                    <div>
-                                                        <p>房间交付日期在2018年5月1号之后的存在有11%税率，需要统一调整为10%税率，请确认。</p>
-                                                        <p>确认后系统会自动调整，同时会反算结算价：结算价=[(结算价*(1+11%)]/(1+10%)</p>
-                                                    </div>
-                                                }
-                                            />
-                                        ),
-                                        onSuccess:this.refreshTable
-                                    },
-                                    {
-                                        type:'revoke',
-                                        url:'/output/room/files/revoke',
-                                        params:{...filters,authMonth:declare.authMonth},
-                                        userPermissions:['1215011'],
-                                        onSuccess:this.refreshTable,
                                     }],statusParam)
                             }
                             <TableTotal type={3} totalSource={totalSource} data={
@@ -627,14 +603,14 @@ class RoomTransactionFile extends Component{
                         }:undefined,
                     }}
                 >
+                    <PopModal 
+                        visible={popModalVisible}
+                        title='确收时点参数设置'
+                        toggleModalVisible={this.togglesPopModalVisible}
+                        declare={declare}
+                    />
                 </SearchTable>
-                <PopModal 
-                    visible={popModalVisible}
-                    title='确收时点参数设置'
-                    toggleModalVisible={this.togglesPopModalVisible}
-                    declare={declare}
-                />
-            </div>
+                
         )
     }
 }

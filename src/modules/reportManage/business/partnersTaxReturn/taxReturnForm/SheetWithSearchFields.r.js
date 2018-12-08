@@ -4,7 +4,7 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Form, Row, Col, Button,Card,message} from 'antd'
-import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request} from 'utils'
+import {getFields,composeBotton,requestResultStatus,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from 'modules/reportManage/business/taxReturnForm/Sheet.r'
@@ -76,7 +76,7 @@ class SheetWithSearchFields extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/taxDeclarationReport/partner/listMain',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
+        requestResultStatus('',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -189,9 +189,6 @@ class SheetWithSearchFields extends Component{
                         bordered={false}
                         extra={
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {/*{
                                     JSON.stringify(params)!=='{}' && composeBotton([{
                                         type:'fileExport',

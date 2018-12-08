@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message} from 'antd'
 import {SynchronizeTable,PopDetailsModal} from 'compoments'
-import {getFields,fMoney,request,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
+import {getFields,fMoney,request,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import moment from 'moment';
 
 const formItemStyle = {
@@ -364,7 +364,7 @@ class BillingSales extends Component {
     }
 
     updateStatus=()=>{
-        requestResultStatus('/account/output/billingSale/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -459,9 +459,6 @@ class BillingSales extends Component {
                 <Card title={<span><label className="tab-breadcrumb">开票销售台账 / </label>开票销售统计表-房地产</span>}
                       extra={<div>
                           {
-                              listMainResultStatus(statusParam)
-                          }
-                          {
                               JSON.stringify(filters) !=='{}' && composeBotton([{
                                   type:'fileExport',
                                   url:'account/output/billingSale/export',
@@ -477,18 +474,6 @@ class BillingSales extends Component {
                                   params:filters,
                                   userPermissions:['1221009'],
                                   onSuccess:this.refreshTable
-                              },{
-                                  type:'submit',
-                                  url:'/account/output/billingSale/submit',
-                                  params:filters,
-                                  userPermissions:['1221010'],
-                                  onSuccess:this.refreshTable
-                              },{
-                                  type:'revoke',
-                                  url:'/account/output/billingSale/revoke',
-                                  params:filters,
-                                  userPermissions:['1221011'],
-                                  onSuccess:this.refreshTable,
                               }],statusParam)
                           }
                       </div>

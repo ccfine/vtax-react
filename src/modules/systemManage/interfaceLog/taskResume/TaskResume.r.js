@@ -209,7 +209,6 @@ export default class TaskResume extends Component {
 
     render() {
         return (
-            <div className="oneLine">
                 <SearchTable
                     searchOption={{
                         fields: searchFields()
@@ -225,7 +224,6 @@ export default class TaskResume extends Component {
                         }
                     }}
                 />
-            </div>
         );
     }
 }

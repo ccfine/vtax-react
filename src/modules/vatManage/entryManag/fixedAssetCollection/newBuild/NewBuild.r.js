@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {composeBotton} from 'utils'
 
 const columns=[
     {
@@ -66,21 +66,10 @@ class NewBuildCollection extends Component{
     state={
         updateKey:Date.now(),
         filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam: {},
     }
     refreshTable = ()=>{
         this.setState({
             updateKey:Date.now()
-        })
-    }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.setState({
-                statusParam: result,
-            })
         })
     }
     mounted = true;
@@ -88,11 +77,10 @@ class NewBuildCollection extends Component{
         this.mounted = null;
     }
     render(){
-        const {updateKey,filters,statusParam} = this.state;
+        const {updateKey,filters} = this.state;
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -108,9 +96,7 @@ class NewBuildCollection extends Component{
                 }}
                 backCondition={(filters)=>{
                     this.mounted && this.setState({
-                        filters,
-                    },()=>{
-                        this.fetchResultStatus()
+                        filters
                     })
                 }}
                 tableOption={{
@@ -122,9 +108,6 @@ class NewBuildCollection extends Component{
                         title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>自持产品清单</span>,
                         extra: (
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
@@ -143,7 +126,6 @@ class NewBuildCollection extends Component{
                     },
                 }}
             />
-            </div>
         )
     }
 }

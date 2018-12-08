@@ -12,7 +12,6 @@ import PopModal from "./popModal";
 import {
   request,
   fMoney,
-  listMainResultStatus,
   composeBotton,requestResultStatus
 } from "utils";
 import moment from "moment";
@@ -245,7 +244,7 @@ class OtherTaxAdjustment extends Component {
           });
   }
   updateStatus = (values) => {
-    requestResultStatus('/account/output/othertax/listMain',values,result=>{
+    requestResultStatus('',values,result=>{
       this.setState({
           statusParam: result,
       })
@@ -257,7 +256,6 @@ class OtherTaxAdjustment extends Component {
     let { filters={}, statusParam = {},totalSource } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (
-      <div className='oneLine'>
         <SearchTable
           doNotFetchDidMount={!disabled}
           searchOption={{
@@ -288,7 +286,6 @@ class OtherTaxAdjustment extends Component {
               title: "其他涉税调整台账",
               extra: (
                 <div>
-                  {listMainResultStatus(statusParam)}
                     {
                         JSON.stringify(filters)!=='{}' && composeBotton([{
                             type:'fileExport',
@@ -310,18 +307,6 @@ class OtherTaxAdjustment extends Component {
                               opid: undefined
                             });
                           }
-                      },{
-                          type:'submit',
-                          url:'/account/output/othertax/submit',
-                          params:filters,
-                          userPermissions:['1311010'],
-                          onSuccess:this.refreshTable
-                      },{
-                          type:'revoke',
-                          url:'/account/output/othertax/restore',
-                          params:filters,
-                          userPermissions:['1311011'],
-                          onSuccess:this.refreshTable,
                       }],statusParam)
                   }
                   <TableTotal type={3} totalSource={totalSource} data={
@@ -340,18 +325,18 @@ class OtherTaxAdjustment extends Component {
               ),
             }
           }}
-        />
-        <PopModal
-          visible={this.state.visible}
-          action={this.state.action}
-          hideModal={() => {
-            this.hideModal();
-          }}
-          id={this.state.opid}
-          update={this.refreshTable}
-          declare={declare}
-        />
-      </div>
+        >
+          <PopModal
+            visible={this.state.visible}
+            action={this.state.action}
+            hideModal={() => {
+              this.hideModal();
+            }}
+            id={this.state.opid}
+            update={this.refreshTable}
+            declare={declare}
+          />
+        </SearchTable>
     );
   }
 }

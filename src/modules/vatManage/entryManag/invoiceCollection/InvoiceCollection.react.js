@@ -6,7 +6,7 @@
 import React, { Component } from "react";
 import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
-import { requestResultStatus, fMoney, listMainResultStatus,composeBotton,request,requestTaxSubjectConfig} from "utils";
+import { requestResultStatus, fMoney,composeBotton,request,requestTaxSubjectConfig} from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
 const pointerStyle = {
@@ -450,7 +450,7 @@ class InvoiceCollection extends Component {
         });
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/income/invoice/collection/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -490,7 +490,6 @@ class InvoiceCollection extends Component {
         let disabled = !!declare,
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
-            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -525,9 +524,6 @@ class InvoiceCollection extends Component {
                         extra: (
 
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
@@ -585,18 +581,6 @@ class InvoiceCollection extends Component {
                                         selectedRowKeys:selectedRowKeys,
                                         userPermissions:['1491008'],
                                         onClick:this.deleteData
-                                    },{
-                                        type:'submit',
-                                        url:'/income/invoice/collection/submit',
-                                        params:filters,
-                                        userPermissions:['1491010'],
-                                        onSuccess:this.refreshTable
-                                    },{
-                                        type:'revoke',
-                                        url:'/income/invoice/collection/revoke',
-                                        params:filters,
-                                        userPermissions:['1491011'],
-                                        onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={
@@ -631,7 +615,6 @@ class InvoiceCollection extends Component {
                         toggleModalVisible={this.toggleModalVisible}
                     />
                 </SearchTable>
-            </div>
         );
     }
 }

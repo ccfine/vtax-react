@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import {Button,Icon} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 import ManualMatchRoomModal from './SummarySheetModal'
 import moment from 'moment';
 const formItemStyle = {
@@ -266,7 +266,7 @@ class unBilledSalesEstate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/output/notInvoiceSale/realty/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -305,9 +305,6 @@ class unBilledSalesEstate extends Component{
                     url:'/account/output/notInvoiceSale/realty/list',
                     extra:<div>
                         {
-                            listMainResultStatus(statusParam)
-                        }
-                        {
                             JSON.stringify(filters) !== "{}" && <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
                         }
                         {
@@ -327,18 +324,6 @@ class unBilledSalesEstate extends Component{
                                 params:filters,
                                 onSuccess:this.refreshTable,
                                 userPermissions:['1351009'],
-                            },{
-                                type:'submit',
-                                url:'/account/output/notInvoiceSale/realty/submit',
-                                params:filters,
-                                onSuccess:this.refreshTable,
-                                userPermissions:['1351010'],
-                            },{
-                                type:'revoke',
-                                url:'/account/output/notInvoiceSale/realty/revoke',
-                                params:filters,
-                                onSuccess:this.refreshTable,
-                                userPermissions:['1351011'],
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={

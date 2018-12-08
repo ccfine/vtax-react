@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable} from 'compoments'
-import {requestResultStatus,fMoney,listMainResultStatus,composeBotton} from 'utils'
+import {requestResultStatus,fMoney,composeBotton} from 'utils'
 import ViewDocumentDetails from 'compoments/viewDocumentDetails'
 const pointerStyle = {
     cursor:'pointer',
@@ -94,7 +94,7 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/incomeSimpleOut/controller/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -114,7 +114,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -144,9 +143,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                         title: <span><label className="tab-breadcrumb">简易计税进项税额转出台账 / </label>简易计税进项税额转出列表</span>,
                         extra:<div>
                             {
-                                listMainResultStatus(statusParam)
-                            }
-                            {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/incomeSimpleOut/controller/allSimple/export',
@@ -165,15 +161,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                                         this.props.refreshTabs()
                                     },
                                     userPermissions:['1391010'],
-                                },{
-                                    type:'revoke',
-                                    url:'/account/incomeSimpleOut/controller/revoke',
-                                    params:filters,
-                                    onSuccess:()=>{
-                                        //this.refreshTable();
-                                        this.props.refreshTabs()
-                                    },
-                                    userPermissions:['1391011'],
                                 }],statusParam)
                             }
                         </div>,
@@ -190,7 +177,6 @@ class SimplifiedTaxInputTaxTransfer extends Component{
                     filters={voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
-            </div>
         )
     }
 }

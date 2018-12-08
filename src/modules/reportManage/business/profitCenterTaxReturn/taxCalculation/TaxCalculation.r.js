@@ -227,7 +227,6 @@ class TaxCalculation extends Component{
         let { defaultParams} = this.props;
         defaultParams.authMonth = defaultParams.taxMonth;
         return(
-            <div className="oneLine">
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
@@ -285,9 +284,7 @@ class TaxCalculation extends Component{
                             }
                         </div>
                     }}
-                >
-                </SearchTable>
-            </div>
+                />
 
         )
     }

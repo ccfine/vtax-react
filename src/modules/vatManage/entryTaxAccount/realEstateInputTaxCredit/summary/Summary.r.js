@@ -8,7 +8,7 @@
 
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,composeBotton,requestResultStatus,listMainResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 
 const columns = context =>[{
         title: '利润中心',
@@ -70,7 +70,7 @@ export default class SelfBuiltToSelfUse extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/income/estate/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -85,7 +85,6 @@ export default class SelfBuiltToSelfUse extends Component{
         const { declare,searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
                 <SearchTable
                     style={{
                         marginTop:-16
@@ -117,9 +116,6 @@ export default class SelfBuiltToSelfUse extends Component{
                         extra: (
                             <div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     JSON.stringify(filters) !=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'account/income/estate/collectList/export',
@@ -135,24 +131,6 @@ export default class SelfBuiltToSelfUse extends Component{
                                         params:filters,
                                         userPermissions:['1251009'],
                                         onSuccess:()=>{
-                                            this.props.refreshTabs()
-                                        },
-                                    },{
-                                        type:'submit',
-                                        url:'/account/income/estate/submit',
-                                        params:filters,
-                                        userPermissions:['1251010'],
-                                        onSuccess:()=>{
-                                            //this.refreshTable();
-                                            this.props.refreshTabs()
-                                        },
-                                    },{
-                                        type:'revoke',
-                                        url:'/account/income/estate/revoke',
-                                        params:filters,
-                                        userPermissions:['1251011'],
-                                        onSuccess:()=>{
-                                            //this.refreshTable();
                                             this.props.refreshTabs()
                                         },
                                     }],statusParam)
@@ -181,7 +159,6 @@ export default class SelfBuiltToSelfUse extends Component{
                         },
                     }}
                 />
-            </div>
         )
     }
 }

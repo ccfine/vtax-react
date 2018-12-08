@@ -12,12 +12,12 @@ class ApplyDeclare extends React.Component {
 		decAction:PropTypes.oneOf(['edit',''])
 		}
 	state ={
-        tabsKey:Date.now(),
-        mainKey:Date.now()+1,
+        tabsKey:Math.random() * new Date(),
+        mainKey:Date.now(),
 		panes: [],
 		activeKey: 'main',
 		record:null,
-		mainUpdateKey:Date.now()+2,
+		mainUpdateKey:Date.now()+1,
 		recordLoading:true,
 
 		// 用来区分 销项发票匹配 中 '销项发票数据匹配' 和 '房间交易档案'

@@ -4,7 +4,7 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Form, Row, Col, Button,Card} from 'antd'
-import {getFields,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {getFields,composeBotton,requestResultStatus} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from 'modules/reportManage/business/taxReturnForm/Sheet.r'
@@ -14,7 +14,6 @@ class SheetWithSearchFields extends Component{
         grid:PropTypes.array,
         url:PropTypes.string,
         composeGrid:PropTypes.func,
-        action:PropTypes.bool,
     }
     static defaultProps = {
         grid:[],
@@ -75,7 +74,7 @@ class SheetWithSearchFields extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/taxDeclarationReport/merge/listMain',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
+        requestResultStatus('',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -116,7 +115,7 @@ class SheetWithSearchFields extends Component{
         this.mounted=null;
     }
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
@@ -149,9 +148,6 @@ class SheetWithSearchFields extends Component{
                         extra={
                             <div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     JSON.stringify(params)!=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'taxDeclarationReport/merge/export',
@@ -168,22 +164,6 @@ class SheetWithSearchFields extends Component{
                                         onSuccess:this.refreshTable
                                     }])
                                 }*/}
-                                {
-                                    action ? (disabled && declare.decAction==='edit') && composeBotton([{
-                                            type:'submit',
-                                            url:'/taxDeclarationReport/merge/submit',
-                                            params:params,
-                                            userPermissions:['2141010'],
-                                            onSuccess:this.refreshTable
-                                        },{
-                                            type:'revoke',
-                                            url:'/taxDeclarationReport/merge/revoke',
-                                            params:params,
-                                            userPermissions:['2141011'],
-                                            onSuccess:this.refreshTable,
-                                        }],statusParam)
-                                        : null
-                                }
                             </div>
                         }
                         title={<span><label className="tab-breadcrumb">纳税申报合并计算表 / </label>{tab}</span>}

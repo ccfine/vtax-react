@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
-import {fMoney,listMainResultStatus,composeBotton,requestResultStatus} from 'utils'
+import {fMoney,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
 import moment from 'moment';
@@ -209,76 +209,13 @@ const getColumns = (context,disabled) =>{
             title: '购货单位名称',
             dataIndex: "purchaseName",
             width:'200px',
-        },/*
-        {
-            title:'匹配时间',
-            dataIndex:'marryTime',
-            width:'100px',
-        },
-        {
-            title:'客户名称',
-            dataIndex:'customerName',
-            width:'100px',
-        },
-        {
-            title:'身份证号/纳税识别码',
-            dataIndex:'taxIdentificationCode',
-            width:'200px',
-        },
-        {
-            title:'楼栋名称',
-            dataIndex:'buildingName',
-            width:'200px',
-        },
-        {
-            title:'单元',
-            dataIndex:'element',
-            width:'100px',
-        },
-        {
-            title:'路址',
-            dataIndex:'htRoomName',
-            width:'200px',
-        },
-        {
-            title:'房号',
-            dataIndex:'roomNumber',
-            width:'100px',
-        },
-        {
-            title:'房间编码',
-            dataIndex:'roomCode',
-            width:'100px',
-        },
-        {
-            title:'成交总价',
-            dataIndex:'totalPrice',
-            render:text=>fMoney(text),
-            className:'table-money',
-            width:'100px',
-        },
-        {
-            title:'匹配方式',
-            dataIndex:'matchingWay',
-            render:text=>{
-                text = parseInt(text,0);//0:手动匹配,1:自动匹配
-                if(text === 0){
-                    return '手动匹配';
-                }else if(text ===1){
-                    return '自动匹配';
-                }else{
-                    return ''
-                }
-            },
-            width:'100px',
-        },*/
+        }
     ];
 }
 class UnmatchedData extends Component{
     state={
         visible:false,
         tableKey:Date.now(),
-        /*filters:{},*/
         selectedData:{},
 
         /**
@@ -293,7 +230,7 @@ class UnmatchedData extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/output/invoice/marry/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -305,11 +242,10 @@ class UnmatchedData extends Component{
         })
     }
     render(){
-        const {visible,tableKey,selectedData,statusParam,totalSource} = this.state;
+        const {visible,tableKey,selectedData,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 doNotFetchDidMount={!disabled}
                 style={{
@@ -337,19 +273,6 @@ class UnmatchedData extends Component{
                     columns:getColumns(this,disabled),
                     url:'/output/invoice/marry/unmatched/list',
                     extra:<div>
-                        {
-                            listMainResultStatus(statusParam)
-                        }
-                        {/*{
-                            (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                type:'fileExport',
-                                url:'output/invoice/marry/unmatched/export',
-                                params:filters,
-                                title:'导出未匹配发票',
-                                userPermissions:['1215005'],
-                                onSuccess:this.refreshTable
-                            }],statusParam)
-                        }*/}
                         <TableTotal type={3} totalSource={totalSource} data={
                             [
                                 {
@@ -378,7 +301,6 @@ class UnmatchedData extends Component{
             >
                 <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
-            </div>
         )
     }
 }

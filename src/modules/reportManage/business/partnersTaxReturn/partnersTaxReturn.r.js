@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {message,Modal,Icon,Drawer} from 'antd'
 import {withRouter} from 'react-router-dom';
 import {SearchTable,AsyncComponent} from 'compoments'
-import {request,composeBotton,requestResultStatus,parseJsonToParams,listMainResultStatus} from 'utils'
+import {request,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import PopModal from './popModal'
 import moment from "moment";
 const PartnersTaxReturnForm = AsyncComponent(() => import('./taxReturnForm'), '合作方的纳税申报-纳税申报表')
@@ -279,7 +279,7 @@ class PartnersTaxReturn extends Component{
             });
     };
     updateStatus = (values) => {
-        requestResultStatus('/taxDeclarationReport/partner/listMain',values,result=>{
+        requestResultStatus('',values,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -298,12 +298,12 @@ class PartnersTaxReturn extends Component{
 
     }
     render(){
-        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,drawerConfig,filters} = this.state;
+        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,drawerConfig} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
 
         return(
-            <div className="oneLine">
+            <React.Fragment>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -327,26 +327,11 @@ class PartnersTaxReturn extends Component{
                             title:'合作方纳税申报表',
                             extra:<div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     (disabled && declare.decAction==='edit') && composeBotton([{
                                         type:'add',
                                         icon:'plus',
                                         userPermissions:['2151003'],
                                         onClick:()=>this.showModal('add',{})
-                                    },{
-                                        type:'submit',
-                                        url:'/taxDeclarationReport/partner/submit',
-                                        params:filters,
-                                        userPermissions:['2131010'],
-                                        onSuccess:this.refreshTable
-                                    },{
-                                        type:'revoke',
-                                        url:'/taxDeclarationReport/partner/revoke',
-                                        params:filters,
-                                        userPermissions:['2131011'],
-                                        onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
                             </div>,
@@ -382,7 +367,7 @@ class PartnersTaxReturn extends Component{
                 >
                     { drawerVisible ? <PartnersTaxReturnForm declare={declare} togglesDrawerVisible={this.togglesDrawerVisible} drawerConfig={drawerConfig} /> : ''}
                 </Drawer>
-            </div>
+            </React.Fragment>
         )
     }
 }

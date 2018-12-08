@@ -70,14 +70,14 @@ const getStatuText = status => {
 	let span = undefined
 	switch (status) {
 		case 1:
-			span = <span style={{ color: '#f5222d' }}>未审核</span>
+			span = <Icon type="exclamation-circle" style={{color:'#faad14',fontSize: 14}} />
 			break
 		case 2:
-			span = <span style={{ color: '#333' }}>已审核</span>
+			span = <Icon type="check-circle" style={{ fontSize: 14 }} />
 			break
 		default:
 	}
-	return span ? <span>【{span}】</span> : ''
+	return span ? <span>{span} </span> : ''
 }
 
 // 步骤数据
@@ -85,7 +85,7 @@ const Step = Steps.Step
 const steps = [
 	{
 		title: '销项管理',
-		decConduct: 0
+		decConduct: 0,
 	},
 	{
 		title: '进项管理',
@@ -95,10 +95,6 @@ const steps = [
 		title: '其他管理',
 		decConduct: 2
 	},
-	// {
-	// 	title: '税款计算',
-	// 	decConduct: 3
-	// },
 	{
 		title: '纳税申报表',
 		decConduct: 3
@@ -118,6 +114,7 @@ class Main extends Component {
 	state = {
 		loading: false,
 		data: [],
+		stepsStatus:[],
 		current: 0,
         path:'',
 	}
@@ -158,16 +155,16 @@ class Main extends Component {
 									   e && e.preventDefault();
                                        this.props.addPane(item.path,item.paneTitle || item.name, item.component,item.props)
                                    }}>
+								   {getStatuText(item.status)}
                                     {item.name}
-                                    {getStatuText(item.status)}
 								</a>
 							) : (
 								<span
 									style={{
 										color: 'rgba(0, 0, 0, 0.65)'
 									}}>
-									{item.name}
 									{getStatuText(item.status)}
+									{item.name}
 								</span>
 							)}
 						</Card>
@@ -216,11 +213,12 @@ class Main extends Component {
 			})
 			.then(({ data }) => {
                 if(data.code===200){
+					let result = data.data;
                     this.setState({
-                        data: transformDeclaration(data.data)
+						data: transformDeclaration(result.listStatus),
+						stepsStatus:result.mainStatus
                     })
                 }
-
                 this.toggleLoading(false)
 			})
 			.catch(err => {
@@ -229,7 +227,7 @@ class Main extends Component {
 			})
     }
     componentDidMount(){
-        this.refresh()
+		this.refresh()
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props.updateKey !== nextProps.updateKey){
@@ -238,17 +236,22 @@ class Main extends Component {
 	}
 	render() {
 		const {record} = this.props
-		const { data, loading, current } = this.state
+		const { data, loading, current,stepsStatus } = this.state
 		return (
 			<div className="steps-main">
 				<h4 style={{padding:'10px 30px 0',textAlign:'right'}}>申报处理【{record.mainName}】 申报期间 【{record.partTerm}】</h4>
-				<Steps current={current} size="small">
+				<Steps current={current} size="small" className="stepsCurrent">
 					{steps.map((item, i) => {
+						let status = parseInt(stepsStatus[i],0)===1,
+							isCurrent = current === parseInt(item.decConduct,0),
+							checke =  isCurrent && 'filled',
+							isColor =  isCurrent && '#1890ff'
 						return (
 							<Step
 								key={item.title}
 								title={item.title}
-								icon={item.icon}
+								status={status ? 'wait' : 'finish'}
+								icon={status ? <Icon type="clock-circle" theme={checke} style={{color: isColor}} /> : <Icon type="check-circle" theme={checke} style={{color: isColor}} />}
 								onClick={() => this.handleCurrent(i)}
 							/>
 						)

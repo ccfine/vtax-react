@@ -15,7 +15,7 @@ import {logout} from 'redux/ducks/user'
 
 const request = Axios.create({
     baseURL:window.baseURL,
-    timeout:20000,
+    timeout:30000,
 });
 request.getToken = ()=>{
     return store.getState().user.get('token') || false

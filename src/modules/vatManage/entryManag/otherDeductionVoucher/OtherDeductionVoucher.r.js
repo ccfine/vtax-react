@@ -2,7 +2,7 @@
  * Created by liuliyuan on 2018/5/12.
  */
 import React, {Component} from 'react';
-import {requestResultStatus, fMoney, requestDict, listMainResultStatus, composeBotton, setFormat,parseJsonToParams} from 'utils';
+import {requestResultStatus, fMoney, requestDict, composeBotton, setFormat,parseJsonToParams} from 'utils';
 import {SearchTable, TableTotal,PopDetailsModal} from 'compoments';
 
 import moment from 'moment';
@@ -307,7 +307,7 @@ export default class OtherDeductionVoucher extends Component {
         sysDictIdList: []
     };
     fetchResultStatus = () => {
-        requestResultStatus('/other/tax/deduction/vouchers/listMain', this.state.filters, result => {
+        requestResultStatus('',this.state.filters, result => {
             this.setState({
                 statusParam: result
             });
@@ -346,7 +346,6 @@ export default class OtherDeductionVoucher extends Component {
         const {declare} = this.props;
         let disabled = !!declare;
         return (
-            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={!disabled}
                     searchOption={{
@@ -377,9 +376,6 @@ export default class OtherDeductionVoucher extends Component {
                             title: "其他扣税凭证",
                             extra: <div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     JSON.stringify(filters) !== '{}' && composeBotton([{
                                         type: 'fileExport',
                                         url: 'other/tax/deduction/vouchers/export',
@@ -396,19 +392,6 @@ export default class OtherDeductionVoucher extends Component {
                                         params: filters,
                                         userPermissions: ['1521009'],
                                         onSuccess: this.refreshTable
-
-                                    }, {
-                                        type: 'submit',
-                                        url: '/other/tax/deduction/vouchers/submit',
-                                        params: filters,
-                                        onSuccess: this.refreshTable,
-                                        userPermissions: ['1521010']
-                                    }, {
-                                        type: 'revoke',
-                                        url: '/other/tax/deduction/vouchers/revoke',
-                                        params: filters,
-                                        onSuccess: this.refreshTable,
-                                        userPermissions: ['1521011']
                                     }], statusParam)
                                 }
 
@@ -491,7 +474,6 @@ export default class OtherDeductionVoucher extends Component {
                         }}
                     />
                 </SearchTable>
-            </div>
         );
     }
 }

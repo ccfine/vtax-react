@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {fMoney,composeBotton} from 'utils'
 
 const columns=[
     {
@@ -111,10 +111,6 @@ const columns=[
     state={
         updateKey:Date.now(),
         filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam: {},
         totalSource:undefined,
     }
     refreshTable = ()=>{
@@ -122,23 +118,15 @@ const columns=[
             updateKey:Date.now()
         })
     }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.mounted && this.setState({
-                statusParam: result,
-            })
-        })
-    }
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
     }
     render(){
-        const {updateKey,filters,statusParam,totalSource} = this.state;
+        const {updateKey,filters,totalSource} = this.state;
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -154,9 +142,7 @@ const columns=[
                 }}
                 backCondition={(filters)=>{
                     this.mounted && this.setState({
-                        filters,
-                    },()=>{
-                        this.fetchResultStatus()
+                        filters
                     })
                 }}
                 tableOption={{
@@ -169,9 +155,6 @@ const columns=[
                         自建转自用不动产</span>,
                         extra: (
                             <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
@@ -206,7 +189,6 @@ const columns=[
                     },
                 }}
             />
-            </div>
         )
     }
 }

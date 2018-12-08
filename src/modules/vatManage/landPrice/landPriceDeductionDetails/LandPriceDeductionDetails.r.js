@@ -9,7 +9,7 @@ import React from 'react'
 // import ShouldDeduct from './shouldDeduct'
 import moment from 'moment'
 import { SearchTable,TableTotal,PopDetailsModal } from 'compoments'
-import { fMoney, composeBotton,requestResultStatus,listMainResultStatus,request,parseJsonToParams} from 'utils'
+import { fMoney, composeBotton,requestResultStatus,request,parseJsonToParams} from 'utils'
 import PopModal from './popModal'
 
 const formItemStyle = {
@@ -367,7 +367,7 @@ class DeductProjectSummary extends React.Component {
 		})
 	}
 	fetchResultStatus = ()=>{
-        requestResultStatus('/account/landPrice/deductedDetails/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -420,9 +420,6 @@ class DeductProjectSummary extends React.Component {
                         extra: (
                             <div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'account/landPrice/deductedDetails/export',
@@ -451,24 +448,6 @@ class DeductProjectSummary extends React.Component {
                                         params:filters,
                                         userPermissions:['1261009'],
                                         onSuccess:this.refreshTable
-                                    },{
-                                        type:'submit',
-                                        url:'/account/landPrice/deductedDetails/submit',
-                                        params:filters,
-                                        userPermissions:['1261010'],
-                                        onSuccess:()=>{
-                                            this.refreshTable()
-                                            this.props.refreshTabs()
-                                        }
-                                    },{
-                                        type:'revoke',
-                                        url:'/account/landPrice/deductedDetails/revoke',
-                                        params:filters,
-                                        userPermissions:['1261011'],
-                                        onSuccess:()=>{
-                                            this.refreshTable()
-                                            this.props.refreshTabs()
-                                        }
                                     }],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={

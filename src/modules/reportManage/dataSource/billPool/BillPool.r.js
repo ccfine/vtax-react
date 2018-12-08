@@ -341,7 +341,6 @@ export default class BillPool extends Component{
     render(){
         const {updateKey,totalSource} = this.state;
         return(
-            <div className='oneLine'>
                 <SearchTable
                     doNotFetchDidMount={true}
                     searchOption={{
@@ -401,7 +400,6 @@ export default class BillPool extends Component{
                         },
                     }}
                 />
-            </div>
         )
     }
 }

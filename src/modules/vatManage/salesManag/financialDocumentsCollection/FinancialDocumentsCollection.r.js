@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
 import DrawerModal from 'compoments/drawerModal'
-import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {request,fMoney,requestResultStatus,composeBotton} from 'utils'
 import moment from 'moment';
 const formItemStyle={
     labelCol:{
@@ -439,6 +439,7 @@ export default class FinancialDocumentsCollection extends Component{
          * */
         statusParam: {},
         totalSource:undefined,
+        errMsg: ''
     }
     refreshTable = ()=>{
         this.setState({
@@ -452,7 +453,7 @@ export default class FinancialDocumentsCollection extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/inter/financial/voucher/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -463,89 +464,86 @@ export default class FinancialDocumentsCollection extends Component{
             drawerVisible
         });
     };
+
+    requestMessage = () => {
+        request.get('/inter/financial/voucher/load/noStages', {
+            params: this.state.filters
+        }).then(({data}) => {
+            if (data.code !== 200) {
+                this.setState({errMsg: data.msg})
+            }
+        })
+    }
+
     render(){
         const {updateKey,drawerUpdateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
-            <SearchTable
-                doNotFetchDidMount={!disabled}
-                searchOption={{
-                    fields:searchFields(disabled,declare),
-                    cardProps:{
-                        style:{
-                            borderTop:0
+            <React.Fragment>
+                <SearchTable
+                    doNotFetchDidMount={!disabled}
+                    searchOption={{
+                        fields:searchFields(disabled,declare),
+                        cardProps:{
+                            style:{
+                                borderTop:0
+                            },
+                        }
+                    }}
+                    tableOption={{
+                        key:updateKey,
+                        pageSize:100,
+                        columns:columns,
+                        url:'/inter/financial/voucher/manageList',
+                        scroll:{ x: 3350 ,y:window.screen.availHeight-450-(disabled?50:0)},
+                        onSuccess:(params)=>{
+                            this.setState({
+                                filters:params,
+                            },()=>{
+                                this.fetchResultStatus()
+                                this.requestMessage()
+                            })
                         },
-                    }
-                }}
-                tableOption={{
-                    key:updateKey,
-                    pageSize:100,
-                    columns:columns,
-                    url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 3350 ,y:window.screen.availHeight-450-(disabled?50:0)},
-                    onSuccess:(params)=>{
-                        this.setState({
-                            filters:params,
-                        },()=>{
-                            this.fetchResultStatus()
-                        })
-                    },
-                    cardProps: {
-                        title: "财务凭证采集",
-                        extra: (
-                            <div>
-                                {
-                                    listMainResultStatus(statusParam)
-                                }
-
-                                {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'consistent',
-                                        //icon:'exception',
-                                        //btnType:'default',
-                                        text:'查看缺失项目分期凭证',
-                                        userPermissions:['1235000'],
-                                        onClick:()=>{
-                                            this.togglesDrawerVisible(true);
-                                        }
-                                    },
+                        cardProps: {
+                            title: "财务凭证采集",
+                            extra: (
+                                <div>
                                     {
-                                        type:'submit',
-                                        url:'/inter/financial/voucher/submit',
-                                        params:filters,
-                                        onSuccess:this.refreshTable,
-                                        userPermissions:['1231010'],
-                                    },
+                                        <span style={{color: 'red',marginRight: '10px'}}>{this.state.errMsg}</span>
+                                    }
                                     {
-                                        type:'revoke',
-                                        url:'/inter/financial/voucher/revoke',
-                                        params:filters,
-                                        onSuccess:this.refreshTable,
-                                        userPermissions:['1231011'],
-                                    }],statusParam)
-                                }
-                                <TableTotal type={3} totalSource={totalSource} data={
-                                    [
-                                        {
-                                            title:'合计',
-                                            total:[
-                                                {title: '贷方金额', dataIndex: 'creditAmount'},
-                                            ],
-                                        }
-                                    ]
-                                } />
-                            </div>
-                        )
-                    },
-                    onTotalSource: (totalSource) => {
-                        this.setState({
-                            totalSource
-                        })
-                    },
-                }}
-            />
+                                        (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                            type:'consistent',
+                                            //icon:'exception',
+                                            //btnType:'default',
+                                            text:'查看缺失项目分期凭证',
+                                            userPermissions:['1235000'],
+                                            onClick:()=>{
+                                                this.togglesDrawerVisible(true);
+                                            }
+                                        }],statusParam)
+                                    }
+                                    <TableTotal type={3} totalSource={totalSource} data={
+                                        [
+                                            {
+                                                title:'合计',
+                                                total:[
+                                                    {title: '贷方金额', dataIndex: 'creditAmount'},
+                                                ],
+                                            }
+                                        ]
+                                    } />
+                                </div>
+                            )
+                        },
+                        onTotalSource: (totalSource) => {
+                            this.setState({
+                                totalSource
+                            })
+                        },
+                    }}
+                />
                 <DrawerModal
                     title="凭证信息"
                     visible={drawerVisible}
@@ -609,7 +607,7 @@ export default class FinancialDocumentsCollection extends Component{
                         }
                     }}
                 />
-            </div>
+            </React.Fragment>
         )
     }
 }

@@ -142,7 +142,7 @@ class GeneralTaxCertificate extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/incomeSimpleOut/controller/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -159,7 +159,6 @@ class GeneralTaxCertificate extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -261,7 +260,6 @@ class GeneralTaxCertificate extends Component{
                     filters={voucherInfo}
                     toggleViewModalVisible={this.toggleViewModalVisible} />
             </SearchTable>
-            </div>
         )
     }
 }

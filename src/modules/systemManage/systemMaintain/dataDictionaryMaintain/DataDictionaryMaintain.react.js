@@ -127,7 +127,6 @@ class DataDictionaryMaintain extends Component {
     render() {
         const {updateTable,updateTree,searchTableLoading,visible,modalConfig,id,filters} = this.state;
         return (
-            <div className="oneLine">
                 <TreeTable
                     spinning={searchTableLoading}
                     refreshTree={this.refreshTree}
@@ -221,7 +220,6 @@ class DataDictionaryMaintain extends Component {
                 >
                     <PopModal refreshAll={this.refreshAll} visible={visible} modalConfig={modalConfig} toggleModalVisible={this.toggleModalVisible} />
                 </TreeTable>
-            </div>
         )
     }
 }

@@ -8,7 +8,7 @@ import React, { Component } from "react"
 import { message } from "antd"
 import { SearchTable, TableTotal } from "compoments"
 import moment from "moment"
-import { listMainResultStatus, composeBotton, request, requestResultStatus,fMoney } from "utils"
+import {composeBotton, request, requestResultStatus,fMoney } from "utils"
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -319,7 +319,7 @@ export default class SelfContainedProductAssociation extends Component {
   }
 
   fetchResultStatus = () => {
-    requestResultStatus("/accountReceiptsInvoice/listMain", this.state.filters,result => {
+    requestResultStatus('',this.state.filters,result => {
         this.setState({
             statusParam: result,
         })
@@ -362,7 +362,6 @@ export default class SelfContainedProductAssociation extends Component {
     const { declare } = this.props
     let disabled = !!declare 
     return (
-      <div className="oneLine">
         <SearchTable 
           doNotFetchDidMount={ !disabled }
           searchOption={{
@@ -384,9 +383,6 @@ export default class SelfContainedProductAssociation extends Component {
             },
             url: "/accountReceiptsInvoice/list",
             extra: <div>
-              {
-                  listMainResultStatus(statusParam)
-              }
               {
                   JSON.stringify(filters) !== "{}" && composeBotton([{
                       type: "fileExport",
@@ -412,22 +408,6 @@ export default class SelfContainedProductAssociation extends Component {
                         btnType: "default",
                         userPermissions: ["2055002"],
                         onClick: this.matchData
-                    },{
-                        type: "submit",
-                        url: "/accountReceiptsInvoice/submit",
-                        params: filters,
-                        userPermissions: ["2051010"],
-                        onSuccess: () => {
-                            this.refreshTabs()
-                        }
-                    },{
-                        type: "revoke",
-                        url: "/accountReceiptsInvoice/revoke",
-                        params: filters,
-                        userPermissions: ["2051011"],
-                        onSuccess: () => {
-                            this.refreshTabs()
-                        }
                     }], statusParam)
                 }
               <TableTotal type={ 3 } totalSource={ totalSource } data={
@@ -456,7 +436,6 @@ export default class SelfContainedProductAssociation extends Component {
             }
           }}
         />
-      </div>
     )
   }
 }

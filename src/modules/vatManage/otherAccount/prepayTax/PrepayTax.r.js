@@ -7,7 +7,7 @@
 import React,{Component} from 'react'
 import {Form,message} from 'antd'
 import {SearchTable,TableTotal,PopDetailsModal} from 'compoments'
-import {request,fMoney,listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
+import {request,fMoney,composeBotton,requestResultStatus,parseJsonToParams} from 'utils'
 import moment from 'moment';
 import { NumericInputCell } from 'compoments/EditableCell'
 
@@ -344,7 +344,7 @@ class PrepayTax extends Component{
         })
     }
     fetchResultStatus = ()=>{
-        requestResultStatus('/account/prepaytax/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -418,7 +418,6 @@ class PrepayTax extends Component{
         const { declare } = this.props;
         let disabled = !!declare;
         return(
-            <div className="oneLine">
                     <SearchTable
                     searchOption={{
                         fields:searchFields(disabled,declare),
@@ -455,8 +454,6 @@ class PrepayTax extends Component{
                         url:'/account/prepaytax/prepayTaxList',
                         extra:<div>
                             {
-                                listMainResultStatus(statusParam)
-                            }{
                                 JSON.stringify(filters) !=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'account/prepaytax/export',
@@ -479,18 +476,6 @@ class PrepayTax extends Component{
                                     params:filters,
                                     userPermissions:['1331009'],
                                     onSuccess:this.refreshTable
-                                },{
-                                    type:'submit',
-                                    url:'/account/prepaytax/submit',
-                                    params:filters,
-                                    userPermissions:['1331010'],
-                                    onSuccess:this.refreshTable
-                                },{
-                                    type:'revoke',
-                                    url:'/account/prepaytax/revoke',
-                                    params:filters,
-                                    userPermissions:['1331011'],
-                                    onSuccess:this.refreshTable,
                                 }],statusParam)
                             }
                             <TableTotal type={3} totalSource={totalSource} data={
@@ -551,7 +536,6 @@ class PrepayTax extends Component{
                     }}
                 />
                 </SearchTable>
-            </div>
         )
     }
 }

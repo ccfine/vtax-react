@@ -6,7 +6,7 @@
 import React,{Component} from 'react'
 import {Layout,Card,Row,Col,Form,Button,message,Modal} from 'antd'
 import { AsyncTable,TableTotal,PopDetailsModal } from "compoments";
-import {request, getFields, fMoney, listMainResultStatus,composeBotton,requestResultStatus,parseJsonToParams } from "utils";
+import {request, getFields, fMoney,composeBotton,requestResultStatus,parseJsonToParams } from "utils";
 import moment from 'moment';
 import PopModal from "./popModal";
 
@@ -497,7 +497,7 @@ class UnBilledSalesNotEstate extends Component {
         })
     }
     updateStatus = () => {
-        requestResultStatus('/account/notInvoiceUnSale/realty/listMain',this.state.filters,result=>{
+        requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
                 statusParam: result,
             })
@@ -645,7 +645,6 @@ class UnBilledSalesNotEstate extends Component {
                 <Card title={<span>未开票销售台账-非地产汇总列表</span>}
                     bordered={false}
                       extra={<div>
-                          {listMainResultStatus(statusParam)}
                           {
                               JSON.stringify(filters)!=='{}' && composeBotton([{
                                   type:'fileExport',
@@ -671,18 +670,6 @@ class UnBilledSalesNotEstate extends Component {
                                   params:filters,
                                   userPermissions:['1361009'],
                                   onSuccess:this.refreshTable
-                              },{
-                                  type:'submit',
-                                  url:'/account/invoiceSale/unrealty/submit',
-                                  params:filters,
-                                  userPermissions:['1361010'],
-                                  onSuccess:this.refreshTable
-                              },{
-                                  type:'revoke',
-                                  url:'/account/invoiceSale/unrealty/revoke',
-                                  params:filters,
-                                  userPermissions:['1361011'],
-                                  onSuccess:this.refreshTable,
                               }],statusParam)
                           }
                           <TableTotal type={3} totalSource={totalSource} data={

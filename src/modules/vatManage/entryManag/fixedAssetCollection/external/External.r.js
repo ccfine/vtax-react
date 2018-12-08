@@ -7,7 +7,8 @@
  */
 import React, { Component } from 'react'
 import {SearchTable,TableTotal} from 'compoments'
-import {fMoney,listMainResultStatus,requestResultStatus,composeBotton} from 'utils'
+import {fMoney,composeBotton} from 'utils'
+
 const columns=[
     {
         title: '利润中心',
@@ -111,10 +112,6 @@ const columns=[
     state={
         updateKey:Date.now()+1,
         filters:{},
-        /**
-         *修改状态和时间
-         * */
-        statusParam: {},
         totalSource:undefined,
     }
     refreshTable = ()=>{
@@ -122,23 +119,15 @@ const columns=[
             updateKey:Date.now()
         })
     }
-    fetchResultStatus = ()=>{
-        requestResultStatus('/fixedAssetCard/listMain',this.state.filters,result=>{
-            this.mounted && this.setState({
-                statusParam: result,
-            })
-        })
-    }
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
     }
     render(){
-        const {updateKey,filters,statusParam,totalSource} = this.state;
+        const {updateKey,filters,totalSource} = this.state;
         const { declare, searchFields } = this.props;
         let disabled = !!declare;
         return(
-            <div className='oneLine'>
             <SearchTable
                 style={{
                     marginTop:-16
@@ -155,8 +144,6 @@ const columns=[
                 backCondition={(filters)=>{
                     this.mounted && this.setState({
                         filters,
-                    },()=>{
-                        this.fetchResultStatus()
                     })
                 }}
                 tableOption={{
@@ -169,9 +156,6 @@ const columns=[
                         extra: (
                             <div>
                                 {
-                                    listMainResultStatus(statusParam)
-                                }
-                                {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
                                         url:'fixedAssetCard/fixedList/export',
@@ -179,25 +163,6 @@ const columns=[
                                         title:'导出',
                                         userPermissions:['1511007'],
                                     }])
-                                }
-                                {
-                                    (disabled && declare.decAction==='edit') &&  composeBotton([{
-                                        type:'submit',
-                                        url:'/fixedAssetCard/submit',
-                                        params:filters,
-                                        userPermissions:['1511010'],
-                                        onSuccess:()=>{
-                                            this.props.refreshTabs();
-                                        },
-                                    },{
-                                        type:'revoke',
-                                        url:'/fixedAssetCard/revoke',
-                                        params:filters,
-                                        userPermissions:['1511011'],
-                                        onSuccess:()=>{
-                                            this.props.refreshTabs();
-                                        },
-                                    }],statusParam)
                                 }
                                 <TableTotal type={3} totalSource={totalSource} data={
                                     [
@@ -224,7 +189,6 @@ const columns=[
                     },
                 }}
             />
-            </div>
         )
     }
 }
