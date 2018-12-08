@@ -243,12 +243,9 @@ class MessageCenter extends Component {
             <div className="message-center">
                 {/* <span className="message-return" onClick={this.handleReturn}>返回</span> */}
                 <div style={{ margin: "0px 0 6px 6px" }} onClick={this.handleReturn}>
-					<a
-                        style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}
-                        href='javascript:;'
-					>
+					<span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}>
 						<Icon type="left" /><span>返回</span>
-					</a>
+					</span>
 				</div>
                 <div className="title">公告中心</div>
                 <SearchTable
