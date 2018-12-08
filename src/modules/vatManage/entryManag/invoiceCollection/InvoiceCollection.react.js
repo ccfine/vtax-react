@@ -468,22 +468,6 @@ class InvoiceCollection extends Component {
     componentWillUnmount(){
         this.mounted = null;
     }
-
-    matchData = () => {
-        const { filters } = this.state
-        request.put("/income/invoice/collection/updateProfitCenterByPool", filters)
-            .then(({data}) => {
-                if (data.code === 200) {
-                    message.success(data.data);
-                    this.refreshTable()
-                } else {
-                    message.error(`数据匹配失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
     render() {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
@@ -544,8 +528,10 @@ class InvoiceCollection extends Component {
                                         icon: "copy",
                                         text: "数据匹配",
                                         btnType: "default",
+                                        url:'/income/invoice/collection/updateProfitCenterByPool',
+                                        params:filters,
                                         userPermissions: ["1495002"],
-                                        onClick: this.matchData
+                                        onSuccess:this.refreshTable,
                                     },
                                     {
                                         type: "fileDownload",
