@@ -146,11 +146,11 @@ const getColumns =(context)=>[
     }, {
         title: '税局审批结果',
         dataIndex: 'approvalStatusInfo',
-        width: "100px",
+        //width: "200px",
     },{
         title: '税局审批结果说明',
         dataIndex: 'errorMessage',
-        width: "300px",
+        width: "500px",
         render(obj){
            return <Tooltip placement="topLeft" title={JSON.stringify(obj)} overlayStyle={{maxWidth:'60%'}}>
                         <div className="ellipsis-index-lineClamp">{JSON.stringify(obj)}</div>
@@ -253,7 +253,7 @@ class SearchDeclare extends Component{
                     },
                     url:'/tax/decConduct/query/list',
                     scroll:{
-                        x:1300
+                        x:1500
                     }
                 }}
             >
