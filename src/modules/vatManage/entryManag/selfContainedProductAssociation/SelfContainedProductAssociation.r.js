@@ -343,7 +343,8 @@ export default class SelfContainedProductAssociation extends Component {
   render () {
     const { tableKey, totalSource, statusParam, filters } = this.state
     const { declare } = this.props
-    let disabled = !!declare 
+    let disabled = !!declare,
+            handle = declare.decAction==='edit';
     return (
         <SearchTable 
           doNotFetchDidMount={ !disabled }
@@ -364,7 +365,7 @@ export default class SelfContainedProductAssociation extends Component {
             cardProps: {
               title: <TableTitle time={ totalSource && totalSource.extractTime }>自持类产品关联进项发票</TableTitle>
             },
-            url: "/accountReceiptsInvoice/list",
+            url: `/accountReceiptsInvoice/list${handle ? '?handle=true' : ''}`,
             extra: <div>
               {
                   JSON.stringify(filters) !== "{}" && composeBotton([{

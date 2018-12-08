@@ -186,7 +186,8 @@ export default class Tab1 extends Component{
     render(){
         const {tableKey,filters,statusParam,totalSource} = this.state;
         const { declare,searchFields } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -207,7 +208,7 @@ export default class Tab1 extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this),
-                    url:'/account/income/fixedAssets/incomeSeparateList',
+                    url:`/account/income/fixedAssets/incomeSeparateList${handle ? '?handle=true' : ''}`,
                     cardProps:{
                         title: <span><label className="tab-breadcrumb">不动产进项发票台账 / </label>单独新建自持类进项发票</span>,
                     },

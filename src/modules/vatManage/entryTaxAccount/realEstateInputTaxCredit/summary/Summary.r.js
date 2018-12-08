@@ -83,7 +83,8 @@ export default class SelfBuiltToSelfUse extends Component{
     render(){
         const {tableKey,statusParam,filters,totalSource} = this.state;
         const { declare,searchFields } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
                 <SearchTable
                     style={{
@@ -109,7 +110,7 @@ export default class SelfBuiltToSelfUse extends Component{
                         key:tableKey,
                         pageSize:100,
                         columns:columns(this),
-                        url:'/account/income/estate/collectList',
+                        url:`/account/income/estate/collectList${handle ? '?handle=true' : ''}`,
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>不动产进项税额抵扣汇总</span>,
                         },

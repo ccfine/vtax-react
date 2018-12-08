@@ -417,6 +417,7 @@ class PrepayTax extends Component{
         const {searchTableLoading,tableKey,statusParam,filters,totalSource,saveLoding,voucherVisible,voucherFilter,stagesId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
+        let handle = declare.decAction==='edit';
         return(
                     <SearchTable
                     searchOption={{
@@ -451,7 +452,7 @@ class PrepayTax extends Component{
                         // pageSize:100,
                         pagination:false,
                         columns:getColumns(this,disabled),
-                        url:'/account/prepaytax/prepayTaxList',
+                        url:`/account/prepaytax/prepayTaxList${handle ? '?handle=true' : ''}`,
                         extra:<div>
                             {
                                 JSON.stringify(filters) !=='{}' && composeBotton([{

@@ -312,6 +312,7 @@ class LandPriceManage extends Component{
         const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
+        let handle = declare.decAction==='edit';
         const {getFieldDecorator} = this.props.form;
         const isCheck = (disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1);
         return(
@@ -337,7 +338,7 @@ class LandPriceManage extends Component{
                         key:tableKey,
                         pageSize:100,
                         columns:getColumns(this,!disabled,getFieldDecorator),
-                        url:'/land/price/manage/list',
+                        url:`/land/price/manage/list${handle ? '?handle=true' : ''}`,
                         rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: record.stagesId.trim() === '', // Column configuration not to be checked

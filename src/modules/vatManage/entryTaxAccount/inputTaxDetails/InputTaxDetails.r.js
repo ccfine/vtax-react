@@ -611,7 +611,8 @@ class InputTaxDetails extends Component {
     render() {
         const {searchTableLoading, tableKey, visible, visible_3, voucherVisible, popModalEdit, editFilters, addVisible, statusParam = {}, filters, voucherParams, exportParams, totalSource, record, action, saveLoading} = this.state;
         const {declare} = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
 
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (
@@ -651,7 +652,7 @@ class InputTaxDetails extends Component {
                     },
                     pagination: false,
                     columns: getColumns(this, noSubmit && disabled && declare.decAction === 'edit'),
-                    url: '/account/income/taxDetail/taxDetailList',
+                    url: `/account/income/taxDetail/taxDetailList${handle ? '?handle=true' : ''}`,
                     extra: <div>
                         {
                             JSON.stringify(filters) !== '{}' && composeBotton([{

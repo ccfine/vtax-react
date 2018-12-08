@@ -415,6 +415,7 @@ class TaxExemptionDetails extends Component {
         const {declare} = this.props;
         let disabled = !!declare;
         const self = this;
+        let handle = declare.decAction==='edit';
         return (
             <SearchTable
                 spinning={searchTableLoading}
@@ -446,7 +447,7 @@ class TaxExemptionDetails extends Component {
                     key: tableKey,
                     pageSize: 100,
                     columns: getColumns(this, getFieldDecorator, (disabled && declare.decAction === 'edit')),
-                    url: `/account/other/reduceTaxDetail/list?type=${isEnabled === false ? '1' : '2'}`,
+                    url: `/account/other/reduceTaxDetail/list?type=${isEnabled === false ? '1' : '2'}${handle ? '&handle=true' : ''}`,
                     cardProps: {
                         title: '减免税明细台账'
                     },
