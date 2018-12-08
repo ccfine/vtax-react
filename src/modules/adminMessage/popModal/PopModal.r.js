@@ -345,7 +345,7 @@ class PopModal extends Component {
                                                         { max: 40, message: '公告标题最多输入40个字符' }
                                                     ],
                                                 })(
-                                                    <Input />
+                                                    <Input placeholder="请输入公告标题" />
                                                 )
                                             }
                                         </FormItem>
