@@ -192,6 +192,7 @@ class OtherRevision extends Component {
   render() {
     const { declare } = this.props;
     let disabled = !!declare;
+    let handle = declare.decAction==='edit';
     let { filters={}, statusParam = {} } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (
@@ -215,7 +216,7 @@ class OtherRevision extends Component {
             pageSize: 100,
             columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
             key: this.state.updateKey,
-            url: "/accountOtherRevision/list",
+            url: `/accountOtherRevision/list${handle ? '?handle=true' : ''}`,
             cardProps: {
               title: "其他事项调整台账",
               extra: (

@@ -386,6 +386,7 @@ class DeductProjectSummary extends React.Component {
 		const { tableKey, filters = {}, statusParam={},canFinish,visible,totalSource,voucherVisible,voucherFilter,stagesId} = this.state
         const { declare } = this.props;
         let disabled = !!declare;
+        let handle = declare.decAction==='edit';
 		return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
@@ -404,7 +405,7 @@ class DeductProjectSummary extends React.Component {
                         key: tableKey,
                         pageSize: 100,
                         columns: columns(this),
-                        url: '/account/landPrice/deductedDetails/list',
+                        url: `/account/landPrice/deductedDetails/list${handle ? '?handle=true' : ''}`,
                         onSuccess: (params) => {
                             this.setState({
                                 filters: params

@@ -127,7 +127,8 @@ export default class ExternalAccess extends Component{
     render(){
         const {tableKey,statusParam,filters,totalSource} = this.state;
         const { declare,searchFields } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
                 <SearchTable
                     style={{
@@ -153,7 +154,7 @@ export default class ExternalAccess extends Component{
                         key:tableKey,
                         pageSize:100,
                         columns:columns(this,disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1),
-                        url:'/account/income/estate/list',
+                        url:`/account/income/estate/list${handle ? '?handle=true' : ''}`,
                         cardProps: {
                             title: <span><label className="tab-breadcrumb">不动产进项税额抵扣台账 / </label>不动产卡片进项税额抵扣</span>,
                         },

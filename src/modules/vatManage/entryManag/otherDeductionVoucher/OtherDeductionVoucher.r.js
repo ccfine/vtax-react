@@ -344,7 +344,8 @@ export default class OtherDeductionVoucher extends Component {
     render() {
         const {visible, tableKey, filters, voucherVisible, statusParam, totalSource, voucherParams, exportParams} = this.state;
         const {declare} = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
@@ -366,7 +367,7 @@ export default class OtherDeductionVoucher extends Component {
                         key: tableKey,
                         pageSize: 100,
                         columns: columns(this),
-                        url: '/other/tax/deduction/vouchers/list',
+                        url: `/other/tax/deduction/vouchers/list${handle ? '?handle=true' : ''}`,
                         onDataChange: (dataSource) => {
                             this.setState({
                                 dataSource

@@ -126,7 +126,8 @@ const columns=[
     render(){
         const {updateKey,filters,totalSource} = this.state;
         const { declare, searchFields } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <SearchTable
                 style={{
@@ -150,7 +151,7 @@ const columns=[
                     key:updateKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/fixedAssetCard/fixedList',
+                    url:`/fixedAssetCard/fixedList${handle ? '?handle=true' : ''}`,
                     cardProps: {
                         title: <span><label className="tab-breadcrumb">不动产信息采集 / </label>不动产卡片</span>,
                         extra: (

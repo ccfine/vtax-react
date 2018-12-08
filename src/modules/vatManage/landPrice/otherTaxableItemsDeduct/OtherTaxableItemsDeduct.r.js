@@ -202,6 +202,7 @@ class OtherTaxableItemsDeduct extends Component{
         const {updateKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
+        let handle = declare.decAction==='edit';
         return(
                 <SearchTable
                     spinning={searchTableLoading}
@@ -233,7 +234,7 @@ class OtherTaxableItemsDeduct extends Component{
                         cardProps:{
                             title:'其他应税项目扣除台账'
                         },
-                        url:'/account/othertax/deducted/list',
+                        url:`/account/othertax/deducted/list${handle ? '?handle=true' : ''}`,
                         extra: <div>
                             {
                                 JSON.stringify(filters)!=='{}' && composeBotton([{

@@ -488,6 +488,7 @@ class InvoiceCollection extends Component {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
+            handle = declare.decAction==='edit',
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
                 <SearchTable
@@ -508,7 +509,7 @@ class InvoiceCollection extends Component {
                     }}
                     tableOption={{
                         columns: getColumns(this),
-                        url: "/income/invoice/collection/list",
+                        url: `/income/invoice/collection/list${handle ? '?handle=true' : ''}`,
                         key: tableUpDateKey,
                         scroll: { x: 2140, y:window.screen.availHeight-380},
                         rowSelection:isCheck?{

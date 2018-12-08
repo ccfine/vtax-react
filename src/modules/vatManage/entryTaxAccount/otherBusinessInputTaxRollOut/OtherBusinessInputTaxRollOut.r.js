@@ -320,7 +320,8 @@ class OtherBusinessInputTaxRollOut extends Component {
     render() {
         const { totalSource,saveLoding, voucherVisible, voucherParams, exportParams, popModalEdit, editFilters } = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
 
         let { filters, statusParam } = this.state;
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
@@ -337,7 +338,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                     }}
                     tableOption={{
                         key: this.state.updateKey,
-                        url: "/account/income/taxout/list",
+                        url: `/account/income/taxout/list${handle ? '?handle=true' : ''}`,
                         pagination: false,
                         columns: getColumns(this,noSubmit && disabled && declare.decAction==='edit' ),
                         rowKey: "id",
