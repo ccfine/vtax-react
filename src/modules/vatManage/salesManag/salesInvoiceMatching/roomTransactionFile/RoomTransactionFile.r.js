@@ -522,7 +522,7 @@ class RoomTransactionFile extends Component{
                             })
                         },
                         columns:getColumns(this,(disabled && handle)),
-                        url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}${handle ? '?handle=true' : ''}`,
+                        url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}${handle ? '&handle=true' : ''}`,
                         key:tableUpDateKey,
                         extra: <div>
                             {
