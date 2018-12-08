@@ -2,7 +2,8 @@
  * Created by liurunbin on 2018/1/15.
  */
 import React,{Component} from 'react';
-import {Modal,Table,message,Spin,Card} from 'antd';
+import {Modal,message,Card} from 'antd';
+import {SynchronizeTable} from 'compoments'
 import {request,fMoney,composeBotton} from 'utils'
 const columns = [
     /*{
@@ -28,30 +29,34 @@ const columns = [
         dataIndex:'taxRate',
         className:'text-right',
         render:text=>text? `${text}%`: text,
-        width:50,
+        width:'100px',
     },
     {
         title:'期末增值税确认收入金额',
         dataIndex:'endTotalPrice',
         className:'text-right',
+        width:'200px',
         render:text=>fMoney(text)
     },
     {
         title:'期末增值税开票金额',
         dataIndex:'endTotalAmount',
         className:'text-right',
+        width:'150px',
         render:text=>fMoney(text)
     },
     {
         title:'期末未开具发票销售额',
         dataIndex:'totalNoInvoiceSales',
         className:'text-right',
+        width:'150px',
         render:text=>fMoney(text)
     },
     {
         title:'期末未开具发票销项税额',
         dataIndex:'taxAmount',
         className:'text-right',
+        width:'200px',
         render:text=>fMoney(text)
     },
 ];
@@ -60,10 +65,14 @@ class SummarySheetModal extends Component{
     static defaultProps={
         type:'edit',
         visible:true,
-        loading:false,
     }
     state={
-
+        updateKey: Date.now()
+    }
+    refreshTable=()=>{
+        this.setState({
+            updateKey:Date.now()
+        })
     }
     mounted=true
     componentWillUnmount(){
@@ -91,6 +100,7 @@ class SummarySheetModal extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.visible && nextProps.params){
+            this.refreshTable
             this.fetchData(nextProps.params)
         }
         if(!nextProps.visible){
@@ -102,24 +112,26 @@ class SummarySheetModal extends Component{
     render(){
         const props = this.props;
         const {title, params} = this.props;
-        const {dataSource,loading} = this.state;
+        const {updateKey,dataSource} = this.state;
         return(
             <Modal
                 maskClosable={false}
                 onCancel={()=>props.toggleModalVisible(false)}
-                width={700}
+                width={900}
                 destroyOnClose={true}
                 bodyStyle={{
                     backgroundColor:'#fafafa'
                 }}
                 style={{
-                    maxWidth:'90%'
+                    maxWidth:'90%',
+                    height:'316px',
                 }}
                 footer={null}
                 visible={props.visible}
                 title={title}>
-                <Spin spinning={loading}>
-                    <Card
+                    <Card 
+                        bordered={false}
+                        //bodyStyle={{padding: '10px 20px'}} 
                         extra={
                             <div>
                                 {
@@ -133,11 +145,18 @@ class SummarySheetModal extends Component{
                                 }
                             </div>
                         }
-                        bordered={false}
                     >
-                        <Table dataSource={dataSource} columns={columns} rowKey={(record)=>record.id}/>
+                    <SynchronizeTable data={dataSource}
+                            updateKey={updateKey}
+                            tableProps={{
+                                rowKey:record=>record.id,
+                                pagination:false,
+                                bordered:true,
+                                size:'small',
+                                columns:columns,
+                                scroll:{ x: 800, y: 400 }
+                            }} />
                     </Card>
-                </Spin>
             </Modal>
         )
     }
