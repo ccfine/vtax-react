@@ -386,7 +386,8 @@ class InvoiceDataMatching extends Component{
     render(){
         const {tableKey,filters,matching,statusParam,totalSource} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -414,7 +415,7 @@ class InvoiceDataMatching extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,disabled),
-                    url:'/output/invoice/marry/already/list',
+                    url:`/output/invoice/marry/already/list${handle ? '?handle=true' : ''}`,
                     extra:<div>
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
@@ -426,7 +427,7 @@ class InvoiceDataMatching extends Component{
                             }])
                         }
                         {
-                            (disabled && declare.decAction==='edit') &&  composeBotton([{
+                            (disabled && handle) &&  composeBotton([{
                                 type:'match',
                                 icon:'copy',
                                 text:'数据匹配',

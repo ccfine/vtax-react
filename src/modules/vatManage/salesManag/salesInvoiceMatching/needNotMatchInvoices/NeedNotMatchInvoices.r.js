@@ -264,7 +264,8 @@ class NeedNotMatchInvoices extends Component{
     render(){
         const {visible,tableKey,statusParam,totalSource,selectedRowKeys} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <SearchTable
                 style={{
@@ -292,7 +293,7 @@ class NeedNotMatchInvoices extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/output/invoice/marry/unwanted/list',
+                    url:`/output/invoice/marry/unwanted/list${handle ? '?handle=true' : ''}`,
                     extra:<div>
                         {
                             (disabled && declare.decAction==='edit') && composeBotton([{

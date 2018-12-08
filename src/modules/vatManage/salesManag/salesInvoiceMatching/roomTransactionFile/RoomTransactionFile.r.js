@@ -490,7 +490,8 @@ class RoomTransactionFile extends Component{
         const {tableUpDateKey,statusParam,totalSource,filters={},deleteLoading,selectedRowKeys,isShowImport,popModalVisible} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+            handle = declare.decAction==='edit',
+            isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
         return(
                 <SearchTable
                     style={{
@@ -520,12 +521,12 @@ class RoomTransactionFile extends Component{
                                 totalSource
                             })
                         },
-                        columns:getColumns(this,(disabled && declare.decAction==='edit')),
-                        url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}`,
+                        columns:getColumns(this,(disabled && handle)),
+                        url: `/output/room/files/list?month=${this.props.declare && this.props.declare.authMonth}${handle ? '?handle=true' : ''}`,
                         key:tableUpDateKey,
                         extra: <div>
                             {
-                                (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                (disabled && handle) &&  composeBotton([{
                                     type:'consistent',
                                     text:'确收时点参数设置',
                                     userPermissions:['1215000'],
@@ -544,7 +545,7 @@ class RoomTransactionFile extends Component{
                                 }])
                             }
                             {
-                                (disabled && declare.decAction==='edit') && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
+                                (disabled && handle) && parseInt(isShowImport, 0) === 1 &&  composeBotton([{
                                     type:'fileExport',
                                     url:'output/room/files/download',
                                     userPermissions:['1211005'],
@@ -559,7 +560,7 @@ class RoomTransactionFile extends Component{
                                 }],statusParam)
                             }
                             {
-                                (disabled && declare.decAction==='edit') && composeBotton([
+                                (disabled && handle) && composeBotton([
                                     {
 
                                         type:'delete',

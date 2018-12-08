@@ -421,7 +421,8 @@ export default class SalesInvoiceCollection extends Component {
         const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+            handle = declare.decAction==='edit',
+            isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
@@ -443,7 +444,7 @@ export default class SalesInvoiceCollection extends Component {
                         key: tableKey,
                         pageSize: 100,
                         columns: getColumns(this),
-                        url: "/output/invoice/collection/list",
+                        url: `/output/invoice/collection/list${handle ? '?handle=true' : ''}`,
                         // rowSelection:{
                         //     type: 'checkbox',
                         // },
@@ -471,7 +472,7 @@ export default class SalesInvoiceCollection extends Component {
                                         }])
                                     }
                                     {
-                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{
+                                        (disabled && handle)  &&  composeBotton([{
                                             type:'fileExport',
                                             url:'output/invoice/collection/download',
                                             onSuccess:this.refreshTable,

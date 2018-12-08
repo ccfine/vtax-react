@@ -244,7 +244,8 @@ class UnmatchedData extends Component{
     render(){
         const {visible,tableKey,selectedData,totalSource} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -271,7 +272,7 @@ class UnmatchedData extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,disabled),
-                    url:'/output/invoice/marry/unmatched/list',
+                    url:`/output/invoice/marry/unmatched/list${handle ? '?handle=true' : ''}`,
                     extra:<div>
                         <TableTotal type={3} totalSource={totalSource} data={
                             [

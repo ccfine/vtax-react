@@ -478,7 +478,8 @@ export default class FinancialDocumentsCollection extends Component{
     render(){
         const {updateKey,drawerUpdateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <React.Fragment>
                 <SearchTable
@@ -495,7 +496,7 @@ export default class FinancialDocumentsCollection extends Component{
                         key:updateKey,
                         pageSize:100,
                         columns:columns,
-                        url:'/inter/financial/voucher/manageList',
+                        url:`/inter/financial/voucher/manageList${handle ? '?handle=true' : ''}`,
                         scroll:{ x: 3350 ,y:window.screen.availHeight-450-(disabled?50:0)},
                         onSuccess:(params)=>{
                             this.setState({
