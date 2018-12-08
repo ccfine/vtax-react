@@ -420,7 +420,7 @@ class InvoiceDataMatching extends Component{
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'/output/invoice/marry/already/automatic',
+                                url:'output/invoice/marry/already/export',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:['1211007'],
@@ -432,7 +432,7 @@ class InvoiceDataMatching extends Component{
                                 icon:'copy',
                                 text:'数据匹配',
                                 btnType:'default',
-                                url:'/income/invoice/collection/updateProfitCenterByPool',
+                                url:'/output/invoice/marry/already/automatic',
                                 params:filters,
                                 userPermissions: ["1215002"],
                                 onSuccess:this.refreshTabs,

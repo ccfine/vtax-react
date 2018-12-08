@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import {Tree,Spin} from 'antd'
 // import difference from 'lodash/difference'
-// import isEqual from 'lodash/isEqual'
+import isEqual from 'lodash/isEqual'
 import './tree.less'
 
 const TreeNode = Tree.TreeNode
@@ -27,17 +27,20 @@ class TreeDom extends Component {
             const value = nextProps.value
             this.setState({checkedKeys:value})
         }
+        if (nextProps.treeData && nextProps.treeData.length !== 0) {
+            this.setState({
+                expandedKeys: [nextProps.treeData[0].key]
+            })
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         // if(difference(nextState.checkedKeys, this.state.checkedKeys).length === 0 && difference(nextProps.treeData, this.props.treeData).length === 0) {
         //     return false
         // }
-        // if ( isEqual(nextProps, this.props) && isEqual(nextState, this.state) ) {
-        //     return false
-        // }
-        // console.log('nextProps', nextProps)
-        // console.log('this.props', this.props)
+        if ( isEqual(nextProps, this.props) && isEqual(nextState, this.state) ) {
+            return false
+        }
         return true
     }
 
@@ -69,23 +72,31 @@ class TreeDom extends Component {
     render() {
         const { treeData=[] } = this.props
         const { checkedKeys, expandedKeys, autoExpandParent } = this.state
-        return treeData.length > 0 ? (
-            <React.Fragment>
-                <div className="message-object">
-                    <h3 className="title1">发布对象</h3>
-                    <Tree
-                        checkable={true}
-                        checkedKeys={checkedKeys}
-                        expandedKeys={expandedKeys}
-                        onCheck={this.onCheck}
-                        onExpand={this.onExpand}
-                        autoExpandParent={autoExpandParent}
-                    >
-                        {this.renderTreeNodes(treeData)}
-                    </Tree>
-                </div>
-            </React.Fragment>
-        ) : (<Spin />)
+        return (
+            <div>
+                <div className="publish-objects">发布对象</div>
+                {
+                    treeData.length > 0 ? (
+                        <React.Fragment>
+                            <div className="message-object">
+                                <Tree
+                                    checkable={true}
+                                    checkedKeys={checkedKeys}
+                                    expandedKeys={expandedKeys}
+                                    onCheck={this.onCheck}
+                                    onExpand={this.onExpand}
+                                    autoExpandParent={autoExpandParent}
+                                >
+                                    {this.renderTreeNodes(treeData)}
+                                </Tree>
+                            </div>
+                        </React.Fragment>
+                    ) : (<Spin>
+                        <React.Fragment><div className="message-object"></div></React.Fragment>
+                    </Spin>)
+                }
+            </div>
+        )
     }
 }
 
