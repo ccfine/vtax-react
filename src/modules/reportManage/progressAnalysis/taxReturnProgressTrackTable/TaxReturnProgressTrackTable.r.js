@@ -14,14 +14,17 @@ const formItemStyle={
         span:16
     }
 }
-
+const status = [
+    {text:'未处理',value:'0'},
+    {text:'已处理',value:'1'},
+]
 const searchFields=(getFieldValue)=>{
     return [
         {
             label: "区域",
             fieldName: "parent",
             type: "asyncSelect",
-            span: 8,
+            span: 6,
             formItemStyle,
             componentProps: {
                 fieldTextName:'name',
@@ -41,7 +44,7 @@ const searchFields=(getFieldValue)=>{
             label: "组织",
             fieldName: "org",
             type: "asyncSelect",
-            span: 8,
+            span: 6,
             formItemStyle,
             componentProps: {
                 fieldTextName: "name",
@@ -62,7 +65,7 @@ const searchFields=(getFieldValue)=>{
             label: "纳税主体",
             fieldName: "main",
             type: "asyncSelect",
-            span: 8,
+            span: 6,
             formItemStyle,
             componentProps: {
                 fieldTextName: "name",
@@ -85,15 +88,39 @@ const searchFields=(getFieldValue)=>{
             fieldName:'authMonth',
             type:'monthPicker',
             formItemStyle,
-            span:8,
+            span:6,
             componentProps:{
                 format:'YYYY-MM',
             },
         },
         {
-            label: "纳税申报表提交",
+            label: "销项管理",
+            fieldName: "outputStatus",
+            span: 6,
+            type: "select",
+            formItemStyle,
+            options: status
+        },
+        {
+            label: "进项管理",
+            fieldName: "incomeStatus",
+            span: 6,
+            type: "select",
+            formItemStyle,
+            options: status
+        },
+        {
+            label: "其他管理",
+            fieldName: "otherStatus",
+            span: 6,
+            type: "select",
+            formItemStyle,
+            options: status
+        },
+        {
+            label: "纳税申报表",
             fieldName: "submitStatus",
-            span: 8,
+            span: 6,
             type: "select",
             formItemStyle,
             options: [
@@ -110,7 +137,7 @@ const searchFields=(getFieldValue)=>{
         {
             label: "申报归档",
             fieldName: "fileStatus",
-            span: 8,
+            span: 6,
             type: "select",
             formItemStyle,
             options: [
@@ -148,7 +175,49 @@ const columns = [
       width: "200px"
     },
     {
-      title: "纳税申报表提交状态",
+        title: "销项管理",
+        dataIndex: "outputStatus",
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },
+    {
+        title: "进项管理",
+        dataIndex: "incomeStatus",
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },
+    {
+        title: "其他管理",
+        dataIndex: "otherStatus",
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },
+    {
+      title: "纳税申报表",
       dataIndex: "submitStatus",
       width: "200px"
     },
@@ -174,9 +243,7 @@ export default class TaxReturnProgressTrackTable extends Component{
     render(){
         const {updateKey, filters,statusParam} = this.state;
         return(
-            <div className="oneLine">
             <SearchTable
-                doNotFetchDidMount={true}
                 searchOption={{
                     fields:searchFields
                 }}
@@ -209,10 +276,9 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 1400, y:window.screen.availHeight-360,},
+                    scroll:{ x: 1400, y:window.screen.availHeight-450},
                 }}
             />
-            </div>
         )
     }
 }
