@@ -181,12 +181,12 @@ const columns = context => [
     },
 	{
 		title: '分期可售建筑面积',
-        dataIndex: 'buildingArea',
+        dataIndex: 'upAreaSale',
         width:'150px',
     },
     {
 		title: '项目分期自持产品建筑面积',
-        dataIndex: 'upAreaSale',
+        dataIndex: 'buildingArea',
         width:'200px',
 	},
 	{
