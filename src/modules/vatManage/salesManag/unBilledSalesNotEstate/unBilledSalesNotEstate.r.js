@@ -565,6 +565,7 @@ class UnBilledSalesNotEstate extends Component {
         const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource,voucherVisibleConfirm,voucherFilterConfirm,voucherVisibleInvoice,voucherFilterInvoice,subjectId,taxRateId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
+            handle = declare.decAction==='edit',
             noSubmit = parseInt(statusParam.status,10)===1;
         const { getFieldValue } = this.props.form
         return(
@@ -655,7 +656,7 @@ class UnBilledSalesNotEstate extends Component {
                               }])
                           }
                           {
-                              (disabled && declare.decAction==='edit') && composeBotton([{
+                              (disabled && handle) && composeBotton([{
                                   type:'consistent',
                                   //icon:'exception',
                                   btnType:'default',
@@ -697,7 +698,7 @@ class UnBilledSalesNotEstate extends Component {
                       style={{marginTop:10}}>
 
 
-                    <AsyncTable url="/account/invoiceSale/unrealty/pc/list"
+                    <AsyncTable url={`/account/invoiceSale/unrealty/pc/list${handle ? '?handle=true' : ''}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
@@ -723,7 +724,7 @@ class UnBilledSalesNotEstate extends Component {
                     bordered={false}
                       extra={<div>
                           {
-                              (disabled && declare.decAction==='edit') && composeBotton([{
+                              (disabled && handle) && composeBotton([{
                                   type:'add',
                                   icon:'plus',
                                   userPermissions:['1361003'],
@@ -739,14 +740,14 @@ class UnBilledSalesNotEstate extends Component {
                       </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url="/account/notInvoiceUnSale/realty/details/list"
+                    <AsyncTable url={`/account/notInvoiceUnSale/realty/details/list${handle ? '?handle=true' : ''}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
                                     rowKey:record=>record.id,
                                     pagination:true,
                                     size:'small',
-                                    columns:columns2(this, noSubmit && disabled && declare.decAction==='edit'),
+                                    columns:columns2(this, noSubmit && disabled && handle),
                                 }} />
                 </Card>
 

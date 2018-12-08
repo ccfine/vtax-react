@@ -336,10 +336,10 @@ class BillingSales extends Component {
     }
 
     fetch=()=>{
+        let handle = this.props && this.props.declare.decAction==='edit',
+            params = handle ? {...this.state.filters,handle:true} : this.state.filters
         this.setState({ loaded: false });
-        request.get('/account/output/billingSale/list',{
-            params:this.state.filters
-        }).then(({data}) => {
+        request.get('/account/output/billingSale/list',{params:params}).then(({data}) => {
             if(data.code===200){
                 this.setState({
                     dataSource: data.data.records,

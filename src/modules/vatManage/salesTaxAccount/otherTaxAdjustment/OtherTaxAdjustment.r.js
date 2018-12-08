@@ -252,9 +252,10 @@ class OtherTaxAdjustment extends Component {
   };
   render() {
     const { declare } = this.props;
-    let disabled = !!declare;
     let { filters={}, statusParam = {},totalSource } = this.state;
-    let noSubmit = parseInt(statusParam.status,10)===1;
+    let disabled = !!declare,
+      handle = declare.decAction==='edit',
+      noSubmit = parseInt(statusParam.status,10)===1;
     return (
         <SearchTable
           doNotFetchDidMount={!disabled}
@@ -274,9 +275,9 @@ class OtherTaxAdjustment extends Component {
           tableOption={{
             scroll: { x: 1900,y:window.screen.availHeight-380-(disabled?50:0)},
             pageSize: 100,
-            columns: getColumns(this,disabled && declare.decAction==='edit' && noSubmit),
+            columns: getColumns(this,disabled && handle && noSubmit),
             key: this.state.updateKey,
-            url: "/account/output/othertax/list",
+            url: `/account/output/othertax/list${handle ? '?handle=true' : ''}`,
             onTotalSource: totalSource => {
               this.setState({
                   totalSource
@@ -296,7 +297,7 @@ class OtherTaxAdjustment extends Component {
                         }])
                     }
                   {
-                      (disabled && declare.decAction==='edit') && composeBotton([{
+                      (disabled && handle) && composeBotton([{
                           type:'add',
                           icon:'plus',
                           userPermissions:['1311003'],

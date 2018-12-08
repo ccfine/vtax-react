@@ -275,7 +275,8 @@ class unBilledSalesEstate extends Component{
     render(){
         const {tableKey,visible,filters={},statusParam={},searchTableLoading,totalSource} = this.state;
         const { declare } = this.props;
-        let disabled = !!declare;
+        let disabled = !!declare,
+            handle = declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -302,7 +303,7 @@ class unBilledSalesEstate extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    url:'/account/output/notInvoiceSale/realty/list',
+                    url:`/account/output/notInvoiceSale/realty/list${handle ? '?handle=true' : ''}`,
                     extra:<div>
                         {
                             JSON.stringify(filters) !== "{}" && <Button size="small" style={{marginRight:5}} onClick={()=>this.toggleModalVisible(true)}><Icon type="search" />查看汇总</Button>
@@ -317,7 +318,7 @@ class unBilledSalesEstate extends Component{
                             }])
                         }
                         {
-                            (disabled && declare.decAction==='edit') && composeBotton([
+                            (disabled && handle) && composeBotton([
                             {
                                 type:'reset',
                                 url:'/account/output/notInvoiceSale/realty/reset',

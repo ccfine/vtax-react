@@ -331,7 +331,8 @@ class unBilledSalesEstate extends Component{
         const {tableKey,filters={},statusParam={},searchTableLoading,selectedRowKeys} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+            handle = declare.decAction==='edit',
+            isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}
@@ -369,7 +370,7 @@ class unBilledSalesEstate extends Component{
                             disabled: parseInt(record.doCheck, 0)  === 1, // Column configuration not to be checked
                         }),
                     }:undefined,
-                    url:'/accountInitialUntaxedSales/list',
+                    url:`/accountInitialUntaxedSales/list${handle ? '?handle=true' : ''}`,
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params,
@@ -391,7 +392,7 @@ class unBilledSalesEstate extends Component{
                             ])
                         }
                         {
-                            (disabled && declare.decAction==='edit') && composeBotton([
+                            (disabled && handle) && composeBotton([
                                 {
                                     type:'mark',
                                     buttonOptions:{
