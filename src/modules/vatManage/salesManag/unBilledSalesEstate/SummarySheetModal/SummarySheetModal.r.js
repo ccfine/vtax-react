@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/15.
  */
 import React,{Component} from 'react';
-import {Modal,message,Card} from 'antd';
+import {Modal,message,Card,Spin} from 'antd';
 import {SynchronizeTable} from 'compoments'
 import {request,fMoney,composeBotton} from 'utils'
 const columns = [
@@ -100,7 +100,6 @@ class SummarySheetModal extends Component{
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.visible && nextProps.params){
-            this.refreshTable
             this.fetchData(nextProps.params)
         }
         if(!nextProps.visible){
@@ -112,7 +111,7 @@ class SummarySheetModal extends Component{
     render(){
         const props = this.props;
         const {title, params} = this.props;
-        const {updateKey,dataSource} = this.state;
+        const {updateKey,dataSource,loading} = this.state;
         return(
             <Modal
                 maskClosable={false}
@@ -129,9 +128,9 @@ class SummarySheetModal extends Component{
                 footer={null}
                 visible={props.visible}
                 title={title}>
+                <Spin spinning={loading}>
                     <Card 
                         bordered={false}
-                        //bodyStyle={{padding: '10px 20px'}} 
                         extra={
                             <div>
                                 {
@@ -146,7 +145,7 @@ class SummarySheetModal extends Component{
                             </div>
                         }
                     >
-                    <SynchronizeTable data={dataSource}
+                        <SynchronizeTable data={dataSource}
                             updateKey={updateKey}
                             tableProps={{
                                 rowKey:record=>record.id,
@@ -157,6 +156,7 @@ class SummarySheetModal extends Component{
                                 scroll:{ x: 800, y: 400 }
                             }} />
                     </Card>
+                </Spin>
             </Modal>
         )
     }
