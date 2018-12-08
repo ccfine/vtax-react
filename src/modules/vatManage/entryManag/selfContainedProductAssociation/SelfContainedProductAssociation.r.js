@@ -5,10 +5,9 @@
 */
 
 import React, { Component } from "react"
-import { message } from "antd"
 import { SearchTable, TableTotal } from "compoments"
 import moment from "moment"
-import {composeBotton, request, requestResultStatus,fMoney } from "utils"
+import {composeBotton, requestResultStatus,fMoney } from "utils"
 import TableTitle from "compoments/tableTitleWithTime"
 
 const formItemStyle = {
@@ -341,22 +340,6 @@ export default class SelfContainedProductAssociation extends Component {
   //       })
   // }
 
-  matchData = () => {
-    const { filters } = this.state
-    request.put("/accountReceiptsInvoice/automatic", filters)
-        .then(({data}) => {
-            if (data.code === 200) {
-                message.success(data.data);
-                this.refreshTabs()
-            } else {
-                message.error(`数据匹配失败:${data.msg}`)
-            }
-        })
-        .catch(err => {
-            message.error(err.message)
-        })
-  }
-
   render () {
     const { tableKey, totalSource, statusParam, filters } = this.state
     const { declare } = this.props
@@ -406,8 +389,10 @@ export default class SelfContainedProductAssociation extends Component {
                         icon: "copy",
                         text: "数据匹配",
                         btnType: "default",
+                        url:'/accountReceiptsInvoice/automatic',
+                        params:filters,
                         userPermissions: ["2055002"],
-                        onClick: this.matchData
+                        onSuccess:this.refreshTabs,
                     }], statusParam)
                 }
               <TableTotal type={ 3 } totalSource={ totalSource } data={

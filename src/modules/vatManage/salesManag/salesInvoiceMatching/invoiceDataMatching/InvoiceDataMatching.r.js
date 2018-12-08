@@ -383,21 +383,6 @@ class InvoiceDataMatching extends Component{
                 message.error(err.message)
             })
     }
-    matchData = ()=>{
-        const {filters} = this.state;
-        request.put(`/output/invoice/marry/already/automatic`,filters)
-            .then(({data})=>{
-                if(data.code===200){
-                    message.success(data.msg);
-                    this.props.refreshTabs()
-                }else{
-                    message.error(`数据匹配失败:${data.msg}`)
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-            })
-    }
     render(){
         const {tableKey,filters,matching,statusParam,totalSource} = this.state;
         const { declare } = this.props;
@@ -434,7 +419,7 @@ class InvoiceDataMatching extends Component{
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'output/invoice/marry/already/export',
+                                url:'/output/invoice/marry/already/automatic',
                                 params:filters,
                                 title:'导出',
                                 userPermissions:['1211007'],
@@ -446,8 +431,10 @@ class InvoiceDataMatching extends Component{
                                 icon:'copy',
                                 text:'数据匹配',
                                 btnType:'default',
-                                userPermissions:['1215002'],
-                                onClick:this.matchData
+                                url:'/income/invoice/collection/updateProfitCenterByPool',
+                                params:filters,
+                                userPermissions: ["1215002"],
+                                onSuccess:this.refreshTabs,
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={
