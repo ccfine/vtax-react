@@ -143,7 +143,7 @@ const columns = context => [
 	{
 		title: '项目分期名称',
 		dataIndex: 'stagesName',
-        width:'200px',
+        //width:'200px',
 	},
 	{
 		title: '期初可抵扣土地价款',
@@ -177,29 +177,34 @@ const columns = context => [
         dataIndex: 'unDeductedLandPrice',
         render: text => fMoney(text),
         className: 'table-money',
-        width:'100px',
+        width:'150px',
     },
 	{
 		title: '分期可售建筑面积',
+        dataIndex: 'buildingArea',
+        width:'150px',
+    },
+    {
+		title: '项目分期自持产品建筑面积',
         dataIndex: 'upAreaSale',
-        width:'100px',
+        width:'200px',
 	},
 	{
 		title: '累计销售建筑面积',
 		dataIndex: 'saleArea',
-        width:'100px',
+        width:'150px',
 	},
 	{
 		title: '未销售建筑面积',
 		dataIndex: 'unSaleArea',
-        width:'100px',
+        width:'150px',
 	},
 	{
 		title: '土地单方价款',
 		dataIndex: 'singleLandCost',
 		render: text => fMoney(text),
 		className: 'table-money',
-        width:'100px',
+        width:'150px',
 	},
 	{
 		title: '当期销售建筑面积',
@@ -414,7 +419,7 @@ class DeductProjectSummary extends React.Component {
                             })
                         },
                         scroll:{
-                            x:2650,
+                            x:2950,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                         extra: (
