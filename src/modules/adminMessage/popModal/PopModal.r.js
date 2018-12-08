@@ -342,7 +342,7 @@ class PopModal extends Component {
                                                     initialValue: defaultData.title || '',
                                                     rules: [
                                                         { required: true, message: '请输入公告标题' },
-                                                        { max: 20, message: '公告标题最多输入20个字符' }
+                                                        { max: 40, message: '公告标题最多输入40个字符' }
                                                     ],
                                                 })(
                                                     <Input />
