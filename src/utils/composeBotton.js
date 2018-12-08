@@ -220,7 +220,7 @@ const getSwitchOptions = (item,statusParam) =>{
 const composeBotton = (buttons = [], params) => {
     return buttons.map((item, i) => {
         let component = undefined;
-        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel' || item.type === 'edit' || item.type === 'delete' || item.type === 'retweet' || item.type === 'match' ){
+        if(item.type === 'add' || item.type === 'save' || item.type ==='view' || item.type === 'cancel' || item.type === 'edit' || item.type === 'delete' || item.type === 'retweet'){
             item.type = 'consistent'
         }
 
