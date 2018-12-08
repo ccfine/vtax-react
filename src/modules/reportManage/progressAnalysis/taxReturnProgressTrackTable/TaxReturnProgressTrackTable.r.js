@@ -15,8 +15,8 @@ const formItemStyle={
     }
 }
 const status = [
-    {text:'未处理',value:'0'},
-    {text:'已处理',value:'1'},
+    {text:'未完成',value:'0'},
+    {text:'已完成',value:'1'},
 ]
 const searchFields=(getFieldValue)=>{
     return [
@@ -153,10 +153,6 @@ const searchFields=(getFieldValue)=>{
         }
     ]
 }
-const status = [
-    {text:'未处理',value:'0'},
-    {text:'已处理',value:'1'},
-]
 const columns = [
     {
       title: "区域",
