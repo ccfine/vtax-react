@@ -127,7 +127,7 @@ const getColumns =(context)=>[
                     </span>;
         },
         fixed: "left",
-        width: "75px",
+        width: "100px",
         dataIndex: "action"
     },{
         title: '纳税申报系统申报进度',
@@ -253,7 +253,7 @@ class SearchDeclare extends Component{
                     },
                     url:'/tax/decConduct/query/list',
                     scroll:{
-                        x:1500
+                        x:1550
                     }
                 }}
             >
