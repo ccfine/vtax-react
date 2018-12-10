@@ -293,7 +293,7 @@ class PopModal extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form
-        const { visible, loading } = this.props
+        const { visible, loading, gglxDict } = this.props
         const { defaultData, fileList, saveLoading, publishLoading, uploadLoging } = this.state
         const props = {
             name: 'files',
@@ -368,10 +368,9 @@ class PopModal extends Component {
                                                         placeholder="请选择公告类型"
                                                         onChange={this.handleSelectChange}
                                                     >
-                                                        <Option value="1">集团税务公告</Option>
-                                                        <Option value="2">税务政策解读</Option>
-                                                        <Option value="3">平台更新公告</Option>
-                                                        <Option value="4">其他公告</Option>
+                                                        {
+                                                            gglxDict && gglxDict.map((item,key) => <Option key={key} value={item.value}>{item.text}</Option>)
+                                                        }
                                                     </Select>
                                                 )
                                             }

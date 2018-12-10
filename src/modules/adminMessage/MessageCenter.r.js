@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react'
 import {Button,message,Modal,Icon} from 'antd'
-import { request,composeBotton } from "utils"
+import { request,composeBotton, requestDict, setFormat } from "utils"
 import { SearchTable } from "compoments"
 import PopsModal from './popModal'
 import './index.less'
@@ -17,6 +17,7 @@ const transformData = (data=[]) =>{
             uid: item.fileUuid,
             name: item.srcFileName,
             noticeId: item.noticeId,
+            gglxDict: []
         }
     })
 }
@@ -102,20 +103,23 @@ const getColumns = context => [
     },
     {
         title: "公告类型",
-        dataIndex: "sysDictId",
+        dataIndex: "sysDictName",
         width:'100px',
         render: (text) => {
-            if (parseInt(text,0) === 1) {
-                return '集团税务公告'
-            } else if (parseInt(text,0) === 2) {
-                return '税务政策解读'
-            } else if (parseInt(text,0) === 3) {
-                return '平台更新公告'
-            } else if (parseInt(text,0) === 4) {
-                return '其他公告'
-            } else {
-                return ''
-            }
+            return text;
+            // const { gglxDict } = context.state;
+            // let list = gglxDict.filter(item => item.value === text);
+            // if (parseInt(text,0) === 1) {
+            //     return '集团税务公告'
+            // } else if (parseInt(text,0) === 2) {
+            //     return '税务政策解读'
+            // } else if (parseInt(text,0) === 3) {
+            //     return '平台更新公告'
+            // } else if (parseInt(text,0) === 4) {
+            //     return '其他公告'
+            // } else {
+            //     return ''
+            // }
         }
     },
     {
@@ -208,6 +212,15 @@ class MessageCenter extends Component {
         }
     }
 
+    componentDidMount() {
+        //公告类型字典
+        requestDict('gglglx', result => {
+            this.setState({
+                gglxDict: setFormat(result)
+            });
+        });
+    }
+
     refreshTable = () => {
         this.setState({
             tableUpDateKey: Date.now(),
@@ -269,7 +282,7 @@ class MessageCenter extends Component {
     }
 
     render() {
-        const { tableUpDateKey, visible, defaultData, messageLoading, modalType, fileList } = this.state;
+        const { tableUpDateKey, visible, defaultData, messageLoading, modalType, fileList, gglxDict } = this.state;
         return (
             <div className="message-center">
                 {/* <span className="message-return" onClick={this.handleReturn}>返回</span> */}
@@ -312,6 +325,7 @@ class MessageCenter extends Component {
                     loading={messageLoading}
                     modalType={modalType}
                     fileList={fileList}
+                    gglxDict={gglxDict}
                     toggleModalVisible={visible => {
                         this.setState({
                             visible: visible,
