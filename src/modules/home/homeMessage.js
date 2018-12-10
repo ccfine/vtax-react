@@ -35,20 +35,6 @@ class homeMessage extends Component {
         }
     }
 
-    getSysDictId = (type) => {
-        if (parseInt(type, 0) === 1) {
-            return '集团税务公告'
-        } else if (parseInt(type, 0) === 2) {
-            return '税务政策解读'
-        } else if (parseInt(type, 0) === 3) {
-            return '平台更新公告'
-        } else if (parseInt(type, 0) === 4) {
-            return '其他公告'
-        } else {
-            return ''
-        }
-    }
-
     htmlToText = (text) => {
         const re = /<(?:.|\s)*?>/g;
         const content = text.replace(re, "");
@@ -120,7 +106,7 @@ class homeMessage extends Component {
                                                 <span>{this.getLevel(item.level)}</span><span>{item.title}</span>
                                             </div>
                                         </a>
-                                        <div className="message-page-info"><span>{`公告时间：${item.publishDateStr}`}</span><span>{`发布人：${item.publishBy}`}</span><span>{`公告类型：${this.getSysDictId(item.sysDictId)}`}</span></div>
+                                        <div className="message-page-info"><span>{`公告时间：${item.publishDateStr}`}</span><span>{`发布人：${item.publishBy}`}</span><span>{`公告类型：${item.sysDictName}`}</span></div>
                                         <div className="message-page-text">{this.htmlToText(item.content)}</div>
                                     </div>
                                 )
