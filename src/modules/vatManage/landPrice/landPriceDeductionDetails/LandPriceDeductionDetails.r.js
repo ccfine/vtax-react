@@ -391,7 +391,7 @@ class DeductProjectSummary extends React.Component {
 		const { tableKey, filters = {}, statusParam={},canFinish,visible,totalSource,voucherVisible,voucherFilter,stagesId} = this.state
         const { declare } = this.props;
         let disabled = !!declare;
-        let handle = declare.decAction==='edit';
+        let handle = declare && declare.decAction==='edit';
 		return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}

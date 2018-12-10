@@ -345,7 +345,7 @@ export default class OtherDeductionVoucher extends Component {
         const {visible, tableKey, filters, voucherVisible, statusParam, totalSource, voucherParams, exportParams} = this.state;
         const {declare} = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}

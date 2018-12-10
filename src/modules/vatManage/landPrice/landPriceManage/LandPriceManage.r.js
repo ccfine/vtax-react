@@ -312,7 +312,7 @@ class LandPriceManage extends Component{
         const {searchTableLoading,visible,tableKey,filters,selectedRowKeys,voucherInfo,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        let handle = declare.decAction==='edit';
+        let handle = declare && declare.decAction==='edit';
         const {getFieldDecorator} = this.props.form;
         const isCheck = (disabled && declare.decAction==='edit' && parseInt(statusParam.status,10)===1);
         return(

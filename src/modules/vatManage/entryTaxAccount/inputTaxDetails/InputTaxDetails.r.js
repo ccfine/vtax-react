@@ -612,7 +612,7 @@ class InputTaxDetails extends Component {
         const {searchTableLoading, tableKey, visible, visible_3, voucherVisible, popModalEdit, editFilters, addVisible, statusParam = {}, filters, voucherParams, exportParams, totalSource, record, action, saveLoading} = this.state;
         const {declare} = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
 
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;
         return (

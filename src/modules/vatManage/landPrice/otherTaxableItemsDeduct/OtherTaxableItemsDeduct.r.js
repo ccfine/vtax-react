@@ -202,7 +202,7 @@ class OtherTaxableItemsDeduct extends Component{
         const {updateKey,searchTableLoading,statusParam,totalSource,filters} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        let handle = declare.decAction==='edit';
+        let handle = declare && declare.decAction==='edit';
         return(
                 <SearchTable
                     spinning={searchTableLoading}

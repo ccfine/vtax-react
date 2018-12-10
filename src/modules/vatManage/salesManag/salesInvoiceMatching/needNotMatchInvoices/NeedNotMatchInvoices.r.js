@@ -265,7 +265,7 @@ class NeedNotMatchInvoices extends Component{
         const {visible,tableKey,statusParam,totalSource,selectedRowKeys} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return(
             <SearchTable
                 style={{

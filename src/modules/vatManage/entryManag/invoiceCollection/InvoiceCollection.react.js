@@ -472,7 +472,7 @@ class InvoiceCollection extends Component {
         const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit',
+            handle = declare && declare.decAction==='edit',
             isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
         return (
                 <SearchTable

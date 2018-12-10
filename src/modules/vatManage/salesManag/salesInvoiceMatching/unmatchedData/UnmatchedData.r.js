@@ -245,7 +245,7 @@ class UnmatchedData extends Component{
         const {visible,tableKey,selectedData,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}

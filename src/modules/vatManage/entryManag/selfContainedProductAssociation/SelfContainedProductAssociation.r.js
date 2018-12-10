@@ -344,7 +344,7 @@ export default class SelfContainedProductAssociation extends Component {
     const { tableKey, totalSource, statusParam, filters } = this.state
     const { declare } = this.props
     let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
     return (
         <SearchTable 
           doNotFetchDidMount={ !disabled }

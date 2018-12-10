@@ -192,7 +192,7 @@ class OtherRevision extends Component {
   render() {
     const { declare } = this.props;
     let disabled = !!declare;
-    let handle = declare.decAction==='edit';
+    let handle = declare && declare.decAction==='edit';
     let { filters={}, statusParam = {} } = this.state;
     let noSubmit = parseInt(statusParam.status,10)===1;
     return (

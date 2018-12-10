@@ -254,7 +254,7 @@ class OtherTaxAdjustment extends Component {
     const { declare } = this.props;
     let { filters={}, statusParam = {},totalSource } = this.state;
     let disabled = !!declare,
-      handle = declare.decAction==='edit',
+      handle = declare && declare.decAction==='edit',
       noSubmit = parseInt(statusParam.status,10)===1;
     return (
         <SearchTable

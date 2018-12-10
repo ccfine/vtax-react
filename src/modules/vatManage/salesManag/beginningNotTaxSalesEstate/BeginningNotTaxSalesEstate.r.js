@@ -331,7 +331,7 @@ class unBilledSalesEstate extends Component{
         const {tableKey,filters={},statusParam={},searchTableLoading,selectedRowKeys} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit',
+            handle = declare && declare.decAction==='edit',
             isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
         return(
             <SearchTable

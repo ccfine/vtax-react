@@ -490,7 +490,7 @@ class RoomTransactionFile extends Component{
         const {tableUpDateKey,statusParam,totalSource,filters={},deleteLoading,selectedRowKeys,isShowImport,popModalVisible} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit',
+            handle = declare && declare.decAction==='edit',
             isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
         return(
                 <SearchTable

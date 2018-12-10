@@ -565,7 +565,7 @@ class UnBilledSalesNotEstate extends Component {
         const {tableUpDateKey,voucherVisible,filters,statusParam,totalSource,voucherVisibleConfirm,voucherFilterConfirm,voucherVisibleInvoice,voucherFilterInvoice,subjectId,taxRateId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit',
+            handle = declare && declare.decAction==='edit',
             noSubmit = parseInt(statusParam.status,10)===1;
         const { getFieldValue } = this.props.form
         return(

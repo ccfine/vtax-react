@@ -321,7 +321,7 @@ class OtherBusinessInputTaxRollOut extends Component {
         const { totalSource,saveLoding, voucherVisible, voucherParams, exportParams, popModalEdit, editFilters } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
 
         let { filters, statusParam } = this.state;
         const noSubmit = statusParam && parseInt(statusParam.status, 0) !== 2;

@@ -387,7 +387,7 @@ class InvoiceDataMatching extends Component{
         const {tableKey,filters,matching,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}

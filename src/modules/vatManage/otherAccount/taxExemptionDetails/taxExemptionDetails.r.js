@@ -415,7 +415,7 @@ class TaxExemptionDetails extends Component {
         const {declare} = this.props;
         let disabled = !!declare;
         const self = this;
-        let handle = declare.decAction==='edit';
+        let handle = declare && declare.decAction==='edit';
         return (
             <SearchTable
                 spinning={searchTableLoading}

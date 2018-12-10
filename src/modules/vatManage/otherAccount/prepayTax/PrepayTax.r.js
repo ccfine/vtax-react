@@ -417,7 +417,7 @@ class PrepayTax extends Component{
         const {searchTableLoading,tableKey,statusParam,filters,totalSource,saveLoding,voucherVisible,voucherFilter,stagesId} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
-        let handle = declare.decAction==='edit';
+        let handle = declare && declare.decAction==='edit';
         return(
                     <SearchTable
                     searchOption={{

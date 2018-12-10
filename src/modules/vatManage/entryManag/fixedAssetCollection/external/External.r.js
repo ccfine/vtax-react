@@ -127,7 +127,7 @@ const columns=[
         const {updateKey,filters,totalSource} = this.state;
         const { declare, searchFields } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return(
             <SearchTable
                 style={{

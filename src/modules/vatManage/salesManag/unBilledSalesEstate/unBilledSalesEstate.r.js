@@ -276,7 +276,7 @@ class unBilledSalesEstate extends Component{
         const {tableKey,visible,filters={},statusParam={},searchTableLoading,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return(
             <SearchTable
                 doNotFetchDidMount={!disabled}

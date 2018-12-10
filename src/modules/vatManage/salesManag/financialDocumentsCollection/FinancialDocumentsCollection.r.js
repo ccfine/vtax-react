@@ -479,7 +479,7 @@ export default class FinancialDocumentsCollection extends Component{
         const {updateKey,drawerUpdateKey,filters,dFilters,drawerVisible,selectedRowKeys,statusParam,totalSource} = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
-            handle = declare.decAction==='edit';
+            handle = declare && declare.decAction==='edit';
         return(
             <React.Fragment>
                 <SearchTable
