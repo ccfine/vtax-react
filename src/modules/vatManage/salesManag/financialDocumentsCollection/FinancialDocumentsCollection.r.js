@@ -502,7 +502,7 @@ export default class FinancialDocumentsCollection extends Component{
                             this.setState({
                                 filters:params,
                             },()=>{
-                                this.fetchResultStatus()
+                                handle && this.fetchResultStatus()
                                 this.requestMessage()
                             })
                         },

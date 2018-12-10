@@ -706,7 +706,7 @@ class UnBilledSalesNotEstate extends Component {
                                     pagination:false,
                                     size:'small',
                                     columns:columns(this),
-                                    onSuccess:this.updateStatus,
+                                    onSuccess:handle && this.updateStatus,
                                     onDataChange:(dataSource)=>{
                                         this.setState({
                                             dataSource

@@ -331,7 +331,7 @@ class LandPriceManage extends Component{
                             filters,
                             selectedRowKeys:[],
                         },() => {
-                            this.fetchResultStatus();
+                            handle && this.fetchResultStatus();
                         });
                     }}
                     tableOption={{

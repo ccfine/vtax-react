@@ -103,7 +103,7 @@ export default class SelfBuiltToSelfUse extends Component{
                         this.mounted && this.setState({
                             filters,
                         },()=>{
-                            this.fetchResultStatus()
+                            handle && this.fetchResultStatus()
                         })
                     }}
                     tableOption={{

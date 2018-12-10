@@ -333,7 +333,7 @@ class OtherBusinessInputTaxRollOut extends Component {
                         this.setState({
                             filters,
                         },()=>{
-                            this.updateStatus(filters);
+                            handle && this.updateStatus(filters);
                         })
                     }}
                     tableOption={{

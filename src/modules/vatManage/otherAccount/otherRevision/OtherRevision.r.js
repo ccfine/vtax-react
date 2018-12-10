@@ -208,7 +208,7 @@ class OtherRevision extends Component {
               this.setState({
                   filters,
               },() => {
-                this.updateStatus(filters);
+                handle && this.updateStatus(filters);
               });
           }}
           tableOption={{

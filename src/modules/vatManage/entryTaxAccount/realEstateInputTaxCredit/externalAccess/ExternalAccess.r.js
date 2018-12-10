@@ -147,7 +147,7 @@ export default class ExternalAccess extends Component{
                         this.mounted && this.setState({
                             filters,
                         },()=>{
-                            this.fetchResultStatus()
+                            handle && this.fetchResultStatus()
                         })
                     }}
                     tableOption={{

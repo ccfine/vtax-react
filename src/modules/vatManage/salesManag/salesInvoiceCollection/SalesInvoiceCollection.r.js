@@ -437,7 +437,7 @@ export default class SalesInvoiceCollection extends Component {
                         this.setState({
                             filters,
                         },() => {
-                            this.fetchResultStatus();
+                            handle && this.fetchResultStatus();
                         });
                     }}
                     tableOption={{

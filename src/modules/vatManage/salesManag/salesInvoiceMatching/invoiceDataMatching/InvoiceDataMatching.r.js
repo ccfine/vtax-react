@@ -408,7 +408,7 @@ class InvoiceDataMatching extends Component{
                     this.setState({
                         filters,
                     },()=>{
-                        this.fetchResultStatus()
+                        handle && this.fetchResultStatus()
                     })
                 }}
                 tableOption={{

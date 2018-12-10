@@ -415,7 +415,7 @@ class DeductProjectSummary extends React.Component {
                             this.setState({
                                 filters: params
                             },()=>{
-                                this.fetchResultStatus()
+                                handle && this.fetchResultStatus()
                                 this.fetchIsFinish()
                             })
                         },

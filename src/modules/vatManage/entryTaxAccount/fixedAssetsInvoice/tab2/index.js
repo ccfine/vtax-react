@@ -196,7 +196,7 @@ export default class Tab2 extends Component{
                     this.mounted && this.setState({
                         filters,
                     },()=>{
-                        this.fetchResultStatus()
+                        handle && this.fetchResultStatus()
                     })
                 }}
                 tableOption={{

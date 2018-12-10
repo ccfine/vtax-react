@@ -336,7 +336,8 @@ class BillingSales extends Component {
     }
 
     fetch=()=>{
-        let handle = this.props && this.props.declare.decAction==='edit',
+        const { declare } = this.props;
+        let handle = declare && declare.decAction==='edit',
             params = handle ? {...this.state.filters,handle:true} : this.state.filters
         this.setState({ loaded: false });
         request.get('/account/output/billingSale/list',{params:params}).then(({data}) => {
@@ -346,7 +347,7 @@ class BillingSales extends Component {
                     notDataSource: data.data.notRecords,
                     loaded: true,
                 },()=>{
-                    this.updateStatus()
+                    handle && this.updateStatus()
                 });
             }else{
                 message.error(data.msg)

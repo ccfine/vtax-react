@@ -349,7 +349,7 @@ class unBilledSalesEstate extends Component{
                         filters,
                         selectedRowKeys:[],
                     },()=>{
-                        this.fetchResultStatus()
+                        handle && this.fetchResultStatus()
                     })
                 }}
                 spinning={searchTableLoading}
@@ -376,7 +376,7 @@ class unBilledSalesEstate extends Component{
                             filters:params,
                             resultFieldsValues:params,
                         },()=>{
-                            this.fetchResultStatus()
+                            handle && this.fetchResultStatus()
                         })
                     },
                     extra:<div>

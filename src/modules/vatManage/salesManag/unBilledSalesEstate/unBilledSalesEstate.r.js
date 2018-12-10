@@ -293,7 +293,7 @@ class unBilledSalesEstate extends Component{
                     this.setState({
                         filters:params,
                     },()=>{
-                        this.fetchResultStatus()
+                        handle && this.fetchResultStatus()
                     })
                 }}
                 tableOption={{

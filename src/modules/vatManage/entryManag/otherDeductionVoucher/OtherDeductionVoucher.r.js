@@ -360,7 +360,7 @@ export default class OtherDeductionVoucher extends Component {
                             filters,
                             selectedRowKeys: []
                         }, () => {
-                            this.fetchResultStatus();
+                            handle && this.fetchResultStatus();
                         });
                     }}
                     tableOption={{
