@@ -115,21 +115,8 @@ const getColumns = context => [
     },
     {
         title: "公告类型",
-        dataIndex: "sysDictId",
+        dataIndex: "sysDictName",
         width:'100px',
-        render: (text) => {
-            if (parseInt(text,0) === 1) {
-                return '集团税务公告'
-            } else if (parseInt(text,0) === 2) {
-                return '税务政策解读'
-            } else if (parseInt(text,0) === 3) {
-                return '平台更新公告'
-            } else if (parseInt(text,0) === 4) {
-                return '其他公告'
-            } else {
-                return ''
-            }
-        }
     },
     {
         title: "公告级别",
