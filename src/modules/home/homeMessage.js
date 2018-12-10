@@ -103,10 +103,10 @@ class homeMessage extends Component {
                                     <div key={key} className="home-message-page">
                                         <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={() => this.handleGo(item)}>
                                             <div className="message-page-header" style={{fontWeight: item.readStatus === 2 ? 500 : 'normal'}}>
-                                                <span>{this.getLevel(item.level)}</span><span>{item.title}</span>
+                                                <span>{this.getLevel(item.level)}</span><span>{item.title || ''}</span>
                                             </div>
                                         </a>
-                                        <div className="message-page-info"><span>{`公告时间：${item.publishDateStr}`}</span><span>{`发布人：${item.publishBy}`}</span><span>{`公告类型：${item.sysDictName}`}</span></div>
+                                        <div className="message-page-info"><span>{`公告时间：${item.publishDateStr || ''}`}</span><span>{`发布人：${item.publishBy || ''}`}</span><span>{`公告类型：${item.sysDictName || ''}`}</span></div>
                                         <div className="message-page-text">{this.htmlToText(item.content)}</div>
                                     </div>
                                 )
