@@ -225,7 +225,7 @@ class SheetWithSearchFields extends Component{
                                     onClick:()=>{
                                         this.handelGenerateTax();
                                     }
-                                }]) : null
+                                }], statusParam) : null
                             }
                             {
                                 JSON.stringify(params)!=='{}' && composeBotton([{
