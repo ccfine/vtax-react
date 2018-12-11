@@ -42,7 +42,7 @@ const searchFields = [
             }
         ],
     },{
-        label:'所属期',
+        label:'纳税申报期',
         type:'monthPicker',
         fieldName:'partTerm',
         formItemStyle,
@@ -169,7 +169,7 @@ const getColumns =(context)=>[
         title: '纳税主体',
         dataIndex: 'mainName',
     },{
-        title: '所属期',
+        title: '纳税申报期',
         dataIndex: 'partTerm',
     },/*{
         title: '税（费）种',

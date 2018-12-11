@@ -68,20 +68,6 @@ class MessageDetail extends Component {
         }
     }
 
-    getSysDictId = (type) => {
-        if (parseInt(type, 0) === 1) {
-            return '集团税务公告'
-        } else if (parseInt(type, 0) === 2) {
-            return '税务政策解读'
-        } else if (parseInt(type, 0) === 3) {
-            return '平台更新公告'
-        } else if (parseInt(type, 0) === 4) {
-            return '其他公告'
-        } else {
-            return ''
-        }
-    }
-
     render() {
         const { data, loading } = this.state
         return (
@@ -103,7 +89,7 @@ class MessageDetail extends Component {
                             <div className="message-info">
                                 <span style={{marginRight: 20}}>{`公告时间：${(data && data.publishDateStr) || ''}`}</span>
                                 <span style={{marginRight: 20}}>{`发布人：${(data && data.publishBy) || ''}`}</span>
-                                <span>{`公告类型：${(data && this.getSysDictId(data.sysDictId)) || ''}`}</span>
+                                <span>{`公告类型：${(data && data.sysDictName) || ''}`}</span>
                             </div>
                             <div className="message-content" dangerouslySetInnerHTML={{ __html: data && data.content }} />
                             <ul className="fileList">
