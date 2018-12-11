@@ -20,6 +20,32 @@ const formItemStyle = {
         span: 16
     }
 };
+
+const markFiledsProfit = (declare) => getFieldValue => [
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        notShowAll:true,
+        span:'22',
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择利润中心'
+                }
+            ]
+        }
+    }
+]
+
 const fields = (disabled,declare) => [
     {
         label:'纳税主体',
@@ -71,6 +97,38 @@ const fields = (disabled,declare) => [
                 {
                     required: true,
                     message: '请选择开票月份'
+                }
+            ]
+        },
+    },
+    {
+        label: "导入内容",
+        fieldName: "type",
+        type: "select",
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        options: [
+            {
+                text: "销项发票",
+                value: "1"
+            },
+            {
+                text: "销项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择导入内容'
                 }
             ]
         },
@@ -441,8 +499,18 @@ export default class SalesInvoiceCollection extends Component {
                                     }
                                     {
                                         (disabled && declare.decAction==='edit')  &&  composeBotton([{  //&& parseInt(isShowImport, 0) === 1
-                                            type:'fileExport',
+                                            type:'fileDownload',
                                             url:'output/invoice/collection/download',
+                                            menu: [
+                                                {
+                                                    url: "output/invoice/collection/download",
+                                                    title: "销项发票模板"
+                                                },
+                                                {
+                                                    url: "output/invoice/collection/downloadProfitCenter",
+                                                    title: "销项发票的利润中心模板",
+                                                }
+                                            ],
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1061005'],
                                         },{
@@ -458,6 +526,25 @@ export default class SalesInvoiceCollection extends Component {
                                             monthFieldName:"authMonth",
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1065000'],
+                                        },{ // 需要改
+                                            type:'mark',
+                                            buttonOptions:{
+                                                text:'利润中心',
+                                                icon:'pushpin-o'
+                                            },
+                                            modalOptions:{
+                                                title:'利润中心'
+                                            },
+                                            formOptions:{
+                                                filters: filters,
+                                                selectedRowKeys: selectedRowKeys,
+                                                url:"/output/invoice/collection/update/status",
+                                                fields: markFiledsProfit(declare),
+                                                onSuccess:()=>{
+                                                    this.refreshTable()
+                                                },
+                                                userPermissions:['1395000'],
+                                            }
                                         },{
                                             type:'delete',
                                             icon:'delete',
