@@ -628,7 +628,7 @@ class RoomTransactionFile extends Component{
                     }}
                 >
                 </SearchTable>
-                <PopModal 
+                <PopModal
                     visible={popModalVisible}
                     title='确收时点参数设置'
                     toggleModalVisible={this.togglesPopModalVisible}
