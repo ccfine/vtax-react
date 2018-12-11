@@ -16,7 +16,10 @@ class ButtonMarkeModal extends Component{
             filters:PropTypes.object,
             selectedRowKeys:PropTypes.array,
             url: PropTypes.string.isRequired,
-            fields:PropTypes.array.isRequired,
+            fields: PropTypes.oneOfType([
+                PropTypes.array.isRequired,
+                PropTypes.func.isRequired,
+            ]),
             disabled:PropTypes.bool,
             onSuccess:PropTypes.func,
         }).isRequired,
@@ -57,6 +60,7 @@ class ButtonMarkeModal extends Component{
             if (!err) {
                 this.toggleLoading(true)
                 const {filters,selectedRowKeys,url,onSuccess} = this.props.formOptions;
+                const { text } = this.props.buttonOptions;
                 const params = {
                     ...filters,
                     ...values,
@@ -66,11 +70,11 @@ class ButtonMarkeModal extends Component{
                     .then(({data})=>{
                         this.toggleLoading(false)
                         if(data.code===200){
-                            message.success('标记类型成功!');
+                            message.success(`${text}成功!`);
                             this.toggleVisible(false);
                             onSuccess && onSuccess()
                         }else{
-                            message.error(`标记类型失败:${data.msg}`)
+                            message.error(`${text}失败:${data.msg}`)
                         }
                     })
                     .catch(err => {

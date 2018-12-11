@@ -555,7 +555,7 @@ class InvoiceCollection extends Component {
                                                 title: "进项发票模板"
                                             },
                                             {
-                                                url: "income/invoice/collection/downloadProfitCenter",
+                                                url: "income/invoice/collection/download/profitCenter",
                                                 title: "进项发票的利润中心模板",
                                             }
                                         ],

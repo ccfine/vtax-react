@@ -489,6 +489,28 @@ export default class SalesInvoiceCollection extends Component {
                                         listMainResultStatus(statusParam)
                                     }
                                     {
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{
+                                            type:'mark',
+                                            buttonOptions:{
+                                                text:'利润中心',
+                                                icon:'pushpin-o'
+                                            },
+                                            modalOptions:{
+                                                title:'利润中心'
+                                            },
+                                            formOptions:{
+                                                filters: filters,
+                                                selectedRowKeys: selectedRowKeys,
+                                                url:"/output/invoice/collection/relationStages",
+                                                fields: markFiledsProfit(declare),
+                                                onSuccess:()=>{
+                                                    this.refreshTable()
+                                                },
+                                                userPermissions:['1065001'],
+                                            }
+                                        }],statusParam)
+                                    }
+                                    {
                                         JSON.stringify(filters)!=='{}' && composeBotton([{
                                             type:'fileExport',
                                             url:'output/invoice/collection/export',
@@ -507,7 +529,7 @@ export default class SalesInvoiceCollection extends Component {
                                                     title: "销项发票模板"
                                                 },
                                                 {
-                                                    url: "output/invoice/collection/downloadProfitCenter",
+                                                    url: "output/invoice/collection/download/profitCenter",
                                                     title: "销项发票的利润中心模板",
                                                 }
                                             ],
@@ -526,25 +548,6 @@ export default class SalesInvoiceCollection extends Component {
                                             monthFieldName:"authMonth",
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1065000'],
-                                        },{ // 需要改
-                                            type:'mark',
-                                            buttonOptions:{
-                                                text:'利润中心',
-                                                icon:'pushpin-o'
-                                            },
-                                            modalOptions:{
-                                                title:'利润中心'
-                                            },
-                                            formOptions:{
-                                                filters: filters,
-                                                selectedRowKeys: selectedRowKeys,
-                                                url:"/output/invoice/collection/update/status",
-                                                fields: markFiledsProfit(declare),
-                                                onSuccess:()=>{
-                                                    this.refreshTable()
-                                                },
-                                                userPermissions:['1395000'],
-                                            }
                                         },{
                                             type:'delete',
                                             icon:'delete',
