@@ -16,7 +16,10 @@ class ButtonMarkeModal extends Component{
             filters:PropTypes.object,
             selectedRowKeys:PropTypes.array,
             url: PropTypes.string.isRequired,
-            fields:PropTypes.array.isRequired,
+            fields: PropTypes.oneOfType([
+                PropTypes.array.isRequired,
+                PropTypes.func.isRequired,
+            ]),
             disabled:PropTypes.bool,
             onSuccess:PropTypes.func,
         }).isRequired,
