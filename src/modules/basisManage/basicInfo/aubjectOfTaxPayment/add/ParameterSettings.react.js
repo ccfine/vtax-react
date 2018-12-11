@@ -195,6 +195,42 @@ export default class ParameterSettings extends Component{
                                 fieldDecoratorOptions:{
                                     initialValue:(defaultData!==null && defaultData.dimensionality) || '1',
                                 }
+                            },
+                            {
+                                label: '申报的税局系统',
+                                fieldName: 'taxSubjectConfigBO.taxType',
+                                type: 'radioGroup',
+                                span: 24,
+                                formItemStyle:{
+                                    labelCol:{
+                                        span:3
+                                    },
+                                    wrapperCol:{
+                                        span:21
+                                    },
+                                    className:'vTax-CheckboxGroup',
+                                },
+                                options:[  //税局系统 1国税申报系统 2地税申报系统 3国地税申报系统 4重点税源申报系统 5个人所得税申报系统 ,
+                                    {
+                                        label: '国税申报系统',
+                                        value: '1',
+                                    },
+                                    {
+                                        label: '国地税申报系统',
+                                        value: '3',
+                                    },
+                                    {
+                                        label: '重点税源申报系统',
+                                        value: '4',
+                                    },
+                                ],
+                                componentProps:{
+                                    className:"radioStyle",
+                                    disabled,
+                                },
+                                fieldDecoratorOptions:{
+                                    initialValue:(defaultData!==null && defaultData.taxType) || undefined,
+                                }
                             }
                         ])
                     }

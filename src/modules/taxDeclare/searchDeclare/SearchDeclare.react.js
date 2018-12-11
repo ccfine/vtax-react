@@ -152,7 +152,7 @@ const getColumns =(context)=>[
         dataIndex: 'errorMessage',
         width: "500px",
         render(obj){
-           return <Tooltip placement="topLeft" title={JSON.stringify(obj)} overlayStyle={{maxWidth:'60%'}}>
+           return obj !== '' && <Tooltip placement="topLeft" title={JSON.stringify(obj)} overlayStyle={{maxWidth:'60%'}}>
                         <div className="ellipsis-index-lineClamp">{JSON.stringify(obj)}</div>
                     </Tooltip>
         }
