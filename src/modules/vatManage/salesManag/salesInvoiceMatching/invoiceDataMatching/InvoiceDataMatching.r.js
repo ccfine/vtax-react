@@ -357,11 +357,6 @@ class InvoiceDataMatching extends Component{
         statusParam:'',
         totalSource:undefined,
     }
-    refreshTable = ()=>{
-        this.setState({
-            tableKey:Date.now()
-        })
-    }
     fetchResultStatus = ()=>{
         requestResultStatus('',this.state.filters,result=>{
             this.setState({
@@ -435,7 +430,7 @@ class InvoiceDataMatching extends Component{
                                 url:'/output/invoice/marry/already/automatic',
                                 params:filters,
                                 userPermissions: ["1215002"],
-                                onSuccess:this.refreshTabs,
+                                onSuccess:this.props.refreshTabs,
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={

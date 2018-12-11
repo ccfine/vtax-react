@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
-import { fMoney,composeBotton,requestResultStatus,request } from "utils";
+import { fMoney,listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
 
@@ -46,6 +46,32 @@ const markFieldsData = [
         }
     }
 ]
+
+const markFiledsProfit = (declare) => getFieldValue => [
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        notShowAll:true,
+        span:'22',
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择利润中心'
+                }
+            ]
+        }
+    }
+]
+
 const fields = (disabled,declare) => [
     {
         label:'纳税主体',
@@ -97,6 +123,38 @@ const fields = (disabled,declare) => [
                 {
                     required: true,
                     message: '请选择开票月份'
+                }
+            ]
+        },
+    },
+    {
+        label: "导入内容",
+        fieldName: "type",
+        type: "select",
+        span: 24,
+        formItemStyle:{
+            labelCol:{
+                span:6
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        options: [
+            {
+                text: "销项发票",
+                value: "1"
+            },
+            {
+                text: "销项发票的利润中心",
+                value:  "2"
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择导入内容'
                 }
             ]
         },
@@ -463,6 +521,31 @@ export default class SalesInvoiceCollection extends Component {
                             extra: (
                                 <div>
                                     {
+                                        listMainResultStatus(statusParam)
+                                    }
+                                    {
+                                        (disabled && declare.decAction==='edit')  &&  composeBotton([{
+                                            type:'mark',
+                                            buttonOptions:{
+                                                text:'利润中心',
+                                                icon:'pushpin-o'
+                                            },
+                                            modalOptions:{
+                                                title:'利润中心'
+                                            },
+                                            formOptions:{
+                                                filters: filters,
+                                                selectedRowKeys: selectedRowKeys,
+                                                url:"/output/invoice/collection/relationStages",
+                                                fields: markFiledsProfit(declare),
+                                                onSuccess:()=>{
+                                                    this.refreshTable()
+                                                },
+                                                userPermissions:['1065001'],
+                                            }
+                                        }],statusParam)
+                                    }
+                                    {
                                         JSON.stringify(filters)!=='{}' && composeBotton([{
                                             type:'fileExport',
                                             url:'output/invoice/collection/export',
@@ -475,6 +558,16 @@ export default class SalesInvoiceCollection extends Component {
                                         (disabled && handle)  &&  composeBotton([{
                                             type:'fileExport',
                                             url:'output/invoice/collection/download',
+                                            menu: [
+                                                {
+                                                    url: "output/invoice/collection/download",
+                                                    title: "销项发票模板"
+                                                },
+                                                {
+                                                    url: "output/invoice/collection/download/profitCenter",
+                                                    title: "销项发票的利润中心模板",
+                                                }
+                                            ],
                                             onSuccess:this.refreshTable,
                                             userPermissions:['1061005'],
                                         },{
