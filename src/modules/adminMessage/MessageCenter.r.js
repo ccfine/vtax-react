@@ -22,7 +22,7 @@ const transformData = (data=[]) =>{
     })
 }
 
-const getSearchFields = [
+const getSearchFields = context => [
     {
         label: "公告标题",
         fieldName: "title",
@@ -33,24 +33,7 @@ const getSearchFields = [
         fieldName: "sysDictId",
         type: "select",
         span: 8,
-        options: [
-            {
-                text: "集团税务公告",
-                value: "1"
-            },
-            {
-                text: "税务政策解读",
-                value:  "2"
-            },
-            {
-                text: "平台更新公告",
-                value: "3"
-            },
-            {
-                text: "其他公告",
-                value: "4"
-            }
-        ]
+        options: context.state.gglxDict
     },
     {
         label: "公告级别",
@@ -105,22 +88,6 @@ const getColumns = context => [
         title: "公告类型",
         dataIndex: "sysDictName",
         width:'100px',
-        render: (text) => {
-            return text;
-            // const { gglxDict } = context.state;
-            // let list = gglxDict.filter(item => item.value === text);
-            // if (parseInt(text,0) === 1) {
-            //     return '集团税务公告'
-            // } else if (parseInt(text,0) === 2) {
-            //     return '税务政策解读'
-            // } else if (parseInt(text,0) === 3) {
-            //     return '平台更新公告'
-            // } else if (parseInt(text,0) === 4) {
-            //     return '其他公告'
-            // } else {
-            //     return ''
-            // }
-        }
     },
     {
         title: "公告级别",
@@ -208,7 +175,8 @@ class MessageCenter extends Component {
             defaultData: undefined,
             messageLoading: false,
             modalType: 'add',
-            fileList: []
+            fileList: [],
+            gglxDict: []
         }
     }
 
@@ -294,7 +262,7 @@ class MessageCenter extends Component {
                 <div className="title">公告中心</div>
                 <SearchTable
                     searchOption={{
-                        fields: getSearchFields,
+                        fields: getSearchFields(this),
                         cardProps:{
                             style:{borderTop:0}
                         }
