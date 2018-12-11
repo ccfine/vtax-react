@@ -22,26 +22,14 @@ const getSearchFields = [
     {
         label: "公告类型",
         fieldName: "sysDictId",
-        type: "select",
+        type: "asyncSelect",
         span: 8,
-        options: [
-            {
-                text: "集团税务公告",
-                value: "1"
-            },
-            {
-                text: "税务政策解读",
-                value:  "2"
-            },
-            {
-                text: "平台更新公告",
-                value: "3"
-            },
-            {
-                text: "其他公告",
-                value: "4"
-            }
-        ]
+        componentProps:{
+            fieldTextName: "name",
+            fieldValueName: "id",
+            doNotFetchDidMount: false,
+            url: `/sys/dict/listBaseInfo/gglglx`
+        }
     },
     {
         label: "公告级别",
