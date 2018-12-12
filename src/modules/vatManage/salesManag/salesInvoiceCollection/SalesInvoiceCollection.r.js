@@ -228,6 +228,27 @@ const searchFields = (disabled,declare) => getFieldValue => {
                     value: "c"
                 }
             ]
+        },
+        {
+            label: "匹配状态",
+            fieldName: "matchingStatus",
+            span: 8,
+            formItemStyle,
+            type: "select",
+            options: [
+                {
+                    text: "未匹配",
+                    value: "0"
+                },
+                {
+                    text: "已匹配",
+                    value: "1"
+                },
+                {
+                    text: "无需匹配",
+                    value: "2"
+                }
+            ]
         }
     ];
 };
@@ -329,6 +350,24 @@ const getColumns = (context) => [
                 return "外部导入";
             }
             return text;
+        }
+    },
+    {
+        title: "匹配状态",
+        dataIndex: "matchingStatus",
+        width:'100px',
+        render: text => {
+            text = parseInt(text, 0);
+            if (text === 0) {
+                return "未匹配";
+            }
+            if (text === 1) {
+                return "已匹配";
+            }
+            if (text === 2) {
+                return "无需匹配";
+            }
+            return '';
         }
     },
     /*,
@@ -473,7 +512,7 @@ export default class SalesInvoiceCollection extends Component {
                         // },
                         rowSelection:isCheck?{
                             getCheckboxProps: record => ({
-                                disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
+                                disabled: false //parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
                         }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
@@ -587,7 +626,7 @@ export default class SalesInvoiceCollection extends Component {
                             )
                         },
                         scroll:{
-                            x:1900,
+                            x:2000,
                             y:window.screen.availHeight-400,
                         },
                         onTotalSource: totalSource => {
