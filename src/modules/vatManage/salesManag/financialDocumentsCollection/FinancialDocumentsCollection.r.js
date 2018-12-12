@@ -469,7 +469,9 @@ export default class FinancialDocumentsCollection extends Component{
         request.get('/inter/financial/voucher/load/noStages', {
             params: this.state.filters
         }).then(({data}) => {
-            if (data.code !== 200) {
+            if (data.code === 200) {
+                this.setState({errMsg: ''})
+            }else {
                 this.setState({errMsg: data.msg})
             }
         })
