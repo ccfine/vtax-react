@@ -613,7 +613,7 @@ export default class SalesInvoiceCollection extends Component {
                                     }
                                     {
                                         (disabled && handle)  &&  composeBotton([{
-                                            type:'fileExport',
+                                            type:'fileDownload',
                                             url:'output/invoice/collection/download',
                                             menu: [
                                                 {
