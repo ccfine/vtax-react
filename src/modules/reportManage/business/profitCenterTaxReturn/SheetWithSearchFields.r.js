@@ -166,7 +166,7 @@ class SheetWithSearchFields extends Component{
         })
         .then(({data})=>{
             this.mounted && this.setState({saveLoding:false})
-            message.warning('系统正在生成法人公司纳税申报表，请稍候查询!');
+            message.warning('系统正在生成纳税申报表，请稍候查询!');
             if(data.code===200){
                 openNotificationWithIcon('success','生成纳税申报表成功!')
                 //message.success('保存成功!');

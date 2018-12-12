@@ -279,7 +279,7 @@ class PartnersTaxReturn extends Component{
             });
     };
     updateStatus = (values) => {
-        requestResultStatus('',values,result=>{
+        requestResultStatus('/taxDeclarationReport/partner/listMain',values,result=>{
             this.setState({
                 statusParam: result,
             })
@@ -298,7 +298,7 @@ class PartnersTaxReturn extends Component{
 
     }
     render(){
-        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,drawerConfig} = this.state;
+        const {updateKey,statusParam = {},visible,drawerVisible,modalConfig,drawerConfig,filters} = this.state;
         const { declare } = this.props;
         let disabled = !!declare;
 
@@ -332,6 +332,18 @@ class PartnersTaxReturn extends Component{
                                         icon:'plus',
                                         userPermissions:['2151003'],
                                         onClick:()=>this.showModal('add',{})
+                                    },{
+                                        type:'submit',
+                                        url:'/taxDeclarationReport/partner/submit',
+                                        params:filters,
+                                        userPermissions:['2131010'],
+                                        onSuccess:this.refreshTable
+                                    },{
+                                        type:'revoke',
+                                        url:'/taxDeclarationReport/partner/revoke',
+                                        params:filters,
+                                        userPermissions:['2131011'],
+                                        onSuccess:this.refreshTable,
                                     }],statusParam)
                                 }
                             </div>,

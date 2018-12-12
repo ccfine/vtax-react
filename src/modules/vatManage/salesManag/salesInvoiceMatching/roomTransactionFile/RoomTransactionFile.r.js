@@ -9,7 +9,7 @@ import {message,Modal} from 'antd'
 import {TableTotal,SearchTable} from 'compoments'
 import {request,fMoney,composeBotton,requestResultStatus,requestTaxSubjectConfig} from 'utils'
 import PopModal from './popModal.r'
-// import moment from "moment";
+import moment from "moment";
 const formItemStyle = {
     labelCol:{
         sm:{
@@ -54,8 +54,8 @@ const importFeilds = (filters,disabled,declare)=>[
                 }
             ]
         },
-    /*}, {
-        label: '认证月份',
+    }, {
+        label: '查询期间',
         fieldName: 'authMonth',
         type: 'monthPicker',
         span: 24,
@@ -67,17 +67,19 @@ const importFeilds = (filters,disabled,declare)=>[
                 span:14
             }
         },
-        componentProps: {},
+        componentProps: {
+            disabled: (filters && filters["mainId"]) ? true : false,
+        },
         fieldDecoratorOptions: {
             initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || undefined,
             //initialValue: (filters && moment(declare["authMonth"], "YYYY-MM")) || undefined,
             rules: [
                 {
                     required: true,
-                    message: '请选择认证月份'
+                    message: '请选择查询期间'
                 }
             ]
-        },*/
+        },
     }
 ]
 const searchFeilds = (disabled,declare) =>(getFieldValue)=>[
