@@ -281,7 +281,7 @@ const searchFields = (disabled,declare) => getFieldValue => {
         {
             label: "匹配状态",
             fieldName: "matchingStatus",
-            span: 8,
+            span: 6,
             formItemStyle,
             type: "select",
             options: [
