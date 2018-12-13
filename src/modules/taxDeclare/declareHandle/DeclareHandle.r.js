@@ -157,12 +157,13 @@ const getColumns =(context)=>[
                     </span>;
         },
         fixed: "left",
-        width: "75px",
+        width: "100px",
         dataIndex: "action"
     },{
         title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
+        width: '100px',
         render:text=>{
             let t = '';
             switch (parseInt(text,0)){
@@ -192,18 +193,23 @@ const getColumns =(context)=>[
     }, {
         title: '上一步完成时间',
         dataIndex: 'lastModifiedDate',
+        width: '250px',
     },{
         title: '大区',
         dataIndex: 'region',
+        width: '150px',
     },{
         title: '组织架构',
         dataIndex: 'orgName',
+        width: '350px',
     },{
         title: '纳税主体',
         dataIndex: 'mainName',
+        width: '150px',
     },{
         title: '所属期',
         dataIndex: 'partTerm',
+        width: '100px',
     },/*{
         title: '税（费）种',
         dataIndex: 'taxType',
@@ -227,12 +233,15 @@ const getColumns =(context)=>[
     },*/{
         title: '所属流程',
         dataIndex: 'isProcess',
+        width: '250px',
     },{
         title: '申报人',
         dataIndex: 'declareBy',
+        width: '100px',
     },{
         title: '申报日期',
         dataIndex: 'declarationDate',
+        width: '100px',
     }
 ];
 
@@ -330,7 +339,7 @@ class DeclareHandle extends Component{
                     },
                     url:'/tax/decConduct/decList',
                     scroll:{
-                        x:1300,
+                        x:1500,
                         y:title ? window.screen.availHeight-800 : window.screen.availHeight-360,
                     }
                 }}

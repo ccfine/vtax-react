@@ -77,7 +77,7 @@ const columns = context => [
                 {
                     composeBotton([{
                         type: 'action',
-                        icon: 'team',
+                        icon: 'setting',
                         title: '分配权限',
                         onSuccess: () => {
                             context.setState({
@@ -89,7 +89,7 @@ const columns = context => [
                         }
                     },{
                         type: 'action',
-                        icon: 'setting',
+                        icon: 'team',
                         title: '分配用户',
                         onSuccess: () => {
                             context.setState({
