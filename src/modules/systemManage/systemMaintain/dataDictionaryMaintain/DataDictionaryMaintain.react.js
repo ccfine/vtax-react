@@ -205,7 +205,7 @@ class DataDictionaryMaintain extends Component {
                         cardProps:{
                             title:'下级列表信息'
                         },
-                        scroll:{x:1000,y:window.screen.availHeight-390},
+                        scroll:{x:1000,y:window.screen.availHeight-490},
                         url:'/sys/dict/list',
                         onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({

@@ -592,7 +592,7 @@ class RoomTransactionFile extends Component{
                         },
                         scroll:{
                             x: 4350,
-                            y:window.screen.availHeight-400-(disabled?50:0),
+                            y:window.screen.availHeight-550-(disabled?50:0),
                         },
                         rowSelection: isCheck ? {
                             getCheckboxProps: record => ({

@@ -170,7 +170,7 @@ class TaxClassificationCode extends Component{
                         cardProps:{
                             title:'税收分类编码'
                         },
-                        scroll:{x:1000,y:window.screen.availHeight-400},
+                        scroll:{x:1000,y:window.screen.availHeight-420},
                         columns:getColumns(this),
                         extra:<div>
                             {

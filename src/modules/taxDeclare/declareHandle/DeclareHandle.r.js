@@ -330,7 +330,8 @@ class DeclareHandle extends Component{
                     },
                     url:'/tax/decConduct/decList',
                     scroll:{
-                        x:1300
+                        x:1300,
+                        y:title ? window.screen.availHeight-800 : window.screen.availHeight-360,
                     }
                 }}
             >

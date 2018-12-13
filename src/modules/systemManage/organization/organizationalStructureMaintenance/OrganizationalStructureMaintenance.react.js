@@ -239,7 +239,7 @@ class OrganizationalStructureMaintenance extends Component {
                     treeCardOption={{
                         cardProps:{
                             title:'组织架构维护树',
-                            bodyStyle:{overflow:'auto',height:window.screen.availHeight-310},
+                            bodyStyle:{overflow:'auto',height:window.screen.availHeight-350},
                         }
                     }}
                     treeOption={{
@@ -267,7 +267,7 @@ class OrganizationalStructureMaintenance extends Component {
                         cardProps:{
                             title:'组织架构维护列表信息'
                         },
-                        scroll:{x:600,y:window.screen.availHeight-390},
+                        scroll:{x:600,y:window.screen.availHeight-430},
                         url:'/sysOrganization/list',
                         onRowSelect:(selectedRowKeys,selectedRows)=>{
                             this.setState({
