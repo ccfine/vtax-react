@@ -303,7 +303,7 @@ class RoleManage extends Component{
                         this.setState({filters})
                     },
                     url: '/sysRole/list',
-                    scroll:{x:1000,y:window.screen.availHeight-350},
+                    scroll:{x:1000,y:window.screen.availHeight-360},
                     cardProps: {
                         title: '角色管理',
                         extra:
