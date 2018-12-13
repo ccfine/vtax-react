@@ -148,6 +148,7 @@ class SubjectRateRela extends Component {
                     columns: getColumns(this),
                     url: "/incomeAndTaxRateCorrespondence/list",
                     key: updateKey,
+                    scroll:{x:1000,y:window.screen.availHeight- 380},
                     extra: (
                         <div>
                             {

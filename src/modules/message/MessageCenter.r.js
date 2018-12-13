@@ -234,7 +234,7 @@ class MessageCenter extends Component {
                         columns: getColumns(this),
                         url: "/sysNotice/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1000, y:window.screen.availHeight-380},
+                        scroll: { x: 1000, y:window.screen.availHeight-500},
                     }}
                 >
                 </SearchTable>

@@ -271,7 +271,7 @@ class MessageCenter extends Component {
                         columns: getColumns(this),
                         url: "/sysNotice/msgList",
                         key: tableUpDateKey,
-                        scroll: { x: 1000, y:window.screen.availHeight-380},
+                        scroll: { x: 1000, y:window.screen.availHeight-500},
                         extra: (
                             <div>
                                 <Button type="primary" onClick={() => {

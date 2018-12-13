@@ -383,7 +383,7 @@ class UserManage extends Component {
                         pageSize: 100,
                         columns: getColumns(this),
                         url: "/sysUser/list",
-                        scroll:{x:1000,y:window.screen.availHeight-370},
+                        scroll:{x:1000,y:window.screen.availHeight-400},
                         cardProps: {
                             title: "用户管理",
                             extra: (

@@ -148,7 +148,7 @@ export default class OperationsLog extends Component {
                     url: "/sysLog/opt/list",
                     scroll: {
                         x: 3000,
-                        y: window.screen.availHeight - 350
+                        y: window.screen.availHeight - 400
                     },
                     cardProps: {
                         title: "操作日志"

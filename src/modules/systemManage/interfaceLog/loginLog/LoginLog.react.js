@@ -95,7 +95,7 @@ export default class QueryLog extends Component {
               pageSize: 100,
               columns: getColumns(),
               url: "/sysLog/list",
-              scroll:{ y:window.screen.availHeight-350},
+              scroll:{ y:window.screen.availHeight-400},
               cardProps: {
                 title: "查询日志"
               },
