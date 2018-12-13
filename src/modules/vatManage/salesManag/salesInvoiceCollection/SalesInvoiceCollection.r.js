@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
-import { fMoney,listMainResultStatus,composeBotton,requestResultStatus,request } from "utils";
+import { fMoney,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
 
@@ -577,9 +577,6 @@ export default class SalesInvoiceCollection extends Component {
                             title: "销项发票采集",
                             extra: (
                                 <div>
-                                    {
-                                        listMainResultStatus(statusParam)
-                                    }
                                     {
                                         (disabled && declare.decAction==='edit')  &&  composeBotton([{
                                             type:'mark',
