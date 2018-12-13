@@ -4,7 +4,7 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 import {Form, Row, Col, Button,Card,message} from 'antd'
-import {getFields,composeBotton,requestResultStatus,request} from 'utils'
+import {getFields,composeBotton,request} from 'utils'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from 'modules/reportManage/business/taxReturnForm/Sheet.r'
@@ -65,23 +65,23 @@ class SheetWithSearchFields extends Component{
         /**
          *修改状态和时间
          * */
-        statusParam:'',
+        // statusParam:'',
         saveLoding:false,
     }
     refreshTable = ()=>{
         this.mounted && this.setState({
             updateKey:Date.now()
         },()=>{
-            this.fetchResultStatus()
+            // this.fetchResultStatus()
         })
     }
-    fetchResultStatus = ()=>{
-        requestResultStatus('',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
-            this.mounted && this.setState({
-                statusParam: result,
-            })
-        })
-    }
+    // fetchResultStatus = ()=>{
+    //     requestResultStatus('',{...this.state.params,authMonth:this.state.params.taxMonth},result=>{
+    //         this.mounted && this.setState({
+    //             statusParam: result,
+    //         })
+    //     })
+    // }
     componentDidMount(){
         const { declare,drawerConfig:{partnerId},reportType } = this.props;
         if (!!declare) {
@@ -159,8 +159,8 @@ class SheetWithSearchFields extends Component{
     render(){
         const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,drawerConfig} = this.props;
         let disabled = !!declare;
-        const { params,updateKey,statusParam,saveLoding } = this.state;
-        const readOnly = !(disabled && declare.decAction==='edit') || !(drawerConfig && drawerConfig.type==='edit') || parseInt(statusParam.status,10)===2;
+        const { params,updateKey,saveLoding } = this.state;
+        const readOnly = !(disabled && declare.decAction==='edit') || !(drawerConfig && drawerConfig.type==='edit'); // || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
                 <div>
