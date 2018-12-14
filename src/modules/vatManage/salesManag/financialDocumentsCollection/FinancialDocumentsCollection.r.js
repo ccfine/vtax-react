@@ -484,7 +484,7 @@ export default class FinancialDocumentsCollection extends Component{
                     pageSize:100,
                     columns:columns,
                     url:'/inter/financial/voucher/manageList',
-                    scroll:{ x: 3350 ,y:window.screen.availHeight-500-(disabled?50:0)},
+                    scroll:{ x: 3350 ,y:window.screen.availHeight-450-(disabled?50:0)},
                     onSuccess:(params)=>{
                         this.setState({
                             filters:params,
