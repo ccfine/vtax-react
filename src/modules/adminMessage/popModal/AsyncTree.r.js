@@ -8,6 +8,7 @@ import React, { Component } from 'react'
 import {message,Form} from 'antd'
 import {request} from 'utils'
 import Tree from './Tree.r'
+// import flattenDeep from 'lodash/flattenDeep'//多维数组转一维数组
 
 const FormItem = Form.Item
 // 将后台数据转换为前端需要的数据
@@ -18,6 +19,7 @@ const transformData =function transformData(arr,fieldValueName,fieldTextName){
             value:ele[fieldValueName],
             title:`${ele.code}-${ele[fieldTextName]}`,
             parentId:ele["parentId"],
+            isLeaf:ele["isLeaf"],
         };
         if(ele.children && ele.children.length>0){
             res.children = transformData(ele.children,fieldValueName,fieldTextName)
@@ -31,6 +33,7 @@ class AsyncTree extends Component {
         super(props)
         this.state = {
             dataSource: [],
+            childrenKey: []
         }
     }
 
@@ -50,8 +53,10 @@ class AsyncTree extends Component {
             .then(({data}) => {
                 if(data.code===200){
                     const result = transformData(data.data.records || data.data,'id','name');
+                    // const childrenKey = flattenDeep(this.getChildrenKey(result))
                     this.setState({
-                        dataSource:result
+                        dataSource:result,
+                        childrenKey: []
                     })
                 }
             })
@@ -60,8 +65,18 @@ class AsyncTree extends Component {
             })
     }
 
+    
+    getChildrenKey = (result) => {
+        return result.map(item => {
+            if (!item.children) {
+                return item.value
+            }
+            return this.getChildrenKey(item.children)
+        })
+    }
+
     render() {
-        const { dataSource } = this.state
+        const { dataSource, childrenKey } = this.state
         const { getFieldDecorator } = this.props.form
         return (
             <FormItem>
@@ -71,6 +86,7 @@ class AsyncTree extends Component {
                 })(
                     <Tree 
                         treeData={dataSource}
+                        childrenKey={childrenKey}
                     />
                 )}
             </FormItem>
