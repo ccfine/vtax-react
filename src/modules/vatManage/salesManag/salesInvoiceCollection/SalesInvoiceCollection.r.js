@@ -709,7 +709,7 @@ export default class SalesInvoiceCollection extends Component {
                         },
                         scroll:{
                             x:2000,
-                            y:window.screen.availHeight-500,
+                            y:window.screen.availHeight-450,
                         },
                         onTotalSource: totalSource => {
                             this.setState({
