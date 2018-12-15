@@ -41,7 +41,10 @@ class PopModal extends Component {
             this.setState({
                 defaultData:{},
                 fileList:[],
-                fileUUIDArray:[]
+                fileUUIDArray:[],
+                saveLoading: false,
+                publishLoading: false,
+                uploadLoging: false
             })
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalType === 'edit'){
