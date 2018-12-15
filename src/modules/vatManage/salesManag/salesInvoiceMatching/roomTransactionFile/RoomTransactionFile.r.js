@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
- * @Last Modified by: zhouzhe
- * @Last Modified time: 2018-09-28 14:20:09
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-12-15 11:14:05
  *
  */
 import React,{Component} from 'react'
@@ -531,7 +531,7 @@ class RoomTransactionFile extends Component{
                                 (disabled && handle) &&  composeBotton([{
                                     type:'consistent',
                                     text:'确收时点参数设置',
-                                    userPermissions:['1215000'],
+                                    userPermissions:['1215014'],
                                     onClick:()=>{
                                         this.togglesPopModalVisible(true);
                                     }
