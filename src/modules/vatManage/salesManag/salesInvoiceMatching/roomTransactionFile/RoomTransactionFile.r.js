@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-17 10:20:30
+ * @Last Modified time: 2018-12-17 11:26:57
  *
  */
 import React,{Component} from 'react'
@@ -494,7 +494,7 @@ class RoomTransactionFile extends Component{
         let disabled = !!declare,
             handle = declare && declare.decAction==='edit',
             isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
-        let exportParams = Object.assign({},filters,{authMonth: declare && declare.authMonth}) // 导出所需要的参数
+        let exportParams = Object.assign({},filters,{month: declare && declare.authMonth}) // 导出所需要的参数
         return(
                 <SearchTable
                     style={{

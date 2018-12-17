@@ -1,8 +1,8 @@
 /*
  * @Author: liuchunxiu 
  * @Date: 2018-05-11 10:25:21 
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-11 10:55:00
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-12-17 11:19:30
  */
 import React, { Component } from "react";
 import {connect} from 'react-redux'
@@ -148,7 +148,6 @@ class SubjectRateRela extends Component {
                     columns: getColumns(this),
                     url: "/incomeAndTaxRateCorrespondence/list",
                     key: updateKey,
-                    scroll:{x:1000,y:window.screen.availHeight- 380},
                     extra: (
                         <div>
                             {
