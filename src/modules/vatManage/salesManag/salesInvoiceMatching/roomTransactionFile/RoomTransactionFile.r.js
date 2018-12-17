@@ -1,7 +1,7 @@
 /**
  * Created by liurunbin on 2018/1/8.
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-15 11:14:05
+ * @Last Modified time: 2018-12-17 10:20:30
  *
  */
 import React,{Component} from 'react'
@@ -494,6 +494,7 @@ class RoomTransactionFile extends Component{
         let disabled = !!declare,
             handle = declare && declare.decAction==='edit',
             isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
+        let exportParams = Object.assign({},filters,{authMonth: declare && declare.authMonth}) // 导出所需要的参数
         return(
                 <SearchTable
                     style={{
@@ -541,7 +542,7 @@ class RoomTransactionFile extends Component{
                                 JSON.stringify(filters)!=='{}' && composeBotton([{
                                     type:'fileExport',
                                     url:'output/room/files/export',
-                                    params:filters,
+                                    params:exportParams,
                                     title:'导出',
                                     userPermissions:['1211007'],
                                 }])

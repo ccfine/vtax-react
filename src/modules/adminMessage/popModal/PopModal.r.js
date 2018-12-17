@@ -197,7 +197,7 @@ class PopModal extends Component {
 
     handleFileChange = (info) => {
         const { file, fileList } = info
-        const isLt5M = file.size / 1024 / 1024 < 5
+        const isLt5M = file.size / 1024 / 1024 <= 5
         if (info.file.status === 'error') {
             // 当文件上传失败 处理
             let newFiles = fileList.filter((item) => item.status !== 'error' || !!item.noticeId)
@@ -239,7 +239,7 @@ class PopModal extends Component {
 
     handleBeforeUpload = (file, filesList) => {
         const { fileList } = this.state
-        const isLt5M = file.size / 1024 / 1024 < 5;
+        const isLt5M = file.size / 1024 / 1024 <= 5;
         if (fileList.length > 4) {
             message.error('附件数量不能多于5个！');
             return false;
