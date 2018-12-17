@@ -18,7 +18,8 @@ class TreeDom extends Component {
         this.state = {
             checkedKeys: [],
             expandedKeys: [],
-            autoExpandParent: true
+            autoExpandParent: true,
+            isFirst: true
         }
     }
 
@@ -27,9 +28,10 @@ class TreeDom extends Component {
             const value = nextProps.value
             this.setState({checkedKeys:value})
         }
-        if (nextProps.treeData && nextProps.treeData.length !== 0) {
+        if (nextProps.treeData && nextProps.treeData.length !== 0 && this.state.isFirst) {
             this.setState({
-                expandedKeys: [nextProps.treeData[0].key]
+                expandedKeys: [nextProps.treeData[0].key],
+                isFirst: false
             })
         }
     }
@@ -58,8 +60,16 @@ class TreeDom extends Component {
     }
 
     onCheck=(checkedKeys,e)=>{
+        // const { childrenKey } = this.props
+        // console.time('filterKey')
+        // const newArr = this.filterKey(checkedKeys, childrenKey)
+        // console.timeEnd('filterKey')
         this.setState({checkedKeys:checkedKeys})
         this.props.onChange && this.props.onChange(checkedKeys)
+    }
+
+    filterKey = (arr, otharr) => {
+        return arr.filter(item => otharr.includes(item))
     }
 
     onExpand = (expandedKeys) => {
