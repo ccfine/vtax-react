@@ -253,7 +253,7 @@ const voucherSearchFields = [
 const voucherSearchFieldsConfirm = [
     {
         label: "科目代码",
-        fieldName: "creditSubjectCode",
+        fieldName: "subjectCode",
         span: 8
     },
     {
