@@ -6,6 +6,8 @@
 import React, { Component } from "react";
 import {message,Modal} from 'antd';
 import { TableTotal, SearchTable } from "compoments";
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import { requestResultStatus, fMoney,composeBotton,request,requestTaxSubjectConfig} from "utils";
 import moment from "moment";
 import PopModal from "./popModal";
@@ -392,6 +394,7 @@ class InvoiceCollection extends Component {
         },
         totalSource: undefined,
         deleteLoading:false,
+        sourceTypeLoading:false,
         selectedRowKeys:[],
 
         // isShowImport:null,
@@ -419,6 +422,9 @@ class InvoiceCollection extends Component {
     };
     toggleDeleteLoading=(val)=>{
         this.mounted && this.setState({deleteLoading:val})
+    }
+    toggleSourceTypeLoading=(val)=>{
+        this.mounted && this.setState({sourceTypeLoading:val})
     }
     deleteData = () =>{
         const modalRef = Modal.confirm({
@@ -449,6 +455,36 @@ class InvoiceCollection extends Component {
             },
         });
     }
+    changeSourceType = () => {
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要变更选中的记录？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleSourceTypeLoading(true)
+                const { selectedRowKeys, filters } = this.state;
+                request.put("/income/invoice/collection/update/sourceType",{ids:selectedRowKeys, ...filters})
+                    .then(({data})=>{
+                        this.toggleSourceTypeLoading(false)
+                        if(data.code===200){
+                            message.success(`变更数据来源成功!`);
+                            this.refreshTable();
+                        }else{
+                            message.error(`变更数据来源失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSourceTypeLoading(false)
+                    })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
     fetchResultStatus = ()=>{
         requestResultStatus('',this.state.filters,result=>{
             this.mounted && this.setState({
@@ -469,11 +505,11 @@ class InvoiceCollection extends Component {
         this.mounted = null;
     }
     render() {
-        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys } = this.state;
+        const { tableUpDateKey, filters, visible, modalConfig, statusParam={}, totalSource,deleteLoading,selectedRowKeys,sourceTypeLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             handle = declare && declare.decAction==='edit',
-            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1);
+            isCheck = (disabled && declare.decAction==='edit' && statusParam && parseInt(statusParam.status,10)===1) || (this.props.type === 8192 && !declare);
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
@@ -509,6 +545,16 @@ class InvoiceCollection extends Component {
                         extra: (
 
                             <div>
+                                {
+                                    (this.props.type === 8192 && !declare) && composeBotton([{
+                                        type:'consistent',
+                                        icon:'line-chart',
+                                        text:'变更数据来源',
+                                        selectedRowKeys:selectedRowKeys,
+                                        loading:sourceTypeLoading,
+                                        onClick:this.changeSourceType
+                                    }])
+                                }
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
                                         type:'fileExport',
@@ -605,4 +651,9 @@ class InvoiceCollection extends Component {
         );
     }
 }
-export default InvoiceCollection
+
+export default withRouter(connect(state=>{
+    return {
+        type: state.user.getIn(['personal','type']),
+    }
+})(InvoiceCollection))

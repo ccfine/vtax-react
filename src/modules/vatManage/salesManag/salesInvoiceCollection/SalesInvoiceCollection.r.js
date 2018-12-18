@@ -4,6 +4,8 @@
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
 import {message,Modal} from 'antd';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import { fMoney,composeBotton,requestResultStatus,request } from "utils";
 import PopModal from "./popModal";
 import moment from "moment";
@@ -453,10 +455,11 @@ const getColumns = (context) => [
 
 ]
 
-export default class SalesInvoiceCollection extends Component {
+class SalesInvoiceCollection extends Component {
     state = {
         visible: false,
         deleteLoading:false,
+        sourceTypeLoading:false,
         modalConfig: {
             type: ""
         },
@@ -478,6 +481,9 @@ export default class SalesInvoiceCollection extends Component {
     };
     toggleDeleteLoading=(val)=>{
         this.mounted && this.setState({deleteLoading:val})
+    }
+    toggleSourceTypeLoading=(val)=>{
+        this.mounted && this.setState({sourceTypeLoading:val})
     }
     deleteData = () =>{
         const modalRef = Modal.confirm({
@@ -509,6 +515,37 @@ export default class SalesInvoiceCollection extends Component {
         });
     }
 
+    changeSourceType = () => {
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要变更选中的记录？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                this.toggleSourceTypeLoading(true)
+                const { selectedRowKeys, filters } = this.state;
+                request.put("/output/invoice/collection/update/sourceType",{ids:selectedRowKeys, ...filters})
+                    .then(({data})=>{
+                        this.toggleSourceTypeLoading(false)
+                        if(data.code===200){
+                            message.success(`变更数据来源成功!`);
+                            this.refreshTable();
+                        }else{
+                            message.error(`变更数据来源失败:${data.msg}`)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.toggleSourceTypeLoading(false)
+                    })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
+
     toggleModalVisible = visible => {
         this.mounted && this.setState({
             visible
@@ -533,11 +570,11 @@ export default class SalesInvoiceCollection extends Component {
         this.mounted = null;
     }
     render() {
-        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading } = this.state;
+        const { visible, modalConfig, tableKey, totalSource, statusParam={}, filters={}, selectedRowKeys,deleteLoading,sourceTypeLoading } = this.state;
         const { declare } = this.props;
         let disabled = !!declare,
             handle = declare && declare.decAction==='edit',
-            isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1);
+            isCheck = (disabled && handle && statusParam && parseInt(statusParam.status,10)===1) || (this.props.type === 8192 && !declare);
         return (
                 <SearchTable
                     doNotFetchDidMount={!disabled}
@@ -578,11 +615,21 @@ export default class SalesInvoiceCollection extends Component {
                             extra: (
                                 <div>
                                     {
+                                        (this.props.type === 8192 && !declare) && composeBotton([{
+                                            type:'consistent',
+                                            icon:'line-chart',
+                                            text:'变更数据来源',
+                                            selectedRowKeys:selectedRowKeys,
+                                            loading:sourceTypeLoading,
+                                            onClick:this.changeSourceType
+                                        }])
+                                    }
+                                    {
                                         (disabled && declare.decAction==='edit')  &&  composeBotton([{
                                             type:'mark',
                                             buttonOptions:{
                                                 text:'利润中心',
-                                                icon:'pushpin-o'
+                                                icon:'home'
                                             },
                                             modalOptions:{
                                                 title:'利润中心'
@@ -704,3 +751,9 @@ export default class SalesInvoiceCollection extends Component {
         );
     }
 }
+
+export default withRouter(connect(state=>{
+    return {
+        type: state.user.getIn(['personal','type']),
+    }
+})(SalesInvoiceCollection))
