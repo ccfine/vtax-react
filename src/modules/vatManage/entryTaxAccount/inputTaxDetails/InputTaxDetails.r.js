@@ -634,6 +634,7 @@ class InputTaxDetails extends Component {
                     }, () => {
                         handle && this.fetchResultStatus();
                     });
+                    this.props.form.resetFields();
                 }}
                 tableOption={{
                     key: tableKey,
