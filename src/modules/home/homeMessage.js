@@ -107,7 +107,7 @@ class homeMessage extends Component {
                                             </div>
                                         </a>
                                         <div className="message-page-info"><span>{`公告时间：${item.publishDateStr || ''}`}</span><span>{`发布人：${item.publishBy || ''}`}</span><span>{`公告类型：${item.sysDictName || ''}`}</span></div>
-                                        <div className="message-page-text">{this.htmlToText(item.content)}</div>
+                                        {/* <div className="message-page-text">{this.htmlToText(item.content)}</div> */}
                                     </div>
                                 )
                             }) : null

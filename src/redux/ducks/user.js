@@ -65,10 +65,13 @@ const initialState = fromJS({
     declare:null,
 
     //公告消息数
-    noticeNum: 0
+    noticeNum: 0,
+
+    // 公告预览内容
+    noticeContent: {}
 });
 
-export const {personal, token, isAuthed, org, area, loginType, declare, options, noticeNum} = createActions({
+export const {personal, token, isAuthed, org, area, loginType, declare, options, noticeNum, noticeContent} = createActions({
     PERSONAL: {
         /**增加*/
         INCREMENT: info => info
@@ -103,6 +106,9 @@ export const {personal, token, isAuthed, org, area, loginType, declare, options,
     },
     NOTICE_NUM: {
         INCREMENT: info => info
+    },
+    NOTICE_CONTENT: {
+        INCREMENT: info => info
     }
 })
 
@@ -134,6 +140,9 @@ export default handleActions({
     },
     [noticeNum.increment]:(state,{payload})=>{
         return state.set('noticeNum',payload)
+    },
+    [noticeContent.increment]:(state,{payload})=>{
+        return state.set('noticeContent',payload)
     },
 }, initialState)
 
@@ -274,6 +283,16 @@ export const fetchNoticeNum = dispatch => async () => {
                 dispatch(noticeNum.increment(data.data))
             }
         })
+    }catch (err){
+        console.log(err)
+    }
+}
+
+// 添加预览公告内容
+export const saveNoticeContent = dispatch => async (data,success) => {
+    try {
+        dispatch(noticeContent.increment(data))
+        success && success()
     }catch (err){
         console.log(err)
     }

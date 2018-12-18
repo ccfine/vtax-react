@@ -8,6 +8,9 @@ import React, { Component } from 'react'
 import { Layout, message, Spin } from 'antd'
 import {request,getUrlParam} from 'utils'
 import { FileExport } from 'compoments'
+import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {saveNoticeContent} from '../../redux/ducks/user'
 import logo from '../sider/images/logo.png'
 import './index.less'
 
@@ -28,8 +31,13 @@ class MessageDetail extends Component {
         let reqData = {
             readStatus: getUrlParam('readStatus')
         }
-        this.fetchData(id, reqData)
-        this.fetchFileData(id)
+        const type = getUrlParam('type')
+        if (type === 'preview') {
+            this.setState({data: this.props.noticeContent, loading: false})
+        } else {
+            this.fetchData(id, reqData)
+            this.fetchFileData(id)
+        }
     }
 
     fetchData = (id, data) => {
@@ -70,6 +78,7 @@ class MessageDetail extends Component {
 
     render() {
         const { data, loading } = this.state
+        console.log('noticeContent',this.props.noticeContent)
         return (
             <Layout className="layout">
                 <Header>
@@ -84,7 +93,7 @@ class MessageDetail extends Component {
                         <Spin spinning={loading}>
                             <div className="message-header">
                                 <span style={{marginRight: 20}}>{(data && this.getLevel(data.level)) || ''}</span>
-                                <span>{(data && data.title) || ''}</span>
+                                <span style={{fontWeight: 550}}>{(data && data.title) || ''}</span>
                             </div>
                             <div className="message-info">
                                 <span style={{marginRight: 20}}>{`公告时间：${(data && data.publishDateStr) || ''}`}</span>
@@ -112,4 +121,8 @@ class MessageDetail extends Component {
     }
 }
 
-export default MessageDetail
+export default withRouter(connect(state=>({
+    noticeContent:state.user.get('noticeContent'),
+}),dispatch=>({
+    saveNoticeContent:saveNoticeContent(dispatch)
+}))(MessageDetail))

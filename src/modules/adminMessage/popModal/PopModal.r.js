@@ -14,6 +14,7 @@ import {connect} from 'react-redux'
 import moment from 'moment'
 import difference from 'lodash/difference'
 import { store } from 'redux/store'
+import {saveNoticeContent} from '../../../redux/ducks/user'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -28,7 +29,8 @@ class PopModal extends Component {
             list: [],
             saveLoading: false,
             publishLoading: false,
-            uploadLoging: false
+            uploadLoging: false,
+            previewLoading: false
         }
     }
 
@@ -44,8 +46,10 @@ class PopModal extends Component {
                 fileUUIDArray:[],
                 saveLoading: false,
                 publishLoading: false,
-                uploadLoging: false
+                uploadLoging: false,
+                previewLoading: false
             })
+            this.props.saveNoticeContent({})
         }
         if(this.props.visible !== nextProps.visible && !this.props.visible && nextProps.modalType === 'edit'){
             /**
@@ -290,6 +294,28 @@ class PopModal extends Component {
         this.props.toggleModalVisible(false)
     }
 
+    handlePreview = () => {
+        const { getFieldsValue } = this.props.form;
+        const { gglxDict } = this.props
+        this.setState({previewLoading:true})
+        const data = getFieldsValue()
+        const sysDictList = gglxDict.filter(item => item.value === data.sysDictId);
+        const value = {
+            ...data,
+            'takeDate': data['takeDate'].format('YYYY-MM-DD'),
+            'publishDateStr': data['takeDate'].format('YYYY-MM-DD'),
+            'createBy': this.props.username,
+            'publishBy': this.props.realName,
+            'sysDictName': sysDictList.length > 0 ? sysDictList[0].text : ''
+        }
+        this.props.saveNoticeContent(value,()=>{
+            setTimeout(()=>{
+                this.setState({previewLoading:false})
+                window.open(`/messageDetail?type=preview`)
+            },1000)
+        })
+    }
+
     getToken = ()=>{
         return store.getState().user.get('token') || false
     }
@@ -297,7 +323,7 @@ class PopModal extends Component {
     render() {
         const { getFieldDecorator } = this.props.form
         const { visible, loading, gglxDict } = this.props
-        const { defaultData, fileList, saveLoading, publishLoading, uploadLoging } = this.state
+        const { defaultData, fileList, saveLoading, publishLoading, uploadLoging, previewLoading } = this.state
         const props = {
             name: 'files',
             action: `${window.baseURL}sysNotice/upload`,
@@ -466,6 +492,9 @@ class PopModal extends Component {
                                         <FormItem
                                             wrapperCol={{ span: 12 }}
                                         >
+                                            <Button loading={previewLoading} style={{margin:'4px 20px 4px 0'}} onClick={this.handlePreview}>
+                                                预览
+                                            </Button>
                                             <Button loading={saveLoading} onClick={(e) => this.handleSubmit(e,'save')}>
                                                 保存
                                             </Button>
@@ -499,4 +528,6 @@ export default withRouter(connect(state=>({
     realName:state.user.getIn(['personal','realname']),
     username:state.user.getIn(['personal','username']),
     typen:state.user.getIn(['personal','typen'])
+}),dispatch=>({
+    saveNoticeContent:saveNoticeContent(dispatch)
 }))(WrappedPopModal))
