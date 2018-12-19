@@ -484,12 +484,13 @@ class PopModal extends Component {
 
                                 <Row>
                                     <Col span={3} offset={1}>添加附件：</Col>
-                                    <Col span={12}>
+                                    <Col span={12} style={{position:'relative'}}>
                                         <Upload {...props}>
                                             <Button disabled={uploadLoging} size='small'>
                                                 <Icon type="upload" />
                                             </Button>
                                         </Upload>
+                                        <span className="message-upload-info">文件格式支持.zip/.rar/.7z，单个文件支持5M以内，最多支持上传5个文件</span>
                                     </Col>
                                 </Row>
 
