@@ -94,10 +94,13 @@ class Home extends Component {
                     items={banner}
                 /> */}
                 <HomeMessage />
+                <div className="home-title">
+                    <span>待申报任务</span>
+                </div>
                 {
-                    isShow && <div style={{ padding: '24px 0'}}>
-                        <Card style={{ padding:'0' }}>
-                            <DeclareHandle key={this.state.declareKey} title="待我办理的申报任务" />
+                    isShow && <div style={{ padding: '2px 0 24px 0'}}>
+                        <Card style={{ padding:'0', border: 'none'}}>
+                            <DeclareHandle key={this.state.declareKey} title={true} />
                         </Card>
                     </div>
                 }

@@ -135,7 +135,15 @@ const getColumns = context => [
         width:'100px',
         render(text, record, index) {
             if (record.publishStatus === 1) {
-                return <a href={`/messageDetail?id=${record.id}&readStatus=0`} target="_blank">查看</a>
+                return composeBotton([{
+                    type:'action',
+                    icon:'search',
+                    title:'查看',
+                    onSuccess:()=>{
+                        window.open(`/messageDetail?id=${record.id}&readStatus=0`)
+                    }
+                }])
+                // return <a href={`/messageDetail?id=${record.id}&readStatus=0`} target="_blank">查看</a>
             }else {
                 return composeBotton([{
                     type:'action',

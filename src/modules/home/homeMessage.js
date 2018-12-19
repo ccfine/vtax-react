@@ -44,7 +44,7 @@ class homeMessage extends Component {
     fetchMessageList = () => {
         this.setState({loading: true})
         request.get(`/sysNotice/upList`, {
-            params: {size: 3}
+            params: {size: 2}
         })
             .then(({data}) => {
                 if(data.code===200){
@@ -89,6 +89,10 @@ class homeMessage extends Component {
 
     render() {
         const { listData, loading } = this.state;
+        const styleObj = {
+            fontWeight: 550,
+            color: '#1890FF'
+        }
         return (
             <div className="home-message">
                 <div className="home-title">
@@ -102,7 +106,7 @@ class homeMessage extends Component {
                                 return (
                                     <div key={key} className="home-message-page">
                                         <a href={`/messageDetail?id=${item.id}&readStatus=${item.readStatus}`} target="_blank" onClick={() => this.handleGo(item)}>
-                                            <div className="message-page-header" style={{fontWeight: item.readStatus === 2 ? 500 : 'normal'}}>
+                                            <div className="message-page-header" style={ item.readStatus === 2 ? {fontWeight: 550} : {...styleObj} }>
                                                 <span>{this.getLevel(item.level)}</span><span>{item.title || ''}</span>
                                             </div>
                                         </a>

@@ -326,7 +326,7 @@ class DeclareHandle extends Component{
                     pageSize:100,
                     columns:getColumns(this),
                     cardProps:{
-                        title: title ? title : '申报办理'
+                        title: title ? ' ' : '申报办理'
                     },
                     url:'/tax/decConduct/decList',
                     scroll:{

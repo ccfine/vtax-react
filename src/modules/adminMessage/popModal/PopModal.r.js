@@ -8,7 +8,9 @@ import React, { Component } from 'react'
 import {Modal,Row,Col,Form,Select,Button,Input,DatePicker,message,Spin,Upload,Icon} from 'antd'
 import {request} from 'utils'
 import AsyncTree from './AsyncTree.r'
-import EditorComponent from './Editor'
+// import EditorComponent from './Editor'
+import Editor from './NewEditor'
+// import BraftEditor from 'braft-editor'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
@@ -73,6 +75,9 @@ class PopModal extends Component {
             if (!err) {
                 const { defaultData } = this.props;
                 const { fileUUIDArray } = this.state
+                // 传纯文本格式给后台 用于首页展示
+                // const editorState = BraftEditor.createEditorState(fieldsValue.content)
+                // const textString = editorState.toText()
                 if (this.props.modalType === 'add') {
                     // 新增公告
                     const values = {
@@ -323,7 +328,7 @@ class PopModal extends Component {
     render() {
         const { getFieldDecorator } = this.props.form
         const { visible, loading, gglxDict } = this.props
-        const { defaultData, fileList, saveLoading, publishLoading, uploadLoging, previewLoading } = this.state
+        const { defaultData, fileList, saveLoading, publishLoading, uploadLoging } = this.state
         const props = {
             name: 'files',
             action: `${window.baseURL}sysNotice/upload`,
@@ -431,16 +436,17 @@ class PopModal extends Component {
                                     </Col>
                                 </Row>
 
-                                <Row>
+                                <Row className="message-new-editor">
                                     <FormItem
-                                        style={{minHeight: 420}}
+                                        // style={{minHeight: 420}}
                                     >
                                         {getFieldDecorator('content',{
                                             initialValue: defaultData.content || '',
                                             // rules: [{ required: true, message: '请输入公告内容' }],
                                             
                                         })(
-                                            <EditorComponent />
+                                            // <EditorComponent />
+                                            <Editor />
                                         )}
                                     </FormItem>
                                 </Row>
@@ -492,9 +498,9 @@ class PopModal extends Component {
                                         <FormItem
                                             wrapperCol={{ span: 12 }}
                                         >
-                                            <Button loading={previewLoading} style={{margin:'4px 20px 4px 0'}} onClick={this.handlePreview}>
+                                            {/* <Button loading={previewLoading} style={{margin:'4px 20px 4px 0'}} onClick={this.handlePreview}>
                                                 预览
-                                            </Button>
+                                            </Button> */}
                                             <Button loading={saveLoading} onClick={(e) => this.handleSubmit(e,'save')}>
                                                 保存
                                             </Button>

@@ -10,7 +10,7 @@ import { SearchTable } from "compoments"
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {fetchNoticeNum} from '../../redux/ducks/user'
-import {request} from 'utils'
+import {request,composeBotton} from 'utils'
 import './index.less'
 
 const getSearchFields = [
@@ -156,7 +156,16 @@ const getColumns = context => [
         dataIndex: "taxableProject9",
         width:'100px',
         render(text, record, index) {
-            return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank" onClick={() => context.handleGo(record)}>查看</a>
+            return composeBotton([{
+                type:'action',
+                icon:'search',
+                title:'查看',
+                onSuccess:()=>{
+                    context.handleGo(record);
+                    window.open(`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`)
+                }
+            }])
+            // return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank" onClick={() => context.handleGo(record)}>查看</a>
         },
     },
 ]
