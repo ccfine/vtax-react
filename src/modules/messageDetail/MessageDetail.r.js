@@ -91,9 +91,9 @@ class MessageDetail extends Component {
                 <Content style={{ padding: '0 50px' }}>
                     <div className="message-detail">
                         <Spin spinning={loading}>
-                            <div className="message-header">
+                            <div className="message-header" style={{fontWeight: 550}}>
                                 <span style={{marginRight: 20}}>{(data && this.getLevel(data.level)) || ''}</span>
-                                <span style={{fontWeight: 550}}>{(data && data.title) || ''}</span>
+                                <span>{(data && data.title) || ''}</span>
                             </div>
                             <div className="message-info">
                                 <span style={{marginRight: 20}}>{`公告时间：${(data && data.publishDateStr) || ''}`}</span>
