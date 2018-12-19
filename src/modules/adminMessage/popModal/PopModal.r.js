@@ -85,7 +85,7 @@ class PopModal extends Component {
                         'takeDate': fieldsValue['takeDate'].format('YYYY-MM-DD'),
                         'createBy': this.props.username,
                         'publishBy': this.props.realName,
-                        'isSave': type === 'save' ? 'save' : 'push',
+                        'publishStatus': type === 'save' ? 0 : 1,
                         'fileUUIDArray': fileUUIDArray
     
                     }
@@ -105,7 +105,7 @@ class PopModal extends Component {
                         'publishBy': this.props.realName,
                         'isSave': type === 'save' ? 'save' : 'push',
                         'id': defaultData.id,
-                        'publishStatus': defaultData.publishStatus,
+                        'publishStatus': type === 'save' ? 0 : 1,//defaultData.publishStatus,
                         'fileUUIDArray': fileUUIDArray
                     }
                     if (type === 'push') {
