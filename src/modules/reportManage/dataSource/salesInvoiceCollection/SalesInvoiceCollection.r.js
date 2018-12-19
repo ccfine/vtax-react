@@ -56,7 +56,7 @@ const searchFields = getFieldValue => [
         },
         {
             label: "发票状态",
-            fieldName: "invoiceCode",
+            fieldName: "status",
             span: 6,
             formItemStyle,
             type: "select",
@@ -67,11 +67,11 @@ const searchFields = getFieldValue => [
                 },
                 {
                     text: "作废",
-                    value: "2"
+                    value: "-1"
                 },
                 {
                     text: "红冲",
-                    value: "3"
+                    value: "2"
                 }
             ]
         },
