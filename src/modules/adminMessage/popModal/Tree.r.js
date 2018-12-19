@@ -63,7 +63,7 @@ class TreeDom extends Component {
         const { childrenKey } = this.props
         const newArr = this.filterKey(checkedKeys, childrenKey)
         this.setState({checkedKeys:newArr})
-        this.props.onChange && this.props.onChange(checkedKeys)
+        this.props.onChange && this.props.onChange(newArr)
     }
 
     filterKey = (arr, otharr) => {
