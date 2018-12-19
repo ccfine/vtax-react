@@ -8,7 +8,7 @@ import React, { Component } from 'react'
 import {message,Form} from 'antd'
 import {request} from 'utils'
 import Tree from './Tree.r'
-// import flattenDeep from 'lodash/flattenDeep'//多维数组转一维数组
+import flattenDeep from 'lodash/flattenDeep'//多维数组转一维数组
 
 const FormItem = Form.Item
 // 将后台数据转换为前端需要的数据
@@ -53,10 +53,10 @@ class AsyncTree extends Component {
             .then(({data}) => {
                 if(data.code===200){
                     const result = transformData(data.data.records || data.data,'id','name');
-                    // const childrenKey = flattenDeep(this.getChildrenKey(result))
+                    const childrenKey = flattenDeep(this.getChildrenKey(result))
                     this.setState({
                         dataSource:result,
-                        childrenKey: []
+                        childrenKey: childrenKey
                     })
                 }
             })
