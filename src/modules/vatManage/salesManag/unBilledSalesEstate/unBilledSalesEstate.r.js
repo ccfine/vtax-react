@@ -95,7 +95,14 @@ const searchFields =(disabled,declare)=>(getFieldValue)=> {
                 fetchAble:getFieldValue('profitCenterId') || getFieldValue('projectId') || false,
                 url:`/project/stages/${getFieldValue('profitCenterId') || ''}?size=1000`
             }
-        }
+        },
+        {
+            label:'房间编码',
+            fieldName:'roomCode',
+            type:'input',
+            span:8,
+            formItemStyle
+        },
     ]
 }
 const columns = [
@@ -351,7 +358,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:2200,
+                        x:2050,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     onTotalSource: (totalSource) => {
