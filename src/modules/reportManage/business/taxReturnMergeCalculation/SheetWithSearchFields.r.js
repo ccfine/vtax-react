@@ -81,12 +81,23 @@ class SheetWithSearchFields extends Component{
         })
     }
     componentDidMount(){
-        const { declare } = this.props;
+        const { declare, defaultParams, reportType } = this.props;
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
                     mainId:declare.mainId || undefined,
                     taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
+                    reportType
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        } else if(defaultParams.hasOwnProperty('mainId')) { // 解决从报表管理-业务报表页进入后，切换tab首次不请求接口
+            this.mounted && this.setState({
+                params:{
+                    mainId:defaultParams.mainId || undefined,
+                    taxMonth:moment(defaultParams.taxMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
+                    reportType
                 }
             },()=>{
                 this.refreshTable()
@@ -97,6 +108,7 @@ class SheetWithSearchFields extends Component{
         e && e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if(!err){
+                values.reportType = this.props.reportType;
                 values.taxMonth = values.taxMonth.format('YYYY-MM');
                 if(values.main){
                     values.mainId = values.main.key

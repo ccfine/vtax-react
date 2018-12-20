@@ -153,6 +153,19 @@ class TaxCalculation extends Component{
         filters:{},
         tableUrl:'/account/taxCalculation/pc/list',
     }
+    componentDidMount() {
+        const { defaultParams } = this.props;
+        // 解决从报表管理-业务报表页进入后，切换tab首次不请求接口问题
+        if (defaultParams.hasOwnProperty('mainId')) {
+            this.setState({
+                filters:{
+                    ...defaultParams,
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        }
+    }
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()

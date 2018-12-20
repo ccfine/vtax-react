@@ -94,12 +94,21 @@ class SheetWithSearchFields extends Component{
         })
     }
     componentDidMount(){
-        const { declare } = this.props;
+        const { declare, defaultParams } = this.props;
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
                     mainId:declare.mainId || undefined,
                     taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        } else if(defaultParams.hasOwnProperty('mainId') && defaultParams.hasOwnProperty('taxMonth')) { // 解决从报表管理-业务报表页进入后，切换tab首次不请求接口
+            this.mounted && this.setState({
+                params:{
+                    mainId:defaultParams.mainId || undefined,
+                    taxMonth:moment(defaultParams.taxMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
                 }
             },()=>{
                 this.refreshTable()

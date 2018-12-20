@@ -25,7 +25,7 @@ const sheetData = [
     {
         tab:'主表',
         grid:sheet_0,
-        url:'/taxDeclarationReport/merge/list?reportType=0',
+        url:'/taxDeclarationReport/merge/list',
         action:true,
         scroll:{
             x:'100%',
@@ -34,7 +34,7 @@ const sheetData = [
     }, {
         tab:'附表一',
         grid:sheet_1,
-        url:'/taxDeclarationReport/merge/list?reportType=1',
+        url:'/taxDeclarationReport/merge/list',
         scroll:{
             x:1800,
             y:window.screen.availHeight-320,
@@ -42,7 +42,7 @@ const sheetData = [
     }, {
         tab:'附表二',
         grid:sheet_2,
-        url:'/taxDeclarationReport/merge/list?reportType=2',
+        url:'/taxDeclarationReport/merge/list',
         scroll:{
             //x:1800,
             y:window.screen.availHeight-320,
@@ -50,7 +50,7 @@ const sheetData = [
     }, {
         tab:'附表三',
         grid:sheet_3,
-        url:'/taxDeclarationReport/merge/list?reportType=3',
+        url:'/taxDeclarationReport/merge/list',
         scroll:{
             //x:1800,
             y:window.screen.availHeight-320,
@@ -58,11 +58,11 @@ const sheetData = [
     }, {
         tab:'附表四',
         grid:sheet_4,
-        url:'/taxDeclarationReport/merge/list?reportType=4',
+        url:'/taxDeclarationReport/merge/list',
     }, {
         tab:'附表五',
         grid:sheet_5,
-        url:'/taxDeclarationReport/merge/list?reportType=5',
+        url:'/taxDeclarationReport/merge/list',
         /*}, {
          tab:'固定资产表',
          grid:sheet_6,
@@ -74,11 +74,11 @@ const sheetData = [
     },{
         tab:'增值税预缴税款表',
         grid:sheet_10,
-        url:'/taxDeclarationReport/merge/list?reportType=6',
+        url:'/taxDeclarationReport/merge/list',
     }, {
         tab:'增值税减免税申报明细表',
         grid:sheet_8,
-        url:'/taxDeclarationReport/merge/list?reportType=7',
+        url:'/taxDeclarationReport/merge/list',
         composeGrid:composeGrid_8,
     },
     // {
@@ -118,7 +118,7 @@ export default class TaxReturnMergeCalculation extends Component{
                             <TabPane tab={item.tab} key={i}>
                                 {
                                     parseInt(activeKey,0) === i ?
-                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} partnerId={partnerId}/>
+                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} partnerId={partnerId} reportType={i}/>
                                         : ''
                                 }
                             </TabPane>

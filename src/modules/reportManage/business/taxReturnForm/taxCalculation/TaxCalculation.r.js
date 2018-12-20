@@ -138,6 +138,18 @@ class TaxCalculation extends Component{
          * */
         statusParam:{},
     }
+    componentDidMount() {
+        const { declare, defaultParams } = this.props;
+        if (!declare && defaultParams.hasOwnProperty('mainId')) {
+            this.setState({
+                filters:{
+                    ...defaultParams,
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        }
+    }
     refreshTable = ()=>{
         this.setState({
             tableKey:Date.now()

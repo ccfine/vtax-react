@@ -96,6 +96,20 @@ class SheetWithSearchFields extends Component{
          * */
         statusParam:'',
     }
+    componentDidMount() {
+        const { defaultParams, reportType } = this.props;
+        // 解决从报表管理-业务报表页进入后，切换tab首次不请求接口问题
+        if (defaultParams.hasOwnProperty('mainId')) {
+            this.mounted && this.setState({
+                params:{
+                    ...defaultParams,
+                    reportType
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        }
+    }
     refreshTable = ()=>{
         this.mounted && this.setState({
             updateKey:Date.now()

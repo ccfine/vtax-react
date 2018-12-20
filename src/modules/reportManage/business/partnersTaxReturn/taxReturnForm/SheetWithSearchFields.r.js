@@ -83,7 +83,7 @@ class SheetWithSearchFields extends Component{
     //     })
     // }
     componentDidMount(){
-        const { declare,drawerConfig:{partnerId},reportType } = this.props;
+        const { declare,drawerConfig:{partnerId},reportType,defaultParams } = this.props;
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
@@ -91,6 +91,15 @@ class SheetWithSearchFields extends Component{
                     taxMonth:moment(declare.authMonth, 'YYYY-MM').format('YYYY-MM') || undefined,
                     partnerId:partnerId,
                     reportType:reportType
+                }
+            },()=>{
+                this.refreshTable()
+            });
+        } else if(defaultParams.hasOwnProperty('mainId')) { // 解决从报表管理-业务报表页进入后，切换tab首次不请求接口
+            this.mounted && this.setState({
+                params:{
+                    ...defaultParams,
+                    reportType
                 }
             },()=>{
                 this.refreshTable()
