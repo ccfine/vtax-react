@@ -251,11 +251,11 @@ const voucherSearchFields = [
 ]
 
 const voucherSearchFieldsConfirm = [
-    {
-        label: "科目代码",
-        fieldName: "subjectCode",
-        span: 8
-    },
+    // {
+    //     label: "科目代码",
+    //     fieldName: "subjectCode",
+    //     span: 8
+    // },
     {
         label: "SAP凭证号",
         fieldName: "voucherNo",
