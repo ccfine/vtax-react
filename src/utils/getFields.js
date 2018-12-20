@@ -141,7 +141,7 @@ const getFields = (form,fieldsData=[]) =>{
                             <CusComponent {...item['componentProps']} placeholder={`请选择${item['label']}`} >
                                 {
                                     optionsData.map((option,i)=>(
-                                        <Option key={i} title={option.text} value={option.value}>{option.text}</Option>
+                                        <Option key={i} dataref={option} title={option.text} value={option.value} >{option.text}</Option>
                                     ))
                                 }
                             </CusComponent>

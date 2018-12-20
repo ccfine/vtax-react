@@ -1,8 +1,8 @@
 /*
  * @Author: liuchunxiu
  * @Date: 2018-05-15 16:12:23
- * @Last Modified by: liuchunxiu
- * @Last Modified time: 2018-07-18 10:53:53
+ * @Last Modified by: liuliyuan
+ * @Last Modified time: 2018-12-20 18:09:24
  */
 import React, { Component } from "react";
 import { Modal, Form, Button, message, Spin, Row } from "antd";
@@ -26,6 +26,7 @@ class PopModal extends Component {
         visible: false,
         typelist: [],
         creditSubjectList:[],
+        noTaxMethod:false,
     };
 
     //查询未开票-非地产的科目列表
@@ -68,11 +69,18 @@ class PopModal extends Component {
                 message.error(err.message)
             });
     }*/
+
+    getCreditSubjectValue=(res)=>{
+        let newObj = this.state.creditSubjectList.filter((item) => item.value === res)
+        newObj.length>0 && this.setNoTaxMethod(newObj[0].noTaxMethod)
+    }
+    
     componentDidMount() {
         this.getLoadUnRealtyList()
     }
     componentWillReceiveProps(props) {
         if (props.visible && this.props.visible !== props.visible) {
+           
             if (props.id) {
                 this.setState({ formLoading: true });
                 request
@@ -82,6 +90,8 @@ class PopModal extends Component {
                             this.setState({
                                 formLoading: false,
                                 record: data.data
+                            },()=>{
+                                this.getCreditSubjectValue(data.data.creditSubjectId)
                             });
                         }
                     })
@@ -95,6 +105,10 @@ class PopModal extends Component {
             }
         }
     }
+    
+    setNoTaxMethod = (noTaxMethod) => {
+        this.setState({ noTaxMethod });
+    };
     hideModal = () => {
         this.setState({ visible: false });
     };
@@ -331,12 +345,12 @@ class PopModal extends Component {
                                     },
                                     fieldDecoratorOptions: {
                                         initialValue:record && record.stagesId? {label:record.stagesName,key:record.stagesId }: undefined,
-                                        rules: [
+                                        rules: this.state.noTaxMethod ? [
                                             {
                                                 required: true,
                                                 message: '请选择项目分期'
                                             }
-                                        ]
+                                        ] : []
                                     },
                                 }
                             ])}
@@ -351,7 +365,11 @@ class PopModal extends Component {
                                     formItemStyle: formItemLayout,
                                     componentProps: {
                                         labelInValue: true,
-                                        disabled:readonly
+                                        disabled:readonly,
+                                        onChange: (data) => {
+                                            console.log(data)
+                                            this.getCreditSubjectValue(data.key)
+                                        }
                                     },
                                     fieldDecoratorOptions: {
                                         initialValue:record.creditSubjectId ? { key: record.creditSubjectId, label: record.creditSubjectName } : undefined,
