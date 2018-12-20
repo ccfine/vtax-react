@@ -296,11 +296,11 @@ table.data-grid{
 }
 
 .ellipsis-index-lineClamp{
-  width: 293px;
+  /* width: 293px; */
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
-
+  /* table-layout: fixed; */
   /* height: 40px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -313,4 +313,16 @@ table.data-grid{
 /* 设置纳税申报的下划线的颜色 */
 .stepsCurrent .ant-steps-item-finish > .ant-steps-item-content > .ant-steps-item-title:after {
   background-color: #e8e8e8;
+}
+
+.tablelayoutfixed .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table, .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table, .ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table, .ant-table-small > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table{
+  table-layout: fixed;
+}
+
+.changecolor .ant-tooltip-inner {
+  color: #666 !important;
+  background-color: #fff !important;
+}
+.changecolor .ant-tooltip-placement-top .ant-tooltip-arrow, .ant-tooltip-placement-topLeft .ant-tooltip-arrow, .ant-tooltip-placement-topRight .ant-tooltip-arrow {
+  border-top-color: #fff !important;
 }

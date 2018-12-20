@@ -155,7 +155,7 @@ export default class AsyncTable extends Component{
         return(
             <div ref="asyncTable">
                 <Table
-                    className="apply-form-list-table"
+                    className={`apply-form-list-table ${props.tableProps.className}`}
                     {...props.tableProps}
                     bordered={props.tableProps.bordered ? props.tableProps.bordered : true}
                     dataSource={typeof props.tableProps.dataSource === 'undefined' ? dataSource : props.tableProps.dataSource}

@@ -6,6 +6,7 @@
 
 import React, {Component} from "react"
 import {SearchTable} from "compoments"
+import { Tooltip } from "antd"
 
 const formItemStyle = {
     labelCol: {
@@ -104,7 +105,18 @@ const getColumns = () => {
         {
             title: "请求参数",
             dataIndex: "requestParams",
-            width: "150px"
+            width: "300px",
+            render(obj){
+                if(obj.constructor === Object || obj.constructor === Array){
+                    return <Tooltip overlayClassName="changecolor" placement="topLeft" title={JSON.stringify(obj)}>
+                                <div className="ellipsis-index-lineClamp">{JSON.stringify(obj)}</div>
+                            </Tooltip>
+                }else{
+                    return <Tooltip overlayClassName="changecolor" placement="topLeft" title={obj}>
+                                <div className="ellipsis-index-lineClamp">{obj}</div>
+                            </Tooltip>
+                }
+            }
         }, {
             title: "响应方法",
             dataIndex: "declaringTypeName",
@@ -138,9 +150,10 @@ export default class OperationsLog extends Component {
                 <SearchTable
                     doNotFetchDidMount={false}
                     searchOption={{
-                    fields: searchFields()
+                    fields: searchFields(),
                 }}
-                    tableOption={{
+                tableOption={{
+                    className:"tablelayoutfixed",
                     key: this.state.updateKey,
                     pageSize: 100,
                     columns: getColumns(),
@@ -151,7 +164,7 @@ export default class OperationsLog extends Component {
                     },
                     cardProps: {
                         title: "操作日志"
-                    }
+                    },
                 }}/>
         )
     }

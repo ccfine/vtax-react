@@ -188,6 +188,7 @@ class SearchTable extends Component{
                                     updateKey={tableUpDateKey}
                                     filters={filters}
                                     tableProps={{
+                                        className:tableOption.className || tableOption.className || undefined,
                                         rowKey:record=>record[tableOption.rowKey] || record.id,
                                         dataSource:tableOption.dataSource || tableOption.dataSource || undefined,
                                         pagination:typeof tableOption.pagination === 'undefined' ? true : tableOption.pagination,
