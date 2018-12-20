@@ -2,6 +2,7 @@
  * Created by liuliyuan on 2018/5/13.
  */
 import React, { Component } from 'react'
+import {Tooltip} from 'antd'
 import {SearchTable,TableTotal} from 'compoments'
 import { composeBotton,fMoney } from 'utils'
 import TableTitle from "compoments/tableTitleWithTime"
@@ -188,6 +189,13 @@ const columns=[
         title: '地址',
         dataIndex: 'address',
         width:'100px',
+        render: text => {
+            return (
+                <Tooltip overlayClassName="changecolor" placement="topLeft" title={text}>
+                    <div className="ellipsis-index-lineClamp">{text}</div>
+                </Tooltip>
+            )
+        },
     },{
         title: '账号',
         dataIndex: 'account',
@@ -276,6 +284,13 @@ const columns=[
     },{
         title: '备注',
         dataIndex: 'remark',
+        render: text => {
+            return (
+                <Tooltip overlayClassName="changecolor" placement="topLeft" title={text}>
+                    <div className="ellipsis-index-lineClamp">{text}</div>
+                </Tooltip>
+            )
+        }
     }
 ];
 export default class SalesInvoiceCollection extends Component{
@@ -297,6 +312,7 @@ export default class SalesInvoiceCollection extends Component{
                     fields:searchFields
                 }}
                 tableOption={{
+                    className:"tablelayoutfixed",
                     key:updateKey,
                     pageSize:100,
                     columns:columns,

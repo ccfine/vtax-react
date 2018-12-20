@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { SearchTable,TableTotal } from "compoments";
-import {message,Modal} from 'antd';
+import {message,Modal,Tooltip} from 'antd';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { fMoney,composeBotton,requestResultStatus,request } from "utils";
@@ -363,6 +363,14 @@ const getColumns = (context) => [
         title: '备注',
         dataIndex: 'remark',
         //width:'500px',
+        render: text => {
+            return (
+                <Tooltip overlayClassName="changecolor" placement="topLeft" title={text}>
+                    <div className="ellipsis-index-lineClamp">{text}</div>
+                </Tooltip>
+
+            )
+        }
     },
     {
         title: '金额',
@@ -593,6 +601,7 @@ class SalesInvoiceCollection extends Component {
                         });
                     }}
                     tableOption={{
+                        className:"tablelayoutfixed",
                         key: tableKey,
                         pageSize: 100,
                         columns: getColumns(this),

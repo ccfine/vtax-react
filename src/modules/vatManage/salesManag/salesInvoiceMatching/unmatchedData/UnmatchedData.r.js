@@ -2,6 +2,7 @@
  * Created by liurunbin on 2018/1/11.
  */
 import React, { Component } from 'react'
+import {Tooltip} from 'antd'
 import {fMoney,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './manualMatchRoomModal.r'
@@ -166,6 +167,13 @@ const getColumns = (context,disabled) =>{
             title: '备注',
             dataIndex: 'remark',
             //width:'500px',
+            render: text => {
+                return (
+                    <Tooltip overlayClassName="changecolor" placement="topLeft" title={text}>
+                        <div className="ellipsis-index-lineClamp">{text}</div>
+                    </Tooltip>
+                )
+            },
         },
         {
             title: '金额',
@@ -269,6 +277,7 @@ class UnmatchedData extends Component{
                     })
                 }}
                 tableOption={{
+                    className:"tablelayoutfixed",
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,disabled),

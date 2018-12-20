@@ -2,7 +2,7 @@
  * Created by liurunbin on 2018/1/9.
  */
 import React, { Component } from 'react'
-import {Modal,message} from 'antd'
+import {Modal,message,Tooltip} from 'antd'
 import {request,fMoney,composeBotton,requestResultStatus} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import moment from 'moment';
@@ -237,6 +237,13 @@ const getColumns = (context,disabled) => {
             title: '备注',
             dataIndex: 'remark',
             //width:'500px',
+            render: text => {
+                return (
+                    <Tooltip overlayClassName="changecolor" placement="topLeft" title={text}>
+                        <div className="ellipsis-index-lineClamp">{text}</div>
+                    </Tooltip>
+                )
+            },
         },
         {
             title:'金额',
@@ -284,7 +291,7 @@ const getColumns = (context,disabled) => {
         {
             title:'路址',
             dataIndex:'htRoomName',
-            width:'200px',
+            width:'300px',
         },
         {
             title:'成交金额',
@@ -296,7 +303,7 @@ const getColumns = (context,disabled) => {
         {
             title:'楼栋名称',
             dataIndex:'buildingName',
-            width:'200px',
+            width:'300px',
         },
         {
             title:'单元',
@@ -407,6 +414,7 @@ class InvoiceDataMatching extends Component{
                     })
                 }}
                 tableOption={{
+                    className:"tablelayoutfixed",
                     key:tableKey,
                     pageSize:100,
                     columns:getColumns(this,disabled),
@@ -452,7 +460,7 @@ class InvoiceDataMatching extends Component{
                         })
                     },
                     scroll:{
-                        x: 3200,
+                        x: 3400,
                         y:window.screen.availHeight-480-(disabled?50:0),
                     },
                     cardProps:{

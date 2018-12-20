@@ -5,7 +5,7 @@
  *
  */
 import React, { Component } from 'react'
-import {Modal,message} from 'antd'
+import {Modal,message,Tooltip} from 'antd'
 import {fMoney,composeBotton,requestResultStatus,request} from 'utils'
 import {SearchTable,TableTotal} from 'compoments'
 import ManualMatchRoomModal from './addDataModal'
@@ -150,6 +150,13 @@ const columns = [
         title: '备注',
         dataIndex: 'remark',
         //width:'500px',
+        render: text => {
+            return (
+                <Tooltip overlayClassName="changecolor" placement="topLeft" title={text}>
+                    <div className="ellipsis-index-lineClamp">{text}</div>
+                </Tooltip>
+            )
+        },
     },
     {
         title:'金额',
@@ -290,6 +297,7 @@ class NeedNotMatchInvoices extends Component{
                     })
                 }}
                 tableOption={{
+                    className:"tablelayoutfixed",
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
