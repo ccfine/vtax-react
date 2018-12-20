@@ -126,7 +126,12 @@ const getColumns = () => {
         {
             title: "信息",
             dataIndex: "msg",
-            width: "200px"
+            width: "200px",
+            render(obj){
+                return <Tooltip placement="topLeft" title={obj}>
+                    <div className="ellipsis-index-lineClamp">{obj}</div>
+                </Tooltip>
+            }
         },
         {
             title: "数据来源",
@@ -214,6 +219,7 @@ export default class TaskResume extends Component {
                         fields: searchFields()
                     }}
                     tableOption={{
+                        className:"tablelayoutfixed",
                         key: this.state.updateKey,
                         pageSize: 100,
                         columns: getColumns(),

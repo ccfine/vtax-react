@@ -176,6 +176,17 @@ const getColumns = () => {
             title: "描述",
             dataIndex: "baseMsg",
             //width: "300px",
+            render(obj){
+                if(obj.constructor === Object || obj.constructor === Array){
+                    return <Tooltip placement="topLeft" title={JSON.stringify(obj)}>
+                                <div className="ellipsis-index-lineClamp">{JSON.stringify(obj)}</div>
+                            </Tooltip>
+                }else{
+                    return <Tooltip placement="topLeft" title={obj}>
+                                <div className="ellipsis-index-lineClamp">{obj}</div>
+                            </Tooltip>
+                }
+            }
         },
         {
             title: "接口字段报文",
