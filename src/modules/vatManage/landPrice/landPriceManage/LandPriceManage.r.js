@@ -192,7 +192,8 @@ const getColumns = (context,disabled,getFieldDecorator) =>[
         dataIndex: 'debitAmount',
         className: "table-money",
         render:(text,record)=>{
-            if(!disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 10) === 1 && parseInt(record.deductionFlag, 10) === 1){
+            if(disabled && context.state.statusParam && parseInt(context.state.statusParam.status, 10) === 1 && parseInt(record.deductionFlag, 10) === 1){
+                console.log(fMoney(text))
                 return <NumericInputCell
                     fieldName={`debitAmount_${record.id}`}
                     initialValue={text==='0' ? '0.00' : text}
@@ -257,6 +258,7 @@ class LandPriceManage extends Component{
          * */
         statusParam:{},
         totalSource:undefined,
+        dataSource:[],
     }
     fetchResultStatus = ()=>{
         requestResultStatus('',this.state.filters,result=>{
@@ -296,6 +298,7 @@ class LandPriceManage extends Component{
                     if(data.code===200){
                         message.success('保存成功!');
                         this.toggleSearchTableLoading(false);
+                        this.props.form.resetFields(); //TODO: 切记以后只要页面用到form标签的必须要在添加成功之后把页面的值删掉
                         this.refreshTable()
                     }else{
                         message.error(`保存失败:${data.msg}`)
@@ -337,7 +340,7 @@ class LandPriceManage extends Component{
                     tableOption={{
                         key:tableKey,
                         pageSize:100,
-                        columns:getColumns(this,!disabled,getFieldDecorator),
+                        columns:getColumns(this,disabled,getFieldDecorator),
                         url:`/land/price/manage/list${handle ? '?handle=true' : ''}`,
                         rowSelection:isCheck?{
                             getCheckboxProps: record => ({
@@ -400,6 +403,9 @@ class LandPriceManage extends Component{
                         scroll:{
                             x:2100,
                             y:window.screen.availHeight-400-(disabled?50:0),
+                        },
+                        onSuccess:(params,data)=>{
+                            console.log(data)
                         },
                     }}
                 >
