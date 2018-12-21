@@ -86,7 +86,22 @@ export default class TabPage extends Component{
             {deleteLoading} = this.state;
         return(
             <SearchTable
-                actionOption={props.disabled ? null :{
+                actionOption={props.disabled ? {
+                    span:12,
+                    body:(
+                        <div style={{mraginBottom:10}}>
+                            {
+                                composeBotton([{
+                                    type:'fileExport',
+                                    url:`realtyCollection/export`,
+                                    params:props.filters,
+                                    title:'导出',
+                                    userPermissions:['1121007'],
+                                },])
+                            }
+                        </div>
+                    )
+                } :{
                     span:12,
                     body:(
                         <div style={{mraginBottom:10}}>
