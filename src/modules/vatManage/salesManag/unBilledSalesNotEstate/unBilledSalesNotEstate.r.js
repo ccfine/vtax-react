@@ -740,7 +740,7 @@ class UnBilledSalesNotEstate extends Component {
                       </div>}
                       style={{marginTop:10}}>
 
-                    <AsyncTable url={`/account/notInvoiceUnSale/realty/details/list${handle ? '?handle=true' : ''}`}
+                    <AsyncTable url={`/account/invoiceSale/unrealty/details/list${handle ? '?handle=true' : ''}`}
                                 updateKey={tableUpDateKey}
                                 filters={filters}
                                 tableProps={{
