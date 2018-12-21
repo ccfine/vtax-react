@@ -9,29 +9,30 @@ import { SelectCell } from 'compoments/EditableCell'
 const columns = (context) =>[{
     title: '利润中心名称',
     dataIndex: 'profitName',
-    width:'100%',
+},{
+    title: '利润中心编码',
+    dataIndex: 'profitNum',
+    width: '350px'
 }];
 const table_1_columns = [{
     title: '项目名称',
     dataIndex: 'itemName',
-    width:'50%',
 }, {
     title: '项目代码',
     dataIndex: 'itemNum',
-    width:'50%',
+    width:'350px',
 }];
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
     dataIndex: 'itemName',
-    //width:'150px',
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'150px',
+    width:'350px',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'150px',
+    width:'350px',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
         text = parseInt(text,0);
@@ -205,96 +206,105 @@ class ProjectManagement extends Component{
                         <Icon type="left" /><span>返回</span>
                     </span>
                 </div>
-                <Card
-                    className="search-card"
-                    title='项目信息管理'
-                >
-                    <Row gutter={8}>
-                        <Col span={6}>
-                            <Card
-                                title={'利润中心'}
-                            >
-                                <AsyncTable url={`/taxsubject/profitCenterList/${taxSubjectId}`}
-                                            updateKey={updateKey}
+                <h2 style={{background:'#fff',padding:'10px 16px',margin:'0',borderBottom: '1px solid #e8e8e8',color:'rgba(0,0,0,0.85)',fontSize:'16px'}}>项目信息管理</h2>
+                <Row>
+                    <Col>
+                        <Card
+                            title="利润中心"
+                            bordered={false}
+                            headStyle={{borderBottom:'none',fontWeight:'500'}}
+                        >
+                            <AsyncTable url={`/taxsubject/profitCenterList/${taxSubjectId}`}
+                                        updateKey={updateKey}
+                                        tableProps={{
+                                            rowKey:record=>record.id,
+                                            //pageSize:100,
+                                            size:'small',
+                                            columns:columns(this),
+                                            pagination:false,
+                                            rowSelection:{
+                                                type: 'radio',
+                                            },
+                                            onRowSelect:(selectedRowKeys)=>{
+                                                this.mounted && this.setState({
+                                                    selectedRowTaxSubjectKeys:selectedRowKeys,
+                                                },()=>{
+                                                    this.refreshTableTwo()
+                                                })
+                                            },
+                                            scroll:{
+                                                x:200,
+                                                y:window.screen.availHeight-320,
+                                            },
+                                        }} />
+                        </Card>
+
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Card
+                            title="分期信息"
+                            bordered={false}
+                            headStyle={{borderBottom:'none',fontWeight:'500'}}
+                            extra={
+                                <Button size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
+                            }
+                        >
+                            <Form onSubmit={this.handleSubmit}>
+                                <AsyncTable url={`/taxsubject/projectStagesList/${selectedRowTaxSubjectKeys && selectedRowTaxSubjectKeys[0]}`}
+                                            updateKey={tableUpDateKey1}
                                             tableProps={{
                                                 rowKey:record=>record.id,
                                                 //pageSize:100,
                                                 size:'small',
-                                                columns:columns(this),
+                                                columns:table_2_columns(this,getFieldDecorator),
                                                 pagination:false,
                                                 rowSelection:{
                                                     type: 'radio',
                                                 },
                                                 onRowSelect:(selectedRowKeys)=>{
                                                     this.mounted && this.setState({
-                                                        selectedRowTaxSubjectKeys:selectedRowKeys,
+                                                        selectedRowKeys,
                                                     },()=>{
-                                                        this.refreshTableTwo()
+                                                        this.refreshTableThree()
                                                     })
                                                 },
                                                 scroll:{
-                                                    x:200,
+                                                    x:520,
                                                     y:window.screen.availHeight-320,
                                                 },
                                             }} />
-                            </Card>
-                        </Col>
-                        <Col span={10}>
-                            <Card
-                                title="分期信息"
-                                bodyStyle={{padding: '10px 20px'}}
-                                extra={
-                                    <Button size='small' type="primary" onClick={this.handleSubmit}>保存</Button>
-                                }
-                            >
-                                <Form onSubmit={this.handleSubmit}>
-                                    <AsyncTable url={`/taxsubject/projectStagesList/${selectedRowTaxSubjectKeys && selectedRowTaxSubjectKeys[0]}`}
-                                                updateKey={tableUpDateKey1}
-                                                tableProps={{
-                                                    rowKey:record=>record.id,
-                                                    //pageSize:100,
-                                                    size:'small',
-                                                    columns:table_2_columns(this,getFieldDecorator),
-                                                    pagination:false,
-                                                    rowSelection:{
-                                                        type: 'radio',
-                                                    },
-                                                    onRowSelect:(selectedRowKeys)=>{
-                                                        this.mounted && this.setState({
-                                                            selectedRowKeys,
-                                                        },()=>{
-                                                            this.refreshTableThree()
-                                                        })
-                                                    },
-                                                    scroll:{
-                                                        x:520,
-                                                        y:window.screen.availHeight-320,
-                                                    },
-                                                }} />
-                                </Form>
-                            </Card>
-                        </Col>
-                        <Col span={8}>
-                            <Card
-                                bodyStyle={{padding: '10px 20px'}}
-                                title="项目信息">
-                                <AsyncTable url={`/project/projectList/${selectedRowKeys && selectedRowKeys[0]}`}
-                                            updateKey={tableUpDateKey2}
-                                            tableProps={{
-                                                rowKey:record=>record.id,
-                                                //pageSize:100,
-                                                size:'small',
-                                                columns:table_1_columns,
-                                                pagination:false,
-                                                scroll:{
-                                                    x:200,
-                                                    y:window.screen.availHeight-320,
-                                                },
-                                            }} />
-                            </Card>
-                        </Col>
-                    </Row>
-                </Card>
+                            </Form>
+                        </Card>             
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Card
+                            title="项目信息"
+                            bordered={false}
+                            headStyle={{borderBottom:'none',fontWeight:'500'}}
+                        >
+                            <AsyncTable url={`/project/projectList/${selectedRowKeys && selectedRowKeys[0]}`}
+                                        updateKey={tableUpDateKey2}
+                                        tableProps={{
+                                            rowKey:record=>record.id,
+                                            //pageSize:100,
+                                            size:'small',
+                                            columns:table_1_columns,
+                                            pagination:false,
+                                            scroll:{
+                                                x:200,
+                                                y:window.screen.availHeight-320,
+                                            },
+                                        }} />
+                        </Card>
+                    </Col>
+                </Row>
+
             </React.Fragment>
         )
     }
