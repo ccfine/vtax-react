@@ -92,6 +92,12 @@ export default class TabPage extends Component{
                         <div style={{mraginBottom:10}}>
                             {
                                 composeBotton([{
+                                    type:'fileExport',
+                                    url:`realtyCollection/export`,
+                                    params:props.filters,
+                                    title:'导出',
+                                    userPermissions:['1121007'],
+                                },{
                                     type: 'fileExport',
                                     url: 'realtyCollection/download',
                                 },{
