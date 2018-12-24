@@ -15,6 +15,32 @@ const pointerStyle = {
     cursor: "pointer",
     color: "#1890ff"
 };
+
+const markFiledsProfit = (declare) => getFieldValue => [
+    {
+        label:'利润中心',
+        fieldName:'profitCenterId',
+        type:'asyncSelect',
+        notShowAll:true,
+        span:'22',
+        componentProps:{
+            fieldTextName:'profitName',
+            fieldValueName:'id',
+            doNotFetchDidMount: !declare,
+            fetchAble: (getFieldValue("main") && getFieldValue("main").key) || (declare && declare.mainId),
+            url:`/taxsubject/profitCenterList/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+        },
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择利润中心'
+                }
+            ]
+        }
+    }
+]
+
 const getFields = (filters)=>[
     {
         label:'纳税主体',
@@ -554,6 +580,28 @@ class InvoiceCollection extends Component {
                                         loading:sourceTypeLoading,
                                         onClick:this.changeSourceType
                                     }])
+                                }
+                                {
+                                    (disabled && declare.decAction==='edit')  &&  composeBotton([{
+                                        type:'mark',
+                                        buttonOptions:{
+                                            text:'利润中心',
+                                            icon:'home'
+                                        },
+                                        modalOptions:{
+                                            title:'利润中心'
+                                        },
+                                        formOptions:{
+                                            filters: filters,
+                                            selectedRowKeys: selectedRowKeys,
+                                            url:"/income/invoice/collection/relationStages",
+                                            fields: markFiledsProfit(declare),
+                                            onSuccess:()=>{
+                                                this.refreshTable()
+                                            },
+                                            userPermissions:['1495003'],
+                                        }
+                                    }],statusParam)
                                 }
                                 {
                                     JSON.stringify(filters)!=='{}' && composeBotton([{
