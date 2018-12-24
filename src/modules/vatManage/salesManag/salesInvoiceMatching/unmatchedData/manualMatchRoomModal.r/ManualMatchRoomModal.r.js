@@ -85,6 +85,23 @@ const searchFields = selectedData=> (getFieldValue)=> {
             type:'input',
             span:6,
             formItemStyle,
+        },
+        {
+            label:'结转状态',
+            fieldName:'taxIdentificationCode1',
+            type:'select',
+            span:6,
+            formItemStyle,
+            options:[
+                {
+                    text:'未结转',
+                    value:'0'
+                },
+                {
+                    text:'已结转',
+                    value:'1'
+                }
+            ]
         }
     ]
 }

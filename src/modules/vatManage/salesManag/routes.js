@@ -14,6 +14,7 @@ const SalesInvoiceCollection = AsyncComponent(() => import('./salesInvoiceCollec
 const SalesInvoiceMatching = AsyncComponent(() => import('./salesInvoiceMatching'), '销项发票匹配')
 const IncomeCheck = AsyncComponent(() => import('./incomeCheck'), '收入检查')
 const BillingSales = AsyncComponent(() => import('../salesTaxAccount/billingSales'), '开票销售台账')
+const CheckOut = AsyncComponent(() => import('./checkOut'), '退房处理台账')
 const BeginningNotTaxSalesEstate = AsyncComponent(() => import('./beginningNotTaxSalesEstate'), '期初未纳税销售额台账-地产')
 const UnBilledSalesEstate = AsyncComponent(() => import('./unBilledSalesEstate'), '未开票销售台账-地产')
 const UnBilledSalesNotEstate = AsyncComponent(() => import('./unBilledSalesNotEstate'), '未开票销售台账-非地产')
@@ -85,6 +86,16 @@ const SalesManag_Routes = [
         },
         authorityInfo:salesManag['unBilledSales'].options,
         exact:true,*/
+    },{
+        path:`${PATH}/checkOut`,
+        component:CheckOut,
+        name:'退房处理台账',
+        icon:{
+            url:`${ICON_URL_PATH}beginningNotTaxSalesEstate.svg`,
+            backgroundColor:'#7ED530'
+        },
+        authorityInfo:salesManag['beginningNotTaxSalesEstate'].options,
+        exact:true,
     },{
         path:`${PATH}/beginningNotTaxSalesEstate`,
         component:BeginningNotTaxSalesEstate,
