@@ -651,7 +651,7 @@ class SalesInvoiceCollection extends Component {
                                                 onSuccess:()=>{
                                                     this.refreshTable()
                                                 },
-                                                userPermissions:['1065001'],
+                                                userPermissions:['1065002'],
                                             }
                                         }],statusParam)
                                     }
@@ -710,7 +710,7 @@ class SalesInvoiceCollection extends Component {
                                                 onSuccess:()=>{
                                                     this.refreshTable()
                                                 },
-                                                userPermissions:['1395000'],
+                                                userPermissions:['1065001'],
                                             }
                                         },{
                                             type:'delete',
