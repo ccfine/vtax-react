@@ -171,6 +171,7 @@ class Sheet extends Component{
                                                     getFieldDecorator={this.props.form.getFieldDecorator}
                                                     fieldName={`map.${di.key}`}
                                                     editAble={true}
+                                                    allowNegative={this.props.sourceForm === 'partners' ? true : false}//合作方纳税表可以填负数
                                                     componentProps={{
                                                         valueType:di.type === 'rate'?'int':'float',
                                                         onFocus:(e)=>di.type !== 'rate' && this.handleFocus(e,`map.${di.key}`),

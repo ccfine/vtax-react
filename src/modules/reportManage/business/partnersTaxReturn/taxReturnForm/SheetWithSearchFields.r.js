@@ -236,7 +236,7 @@ class SheetWithSearchFields extends Component{
                             padding:10
                         }}
                     >
-                        <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form}/>
+                        <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form} sourceForm={'partners'} />
                     </Card>
                 </div>
             </Form>
