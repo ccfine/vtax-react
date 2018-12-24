@@ -599,8 +599,8 @@ class InvoiceCollection extends Component {
                                             onSuccess:()=>{
                                                 this.refreshTable()
                                             },
-                                            userPermissions:['1495003'],
-                                        }
+                                        },
+                                        userPermissions:['1495003'],
                                     }],statusParam)
                                 }
                                 {
