@@ -300,8 +300,18 @@ const getColumns = (context,disabled) => {
             width:'100px',
         },
         {
-            title:'房间面积',
+            title:'预测建筑面积',
             dataIndex:'roomArea',
+            width:'100px',
+        },
+        {
+            title:'实测建筑面积',
+            dataIndex:'actualArea',
+            width:'100px',
+        },
+        {
+            title:'建筑性质',
+            dataIndex:'buildingProperty',
             width:'100px',
         },
         {
@@ -592,7 +602,7 @@ class RoomTransactionFile extends Component{
                             title: <span><label className="tab-breadcrumb">销项发票匹配 / </label>房间交易档案</span>
                         },
                         scroll:{
-                            x: 4350,
+                            x: 4550,
                             y:window.screen.availHeight-400-(disabled?50:0),
                         },
                         rowSelection: isCheck ? {

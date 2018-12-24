@@ -251,8 +251,16 @@ const columns = [{
         dataIndex:'receivables',
         width:'100px',
     }, {
-        title:'房间面积',
+        title:'预测建筑面积',
         dataIndex:'roomArea',
+        width:'100px',
+    }, {
+        title:'实测建筑面积',
+        dataIndex:'actualArea',
+        width:'100px',
+    }, {
+        title:'建筑性质',
+        dataIndex:'buildingProperty',
         width:'100px',
     }, {
         title:'匹配状态',
@@ -407,7 +415,7 @@ class RoomTransactionFile extends Component{
                         })
                     },
                     scroll:{
-                        x: 4200,
+                        x: 4400,
                         y:window.screen.availHeight-400
                     },
                 }}
