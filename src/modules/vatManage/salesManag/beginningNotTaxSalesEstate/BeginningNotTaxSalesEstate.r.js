@@ -171,6 +171,14 @@ const columns = [
         }
     },
     {
+        title:'是否期初结转',
+        dataIndex:'knots',
+        width:'100px',
+        render:(id,record)=>{
+            return parseInt(record.knots,10) === 0 ? "否":"是";
+        }
+    },
+    {
         title:'利润中心',
         dataIndex:'profitCenterName',
         width:'200px',
@@ -475,7 +483,7 @@ class unBilledSalesEstate extends Component{
                         }
                     </div>,
                     scroll:{
-                        x:2500,
+                        x:2600,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                 }}
