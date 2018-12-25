@@ -49,6 +49,7 @@ const sheetData = [
         grid:sheet_4,
         url:'/tax/declaration/addendum/four/list',
         //saveUrl:'/tax/declaration/addendum/four/save',
+        taxEdit:true // 附表四 增加本期实际抵减税额调整
     }, {
         tab:'附表五',
         grid:sheet_5,

@@ -8,6 +8,7 @@ import {getFields,listMainResultStatus,composeBotton,requestResultStatus,request
 import { withRouter } from 'react-router'
 import moment from 'moment'
 import Sheet from './Sheet.r'
+import PopModal from './popModal.r'
 
 const openNotificationWithIcon = (type,msg) => {
     notification[type]({
@@ -78,6 +79,7 @@ class SheetWithSearchFields extends Component{
          * */
         statusParam:'',
         saveLoding:false,
+        popModalVisible:false
     }
     refreshTable = ()=>{
         this.mounted && this.setState({
@@ -190,10 +192,19 @@ class SheetWithSearchFields extends Component{
     componentWillUnmount(){
         this.mounted=null;
     }
+    togglesPopModalVisible = (popModalVisible,isrefresh) => {
+        this.setState({
+            popModalVisible
+        },()=>{
+            if(isrefresh){
+                this.refreshTable()
+            }
+        });
+    };
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl} = this.props;
+        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,taxEdit} = this.props;
         let disabled = !!declare;
-        const { params,updateKey,statusParam,saveLoding } = this.state;
+        const { params,updateKey,statusParam,saveLoding,popModalVisible } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
         return(
             <Form onSubmit={this.onSubmit}>
@@ -235,6 +246,16 @@ class SheetWithSearchFields extends Component{
                                         this.handelGenerateTax();
                                     }
                                 }], statusParam) : null
+                            }
+                            {
+                                taxEdit ? (disabled && declare.decAction==='edit') &&  composeBotton([{
+                                    type:'consistent',
+                                    text:'本期实际抵减税额调整',
+                                    onClick:()=>{
+                                        this.togglesPopModalVisible(true);
+                                    },
+                                    userPermissions:['1915015'],
+                                }]) : null
                             }
                             {
                                 JSON.stringify(params)!=='{}' && composeBotton([{
@@ -288,6 +309,12 @@ class SheetWithSearchFields extends Component{
                 >
                     <Sheet readOnly={readOnly} scroll={scroll} grid={grid} url={url} params={params} composeGrid={composeGrid} updateKey={updateKey} form={this.props.form}/>
                 </Card>
+                <PopModal
+                    visible={popModalVisible}
+                    title='本期实际抵减税额调整'
+                    toggleModalVisible={this.togglesPopModalVisible}
+                    declare={declare}
+                />
             </div>
         
 
