@@ -140,7 +140,13 @@ const getColumns = context => [
                         },
                     });
                 } else {
-                    context.togglesPopModalVisible(true);
+                    context.togglesPopModal({
+                        popModalVisible: true,
+                        params: {
+                            collectionId: context.props.selectedData['id'],
+                            roomId: record.id
+                        }
+                    });
                 }
             }}>
                 <Icon type="check-circle-o" />
@@ -191,7 +197,8 @@ class ManualMatchRoomModal extends Component{
     }
     state={
         matching:false,
-        tableKey:Date.now()
+        tableKey:Date.now(),
+        params: {}
     }
 
     toggleLoaded = loaded => this.setState({loaded})
@@ -217,7 +224,8 @@ class ManualMatchRoomModal extends Component{
         request.get('/output/invoice/marry/manual/determine',{
             params:{
                 collectionId,
-                roomId
+                roomId,
+                returned: '0'
             }
         })
             .then(({data})=>{
@@ -316,17 +324,16 @@ class ManualMatchRoomModal extends Component{
         this.setState({
             popModalVisible
         });
-    // const params = {
-    //     month: '',
-    //     knots: '',
-    //     amount: ''
-    // }
     };
+    togglesPopModal = (data) => {
+        this.setState({
+            ...data
+        });
+    }
     render(){
         const props = this.props;
         const {title} = this.props;
-        const {tableKey,matching,popModalVisible} = this.state;
-        console.log('declare',this.props.declare)
+        const {tableKey,matching,popModalVisible,params} = this.state;
         return(
             <Modal
                 maskClosable={false}
@@ -398,6 +405,7 @@ class ManualMatchRoomModal extends Component{
                 <PopModal 
                     visible={popModalVisible}
                     title='红冲类型'
+                    params={params}
                     toggleModalVisible={this.togglesPopModalVisible}
                 />
             </Modal>

@@ -14,23 +14,22 @@ class PopModal extends Component{
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('values',values)
-                // const { declare } = this.props;
-                // let param = {
-                //     month: declare.authMonth,
-                //     parentId: declare.mainId
-                // }
-                // request.post('/output/room/files/updateConfig',param).then(({data}) => {
-                //     if (data.code === 200) {
-                //         message.success('修改成功')
-                //     } else {
-                //         message.error(data.msg)
-                //     }
-                //     this.props.toggleModalVisible(false)
-                // }).catch(err => {
-                //     message.error(err.message)
-                //     this.props.toggleModalVisible(false)
-                // })
+                const { params } = this.props;
+                let param = {
+                    ...params,
+                    returned: values.returned
+                }
+                request.post('/output/invoice/marry/manual/determine',param).then(({data}) => {
+                    if (data.code === 200) {
+                        message.success('修改成功')
+                    } else {
+                        message.error(data.msg)
+                    }
+                    this.props.toggleModalVisible(false)
+                }).catch(err => {
+                    message.error(err.message)
+                    this.props.toggleModalVisible(false)
+                })
             }
         });
     }
@@ -59,7 +58,7 @@ class PopModal extends Component{
                         {
                             getFields(this.props.form, [{
                                 label:'发票红冲类型',
-                                fieldName:'confirmType',
+                                fieldName:'returned',
                                 type:'select',
                                 span:24,
                                 formItemStyle:{
@@ -73,11 +72,11 @@ class PopModal extends Component{
                                 options:[
                                     {
                                         text: '一般红冲',
-                                        value: '1',
+                                        value: '0',
                                     },
                                     {
                                         text: '退房红冲',
-                                        value: '2',
+                                        value: '1',
                                     }
                                 ],
                                 fieldDecoratorOptions:{
